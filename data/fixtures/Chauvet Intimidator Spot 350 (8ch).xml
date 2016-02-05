@@ -1,0 +1,14 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<fixture id="Chauvet Intimidator Spot 350 (8ch)" type="LED" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="fixture.xsd">
+  <channel name="Pan" dmx="1" min="0" max="255" />
+  <channel name="Tilt" dmx="2" min="0" max="255" />
+  <channel name="Color Wheel" dmx="3" min="0" max="255" />
+  <channel name="Gobo Wheel" dmx="4" min="0" max="255" />
+  <channel name="Gobo Rotation" dmx="5" min="0" max="255" />
+  <channel name="Prism" dmx="6" min="0" max="255" />
+  <channel name="Focus" dmx="7" min="0" max="255" />
+  <channel name="Master" dmx="8" min="0" max="7" />
+  <channel name="Strobe" dmx="8" min="8" max="76" />
+  <movement type="Pan" min="-270" max="270" />
+  <movement type="Tilt" min="-135" max="135" />
+</fixture>

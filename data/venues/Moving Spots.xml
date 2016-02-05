@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<venue xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="venue.xsd">
+    <xi:include xmlns:xi="http://www.w3.org/2001/XInclude" href="../groups.xml" />
+    <xi:include xmlns:xi="http://www.w3.org/2001/XInclude" href="../transmitters.xml" />
+    <universes>
+        <universe name="Main Universe">
+            <transmitters>
+                <transmitter id="enttecTransmitter" />
+            </transmitters>
+            <fixtures>
+                <fixture startChannel="401" type="Chinese Moving Spot">
+                    <groups>
+                        <group name="vocalist" />
+                    </groups>
+                    <solver type="hsb" />
+                    <solver type="masterAtFull" />
+                    <solver type="pan16bit" adjustment="90" />
+                    <solver type="tilt16bit" adjustment="0" />
+                    <solver type="fakeUV" />
+                </fixture>
+                <fixture startChannel="414" type="Chinese Moving Spot">
+                    <groups>
+                        <group name="guitarist" />
+                    </groups>
+                    <solver type="hsb" />
+                    <solver type="masterAtFull" />
+                    <solver type="pan16bit" adjustment="0.6" />
+                    <solver type="tilt16bit" adjustment="0.6" />
+                    <solver type="fakeUV" />
+                </fixture>
+                <fixture startChannel="427" type="Chinese Moving Spot">
+                    <groups>
+                        <group name="bassist" />
+                    </groups>
+                    <solver type="hsb" />
+                    <solver type="masterAtFull" />
+                    <solver type="pan16bit" adjustment="0.6" />
+                    <solver type="tilt16bit" adjustment="0.6" />
+                    <solver type="fakeUV" />
+                </fixture>
+                <fixture startChannel="440" type="Chinese Moving Spot">
+                    <groups>
+                        <group name="drummer" />
+                    </groups>
+                    <solver type="hsb" />
+                    <solver type="masterAtFull" />
+                    <solver type="pan16bit" adjustment="0.6" />
+                    <solver type="tilt16bit" adjustment="0.6" />
+                    <solver type="fakeUV" />
+                </fixture>
+            </fixtures>
+        </universe>
+    </universes>
+</venue>

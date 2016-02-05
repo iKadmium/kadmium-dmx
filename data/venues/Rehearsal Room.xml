@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<venue xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:noNamespaceSchemaLocation="venue.xsd"
+       xmlns:xi="http://www.w3.org/2001/XInclude">
+
+    <xi:include href="../groups.xml" />
+    <xi:include href="../transmitters.xml" />
+
+    <universes>
+        <universe name="Main Universe">
+            <transmitters>
+                <transmitter id="enttecTransmitter"/>
+                <transmitter id="sacnTransmitter"/>
+            </transmitters>
+            <fixtures>
+                <fixture type="Nerhor NE-112" startChannel="64">
+                    <groups>
+                        <group name="vocalist"/>
+                    </groups>
+                    <solver type="hsb" enabled="true"/>
+                </fixture>
+
+                <fixtureSet src="ColorRails.xml" universe="Personal Universe"/>
+
+                <fixture type="Nerhor NE-112" startChannel="68">
+                    <groups>
+                        <group name="rearSides"/>
+                    </groups>
+                    <solver type="hsb" enabled="true"/>
+                </fixture>
+            </fixtures>
+        </universe>
+
+    </universes>
+
+</venue>

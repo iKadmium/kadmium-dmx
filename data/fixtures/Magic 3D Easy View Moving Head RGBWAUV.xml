@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<fixture xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="fixture.xsd"
+         id="Magic 3D Easy View Moving Head RGBWAUV" type="LED">
+    <channel name="Master" dmx="1"/>
+    <channel name="Red" dmx="2"/>
+    <channel name="Green" dmx="3"/>
+    <channel name="Blue" dmx="4"/>
+    <channel name="White" dmx="5"/>
+    <channel name="trueUV" dmx="6"/>
+    <channel name="Amber" dmx="7"/>
+    <channel name="Master" dmx="8" />
+    <channel name="PanCoarse" dmx="9"/>
+    <channel name="TiltCoarse" dmx="10"/>
+    <channel name="PanFine" dmx="11"/>
+    <channel name="TiltFine" dmx="12"/>
+    <channel name="Speed" dmx="13"/>
+    <channel name="Zoom" dmx="14" min="255"/>
+    <channel name="Strobe" dmx="15" max="150"/>
+    <channel name="Macro" dmx="16"/>
+    <channel name="Speed Auto" dmx="17"/>
+    <channel name="Reset" dmx="18"/>
+
+    <movement type="Pan" min="-270" max="270" />
+    <movement type="Tilt" min="-135" max="135" />
+</fixture>

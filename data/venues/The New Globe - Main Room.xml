@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<venue xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:noNamespaceSchemaLocation="venue.xsd"
+       xmlns:xi="http://www.w3.org/2001/XInclude">
+
+    <xi:include href="../groups.xml"/>
+    <xi:include href="../transmitters.xml"/>
+
+    <universes>
+        <universe name="Main Universe">
+            <transmitters>
+                <transmitter id="enttecTransmitter"/>
+                <transmitter id="sacnTransmitter"/>
+            </transmitters>
+            <fixtures>
+                <fixture type="New Globe RGB LED" startChannel="19">
+                    <groups>
+                        <group name="vocalist"/>
+                    </groups>
+                    <solver type="hsb" enabled="true"/>
+                    <solver type="fakeStrobe" enabled="true" countdownFrames="2"/>
+                </fixture>
+
+                <fixtureSet src="ColorRails.xml"/>
+
+                <fixture type="New Globe RGB LED Dimmed" startChannel="13">
+                    <groups>
+                        <group name="drummer"/>
+                    </groups>
+                    <solver type="hsb" enabled="true"/>
+                    <solver type="fakeStrobe" enabled="true" countdownFrames="2"/>
+                </fixture>
+
+                <fixture type="New Globe RGB LED Dimmed" startChannel="16">
+                    <groups>
+                        <group name="rearSides"/>
+                    </groups>
+                    <solver type="hsb" enabled="true"/>
+                    <solver type="fakeStrobe" enabled="true" countdownFrames="2"/>
+                </fixture>
+
+                <fixtureSet src="Drum FadeCandy.xml"/>
+                <fixtureSet src="Guitar FadeCandy.xml"/>
+            </fixtures>
+        </universe>
+    </universes>
+</venue>

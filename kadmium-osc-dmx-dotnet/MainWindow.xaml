@@ -1,0 +1,19 @@
+﻿<Window x:Class="kadmium_osc_dmx_dotnet.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:kadmium_osc_dmx_dotnet"
+        mc:Ignorable="d"
+        Title="MainWindow" Height="350" Width="525">
+
+    <TabControl x:Name="tbcUniverses" Margin="10,10,10,10">
+        <TabItem Header="Preview">
+            <WrapPanel x:Name="groupsPanel" />
+        </TabItem>
+        <TabItem Header="Status" x:Name="tabHeader">
+            <Grid />
+        </TabItem>
+    </TabControl>
+
+</Window>

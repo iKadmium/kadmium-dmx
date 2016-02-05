@@ -1,0 +1,8 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<fixture id="Nerhor NE-112" type="LED" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="fixture.xsd">
+  <channel name="Master" dmx="1" min="0" max="152" />
+  <channel name="Strobe" dmx="1" min="153" max="242" />
+  <channel name="Blue" dmx="2" min="0" max="255" />
+  <channel name="Green" dmx="3" min="0" max="255" />
+  <channel name="Red" dmx="4" min="0" max="255" />
+</fixture>

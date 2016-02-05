@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xsd:schema xmlns:xsd="http://www.w3.org/2001/XMLSchema" elementFormDefault="qualified">
+
+  <xsd:include schemaLocation="normalisedFloat.xsd"/>
+  
+  <xsd:complexType name="solver">
+    <xsd:sequence/>
+    <xsd:attribute name="type" type="xsd:string" use="required"/>
+    <xsd:attribute name="enabled" type="xsd:boolean" use="optional"/>
+    <xsd:attribute name="countdownFrames" type="xsd:int"
+			use="optional"/>
+    <xsd:attribute name="maxDistance" type="xsd:int" use="optional"/>
+    <xsd:attribute name="panAdjustment" type="xsd:float" use="optional" default="0.5"/>
+    <xsd:attribute name="tiltAdjustment" type="xsd:float" use="optional" default="0.5"/>
+    <xsd:attribute name="maxBrightness" type="normalisedFloat" use="optional" default="1.0"/>
+    <xsd:attribute name="panInverted" type="xsd:boolean" use="optional" default="false" />
+    <xsd:attribute name="tiltInverted" type="xsd:boolean" use="optional" default="false" />
+    <xsd:attribute name="eased" type="xsd:boolean" use="optional" default="true" />
+  </xsd:complexType>
+
+  <xsd:complexType name="lookAtSolver">
+    <xsd:sequence>
+      <xsd:element name="target" type="target" minOccurs="0"
+                   maxOccurs="unbounded"/>
+    </xsd:sequence>
+    <xsd:attribute name="x" type="xsd:float" use="required"/>
+    <xsd:attribute name="y" type="xsd:float" use="required"/>
+    <xsd:attribute name="z" type="xsd:float" use="required"/>
+  </xsd:complexType>
+
+  <xsd:complexType name="target">
+    <xsd:sequence/>
+    <xsd:attribute name="dmx" use="required">
+      <xsd:simpleType>
+        <xsd:restriction base="xsd:int">
+          <xsd:minInclusive value="0"/>
+          <xsd:maxInclusive value="255"/>
+        </xsd:restriction>
+      </xsd:simpleType>
+    </xsd:attribute>
+    <xsd:attribute name="x" type="xsd:float" use="required"/>
+    <xsd:attribute name="y" type="xsd:float" use="required"/>
+    <xsd:attribute name="z" type="xsd:float" use="required"/>
+  </xsd:complexType>
+
+</xsd:schema>

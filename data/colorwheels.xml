@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<colorwheels xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="colorwheels.xsd">
+    <fixture id="Nerhor Moving Head">
+        <color min="0" max="15" rgb="FF0000" />
+        <color min="16" max="31" rgb="00FF00" />
+        <color min="32" max="47" rgb="0000FF" />
+        <color min="48" max="63" rgb="FFFF00" />
+        <color min="64" max="79" rgb="00FFFF" />
+        <color min="80" max="95" rgb="FF00FF" />
+        <color min="96" max="112" rgb="FFFFFF" />
+    </fixture>
+</colorwheels>

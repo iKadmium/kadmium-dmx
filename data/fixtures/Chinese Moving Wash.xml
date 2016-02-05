@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<fixture xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="fixture.xsd"
+         id="Chinese Moving Wash" type="LED">
+    <channel name="PanCoarse" dmx="1"/>
+    <channel name="PanFine" dmx="2"/>
+    <channel name="TiltCoarse" dmx="3"/>
+    <channel name="TiltFine" dmx="4"/>
+    <channel name="MotorSpeed" dmx="5"/>
+    <channel name="Master" dmx="6"/>
+    <channel name="Strobe" dmx="7"/>
+    <channel name="ColorMacro" dmx="8"/>
+    <channel name="MacroSpeed" dmx="9"/>
+    <channel name="Red" dmx="10"/>
+    <channel name="Green" dmx="11"/>
+    <channel name="Blue" dmx="12"/>
+    <channel name="White" dmx="13"/>
+
+    <movement type="Pan" min="-270" max="270" />
+    <movement type="Tilt" min="-135" max="135" />
+</fixture>

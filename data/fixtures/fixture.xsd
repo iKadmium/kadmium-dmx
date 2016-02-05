@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xsd:schema elementFormDefault="qualified"
+            xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+
+    <xsd:complexType name="fixture">
+        <xsd:sequence>
+            <xsd:element name="channel" type="channel" minOccurs="0"
+                         maxOccurs="unbounded">
+            </xsd:element>
+            <xsd:element name="movement" type="movement" minOccurs="0"
+                         maxOccurs="unbounded">
+            </xsd:element>
+        </xsd:sequence>
+        <xsd:attribute name="id" type="xsd:string"/>
+        <xsd:attribute name="type" type="xsd:string"/>
+    </xsd:complexType>
+
+    <xsd:complexType name="channel">
+        <xsd:attribute name="name" type="xsd:string" use="required"/>
+        <xsd:attribute name="dmx" type="xsd:int" use="required"/>
+        <xsd:attribute name="min" type="xsd:int" default="0"/>
+        <xsd:attribute name="max" type="xsd:int" default="255"/>
+    </xsd:complexType>
+
+    <xsd:complexType name="movement">
+        <xsd:attribute name="type" type="xsd:string"/>
+        <xsd:attribute name="min" type="xsd:int"/>
+        <xsd:attribute name="max" type="xsd:int"/>
+    </xsd:complexType>
+
+    <xsd:element name="fixture" type="fixture"/>
+
+</xsd:schema>

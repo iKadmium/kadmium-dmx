@@ -1,0 +1,101 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<venue xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:noNamespaceSchemaLocation="venue.xsd"
+       xmlns:xi="http://www.w3.org/2001/XInclude">
+
+    <xi:include href="../groups.xml"/>
+    <xi:include href="../transmitters.xml"/>
+
+    <universes>
+        <universe name="Main Universe">
+            <transmitters>
+                <transmitter id="enttecTransmitter"/>
+                <transmitter id="sacnTransmitter"/>
+            </transmitters>
+            <fixtures>
+                <fixture startChannel="401" type="Chinese Moving Spot">
+                    <groups>
+                        <group name="vocalist"/>
+                    </groups>
+                    <solver type="hsb"/>
+                    <solver type="masterAtFull"/>
+                    <solver type="panTilt16bit"/>
+                    <solver type="fakeUV"/>
+                    <solver type="fakeStrobe" countdownFrames="2"/>
+                </fixture>
+                <fixture startChannel="414" type="Chinese Moving Spot">
+                    <groups>
+                        <group name="guitarist"/>
+                    </groups>
+                    <solver type="hsb"/>
+                    <solver type="masterAtFull"/>
+                    <solver type="panTilt16bit"/>
+                    <solver type="fakeUV"/>
+                    <solver type="fakeStrobe" countdownFrames="2"/>
+                </fixture>
+                <fixture startChannel="427" type="Chinese Moving Spot">
+                    <groups>
+                        <group name="bassist"/>
+                    </groups>
+                    <solver type="hsb"/>
+                    <solver type="masterAtFull"/>
+                    <solver type="panTilt16bit"/>
+                    <solver type="fakeUV"/>
+                    <solver type="fakeStrobe" countdownFrames="2"/>
+                </fixture>
+                <fixture startChannel="440" type="Chinese Moving Spot">
+                    <groups>
+                        <group name="drummer"/>
+                    </groups>
+                    <solver type="hsb"/>
+                    <solver type="masterAtFull"/>
+                    <solver type="panTilt16bit"/>
+                    <solver type="fakeUV"/>
+                    <solver type="fakeStrobe" countdownFrames="2"/>
+                </fixture>
+                <fixture startChannel="301" type="Chinese Moving Spot">
+                    <groups>
+                        <group name="rearSides"/>
+                    </groups>
+                    <solver type="hsb"/>
+                    <solver type="masterAtFull"/>
+                    <solver type="panTilt16bit"/>
+                    <solver type="fakeUV"/>
+                    <solver type="fakeStrobe" countdownFrames="2"/>
+                </fixture>
+                <fixture startChannel="314" type="Chinese Moving Spot">
+                    <groups>
+                        <group name="rearSides"/>
+                    </groups>
+                    <solver type="hsb"/>
+                    <solver type="masterAtFull"/>
+                    <solver type="panTilt16bit"/>
+                    <solver type="fakeUV"/>
+                    <solver type="fakeStrobe" countdownFrames="2"/>
+                </fixture>
+                <fixture startChannel="327" type="Chinese Moving Spot">
+                    <groups>
+                        <group name="rearSides"/>
+                    </groups>
+                    <solver type="hsb"/>
+                    <solver type="masterAtFull"/>
+                    <solver type="panTilt16bit" panInverted="true"/>
+                    <solver type="fakeUV"/>
+                    <solver type="fakeStrobe" countdownFrames="2"/>
+                </fixture>
+                <fixture startChannel="340" type="Chinese Moving Spot">
+                    <groups>
+                        <group name="rearSides"/>
+                    </groups>
+                    <solver type="hsb"/>
+                    <solver type="masterAtFull"/>
+                    <solver type="panTilt16bit" panInverted="true" />
+                    <solver type="fakeUV"/>
+                    <solver type="fakeStrobe" countdownFrames="2"/>
+                </fixture>
+                <fixtureSet src="Guitar FadeCandy.xml"/>
+                <fixtureSet src="Drum FadeCandy.xml"/>
+            </fixtures>
+        </universe>
+    </universes>
+</venue>

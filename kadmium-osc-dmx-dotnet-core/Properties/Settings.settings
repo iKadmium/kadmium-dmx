@@ -1,0 +1,9 @@
+﻿<?xml version='1.0' encoding='utf-8'?>
+<SettingsFile xmlns="http://schemas.microsoft.com/VisualStudio/2004/01/settings" CurrentProfile="(Default)" GeneratedClassNamespace="kadmium_osc_dmx_dotnet_core.Properties" GeneratedClassName="Settings">
+  <Profiles />
+  <Settings>
+    <Setting Name="VenuesLocation" Type="System.String" Scope="User">
+      <Value Profile="(Default)">D:\User\IntelliJ Workspace\kadmium-osc-dmx\data\venues</Value>
+    </Setting>
+  </Settings>
+</SettingsFile>
