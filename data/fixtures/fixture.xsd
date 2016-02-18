@@ -2,7 +2,7 @@
 <xsd:schema elementFormDefault="qualified"
             xmlns:xsd="http://www.w3.org/2001/XMLSchema">
 
-    <xsd:complexType name="fixture">
+    <xsd:complexType name="fixtureDefinition">
         <xsd:sequence>
             <xsd:element name="channel" type="channel" minOccurs="0"
                          maxOccurs="unbounded">
@@ -28,6 +28,6 @@
         <xsd:attribute name="max" type="xsd:int"/>
     </xsd:complexType>
 
-    <xsd:element name="fixture" type="fixture"/>
+    <xsd:element name="fixture" type="fixtureDefinition"/>
 
 </xsd:schema>

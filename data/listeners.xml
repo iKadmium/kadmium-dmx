@@ -1,7 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<listeners xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="listeners.xsd">
+<listeners 
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+    xmlns="listeners"
+    xsi:schemaLocation="listeners.xsd">
+
 	<oscListener port="9001" id="osc">
         <listenerMap id="Main Universe" startIndex="1">
+            <!--
             <mapping address="/group/(.)/Hue" channel="Hue" />
             <mapping address="/group/(.)/Saturation" channel="Saturation" />
             <mapping address="/group/(.)/Brightness" channel="Brightness" />
@@ -21,6 +26,7 @@
             <mapping address="/group/(.)/OverrideHue" channel="OverrideHue" />
             <mapping address="/group/(.)/OverrideSaturation" channel="OverrideSaturation" />
             <mapping address="/group/(.)/OverrideBrightness" channel="OverrideBrightness" />
+        -->
         </listenerMap>
     </oscListener>
 </listeners>

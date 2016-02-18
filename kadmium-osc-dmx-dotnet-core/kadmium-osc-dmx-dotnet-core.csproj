@@ -29,7 +29,34 @@
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|x86'">
+    <DebugSymbols>true</DebugSymbols>
+    <OutputPath>bin\x86\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <DebugType>full</DebugType>
+    <PlatformTarget>x86</PlatformTarget>
+    <ErrorReport>prompt</ErrorReport>
+    <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release|x86'">
+    <OutputPath>bin\x86\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <Optimize>true</Optimize>
+    <DebugType>pdbonly</DebugType>
+    <PlatformTarget>x86</PlatformTarget>
+    <ErrorReport>prompt</ErrorReport>
+    <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
+  </PropertyGroup>
   <ItemGroup>
+    <Reference Include="Mvp.Xml, Version=2.3.0.0, Culture=neutral, PublicKeyToken=6ead800d778c9b9f, processorArchitecture=MSIL">
+      <HintPath>..\packages\Mvp.Xml.2.3.0\lib\net20\Mvp.Xml.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="PresentationCore" />
+    <Reference Include="Rug.Osc, Version=1.2.5.17694, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\Rug.Osc.1.2.5\lib\Rug.Osc.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Xml.Linq" />
@@ -41,16 +68,33 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="FileAccess.cs" />
+    <Compile Include="Fixtures\DMXAdapter.cs" />
+    <Compile Include="Fixtures\DMXChannel.cs" />
     <Compile Include="Fixtures\Fixture.cs" />
+    <Compile Include="Fixtures\MovementAxis.cs" />
+    <Compile Include="Solvers\FakeStrobeSolver.cs" />
+    <Compile Include="Solvers\FakeUVSolver.cs" />
+    <Compile Include="Solvers\MasterAtFullSolver.cs" />
+    <Compile Include="Solvers\RestrictableMovementAxis.cs" />
+    <Compile Include="Fixtures\Strobe.cs" />
     <Compile Include="Group.cs" />
+    <Compile Include="Listeners\Listener.cs" />
+    <Compile Include="Listeners\ListenerMapping.cs" />
+    <Compile Include="Listeners\OSCListener.cs" />
     <Compile Include="MasterController.cs" />
-    <Compile Include="OutputAdapters\DMXAdapter.cs" />
     <Compile Include="Properties\Settings.Designer.cs">
       <AutoGen>True</AutoGen>
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
       <DependentUpon>Settings.settings</DependentUpon>
     </Compile>
+    <Compile Include="Solvers\ApeshitSolver.cs" />
+    <Compile Include="Solvers\Attribute.cs" />
+    <Compile Include="Solvers\GroupSolver.cs" />
+    <Compile Include="Solvers\HSBSolver.cs" />
+    <Compile Include="Solvers\FixtureSolver.cs" />
+    <Compile Include="Solvers\PanTilt16BitSolver.cs" />
     <Compile Include="Solvers\Solver.cs" />
+    <Compile Include="Status.cs" />
     <Compile Include="Transmitters\EnttecProTransmitter.cs" />
     <Compile Include="Transmitters\SACNTransmitter.cs" />
     <Compile Include="Transmitters\Transmitter.cs" />
@@ -59,10 +103,17 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="app.config" />
+    <None Include="packages.config" />
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>
     </None>
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\kadmium-sacn\kadmium-sacn.csproj">
+      <Project>{2ee801e6-3691-40c3-9f4a-ced126365999}</Project>
+      <Name>kadmium-sacn</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

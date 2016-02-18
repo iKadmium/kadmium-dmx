@@ -1,4 +1,5 @@
-﻿using kadmium_osc_dmx_dotnet_core.Solvers;
+﻿using kadmium_osc_dmx_dotnet_core.Fixtures;
+using kadmium_osc_dmx_dotnet_core.Solvers;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -11,25 +12,48 @@ namespace kadmium_osc_dmx_dotnet_core
     public class Group
     {
         public string Name { get; set; }
-        public List<Solver> Solvers { get; set; }
-
+        public List<GroupSolver> Solvers { get; set; }
+        public List<Fixture> Fixtures { get; set; }
+        
         public Group(string name)
         {
             Name = name;
+            Fixtures = new List<Fixture>();
+            Solvers = new List<GroupSolver>();
         }
 
         public static Group Load(XElement element)
         {
             string name = element.Attribute("name").Value;
-            Group group = new Group(name);
+            Group theGroup = new Group(name);
             if(element.Element("solvers") != null)
             {
                 var solvers = from solverElement in element.Element("solvers").Elements()
-                              select Solver.Load(solverElement);
-                group.Solvers.AddRange(solvers);
+                              select GroupSolver.Load(solverElement, theGroup);
+                theGroup.Solvers.AddRange(solvers);
             }
             
-            return group;
+            return theGroup;
+        }
+
+        public void Set(string attribute, float value)
+        {
+            foreach(Fixture fixture in Fixtures)
+            {
+                if(fixture.Settables.ContainsKey(attribute))
+                {
+                    fixture.Settables[attribute].Value = value;
+                }
+                
+            }
+        }
+
+        internal void Update()
+        {
+            foreach(Fixture fixture in Fixtures)
+            {
+                fixture.Update();
+            }
         }
     }
 }

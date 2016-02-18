@@ -8,7 +8,7 @@
         <xsd:attribute name="max" type="xsd:int" />
     </xsd:complexType>
 
-    <xsd:complexType name="fixture">
+    <xsd:complexType name="colorWheelFixture">
         <xsd:sequence>
             <xsd:element name="color" type="color" minOccurs="0" maxOccurs="unbounded" />
         </xsd:sequence>
@@ -17,7 +17,7 @@
 
     <xsd:complexType name="colorwheels">
         <xsd:sequence>
-            <xsd:element name="fixture" type="fixture" minOccurs="0"
+            <xsd:element name="fixture" type="colorWheelFixture" minOccurs="0"
                          maxOccurs="unbounded"></xsd:element>
         </xsd:sequence>
     </xsd:complexType>

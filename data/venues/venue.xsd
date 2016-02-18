@@ -1,11 +1,16 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <xsd:schema
-    xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+    xmlns:solver="solver"
+    xmlns:transmitters="transmitters"
+    xmlns:groups="groups"
+    xmlns="venue"
+    targetNamespace="venue"
+    xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+    elementFormDefault="qualified">
 
-    <xsd:include schemaLocation="../solver.xsd"/>
-    <xsd:include schemaLocation="../groups.xsd"/>
-    <xsd:include schemaLocation="../transmitters.xsd"/>
-    <xsd:include schemaLocation="../normalisedFloat.xsd"/>
+    <xsd:import namespace="solver" schemaLocation="../solver.xsd"/>
+    <xsd:import namespace="groups" schemaLocation="../groups.xsd"/>
+    <xsd:import namespace="transmitters" schemaLocation="../transmitters.xsd"/>
 
     <xsd:complexType name="fixtureGroups">
         <xsd:sequence>
@@ -21,9 +26,7 @@
 	<xsd:complexType name="fixture">
 		<xsd:sequence>
             <xsd:element name="groups" type="fixtureGroups" minOccurs="1" maxOccurs="1"/>
-			<xsd:element name="solver" type="solver" minOccurs="0"
-				maxOccurs="unbounded"/>
-            <xsd:element name="lookAtSolver" type="lookAtSolver" minOccurs="0" maxOccurs="1" />
+			<xsd:element name="solvers" type="solver:fixtureSolverGroup" minOccurs="1" maxOccurs="1"/>
 		</xsd:sequence>
 		<xsd:attribute name="type" type="xsd:string" use="required"/>
 		<xsd:attribute name="startChannel" use="optional">
@@ -75,8 +78,8 @@
 
     <xsd:complexType name="venue">
     	<xsd:sequence>
-            <xsd:element name="groups" type="groups"/>
-            <xsd:element name="transmitters" type="transmitters"/>
+            <!--<xsd:element name="groups" type="groups:groups"/>
+            <xsd:element name="transmitters" type="transmitters:transmitters"/>-->
     		<xsd:element name="universes" type="universes"/>
     	</xsd:sequence>
     </xsd:complexType>

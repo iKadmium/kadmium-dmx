@@ -1,5 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<xsd:schema xmlns:xsd="http://www.w3.org/2001/XMLSchema" elementFormDefault="qualified">
+<xsd:schema xmlns:xsd="http://www.w3.org/2001/XMLSchema" 
+    xmlns="transmitters"
+    targetNamespace="transmitters"
+    elementFormDefault="qualified">
 
     <xsd:complexType name="enttecTransmitter">
         <xsd:complexContent>
@@ -19,7 +22,6 @@
         <xsd:complexContent>
             <xsd:extension base="transmitter">
                 <xsd:attribute name="universeID" type="xsd:int"/>
-                <xsd:attribute name="name" type="xsd:string"/>
                 <xsd:attribute name="uuid" type="xsd:string"/>
             </xsd:extension>
         </xsd:complexContent>

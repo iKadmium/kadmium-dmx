@@ -1,5 +1,7 @@
-<transmitters xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="transmitters.xsd">
+<transmitters xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+	xmlns="transmitters"
+	xsi:schemaLocation="transmitters.xsd">
     <enttecTransmitter address="COM6" id="enttecTransmitter" />
-    <artnetTransmitter address="localhost" id="artNetTransmitter" universeID="1" />
-    <sacnTransmitter address="multicast" universeID="1" name="sacn dmx thing" uuid="52fe3895-0615-40da-866b-37619ddd00f2" id="sacnTransmitter" />
+    <!--<artnetTransmitter address="localhost" id="artNetTransmitter" universeID="1" />-->
+    <sacnTransmitter address="multicast" universeID="1" uuid="52fe3895-0615-40da-866b-37619ddd00f2" id="sacnTransmitter" />
 </transmitters>

@@ -17,8 +17,10 @@
                     <groups>
                         <group name="vocalist"/>
                     </groups>
-                    <solver type="hsb" enabled="true"/>
-                    <solver type="fakeStrobe" enabled="true" countdownFrames="2"/>
+                    <solvers>
+                        <solver type="hsb" enabled="true"/>
+                        <solver type="fakeStrobe" enabled="true" countdownFrames="2"/>
+                    </solvers>
                 </fixture>
 
                 <fixtureSet src="ColorRails.xml"/>
@@ -27,8 +29,10 @@
                     <groups>
                         <group name="rearSides"/>
                     </groups>
-                    <solver type="hsb" enabled="true"/>
-                    <solver type="fakeStrobe" enabled="true" countdownFrames="2"/>
+                    <solvers>
+                        <solver type="hsb" enabled="true"/>
+                        <solver type="fakeStrobe" enabled="true" countdownFrames="2"/>
+                    </solvers>
                 </fixture>
             </fixtures>
         </universe>

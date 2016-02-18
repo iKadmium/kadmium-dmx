@@ -1,21 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<xsd:schema xmlns:xsd="http://www.w3.org/2001/XMLSchema" elementFormDefault="qualified">
-
-    <xsd:complexType name="oscListener">
-        <xsd:complexContent>
-            <xsd:extension base="listener">
-                <xsd:attribute name="port" type="xsd:int"/>
-            </xsd:extension>
-        </xsd:complexContent>
-    </xsd:complexType>
-
-    <xsd:complexType name="midiListener">
-        <xsd:complexContent>
-            <xsd:extension base="listener">
-                <xsd:attribute name="device" type="xsd:string" use="required"/>
-            </xsd:extension>
-        </xsd:complexContent>
-    </xsd:complexType>
+<xsd:schema xmlns:xsd="http://www.w3.org/2001/XMLSchema" 
+    xmlns="listeners"
+    targetNamespace="listeners"
+    elementFormDefault="qualified">
 
     <xsd:complexType name="mapping">
         <xsd:attribute name="address" type="xsd:string" use="required"/>
@@ -55,6 +42,22 @@
                        default="true">
         </xsd:attribute>
         <xsd:attribute name="id" type="xsd:string"/>
+    </xsd:complexType>
+
+    <xsd:complexType name="oscListener">
+        <xsd:complexContent>
+            <xsd:extension base="listener">
+                <xsd:attribute name="port" type="xsd:int"/>
+            </xsd:extension>
+        </xsd:complexContent>
+    </xsd:complexType>
+
+    <xsd:complexType name="midiListener">
+        <xsd:complexContent>
+            <xsd:extension base="listener">
+                <xsd:attribute name="device" type="xsd:string" use="required"/>
+            </xsd:extension>
+        </xsd:complexContent>
     </xsd:complexType>
 
     <xsd:complexType name="listeners">

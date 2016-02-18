@@ -4,9 +4,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace kadmium_osc_dmx_dotnet_core.OutputAdapters
+namespace kadmium_osc_dmx_dotnet_core.Listeners
 {
-    class DMXAdapter
+    class ListenerMapping
     {
     }
 }

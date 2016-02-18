@@ -4,15 +4,107 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:kadmium_osc_dmx_dotnet"
+        xmlns:listeners="clr-namespace:kadmium_osc_dmx_dotnet_core.Listeners;assembly=kadmium-osc-dmx-dotnet-core"
+        xmlns:transmitters="clr-namespace:kadmium_osc_dmx_dotnet_core.Transmitters;assembly=kadmium-osc-dmx-dotnet-core"
+        xmlns:core="clr-namespace:kadmium_osc_dmx_dotnet_core;assembly=kadmium-osc-dmx-dotnet-core"
+        xmlns:sys="clr-namespace:System;assembly=mscorlib"
         mc:Ignorable="d"
-        Title="MainWindow" Height="350" Width="525">
+        Title="MainWindow" Closed="Window_Closed">
+    <Window.Resources>
+        <sys:Double x:Key="FixtureSize">64</sys:Double>
+        <sys:Double x:Key="PixelSize">16</sys:Double>
+        
+        <Style x:Key="StatusLabel" TargetType="Label">
+            <Setter Property="FontWeight" Value="Bold"/>
+            <Setter Property="VerticalAlignment" Value="Center"/>
+        </Style>
 
+        <Style x:Key="PixelRectStyle" TargetType="Rectangle">
+            <Setter Property="Width" Value="{StaticResource ResourceKey=PixelSize}"/>
+            <Setter Property="Height" Value="{StaticResource ResourceKey=PixelSize}"/>
+            <Setter Property="Stroke" Value="Black"/>
+        </Style>
+
+        <Style x:Key="FixtureRectStyle" TargetType="Rectangle">
+            <Setter Property="Width" Value="{StaticResource ResourceKey=FixtureSize}"/>
+            <Setter Property="Height" Value="{StaticResource ResourceKey=FixtureSize}"/>
+            <Setter Property="Stroke" Value="Black"/>
+        </Style>
+
+        <Style x:Key="StatusRect" TargetType="Rectangle">
+            <Setter Property="Width" Value="{StaticResource ResourceKey=FixtureSize}"/>
+            <Setter Property="Height" Value="{StaticResource ResourceKey=FixtureSize}"/>
+            <Setter Property="Stroke" Value="Black"/>
+            <Setter Property="Margin" Value="8, 8, 8, 8"/>
+            <Style.Triggers>
+                <DataTrigger Binding="{Binding Path=Status.StatusCode}"
+                    Value="{x:Static core:StatusCode.Running}">
+                    <Setter Property="Fill" Value="Green" />
+                </DataTrigger>
+                <DataTrigger Binding="{Binding Path=Status.StatusCode}"
+                    Value="{x:Static core:StatusCode.NotStarted}">
+                    <Setter Property="Fill" Value="Yellow" />
+                </DataTrigger>
+                <DataTrigger Binding="{Binding Path=Status.StatusCode}"
+                    Value="{x:Static core:StatusCode.Error}">
+                    <Setter Property="Fill" Value="Red" />
+                </DataTrigger>
+            </Style.Triggers>
+        </Style>
+
+        <Style x:Key="DebugLabel" TargetType="Label">
+            <Style.Triggers>
+                <DataTrigger Binding="{Binding Path=DebugLevel}"
+                    Value="{x:Static local:DebugLevel.None}">
+                    <Setter Property="Visibility" Value="Collapsed" />
+                </DataTrigger>
+                <DataTrigger Binding="{Binding Path=DebugLevel}"
+                    Value="{x:Static local:DebugLevel.Names}">
+                    <Setter Property="Visibility" Value="Visible" />
+                </DataTrigger>
+                <DataTrigger Binding="{Binding Path=DebugLevel}"
+                    Value="{x:Static local:DebugLevel.Numbers}">
+                    <Setter Property="Visibility" Value="Visible" />
+                </DataTrigger>
+            </Style.Triggers>
+        </Style>
+            
+        <ControlTemplate x:Key="statusControlTemplate">
+            <GroupBox Header="{Binding Path=DisplayName}">
+                <WrapPanel>
+                    <Rectangle Style="{DynamicResource StatusRect}" />
+                    <Label Style="{DynamicResource StatusLabel}" Content="{Binding Path=Status.Message}"/>
+                </WrapPanel>
+            </GroupBox>
+        </ControlTemplate>
+
+        <ControlTemplate x:Key="FixtureControlTemplate">
+            <StackPanel>
+                <Canvas Width="{StaticResource ResourceKey=FixtureSize}" Height="{StaticResource ResourceKey=FixtureSize}">
+                    <Rectangle Style="{StaticResource FixtureRectStyle}" Fill="{Binding Path=RectFill}" MouseUp="FixtureRect_MouseUp"/>
+                    <Line X1="{Binding Path=PanLineX}" X2="{Binding Path=PanLineX}" Y1="0" Y2="{StaticResource ResourceKey=FixtureSize}" Stroke="{Binding Path=LineStroke}" Canvas.ZIndex="1" Visibility="{Binding Path=PanLineVisibility}" />
+                    <Line X1="0" X2="{StaticResource ResourceKey=FixtureSize}" Y1="{Binding Path=TiltLineY}" Y2="{Binding Path=TiltLineY}" Stroke="{Binding Path=LineStroke}" Canvas.ZIndex="1" Visibility="{Binding Path=TiltLineVisibility}" />
+                </Canvas>
+                
+                <Label Content="{Binding Path=DisplayName}"/>
+                <Label Content="{Binding Path=DebugText}" Style="{StaticResource DebugLabel}"/>
+            </StackPanel>
+        </ControlTemplate>
+    </Window.Resources>
+    
     <TabControl x:Name="tbcUniverses" Margin="10,10,10,10">
-        <TabItem Header="Preview">
-            <WrapPanel x:Name="groupsPanel" />
+        <TabItem Header="Groups">
+            <WrapPanel x:Name="groupsPanel">
+                <StackPanel Orientation="Vertical">
+                    <StackPanel Orientation="Horizontal">
+                        <Rectangle Style="{StaticResource PixelRectStyle}"/>
+                    </StackPanel>
+                </StackPanel>
+            </WrapPanel>
         </TabItem>
         <TabItem Header="Status" x:Name="tabHeader">
-            <Grid />
+            <StackPanel x:Name="stkStatus">
+            </StackPanel>
         </TabItem>
     </TabControl>
 
