@@ -6,7 +6,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Media;
 
-namespace kadmium_osc_dmx_dotnet
+namespace kadmium_osc_dmx_dotnet_ui
 {
     public static class ColorExtensions
     {

@@ -13,13 +13,9 @@ namespace kadmium_osc_dmx_dotnet_core.Solvers
     {
         public Fixture Fixture { get; set; }
 
-        public FixtureSolver(Fixture fixture, params string[] attributes) : base(attributes)
+        public FixtureSolver(Fixture fixture, params string[] attributes) : base(fixture.Settables, attributes)
         {
             Fixture = fixture;
-            foreach (Attribute attribute in Attributes.Values)
-            {
-                fixture.Settables.Add(attribute.Name, attribute);
-            }
         }
 
         public static FixtureSolver Load(XElement element, Fixture fixture)

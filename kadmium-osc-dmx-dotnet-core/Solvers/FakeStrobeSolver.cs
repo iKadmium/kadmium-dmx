@@ -8,25 +8,34 @@ using System.Xml.Linq;
 
 namespace kadmium_osc_dmx_dotnet_core.Solvers
 {
-    class FakeStrobeSolver : FixtureSolver
+    public class FakeStrobeSolver : FixtureSolver
     {
-        public FakeStrobeSolver(Fixture fixture) : base(fixture, "Strobe")
-        {
+        Strobe Strobe { get; set; }
 
+        public FakeStrobeSolver(Fixture fixture, Strobe strobe) : base(fixture, "Strobe")
+        {
+            Strobe = strobe;
         }
+
+        public FakeStrobeSolver(Fixture fixture) : this(fixture, MasterController.Instance.Strobe) { }
 
         public override void Solve()
         {
-            if (MasterController.Instance.Strobe.GetValue())
+            if (Strobe.GetValue())
             {
-                var searchTargets = new string[] { "Red", "Blue", "Green", "White", "Amber", "UV", "Brightness" };
-                var channelTargets = from channel in Fixture.Adapter.Channels.Values
-                                     where searchTargets.Contains(channel.Name)
-                                     select channel;
-                foreach(DMXChannel channel in channelTargets)
-                {
-                    channel.Value = 0.0f;
-                }
+                BlackoutFixture(Fixture);
+            }
+        }
+
+        public static void BlackoutFixture(Fixture fixture)
+        {
+            var searchTargets = new string[] { "Red", "Blue", "Green", "White", "Amber", "UV", "Brightness" };
+            var channelTargets = from channel in fixture.Adapter.Channels.Values
+                                 where searchTargets.Contains(channel.Name)
+                                 select channel;
+            foreach (DMXChannel channel in channelTargets)
+            {
+                channel.Value = 0.0f;
             }
         }
     }

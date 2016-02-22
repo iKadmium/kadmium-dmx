@@ -10,7 +10,7 @@ using System.Xml.Linq;
 
 namespace kadmium_osc_dmx_dotnet_core.Solvers
 {
-    class PanTilt16BitSolver : FixtureSolver
+    public class PanTilt16BitSolver : FixtureSolver
     {
         public bool PanInverted { get; set; }
         public bool TiltInverted { get; set; }
@@ -21,10 +21,10 @@ namespace kadmium_osc_dmx_dotnet_core.Solvers
 
         private RandomMovement RandomMovement { get; set; }
 
-        public PanTilt16BitSolver(Fixture fixture, IEnumerable<RestrictableMovementAxis> restrictedAxis) : base(fixture, "Pan", "Tilt", "RandomMove")
+        public PanTilt16BitSolver(Fixture fixture, IEnumerable<RestrictableMovementAxis> restrictableAxis) : base(fixture, "Pan", "Tilt", "RandomMove")
         {
             Axis = new Dictionary<string, RestrictableMovementAxis>();
-            foreach(RestrictableMovementAxis axis in restrictedAxis)
+            foreach(RestrictableMovementAxis axis in restrictableAxis)
             {
                 Axis.Add(axis.Name, axis);
             }
@@ -49,7 +49,10 @@ namespace kadmium_osc_dmx_dotnet_core.Solvers
                 float valueCoarse = (float)valueBytes[1] / (float)byte.MaxValue;
 
                 Fixture.Adapter.Channels[axis.Name + "Coarse"].Value = valueCoarse;
-                Fixture.Adapter.Channels[axis.Name + "Fine"].Value = valueFine;
+                if(Fixture.Adapter.Channels.ContainsKey(axis.Name + "Fine"))
+                {
+                    Fixture.Adapter.Channels[axis.Name + "Fine"].Value = valueFine;
+                }
             }
         }
 

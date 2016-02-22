@@ -1,4 +1,4 @@
-﻿using kadmium_osc_dmx_dotnet.Properties;
+﻿using kadmium_osc_dmx_dotnet_ui.Properties;
 using kadmium_osc_dmx_dotnet_core;
 using kadmium_osc_dmx_dotnet_core.Fixtures;
 using System;
@@ -13,7 +13,7 @@ using System.Windows.Ink;
 using System.Windows.Media;
 using System.Windows.Shapes;
 
-namespace kadmium_osc_dmx_dotnet
+namespace kadmium_osc_dmx_dotnet_ui
 {
     public enum DebugLevel
     {

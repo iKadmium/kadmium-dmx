@@ -19,6 +19,8 @@ namespace kadmium_osc_dmx_dotnet_core.Solvers
             Name = fixtureAxis.Name;
         }
 
+        public RestrictableMovementAxis(MovementAxis fixtureAxis) : this(fixtureAxis, fixtureAxis.Min, fixtureAxis.Max) { }
+
         private int FixtureRange
         {
             get

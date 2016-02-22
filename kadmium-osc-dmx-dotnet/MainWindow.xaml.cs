@@ -18,7 +18,7 @@ using System.Windows.Navigation;
 using System.Windows.Shapes;
 using System.Xml.Serialization;
 
-namespace kadmium_osc_dmx_dotnet
+namespace kadmium_osc_dmx_dotnet_ui
 {
     /// <summary>
     /// Interaction logic for MainWindow.xaml

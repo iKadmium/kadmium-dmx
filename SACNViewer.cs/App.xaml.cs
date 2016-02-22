@@ -6,7 +6,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using System.Windows;
 
-namespace kadmium_osc_dmx_dotnet_ui
+namespace SACNViewer.cs
 {
     /// <summary>
     /// Interaction logic for App.xaml

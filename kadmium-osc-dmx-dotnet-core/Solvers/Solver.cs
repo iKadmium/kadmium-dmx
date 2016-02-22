@@ -12,7 +12,7 @@ namespace kadmium_osc_dmx_dotnet_core.Solvers
         public Dictionary<string, Attribute> Attributes { get; set; }
         public List<string> SolvableAttributes { get; set; }
 
-        protected Solver(params string[] attributes)
+        protected Solver(Dictionary<string, Attribute> settables, params string[] attributes)
         {
             Attributes = new Dictionary<string, Attribute>();
             SolvableAttributes = new List<string>();
@@ -20,7 +20,10 @@ namespace kadmium_osc_dmx_dotnet_core.Solvers
             {
                 Attribute attribute = new Attribute(attributeName);
                 Attributes.Add(attribute.Name, attribute);
+                settables.Add(attribute.Name, attribute);
             }
+
+            
         }
 
         public abstract void Solve();

@@ -10,7 +10,7 @@ namespace kadmium_osc_dmx_dotnet_core.Solvers
 {
     class FakeUVSolver : FixtureSolver
     {
-        private static Dictionary<string, Attribute> UVColor = new Dictionary<string, Attribute>()
+        public static Dictionary<string, Attribute> UVColor = new Dictionary<string, Attribute>()
         {
             ["Red"] = new Attribute("Red", 0.58f),
             ["Green"] = new Attribute("Green", 0f),

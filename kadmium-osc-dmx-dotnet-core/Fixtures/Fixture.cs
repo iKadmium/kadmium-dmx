@@ -27,14 +27,7 @@ namespace kadmium_osc_dmx_dotnet_core.Fixtures
             {
                 Settables.Add(attribute.Name, attribute);
             }
-            MovementAxis = new Dictionary<string, Fixtures.MovementAxis>();
-            foreach(XElement movementElement in FileAccess.LoadFixtureModel(adapter.Type).Elements("movement"))
-            {
-                string name = movementElement.Attribute("type").Value;
-                int min = int.Parse(movementElement.Attribute("min").Value);
-                int max = int.Parse(movementElement.Attribute("max").Value);
-                MovementAxis.Add(name, new Fixtures.MovementAxis(name, min, max));
-            }
+            MovementAxis = new Dictionary<string, Fixtures.MovementAxis>();            
         }
         
         internal static Fixture Load(XElement fixtureElement)
@@ -45,6 +38,13 @@ namespace kadmium_osc_dmx_dotnet_core.Fixtures
                          select MasterController.Instance.Groups.Single(grp => grp.Name == groupElement.Attribute("name").Value);
             var solvers = from solverElement in fixtureElement.Element("solvers").Elements()
                           select FixtureSolver.Load(solverElement, fixture);
+            foreach (XElement movementElement in FileAccess.LoadFixtureModel(adapter.Type).Elements("movement"))
+            {
+                string name = movementElement.Attribute("type").Value;
+                int min = int.Parse(movementElement.Attribute("min").Value);
+                int max = int.Parse(movementElement.Attribute("max").Value);
+                fixture.MovementAxis.Add(name, new Fixtures.MovementAxis(name, min, max));
+            }
             fixture.Solvers.AddRange(solvers);
             foreach (Group group in groups)
             {

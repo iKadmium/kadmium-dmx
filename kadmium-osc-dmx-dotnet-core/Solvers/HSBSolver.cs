@@ -10,14 +10,14 @@ using System.Xml.Linq;
 
 namespace kadmium_osc_dmx_dotnet_core.Solvers
 {
-    struct RGB
+    public struct RGB
     {
         public float Red { get; set; }
         public float Green { get; set; }
         public float Blue { get; set; }
     }
 
-    class HSBSolver : FixtureSolver
+    public class HSBSolver : FixtureSolver
     {
         public HSBSolver(Fixture fixture) : base(fixture, "Hue", "Saturation", "Brightness")
         {

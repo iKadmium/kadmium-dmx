@@ -10,9 +10,9 @@ namespace kadmium_osc_dmx_dotnet_core.Solvers
 {
     public abstract class GroupSolver : Solver
     {
-        private Group Group { get; set; }
+        protected Group Group { get; set; }
 
-        public GroupSolver(Group group)
+        public GroupSolver(Group group, params string[] attributes) : base(group.Settables, attributes)
         {
             Group = group;
         }

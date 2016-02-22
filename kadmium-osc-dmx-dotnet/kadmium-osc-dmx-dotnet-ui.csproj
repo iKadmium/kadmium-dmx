@@ -7,8 +7,8 @@
     <ProjectGuid>{91227DAF-2991-4BAA-BDB2-A7487C8962E9}</ProjectGuid>
     <OutputType>WinExe</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>kadmium_osc_dmx_dotnet</RootNamespace>
-    <AssemblyName>kadmium-osc-dmx-dotnet</AssemblyName>
+    <RootNamespace>kadmium_osc_dmx_dotnet_ui</RootNamespace>
+    <AssemblyName>kadmium-osc-dmx-dotnet-ui</AssemblyName>
     <TargetFrameworkVersion>v4.5.2</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <ProjectTypeGuids>{60dc8134-eba5-43b8-bcc9-bb4bc16c2548};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>

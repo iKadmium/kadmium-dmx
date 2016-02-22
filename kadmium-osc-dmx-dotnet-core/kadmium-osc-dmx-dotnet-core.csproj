@@ -79,7 +79,6 @@
     <Compile Include="Fixtures\Strobe.cs" />
     <Compile Include="Group.cs" />
     <Compile Include="Listeners\Listener.cs" />
-    <Compile Include="Listeners\ListenerMapping.cs" />
     <Compile Include="Listeners\OSCListener.cs" />
     <Compile Include="MasterController.cs" />
     <Compile Include="Properties\Settings.Designer.cs">

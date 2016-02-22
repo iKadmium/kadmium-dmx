@@ -3,13 +3,15 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 14
 VisualStudioVersion = 14.0.23107.0
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "kadmium-osc-dmx-dotnet-run", "kadmium-osc-dmx-dotnet\kadmium-osc-dmx-dotnet-run.csproj", "{91227DAF-2991-4BAA-BDB2-A7487C8962E9}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "kadmium-osc-dmx-dotnet-ui", "kadmium-osc-dmx-dotnet\kadmium-osc-dmx-dotnet-ui.csproj", "{91227DAF-2991-4BAA-BDB2-A7487C8962E9}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "kadmium-osc-dmx-dotnet-core", "kadmium-osc-dmx-dotnet-core\kadmium-osc-dmx-dotnet-core.csproj", "{372B51D0-2642-46EC-BDDD-D26783BC41C2}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "kadmium-sacn", "kadmium-sacn\kadmium-sacn.csproj", "{2EE801E6-3691-40C3-9F4A-CED126365999}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SACNViewer", "SACNViewer.cs\SACNViewer.csproj", "{CBA881F6-98F1-41F8-AEB1-C38582C1A3DC}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "kadmium-osc-dmx-dotnet-test", "kadmium-osc-dmx-dotnet-test\kadmium-osc-dmx-dotnet-test.csproj", "{3282C414-EB70-4D79-8FCE-15E1FC6C0DB7}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -51,6 +53,14 @@ Global
 		{CBA881F6-98F1-41F8-AEB1-C38582C1A3DC}.Release|Any CPU.Build.0 = Release|Any CPU
 		{CBA881F6-98F1-41F8-AEB1-C38582C1A3DC}.Release|x86.ActiveCfg = Release|Any CPU
 		{CBA881F6-98F1-41F8-AEB1-C38582C1A3DC}.Release|x86.Build.0 = Release|Any CPU
+		{3282C414-EB70-4D79-8FCE-15E1FC6C0DB7}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{3282C414-EB70-4D79-8FCE-15E1FC6C0DB7}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{3282C414-EB70-4D79-8FCE-15E1FC6C0DB7}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{3282C414-EB70-4D79-8FCE-15E1FC6C0DB7}.Debug|x86.Build.0 = Debug|Any CPU
+		{3282C414-EB70-4D79-8FCE-15E1FC6C0DB7}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{3282C414-EB70-4D79-8FCE-15E1FC6C0DB7}.Release|Any CPU.Build.0 = Release|Any CPU
+		{3282C414-EB70-4D79-8FCE-15E1FC6C0DB7}.Release|x86.ActiveCfg = Release|Any CPU
+		{3282C414-EB70-4D79-8FCE-15E1FC6C0DB7}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

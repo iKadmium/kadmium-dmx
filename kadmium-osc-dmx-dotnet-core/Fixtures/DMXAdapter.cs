@@ -27,7 +27,7 @@ namespace kadmium_osc_dmx_dotnet_core.Fixtures
 
                 foreach(var channelGroup in channels)
                 {
-                    DMXChannel channel = channelGroup.OrderByDescending(chan => chan.Value).First();
+                    DMXChannel channel = channelGroup.OrderByDescending(chan => chan.Value).ThenByDescending(chan => chan.Min).First();
                     channelsReturned.Add(channel.RelativeAddress + StartChannel - 2, channel.ByteValue);
                 }
 
