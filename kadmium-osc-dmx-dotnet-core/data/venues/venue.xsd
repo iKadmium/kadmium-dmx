@@ -1,0 +1,107 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xsd:schema
+    xmlns:solver="solver"
+    xmlns:transmitters="transmitters"
+    xmlns:groups="groups"
+    xmlns="venue"
+    targetNamespace="venue"
+    xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+    elementFormDefault="qualified">
+
+    <xsd:import namespace="solver" schemaLocation="../solver.xsd"/>
+    <xsd:import namespace="groups" schemaLocation="../groups.xsd"/>
+    <xsd:import namespace="transmitters" schemaLocation="../transmitters.xsd"/>
+
+    <xsd:complexType name="fixtureGroups">
+        <xsd:sequence>
+            <xsd:element name="group" type="fixtureGroup" minOccurs="0" maxOccurs="unbounded"/>
+        </xsd:sequence>
+    </xsd:complexType>
+
+    <xsd:complexType name="fixtureGroup">
+        <xsd:sequence/>
+        <xsd:attribute name="name" type="xsd:string" use="required"/>
+    </xsd:complexType>
+
+	<xsd:complexType name="fixture">
+		<xsd:sequence>
+            <xsd:element name="groups" type="fixtureGroups" minOccurs="1" maxOccurs="1"/>
+			<xsd:element name="solvers" type="solver:fixtureSolverGroup" minOccurs="1" maxOccurs="1"/>
+		</xsd:sequence>
+		<xsd:attribute name="type" type="xsd:string" use="required"/>
+		<xsd:attribute name="startChannel" use="optional">
+			<xsd:simpleType>
+				<xsd:restriction base="xsd:int">
+					<xsd:minInclusive value="1"/>
+					<xsd:maxInclusive value="512"/>
+				</xsd:restriction>
+			</xsd:simpleType>
+		</xsd:attribute>
+    </xsd:complexType>
+
+    <xsd:complexType name="fixtureSet">
+        <xsd:attribute name="src" type="xsd:anyURI" use="required"/>
+        <xsd:attribute name="universe" type="xsd:string" use="optional"/>
+    </xsd:complexType>
+
+    <xsd:complexType name="universeTransmitter">
+        <xsd:sequence/>
+        <xsd:attribute name="id" type="xsd:string" use="required" />
+    </xsd:complexType>
+
+    <xsd:complexType name="universeTransmitters">
+        <xsd:sequence>
+            <xsd:element name="transmitter" type="universeTransmitter" minOccurs="1" maxOccurs="unbounded"/>
+        </xsd:sequence>
+    </xsd:complexType>
+
+    <xsd:complexType name="fixtures">
+        <xsd:choice minOccurs="0" maxOccurs="unbounded">
+            <xsd:element name="fixture" type="fixture" />
+            <xsd:element name="fixtureSet" type="fixtureSet"/>
+        </xsd:choice>
+    </xsd:complexType>
+
+    <xsd:complexType name="universe">
+    	<xsd:sequence>
+            <xsd:element name="transmitters" type="universeTransmitters" minOccurs="1" maxOccurs="1" />
+            <xsd:element name="fixtures" type="fixtures" minOccurs="1" maxOccurs="1" />
+    	</xsd:sequence>
+    	<xsd:attribute name="name" type="xsd:string" use="required"/>
+    </xsd:complexType>
+
+    <xsd:complexType name="universes">
+        <xsd:sequence>
+            <xsd:element name="universe" type="universe" minOccurs="1" maxOccurs="unbounded"/>
+        </xsd:sequence>
+    </xsd:complexType>
+
+    <xsd:complexType name="venue">
+    	<xsd:sequence>
+            <!--<xsd:element name="groups" type="groups:groups"/>
+            <xsd:element name="transmitters" type="transmitters:transmitters"/>-->
+    		<xsd:element name="universes" type="universes"/>
+    	</xsd:sequence>
+    </xsd:complexType>
+
+    <xsd:element name="venue" type="venue">
+        <xsd:key name="validGroup">
+            <xsd:selector xpath="./groups/group"/>
+            <xsd:field xpath="@name"/>
+        </xsd:key>
+        <xsd:keyref name="validGroupReference" refer="validGroup">
+            <xsd:selector xpath="./universe/fixture/groups/group"/>
+            <xsd:field xpath="@name"/>
+        </xsd:keyref>
+
+        <xsd:key name="validTransmitter">
+            <xsd:selector xpath="./transmitters/enttecTransmitter"/>
+            <xsd:field xpath="@id"/>
+        </xsd:key>
+        <xsd:keyref name="validTransmitterReference" refer="validTransmitter">
+            <xsd:selector xpath="./universe"/>
+            <xsd:field xpath="@transmitter"/>
+        </xsd:keyref>
+    </xsd:element>
+
+</xsd:schema>

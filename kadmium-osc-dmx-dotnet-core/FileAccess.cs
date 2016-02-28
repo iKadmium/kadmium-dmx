@@ -16,7 +16,7 @@ namespace kadmium_osc_dmx_dotnet_core
 {
     static class FileAccess
     {
-        static string DataLocation = @"D:\User\Documents\GitHubVisualStudio\kadmium-osc-dmx-dotnet\data";
+        static string DataLocation = Path.Combine(Environment.CurrentDirectory, "data");
         static string FixturesLocation = Path.Combine(DataLocation, "fixtures");
         static string GroupsLocation = Path.Combine(DataLocation, "groups.xml");
         static string TransmittersLocation = Path.Combine(DataLocation, "transmitters.xml");
@@ -52,11 +52,8 @@ namespace kadmium_osc_dmx_dotnet_core
             config.ValidationFlags |= XmlSchemaValidationFlags.ProcessInlineSchema;
             config.ValidationFlags |= XmlSchemaValidationFlags.ProcessSchemaLocation;
             config.ValidationEventHandler += new ValidationEventHandler(ValidationCallBack);
-
-            var xsds = from xsdFile in Directory.EnumerateFiles(@"D:\User\Documents\GitHubVisualStudio\kadmium-osc-dmx-dotnet\data", "*.xsd", SearchOption.AllDirectories)
-                       select xsdFile;
-
-            foreach (string xsdFile in Directory.EnumerateFiles(@"D:\User\Documents\GitHubVisualStudio\kadmium-osc-dmx-dotnet\data", "*.xsd", SearchOption.AllDirectories))
+            
+            foreach (string xsdFile in Directory.EnumerateFiles(DataLocation, "*.xsd", SearchOption.AllDirectories))
             {
                 XmlSchema schema = XmlSchema.Read(XmlReader.Create(xsdFile), null);
                 if(!AlreadyIncluded(config.Schemas, xsdFile))
@@ -64,7 +61,6 @@ namespace kadmium_osc_dmx_dotnet_core
                     config.Schemas.Add(schema);
                     config.Schemas.Compile();
                 }
-                
             }
             
             XmlReader reader = XIncludingReader.Create(path, config);
@@ -178,7 +174,7 @@ namespace kadmium_osc_dmx_dotnet_core
 
         internal static IEnumerable<Universe> LoadVenue(string venue)
         {
-            string path = Path.Combine(VenuesLocation, venue);
+            string path = venue;
             XElement venueRoot = ValidatedLoad(path);
             var universes = from universeElement in venueRoot.Element("universes").Elements("universe")
                             select Universe.Load(path, universeElement);
@@ -187,7 +183,7 @@ namespace kadmium_osc_dmx_dotnet_core
 
         internal static IEnumerable<Fixture> LoadFixtureSet(string originalDocPath, string fixtureSetPath)
         {
-            XElement fixtureSetRoot = ValidatedLoad(Path.Combine(Path.GetPathRoot(originalDocPath), fixtureSetPath));
+            XElement fixtureSetRoot = ValidatedLoad(Path.Combine(Path.GetDirectoryName(originalDocPath), fixtureSetPath));
             
             var fixtures = from fixtureElement in fixtureSetRoot.Descendants("fixture")
                            select Fixture.Load(fixtureElement);

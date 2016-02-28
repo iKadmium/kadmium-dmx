@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<venue xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xmlns="venue"
+    xsi:schemaLocation="venue venue.xsd"
+    xmlns:solver="solver">
+
+  <universes>
+    <universe name="Personal Universe">
+      <transmitters>
+        <transmitter id="sacnTransmitter"/>
+      </transmitters>
+      <fixtures>
+        <fixture type="FadeCandy (program mode)" startChannel="460">
+          <groups>
+            <group name="drumLEDs"/>
+          </groups>
+          <solvers>
+            <solver:hsbSolver/>
+            <solver:fakeUVSolver/>
+          </solvers>
+        </fixture>
+      </fixtures>
+    </universe>
+  </universes>
+</venue>

@@ -35,9 +35,9 @@ namespace kadmium_osc_dmx_dotnet_core.Listeners
             listener.Attach(e.Address, (ev) =>
             {
                 string[] parts = ev.Address.Split('/');
-                int groupNumber = int.Parse(parts[2]);
+                string groupName = parts[2];
                 string attribute = parts[3];
-                Group group = MasterController.Instance.Groups[groupNumber - 1];
+                Group group = MasterController.Instance.Groups[groupName];
                 float value = (float)ev[0];
 
                 group.Set(attribute, value);

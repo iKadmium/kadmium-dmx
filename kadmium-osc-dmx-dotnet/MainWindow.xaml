@@ -9,20 +9,22 @@
         xmlns:core="clr-namespace:kadmium_osc_dmx_dotnet_core;assembly=kadmium-osc-dmx-dotnet-core"
         xmlns:sys="clr-namespace:System;assembly=mscorlib"
         mc:Ignorable="d"
-        Title="MainWindow" Closed="Window_Closed">
+        Title="MainWindow" Closed="Window_Closed" Loaded="Window_Loaded">
+    <Window.CommandBindings>
+        <CommandBinding Command="ApplicationCommands.Open" Executed="FileOpenExecuted"/>
+        <CommandBinding Command="ApplicationCommands.Close" Executed="FileCloseExecuted"/>
+    </Window.CommandBindings>
+    <Window.InputBindings>
+        <KeyBinding Command="ApplicationCommands.Open" Modifiers="Ctrl" Key="O"/>
+        <KeyBinding Command="ApplicationCommands.Close" Modifiers="Ctrl" Key="F4"/>
+        <KeyBinding Command="ApplicationCommands.Close" Modifiers="Ctrl" Key="W"/>
+    </Window.InputBindings>
     <Window.Resources>
         <sys:Double x:Key="FixtureSize">64</sys:Double>
-        <sys:Double x:Key="PixelSize">16</sys:Double>
-        
+
         <Style x:Key="StatusLabel" TargetType="Label">
             <Setter Property="FontWeight" Value="Bold"/>
             <Setter Property="VerticalAlignment" Value="Center"/>
-        </Style>
-
-        <Style x:Key="PixelRectStyle" TargetType="Rectangle">
-            <Setter Property="Width" Value="{StaticResource ResourceKey=PixelSize}"/>
-            <Setter Property="Height" Value="{StaticResource ResourceKey=PixelSize}"/>
-            <Setter Property="Stroke" Value="Black"/>
         </Style>
 
         <Style x:Key="FixtureRectStyle" TargetType="Rectangle">
@@ -68,7 +70,7 @@
                 </DataTrigger>
             </Style.Triggers>
         </Style>
-            
+
         <ControlTemplate x:Key="statusControlTemplate">
             <GroupBox Header="{Binding Path=DisplayName}">
                 <WrapPanel>
@@ -85,27 +87,29 @@
                     <Line X1="{Binding Path=PanLineX}" X2="{Binding Path=PanLineX}" Y1="0" Y2="{StaticResource ResourceKey=FixtureSize}" Stroke="{Binding Path=LineStroke}" Canvas.ZIndex="1" Visibility="{Binding Path=PanLineVisibility}" />
                     <Line X1="0" X2="{StaticResource ResourceKey=FixtureSize}" Y1="{Binding Path=TiltLineY}" Y2="{Binding Path=TiltLineY}" Stroke="{Binding Path=LineStroke}" Canvas.ZIndex="1" Visibility="{Binding Path=TiltLineVisibility}" />
                 </Canvas>
-                
+
                 <Label Content="{Binding Path=DisplayName}"/>
                 <Label Content="{Binding Path=DebugText}" Style="{StaticResource DebugLabel}"/>
             </StackPanel>
         </ControlTemplate>
     </Window.Resources>
-    
-    <TabControl x:Name="tbcUniverses" Margin="10,10,10,10">
-        <TabItem Header="Groups">
-            <WrapPanel x:Name="groupsPanel">
-                <StackPanel Orientation="Vertical">
-                    <StackPanel Orientation="Horizontal">
-                        <Rectangle Style="{StaticResource PixelRectStyle}"/>
-                    </StackPanel>
-                </StackPanel>
-            </WrapPanel>
-        </TabItem>
-        <TabItem Header="Status" x:Name="tabHeader">
-            <StackPanel x:Name="stkStatus">
-            </StackPanel>
-        </TabItem>
-    </TabControl>
 
+    <DockPanel>
+        <Menu DockPanel.Dock="Top">
+            <MenuItem Header="File">
+                <MenuItem Header="Open" Command="ApplicationCommands.Open"/>
+                <MenuItem Header="Close" Command="ApplicationCommands.Close"/>
+                <MenuItem Header="Exit" Click="FileExit_Click"/>
+            </MenuItem>
+        </Menu>
+        <TabControl x:Name="tbcUniverses" Margin="10,10,10,10" DockPanel.Dock="Bottom">
+            <TabItem Header="Groups">
+                <WrapPanel x:Name="groupsPanel"/>
+            </TabItem>
+            <TabItem Header="Status" x:Name="tabHeader">
+                <StackPanel x:Name="stkStatus">
+                </StackPanel>
+            </TabItem>
+        </TabControl>
+    </DockPanel>
 </Window>

@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<fixture
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xmlns="fixture"
+  xsi:schemaLocation="fixture fixture.xsd"
+  xmlns:solver="solver"
+  id="Chinese RGBW (7ch)" type="LED">
+  <channel name="Master" dmx="1" />
+  <channel name="Red" dmx="2" />
+  <channel name="Green" dmx="3" />
+  <channel name="Blue" dmx="4" />
+  <channel name="White" dmx="5" />
+  <channel name="Strobe" dmx="6" />
+  <channel name="ColorMacros" dmx="7" />
+</fixture>

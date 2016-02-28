@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<venue xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xmlns="venue"
+    xsi:schemaLocation="venue venue.xsd"
+    xmlns:solver="solver">
+
+  <universes>
+    <universe name="Main Universe">
+      <transmitters>
+        <transmitter id="enttecTransmitter"/>
+        <transmitter id="sacnTransmitter"/>
+      </transmitters>
+      <fixtures>
+        <fixtureSet src="Chinese Still Washes.xml"/>
+        <fixtureSet src="Chinese Moving Washes.xml"/>
+        <fixtureSet src="Guitar FadeCandy.xml"/>
+        <fixtureSet src="Drum FadeCandy.xml"/>
+      </fixtures>
+    </universe>
+  </universes>
+</venue>

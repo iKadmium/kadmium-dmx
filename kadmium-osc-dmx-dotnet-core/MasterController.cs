@@ -12,7 +12,7 @@ namespace kadmium_osc_dmx_dotnet_core
 {
     public class MasterController
     {
-        public List<Group> Groups { get; set; }
+        public Dictionary<string, Group> Groups { get; set; }
         public List<Listener> Listeners { get; set; }
         public List<Transmitter> Transmitters { get; set; }
         public List<Universe> Universes { get; set; }
@@ -35,14 +35,14 @@ namespace kadmium_osc_dmx_dotnet_core
             instance = new MasterController();
             instance.Random = new Random();
             instance.Strobe = new Strobe(20);
-            instance.Groups = FileAccess.LoadGroups().ToList();
+            instance.Groups = FileAccess.LoadGroups().ToDictionary(x => x.Name, x => x);
             instance.Listeners = FileAccess.LoadListeners().ToList();
             instance.Transmitters = FileAccess.LoadTransmitters().ToList();
         }
 
         private MasterController()
         {
-            Groups = new List<Group>();
+            Groups = new Dictionary<string, Group>();
             Transmitters = new List<Transmitter>();
             Universes = new List<Universe>();
         }
@@ -54,7 +54,7 @@ namespace kadmium_osc_dmx_dotnet_core
 
         public void Update()
         {
-            foreach(Group group in Groups)
+            foreach(Group group in Groups.Values)
             {
                 group.Update();
             }
@@ -78,7 +78,8 @@ namespace kadmium_osc_dmx_dotnet_core
 
         public void Close()
         {
-            foreach(Transmitter transmitter in Transmitters)
+            updateTimer?.Close();
+            foreach (Transmitter transmitter in Transmitters)
             {
                 transmitter.Close();
             }
@@ -86,7 +87,6 @@ namespace kadmium_osc_dmx_dotnet_core
             {
                 listener.Close();
             }
-            updateTimer.Close();
         }
     }
 }

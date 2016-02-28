@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<fixture
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xmlns="fixture"
+  xsi:schemaLocation="fixture fixture.xsd"
+  id="Generic RGB" type="LED">
+  <channel name="Red" dmx="1" />
+  <channel name="Green" dmx="2" />
+  <channel name="Blue" dmx="3" />
+</fixture>

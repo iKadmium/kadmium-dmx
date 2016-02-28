@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<venue xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xmlns="venue"
+    xsi:schemaLocation="venue venue.xsd"
+    xmlns:solver="solver">
+  <universes>
+    <universe name="New Universe">
+      <transmitters>
+        <transmitter id="enttecTransmitter" />
+      </transmitters>
+      <fixtures>
+        <fixture startChannel="301" type="Generic Moving RGB">
+          <groups>
+            <group name="rearSides" />
+          </groups>
+          <solvers>
+            <solver:hsbSolver/>
+            <solver:fakeUVSolver/>
+            <solver:fakeStrobeSolver/>
+            <solver:panTilt16BitSolver>
+              <solver:axisRestrictions>
+                <solver:axisRestriction name="Pan" min="-90" max="90"/>
+                <solver:axisRestriction name="Tilt" min="0" max="90"/>
+              </solver:axisRestrictions>
+            </solver:panTilt16BitSolver>
+          </solvers>
+        </fixture>
+        <fixture startChannel="315" type="Generic Moving RGB">
+          <groups>
+            <group name="rearSides" />
+          </groups>
+          <solvers>
+            <solver:hsbSolver/>
+            <solver:fakeUVSolver/>
+            <solver:fakeStrobeSolver/>
+            <solver:panTilt16BitSolver>
+              <solver:axisRestrictions>
+                <solver:axisRestriction name="Pan" min="-90" max="90"/>
+                <solver:axisRestriction name="Tilt" min="0" max="90"/>
+              </solver:axisRestrictions>
+            </solver:panTilt16BitSolver>
+          </solvers>
+        </fixture>
+        <fixture startChannel="329" type="Generic Moving RGB">
+          <groups>
+            <group name="rearSides" />
+          </groups>
+          <solvers>
+            <solver:hsbSolver/>
+            <solver:fakeUVSolver/>
+            <solver:fakeStrobeSolver/>
+            <solver:panTilt16BitSolver>
+              <solver:axisRestrictions>
+                <solver:axisRestriction name="Pan" min="-90" max="90"/>
+                <solver:axisRestriction name="Tilt" min="0" max="90"/>
+              </solver:axisRestrictions>
+            </solver:panTilt16BitSolver>
+          </solvers>
+        </fixture>
+        <fixture startChannel="343" type="Generic Moving RGB">
+          <groups>
+            <group name="rearSides" />
+          </groups>
+          <solvers>
+            <solver:hsbSolver/>
+            <solver:fakeUVSolver/>
+            <solver:fakeStrobeSolver/>
+            <solver:panTilt16BitSolver>
+              <solver:axisRestrictions>
+                <solver:axisRestriction name="Pan" min="-90" max="90"/>
+                <solver:axisRestriction name="Tilt" min="0" max="90"/>
+              </solver:axisRestrictions>
+            </solver:panTilt16BitSolver>
+          </solvers>
+        </fixture>
+      </fixtures>
+    </universe>
+  </universes>
+</venue>

@@ -21,10 +21,14 @@ namespace kadmium_osc_dmx_dotnet_core.Solvers
 
         public override void Solve()
         {
-            if (Strobe.GetValue())
+            if(Attributes["Strobe"].Value > 0.0f)
             {
-                BlackoutFixture(Fixture);
+                if (Strobe.GetValue())
+                {
+                    BlackoutFixture(Fixture);
+                }
             }
+            
         }
 
         public static void BlackoutFixture(Fixture fixture)

@@ -33,7 +33,7 @@ namespace kadmium_osc_dmx_dotnet_core
             universe.Fixtures.AddRange(fixtures);
             var fixtureSetFixtures = from fixtureSetElement in universeElement.Element("fixtures").Elements("fixtureSet")
                                      select FileAccess.LoadFixtureSet(sourceDocumentLocation, fixtureSetElement.Attribute("src").Value);
-
+            universe.Fixtures.AddRange(fixtureSetFixtures.SelectMany(x => x));
             return universe;
         }
 

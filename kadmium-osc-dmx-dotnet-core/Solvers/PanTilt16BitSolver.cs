@@ -83,7 +83,7 @@ namespace kadmium_osc_dmx_dotnet_core.Solvers
 
     class RandomMovement
     {
-        public static float MAX_SPEED = 0.01f;
+        public static float MAX_SPEED = 0.005f;
 
         public Dictionary<string, AnimatableAxis> Axis { get; set; }
 

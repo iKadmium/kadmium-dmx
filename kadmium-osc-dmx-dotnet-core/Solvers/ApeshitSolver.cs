@@ -13,6 +13,7 @@ namespace kadmium_osc_dmx_dotnet_core.Solvers
         private bool? lastStrobe;
         private Strobe Strobe { get; set; }
         public double Coverage { get; set; }
+        IEnumerable<Fixture> blackoutFixtures = Enumerable.Empty<Fixture>();
 
         public ApeshitSolver(Group group, Strobe strobe, double coverage = 0.1) : base(group, "Apeshit")
         {
@@ -31,13 +32,18 @@ namespace kadmium_osc_dmx_dotnet_core.Solvers
                 bool strobeValue = Strobe.GetValue();
                 if (strobeValue != lastStrobe)
                 {
-                    int count = (int)Math.Ceiling(Group.Fixtures.Count * (1.0 - Coverage));
-                    IEnumerable<Fixture> blackoutFixtures = Group.Fixtures.PickRandom(count);
-                    foreach (Fixture fixture in blackoutFixtures)
+                    int count = (int)Math.Floor(Group.Fixtures.Count * (1.0 - Coverage));
+                    IEnumerable<Fixture> proposedBlackoutFixtures = Group.Fixtures.PickRandom(count);
+                    while(proposedBlackoutFixtures.SequenceEqualIgnoreOrder(blackoutFixtures))
                     {
-                        FakeStrobeSolver.BlackoutFixture(fixture);
+                        proposedBlackoutFixtures = Group.Fixtures.PickRandom(count);
                     }
+                    blackoutFixtures = proposedBlackoutFixtures;   
                     lastStrobe = strobeValue;
+                }
+                foreach (Fixture fixture in blackoutFixtures)
+                {
+                    FakeStrobeSolver.BlackoutFixture(fixture);
                 }
             }
         }
@@ -56,13 +62,18 @@ namespace kadmium_osc_dmx_dotnet_core.Solvers
             
             for(int i = 0; i < count; i++)
             {
-                int current = random.Next(count - 1 - i);
-                T item = original.Skip(current).First();
+                int current = random.Next(originalItems.Count);
+                T item = originalItems.Skip(current).First();
                 randomItems.Add(item);
                 originalItems.Remove(item);
             }
 
             return randomItems;
+        }
+
+        public static bool SequenceEqualIgnoreOrder<T>(this IEnumerable<T> first, IEnumerable<T> second)
+        {
+            return second.Except(first).Count() == 0 && first.Except(second).Count() == 0;
         }
     }
 }

@@ -1,0 +1,100 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xsd:schema xmlns:xsd="http://www.w3.org/2001/XMLSchema" 
+  xmlns="solver"
+  targetNamespace="solver"
+  xmlns:normalisedFloat="normalisedFloat"
+  elementFormDefault="qualified">
+
+  <xsd:import namespace="normalisedFloat" schemaLocation="normalisedFloat.xsd" />
+  
+  <xsd:complexType name="solver">
+    <xsd:sequence/>
+    <xsd:attribute name="enabled" type="xsd:boolean" use="optional" default="true"/>
+    <xsd:attribute name="countdownFrames" type="xsd:int"
+			use="optional"/>
+    <xsd:attribute name="maxDistance" type="xsd:int" use="optional"/>
+    <xsd:attribute name="maxBrightness" type="normalisedFloat:normalisedFloat" use="optional" default="1.0"/>
+  </xsd:complexType>
+
+  <xsd:complexType name="apeshitSolver">
+      <xsd:complexContent>
+        <xsd:extension base="solver"/>
+      </xsd:complexContent>
+  </xsd:complexType>
+
+  <xsd:complexType name="groupSolverGroup">
+    <xsd:sequence minOccurs="0" maxOccurs="unbounded">
+      <xsd:choice>
+        <xsd:element name="apeshitSolver" type="apeshitSolver"/>  
+      </xsd:choice>
+    </xsd:sequence>
+  </xsd:complexType>
+
+  <xsd:complexType name="fixtureSolverGroup">
+      <xsd:sequence minOccurs="0" maxOccurs="unbounded">
+        <xsd:choice>
+          <xsd:element name="hsbSolver" type="hsbSolver"/>
+          <xsd:element name="fakeStrobeSolver" type="fakeStrobeSolver"/>
+          <xsd:element name="fakeUVSolver" type="fakeUVSolver"/>
+          <xsd:element name="panTilt16BitSolver" type="panTilt16BitSolver"/>
+          <xsd:element name="masterAtFullSolver" type="masterAtFullSolver"/>
+        </xsd:choice>
+      </xsd:sequence>
+  </xsd:complexType>
+
+  <xsd:complexType name="hsbSolver">
+      <xsd:complexContent>
+          <xsd:extension base="solver"/>
+      </xsd:complexContent>
+  </xsd:complexType>
+
+  <xsd:complexType name="fakeStrobeSolver">
+      <xsd:complexContent>
+          <xsd:extension base="solver"/>
+      </xsd:complexContent>
+  </xsd:complexType>
+
+  <xsd:complexType name="masterAtFullSolver">
+      <xsd:complexContent>
+          <xsd:extension base="solver"/>
+      </xsd:complexContent>
+  </xsd:complexType>
+
+  <xsd:complexType name="axisRestriction">
+      <xsd:sequence/>
+      <xsd:attribute name="name" type="xsd:string" use="required"/>
+      <xsd:attribute name="min" type="xsd:int" use="required"/>
+      <xsd:attribute name="max" type="xsd:int" use="required"/>
+  </xsd:complexType>
+
+  <xsd:complexType name="axisRestrictions">
+    <xsd:sequence minOccurs="0" maxOccurs="unbounded">
+      <xsd:element name="axisRestriction" type="axisRestriction"/>
+    </xsd:sequence>
+  </xsd:complexType>
+
+  <xsd:complexType name="panTilt16BitSolver">
+      <xsd:complexContent>
+        <xsd:extension base="solver">
+          <xsd:sequence minOccurs="0" maxOccurs="1">
+            <xsd:element name="axisRestrictions" type="axisRestrictions"/>
+          </xsd:sequence>
+          <xsd:attribute name="panInverted" type="xsd:boolean" use="optional" default="false" />
+          <xsd:attribute name="tiltInverted" type="xsd:boolean" use="optional" default="false" />
+          <xsd:attribute name="eased" type="xsd:boolean" use="optional" default="true" />
+          <xsd:attribute name="panMin" type="xsd:int" use="optional" default="-90"/>
+          <xsd:attribute name="panMax" type="xsd:int" use="optional" default="90"/>
+          <xsd:attribute name="tiltMin" type="xsd:int" use="optional" default="0"/>
+          <xsd:attribute name="tiltMax" type="xsd:int" use="optional" default="90"/>
+        </xsd:extension>
+      </xsd:complexContent>
+  </xsd:complexType>
+
+  <xsd:complexType name="fakeUVSolver">
+      <xsd:complexContent>
+          <xsd:extension base="solver">
+          </xsd:extension>
+      </xsd:complexContent>
+  </xsd:complexType> 
+
+</xsd:schema>

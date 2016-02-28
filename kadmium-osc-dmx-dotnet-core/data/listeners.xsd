@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xsd:schema xmlns:xsd="http://www.w3.org/2001/XMLSchema" 
+    xmlns="listeners"
+    targetNamespace="listeners"
+    elementFormDefault="qualified">
+
+    <xsd:complexType name="mapping">
+        <xsd:attribute name="address" type="xsd:string" use="required"/>
+        <xsd:attribute name="channel" type="xsd:string" use="required">
+            <!--<xsd:simpleType>
+                <xsd:restriction base="xsd:string">
+                    <xsd:enumeration value="Hue"/>
+                    <xsd:enumeration value="Saturation"/>
+                    <xsd:enumeration value="Brightness"/>
+                    <xsd:enumeration value="Strobe"/>
+                    <xsd:enumeration value="Chase"/>
+                    <xsd:enumeration value="Apeshit"/>
+                    <xsd:enumeration value="OverrideEnabled"/>
+                    <xsd:enumeration value="OverrideHue"/>
+                    <xsd:enumeration value="OverrideSaturation"/>
+                    <xsd:enumeration value="OverrideBrightness"/>
+                </xsd:restriction>
+            </xsd:simpleType>-->
+        </xsd:attribute>
+    </xsd:complexType>
+
+    <xsd:complexType name="listenerMap">
+        <xsd:sequence>
+            <xsd:element name="mapping" type="mapping" minOccurs="0"
+                         maxOccurs="unbounded">
+            </xsd:element>
+        </xsd:sequence>
+        <xsd:attribute name="id" type="xsd:string" use="required"/>
+        <xsd:attribute name="startIndex" type="xsd:int" use="optional" default="1"/>
+    </xsd:complexType>
+
+    <xsd:complexType name="listener">
+        <xsd:sequence>
+            <xsd:element name="listenerMap" type="listenerMap" minOccurs="1" maxOccurs="1" />
+        </xsd:sequence>
+        <xsd:attribute name="enabled" type="xsd:boolean" use="optional"
+                       default="true">
+        </xsd:attribute>
+        <xsd:attribute name="id" type="xsd:string"/>
+    </xsd:complexType>
+
+    <xsd:complexType name="oscListener">
+        <xsd:complexContent>
+            <xsd:extension base="listener">
+                <xsd:attribute name="port" type="xsd:int"/>
+            </xsd:extension>
+        </xsd:complexContent>
+    </xsd:complexType>
+
+    <xsd:complexType name="midiListener">
+        <xsd:complexContent>
+            <xsd:extension base="listener">
+                <xsd:attribute name="device" type="xsd:string" use="required"/>
+            </xsd:extension>
+        </xsd:complexContent>
+    </xsd:complexType>
+
+    <xsd:complexType name="listeners">
+        <xsd:sequence>
+            <xsd:element name="oscListener" type="oscListener"
+                         minOccurs="0" maxOccurs="unbounded">
+            </xsd:element>
+            <xsd:element name="midiListener" type="midiListener" minOccurs="0" maxOccurs="unbounded"/>
+        </xsd:sequence>
+    </xsd:complexType>
+
+    <xsd:element name="listeners" type="listeners">
+        <xsd:unique name="ListenerIDKey">
+            <xsd:selector xpath="*"/>
+            <xsd:field xpath="@id"/>
+        </xsd:unique>
+        <xsd:unique name="AddressUniqueness">
+            <xsd:selector xpath="*/listenerMap/mapping"/>
+            <xsd:field xpath="@address"/>
+        </xsd:unique>
+        <xsd:unique name="ChannelUniqueness">
+            <xsd:selector xpath="*/listenerMap/mapping"/>
+            <xsd:field xpath="@channel"/>
+        </xsd:unique>
+    </xsd:element>
+</xsd:schema>

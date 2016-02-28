@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text;
-using System.Threading.Tasks;
 
 namespace kadmium_sacn
 {
@@ -15,11 +14,6 @@ namespace kadmium_sacn
         }
 
         public BigEndianBinaryReader(Stream input, Encoding encoding) : base(input, encoding)
-        {
-
-        }
-
-        public BigEndianBinaryReader(Stream input, Encoding encoding, bool leaveOpen) : base(input, encoding, leaveOpen)
         {
 
         }

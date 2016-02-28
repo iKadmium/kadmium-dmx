@@ -62,7 +62,7 @@ namespace kadmium_osc_dmx_dotnet_core.Fixtures
         }
 
         public string DisplayName { get { return Type + " " + StartChannel + " - " + EndChannel; } }
-        public int EndChannel { get { return Channels.Values.Max(x => x.RelativeAddress) + StartChannel; } }
+        public int EndChannel { get { return Channels.Values.Max(x => x.RelativeAddress) + StartChannel - 1; } }
 
         public DMXAdapter()
         {

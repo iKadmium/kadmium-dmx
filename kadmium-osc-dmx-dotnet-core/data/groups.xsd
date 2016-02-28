@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xsd:schema
+    xmlns:solver="solver"
+    targetNamespace="groups"
+    xmlns="groups"
+    xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+    elementFormDefault="qualified">
+
+    <xsd:import namespace="venue" schemaLocation="venues/venue.xsd"/>
+    <xsd:import namespace="solver" schemaLocation="solver.xsd"/>
+
+    <xsd:complexType name="group">
+        <xsd:sequence minOccurs="0" maxOccurs="1">
+            <xsd:element name="solvers" type="solver:groupSolverGroup"/>
+        </xsd:sequence>
+        <xsd:attribute name="name" use="required"/>
+    </xsd:complexType>
+
+    <xsd:complexType name="groups">
+        <xsd:sequence>
+            <xsd:element name="group" type="group" minOccurs="1" maxOccurs="unbounded"/>
+        </xsd:sequence>
+    </xsd:complexType>
+
+    <xsd:element name="groups" type="groups">
+        <xsd:unique name="GroupIDKey">
+            <xsd:selector xpath="group" />
+            <xsd:field xpath="@name" />
+        </xsd:unique>
+    </xsd:element>
+</xsd:schema>

@@ -35,7 +35,7 @@ namespace kadmium_osc_dmx_dotnet_core.Fixtures
             DMXAdapter adapter = DMXAdapter.Load(fixtureElement.Attribute("type").Value, int.Parse(fixtureElement.Attribute("startChannel").Value));
             Fixture fixture = new Fixture(adapter);
             var groups = from groupElement in fixtureElement.Element("groups").Elements("group")
-                         select MasterController.Instance.Groups.Single(grp => grp.Name == groupElement.Attribute("name").Value);
+                         select MasterController.Instance.Groups[groupElement.Attribute("name").Value];
             var solvers = from solverElement in fixtureElement.Element("solvers").Elements()
                           select FixtureSolver.Load(solverElement, fixture);
             foreach (XElement movementElement in FileAccess.LoadFixtureModel(adapter.Type).Elements("movement"))
@@ -64,6 +64,11 @@ namespace kadmium_osc_dmx_dotnet_core.Fixtures
             {
                 Updated(this, new EventArgs());
             }
+        }
+
+        public override string ToString()
+        {
+            return Adapter.DisplayName;
         }
     }
 }

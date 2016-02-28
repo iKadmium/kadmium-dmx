@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using System.Threading.Tasks;
 using System.Net;
 using System.Net.Sockets;
 using kadmium_sacn;
@@ -16,6 +15,7 @@ namespace kadmium_sacn
         Int16 UniverseID { get; set; }
         private bool DataAvailableFlagged { get; set; }
         public event EventHandler<PacketReceivedEventArgs> OnReceive;
+        public Thread ListenerThread { get; set; }
 
         public SACNServer(Int16 universeID)
         {
@@ -23,27 +23,28 @@ namespace kadmium_sacn
             Socket = new UdpClient(SACNCommon.SACN_PORT);
             Socket.JoinMulticastGroup(SACNCommon.GetMulticastAddress(UniverseID));
 
-            Task.Run(() =>
+            ThreadStart start = new ThreadStart(() =>
             {
-                while(true)
+                while (true)
                 {
-                    while(Socket.Available == 0)
+                    while (Socket.Available == 0)
                     {
                         Thread.Sleep(10);
                     }
-                    while(Socket.Available > 0)
+                    while (Socket.Available > 0)
                     {
                         IPEndPoint endPoint = null;
                         SACNPacket packet = SACNPacket.Parse(Socket.Receive(ref endPoint));
-                        if(OnReceive != null)
+                        if (OnReceive != null)
                         {
                             OnReceive(this, new PacketReceivedEventArgs(packet, endPoint));
                         }
-                        
                     }
-                    
                 }
             });
+
+            ListenerThread = new Thread(start);
+            ListenerThread.Start();
         }
         
         public class PacketReceivedEventArgs : EventArgs

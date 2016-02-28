@@ -55,14 +55,13 @@ namespace kadmium_osc_dmx_dotnet_core
 
         internal void Update()
         {
-            foreach(GroupSolver solver in Solvers)
-            {
-                solver.Solve();
-            }
-
             foreach(Fixture fixture in Fixtures)
             {
                 fixture.Update();
+            }
+            foreach (GroupSolver solver in Solvers)
+            {
+                solver.Solve();
             }
         }
     }
