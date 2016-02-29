@@ -6,7 +6,7 @@
   <universes>
     <universe name="New Universe">
       <transmitters>
-        <transmitter id="enttecTransmitter" />
+        <transmitter id="pixelSacnTransmitter" />
       </transmitters>
       <fixtures>
         <fixture type="FadeCandy (program mode)" startChannel="460">

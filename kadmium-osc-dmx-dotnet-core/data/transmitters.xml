@@ -5,4 +5,5 @@
     <enttecTransmitter address="COM6" id="enttecTransmitter" />
     <!--<artnetTransmitter address="localhost" id="artNetTransmitter" universeID="1" />-->
     <sacnTransmitter address="multicast" universeID="1" uuid="52fe3895-0615-40da-866b-37619ddd00f2" id="sacnTransmitter" />
+    <sacnTransmitter address="multicast" universeID="1" uuid="52fe3895-0615-40da-866b-37619ddd00f3" id="pixelSacnTransmitter" port="5569" />
 </transmitters>

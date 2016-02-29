@@ -7,7 +7,7 @@
   <universes>
     <universe name="Personal Universe">
       <transmitters>
-        <transmitter id="sacnTransmitter"/>
+        <transmitter id="pixelSacnTransmitter"/>
       </transmitters>
       <fixtures>
         <fixture type="FadeCandy (program mode)" startChannel="480">

@@ -16,15 +16,16 @@ namespace kadmium_osc_dmx_dotnet_core.Transmitters
         static String MULTICAST_ADDRESS = "multicast";
         static string SOURCE_NAME = "Kadmium-OSC-DMX";
         public Int16 UniverseID { get; set; }
-        private SACNClient SACNClient { get; set; }
+        private SACNSender SACNClient { get; set; }
         public IPAddress UnicastAddress { get; set; }
         public bool Multicast { get { return UnicastAddress != null; } }
-        
+        public int Port { get; set; }
+
         public new string DisplayName
         {
             get
             {
-                return "SACN Transmitter [" + Name + "] : " + Address;
+                return "SACN Transmitter [" + Name + "] : " + Address + ":" + Port;
             }
         }
 
@@ -33,10 +34,11 @@ namespace kadmium_osc_dmx_dotnet_core.Transmitters
             SACNClient.Send(UniverseID, dmx);
         }
 
-        public SACNTransmitter(Guid uuid, Int16 universeID, string address, string name, bool enabled) : base(name, address, enabled)
+        public SACNTransmitter(Guid uuid, Int16 universeID, string address, string name, bool enabled, int port) : base(name, address, enabled)
         {
+            Port = port;
             UniverseID = universeID;
-            SACNClient = new SACNClient(uuid, SOURCE_NAME);
+            SACNClient = new SACNSender(uuid, SOURCE_NAME, port);
             
             if(address == MULTICAST_ADDRESS)
             {
@@ -57,7 +59,8 @@ namespace kadmium_osc_dmx_dotnet_core.Transmitters
             string address = element.Attribute("address").Value;
             string id = element.Attribute("id").Value;
             bool enabled = bool.Parse(element.Attribute("enabled").Value);
-            SACNTransmitter transmitter = new SACNTransmitter(uuid, universeID, address, id, enabled);
+            int port = int.Parse(element.Attribute("port").Value);
+            SACNTransmitter transmitter = new SACNTransmitter(uuid, universeID, address, id, enabled, port);
             return transmitter;
         }
 

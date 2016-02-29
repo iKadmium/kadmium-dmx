@@ -23,6 +23,7 @@
             <xsd:extension base="transmitter">
                 <xsd:attribute name="universeID" type="xsd:int"/>
                 <xsd:attribute name="uuid" type="xsd:string"/>
+                <xsd:attribute name="port" type="xsd:positiveInteger" use="optional" default="5568"/>
             </xsd:extension>
         </xsd:complexContent>
     </xsd:complexType>

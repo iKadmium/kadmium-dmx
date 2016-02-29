@@ -23,13 +23,13 @@ namespace SACNViewer
     /// </summary>
     public partial class MainWindow : Window
     {
-        SACNServer server;
+        SACNListener server;
         List<DMXRectAdapter> dmxRectAdapters;
 
         public MainWindow()
         {
             InitializeComponent();
-            server = new SACNServer(1);
+            server = new SACNListener(1);
             dmxRectAdapters = new List<DMXRectAdapter>();
 
             int rows = 52;
@@ -55,7 +55,7 @@ namespace SACNViewer
             server.OnReceive += Server_OnReceive;
         }
 
-        private void Server_OnReceive(object sender, SACNServer.PacketReceivedEventArgs e)
+        private void Server_OnReceive(object sender, SACNListener.PacketReceivedEventArgs e)
         {
             for(int i = 0; i < e.Packet.Data.Length; i++)
             {

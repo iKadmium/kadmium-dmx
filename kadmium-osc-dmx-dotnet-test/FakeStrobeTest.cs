@@ -24,7 +24,7 @@ namespace kadmium_osc_dmx_dotnet_test
             RGB initialRGB = new kadmium_osc_dmx_dotnet_core.Solvers.RGB
             {
                 Red = fixture.Adapter.Channels["Red"].Value,
-                Green = fixture.Adapter.Channels["Red"].Value,
+                Green = fixture.Adapter.Channels["Green"].Value,
                 Blue = fixture.Adapter.Channels["Blue"].Value
             };
 
@@ -34,7 +34,7 @@ namespace kadmium_osc_dmx_dotnet_test
             RGB secondRGB = new kadmium_osc_dmx_dotnet_core.Solvers.RGB
             {
                 Red = fixture.Adapter.Channels["Red"].Value,
-                Green = fixture.Adapter.Channels["Red"].Value,
+                Green = fixture.Adapter.Channels["Green"].Value,
                 Blue = fixture.Adapter.Channels["Blue"].Value
             };
 
@@ -44,7 +44,7 @@ namespace kadmium_osc_dmx_dotnet_test
             RGB thirdRGB = new kadmium_osc_dmx_dotnet_core.Solvers.RGB
             {
                 Red = fixture.Adapter.Channels["Red"].Value,
-                Green = fixture.Adapter.Channels["Red"].Value,
+                Green = fixture.Adapter.Channels["Green"].Value,
                 Blue = fixture.Adapter.Channels["Blue"].Value
             };
 

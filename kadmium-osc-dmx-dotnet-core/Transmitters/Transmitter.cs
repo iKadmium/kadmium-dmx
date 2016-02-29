@@ -25,7 +25,7 @@ namespace kadmium_osc_dmx_dotnet_core.Transmitters
         public int Delay { get; set; }
         public string Name { get; set; }
         public Status Status { get; set; }
-        public string DisplayName {
+        public virtual string DisplayName {
             get
             {
                 return Name;

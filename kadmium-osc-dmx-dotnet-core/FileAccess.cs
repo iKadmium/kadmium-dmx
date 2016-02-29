@@ -187,7 +187,9 @@ namespace kadmium_osc_dmx_dotnet_core
             
             var fixtures = from fixtureElement in fixtureSetRoot.Descendants("fixture")
                            select Fixture.Load(fixtureElement);
-            return fixtures;
+            var fixtureSets = from fixtureSetElement in fixtureSetRoot.Descendants("fixtureSet")
+                              select LoadFixtureSet(originalDocPath, fixtureSetElement.Attribute("src").Value);
+            return fixtures.Union(fixtureSets.SelectMany(x => x));
         }
 
         internal static IEnumerable<Listener> LoadListeners()
