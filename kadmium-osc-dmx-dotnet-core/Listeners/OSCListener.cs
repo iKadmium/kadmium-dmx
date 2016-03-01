@@ -5,6 +5,8 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Xml.Linq;
 using Rug.Osc;
+using System.Net.Sockets;
+using EventSocket;
 
 namespace kadmium_osc_dmx_dotnet_core.Listeners
 {
@@ -19,33 +21,33 @@ namespace kadmium_osc_dmx_dotnet_core.Listeners
             }
         }
 
-        private OscListener listener;
+        private EventClient listener;
 
         public OSCListener(int port, string name) : base(name)
         {
             Port = port;
-            listener = new OscListener(port);
-            listener.UnknownAddress += Listener_UnknownAddress;
-            listener.Connect();
+
+            listener = new EventClient(Port);
+            listener.PacketReceived += Listener_PacketReceived;
             Status.Update(StatusCode.NotStarted, "Listening on port " + Port + " - no messages yet");
+            
         }
 
-        private void Listener_UnknownAddress(object sender, UnknownAddressEventArgs e)
+        private void Listener_PacketReceived(object sender, PacketReceivedArgs e)
         {
-            listener.Attach(e.Address, (ev) =>
+            OscBundle bundle = OscPacket.Read(e.Packet, e.Packet.Length) as OscBundle;
+            foreach(OscMessage message in bundle)
             {
-                string[] parts = ev.Address.Split('/');
+                string[] parts = message.Address.Split('/');
                 string groupName = parts[2];
                 string attribute = parts[3];
                 Group group = MasterController.Instance.Groups[groupName];
-                float value = (float)ev[0];
-
+                float value = (float)message[0];
                 group.Set(attribute, value);
-            });
-            e.Retry = true;
+            }
             Status.Update(StatusCode.Running, "Messages received");
         }
-
+        
         public static new OSCListener Load(XElement element)
         {
             int port = int.Parse(element.Attribute("port").Value);
@@ -56,7 +58,9 @@ namespace kadmium_osc_dmx_dotnet_core.Listeners
 
         public override void Close()
         {
+            listener.StopListening();
             listener.Close();
         }
     }
+    
 }

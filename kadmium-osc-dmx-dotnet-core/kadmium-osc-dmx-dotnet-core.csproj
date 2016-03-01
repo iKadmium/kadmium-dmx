@@ -141,6 +141,10 @@
     </None>
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\EventSocket\EventSocket.csproj">
+      <Project>{e448d704-7d2f-46c2-9f69-7fa9d933ef73}</Project>
+      <Name>EventSocket</Name>
+    </ProjectReference>
     <ProjectReference Include="..\kadmium-sacn\kadmium-sacn.csproj">
       <Project>{2ee801e6-3691-40c3-9f4a-ced126365999}</Project>
       <Name>kadmium-sacn</Name>
@@ -175,7 +179,7 @@
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
       <SubType>Designer</SubType>
     </Content>
-    <Content Include="data\venues\Chinese Still Washes - Copy.xml">
+    <Content Include="data\venues\Chinese Still Washes.xml">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="data\venues\Unity Fadecandy.xml">

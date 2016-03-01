@@ -6,12 +6,13 @@ using System.Net;
 using System.Net.Sockets;
 using kadmium_sacn;
 using System.Threading;
+using EventSocket;
 
 namespace kadmium_sacn
 {
     public class SACNListener
     {
-        UdpClient Socket { get; set; }
+        EventClient Socket { get; set; }
         Int16 UniverseID { get; set; }
         private bool DataAvailableFlagged { get; set; }
         public event EventHandler<PacketReceivedEventArgs> OnReceive;
@@ -22,45 +23,28 @@ namespace kadmium_sacn
         {
             Port = port;
             UniverseID = universeID;
-            Socket = new UdpClient(port);
+            Socket = new EventClient(port);
             Socket.JoinMulticastGroup(SACNCommon.GetMulticastAddress(UniverseID));
-            
-            ThreadStart start = new ThreadStart(ListenForPackets);
 
-            ListenerThread = new Thread(start);
+            Socket.PacketReceived += Socket_PacketReceived;
+            
             ListenerThread.Start();
         }
 
-        public SACNListener(Int16 universeID) : this(universeID, SACNCommon.SACN_PORT) { }
-
-        void ListenForPackets()
+        private void Socket_PacketReceived(object sender, PacketReceivedArgs e)
         {
-            while (true)
-            {
-                while (Socket.Available == 0)
-                {
-                    Thread.Sleep(10);
-                }
-                while (Socket.Available > 0)
-                {
-                    IPEndPoint endPoint = null;
-                    SACNPacket packet = SACNPacket.Parse(Socket.Receive(ref endPoint));
-                    if (OnReceive != null)
-                    {
-                        OnReceive(this, new PacketReceivedEventArgs(packet, endPoint));
-                    }
-                }
-            }
+            SACNPacket packet = SACNPacket.Parse(e.Packet);
+            OnReceive?.Invoke(this, new PacketReceivedEventArgs(packet));
         }
+
+        public SACNListener(Int16 universeID) : this(universeID, SACNCommon.SACN_PORT) { }
         
         public class PacketReceivedEventArgs : EventArgs
         {
             public SACNPacket Packet { get; set; }
-            public IPEndPoint Sender { get; set; }
-            public PacketReceivedEventArgs(SACNPacket packet, IPEndPoint sender)
+            public PacketReceivedEventArgs(SACNPacket packet)
             {
                 Packet = packet;
-                Sender = sender;
             }
         }
     }
