@@ -6,7 +6,7 @@
   <universes>
     <universe name="New Universe">
       <transmitters>
-        <transmitter id="pixelSacnTransmitter" />
+        <transmitter id="sacnTransmitter" />
       </transmitters>
       <fixtures>
         <fixture type="FadeCandy (program mode)" startChannel="460">
@@ -16,16 +16,6 @@
           <solvers>
             <solver:hsbSolver/>
             <solver:fakeUVSolver/>
-          </solvers>
-        </fixture>
-        <fixture type="Generic RGB" startChannel="480">
-          <groups>
-            <group name="guitarLEDs"/>
-          </groups>
-          <solvers>
-            <solver:hsbSolver/>
-            <solver:fakeUVSolver/>
-            <solver:fakeStrobeSolver/>
           </solvers>
         </fixture>
       </fixtures>

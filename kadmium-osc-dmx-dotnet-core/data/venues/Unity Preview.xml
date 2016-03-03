@@ -7,12 +7,28 @@
   <universes>
     <universe name="Main Universe">
       <transmitters>
-        <transmitter id="enttecTransmitter"/>
-        <transmitter id="sacnTransmitter"/>
+        <transmitter id="unityTransmitter"/>
       </transmitters>
       <fixtures>
         <fixtureSet src="Unity Still Washes.xml"/>
         <fixtureSet src="Unity Moving Washes.xml"/>
+        <fixture type="Generic RGB" startChannel="480">
+          <groups>
+            <group name="guitarLEDs"/>
+          </groups>
+          <solvers>
+            <solver:hsbSolver/>
+            <solver:fakeUVSolver/>
+            <solver:fakeStrobeSolver/>
+          </solvers>
+        </fixture>
+      </fixtures>
+    </universe>
+    <universe name="Pixel Universe">
+      <transmitters>
+        <transmitter id="sacnTransmitter"/>
+      </transmitters>
+      <fixtures>
         <fixtureSet src="Unity FadeCandy.xml"/>
       </fixtures>
     </universe>

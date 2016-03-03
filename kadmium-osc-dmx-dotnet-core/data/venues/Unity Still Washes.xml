@@ -6,7 +6,7 @@
   <universes>
     <universe name="New Universe">
       <transmitters>
-        <transmitter id="enttecTransmitter" />
+        <transmitter id="unityTransmitter"/>
       </transmitters>
       <fixtures>
         <fixture type="Generic RGB" startChannel="401">

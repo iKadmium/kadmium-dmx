@@ -25,11 +25,11 @@ namespace EventSocket
         {
             while (!token.IsCancellationRequested)
             {
-                while (Available == 0)
+                while (!token.IsCancellationRequested && Available == 0)
                 {
                     await Task.Delay(10);
                 }
-                while (Available > 0)
+                while (!token.IsCancellationRequested && Available > 0)
                 {
                     IPEndPoint endPoint = null;
                     byte[] data = Receive(ref endPoint);
