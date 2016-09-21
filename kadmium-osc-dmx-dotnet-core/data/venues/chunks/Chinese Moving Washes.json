@@ -1,0 +1,29 @@
+﻿{
+  "name": "Chinese Moving Washes",
+  "fixtures": [
+    {
+      "startChannel": 301,
+      "type": "Chinese Moving Wash",
+      "group": "rearSides",
+      "options": []
+    },
+    {
+      "startChannel": 315,
+      "type": "Chinese Moving Wash",
+      "group": "rearSides",
+      "options": []
+    },
+    {
+      "startChannel": 329,
+      "type": "Chinese Moving Wash",
+      "group": "rearSides",
+      "options": []
+    },
+    {
+      "startChannel": 343,
+      "type": "Chinese Moving Wash",
+      "group": "rearSides",
+      "options": []
+    }
+  ]
+}

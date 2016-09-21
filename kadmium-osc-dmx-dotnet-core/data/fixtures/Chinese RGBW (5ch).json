@@ -1,0 +1,28 @@
+﻿{
+  "$schema": "fixture.schema.json",
+  "name": "Chinese RGBW (5ch)",
+  "type": "LED",
+  "channels": [
+    {
+      "name": "Strobe",
+      "dmx": 1
+    },
+    {
+      "name": "Red",
+      "dmx": 2
+    },
+    {
+      "name": "Green",
+      "dmx": 3
+    },
+    {
+      "name": "Blue",
+      "dmx": 4
+    },
+    {
+      "name": "White",
+      "dmx": 5
+    }
+  ]
+
+}

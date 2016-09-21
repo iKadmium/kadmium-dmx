@@ -1,0 +1,23 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="14.0.25123" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">14.0.25123</VisualStudioVersion>
+    <VSToolsPath Condition="'$(VSToolsPath)' == ''">$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)</VSToolsPath>
+  </PropertyGroup>
+  <Import Project="$(VSToolsPath)\DotNet\Microsoft.DotNet.Props" Condition="'$(VSToolsPath)' != ''" />
+  <PropertyGroup Label="Globals">
+    <ProjectGuid>bdf75af7-07fc-440c-b68c-a4fe3a53d1f6</ProjectGuid>
+    <RootNamespace>kadmium_osc_dmx_dotnet_core</RootNamespace>
+    <BaseIntermediateOutputPath Condition="'$(BaseIntermediateOutputPath)'=='' ">.\obj</BaseIntermediateOutputPath>
+    <OutputPath Condition="'$(OutputPath)'=='' ">.\bin\</OutputPath>
+  </PropertyGroup>
+  <PropertyGroup>
+    <SchemaVersion>2.0</SchemaVersion>
+  </PropertyGroup>
+  <Import Project="$(VSToolsPath)\DotNet\Microsoft.DotNet.targets" Condition="'$(VSToolsPath)' != ''" />
+  <ProjectExtensions>
+    <VisualStudio>
+      <UserProperties data_4transmitters_1json__JSONSchema="transmitters.schema.json" data_4listeners_1json__JSONSchema="listeners.schema.json" data_4venues_4Rehearsal_x0020_Room_1json__JSONSchema="venue.schema.json" data_4groups_1json__JSONSchema="groups.schema.json" data_4fixtures_4Chinese_x0020_RGBW_x0020__x0028_5ch_x0029__1json__JSONSchema="fixture.schema.json" />
+    </VisualStudio>
+  </ProjectExtensions>
+</Project>

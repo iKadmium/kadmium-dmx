@@ -1,5 +1,4 @@
-﻿using kadmium_osc_dmx_dotnet_core.Fixtures;
-using System;
+﻿using System;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System.Collections.Generic;
 using System.Linq;

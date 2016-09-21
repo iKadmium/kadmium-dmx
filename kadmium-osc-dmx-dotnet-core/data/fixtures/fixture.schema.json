@@ -1,0 +1,58 @@
+﻿{
+  "$schema": "http://json-schema.org/draft-04/schema#",
+  "title": "Fixture Definition",
+  "type": "object",
+  "properties": {
+    "name": {
+      "description": "The name of the fixture. This should be the same as the filename (without .json)",
+      "type": "string"
+    },
+    "type": {
+      "description": "The type of light the effect contains",
+      "type": "string",
+      "enum": [ "LED", "Effect", "Tungsten" ]
+    },
+    "channels": {
+      "description": "The DMX channels the fixture uses",
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "description": "The name of the DMX Channel",
+            "type": "string"
+          },
+          "dmx": {
+            "description": "The address of the DMX Channel, starting at 1",
+            "type": "integer"
+          },
+          "min": {
+            "description": "The minimum value that should be used",
+            "type": "integer",
+            "default": 0
+          },
+          "max": {
+            "description": "The maximum value that should be used",
+            "type": "integer",
+            "default": 255
+          }
+        },
+        "required": [ "name", "dmx" ]
+      }
+    },
+    "movements": {
+      "description": "The movement axis the fixture uses",
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "description": "The name of the axis",
+            "type": "string"
+          }
+        }
+      }
+    }
+  },
+  "required": ["name", "type", "channels"]
+}

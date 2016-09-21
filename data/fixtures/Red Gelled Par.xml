@@ -1,4 +1,0 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
-<fixture id="Red Gelled Par" type="Tungsten" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="fixture.xsd">
-  <channel name="Red" dmx="1" min="0" max="255" />
-</fixture>

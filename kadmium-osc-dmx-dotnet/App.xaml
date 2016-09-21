@@ -1,9 +1,0 @@
-﻿<Application x:Class="kadmium_osc_dmx_dotnet_ui.App"
-             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
-             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-             xmlns:local="clr-namespace:kadmium_osc_dmx_dotnet_ui"
-             StartupUri="MainWindow.xaml">
-    <Application.Resources>
-         
-    </Application.Resources>
-</Application>

@@ -1,0 +1,25 @@
+{
+  "version": "1.0.1",
+  "buildOptions": {
+    "debugType": "portable",
+    "copyToOutput": { "include": "data"}
+  },
+  "dependencies": {
+    "kadmium-sacn-pcl": "1.0.0-*",
+    "OSCforPCL": "0.0.1",
+    "Microsoft.NETCore.App": {
+      "type": "platform",
+      "version": "1.0.1"
+    },
+    "Newtonsoft.Json": "9.0.1",
+"Newtonsoft.Json.Schema": "2.0.6"
+  },
+  "frameworks": {
+    "netcoreapp1.0": {
+      "imports": "dnxcore50"
+    }
+  },
+  "runtimes": {
+    "win10-x64": {}
+  }
+}

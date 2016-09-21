@@ -1,7 +1,0 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<targets xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="lookAtTargets.xsd">
-    <target name="Neutral" />
-    <target name="Forward" />
-    <target name="NearCorner"/>
-    <target name="FarCorner"/>
-</targets>

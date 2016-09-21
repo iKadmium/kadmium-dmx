@@ -1,0 +1,35 @@
+﻿{
+  "$schema": "http://json-schema.org/draft-04/schema#",
+  "title": "Venue",
+  "description": "Describes a venue",
+  "type": "object",
+  "properties": {
+    "name": {
+      "type": "string",
+      "description": "The name of the venue"
+    },
+    "universes": {
+      "type": "array",
+      "description": "A list of universes for this venue",
+      "items": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "description": "The name of this universe",
+            "type": "string"
+          },
+          "transmitters": {
+            "description": "The transmitters that the universe should transmit on",
+            "type": "array",
+            "items": { "type": "string" }
+          },
+          "chunks": {
+            "description": "The chunks contained in this venue",
+            "type": "array",
+            "items": { "type": "string" }
+          }
+        }
+      }
+    }
+  }
+}

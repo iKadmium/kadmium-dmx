@@ -1,6 +1,0 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
-<fixture id="Nerhor Moving Head" type="LED" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="fixture.xsd">
-  <channel name="ColorWheel" dmx="1" min="0" max="255" />
-  <channel name="Strobe" dmx="2" min="0" max="1" />
-  <channel name="Master" dmx="3" min="0" max="255" />
-</fixture>

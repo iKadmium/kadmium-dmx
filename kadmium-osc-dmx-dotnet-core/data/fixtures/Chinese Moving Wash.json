@@ -1,0 +1,47 @@
+﻿{
+  "$schema": "fixture.schema.json",
+  "name": "Chinese Moving Wash",
+  "type": "LED",
+  "channels": [
+    {
+      "name": "Red",
+      "dmx": 1
+    },
+    {
+      "name": "Green",
+      "dmx": 2
+    },
+    {
+      "name": "Blue",
+      "dmx": 3
+    },
+    {
+      "name": "Strobe",
+      "dmx": 4
+    },
+    {
+      "name": "Apeshit",
+      "dmx": 5
+    },
+    {
+      "name": "Chase",
+      "dmx": 6
+    },
+    {
+      "name": "Program",
+      "dmx": 7
+    }
+  ],
+  "movements": [
+    {
+      "name": "Pan",
+      "min": -270,
+      "max": 270
+    },
+    {
+      "name": "Tilt",
+      "min": -135,
+      "max": 135
+    }
+  ]
+}

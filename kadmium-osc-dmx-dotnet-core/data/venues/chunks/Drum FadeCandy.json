@@ -1,0 +1,11 @@
+﻿{
+  "name": "Drum FadeCandy",
+  "fixtures": [
+    {
+      "startChannel": 460,
+      "type": "FadeCandy (program mode)",
+      "group": "drumLEDs",
+      "options": []
+    }
+  ]
+}

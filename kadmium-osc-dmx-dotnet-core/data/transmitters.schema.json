@@ -1,0 +1,59 @@
+﻿{
+  "$schema": "http://json-schema.org/draft-04/schema#",
+  "title": "Transmitters",
+  "description": "A list of transmitters",
+  "type": "array",
+  "items": {
+    "type": "object",
+    "allOf": [{"$ref": "#/definitions/transmitterCommon"}],
+    "oneOf": [
+      { "$ref": "#/definitions/sacn" },
+      { "$ref": "#/definitions/enttec" }
+    ]
+  },
+  "definitions": {
+    "transmitterCommon": {
+      "properties": {
+        "name": {
+          "description": "The unique name of this transmitter",
+          "type": "string"
+        },
+        "delay": {
+          "description": "Time to delay transmissions, in ms",
+          "type": "integer",
+          "default": 0
+        }
+      }
+    },
+    "enttec": {
+      "properties": {
+        "type": { "enum": [ "EntTec" ] },
+        "address": {
+          "description": "The address on which to transmit",
+          "type": "string"
+        }
+      }
+    },
+    "sacn": {
+      "properties": {
+        "type": { "enum": [ "sACN" ] },
+        "address": {
+          "description": "The address on which to transmit",
+          "type": "string"
+        },
+        "description": {
+          "description": "The name to send to sACN listeners",
+          "type": "string"
+        },
+        "uuid": {
+          "description": "The unique ID of this transmitter",
+          "type": "string"
+        },
+        "universeID": {
+          "description": "The Universe number that should be transmitted",
+          "type": "integer"
+        }
+      }
+    }
+  }
+}
