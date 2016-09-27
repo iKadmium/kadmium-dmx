@@ -10,76 +10,27 @@ namespace kadmium_osc_dmx_dotnet_core.Fixtures
 {
     public class DMXAdapter
     {
-        public int StartChannel { get; set; }
-        public string Type { get; set; }
+        public string Name { get; set; }
         public Dictionary<string, DMXChannel> Channels { get; set; }
 
-        public Dictionary<int, byte> DMXData
+        public void Update(byte[] dmx, int startChannel)
         {
-            get
+            var channels = from channel in Channels.Values
+                           group channel by channel.RelativeAddress into chanGroup
+                           select chanGroup;
+
+            foreach (var channelGroup in channels)
             {
-                Dictionary<int, byte> channelsReturned = new Dictionary<int, byte>();
-
-                var channels = from channel in Channels.Values
-                               group channel by channel.RelativeAddress into chanGroup
-                               select chanGroup;
-
-                foreach(var channelGroup in channels)
-                {
-                    DMXChannel channel = channelGroup.OrderByDescending(chan => chan.Value).ThenByDescending(chan => chan.Min).First();
-                    channelsReturned.Add(channel.RelativeAddress + StartChannel - 2, channel.ByteValue);
-                }
-
-                return channelsReturned;
+                DMXChannel channel = channelGroup.OrderByDescending(chan => chan.Value).ThenByDescending(chan => chan.Min).First();
+                dmx[channel.RelativeAddress + startChannel - 2] = channel.ByteValue;
             }
         }
-
-        public string DebugNames
-        {
-            get
-            {
-                StringBuilder builder = new StringBuilder();
-                foreach(DMXChannel channel in Channels.Values)
-                {
-                    builder.AppendLine(channel.Name + " -> " + channel.ByteValue);
-                }
-                return builder.ToString();
-            }
-        }
-
-        public string DebugNumbers
-        {
-            get
-            {
-                StringBuilder builder = new StringBuilder();
-                foreach (DMXChannel channel in Channels.Values)
-                {
-                    builder.AppendLine(channel.RelativeAddress + StartChannel - 1 + " -> " + channel.ByteValue);
-                }
-                return builder.ToString();
-            }
-        }
-
-        public string DisplayName { get { return Type + " " + StartChannel + " - " + EndChannel; } }
-        public int EndChannel { get { return Channels.Values.Max(x => x.RelativeAddress) + StartChannel - 1; } }
-
-        public DMXAdapter()
+        
+        public DMXAdapter(Definition definition)
         {
             Channels = new Dictionary<string, DMXChannel>();
         }
         
-        internal static DMXAdapter Load(string model, int startChannel)
-        {
-            DMXAdapter adapter = new DMXAdapter();
-            adapter.Type = model;
-            adapter.StartChannel = startChannel;
-            JObject modelElement = FileAccess.LoadFixtureModel(model);
-            foreach (JObject channelElement in modelElement["channel"])
-            {
-                DMXChannel channel = DMXChannel.Load(channelElement);
-                adapter.Channels.Add(channel.Name, channel);
-            }
-            return adapter;
-        }
+        
     }
 }

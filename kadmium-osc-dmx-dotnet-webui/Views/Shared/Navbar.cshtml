@@ -1,0 +1,73 @@
+﻿@*
+    For more information on enabling MVC for empty projects, visit http://go.microsoft.com/fwlink/?LinkID=397860
+*@
+@{
+    var Navbar = new[] {
+        new NavbarItem("Preview",
+            new NavbarItem("Preview2D"),
+            new NavbarItem("Preview3D")
+        ),
+        new NavbarItem("Groups"),
+        new NavbarItem("Venus",
+            new NavbarItem("Venues"),
+            new NavbarItem("VenuesChunks", "Venue Chunks")
+        ),
+        new NavbarItem("Fixtures"),
+        new NavbarItem("Listeners"),
+        new NavbarItem("Transmitters"),
+        new NavbarItem("Help",
+            new NavbarItem("Help", "Index", "Help"),
+            new NavbarItem("ProjectPage", "Project Page" ),
+            new NavbarItem("Help", "About", "About")
+        )
+    };
+}
+
+<div class="navbar navbar-inverse navbar-fixed-top">
+    <div class="container">
+        <div class="navbar-header">
+            <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a asp-area="" asp-controller="Home" asp-action="Index" class="navbar-brand">kadmium-osc-dmx</a>
+        </div>
+        <div class="navbar-collapse collapse">
+            <ul class="nav navbar-nav">
+                @foreach (NavbarItem item in Navbar)
+                {
+                    if (item.Children.Count() > 0)
+                    {
+                        <li class="dropdown">
+                            <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">
+                                @item.Display <span class="caret"></span>
+                            </a>
+                            <ul class="dropdown-menu">
+                                @foreach (NavbarItem child in item.Children)
+                                {
+                                    <li><a asp-area="" asp-controller="@child.Controller" asp-action="@child.Action">@child.Display</a></li>
+                                }
+                                
+                            </ul>
+                        </li>
+
+                    }
+                    else
+                    {
+                        @if (item.Controller == ViewContext.RouteData.Values["controller"].ToString())
+                        {
+                            <li class="active"><a asp-area="" asp-controller="@item.Controller" asp-action="@item.Action">@item.Display</a></li>
+                        }
+                        else
+                        {
+                            <li><a asp-area="" asp-controller="@item.Controller" asp-action="@item.Action">@item.Display</a></li>
+                        }
+
+                    }
+                }
+            </ul>
+        </div>
+    </div>
+</div>

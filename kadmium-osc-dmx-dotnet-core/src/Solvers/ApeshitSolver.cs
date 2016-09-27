@@ -25,7 +25,7 @@ namespace kadmium_osc_dmx_dotnet_core.Solvers
         public ApeshitSolver(Group group, double coverage = 0.1) : this(group, MasterController.Instance.Strobe, coverage) { }
         public ApeshitSolver(Group group) : this(group, MasterController.Instance.Strobe) { }
 
-        public override void Solve()
+        public override void Solve(Dictionary<string, Attribute> Attributes)
         {
             if (Attributes["Apeshit"].Value > 0.0f)
             {
@@ -43,7 +43,14 @@ namespace kadmium_osc_dmx_dotnet_core.Solvers
                 }
                 foreach (Fixture fixture in blackoutFixtures)
                 {
-                    FakeStrobeSolver.BlackoutFixture(fixture);
+                    if(blackoutFixtures.Contains(fixture))
+                    {
+                        fixture.Settables["Blackout"].Value = 1f;
+                    }
+                    else
+                    {
+                        fixture.Settables["Blackout"].Value = 0f;
+                    }
                 }
             }
         }

@@ -11,14 +11,14 @@
   {
     "outputFileName": "wwwroot/js/site.min.js",
     "inputFiles": [
-      "wwwroot/js/site.js"
+      "wwwroot/js/DeleteConfirmation.ts"
     ],
     // Optionally specify minification options
     "minify": {
-      "enabled": true,
+      "enabled": false,
       "renameLocals": true
     },
     // Optinally generate .map file
-    "sourceMap": false
+    "sourceMap": true
   }
 ]

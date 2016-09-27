@@ -29,32 +29,7 @@ namespace kadmium_osc_dmx_dotnet_core.Solvers
             }
             RandomMovement = new RandomMovement("Pan", "Tilt");
         }
-
-        public override void Solve()
-        {
-            foreach(RestrictableMovementAxis axis in Axis.Values)
-            {
-                float value = Attributes[axis.Name].Value;
-                if (Attributes["RandomMove"].Value > 0)
-                {
-                    RandomMovement.Update(Attributes["RandomMove"].Value);
-                    value = RandomMovement.Axis[axis.Name].Value;
-                }
-                value = axis.RestrictedToOriginal(value);
-                UInt16 value16bit = (UInt16)(value * UInt16.MaxValue);
-
-                byte[] valueBytes = BitConverter.GetBytes(value16bit);
-                float valueFine = (float)valueBytes[0] / (float)byte.MaxValue;
-                float valueCoarse = (float)valueBytes[1] / (float)byte.MaxValue;
-
-                Fixture.Adapter.Channels[axis.Name + "Coarse"].Value = valueCoarse;
-                if(Fixture.Adapter.Channels.ContainsKey(axis.Name + "Fine"))
-                {
-                    Fixture.Adapter.Channels[axis.Name + "Fine"].Value = valueFine;
-                }
-            }
-        }
-
+        
         public static PanTilt16BitSolver LoadInternal(XElement element, Fixture fixture)
         {
             IEnumerable<RestrictableMovementAxis> restrictions;
@@ -72,6 +47,31 @@ namespace kadmium_osc_dmx_dotnet_core.Solvers
                                select new RestrictableMovementAxis(axis, axis.Min, axis.Max);
             }
             return new PanTilt16BitSolver(fixture, restrictions);
+        }
+
+        public override void Solve(Dictionary<string, Attribute> Attributes)
+        {
+            foreach (RestrictableMovementAxis axis in Axis.Values)
+            {
+                float value = Attributes[axis.Name].Value;
+                if (Attributes["RandomMove"].Value > 0)
+                {
+                    RandomMovement.Update(Attributes["RandomMove"].Value);
+                    value = RandomMovement.Axis[axis.Name].Value;
+                }
+                value = axis.RestrictedToOriginal(value);
+                UInt16 value16bit = (UInt16)(value * UInt16.MaxValue);
+
+                byte[] valueBytes = BitConverter.GetBytes(value16bit);
+                float valueFine = (float)valueBytes[0] / (float)byte.MaxValue;
+                float valueCoarse = (float)valueBytes[1] / (float)byte.MaxValue;
+
+                Attributes[axis.Name + "Coarse"].Value = valueCoarse;
+                if (Attributes.ContainsKey(axis.Name + "Fine"))
+                {
+                    Attributes[axis.Name + "Fine"].Value = valueFine;
+                }
+            }
         }
     }
 

@@ -9,22 +9,19 @@ namespace kadmium_osc_dmx_dotnet_core.Solvers
 {
     public abstract class Solver
     {
-        public Dictionary<string, Attribute> Attributes { get; set; }
         public List<string> SolvableAttributes { get; set; }
 
-        protected Solver(Dictionary<string, Attribute> settables, params string[] attributes)
+        protected Solver(Dictionary<string, Attribute> settables, Dictionary<string, Attribute> frameSettables, params string[] attributes)
         {
-            Attributes = new Dictionary<string, Attribute>();
             SolvableAttributes = new List<string>();
             foreach (string attributeName in attributes)
             {
                 Attribute attribute = new Attribute(attributeName);
-                Attributes.Add(attribute.Name, attribute);
                 settables.Add(attribute.Name, attribute);
+                frameSettables.Add(attribute.Name, attribute);
             }
         }
 
-        public abstract void Solve();
-        
+        public abstract void Solve(Dictionary<string, Attribute> Attributes);
     }
 }

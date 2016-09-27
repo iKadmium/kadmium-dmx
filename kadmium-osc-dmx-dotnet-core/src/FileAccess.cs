@@ -12,7 +12,7 @@ using Newtonsoft.Json.Schema;
 
 namespace kadmium_osc_dmx_dotnet_core
 {
-    static class FileAccess
+    public static class FileAccess
     {
         static string DataLocation = Path.Combine(Directory.GetCurrentDirectory(), "bin", "debug", "netcoreapp1.0", "kadmium-osc-dmx-dotnet-core", "data");
         static string FixturesLocation = Path.Combine(DataLocation, "fixtures");
@@ -83,9 +83,20 @@ namespace kadmium_osc_dmx_dotnet_core
             return universes;
         }
 
-        internal static JObject LoadFixtureModel(string model)
+        public static JObject LoadFixtureDefinition(string model)
         {
-            throw new NotImplementedException();
+            string path = Path.Combine(FixturesLocation, model + ".json");
+            JObject definitionRoot = ValidatedLoad(path, FixturesSchema).Value<JObject>();
+            return definitionRoot;
+
+        }
+
+        public static IEnumerable<string> GetFixtureNames()
+        {
+            var files = from filename in Directory.EnumerateFiles(FixturesLocation)
+                        where !filename.Contains(".schema")
+                        select Path.GetFileNameWithoutExtension(filename);
+            return files;
         }
     }
 }

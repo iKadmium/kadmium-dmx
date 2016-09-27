@@ -14,9 +14,9 @@ namespace kadmium_osc_dmx_dotnet_core.Solvers
 
         }
 
-        public override void Solve()
+        public override void Solve(Dictionary<string, Attribute> Attributes)
         {
-            Fixture.Adapter.Channels["Master"].Value = 1.0f;
+            Attributes["Master"].Value = 1.0f;
         }
     }
 }

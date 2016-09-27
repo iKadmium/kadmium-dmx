@@ -12,9 +12,9 @@ namespace kadmium_osc_dmx_dotnet_core.Solvers
     {
         public static Dictionary<string, Attribute> UVColor = new Dictionary<string, Attribute>()
         {
-            ["Red"] = new Attribute("Red", 0.58f),
-            ["Green"] = new Attribute("Green", 0f),
-            ["Blue"] = new Attribute("Blue", 0.83f)
+            ["Hue"] = new Attribute("Hue", 0.78f),
+            ["Saturation"] = new Attribute("Saturation", 1f),
+            ["Brightness"] = new Attribute("Brightness", 0.83f)
         };
 
         public FakeUVSolver(Fixture fixture) : base(fixture, "UV")
@@ -22,13 +22,13 @@ namespace kadmium_osc_dmx_dotnet_core.Solvers
 
         }
 
-        public override void Solve()
+        public override void Solve(Dictionary<string, Attribute> settables)
         {
-            var applicableChannels = from channel in Fixture.Adapter.Channels
+            var applicableChannels = from channel in settables
                                      where UVColor.ContainsKey(channel.Key)
                                      select channel.Value;
 
-            float uvAmount = Attributes["UV"].Value;
+            float uvAmount = settables["UV"].Value;
             float originalAmount = 1.0f - uvAmount;
             
             foreach (var channel in applicableChannels)

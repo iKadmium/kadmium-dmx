@@ -23,13 +23,13 @@ namespace kadmium_osc_dmx_dotnet_core.Solvers
             
         }
 
-        public override void Solve()
+        public override void Solve(Dictionary<string, Attribute> Attributes)
         {
             RGB color = FromHSB(Attributes["Hue"].Value, Attributes["Saturation"].Value, Attributes["Brightness"].Value);
 
-            Fixture.Adapter.Channels["Red"].Value = color.Red;
-            Fixture.Adapter.Channels["Green"].Value = color.Green;
-            Fixture.Adapter.Channels["Blue"].Value = color.Blue;
+            Attributes["Red"].Value = color.Red;
+            Attributes["Green"].Value = color.Green;
+            Attributes["Blue"].Value = color.Blue;
         }
 
         private static RGB FromHSB(double H, double S, double B)

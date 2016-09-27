@@ -1,0 +1,29 @@
+﻿@model ListData
+
+@{ 
+    Layout = "_Layout.cshtml";
+}
+
+<ul class="list-group">
+    @foreach (string name in Model.Items)
+    {
+        <li class="list-group-item clearfix">
+            @name
+            <div class="pull-right btn-group">
+                @if (ViewData.ContainsKey("Load") && (bool)ViewData["Load"])
+                {
+                    <a asp-action="Load" asp-route-id="@name" class="btn btn-success" title="Load"><span class="glyphicon glyphicon-download-alt"></span></a>
+                }
+                <a href="#" class="btn btn-default" title="Edit" data-item-id="@name" data-toggle="modal" data-target="#modal-edit" ><span class="glyphicon glyphicon-pencil"></span></a>
+                <a href="#" class="btn btn-danger" title="Delete" data-item-id="@name" data-href="@Url.Action("Delete", new { id = name })" data-toggle="modal" data-target="#confirm-delete"><span class="glyphicon glyphicon-remove"></span></a>
+            </div>
+        </li>
+    }
+</ul>
+
+@Html.Partial("ModalDelete", Model.Name)
+
+@RenderBody()
+
+@section scripts
+{}
