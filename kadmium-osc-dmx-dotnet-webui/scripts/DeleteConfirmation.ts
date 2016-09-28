@@ -1,11 +1,24 @@
 ﻿// <reference path="jquery.d.ts" />
 
+let deleteItemID = "";
+
+function onSave(data: any, textStatus: string, jqXHR: JQueryXHR)
+{
+    listItemDelete(deleteItemID);
+    $("#modal-delete").prop("disabled", false);
+    ($('#confirm-delete') as any).modal("hide");
+}
+
 function deleteConfirmationOnLoad(): void
 {
+    $("#modal-delete").on("click", (e: JQueryEventObject) => {
+        $("#modal-delete").prop("disabled", true);
+        jQuery.post("Fixtures/Delete/" + deleteItemID, onSave);
+    });
+
     $("#confirm-delete").on("show.bs.modal", (e: JQueryEventObject) => {
-        let deleteButton = $("#modal-delete")[0] as HTMLAnchorElement;
-        deleteButton.href = $(e.relatedTarget).data("href");
-        $(".item-id").text($(e.relatedTarget).data("item-id"));
+        deleteItemID = $(e.relatedTarget).data("item-id");
+        $(".item-id").text(deleteItemID);
     });
 }
 

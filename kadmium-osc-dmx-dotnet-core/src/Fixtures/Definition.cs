@@ -41,6 +41,37 @@ namespace kadmium_osc_dmx_dotnet_core.Fixtures
             return definition;
         }
 
+        public JObject Serialize()
+        {
+            JObject obj = new JObject(
+                new JProperty("name", Name),
+                new JProperty("type", Type.ToString()),
+                new JProperty("channels",
+                    new JArray(
+                        from channel in Channels
+                        select new JObject(
+                            new JProperty("name", channel.Name),
+                            new JProperty("dmx", channel.RelativeAddress),
+                            new JProperty("min", channel.Min),
+                            new JProperty("max", channel.Max)
+                        )
+                    )
+                ),
+                new JProperty("movements",
+                    new JArray(
+                        from axis in Axis
+                        select new JObject(
+                            new JProperty("name", axis.Name),
+                            new JProperty("min", axis.Min),
+                            new JProperty("max", axis.Max)
+                        )
+                    )
+                )
+            );
+
+            return obj;
+        }
+
         public static Definition Load(string name)
         {
             return Load(FileAccess.LoadFixtureDefinition(name));

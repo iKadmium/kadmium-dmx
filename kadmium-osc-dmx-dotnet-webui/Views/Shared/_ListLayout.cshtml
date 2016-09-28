@@ -4,11 +4,11 @@
     Layout = "_Layout.cshtml";
 }
 
-<ul class="list-group">
+<ul class="list-group" id="items">
     @foreach (string name in Model.Items)
     {
-        <li class="list-group-item clearfix">
-            @name
+        <li class="list-group-item clearfix" data-item-id="@name">
+            <span class="list-item-id">@name</span>
             <div class="pull-right btn-group">
                 @if (ViewData.ContainsKey("Load") && (bool)ViewData["Load"])
                 {
@@ -26,4 +26,6 @@
 @RenderBody()
 
 @section scripts
-{}
+{
+    <script src="~/js/ListLayout.js"></script>
+}

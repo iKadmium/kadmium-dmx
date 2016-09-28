@@ -5,20 +5,19 @@ using System.Threading.Tasks;
 
 namespace kadmium_osc_dmx_dotnet_webui.ViewHelpers
 {
-    public class InputText : VisibleInputElement
+    public class InputList : VisibleInputElement
     {
-        public string Default { get; set; }
-
-        public InputText(string id, string label) : base(id, label)
+        public string DataListID { get; set; }
+        public InputList(string id, string label, string dataListID) : base(id, label)
         {
-
+            DataListID = dataListID;
         }
 
         public override string ViewName
         {
             get
             {
-                return "InputText";
+                return "InputList";
             }
         }
     }

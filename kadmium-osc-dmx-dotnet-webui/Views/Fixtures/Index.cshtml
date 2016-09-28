@@ -1,4 +1,5 @@
 ﻿@using kadmium_osc_dmx_dotnet_webui.ViewHelpers
+@using kadmium_osc_dmx_dotnet_core.Fixtures
 @*
     For more information on enabling MVC for empty projects, visit http://go.microsoft.com/fwlink/?LinkID=397860
 *@
@@ -15,9 +16,22 @@
             </div>
             <div class="modal-body">
                 <div class="form-horizontal" id="edit-form">
-                    @Html.Partial("InputText", new InputText { ID = "name", Label = "Name:" })
-                    @Html.Partial("InputCollection", new InputCollection { ID = "channels", Label = "Channels:" })
-                    @Html.Partial("InputCollection", new InputCollection { ID = "movements", Label = "Movements:" })
+                    @Html.Partial("InputLabel", new InputText("name", "Name:"))
+                    @Html.Partial("InputLabel", new InputSelect("type", "Type:", Enum.GetNames(typeof(FixtureType)).ToDictionary(x => x)))
+                    @Html.Partial("InputDataList", new InputDataList("channel-names", 
+                        "Master", "Red", "Green", "Blue", "White", "UV", "Strobe", "PanCoarse", "PanFine", "TiltCoarse", "TiltFine" ))
+                    @Html.Partial("InputLabel", new InputCollection("channels", "Channels:",
+                        new InputList("name", "Name", "channel-names"),
+                        new InputNumber("dmx", "DMX", 1, 512, 1),
+                        new InputNumber("min", "Min", 0, 255, 0),
+                        new InputNumber("max", "Max", 0, 255, 255)
+                    ))
+                    @Html.Partial("InputDataList", new InputDataList("movement-names", "Pan", "Tilt"))
+                    @Html.Partial("InputLabel", new InputCollection("movements", "Movements:",
+                        new InputList("name", "Name", "movement-names"),
+                        new InputNumber("min", "Min", -540, 540),
+                        new InputNumber("max", "Max", -540, 540)
+                    ))
                 </div>
             </div>
             <div class="modal-footer">
@@ -29,12 +43,12 @@
                 </div>
                 <div id="footer-buttons">
                     <button type="button" class="btn btn-success btn-ok" id="modal-submit" disabled>Save</button>
-                    <button type="button" class="btn btn-default" data-dismiss="modal" disabled>Cancel</button>
+                    <button type="button" class="btn btn-default" id="modal-cancel" data-dismiss="modal" disabled>Cancel</button>
                 </div>
             </div>
         </div>
     </div>
 </div>
 
-<script src="~/js/ModalEdit.js"></script>
+<script src="~/js/ModalEditor.js"></script>
 <script src="~/js/FixtureEdit.js"></script>

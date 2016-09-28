@@ -4,10 +4,26 @@
 *@
 @{
 }
-<div class="form-group">
-    <label for="@Model.ID" class="control-label col-sm-2">@Model.Label</label>
-    <div class="col-sm-10">
-        <button class="btn btn-success" disabled><span class="glyphicon glyphicon-plus"></span></button>
-        <button class="btn btn-danger" disabled><span class="glyphicon glyphicon-remove"></span></button>
-    </div>
+<div class="col-sm-10">
+    <table class="table table-striped">
+        <thead>
+            <tr>
+                @foreach(var inputElement in Model.Items)
+                {
+                    <th>@inputElement.Label</th>
+                }
+                <th>Delete</th>
+            </tr>
+        </thead>
+        <tbody id="@Model.ID">
+            <tr id="@Model.ID-prototype" class="collection-prototype">
+                @foreach (var inputElement in Model.Items)
+                {
+                    <td>@Html.Partial(inputElement.ViewName, inputElement)</td>
+                }
+                <td><button class="btn btn-danger collection-remove"><span class="glyphicon glyphicon-remove"></span></button></td>
+            </tr>
+        </tbody>
+    </table>
+    <button class="btn btn-success collection-add" id="@Model.ID-add" disabled><span class="glyphicon glyphicon-plus"></span></button>
 </div>

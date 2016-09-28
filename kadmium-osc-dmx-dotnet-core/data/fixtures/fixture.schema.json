@@ -37,7 +37,7 @@
             "default": 255
           }
         },
-        "required": [ "name", "dmx" ]
+        "required": [ "name", "dmx", "min", "max" ]
       }
     },
     "movements": {
@@ -54,5 +54,5 @@
       }
     }
   },
-  "required": ["name", "type", "channels"]
+  "required": ["name", "type", "channels", "movements"]
 }

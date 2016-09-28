@@ -5,24 +5,35 @@
   "channels": [
     {
       "name": "Strobe",
-      "dmx": 1
+      "dmx": 1,
+      "min": 0,
+      "max": 255
     },
     {
       "name": "Red",
-      "dmx": 2
+      "dmx": 2,
+      "min": 0,
+      "max": 255
     },
     {
       "name": "Green",
-      "dmx": 3
+      "dmx": 3,
+      "min": 0,
+      "max": 255
     },
     {
       "name": "Blue",
-      "dmx": 4
+      "dmx": 4,
+      "min": 0,
+      "max": 255
     },
     {
       "name": "White",
-      "dmx": 5
+      "dmx": 5,
+      "min": 0,
+      "max": 255
     }
-  ]
+  ],
+  "movements": []
 
 }

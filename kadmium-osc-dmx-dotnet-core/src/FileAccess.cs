@@ -28,6 +28,26 @@ namespace kadmium_osc_dmx_dotnet_core
         static string ListenersSchema = Path.Combine(DataLocation, "listeners.schema.json");
         static string VenuesSchema = Path.Combine(VenuesLocation, "venue.schema.json");
 
+        private static void ValidatedSave(JObject obj, string path, string schemaPath)
+        {
+            string schemaString = File.ReadAllText(schemaPath);
+            JSchema schema = JSchema.Parse(schemaString);
+            IList<ValidationError> errors;
+            bool valid = obj.IsValid(schema, out errors);
+            if (valid)
+            {
+                File.WriteAllText(path, obj.ToString());
+            }
+            else
+            { 
+                foreach (var error in errors)
+                {
+                    Console.Error.WriteLine(error.ToString());
+                }
+                throw new InvalidDataException("Could not validate " + path);
+            }
+        }
+
         private static JToken ValidatedLoad(string path, string schemaPath)
         {
             string jsonString = File.ReadAllText(path);
@@ -88,7 +108,19 @@ namespace kadmium_osc_dmx_dotnet_core
             string path = Path.Combine(FixturesLocation, model + ".json");
             JObject definitionRoot = ValidatedLoad(path, FixturesSchema).Value<JObject>();
             return definitionRoot;
+        }
 
+        public static void DeleteFixtureDefinition(string model)
+        {
+            string path = Path.Combine(FixturesLocation, model + ".json");
+            File.Delete(path);
+        }
+
+        public static void SaveFixtureDefinition(JObject definition)
+        {
+            string model = definition["name"].Value<string>();
+            string path = Path.Combine(FixturesLocation, model + ".json");
+            ValidatedSave(definition, path, FixturesSchema);
         }
 
         public static IEnumerable<string> GetFixtureNames()
