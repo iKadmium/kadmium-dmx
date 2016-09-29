@@ -4,4 +4,4 @@
 *@
 @{
 }
-<input type="text" class="form-control" id="@Model.ID" value="@Model.Default" disabled>
+<input type="text" class="form-control" id="@Model.ID" value="@Model.Default" @if (Model.Required) {<text>required</text>} >

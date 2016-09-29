@@ -21,5 +21,5 @@ function listItemDelete(name: string)
 
 function listItemGet(name: string)
 {
-    return $("#items").children().filter("[data-item-id=\"" + name + "\"]");
+    return $("#items").children().not(".list-item-prototype").filter("[data-item-id=\"" + name + "\"]");
 }

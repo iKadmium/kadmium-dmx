@@ -42,7 +42,17 @@ namespace kadmium_osc_dmx_dotnet_core.Listeners
             group.Set(attribute, value);
             Status.Update(StatusCode.Running, "Messages received");
         }
-        
+
+        public override JObject Serialize()
+        {
+            JObject obj = new JObject(
+                new JProperty("name", Name),
+                new JProperty("type", "OSC"),
+                new JProperty("port", Port)
+            );
+            return obj;
+        }
+
         public static new OSCListener Load(JObject element)
         {
             int port = element["port"].Value<int>();

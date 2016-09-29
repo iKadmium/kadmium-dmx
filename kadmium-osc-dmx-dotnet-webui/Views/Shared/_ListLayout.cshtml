@@ -5,6 +5,18 @@
 }
 
 <ul class="list-group" id="items">
+    <li class="list-group-item clearfix list-item-prototype" data-item-id="prototype">
+        <span class="list-item-id">prototype</span>
+        <div class="pull-right btn-group">
+            @if (ViewData.ContainsKey("Load") && (bool)ViewData["Load"])
+            {
+                //<a asp-action="Load" asp-route-id="@name" class="btn btn-success" title="Load"><span class="glyphicon glyphicon-download-alt"></span></a>
+            }
+            <button class="btn btn-default" title="Edit" data-item-id="prototype" data-toggle="modal" data-target="#modal-edit"><span class="glyphicon glyphicon-pencil"></span></button>
+            <button class="btn btn-danger" title="Delete" data-item-id="prototype" data-toggle="modal" data-target="#confirm-delete"><span class="glyphicon glyphicon-remove"></span></button>
+        </div>
+    </li>
+
     @foreach (string name in Model.Items)
     {
         <li class="list-group-item clearfix" data-item-id="@name">
@@ -14,12 +26,14 @@
                 {
                     <a asp-action="Load" asp-route-id="@name" class="btn btn-success" title="Load"><span class="glyphicon glyphicon-download-alt"></span></a>
                 }
-                <a href="#" class="btn btn-default" title="Edit" data-item-id="@name" data-toggle="modal" data-target="#modal-edit" ><span class="glyphicon glyphicon-pencil"></span></a>
-                <a href="#" class="btn btn-danger" title="Delete" data-item-id="@name" data-href="@Url.Action("Delete", new { id = name })" data-toggle="modal" data-target="#confirm-delete"><span class="glyphicon glyphicon-remove"></span></a>
+                <button class="btn btn-default" title="Edit" data-item-id="@name" data-toggle="modal" data-target="#modal-edit" ><span class="glyphicon glyphicon-pencil"></span></button>
+                <button class="btn btn-danger" title="Delete" data-item-id="@name" data-toggle="modal" data-target="#confirm-delete"><span class="glyphicon glyphicon-remove"></span></button>
             </div>
         </li>
     }
 </ul>
+
+<button class="btn btn-success" data-toggle="modal" data-target="#modal-edit"><span class="glyphicon glyphicon-plus"></span></button>
 
 @Html.Partial("ModalDelete", Model.Name)
 
@@ -27,5 +41,6 @@
 
 @section scripts
 {
+    <script src="~/js/validator.js"></script>
     <script src="~/js/ListLayout.js"></script>
 }

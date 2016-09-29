@@ -3,42 +3,41 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
-using kadmium_osc_dmx_dotnet_core;
 using kadmium_osc_dmx_dotnet_webui.ViewHelpers;
+using kadmium_osc_dmx_dotnet_core;
+using kadmium_osc_dmx_dotnet_core.Listeners;
 using Newtonsoft.Json.Linq;
 
 // For more information on enabling MVC for empty projects, visit http://go.microsoft.com/fwlink/?LinkID=397860
 
 namespace kadmium_osc_dmx_dotnet_webui.Controllers
 {
-    public class GroupsController : Controller
+    public class OSCListenersController : Controller
     {
         // GET: /<controller>/
         public IActionResult Index()
         {
-            return View(new ListData("group", MasterController.Instance.Groups.Keys));
+            return View(new ListData("OSC Listener", MasterController.Instance.Listeners.Select(x => x.Name)));
         }
 
         public IActionResult Load(string id)
         {
-            if(id == null)
+            if (id == null)
             {
-                JObject obj = new JObject(
-                    new JProperty("name", "")
-                );
-                return Content(obj.ToString());
-            }
-            else if(MasterController.Instance.Groups.ContainsKey(id))
-            {
-                JObject obj = new JObject(
-                    new JProperty("name", id)
-                );
-                return Content(obj.ToString());
+                return Content(new OSCListener(9000, "").Serialize().ToString());
             }
             else
             {
-                Response.StatusCode = 404;
-                return new EmptyResult();
+                try
+                {
+                    OSCListener listener = MasterController.Instance.Listeners.Single(x => x.Name == id && x is OSCListener) as OSCListener;
+                    return Content(listener.Serialize().ToString());
+                }
+                catch (Exception)
+                {
+                    Response.StatusCode = 404;
+                    return new EmptyResult();
+                }
             }
         }
 
@@ -46,19 +45,20 @@ namespace kadmium_osc_dmx_dotnet_webui.Controllers
         {
             JObject obj = JObject.Parse(jsonString);
             string newID = obj["name"].Value<string>();
-            Group group;
-            if(MasterController.Instance.Groups.ContainsKey(id))
+            OSCListener listener;
+            try
             {
-                group = MasterController.Instance.Groups[id];
-                MasterController.Instance.Groups.Remove(id);
-                group.Name = newID;
+                listener = MasterController.Instance.Listeners.Single(x => x is OSCListener && x.Name == newID) as OSCListener;
+                MasterController.Instance.Listeners.Remove(listener);
             }
-            else
-            {
-                group = new Group(newID);
+            catch (Exception)
+            {    
             }
-            MasterController.Instance.Groups.Add(newID, group);
-            FileAccess.SaveGroups();
+
+            listener = OSCListener.Load(obj);
+            MasterController.Instance.Listeners.Add(listener);
+
+            FileAccess.SaveListeners();
 
             Response.StatusCode = 200;
             return new EmptyResult();

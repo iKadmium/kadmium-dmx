@@ -8,13 +8,15 @@ using Newtonsoft.Json.Linq;
 
 namespace kadmium_osc_dmx_dotnet_core.Transmitters
 {
-    class EnttecProTransmitter : Transmitter
+    public class EnttecProTransmitter : Transmitter
     {
         private static int DMX_PRO_MIN_DATA_SIZE = 25;
         private static byte DMX_PRO_MESSAGE_START = (byte)(0x7E);
         private static byte DMX_PRO_MESSAGE_END = (byte)(0xE7);
         private static byte DMX_PRO_SEND_PACKET = (byte)(6);
-        
+
+        public string Address { get; set; }
+
         //public SerialPort SerialPort { get; set; }
         public new string DisplayName
         {
@@ -23,8 +25,9 @@ namespace kadmium_osc_dmx_dotnet_core.Transmitters
                 return "Enttec Pro Transmitter [" + Name + "] : " + Address;
             }
         }
-        public EnttecProTransmitter(string name, string address, bool enabled) : base(name, address, enabled)
+        public EnttecProTransmitter(string name, string address, bool enabled) : base(name, enabled)
         {
+            Address = address;
             /*SerialPort = new SerialPort(address, 115200, Parity.None, 8, StopBits.One);
             try
             {
@@ -41,6 +44,17 @@ namespace kadmium_osc_dmx_dotnet_core.Transmitters
                 Status.Update(StatusCode.Error, builder.ToString());
             }*/
 
+        }
+
+        public override JObject Serialize()
+        {
+            JObject obj = new JObject(
+                new JProperty("name", Name),
+                new JProperty("type", "EntTec"),
+                new JProperty("address", Address)
+            );
+
+            return obj;
         }
 
         public override void TransmitInternal(byte[] dmx)

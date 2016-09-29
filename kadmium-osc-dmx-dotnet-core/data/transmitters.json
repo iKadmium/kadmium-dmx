@@ -7,10 +7,8 @@
   {
     "type": "sACN",
     "name": "sacnTransmitter",
-    "address": "multicast",
-    "description": "sacn dmx thing",
+    "description": "Kadmium-OSC-DMX",
     "universeID": 1,
-    "uuid": "52fe3895-0615-40da-866b-37619ddd00f2",
     "delay": 1500
   }
 ]

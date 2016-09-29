@@ -1,0 +1,22 @@
+﻿@using kadmium_osc_dmx_dotnet_core;
+@*
+    For more information on enabling MVC for empty projects, visit http://go.microsoft.com/fwlink/?LinkID=397860
+*@
+@{
+    Layout = "~/Views/Shared/_ListLayout.cshtml";
+    ViewData["Title"] = "Venue Chunks";
+
+    var inputs = new InputElement[]
+    {
+        new InputText("name", "Name:"),
+        new InputCollection("fixtures", "Fixtures:",
+            new InputSelect("model", "Model", FileAccess.GetFixtureNames().ToDictionary(x => x)),
+            new InputNumber("channel", "Channel", 1, 512),
+            new InputSelect("group", "Group", MasterController.Instance.Groups.Keys.ToDictionary(x => x)),
+            new InputText("options", "Options", false)
+        )
+    };
+}
+@Html.Partial("ModalEdit", inputs)
+
+<script src="~/js/SACNTransmitterEdit.js"></script>

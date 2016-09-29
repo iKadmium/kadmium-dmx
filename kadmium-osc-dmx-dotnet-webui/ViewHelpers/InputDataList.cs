@@ -12,7 +12,7 @@ namespace kadmium_osc_dmx_dotnet_webui.ViewHelpers
         {
             get
             {
-                return "InputDataListMinimal";
+                return "InputDataList";
             }
         }
 

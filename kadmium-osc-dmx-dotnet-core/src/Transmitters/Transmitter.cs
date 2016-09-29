@@ -12,15 +12,14 @@ namespace kadmium_osc_dmx_dotnet_core.Transmitters
     public abstract class Transmitter
     {
         
-        protected Transmitter(string name, string address, bool enabled)
+        protected Transmitter(string name, bool enabled)
         {
             Name = name;
-            Address = address;
             Status = new Status();
             Enabled = enabled;
         }
 
-        public string Address { get; set; }
+        
         public bool Enabled { get; set; }
         public int Delay { get; set; }
         public string Name { get; set; }
@@ -58,6 +57,6 @@ namespace kadmium_osc_dmx_dotnet_core.Transmitters
         }
 
         public abstract void Close();
-
+        public abstract JObject Serialize();
     }
 }

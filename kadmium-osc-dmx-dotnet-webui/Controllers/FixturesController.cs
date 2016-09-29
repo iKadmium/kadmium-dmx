@@ -23,14 +23,29 @@ namespace kadmium_osc_dmx_dotnet_webui.Controllers
         
         public IActionResult Load(string id)
         {
-            return Content(FileAccess.LoadFixtureDefinition(id).ToString(), "text/json");
+            if(id == null)
+            {
+                return Content(new Definition().Serialize().ToString(), "text/json");
+            }
+            else if (FileAccess.HasFixtureDefinition(id))
+            {
+                return Content(FileAccess.LoadFixtureDefinition(id).ToString(), "text/json");
+            }
+            else
+            {
+                Response.StatusCode = 404;
+                return new EmptyResult();
+            }
         }
 
         public IActionResult Save(string id, string jsonString)
         {
             JObject fixtureObj = JObject.Parse(jsonString);
             Definition definition = Definition.Load(fixtureObj);
-            FileAccess.DeleteFixtureDefinition(id);
+            if(FileAccess.HasFixtureDefinition(id))
+            {
+                FileAccess.DeleteFixtureDefinition(id);
+            }
             FileAccess.SaveFixtureDefinition(definition.Serialize());
             Response.StatusCode = 200;
             return new EmptyResult();
@@ -38,9 +53,18 @@ namespace kadmium_osc_dmx_dotnet_webui.Controllers
 
         public IActionResult Delete(string id)
         {
-            FileAccess.DeleteFixtureDefinition(id);
-            Response.StatusCode = 200;
-            return new EmptyResult();
+            if(FileAccess.HasFixtureDefinition(id))
+            {
+                FileAccess.DeleteFixtureDefinition(id);
+                Response.StatusCode = 200;
+                return new EmptyResult();
+            }
+            else
+            {
+                Response.StatusCode = 404;
+                return new EmptyResult();
+            }
+            
         }
     }
 }

@@ -2,58 +2,126 @@
 
 class ModalEditor
 {
-    staticElements: HTMLElement[];
+    staticElements: JQuery;
     jsonLoadURL: string;
     jsonSaveURL: string;
     itemID: string;
     validate: () => boolean;
     getObject: () => any;
-    onDataReceived: (data: any) => void;
 
-    constructor(jsonDataURL: string, jsonSaveURL: string, onDataReceived: (data: any) => void, validate: () => boolean, getObject: () => any, staticElements: HTMLElement[]) {
-        this.staticElements = staticElements;
+    constructor(jsonDataURL: string, jsonSaveURL: string, getObject: () => any) {
+        this.staticElements = $("#edit-form").find("input,select");
         this.jsonLoadURL = jsonDataURL;
         this.jsonSaveURL = jsonSaveURL;
-        this.onDataReceived = onDataReceived;
         this.getObject = getObject;
-        this.validate = validate;
 
         let that = this;
+
+        $(".collection-remove").on("click", ModalEditor.collectionDefaultRemoveClick);
+
+        $(".collection-add").each((index, elem) => {
+            $(elem).on("click", (e) => {
+                ModalEditor.collectionDefaultAdd($(elem).data("collection-id"))
+            });
+        });
         
+
         $("#modal-edit").on("show.bs.modal", (e: JQueryEventObject) => {
             that.itemID = $(e.relatedTarget).data("item-id") as string;
-            $(".item-id").text(that.itemID);
+            $("#modal-result").hide();
+            $("#modal-submit").show();
+            $("#modal-cancel").text("Cancel");
             that.deleteCollectionItems();
+            $(".item-id").text(that.itemID == null ? "new item" : that.itemID);
+            $("#edit-form").hide();
             that.disableElements("Loading...");
-            jQuery.getJSON(that.jsonLoadURL + that.itemID, $.proxy(that.onLoad, that));
+            let url = that.jsonLoadURL + (that.itemID != null ? that.itemID : "");
+            jQuery.ajax({
+                dataType: "json",
+                url: url,
+                success: $.proxy(that.onLoad, that),
+                error: that.onLoadError
+            });
+            
         });
 
         $("#modal-submit").on("click", (e: JQueryEventObject) => {
-            if (that.validate()) {
-                that.disableElements("Saving...");
-                jQuery.post(jsonSaveURL + that.itemID,
-                    { jsonString: JSON.stringify(that.getObject()) },
-                    $.proxy(that.onSave, that)
-                );
-            }
+            $("#edit-form").hide();
+            that.disableElements("Saving...");
+            jQuery.ajax({
+                type: "POST",
+                url: jsonSaveURL + that.itemID,
+                data: { jsonString: JSON.stringify(that.getObject()) },
+                success: $.proxy(that.onSave, that),
+                error: that.onSaveError
+            });
         });
     }
-    
+
+    onSaveError(xhr: JQueryXHR, textStatus: string, errorThrown: string) {
+        $("#modal-status").hide();
+        $("#modal-result").removeClass("alert-success").addClass("alert-danger");
+        $("#modal-result-text").text(errorThrown);
+        $("#modal-result").show();
+    }
+
+    onLoadError(xhr: JQueryXHR, textStatus: string, errorThrown: string) {
+        $("#modal-status").hide();
+        $("#modal-result").removeClass("alert-success").addClass("alert-danger");
+        $("#modal-result-text").text(errorThrown);
+        $("#modal-result").show();
+    }
+
     onSave(data: any, textStatus: string, jqXHR: JQueryXHR)
     {
-        ($('#modal-edit') as any).modal("hide");
         if (this.getObject().name != this.itemID)
         {
             listItemRename(this.itemID, this.getObject().name);
         }
+        $("#modal-status").hide();
+        $("#modal-result").removeClass("alert-danger").addClass("alert-success");
+        $("#modal-result-text").text("Saved");
+        $("#modal-result").show();
+        $("#modal-submit").hide();
+        $("#modal-cancel").prop("disabled", false);
+        $("#modal-cancel").text("Close");
     }
 
     onLoad(data: any, textStatus: string, jqXHR: JQueryXHR)
     {
-        this.onDataReceived(data);
+        for (let key in data) {
+            let value: any = data[key];
+            if (key == "$schema")
+            {
+                //do nothing
+            }
+            else if (Array.isArray(value))
+            {
+                for (let arrayItem of value)
+                {
+                    let row = ModalEditor.collectionDefaultAdd(key);
+                    for (let arrayItemKey in arrayItem)
+                    {
+                        let arrayItemValue: any = arrayItem[arrayItemKey];
+                        row.children().children("#" + arrayItemKey).val(arrayItemValue);
+                    }
+                }
+            }
+            else
+            {
+                $("#edit-form").find("#" + key).val(value);
+            }
+        }
         this.enableElements();
+        $("#edit-form").show();
     }
-    
+
+    static collectionDefaultRemoveClick(event: JQueryEventObject): void
+    {
+        let row = this.parentElement.parentElement as HTMLTableRowElement;
+        row.parentElement.removeChild(row);
+    }
+
     static collectionDefaultAdd(name: string): JQuery {
         let newItem = $("#" + name + "-prototype").clone(true);
         newItem.removeClass("collection-prototype");
@@ -70,23 +138,21 @@ class ModalEditor
     disableElements(status: string)
     {
         $(".collection-item").children().children().prop("disabled", true);
-        $(staticElements).prop("disabled", true);
+        $(this.staticElements).prop("disabled", true);
         $(".collection-add").prop("disabled", true);
         $(".collection-remove").prop("disabled", true);
-        $("#modal-submit").prop("disabled", true);
         $("#modal-cancel").prop("disabled", true);
-        $("#footer-status").show();
-        $("#footer-status-text").text(status);
+        $("#modal-status").show();
+        $("#modal-status-text").text(status);
     }
 
     enableElements()
     {
         $(".collection-item").children().children().prop("disabled", false);
-        $(staticElements).prop("disabled", false);
+        $(this.staticElements).prop("disabled", false);
         $(".collection-add").prop("disabled", false);
         $(".collection-remove").prop("disabled", false);
-        $("#modal-submit").prop("disabled", false);
         $("#modal-cancel").prop("disabled", false);
-        $("#footer-status").hide();
+        $("#modal-status").hide();
     }
 }

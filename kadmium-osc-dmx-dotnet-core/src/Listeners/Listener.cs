@@ -31,5 +31,6 @@ namespace kadmium_osc_dmx_dotnet_core.Listeners
         }
 
         public abstract void Close();
+        public abstract JObject Serialize();
     }
 }

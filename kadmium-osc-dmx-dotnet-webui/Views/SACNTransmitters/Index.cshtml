@@ -1,0 +1,18 @@
+﻿@*
+    For more information on enabling MVC for empty projects, visit http://go.microsoft.com/fwlink/?LinkID=397860
+*@
+@{
+    Layout = "~/Views/Shared/_ListLayout.cshtml";
+    ViewData["Title"] = "sACN Transmitters";
+
+    var inputs = new InputElement[]
+    {
+        new InputText("name", "Name:"),
+        new InputText("description", "Description:"),
+        new InputNumber("universeID", "Universe ID:", 0, 63999, 1),
+        new InputNumber("delay", "Delay (ms):", 0, 30000, 0)
+    };
+}
+@Html.Partial("ModalEdit", inputs)
+
+<script src="~/js/SACNTransmitterEdit.js"></script>

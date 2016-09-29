@@ -2,15 +2,15 @@
     For more information on enabling MVC for empty projects, visit http://go.microsoft.com/fwlink/?LinkID=397860
 *@
 @{
-    ViewData["Title"] = "Groups";
     Layout = "~/Views/Shared/_ListLayout.cshtml";
+    ViewData["Title"] = "Fixture Definitions";
 
     var inputs = new InputElement[]
     {
-        new InputText("name", "Name:")
+        new InputText("name", "Name:"),
+        new InputText("address", "Address:")
     };
 }
-
 @Html.Partial("ModalEdit", inputs)
 
-<script src="~/js/GroupEdit.js"></script>
+<script src="~/js/EnttecProTransmitterEdit.js"></script>
