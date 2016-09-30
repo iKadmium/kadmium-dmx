@@ -2,9 +2,10 @@
 
 @{ 
     Layout = "_Layout.cshtml";
+    string controllerURL = ViewContext.RouteData.Values["controller"].ToString();
 }
 
-<ul class="list-group" id="items">
+<ul class="list-group" id="items" data-controller-url="@controllerURL">
     <li class="list-group-item clearfix list-item-prototype" data-item-id="prototype">
         <span class="list-item-id">prototype</span>
         <div class="pull-right btn-group">

@@ -17,17 +17,19 @@ namespace kadmium_osc_dmx_dotnet_core
         static string DataLocation = Path.Combine(Directory.GetCurrentDirectory(), "bin", "debug", "netcoreapp1.0", "kadmium-osc-dmx-dotnet-core", "data");
         static string FixturesLocation = Path.Combine(DataLocation, "fixtures");
         static string GroupsLocation = Path.Combine(DataLocation, "groups.json");
+        static string UniversesLocation = Path.Combine(DataLocation, "universes.json");
         static string TransmittersLocation = Path.Combine(DataLocation, "transmitters.json");
         static string ListenersLocation = Path.Combine(DataLocation, "listeners.json");
         static string VenuesLocation = Path.Combine(DataLocation, "venues");
-        static string VenueChunksLocation = Path.Combine(VenuesLocation, "chunks");
+        static string FixtureCollectionLocation = Path.Combine(DataLocation, "fixtureCollections");
 
         static string FixturesSchema = Path.Combine(FixturesLocation, "fixture.schema.json");
         static string GroupsSchema = Path.Combine(DataLocation, "groups.schema.json");
+        static string UniversesSchema = Path.Combine(DataLocation, "universes.schema.json");
         static string TransmittersSchema = Path.Combine(DataLocation, "transmitters.schema.json");
         static string ListenersSchema = Path.Combine(DataLocation, "listeners.schema.json");
         static string VenuesSchema = Path.Combine(VenuesLocation, "venue.schema.json");
-        static string VenueChunksSchema = Path.Combine(VenueChunksLocation, "venuechunk.schema.json");
+        static string FixtureCollectionsSchema = Path.Combine(FixtureCollectionLocation, "fixtureCollection.schema.json");
         
         private static void ValidatedSave(JToken obj, string path, string schemaPath)
         {
@@ -79,12 +81,32 @@ namespace kadmium_osc_dmx_dotnet_core
             return groups;
         }
 
+        public static void SaveGroups()
+        {
+            JArray groups = new JArray(
+                from groupName in MasterController.Instance.Groups.Keys
+                select groupName
+            );
+
+            ValidatedSave(groups, GroupsLocation, GroupsSchema);
+        }
+
         internal static IEnumerable<Transmitter> LoadTransmitters()
         {
             JArray transmittersObject = ValidatedLoad(TransmittersLocation, TransmittersSchema).Value<JArray>();
             var transmitters = from transmitterObject in transmittersObject.Children<JObject>()
                          select Transmitter.Load(transmitterObject);
             return transmitters;
+        }
+
+        public static void SaveTransmitters()
+        {
+            JArray transmitters = new JArray(
+                from transmitter in MasterController.Instance.Transmitters
+                select transmitter.Serialize()
+            );
+
+            ValidatedSave(transmitters, TransmittersLocation, TransmittersSchema);
         }
 
         internal static IEnumerable<Listener> LoadListeners()
@@ -95,13 +117,32 @@ namespace kadmium_osc_dmx_dotnet_core
             return listeners;
         }
 
-        internal static IEnumerable<Universe> LoadVenue(string venue)
+        public static void SaveListeners()
         {
-            string path = Path.Combine(VenuesLocation, venue);
-            JObject venueRoot = ValidatedLoad(path, VenuesSchema).Value<JObject>();
-            var universes = from universeElement in venueRoot["universes"].Children<JObject>()
-                            select Universe.Load(path, universeElement);
+            JArray listeners = new JArray(
+                from listener in MasterController.Instance.Listeners
+                select listener.Serialize()
+            );
+
+            ValidatedSave(listeners, ListenersLocation, ListenersSchema);
+        }
+
+        internal static IEnumerable<Universe> LoadUniverses()
+        {
+            JArray universesObject = ValidatedLoad(UniversesLocation, UniversesSchema).Value<JArray>();
+            var universes = from universeElement in universesObject
+                            select Universe.Load(universeElement.Value<JObject>());
             return universes;
+        }
+
+        public static void SaveUniverses()
+        {
+            JArray universes = new JArray(
+                from universe in MasterController.Instance.Universes.Values
+                select universe.Serialize()
+            );
+
+            ValidatedSave(universes, ListenersLocation, ListenersSchema);
         }
 
         public static bool HasFixtureDefinition(string model)
@@ -137,68 +178,72 @@ namespace kadmium_osc_dmx_dotnet_core
                         select Path.GetFileNameWithoutExtension(filename);
             return files;
         }
-
-        public static void SaveGroups()
+        
+        public static IEnumerable<string> GetFixtureCollectionNames()
         {
-            JArray groups = new JArray(
-                from groupName in MasterController.Instance.Groups.Keys
-                select groupName
-            );
-
-            ValidatedSave(groups, GroupsLocation, GroupsSchema);
-        }
-
-        public static void SaveListeners()
-        {
-            JArray listeners = new JArray(
-                from listener in MasterController.Instance.Listeners
-                select listener.Serialize()
-            );
-
-            ValidatedSave(listeners, ListenersLocation, ListenersSchema);
-        }
-
-        public static void SaveTransmitters()
-        {
-            JArray transmitters = new JArray(
-                from transmitter in MasterController.Instance.Transmitters
-                select transmitter.Serialize()
-            );
-
-            ValidatedSave(transmitters, TransmittersLocation, TransmittersSchema);
-        }
-
-        public static IEnumerable<string> GetVenueChunkNames()
-        {
-            var files = from filename in Directory.EnumerateFiles(VenueChunksLocation)
+            var files = from filename in Directory.EnumerateFiles(FixtureCollectionLocation)
                         where !filename.Contains(".schema")
                         select Path.GetFileNameWithoutExtension(filename);
             return files;
         }
 
-        public static bool HasVenueChunk(string id)
+        public static bool HasFixtureCollection(string id)
         {
-            string path = Path.Combine(VenueChunksLocation, id + ".json");
+            string path = Path.Combine(FixtureCollectionLocation, id + ".json");
             return File.Exists(path);
         }
 
-        public static void DeleteVenueChunk(string id)
+        public static void DeleteFixtureCollection(string id)
         {
-            string path = Path.Combine(VenueChunksLocation, id + ".json");
+            string path = Path.Combine(FixtureCollectionLocation, id + ".json");
             File.Delete(path);
         }
 
-        public static void SaveVenueChunk(JObject chunk)
+        public static void SaveFixtureCollection(JObject chunk)
         {
             string name = chunk["name"].Value<string>();
-            string path = Path.Combine(VenueChunksLocation, name + ".json");
-            ValidatedSave(chunk, path, VenueChunksSchema);
+            string path = Path.Combine(FixtureCollectionLocation, name + ".json");
+            ValidatedSave(chunk, path, FixtureCollectionsSchema);
         }
 
-        public static JObject LoadVenueChunk(string id)
+        public static JObject LoadFixtureCollection(string id)
         {
-            string path = Path.Combine(VenueChunksLocation, id + ".json");
-            JObject obj = ValidatedLoad(path, VenueChunksSchema) as JObject;
+            string path = Path.Combine(FixtureCollectionLocation, id + ".json");
+            JObject obj = ValidatedLoad(path, FixtureCollectionsSchema) as JObject;
+            return obj;
+        }
+
+        public static IEnumerable<string> GetVenueNames()
+        {
+            var files = from filename in Directory.EnumerateFiles(VenuesLocation)
+                        where !filename.Contains(".schema")
+                        select Path.GetFileNameWithoutExtension(filename);
+            return files;
+        }
+
+        public static bool HasVenue(string id)
+        {
+            string path = Path.Combine(VenuesLocation, id + ".json");
+            return File.Exists(path);
+        }
+
+        public static void DeleteVenue(string id)
+        {
+            string path = Path.Combine(VenuesLocation, id + ".json");
+            File.Delete(path);
+        }
+
+        public static void SaveVenue(JObject venue)
+        {
+            string name = venue["name"].Value<string>();
+            string path = Path.Combine(VenuesLocation, name + ".json");
+            ValidatedSave(venue, path, VenuesSchema);
+        }
+
+        public static JObject LoadVenue(string id)
+        {
+            string path = Path.Combine(VenuesLocation, id + ".json");
+            JObject obj = ValidatedLoad(path, VenuesSchema) as JObject;
             return obj;
         }
     }

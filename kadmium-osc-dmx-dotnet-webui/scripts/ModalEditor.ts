@@ -1,30 +1,31 @@
 ﻿// <reference path="jquery.d.ts" />
 
-class ModalEditor
+interface Named {
+    name: string;
+}
+
+class ModalEditor<T extends Named>
 {
     staticElements: JQuery;
-    jsonLoadURL: string;
-    jsonSaveURL: string;
     itemID: string;
+    prototype: any;
     validate: () => boolean;
-    getObject: () => any;
-
-    constructor(jsonDataURL: string, jsonSaveURL: string, getObject: () => any) {
+    
+    constructor() {
         this.staticElements = $("#edit-form").find("input,select");
-        this.jsonLoadURL = jsonDataURL;
-        this.jsonSaveURL = jsonSaveURL;
-        this.getObject = getObject;
-
+        
         let that = this;
 
-        $(".collection-remove").on("click", ModalEditor.collectionDefaultRemoveClick);
+        $(".collection-remove").on("click", (e: JQueryEventObject) => {
+            let element = $(e.target).closest("tr");
+            ModalEditor.collectionDefaultRemoveClick(element);
+        });
 
         $(".collection-add").each((index, elem) => {
             $(elem).on("click", (e) => {
                 ModalEditor.collectionDefaultAdd($(elem).data("collection-id"))
             });
         });
-        
 
         $("#modal-edit").on("show.bs.modal", (e: JQueryEventObject) => {
             that.itemID = $(e.relatedTarget).data("item-id") as string;
@@ -35,14 +36,12 @@ class ModalEditor
             $(".item-id").text(that.itemID == null ? "new item" : that.itemID);
             $("#edit-form").hide();
             that.disableElements("Loading...");
-            let url = that.jsonLoadURL + (that.itemID != null ? that.itemID : "");
             jQuery.ajax({
                 dataType: "json",
-                url: url,
+                url: listGetActionURL("Load", that.itemID),
                 success: $.proxy(that.onLoad, that),
                 error: that.onLoadError
             });
-            
         });
 
         $("#modal-submit").on("click", (e: JQueryEventObject) => {
@@ -50,12 +49,83 @@ class ModalEditor
             that.disableElements("Saving...");
             jQuery.ajax({
                 type: "POST",
-                url: jsonSaveURL + that.itemID,
+                url: listGetActionURL("Save", that.itemID),
                 data: { jsonString: JSON.stringify(that.getObject()) },
                 success: $.proxy(that.onSave, that),
                 error: that.onSaveError
             });
         });
+    }
+
+    getObject(): T
+    {
+        let obj: any = {};
+
+        for (let key in this.prototype) {
+            let value: any = this.prototype[key];
+            if (key == "$schema") 
+            {
+                //do nothing
+            }
+            else if (Array.isArray(value)) 
+            {
+                let parentElement = $("#" + key);
+                if (parentElement.prop("nodeName") == "TBODY")
+                {
+                    let rows = parentElement.children().not(".collection-prototype");
+                    let collection: any[] = [];
+                    obj[key] = collection;
+                    for (let row of rows.toArray())
+                    {
+                        let properties = $(row).children().children().not("button").toArray();
+                        let subObj: any = {};
+                        for (let propertyElement of properties)
+                        {
+                            let propertyKey = $(propertyElement).attr("id");
+                            if ($(propertyElement).prop("nodeName") == "SELECT")
+                            {
+                                subObj[propertyKey] = ModalEditor.getSelectElements($(propertyElement));
+                            }
+                            else
+                            {
+                                let propertyValue = $(propertyElement).val();
+                                subObj[propertyKey] = propertyValue;
+                            }
+                        }
+                        collection.push(subObj);
+                    }
+                }
+                else if (parentElement.prop("nodeName") == "SELECT")
+                {
+                    obj[key] = ModalEditor.getSelectElements(parentElement);
+                }
+            }
+            else
+            {
+                obj[key] = $("#edit-form").find("#" + key).val();
+            }
+        }
+
+        return obj;
+    }
+
+    static getSelectElements(selectBox: JQuery): any
+    {
+        if (selectBox.prop("multiple"))
+        {
+            let values: string[] = [];
+            selectBox.children(":selected").each((index, element) => 
+            {
+                values.push($(element).val());
+            });
+            return values;
+        }
+        else
+        {
+            let value = selectBox.children(":selected").val();
+            return value;
+        }
+
     }
 
     onSaveError(xhr: JQueryXHR, textStatus: string, errorThrown: string) {
@@ -74,7 +144,11 @@ class ModalEditor
 
     onSave(data: any, textStatus: string, jqXHR: JQueryXHR)
     {
-        if (this.getObject().name != this.itemID)
+        if (this.itemID == null)
+        {
+            listItemAdd(this.getObject().name);
+        }
+        else if (this.getObject().name != this.itemID)
         {
             listItemRename(this.itemID, this.getObject().name);
         }
@@ -89,6 +163,7 @@ class ModalEditor
 
     onLoad(data: any, textStatus: string, jqXHR: JQueryXHR)
     {
+        this.prototype = data;
         for (let key in data) {
             let value: any = data[key];
             if (key == "$schema")
@@ -97,15 +172,28 @@ class ModalEditor
             }
             else if (Array.isArray(value))
             {
-                for (let arrayItem of value)
-                {
-                    let row = ModalEditor.collectionDefaultAdd(key);
-                    for (let arrayItemKey in arrayItem)
-                    {
-                        let arrayItemValue: any = arrayItem[arrayItemKey];
-                        row.children().children("#" + arrayItemKey).val(arrayItemValue);
-                    }
+                let arrayElement = $("#" + key);
+                let array = value as string[];
+                
+                switch (arrayElement.prop("nodeName")) {
+                    case "SELECT":
+                        arrayElement.children().each((index, element) => {
+                            let present = array.indexOf($(element).val()) != -1;
+                            $(element).prop("selected", present);
+                        });
+                        break;
+                    default:
+                        for (let arrayItem of value) {
+                            let row = ModalEditor.collectionDefaultAdd(key);
+                            for (let arrayItemKey in arrayItem) {
+                                let arrayItemValue: any = arrayItem[arrayItemKey];
+                                row.children().children("#" + arrayItemKey).val(arrayItemValue);
+                            }
+                        }
+
+                        break;
                 }
+                
             }
             else
             {
@@ -116,10 +204,9 @@ class ModalEditor
         $("#edit-form").show();
     }
 
-    static collectionDefaultRemoveClick(event: JQueryEventObject): void
+    static collectionDefaultRemoveClick(row: JQuery): void
     {
-        let row = this.parentElement.parentElement as HTMLTableRowElement;
-        row.parentElement.removeChild(row);
+        row.remove();
     }
 
     static collectionDefaultAdd(name: string): JQuery {

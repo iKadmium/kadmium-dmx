@@ -54,5 +54,6 @@
       }
     }
   },
-  "required": ["name", "type", "channels", "movements"]
+  "required": [ "name", "type", "channels", "movements" ],
+  "additionalProperties": false
 }

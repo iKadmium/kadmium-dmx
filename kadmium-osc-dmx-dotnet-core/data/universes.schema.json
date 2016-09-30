@@ -1,0 +1,26 @@
+﻿{
+  "$schema": "http://json-schema.org/draft-04/schema#",
+  "title": "Universes List",
+  "description": "The DMX channels the fixture uses",
+  "type": "array",
+  "items": {
+    "type": "object",
+    "properties": {
+      "name": {
+        "description": "The name of the DMX Channel",
+        "type": "string"
+      },
+      "transmitters": {
+        "description": "The list of transmitter names",
+        "type": "array",
+        "items": {
+          "type": "string",
+          "description": "The name of the transmitter"
+        }
+      }
+    },
+    "required": [ "name", "transmitters" ],
+    "additionalProperties": false
+
+  }
+}

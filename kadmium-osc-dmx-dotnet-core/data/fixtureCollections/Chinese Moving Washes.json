@@ -1,26 +1,27 @@
 ﻿{
   "name": "Chinese Moving Washes",
+  "universe": "Private Universe",
   "fixtures": [
     {
-      "startChannel": 301,
+      "channel": 301,
       "type": "Chinese Moving Wash",
       "group": "rearSides",
       "options": []
     },
     {
-      "startChannel": 315,
+      "channel": 315,
       "type": "Chinese Moving Wash",
       "group": "rearSides",
       "options": []
     },
     {
-      "startChannel": 329,
+      "channel": 329,
       "type": "Chinese Moving Wash",
       "group": "rearSides",
       "options": []
     },
     {
-      "startChannel": 343,
+      "channel": 343,
       "type": "Chinese Moving Wash",
       "group": "rearSides",
       "options": []

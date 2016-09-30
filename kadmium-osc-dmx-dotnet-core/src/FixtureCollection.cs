@@ -15,16 +15,18 @@ namespace kadmium_osc_dmx_dotnet_core
         public IEnumerable<string> Options { get; set; }
     }
 
-    public class VenueChunk
+    public class FixtureCollection
     {
         public string Name { get; set; }
+        public string Universe { get; set; }
         public IEnumerable<FixtureEntry> FixtureEntries { get;}
         
-        public VenueChunk() : this("", Enumerable.Empty<FixtureEntry>()) { }
+        public FixtureCollection() : this("", "", Enumerable.Empty<FixtureEntry>()) { }
 
-        public VenueChunk(string name, IEnumerable<FixtureEntry> fixtureEntries)
+        public FixtureCollection(string name, string universe, IEnumerable<FixtureEntry> fixtureEntries)
         {
             Name = name;
+            Universe = universe;
             FixtureEntries = fixtureEntries;
         }
 
@@ -32,10 +34,11 @@ namespace kadmium_osc_dmx_dotnet_core
         {
             JObject obj = new JObject(
                 new JProperty("name", Name),
+                new JProperty("universe", Universe),
                 new JProperty("fixtures",
                     from entry in FixtureEntries
                     select new JObject(
-                        new JProperty("startChannel", entry.StartChannel),
+                        new JProperty("channel", entry.StartChannel),
                         new JProperty("type", entry.Type),
                         new JProperty("group", entry.Group),
                         new JProperty("options", entry.Options)
@@ -45,18 +48,19 @@ namespace kadmium_osc_dmx_dotnet_core
             return obj;
         }
 
-        public static VenueChunk Load(JObject obj)
+        public static FixtureCollection Load(JObject obj)
         {
             string name = obj["name"].Value<string>();
+            string universe = obj["universe"].Value<string>();
             var fixtureEntries = from fixture in obj["fixtures"].ToArray()
                                  select new FixtureEntry
                                  {
-                                     StartChannel = fixture["startChannel"].Value<int>(),
+                                     StartChannel = fixture["channel"].Value<int>(),
                                      Type = fixture["type"].Value<string>(),
                                      Group = fixture["group"].Value<string>(),
-                                     Options = fixture["group"].Values<string>()
+                                     Options = fixture["options"].Values<string>()
                                  };
-            return new VenueChunk(name, fixtureEntries);
+            return new FixtureCollection(name, universe, fixtureEntries);
         }
     }
 }

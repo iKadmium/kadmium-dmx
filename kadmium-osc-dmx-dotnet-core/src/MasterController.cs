@@ -13,12 +13,13 @@ namespace kadmium_osc_dmx_dotnet_core
 {
     public class MasterController
     {
-        public Dictionary<string, Group> Groups { get; set; }
-        public List<Listener> Listeners { get; set; }
-        public List<Transmitter> Transmitters { get; set; }
-        public List<Universe> Universes { get; set; }
-        public Strobe Strobe { get; set; }
-        public Random Random { get; set; }
+        public Dictionary<string, Group> Groups { get; private set; }
+        public List<Listener> Listeners { get; private set; }
+        public List<Transmitter> Transmitters { get; private set; }
+        public Dictionary<string, Universe> Universes { get; private set; }
+        public Venue Venue { get; private set; }
+        public Strobe Strobe { get; }
+        public Random Random { get; }
         private Timer updateTimer;
 
         private static MasterController instance;
@@ -34,23 +35,21 @@ namespace kadmium_osc_dmx_dotnet_core
         public static void Initialise()
         {
             instance = new MasterController();
-            instance.Random = new Random();
-            instance.Strobe = new Strobe(20);
-            instance.Groups = FileAccess.LoadGroups().ToDictionary(x => x.Name, x => x);
-            instance.Listeners = FileAccess.LoadListeners().ToList();
-            instance.Transmitters = FileAccess.LoadTransmitters().ToList();
+            Instance.Groups = FileAccess.LoadGroups().ToDictionary(x => x.Name, x => x);
+            Instance.Transmitters = FileAccess.LoadTransmitters().ToList();
+            Instance.Universes = FileAccess.LoadUniverses().ToDictionary(x => x.Name, x => x);
+            Instance.Listeners = FileAccess.LoadListeners().ToList();
         }
 
         private MasterController()
         {
-            Groups = new Dictionary<string, Group>();
-            Transmitters = new List<Transmitter>();
-            Universes = new List<Universe>();
+            Random = new Random();
+            Strobe = new Strobe(20);
         }
 
         public void LoadVenue(string venue)
         {
-            Universes.AddRange(FileAccess.LoadVenue(venue));
+            Venue = Venue.Load(FileAccess.LoadVenue(venue));
         }
 
         public void Update()
@@ -59,7 +58,7 @@ namespace kadmium_osc_dmx_dotnet_core
             {
                 group.Update();
             }
-            foreach(Universe universe in Universes)
+            foreach(Universe universe in Universes.Values)
             {
                 universe.Update();
             }

@@ -4,19 +4,20 @@
 *@
 @{
     Layout = "~/Views/Shared/_ListLayout.cshtml";
-    ViewData["Title"] = "Venue Chunks";
+    ViewData["Title"] = "Fixture Collections";
 
     var inputs = new InputElement[]
     {
         new InputText("name", "Name:"),
+        new InputSelect("universe", "Universe:", MasterController.Instance.Universes.Keys.ToDictionary(x => x)),
         new InputCollection("fixtures", "Fixtures:",
-            new InputSelect("model", "Model", FileAccess.GetFixtureNames().ToDictionary(x => x)),
+            new InputSelect("type", "Model", FileAccess.GetFixtureNames().ToDictionary(x => x)),
             new InputNumber("channel", "Channel", 1, 512),
             new InputSelect("group", "Group", MasterController.Instance.Groups.Keys.ToDictionary(x => x)),
-            new InputText("options", "Options", false)
+            new InputMultiSelect("options", "Options", new Dictionary<string, string>() {["Stupid"] = "Stupid" })
         )
     };
 }
 @Html.Partial("ModalEdit", inputs)
 
-<script src="~/js/SACNTransmitterEdit.js"></script>
+<script src="~/js/Controllers/FixtureCollectionEdit.js"></script>

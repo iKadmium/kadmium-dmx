@@ -1,5 +1,5 @@
 namespace OSCListener {
-    let modalEditor: ModalEditor;
+    let modalEditor: ModalEditor<OSCListener>;
 
     interface OSCListener {
         name: string;
@@ -15,7 +15,7 @@ namespace OSCListener {
     }
 
     function onLoad(): void {
-        modalEditor = new ModalEditor("OSCListeners/Load/", "OSCListeners/Save/", getObject);
+        modalEditor = new ModalEditor<OSCListener>();
     }
 
     window.addEventListener("load", onLoad);

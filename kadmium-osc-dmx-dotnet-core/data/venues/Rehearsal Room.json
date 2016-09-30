@@ -1,10 +1,4 @@
 ﻿{
   "name": "Rehearsal Room",
-  "universes": [
-    {
-      "name": "Main Universe",
-      "transmitters": [ "enttecTransmitter", "sacnTransmitter" ],
-      "chunks": [ "Chinese Still Washes", "Chinese Moving Washes", "Drum FadeCandy" ]
-    }
-  ]
+  "fixtureCollections": [ "Chinese Still Washes", "Chinese Moving Washes", "Drum FadeCandy" ]
 }

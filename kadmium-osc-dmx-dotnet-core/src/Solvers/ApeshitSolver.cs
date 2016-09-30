@@ -32,7 +32,7 @@ namespace kadmium_osc_dmx_dotnet_core.Solvers
                 bool strobeValue = Strobe.GetValue();
                 if (strobeValue != lastStrobe)
                 {
-                    int count = (int)Math.Floor(Group.Fixtures.Count * (1.0 - Coverage));
+                    int count = (int)Math.Floor((double)(Group.Fixtures.Count * (1.0 - Coverage)));
                     IEnumerable<Fixture> proposedBlackoutFixtures = Group.Fixtures.PickRandom(count);
                     while(proposedBlackoutFixtures.SequenceEqualIgnoreOrder(blackoutFixtures))
                     {

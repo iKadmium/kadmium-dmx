@@ -14,15 +14,32 @@ namespace kadmium_osc_dmx_dotnet_core
         private static int DMX_UNIVERSE_SIZE = 512;
         public string Name { get; set; }
         public IEnumerable<Transmitter> TransmitterTargets { get; set; }
-        public List<VenueChunk> VenueChunks { get; }
+        public List<Fixture> Fixtures { get; }
 
         public Universe(string name, IEnumerable<Transmitter> transmitterTargets)
         {
+            Name = name;
             TransmitterTargets = transmitterTargets;
-            VenueChunks = new List<VenueChunk>();
+            Fixtures = new List<Fixture>();
         }
 
-        internal static Universe Load(string sourceDocumentLocation, JObject universeElement)
+        public Universe() : this("", Enumerable.Empty<Transmitter>())
+        {
+        }
+
+        public JObject Serialize()
+        {
+            JObject obj = new JObject(
+                new JProperty("name", Name),
+                new JProperty("transmitters",
+                    from transmitter in TransmitterTargets
+                    select transmitter.Name
+                )
+            );
+            return obj;
+        }
+
+        public static Universe Load(JObject universeElement)
         {
             var targets = from transmitterName in universeElement["transmitters"].Values<string>()
                           select MasterController.Instance.Transmitters.Single(x => x.Name == transmitterName);

@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Mvc;
 using kadmium_osc_dmx_dotnet_core;
 using kadmium_osc_dmx_dotnet_core.Transmitters;
 using Newtonsoft.Json.Linq;
+using kadmium_osc_dmx_dotnet_webui.ViewHelpers;
 
 // For more information on enabling MVC for empty projects, visit http://go.microsoft.com/fwlink/?LinkID=397860
 
@@ -16,7 +17,7 @@ namespace kadmium_osc_dmx_dotnet_webui.Controllers
         // GET: /<controller>/
         public IActionResult Index()
         {
-            return View();
+            return View(new ListData("EntTec Transmitter", MasterController.Instance.Transmitters.Where(x => x is EnttecProTransmitter).Select(x => x.Name)));
         }
 
         public IActionResult Load(string id)

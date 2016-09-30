@@ -1,5 +1,5 @@
 ﻿namespace Group {
-    let modalEditor: ModalEditor;
+    let modalEditor: ModalEditor<Group>;
 
     interface Group {
         name: string;
@@ -13,7 +13,7 @@
     }
 
     function onLoad(): void {
-        modalEditor = new ModalEditor("Groups/Load/", "Groups/Save/", getObject);
+        modalEditor = new ModalEditor();
     }
 
     window.addEventListener("load", onLoad);

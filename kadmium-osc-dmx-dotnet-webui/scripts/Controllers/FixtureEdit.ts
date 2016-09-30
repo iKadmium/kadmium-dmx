@@ -21,8 +21,8 @@ namespace Fixture {
         channels: DMXChannel[],
         movements: FixtureAxis[]
     }
-    
-    let modalEditor: ModalEditor;
+
+    let modalEditor: ModalEditor<FixtureDefinition>;
     
     function addChannelClick(event: JQueryEventObject): void {
         let newChannel = ModalEditor.collectionDefaultAdd("channels");
@@ -70,7 +70,7 @@ namespace Fixture {
     function getObject(): FixtureDefinition {
         let output: FixtureDefinition = {
             name: $("#name").val(),
-            type: $("type").val(),
+            type: $("#type").val(),
             channels: getChannels(),
             movements: getMovements()
         };
@@ -79,7 +79,7 @@ namespace Fixture {
     
     function onLoad(): void {
 
-        modalEditor = new ModalEditor("Fixtures/Load/", "Fixtures/Save/", getObject);
+        modalEditor = new ModalEditor<FixtureDefinition>();
 
         $("#channels-add").off("click");
         $("#channels-add").on("click", addChannelClick);

@@ -18,17 +18,14 @@
             "description": "The name of this universe",
             "type": "string"
           },
-          "transmitters": {
-            "description": "The transmitters that the universe should transmit on",
-            "type": "array",
-            "items": { "type": "string" }
-          },
-          "chunks": {
-            "description": "The chunks contained in this venue",
+          "fixtureCollections": {
+            "description": "The fixture collections contained in this venue",
             "type": "array",
             "items": { "type": "string" }
           }
-        }
+        },
+        "required": [ "fixtureCollections", "name" ],
+        "additionalProperties": false
       }
     }
   }

@@ -1,20 +1,24 @@
 ﻿{
   "$schema": "http://json-schema.org/draft-04/schema#",
-  "title": "Venue Chunk",
-  "description": "Describes a venue chunk",
+  "title": "Fixture Collection",
+  "description": "Describes a fixture collection",
   "type": "object",
   "properties": {
     "name": {
       "type": "string",
-      "description": "The name of the venue"
+      "description": "The name of the collection"
+    },
+    "universe": {
+      "type": "string",
+      "description": "The name of the universe to which this fixture will belong"
     },
     "fixtures": {
       "type": "array",
-      "description": "A list of universes for this venue",
+      "description": "A list of fixtures for this collection",
       "items": {
         "type": "object",
         "properties": {
-          "startChannel": {
+          "channel": {
             "description": "The channel assigned to the fixture",
             "type": "number"
           },
@@ -31,8 +35,12 @@
             "type": "array",
             "items": { "type": "string" }
           }
-        }
+        },
+        "required": [ "channel", "group", "options", "type" ],
+        "additionalProperties": false
       }
     }
-  }
+  },
+  "required": [ "name", "universe", "fixtures" ],
+  "additionalProperties": false
 }

@@ -13,7 +13,7 @@ function deleteConfirmationOnLoad(): void
 {
     $("#modal-delete").on("click", (e: JQueryEventObject) => {
         $("#modal-delete").prop("disabled", true);
-        jQuery.post("Fixtures/Delete/" + deleteItemID, onSave);
+        jQuery.post(listGetActionURL("Delete", deleteItemID), onSave);
     });
 
     $("#confirm-delete").on("show.bs.modal", (e: JQueryEventObject) => {

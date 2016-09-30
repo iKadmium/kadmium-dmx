@@ -1,0 +1,12 @@
+﻿@model InputMultiSelect
+@*
+    For more information on enabling MVC for empty projects, visit http://go.microsoft.com/fwlink/?LinkID=397860
+*@
+@{
+}
+<select multiple class="form-control" id="@Model.ID" disabled>
+    @foreach (KeyValuePair<string, string> option in Model.Options)
+    {
+        <option value="@option.Key">@option.Value</option>
+    }
+</select>
