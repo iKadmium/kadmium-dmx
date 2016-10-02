@@ -1,12 +1,17 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net.WebSockets;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
+using System.Threading;
+using System.Text;
+using kadmium_osc_dmx_dotnet_webui.WebSockets;
 
 namespace kadmium_osc_dmx_dotnet_webui
 {
@@ -47,8 +52,12 @@ namespace kadmium_osc_dmx_dotnet_webui
                 app.UseExceptionHandler("/Home/Error");
             }
 
+            app.UseWebSockets();
+            app.UseDefaultFiles();
             app.UseStaticFiles();
 
+            app.Map("/Preview2D/Socket", Preview2DSocketHandler.Map);
+            
             app.UseMvc(routes =>
             {
                 routes.MapRoute(
@@ -56,5 +65,7 @@ namespace kadmium_osc_dmx_dotnet_webui
                     template: "{controller=Home}/{action=Index}/{id?}");
             });
         }
+        
+
     }
 }

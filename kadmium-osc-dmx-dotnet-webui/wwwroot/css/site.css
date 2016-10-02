@@ -46,3 +46,9 @@ textarea {
 {
     display: none;
 }
+
+.fixture-canvas
+{
+    border: 1px solid black;
+    fill: green;
+}

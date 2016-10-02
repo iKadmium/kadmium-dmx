@@ -55,5 +55,10 @@ namespace kadmium_osc_dmx_dotnet_core
                 solver.Solve(FrameSettables);
             }
         }
+
+        public void Clear()
+        {
+            Fixtures.Clear();
+        }
     }
 }

@@ -44,5 +44,13 @@ namespace kadmium_osc_dmx_dotnet_core
 
             return new Venue(name, fixtureCollections);
         }
+
+        public void Activate()
+        {
+            foreach(FixtureCollection collection in FixtureCollections)
+            {
+                collection.Activate();
+            }
+        }
     }
 }

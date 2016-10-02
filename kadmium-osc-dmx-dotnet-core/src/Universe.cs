@@ -11,7 +11,7 @@ namespace kadmium_osc_dmx_dotnet_core
 {
     public class Universe
     {
-        private static int DMX_UNIVERSE_SIZE = 512;
+        public static int DMX_UNIVERSE_SIZE = 512;
         public string Name { get; set; }
         public IEnumerable<Transmitter> TransmitterTargets { get; set; }
         public List<Fixture> Fixtures { get; }

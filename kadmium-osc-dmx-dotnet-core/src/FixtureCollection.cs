@@ -47,7 +47,7 @@ namespace kadmium_osc_dmx_dotnet_core
             );
             return obj;
         }
-
+        
         public static FixtureCollection Load(JObject obj)
         {
             string name = obj["name"].Value<string>();
@@ -61,6 +61,19 @@ namespace kadmium_osc_dmx_dotnet_core
                                      Options = fixture["options"].Values<string>()
                                  };
             return new FixtureCollection(name, universe, fixtureEntries);
+        }
+
+        public void Activate()
+        {
+            Universe universe = MasterController.Instance.Universes[Universe];
+            foreach(var entry in FixtureEntries)
+            {
+                Definition definition = Definition.Load(entry.Type);
+                Fixture fixture = new Fixture(definition);
+                fixture.StartChannel = entry.StartChannel;
+                Group group = MasterController.Instance.Groups[entry.Group];
+                group.Fixtures.Add(fixture);
+            }
         }
     }
 }

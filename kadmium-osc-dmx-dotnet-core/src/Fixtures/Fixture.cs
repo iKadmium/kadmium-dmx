@@ -34,7 +34,29 @@ namespace kadmium_osc_dmx_dotnet_core.Fixtures
             }
             MovementAxis = new Dictionary<string, MovementAxis>();
         }
-        
+
+        public JObject RenderToJSON()
+        {
+            var relevant = new string[] { "", "" };
+            var color = new OSCforPCL.Values.Color(
+                (byte)Math.Round(FrameSettables["Red"].Value * 255),
+                (byte)Math.Round(FrameSettables["Green"].Value * 255),
+                (byte)Math.Round(FrameSettables["Blue"].Value * 255),
+                255);
+
+            JObject obj = new JObject(
+                new JProperty("address", StartChannel),
+                new JProperty("color", string.Format("#{0:X2}{1:X2}{2:X2}", color.Red, color.Green, color.Blue)),
+                new JProperty("channels",
+                    from channel in Definition.Channels
+                    select new JObject(
+                        new JProperty(channel.RelativeAddress + StartChannel - 1 + "", channel.ByteValue)
+                    )
+                )
+            );
+
+            return obj;
+        }
 
         internal void Update()
         {
@@ -47,9 +69,7 @@ namespace kadmium_osc_dmx_dotnet_core.Fixtures
             {
                 solver.Solve(FrameSettables);
             }
-
             
-
             Updated?.Invoke(this, new EventArgs());
         }
 
@@ -68,7 +88,7 @@ namespace kadmium_osc_dmx_dotnet_core.Fixtures
 
         public override string ToString()
         {
-            return Definition.Name + "[" + StartChannel + " - "  + "]";
+            return Definition.Name + " [" + StartChannel + " - " + EndChannel + "]";
         }
     }
 }

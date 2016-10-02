@@ -7,7 +7,7 @@ using System.Net.Sockets;
 using System.Text;
 using System.Threading.Tasks;
 using Newtonsoft.Json.Linq;
-using kadmium_sacn;
+using kadmium_sacn_core;
 
 namespace kadmium_osc_dmx_dotnet_core.Transmitters
 {

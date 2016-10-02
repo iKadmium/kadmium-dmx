@@ -49,7 +49,12 @@ namespace kadmium_osc_dmx_dotnet_core
 
         public void LoadVenue(string venue)
         {
+            foreach(Group group in Groups.Values)
+            {
+                group.Clear();
+            }
             Venue = Venue.Load(FileAccess.LoadVenue(venue));
+            Venue.Activate();
         }
 
         public void Update()

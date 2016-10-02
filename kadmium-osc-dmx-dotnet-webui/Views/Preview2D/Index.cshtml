@@ -1,0 +1,59 @@
+﻿@using kadmium_osc_dmx_dotnet_core.Fixtures
+@using kadmium_osc_dmx_dotnet_core
+@using kadmium_osc_dmx_dotnet_webui.Controllers;
+@*
+    For more information on enabling MVC for empty projects, visit http://go.microsoft.com/fwlink/?LinkID=397860
+*@
+@{
+}
+@foreach (Group group in MasterController.Instance.Groups.Values)
+{
+    <div class="panel panel-default">
+        <div class="panel-heading">@group.Name</div>
+        <div class="panel-body">
+            @foreach (IEnumerable<Fixture> batch in group.Fixtures.Batch(4))
+            {
+                <div class="row">
+                    @foreach (Fixture fixture in batch)
+                    {
+                        <div class="col-sm-3">
+                            <div class="panel panel-default">
+                                <div class="panel-heading text-center">@fixture.ToString()</div>
+                                <div class="panel-body text-center">
+                                    <canvas class="fixture-canvas" width="150" height="150" id="canvas-@fixture.StartChannel"></canvas>
+                                </div>
+                                <div class="text-center">
+                                    <button data-toggle="collapse" data-target="#dmx-@fixture.StartChannel" class="btn btn-default">DMX</button>
+
+                                    <div id="dmx-@fixture.StartChannel" class="collapse">
+                                        <table class="table table-striped">
+                                            <thead>
+                                                <tr>
+                                                    <th>DMX</th>
+                                                    <th>Name</th>
+                                                    <th>Value</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                @foreach (var channel in fixture.Definition.Channels)
+                                                {
+                                                    var address = channel.RelativeAddress + fixture.StartChannel - 1;
+                                                    <tr>
+                                                        <th>@address</th>
+                                                        <th>@channel.Name</th>
+                                                        <th id="channel-@address">@channel.Value</th>
+                                                    </tr>
+                                                }
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    }
+                </div>
+            }
+        </div>
+    </div>
+}
+<script src="~/js/Preview2D.js"></script>

@@ -69,5 +69,20 @@ namespace kadmium_osc_dmx_dotnet_webui.Controllers
             }
             return new EmptyResult();
         }
+
+        public IActionResult Activate(string id)
+        {
+            if(FileAccess.HasVenue(id))
+            {
+                MasterController.Instance.LoadVenue(id);
+                Response.StatusCode = 200;
+                return new EmptyResult();
+            }
+            else
+            {
+                Response.StatusCode = 404;
+                return new EmptyResult();
+            }
+        }
     }
 }
