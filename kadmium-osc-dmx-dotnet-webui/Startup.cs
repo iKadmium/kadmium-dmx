@@ -53,7 +53,7 @@ namespace kadmium_osc_dmx_dotnet_webui
             }
 
             app.UseWebSockets();
-            app.UseDefaultFiles();
+            //app.UseDefaultFiles();
             app.UseStaticFiles();
 
             app.Map("/Preview2D/Socket", Preview2DSocketHandler.Map);

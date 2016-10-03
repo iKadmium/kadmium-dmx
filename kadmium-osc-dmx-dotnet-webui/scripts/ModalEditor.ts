@@ -13,7 +13,6 @@ class ModalEditor<T extends Named>
     
     constructor() {
         this.staticElements = $("#edit-form").find("input,select");
-        
         let that = this;
 
         $(".collection-remove").on("click", (e: JQueryEventObject) => {
@@ -26,7 +25,7 @@ class ModalEditor<T extends Named>
                 ModalEditor.collectionDefaultAdd($(elem).data("collection-id"))
             });
         });
-
+        
         $("#modal-edit").on("show.bs.modal", (e: JQueryEventObject) => {
             that.itemID = $(e.relatedTarget).data("item-id") as string;
             $("#modal-result").hide();
@@ -54,6 +53,13 @@ class ModalEditor<T extends Named>
                 success: $.proxy(that.onSave, that),
                 error: that.onSaveError
             });
+        });
+
+        jQuery.ajax({
+            dataType: "json",
+            url: listGetActionURL("Schema", null),
+            success: $.proxy(that.onSchema, that),
+            error: that.onSchemaError
         });
     }
 
@@ -125,7 +131,6 @@ class ModalEditor<T extends Named>
             let value = selectBox.children(":selected").val();
             return value;
         }
-
     }
 
     onSaveError(xhr: JQueryXHR, textStatus: string, errorThrown: string) {
@@ -136,6 +141,13 @@ class ModalEditor<T extends Named>
     }
 
     onLoadError(xhr: JQueryXHR, textStatus: string, errorThrown: string) {
+        $("#modal-status").hide();
+        $("#modal-result").removeClass("alert-success").addClass("alert-danger");
+        $("#modal-result-text").text(errorThrown);
+        $("#modal-result").show();
+    }
+
+    onSchemaError(xhr: JQueryXHR, textStatus: string, errorThrown: string) {
         $("#modal-status").hide();
         $("#modal-result").removeClass("alert-success").addClass("alert-danger");
         $("#modal-result-text").text(errorThrown);
@@ -163,7 +175,6 @@ class ModalEditor<T extends Named>
 
     onLoad(data: any, textStatus: string, jqXHR: JQueryXHR)
     {
-        this.prototype = data;
         for (let key in data) {
             let value: any = data[key];
             if (key == "$schema")
@@ -190,10 +201,8 @@ class ModalEditor<T extends Named>
                                 row.children().children("#" + arrayItemKey).val(arrayItemValue);
                             }
                         }
-
                         break;
                 }
-                
             }
             else
             {
@@ -202,6 +211,51 @@ class ModalEditor<T extends Named>
         }
         this.enableElements();
         $("#edit-form").show();
+    }
+
+    onSchema(data: any, textStatus: string, jqXHR: JQueryXHR)
+    {
+        let properties: any;
+        let obj: any = {};
+        if (data.type == "array")
+        {
+            properties = data.items.properties;
+        }
+        else
+        {
+            properties = data.properties;
+        }
+        ModalEditor.createPrototype(obj, properties);
+        this.prototype = obj;
+    }
+
+    static createPrototype(obj: any, properties: any) : any
+    {
+        for (let key in properties)
+        {
+            if (key != "$schema")
+            {
+                obj[key] = ModalEditor.createProperty(properties[key]);
+            }
+        }
+        return obj;
+    }
+
+    static createProperty(definition: any): any
+    {
+        switch (definition.type)
+        {
+            case "string":
+                return "";
+            case "integer":
+                return 0;
+            case "array":
+                return [ModalEditor.createProperty(definition.items)];
+            case "object":
+                return ModalEditor.createPrototype({}, definition.properties);
+            default:
+                return "";
+        }
     }
 
     static collectionDefaultRemoveClick(row: JQuery): void

@@ -19,6 +19,13 @@ namespace kadmium_osc_dmx_dotnet_webui.Controllers
             return View(new ListData("Universe", MasterController.Instance.Universes.Keys));
         }
 
+        public IActionResult Schema()
+        {
+            JObject obj = FileAccess.GetUniverseSchema();
+            Response.StatusCode = 200;
+            return Content(obj.ToString());
+        }
+
         public IActionResult Load(string id)
         {
             if (id == null)

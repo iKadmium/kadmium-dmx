@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Newtonsoft.Json.Linq;
 
 namespace kadmium_osc_dmx_dotnet_core
 {
@@ -23,7 +24,11 @@ namespace kadmium_osc_dmx_dotnet_core
             Settables = new Dictionary<string, Attribute>();
             FrameSettables = new Dictionary<string, Attribute>();
         }
-        
+
+        public Group() : this("")
+        {
+        }
+
         public void Set(string attribute, float value)
         {
             if(Settables.ContainsKey(attribute))
@@ -38,6 +43,14 @@ namespace kadmium_osc_dmx_dotnet_core
                     fixture.Settables[attribute].Value = value;
                 }
             }
+        }
+
+        public JObject Serialize()
+        {
+            JObject obj = new JObject(
+                new JProperty("name", Name)
+            );
+            return obj;
         }
 
         internal void Update()
@@ -59,6 +72,12 @@ namespace kadmium_osc_dmx_dotnet_core
         public void Clear()
         {
             Fixtures.Clear();
+        }
+
+        public static Group Load(JObject groupObject)
+        {
+            string name = groupObject["name"].Value<string>();
+            return new Group(name);
         }
     }
 }

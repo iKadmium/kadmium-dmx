@@ -11,27 +11,29 @@ var plumber = require("gulp-plumber");
 
 var paths =
 {
-    scripts: ["scripts/**/*.ts"]
+    typescript: ["scripts/**/*.ts"],
+    javascript: ["scripts/**/*.js"],
+    destination: "wwwroot/js"
 };
 
-gulp.task("clean", function () {
+gulp.task("clean", function ()
+{
     return del(["wwwroot/scripts/**/*"]);
 });
 
-gulp.task("watch", function () {
-    return gulp.on("error", swallowError).watch(paths.scripts, ["default"]);
+gulp.task("watch", function ()
+{
+    return gulp.watch([paths.typescript, paths.javascript], ["default"]);
 });
 
-function swallowError(error)
+gulp.task('default', function ()
 {
-    console.log(error.toString())
+    gulp.src(paths.javascript)
+        .pipe(plumber())
+        .pipe(gulp.dest(paths.destination));
 
-    this.emit('end')
-}
-
-gulp.task('default', function () {
-    gulp.src(paths.scripts)
+    gulp.src(paths.typescript)
         .pipe(plumber())
         .pipe(typescript({sourceMap: true}))
-        .pipe(gulp.dest('wwwroot/js'));
+        .pipe(gulp.dest(paths.destination));
 });

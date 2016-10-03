@@ -9,7 +9,7 @@
     var inputs = new InputElement[]
     {
         new InputText("name", "Name:"),
-        new InputMultiSelect("transmitters", "Transmitters:", FileAccess.GetFixtureCollectionNames().ToDictionary(x => x))
+        new InputMultiSelect("transmitters", "Transmitters:", MasterController.Instance.Transmitters.ToDictionary(x => x.Name, x => x.Name))
     };
 }
 

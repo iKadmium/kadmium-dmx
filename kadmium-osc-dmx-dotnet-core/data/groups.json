@@ -1,10 +1,26 @@
 ﻿[
-  "vocalist",
-  "guitarist",
-  "bassist",
-  "drummer",
-  "rearSides",
-  "drumLEDs",
-  "guitarLEDs",
-  "audience"
+	{
+		"name": "vocalist"
+	},
+	{
+		"name": "guitarist"
+	},
+	{
+		"name": "bassist"
+	},
+	{
+		"name": "drummer"
+	},
+	{
+		"name": "rearSides"
+	},
+	{
+		"name": "drumLEDs"
+	},
+	{
+		"name": "guitarLEDs"
+	},
+	{
+		"name": "audience"
+	}
 ]

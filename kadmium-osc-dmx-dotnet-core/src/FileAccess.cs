@@ -23,6 +23,7 @@ namespace kadmium_osc_dmx_dotnet_core
         static string VenuesLocation = Path.Combine(DataLocation, "venues");
         static string FixtureCollectionLocation = Path.Combine(DataLocation, "fixtureCollections");
 
+        static string JsonSchemaSchema = Path.Combine(DataLocation, "jsonschema.schema.json");
         static string FixturesSchema = Path.Combine(FixturesLocation, "fixture.schema.json");
         static string GroupsSchema = Path.Combine(DataLocation, "groups.schema.json");
         static string UniversesSchema = Path.Combine(DataLocation, "universes.schema.json");
@@ -76,19 +77,25 @@ namespace kadmium_osc_dmx_dotnet_core
         internal static IEnumerable<Group> LoadGroups()
         {
             JArray groupsObject = ValidatedLoad(GroupsLocation, GroupsSchema).Value<JArray>();
-            var groups = from groupName in groupsObject
-                         select new Group(groupName.Value<string>());
+            var groups = from groupObject in groupsObject
+                         select Group.Load(groupObject as JObject);
             return groups;
         }
 
         public static void SaveGroups()
         {
             JArray groups = new JArray(
-                from groupName in MasterController.Instance.Groups.Keys
-                select groupName
+                from grp in MasterController.Instance.Groups.Values
+                select grp.Serialize()
             );
 
             ValidatedSave(groups, GroupsLocation, GroupsSchema);
+        }
+
+        public static JObject GetGroupsSchema()
+        {
+            JObject schema = ValidatedLoad(GroupsSchema, JsonSchemaSchema) as JObject;
+            return schema;
         }
 
         internal static IEnumerable<Transmitter> LoadTransmitters()
@@ -145,6 +152,12 @@ namespace kadmium_osc_dmx_dotnet_core
             ValidatedSave(universes, ListenersLocation, ListenersSchema);
         }
 
+        public static JObject GetUniverseSchema()
+        {
+            JObject schema = ValidatedLoad(UniversesSchema, JsonSchemaSchema) as JObject;
+            return schema;
+        }
+
         public static bool HasFixtureDefinition(string model)
         {
             string path = Path.Combine(FixturesLocation, model + ".json");
@@ -169,6 +182,12 @@ namespace kadmium_osc_dmx_dotnet_core
             string model = definition["name"].Value<string>();
             string path = Path.Combine(FixturesLocation, model + ".json");
             ValidatedSave(definition, path, FixturesSchema);
+        }
+
+        public static JObject GetFixtureDefinitionSchema()
+        {
+            JObject schema = ValidatedLoad(FixturesSchema, JsonSchemaSchema) as JObject;
+            return schema;
         }
 
         public static IEnumerable<string> GetFixtureNames()

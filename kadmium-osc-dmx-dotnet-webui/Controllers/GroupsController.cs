@@ -35,6 +35,13 @@ namespace kadmium_osc_dmx_dotnet_webui.Controllers
             return View(new ListData("group", MasterController.Instance.Groups.Keys));
         }
 
+        public IActionResult Schema()
+        {
+            JObject obj = FileAccess.GetGroupsSchema();
+            Response.StatusCode = 200;
+            return Content(obj.ToString());
+        }
+
         public IActionResult Load(string id)
         {
             if(id == null)
@@ -42,14 +49,12 @@ namespace kadmium_osc_dmx_dotnet_webui.Controllers
                 JObject obj = new JObject(
                     new JProperty("name", "")
                 );
-                return Content(obj.ToString());
+                return Content(new Group().Serialize().ToString());
             }
             else if(MasterController.Instance.Groups.ContainsKey(id))
             {
-                JObject obj = new JObject(
-                    new JProperty("name", id)
-                );
-                return Content(obj.ToString());
+                Group group = MasterController.Instance.Groups[id];
+                return Content(group.Serialize().ToString());
             }
             else
             {
