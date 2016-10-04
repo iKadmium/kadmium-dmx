@@ -1,8 +1,13 @@
-﻿namespace Group {
+﻿import { ListLayout } from "../ListLayout";
+import {ModalEditor } from "../ModalEditor";
+
+namespace Group
+{
     let modalEditor: ModalEditor<Group>;
 
     interface Group {
         name: string;
+        [key: string]: string;
     }
     
     function getObject(): Group {

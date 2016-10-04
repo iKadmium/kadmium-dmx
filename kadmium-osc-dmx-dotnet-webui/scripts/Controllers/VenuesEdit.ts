@@ -1,14 +1,21 @@
-﻿namespace Venue {
-    let modalEditor: ModalEditor<Venue>;
+﻿import {ModalEditor} from "../ModalEditor";
 
-    interface Venue {
-        name: string;
-        fixtureCollections: string[];
-    }
-    
-    function onLoad(): void {
-        modalEditor = new ModalEditor<Venue>();
-    }
-
-    window.addEventListener("load", onLoad);
+interface VenueData
+{
+    name: string;
+    fixtureCollections: string[];
+    [key: string]: any;
 }
+
+export class Venue 
+{
+    modalEditor: ModalEditor<VenueData>;
+    
+    OnLoad(): void 
+    {
+        this.modalEditor = new ModalEditor<VenueData>();
+    }
+}
+
+let venue = new Venue();
+window.addEventListener("load", venue.OnLoad);

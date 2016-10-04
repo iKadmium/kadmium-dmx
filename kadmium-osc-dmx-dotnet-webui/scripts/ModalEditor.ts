@@ -1,18 +1,20 @@
 ﻿// <reference path="jquery.d.ts" />
+import { ListLayout } from "./ListLayout";
+import { MVC } from "./MVC";
 
 interface Named {
     name: string;
+    [key: string]: string;
 }
 
-class ModalEditor<T extends Named>
+export class ModalEditor<T extends Named>
 {
-    staticElements: JQuery;
     itemID: string;
-    prototype: any;
+    prototype: T;
     validate: () => boolean;
     
-    constructor() {
-        this.staticElements = $("#edit-form").find("input,select");
+    constructor() 
+    {
         let that = this;
 
         $(".collection-remove").on("click", (e: JQueryEventObject) => {
@@ -20,7 +22,7 @@ class ModalEditor<T extends Named>
             ModalEditor.collectionDefaultRemoveClick(element);
         });
 
-        $(".collection-add").each((index, elem) => {
+        $(".collection-add"). each((index, elem) => {
             $(elem).on("click", (e) => {
                 ModalEditor.collectionDefaultAdd($(elem).data("collection-id"))
             });
@@ -37,7 +39,7 @@ class ModalEditor<T extends Named>
             that.disableElements("Loading...");
             jQuery.ajax({
                 dataType: "json",
-                url: listGetActionURL("Load", that.itemID),
+                url: ListLayout.GetActionURL("Load", that.itemID),
                 success: $.proxy(that.onLoad, that),
                 error: that.onLoadError
             });
@@ -48,7 +50,7 @@ class ModalEditor<T extends Named>
             that.disableElements("Saving...");
             jQuery.ajax({
                 type: "POST",
-                url: listGetActionURL("Save", that.itemID),
+                url: ListLayout.GetActionURL("Save", that.itemID),
                 data: { jsonString: JSON.stringify(that.getObject()) },
                 success: $.proxy(that.onSave, that),
                 error: that.onSaveError
@@ -57,7 +59,7 @@ class ModalEditor<T extends Named>
 
         jQuery.ajax({
             dataType: "json",
-            url: listGetActionURL("Schema", null),
+            url: ListLayout.GetActionURL("Schema", null),
             success: $.proxy(that.onSchema, that),
             error: that.onSchemaError
         });
@@ -158,11 +160,11 @@ class ModalEditor<T extends Named>
     {
         if (this.itemID == null)
         {
-            listItemAdd(this.getObject().name);
+            ListLayout.Add(this.getObject().name);
         }
         else if (this.getObject().name != this.itemID)
         {
-            listItemRename(this.itemID, this.getObject().name);
+            ListLayout.Rename(this.itemID, this.getObject().name);
         }
         $("#modal-status").hide();
         $("#modal-result").removeClass("alert-danger").addClass("alert-success");
@@ -278,10 +280,6 @@ class ModalEditor<T extends Named>
 
     disableElements(status: string)
     {
-        $(".collection-item").children().children().prop("disabled", true);
-        $(this.staticElements).prop("disabled", true);
-        $(".collection-add").prop("disabled", true);
-        $(".collection-remove").prop("disabled", true);
         $("#modal-cancel").prop("disabled", true);
         $("#modal-status").show();
         $("#modal-status-text").text(status);
@@ -289,10 +287,6 @@ class ModalEditor<T extends Named>
 
     enableElements()
     {
-        $(".collection-item").children().children().prop("disabled", false);
-        $(this.staticElements).prop("disabled", false);
-        $(".collection-add").prop("disabled", false);
-        $(".collection-remove").prop("disabled", false);
         $("#modal-cancel").prop("disabled", false);
         $("#modal-status").hide();
     }

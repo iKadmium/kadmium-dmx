@@ -1,18 +1,18 @@
-﻿namespace Dashboard
+﻿interface Status
 {
-    interface Status
-    {
-        code: string;
-        message: string;
-        name: string;
-        controller: string;
-    }
+    code: string;
+    message: string;
+    name: string;
+    controller: string;
+}
 
-    let alertClasses: string[] = ["alert-danger", "alert-success", "alert-warning"];
-    let panelClasses: string[] = ["panel-danger", "panel-success", "panel-warning"];
-    let glyphs: string[] = ["glyphicon-remove-sign", "glyphicon-ok-sign", "glyphicon-info-sign", "glyphicon-question-sign"];
+export class Dashboard
+{
+    static AlertClasses: string[] = ["alert-danger", "alert-success", "alert-warning"];
+    static PanelClasses: string[] = ["panel-danger", "panel-success", "panel-warning"];
+    static Glyphs: string[] = ["glyphicon-remove-sign", "glyphicon-ok-sign", "glyphicon-info-sign", "glyphicon-question-sign"];
 
-    function onGetStatusSuccess(data: any, textStatus: string, xhr: JQueryXHR) : void
+    OnGetStatusSuccess(data: any, textStatus: string, xhr: JQueryXHR) : void
     {
         let status = JSON.parse(data) as Status;
         let panel = $(".status-panel").filter((index, element) =>
@@ -25,9 +25,9 @@
         let statusText = panel.find(".status-message");
         let panelBody = panel.find(".panel-body");
 
-        panel.removeClass(panelClasses.join(" "));
-        panelBody.removeClass(alertClasses.join(" "));
-        glyph.removeClass(glyphs.join(" "));
+        panel.removeClass(Dashboard.PanelClasses.join(" "));
+        panelBody.removeClass(Dashboard.AlertClasses.join(" "));
+        glyph.removeClass(Dashboard.Glyphs.join(" "));
 
         switch (status.code)
         {
@@ -51,11 +51,11 @@
         statusText.text(status.message);
     }
 
-    function onGetStatusError(xhr: JQueryXHR, textStatus: string, errorThrown: string) : void
+    OnGetStatusError(xhr: JQueryXHR, textStatus: string, errorThrown: string) : void
     {
     }
 
-    function addAlert(text: string, classes: string)
+    AddAlert(text: string, classes: string)
     {
         let alertDiv = document.createElement("div");
         $(alertDiv).addClass(classes);
@@ -69,7 +69,7 @@
         $("#status-alerts")[0].appendChild(alertDiv);
     }
 
-    function onLoadVenueSuccess(data: any, textStatus: string, xhr: JQueryXHR): void
+    OnLoadVenueSuccess(data: any, textStatus: string, xhr: JQueryXHR): void
     {
         addAlert("Venue loaded successfully", "alert alert-success");
     }
