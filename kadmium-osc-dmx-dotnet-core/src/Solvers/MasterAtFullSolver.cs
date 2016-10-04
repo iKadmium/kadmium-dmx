@@ -18,5 +18,10 @@ namespace kadmium_osc_dmx_dotnet_core.Solvers
         {
             Attributes["Master"].Value = 1.0f;
         }
+
+        public static bool SuitableFor(Definition definition)
+        {
+            return definition.Channels.Any(x => x.Name == "Master");
+        }
     }
 }

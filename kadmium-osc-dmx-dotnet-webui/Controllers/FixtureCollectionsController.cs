@@ -19,6 +19,12 @@ namespace kadmium_osc_dmx_dotnet_webui.Controllers
             return View(new ListData("Fixture Collection", FileAccess.GetFixtureCollectionNames()));
         }
 
+        public IActionResult Schema()
+        {
+            JObject obj = FileAccess.GetFixtureCollectionSchema();
+            return Content(obj.ToString());
+        }
+
         public IActionResult Load(string id)
         {
             if (id == null)

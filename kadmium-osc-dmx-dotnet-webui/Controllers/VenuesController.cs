@@ -19,11 +19,17 @@ namespace kadmium_osc_dmx_dotnet_webui.Controllers
             return View(new ListData("Venue", FileAccess.GetVenueNames()));
         }
 
+        public IActionResult Schema()
+        {
+            JObject obj = FileAccess.GetVenuesSchema();
+            return Content(obj.ToString());
+        }
+
         public IActionResult Load(string id)
         {
             if (id == null)
             {
-                return base.Content(new Venue().Serialize().ToString());
+                return Content(new Venue().Serialize().ToString());
             }
             else
             {

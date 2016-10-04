@@ -32,6 +32,13 @@ namespace kadmium_osc_dmx_dotnet_core.Solvers
             Attributes["Blue"].Value = color.Blue;
         }
 
+        public static bool SuitableFor(Definition definition)
+        {
+            return definition.Channels.Any(x => x.Name == "Red") &&
+                definition.Channels.Any(x => x.Name == "Green") &&
+                definition.Channels.Any(x => x.Name == "Blue");
+        }
+
         private static RGB FromHSB(double H, double S, double B)
         {
             double red = 0.0, green = 0.0, blue = 0.0;

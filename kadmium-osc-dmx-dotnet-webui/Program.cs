@@ -5,6 +5,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Hosting;
 using kadmium_osc_dmx_dotnet_core;
+using Microsoft.Extensions.Configuration;
 
 namespace kadmium_osc_dmx_dotnet_webui
 {
@@ -14,6 +15,7 @@ namespace kadmium_osc_dmx_dotnet_webui
         {
             MasterController.Initialise();
             MasterController.Instance.LoadVenue(@"Rehearsal Room");
+            
             var host = new WebHostBuilder()
                 .UseKestrel()
                 .UseContentRoot(Directory.GetCurrentDirectory())

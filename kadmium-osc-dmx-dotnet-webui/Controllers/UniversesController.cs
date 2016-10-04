@@ -34,10 +34,8 @@ namespace kadmium_osc_dmx_dotnet_webui.Controllers
             }
             else if (MasterController.Instance.Universes.ContainsKey(id))
             {
-                JObject obj = new JObject(
-                    new JProperty("name", id)
-                );
-                return Content(obj.ToString());
+                Universe universe = MasterController.Instance.Universes[id];
+                return Content(universe.Serialize().ToString());
             }
             else
             {

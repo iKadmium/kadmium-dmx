@@ -17,8 +17,14 @@ namespace kadmium_osc_dmx_dotnet_core.Solvers
             foreach (string attributeName in attributes)
             {
                 Attribute attribute = new Attribute(attributeName);
-                settables.Add(attribute.Name, attribute);
-                frameSettables.Add(attribute.Name, attribute);
+                if(!settables.ContainsKey(attributeName))
+                {
+                    settables.Add(attribute.Name, new Attribute(attribute.Name));
+                }
+                if(!frameSettables.ContainsKey(attributeName))
+                {
+                    frameSettables.Add(attribute.Name, new Attribute(attribute.Name));
+                }
             }
         }
 

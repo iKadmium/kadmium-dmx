@@ -4,44 +4,80 @@
   "type": "LED",
   "channels": [
     {
-      "name": "Red",
+      "name": "PanCoarse",
       "dmx": 1,
       "min": 0,
       "max": 255
     },
     {
-      "name": "Green",
+      "name": "PanFine",
       "dmx": 2,
       "min": 0,
       "max": 255
     },
     {
-      "name": "Blue",
+      "name": "TiltCoarse",
       "dmx": 3,
       "min": 0,
       "max": 255
     },
     {
-      "name": "Strobe",
+      "name": "TiltFine",
       "dmx": 4,
       "min": 0,
       "max": 255
     },
     {
-      "name": "Apeshit",
+      "name": "MotorSpeed",
       "dmx": 5,
       "min": 0,
       "max": 255
     },
     {
-      "name": "Chase",
+      "name": "Master",
       "dmx": 6,
       "min": 0,
       "max": 255
     },
     {
-      "name": "Program",
+      "name": "Strobe",
       "dmx": 7,
+      "min": 0,
+      "max": 255
+    },
+    {
+      "name": "ColorMacro",
+      "dmx": 8,
+      "min": 0,
+      "max": 255
+    },
+    {
+      "name": "MacroSpeed",
+      "dmx": 9,
+      "min": 0,
+      "max": 255
+    },
+    {
+      "name": "Red",
+      "dmx": 10,
+      "min": 0,
+      "max": 255
+    },
+    {
+      "name": "Green",
+      "dmx": 11,
+      "min": 0,
+      "max": 255
+    },
+    {
+      "name": "Blue",
+      "dmx": 12,
+      "min": 0,
+      "max": 255
+    },
+    {
+      "name": "White",
+      "dmx": 13,
       "min": 0,
       "max": 255
     }

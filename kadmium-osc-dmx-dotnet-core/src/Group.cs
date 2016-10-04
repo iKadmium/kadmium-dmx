@@ -59,10 +59,6 @@ namespace kadmium_osc_dmx_dotnet_core
             {
                 FrameSettables[kvp.Key].Value = kvp.Value.Value;
             }
-            foreach(Fixture fixture in Fixtures)
-            {
-                fixture.Update();
-            }
             foreach (GroupSolver solver in Solvers)
             {
                 solver.Solve(FrameSettables);

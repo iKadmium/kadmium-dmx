@@ -15,6 +15,30 @@ namespace kadmium_osc_dmx_dotnet_core.Solvers
         public FixtureSolver(Fixture fixture, params string[] attributes) : base(fixture.Settables, fixture.FrameSettables, attributes)
         { }
 
-        
+        public static IEnumerable<FixtureSolver> GetDefaultSolvers(Fixture fixture, IEnumerable<string> options)
+        {
+            List<FixtureSolver> solvers = new List<FixtureSolver>();
+            if (MasterAtFullSolver.SuitableFor(fixture.Definition))
+            {
+                solvers.Add(new MasterAtFullSolver(fixture));
+            }
+            if(FakeUVSolver.SuitableFor(fixture.Definition))
+            {
+                solvers.Add(new FakeUVSolver(fixture));
+            }
+            if (FakeStrobeSolver.SuitableFor(fixture.Definition))
+            {
+                solvers.Add(new FakeStrobeSolver(fixture));
+            }
+            if (HSBSolver.SuitableFor(fixture.Definition))
+            {
+                solvers.Add(new HSBSolver(fixture));
+            }
+            if (PanTilt16BitSolver.SuitableFor(fixture.Definition))
+            {
+                solvers.Add(new PanTilt16BitSolver(fixture, options));
+            }
+            return solvers;
+        }
     }
 }

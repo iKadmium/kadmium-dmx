@@ -15,12 +15,14 @@ namespace kadmium_osc_dmx_dotnet_core
         public string Name { get; set; }
         public IEnumerable<Transmitter> TransmitterTargets { get; set; }
         public List<Fixture> Fixtures { get; }
+        public byte[] DMX { get; }
 
         public Universe(string name, IEnumerable<Transmitter> transmitterTargets)
         {
             Name = name;
             TransmitterTargets = transmitterTargets;
             Fixtures = new List<Fixture>();
+            DMX = new byte[DMX_UNIVERSE_SIZE];
         }
 
         public Universe() : this("", Enumerable.Empty<Transmitter>())
@@ -50,7 +52,15 @@ namespace kadmium_osc_dmx_dotnet_core
 
         public void Update()
         {
-            
+            foreach(Fixture fixture in Fixtures)
+            {
+                fixture.Update();
+                fixture.Render(DMX);
+            }
+            foreach(Transmitter transmitter in TransmitterTargets)
+            {
+                transmitter.Transmit(DMX);
+            }
         }
     }
 }

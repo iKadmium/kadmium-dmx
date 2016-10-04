@@ -20,35 +20,38 @@ namespace kadmium_osc_dmx_dotnet_core.Solvers
 
         private RandomMovement RandomMovement { get; set; }
 
-        public PanTilt16BitSolver(Fixture fixture, IEnumerable<RestrictableMovementAxis> restrictableAxis) : base(fixture, "Pan", "Tilt", "RandomMove")
+        public PanTilt16BitSolver(Fixture fixture, IEnumerable<string> options) : base(fixture, "Pan", "Tilt", "RandomMove")
         {
             Axis = new Dictionary<string, RestrictableMovementAxis>();
-            foreach(RestrictableMovementAxis axis in restrictableAxis)
+            foreach(MovementAxis movement in fixture.Definition.Axis)
             {
-                Axis.Add(axis.Name, axis);
+                RestrictableMovementAxis axis;
+                if(movement.Name == "Pan" && options.Contains("RestrictedPan"))
+                {
+                    axis = new RestrictableMovementAxis(movement, -90, 90);
+                }
+                else if(movement.Name == "Tilt" && options.Contains("RestrictedTilt"))
+                {
+                    axis = new RestrictableMovementAxis(movement, 0, 90);
+                }
+                else
+                {
+                    axis = new RestrictableMovementAxis(movement);
+                }
+                Axis.Add(movement.Name, axis);
             }
+            PanInverted = options.Contains("PanInverted");
+            TiltInverted = options.Contains("TiltInverted");
             RandomMovement = new RandomMovement("Pan", "Tilt");
         }
-        
-        public static PanTilt16BitSolver LoadInternal(XElement element, Fixture fixture)
+
+        internal static bool SuitableFor(Definition definition)
         {
-            IEnumerable<RestrictableMovementAxis> restrictions;
+            return definition.Channels.Any(x => x.Name == "PanCoarse") ||
+                definition.Channels.Any(x => x.Name == "TiltCoarse");
 
-            if(element.Element("axisRestrictions") != null)
-            {
-                restrictions = from restrictionElement in element.Element("axisRestrictions").Elements("axisRestriction")
-                               select new RestrictableMovementAxis(fixture.MovementAxis[restrictionElement.Attribute("name").Value],
-                               int.Parse(restrictionElement.Attribute("min").Value),
-                               int.Parse(restrictionElement.Attribute("max").Value));
-            }
-            else
-            {
-                restrictions = from axis in fixture.MovementAxis.Values
-                               select new RestrictableMovementAxis(axis, axis.Min, axis.Max);
-            }
-            return new PanTilt16BitSolver(fixture, restrictions);
         }
-
+        
         public override void Solve(Dictionary<string, Attribute> Attributes)
         {
             foreach (RestrictableMovementAxis axis in Axis.Values)

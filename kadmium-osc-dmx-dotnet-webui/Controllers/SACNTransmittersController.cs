@@ -20,6 +20,13 @@ namespace kadmium_osc_dmx_dotnet_webui.Controllers
             return View(new ListData("sACN Transmitter", MasterController.Instance.Transmitters.Where(x => x is SACNTransmitter).Select(x => x.Name)));
         }
 
+        public IActionResult Schema()
+        {
+            JObject obj = FileAccess.GetTransmitterSchema();
+            Response.StatusCode = 200;
+            return Content(obj.ToString());
+        }
+
         public IActionResult Load(string id)
         {
             if (id == null)
@@ -76,6 +83,37 @@ namespace kadmium_osc_dmx_dotnet_webui.Controllers
                 return new EmptyResult();
             }
             catch(Exception)
+            {
+                Response.StatusCode = 404;
+                return new EmptyResult();
+            }
+        }
+
+        public IActionResult Status(string id)
+        {
+            if (MasterController.Instance.Transmitters.Any(x => x.Name == id))
+            {
+                SACNTransmitter transmitter = MasterController.Instance.Transmitters.Single(x => x.Name == id) as SACNTransmitter;
+                JObject obj = transmitter.Status.Serialize();
+                obj.Add(new JProperty("name", id));
+                obj.Add(new JProperty("controller", ControllerContext.RouteData.Values["controller"].ToString()));
+                return Content(obj.ToString());
+            }
+            else
+            {
+                Response.StatusCode = 404;
+                return new EmptyResult();
+            }
+        }
+
+        public IActionResult Log(string id)
+        {
+            if (MasterController.Instance.Transmitters.Any(x => x.Name == id))
+            {
+                SACNTransmitter transmitter = MasterController.Instance.Transmitters.Single(x => x.Name == id) as SACNTransmitter;
+                return View(transmitter);
+            }
+            else
             {
                 Response.StatusCode = 404;
                 return new EmptyResult();

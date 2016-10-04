@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Newtonsoft.Json.Linq;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
@@ -62,6 +63,15 @@ namespace kadmium_osc_dmx_dotnet_core
         {
             Message = message;
             StatusCode = statusCode;
+        }
+
+        public JObject Serialize()
+        {
+            JObject obj = new JObject(
+                new JProperty("code", StatusCode.ToString()),
+                new JProperty("message", Message)
+            );
+            return obj;
         }
     }
     

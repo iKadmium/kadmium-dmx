@@ -13,6 +13,9 @@ namespace kadmium_osc_dmx_dotnet_core
 {
     public class MasterController
     {
+        static int UPDATES_PER_SECOND = 40; // in hz
+        static int UPDATE_TIME = 1000 / UPDATES_PER_SECOND;
+
         public Dictionary<string, Group> Groups { get; private set; }
         public List<Listener> Listeners { get; private set; }
         public List<Transmitter> Transmitters { get; private set; }
@@ -20,6 +23,7 @@ namespace kadmium_osc_dmx_dotnet_core
         public Venue Venue { get; private set; }
         public Strobe Strobe { get; }
         public Random Random { get; }
+        public bool UpdatesEnabled { get; private set; }
         private Timer updateTimer;
 
         private static MasterController instance;
@@ -39,6 +43,17 @@ namespace kadmium_osc_dmx_dotnet_core
             Instance.Transmitters = FileAccess.LoadTransmitters().ToList();
             Instance.Universes = FileAccess.LoadUniverses().ToDictionary(x => x.Name, x => x);
             Instance.Listeners = FileAccess.LoadListeners().ToList();
+            Instance.updateTimer = new Timer(Instance.UpdateTimer_Elapsed, null, UPDATE_TIME, UPDATE_TIME);
+        }
+
+        public void Stop()
+        {
+            UpdatesEnabled = false;
+        }
+
+        public void Start()
+        {
+            UpdatesEnabled = true;
         }
 
         private MasterController()
@@ -68,15 +83,13 @@ namespace kadmium_osc_dmx_dotnet_core
                 universe.Update();
             }
         }
-
-        public void Start()
-        {
-            updateTimer = new Timer(UpdateTimer_Elapsed, null, 0, 25);
-        }
-
+        
         private void UpdateTimer_Elapsed(object state)
         {
-            Update();
+            if(UpdatesEnabled)
+            {
+                Update();
+            }
         }
 
         public void Close()

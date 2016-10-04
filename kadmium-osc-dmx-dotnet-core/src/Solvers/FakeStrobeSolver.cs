@@ -31,6 +31,10 @@ namespace kadmium_osc_dmx_dotnet_core.Solvers
             
         }
 
-        
+        internal static bool SuitableFor(Definition definition)
+        {
+            return definition.Type == FixtureType.LED &&
+                !definition.Channels.Any(x => x.Name == "Strobe");
+        }
     }
 }

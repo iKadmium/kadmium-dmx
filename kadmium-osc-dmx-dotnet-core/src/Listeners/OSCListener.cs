@@ -27,7 +27,7 @@ namespace kadmium_osc_dmx_dotnet_core.Listeners
 
             listener = new OSCServer(port);
             listener.DefaultOnMessageReceived += Listener_PacketReceived;
-            Status.Update(StatusCode.NotStarted, "Listening on Port " + Port + " - no messages yet");
+            Status.Update(StatusCode.NotStarted, "No messages yet");
         }
 
         private void Listener_PacketReceived(object sender, OSCMessageReceivedArgs e)
@@ -37,10 +37,13 @@ namespace kadmium_osc_dmx_dotnet_core.Listeners
             string[] parts = message.Address.Contents.Split('/');
             string groupName = parts[2];
             string attribute = parts[3];
-            Group group = MasterController.Instance.Groups[groupName];
-            float value = (float)message.Arguments[0].GetValue();
-            group.Set(attribute, value);
-            Status.Update(StatusCode.Running, "Messages received");
+            if (MasterController.Instance.Groups.ContainsKey(groupName))
+            {
+                Group group = MasterController.Instance.Groups[groupName];
+                float value = (float)message.Arguments[0].GetValue();
+                group.Set(attribute, value);
+                Status.Update(StatusCode.Running, "Messages received");
+            }
         }
 
         public override JObject Serialize()

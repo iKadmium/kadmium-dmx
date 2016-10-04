@@ -32,14 +32,7 @@ function listItemDelete(name: string): void
 function listGetActionURL(action: string, id: string) : string
 {
     let controller = $("#items").data("controller-url");
-    if (id == null)
-    {
-        return "/" + controller + "/" + action;
-    }
-    else
-    {
-        return "/" + controller + "/" + action + "/" + id;
-    }
+    return getActionURL(controller, action, id);
 }
 
 function listItemGet(name: string): JQuery

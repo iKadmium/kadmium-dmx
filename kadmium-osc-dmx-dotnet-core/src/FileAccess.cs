@@ -115,6 +115,12 @@ namespace kadmium_osc_dmx_dotnet_core
 
             ValidatedSave(transmitters, TransmittersLocation, TransmittersSchema);
         }
+        
+        public static JObject GetTransmitterSchema()
+        {
+            JObject schema = ValidatedLoad(TransmittersSchema, JsonSchemaSchema) as JObject;
+            return schema;
+        }
 
         internal static IEnumerable<Listener> LoadListeners()
         {
@@ -132,6 +138,12 @@ namespace kadmium_osc_dmx_dotnet_core
             );
 
             ValidatedSave(listeners, ListenersLocation, ListenersSchema);
+        }
+
+        public static JObject GetListenerSchema()
+        {
+            JObject schema = ValidatedLoad(ListenersSchema, JsonSchemaSchema) as JObject;
+            return schema;
         }
 
         internal static IEnumerable<Universe> LoadUniverses()
@@ -232,6 +244,12 @@ namespace kadmium_osc_dmx_dotnet_core
             return obj;
         }
 
+        public static JObject GetFixtureCollectionSchema()
+        {
+            JObject obj = ValidatedLoad(FixtureCollectionsSchema, JsonSchemaSchema) as JObject;
+            return obj;
+        }
+
         public static IEnumerable<string> GetVenueNames()
         {
             var files = from filename in Directory.EnumerateFiles(VenuesLocation)
@@ -263,6 +281,12 @@ namespace kadmium_osc_dmx_dotnet_core
         {
             string path = Path.Combine(VenuesLocation, id + ".json");
             JObject obj = ValidatedLoad(path, VenuesSchema) as JObject;
+            return obj;
+        }
+
+        public static JObject GetVenuesSchema()
+        {
+            JObject obj = ValidatedLoad(VenuesSchema, JsonSchemaSchema) as JObject;
             return obj;
         }
     }

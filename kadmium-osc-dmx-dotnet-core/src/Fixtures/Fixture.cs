@@ -21,7 +21,7 @@ namespace kadmium_osc_dmx_dotnet_core.Fixtures
         public List<FixtureSolver> Solvers { get; }
         public event EventHandler Updated;
         
-        public Fixture(Definition definition)
+        public Fixture(Definition definition, IEnumerable<string> options)
         {
             Definition = definition;
             Solvers = new List<FixtureSolver>();
@@ -33,6 +33,15 @@ namespace kadmium_osc_dmx_dotnet_core.Fixtures
                 FrameSettables.Add(attribute.Name, attribute);
             }
             MovementAxis = new Dictionary<string, MovementAxis>();
+            foreach(var axis in Definition.Axis)
+            {
+                MovementAxis.Add(axis.Name, axis);
+            }
+
+            foreach(var solver in FixtureSolver.GetDefaultSolvers(this, options))
+            {
+                Solvers.Add(solver);
+            }
         }
 
         public JObject RenderToJSON()
@@ -51,6 +60,13 @@ namespace kadmium_osc_dmx_dotnet_core.Fixtures
                     from channel in Definition.Channels
                     select new JObject(
                         new JProperty(channel.RelativeAddress + StartChannel - 1 + "", channel.ByteValue)
+                    )
+                ),
+                new JProperty("movements",
+                    from movement in MovementAxis.Values
+                    select new JObject(
+                        new JProperty("name", movement.Name),
+                        new JProperty("value", FrameSettables[movement.Name + "Coarse"].Value)
                     )
                 )
             );

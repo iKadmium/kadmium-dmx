@@ -20,6 +20,13 @@ namespace kadmium_osc_dmx_dotnet_webui.Controllers
             return View(new ListData("OSC Listener", MasterController.Instance.Listeners.Select(x => x.Name)));
         }
 
+        public IActionResult Schema()
+        {
+            JObject obj = FileAccess.GetListenerSchema();
+            Response.StatusCode = 200;
+            return Content(obj.ToString());
+        }
+
         public IActionResult Load(string id)
         {
             if (id == null)
@@ -66,12 +73,44 @@ namespace kadmium_osc_dmx_dotnet_webui.Controllers
 
         public IActionResult Delete(string id)
         {
-            if (MasterController.Instance.Groups.ContainsKey(id))
+            if (MasterController.Instance.Listeners.Any(x => x.Name == id))
             {
-                MasterController.Instance.Groups.Remove(id);
-                FileAccess.SaveGroups();
+                OSCListener listener = MasterController.Instance.Listeners.Single(x => x.Name == id) as OSCListener;
+                MasterController.Instance.Listeners.Remove(listener);
+                FileAccess.SaveListeners();
                 Response.StatusCode = 200;
                 return new EmptyResult();
+            }
+            else
+            {
+                Response.StatusCode = 404;
+                return new EmptyResult();
+            }
+        }
+
+        public IActionResult Status(string id)
+        {
+            if(MasterController.Instance.Listeners.Any(x => x.Name == id))
+            {
+                OSCListener listener = MasterController.Instance.Listeners.Single(x => x.Name == id) as OSCListener;
+                JObject obj = listener.Status.Serialize();
+                obj.Add(new JProperty("name", id));
+                obj.Add(new JProperty("controller", ControllerContext.RouteData.Values["controller"].ToString()));
+                return Content(obj.ToString());
+            }
+            else
+            {
+                Response.StatusCode = 404;
+                return new EmptyResult();
+            }
+        }
+
+        public IActionResult Log(string id)
+        {
+            if (MasterController.Instance.Listeners.Any(x => x.Name == id))
+            {
+                OSCListener listener = MasterController.Instance.Listeners.Single(x => x.Name == id) as OSCListener;
+                return View(listener);
             }
             else
             {

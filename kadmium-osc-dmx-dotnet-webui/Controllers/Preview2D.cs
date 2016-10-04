@@ -11,13 +11,6 @@ namespace kadmium_osc_dmx_dotnet_webui.Controllers
 {
     public class Preview2D : Controller
     {
-        WebSocket webSocket;
-
-        public Preview2D()
-        {
-            
-        }
-
         // GET: /<controller>/
         public IActionResult Index()
         {
