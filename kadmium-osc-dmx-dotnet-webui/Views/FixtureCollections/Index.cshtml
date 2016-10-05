@@ -14,10 +14,16 @@
             new InputSelect("type", "Model", FileAccess.GetFixtureNames().ToDictionary(x => x)),
             new InputNumber("channel", "Channel", 1, 512),
             new InputSelect("group", "Group", MasterController.Instance.Groups.Keys.ToDictionary(x => x)),
-            new InputMultiSelect("options", "Options", new Dictionary<string, string>() {["Stupid"] = "Stupid" })
+            new InputMultiSelect("options", "Options", new Dictionary<string, string>()
+            {
+                ["RestrictedPan"] = "RestrictedPan",
+                ["RestrictedTilt"] = "RestrictedTilt",
+                ["InvertedPan"] = "InvertedPan",
+                ["InvertedTilt"] = "InvertedTilt"
+            })
         )
     };
 }
 @Html.Partial("ModalEdit", inputs)
 
-<script src="~/js/Controllers/FixtureCollectionEdit.js"></script>
+<script src="~/js/FixtureCollectionEdit.js"></script>

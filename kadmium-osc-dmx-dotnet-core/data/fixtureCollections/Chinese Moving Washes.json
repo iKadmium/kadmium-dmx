@@ -6,25 +6,39 @@
       "channel": 301,
       "type": "Chinese Moving Wash",
       "group": "rearSides",
-      "options": []
+      "options": [
+        "RestrictedPan",
+        "RestrictedTilt"
+      ]
     },
     {
       "channel": 315,
       "type": "Chinese Moving Wash",
       "group": "rearSides",
-      "options": []
+      "options": [
+        "RestrictedPan",
+        "RestrictedTilt"
+      ]
     },
     {
       "channel": 329,
       "type": "Chinese Moving Wash",
       "group": "rearSides",
-      "options": []
+      "options": [
+        "RestrictedPan",
+        "RestrictedTilt",
+        "InvertedPan"
+      ]
     },
     {
       "channel": 343,
       "type": "Chinese Moving Wash",
       "group": "rearSides",
-      "options": []
+      "options": [
+        "RestrictedPan",
+        "RestrictedTilt",
+        "InvertedPan"
+      ]
     }
   ]
 }

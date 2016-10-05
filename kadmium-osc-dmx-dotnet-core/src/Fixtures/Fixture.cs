@@ -19,7 +19,6 @@ namespace kadmium_osc_dmx_dotnet_core.Fixtures
         public Dictionary<string, Solvers.Attribute> FrameSettables { get; }
         public Dictionary<string, MovementAxis> MovementAxis { get; }
         public List<FixtureSolver> Solvers { get; }
-        public event EventHandler Updated;
         
         public Fixture(Definition definition, IEnumerable<string> options)
         {
@@ -85,8 +84,6 @@ namespace kadmium_osc_dmx_dotnet_core.Fixtures
             {
                 solver.Solve(FrameSettables);
             }
-            
-            Updated?.Invoke(this, new EventArgs());
         }
 
         public void Render(byte[] dmx)

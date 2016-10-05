@@ -4,7 +4,7 @@
 *@
 @{
 }
-<select multiple class="form-control" id="@Model.ID" disabled>
+<select multiple class="form-control" id="@Model.ID">
     @foreach (KeyValuePair<string, string> option in Model.Options)
     {
         <option value="@option.Key">@option.Value</option>

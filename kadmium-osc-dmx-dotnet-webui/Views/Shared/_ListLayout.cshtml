@@ -9,10 +9,6 @@
     <li class="list-group-item clearfix list-item-prototype" data-item-id="prototype">
         <span class="list-item-id">prototype</span>
         <div class="pull-right btn-group">
-            @if (ViewData.ContainsKey("Activate") && (bool)ViewData["Activate"])
-            {
-                //<a asp-action="Load" asp-route-id="@name" class="btn btn-success" title="Load"><span class="glyphicon glyphicon-download-alt"></span></a>
-            }
             <button class="btn btn-default" title="Edit" data-item-id="prototype" data-toggle="modal" data-target="#modal-edit"><span class="glyphicon glyphicon-pencil"></span></button>
             <button class="btn btn-danger" title="Delete" data-item-id="prototype" data-toggle="modal" data-target="#confirm-delete"><span class="glyphicon glyphicon-remove"></span></button>
         </div>
@@ -23,10 +19,6 @@
         <li class="list-group-item clearfix" data-item-id="@name">
             <span class="list-item-id">@name</span>
             <div class="pull-right btn-group">
-                @if (ViewData.ContainsKey("Activate") && (bool)ViewData["Activate"])
-                {
-                    <a asp-action="Activate" asp-route-id="@name" class="btn btn-success" title="Activate"><span class="glyphicon glyphicon-download-alt"></span></a>
-                }
                 <button class="btn btn-default" title="Edit" data-item-id="@name" data-toggle="modal" data-target="#modal-edit" ><span class="glyphicon glyphicon-pencil"></span></button>
                 <button class="btn btn-danger" title="Delete" data-item-id="@name" data-toggle="modal" data-target="#confirm-delete"><span class="glyphicon glyphicon-remove"></span></button>
             </div>
@@ -43,6 +35,4 @@
 @section scripts
 {
     <script src="~/js/validator.js"></script>
-    <script src="~/js/Globals.js"></script>
-    <script src="~/js/ListLayout.js"></script>
 }

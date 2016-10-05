@@ -1,4 +1,6 @@
-﻿interface Status
+﻿import {MVC} from "../MVC";
+
+interface Status
 {
     code: string;
     message: string;
@@ -6,13 +8,13 @@
     controller: string;
 }
 
-export class Dashboard
+export class DashboardController
 {
-    static AlertClasses: string[] = ["alert-danger", "alert-success", "alert-warning"];
-    static PanelClasses: string[] = ["panel-danger", "panel-success", "panel-warning"];
-    static Glyphs: string[] = ["glyphicon-remove-sign", "glyphicon-ok-sign", "glyphicon-info-sign", "glyphicon-question-sign"];
+    static alertClasses: string[] = ["alert-danger", "alert-success", "alert-warning"];
+    static panelClasses: string[] = ["panel-danger", "panel-success", "panel-warning"];
+    static glyphs: string[] = ["glyphicon-remove-sign", "glyphicon-ok-sign", "glyphicon-info-sign", "glyphicon-question-sign"];
 
-    OnGetStatusSuccess(data: any, textStatus: string, xhr: JQueryXHR) : void
+    onGetStatusSuccess(data: any, textStatus: string, xhr: JQueryXHR) : void
     {
         let status = JSON.parse(data) as Status;
         let panel = $(".status-panel").filter((index, element) =>
@@ -25,9 +27,9 @@ export class Dashboard
         let statusText = panel.find(".status-message");
         let panelBody = panel.find(".panel-body");
 
-        panel.removeClass(Dashboard.PanelClasses.join(" "));
-        panelBody.removeClass(Dashboard.AlertClasses.join(" "));
-        glyph.removeClass(Dashboard.Glyphs.join(" "));
+        panel.removeClass(DashboardController.panelClasses.join(" "));
+        panelBody.removeClass(DashboardController.alertClasses.join(" "));
+        glyph.removeClass(DashboardController.glyphs.join(" "));
 
         switch (status.code)
         {
@@ -51,11 +53,11 @@ export class Dashboard
         statusText.text(status.message);
     }
 
-    OnGetStatusError(xhr: JQueryXHR, textStatus: string, errorThrown: string) : void
+    onGetStatusError(xhr: JQueryXHR, textStatus: string, errorThrown: string) : void
     {
     }
 
-    AddAlert(text: string, classes: string)
+    addAlert(text: string, classes: string)
     {
         let alertDiv = document.createElement("div");
         $(alertDiv).addClass(classes);
@@ -69,28 +71,31 @@ export class Dashboard
         $("#status-alerts")[0].appendChild(alertDiv);
     }
 
-    OnLoadVenueSuccess(data: any, textStatus: string, xhr: JQueryXHR): void
+    onLoadVenueSuccess(data: any, textStatus: string, xhr: JQueryXHR): void
     {
-        addAlert("Venue loaded successfully", "alert alert-success");
+        this.addAlert("Venue loaded successfully", "alert alert-success");
     }
 
-    function onLoadVenueError(xhr: JQueryXHR, textStatus: string, errorThrown: string): void
+    onLoadVenueError(xhr: JQueryXHR, textStatus: string, errorThrown: string): void
     {
-        addAlert("Error loading venue: " + errorThrown, "alert alert-danger");
+        this.addAlert("Error loading venue: " + errorThrown, "alert alert-danger");
     }
     
-    function onLoad(): void
+    onLoad(): void
     {
+        let that = this;
         let panels = $(".status-panel");
         panels.each((index, elem) =>
         {
             let controller = $(elem).data("controller");
             let name = $(elem).data("id");
-            let url = getActionURL(controller, "Status", name);
-            let settings: JQueryAjaxSettings = {};
-            settings.url = url;
-            settings.success = onGetStatusSuccess;
-            settings.error = onGetStatusError;
+            let url = MVC.getActionURL(controller, "Status", name);
+            let settings: JQueryAjaxSettings =
+            {
+                url: url,
+                success: that.onGetStatusSuccess,
+                error: that.onGetStatusError
+            }
             $.ajax(settings);
             window.setInterval(() =>
             {
@@ -102,14 +107,24 @@ export class Dashboard
         venueLoadLinks.on("click", (e: JQueryEventObject) =>
         {
             let id = $(this).data("id");
-            let url = getActionURL("Venues", "Load", id);
-            let settings: JQueryAjaxSettings = {};
-            settings.url = url;
-            settings.success = onLoadVenueSuccess;
-            settings.error = onLoadVenueError;
+            let url = MVC.getActionURL("Venues", "Load", id);
+            let settings: JQueryAjaxSettings =
+            {
+                url: url,
+                success: $.proxy(that.onLoadVenueSuccess, that),
+                error: $.proxy(that.onLoadVenueError, that)
+            }
             $.ajax(settings);
         });
     }
 
-    window.addEventListener("load", onLoad);
+    constructor()
+    {
+        window.addEventListener("load", (ev) =>
+        {
+            this.onLoad();
+        });
+    }
 }
+
+let dashboardController = new DashboardController();

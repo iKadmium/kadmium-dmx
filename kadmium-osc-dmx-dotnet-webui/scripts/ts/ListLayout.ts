@@ -45,7 +45,7 @@ export class ListLayout
     static GetActionURL(action: string, id: string): string
     {
         let controller = $("#items").data("controller-url");
-        return MVC.GetActionURL(controller, action, id);
+        return MVC.getActionURL(controller, action, id);
     }
 
     static Get(name: string): JQuery

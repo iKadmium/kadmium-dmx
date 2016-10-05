@@ -2,12 +2,13 @@
 import { ListLayout } from "./ListLayout";
 import { MVC } from "./MVC";
 
-interface Named {
+export interface ControllerData 
+{
     name: string;
-    [key: string]: string;
+    [key: string]: any;
 }
 
-export class ModalEditor<T extends Named>
+export class ModalEditor<T extends ControllerData>
 {
     itemID: string;
     prototype: T;

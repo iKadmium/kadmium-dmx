@@ -1,6 +1,6 @@
 ﻿export class MVC
 {
-    static GetActionURL(controller: string, action: string, id: string): string
+    static getActionURL(controller: string, action: string, id: string): string
     {
         if (id == null)
         {

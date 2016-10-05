@@ -40,8 +40,8 @@ namespace kadmium_osc_dmx_dotnet_core.Solvers
                 }
                 Axis.Add(movement.Name, axis);
             }
-            PanInverted = options.Contains("PanInverted");
-            TiltInverted = options.Contains("TiltInverted");
+            PanInverted = options.Contains("InvertedPan");
+            TiltInverted = options.Contains("InvertedTilt");
             RandomMovement = new RandomMovement("Pan", "Tilt");
         }
 

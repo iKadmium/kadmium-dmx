@@ -12,7 +12,7 @@ var webpack = require("webpack-stream");
 
 var paths =
 {
-    javascript: ["scripts/**/*.js"],
+    javascript: ["scripts/js/**/*.js"],
     destination: "wwwroot/js"
 };
 

@@ -1,11 +1,13 @@
 {
   "compilerOptions": {
+    "module": "commonjs",
     "noImplicitAny": true,
     "noEmitOnError": true,
     "removeComments": false,
     "sourceMap": true,
     "target": "es5",
-    "outDir": "wwwroot/js"
+    "moduleResolution": "classic",
+    "outDir": "scripts/bin"
   },
   "exclude": [
     "node_modules",
