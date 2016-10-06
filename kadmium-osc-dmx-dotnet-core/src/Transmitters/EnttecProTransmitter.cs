@@ -81,7 +81,7 @@ namespace kadmium_osc_dmx_dotnet_core.Transmitters
                 outputData[outputData.Length - 1] = DMX_PRO_MESSAGE_END;
 
                 //SerialPort.Write(outputData, 0, outputData.Length);
-                Status.Update(StatusCode.Running, "Data sent");
+                Status.Update(StatusCode.Running, "Data sent", this);
 
             }
         }

@@ -13,10 +13,10 @@ export class DashboardController
     static alertClasses: string[] = ["alert-danger", "alert-success", "alert-warning"];
     static panelClasses: string[] = ["panel-danger", "panel-success", "panel-warning"];
     static glyphs: string[] = ["glyphicon-remove-sign", "glyphicon-ok-sign", "glyphicon-info-sign", "glyphicon-question-sign"];
+    webSocket: WebSocket;
 
-    onGetStatusSuccess(data: any, textStatus: string, xhr: JQueryXHR) : void
+    updateStatus(status: Status) : void
     {
-        let status = JSON.parse(data) as Status;
         let panel = $(".status-panel").filter((index, element) =>
         {
             return $(element).data("id") == status.name
@@ -52,11 +52,7 @@ export class DashboardController
 
         statusText.text(status.message);
     }
-
-    onGetStatusError(xhr: JQueryXHR, textStatus: string, errorThrown: string) : void
-    {
-    }
-
+    
     addAlert(text: string, classes: string)
     {
         let alertDiv = document.createElement("div");
@@ -84,23 +80,12 @@ export class DashboardController
     onLoad(): void
     {
         let that = this;
-        let panels = $(".status-panel");
-        panels.each((index, elem) =>
+
+        this.webSocket = new WebSocket(document.URL.replace("http://", "ws://") + "Index/Socket");
+        this.webSocket.addEventListener("message", (ev: MessageEvent) =>
         {
-            let controller = $(elem).data("controller");
-            let name = $(elem).data("id");
-            let url = MVC.getActionURL(controller, "Status", name);
-            let settings: JQueryAjaxSettings =
-            {
-                url: url,
-                success: that.onGetStatusSuccess,
-                error: that.onGetStatusError
-            }
-            $.ajax(settings);
-            window.setInterval(() =>
-            {
-                $.ajax(settings);
-            }, 1000);
+            let status = JSON.parse(ev.data) as Status;
+            this.updateStatus(status);
         });
 
         let venueLoadLinks = $(".venue-load-link");

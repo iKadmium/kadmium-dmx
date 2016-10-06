@@ -16,6 +16,13 @@ namespace kadmium_osc_dmx_dotnet_core.Solvers
         {
             Group = group;
         }
-        
+
+        public static IEnumerable<GroupSolver> GetDefaultSolvers(Group group, IEnumerable<string> options)
+        {
+            List<GroupSolver> solvers = new List<GroupSolver>();
+            solvers.Add(new ApeshitGroupSolver(group));
+            return solvers;
+        }
+
     }
 }

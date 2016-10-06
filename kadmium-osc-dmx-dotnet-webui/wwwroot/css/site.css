@@ -57,3 +57,10 @@ textarea {
 {
     font-size: 72px;
 }
+
+.log-chart
+{
+    display: inline !important;
+    height: auto !important;
+    width: auto !important;
+}

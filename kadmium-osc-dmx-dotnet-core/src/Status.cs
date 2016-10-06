@@ -15,54 +15,24 @@ namespace kadmium_osc_dmx_dotnet_core
         Error
     }
 
-    public class Status : INotifyPropertyChanged
+    public class Status
     {
-        public event PropertyChangedEventHandler PropertyChanged;
+        public event EventHandler<StatusUpdateEventArgs> Updated;
 
-        private string message;
-        public string Message
-        {
-            get
-            {
-                return message;
-            }
-            set
-            {
-                message = value;
-                if(PropertyChanged != null)
-                {
-                    PropertyChanged(this, new PropertyChangedEventArgs(nameof(Message)));
-                }
-            }
-        }
-
-        private StatusCode statusCode;
-        public StatusCode StatusCode
-        { 
-            get
-            {
-                return statusCode;
-            }
-            set
-            {
-                statusCode = value;
-                if (PropertyChanged != null)
-                {
-                    PropertyChanged(this, new PropertyChangedEventArgs(nameof(StatusCode)));
-                }
-            }
-        }
-
+        public string Message { get; private set; }
+        public StatusCode StatusCode { get; private set; }
+        
         public Status(string notStartedMessage = "Not started yet")
         {
-            statusCode = StatusCode.NotStarted;
-            message = notStartedMessage;
+            StatusCode = StatusCode.NotStarted;
+            Message = notStartedMessage;
         }
         
-        public void Update(StatusCode statusCode, string message)
+        public void Update(StatusCode statusCode, string message, object sender)
         {
             Message = message;
             StatusCode = statusCode;
+            Updated?.Invoke(sender, new StatusUpdateEventArgs(message, statusCode));
         }
 
         public JObject Serialize()
@@ -74,6 +44,16 @@ namespace kadmium_osc_dmx_dotnet_core
             return obj;
         }
     }
-    
-    
+
+    public class StatusUpdateEventArgs : EventArgs
+    {
+        public string Message { get; }
+        public StatusCode StatusCode { get; }
+
+        public StatusUpdateEventArgs(string message, StatusCode statusCode)
+        {
+            Message = message;
+            StatusCode = statusCode;
+        }
+    }
 }

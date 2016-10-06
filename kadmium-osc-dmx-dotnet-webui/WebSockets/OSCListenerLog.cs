@@ -1,4 +1,5 @@
 ﻿using kadmium_osc_dmx_dotnet_core;
+using kadmium_osc_dmx_dotnet_core.Listeners;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
 using Newtonsoft.Json.Linq;
@@ -9,61 +10,57 @@ using System.Net.WebSockets;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
-using kadmium_osc_dmx_dotnet_core.Fixtures;
 
 namespace kadmium_osc_dmx_dotnet_webui.WebSockets
 {
-    public class Preview2DSocketHandler
+    public class OSCListenerLog
     {
         public WebSocket Socket { get; }
-        public byte[] DMX { get; }
+        public OSCListener Listener { get; }
         
-        public Preview2DSocketHandler(WebSocket socket)
+        public OSCListenerLog(WebSocket socket, string id)
         {
             Socket = socket;
-            DMX = new byte[Universe.DMX_UNIVERSE_SIZE ];
-            foreach(Universe universe in MasterController.Instance.Universes.Values)
-            {
-                universe.Updated += Universe_Updated;
-            }
+            Listener = MasterController.Instance.Listeners.Single(x => x.Name == id) as OSCListener;
+            Listener.MessageReceived += Listener_MessageReceived;
         }
 
-        private async void Universe_Updated(object sender, DMXEventArgs e)
+        private async void Listener_MessageReceived(object sender, ListenerEventArgs e)
         {
-            JArray arr = new JArray(
-                from channel in e.DMX
-                select new JValue((int)channel)
+            JObject obj = new JObject(
+                new JProperty("group", e.Group),
+                new JProperty("attribute", e.Attribute),
+                new JProperty("value", e.Value)
             );
-
-            string message = arr.ToString();
-
-            byte[] bytes = Encoding.UTF8.GetBytes(message);
+            
+            byte[] bytes = Encoding.UTF8.GetBytes(obj.ToString());
 
             ArraySegment<byte> segment = new ArraySegment<byte>(bytes);
             await Socket.SendAsync(segment, WebSocketMessageType.Text, true, CancellationToken.None);
         }
-
+        
         async Task RenderLoop()
         {
             while (Socket.State == WebSocketState.Open)
-            {   
+            {
                 await Task.Delay(100);
             }
         }
-        
+
         static async Task Acceptor(HttpContext hc, Func<Task> n)
         {
             if (!hc.WebSockets.IsWebSocketRequest)
                 return;
 
             var socket = await hc.WebSockets.AcceptWebSocketAsync();
-            var h = new Preview2DSocketHandler(socket);
+            string id = hc.Request.Path.Value.Split('/').Last();
+            var h = new OSCListenerLog(socket, id);
             await h.RenderLoop();
         }
 
         public static void Map(IApplicationBuilder app)
         {
-            app.Use(Preview2DSocketHandler.Acceptor);
+            app.Use(OSCListenerLog.Acceptor);
         }
     }
 }

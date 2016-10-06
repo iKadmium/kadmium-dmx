@@ -20,6 +20,7 @@ namespace kadmium_osc_dmx_dotnet_core.Listeners
         }
 
         private OSCServer listener;
+        public event EventHandler<ListenerEventArgs> MessageReceived;
 
         public OSCListener(int port, string name) : base(name)
         {
@@ -27,7 +28,7 @@ namespace kadmium_osc_dmx_dotnet_core.Listeners
 
             listener = new OSCServer(port);
             listener.DefaultOnMessageReceived += Listener_PacketReceived;
-            Status.Update(StatusCode.NotStarted, "No messages yet");
+            Status.Update(StatusCode.NotStarted, "No messages yet", this);
         }
 
         private void Listener_PacketReceived(object sender, OSCMessageReceivedArgs e)
@@ -42,7 +43,8 @@ namespace kadmium_osc_dmx_dotnet_core.Listeners
                 Group group = MasterController.Instance.Groups[groupName];
                 float value = (float)message.Arguments[0].GetValue();
                 group.Set(attribute, value);
-                Status.Update(StatusCode.Running, "Messages received");
+                MessageReceived?.Invoke(this, new ListenerEventArgs(group.Name, attribute, value));
+                Status.Update(StatusCode.Running, "Messages received", this);
             }
         }
 
@@ -69,5 +71,18 @@ namespace kadmium_osc_dmx_dotnet_core.Listeners
             listener.Dispose();
         }
     }
-    
+
+    public class ListenerEventArgs : EventArgs
+    {
+        public string Attribute { get; }
+        public string Group { get; }
+        public float Value { get; }
+
+        public ListenerEventArgs(string group, string attribute, float value)
+        {
+            Attribute = attribute;
+            Group = group;
+            Value = value;
+        }
+    }
 }

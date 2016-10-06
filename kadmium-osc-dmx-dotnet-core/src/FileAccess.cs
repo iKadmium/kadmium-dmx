@@ -14,7 +14,7 @@ namespace kadmium_osc_dmx_dotnet_core
 {
     public static class FileAccess
     {
-        static string DataLocation = Path.Combine(Directory.GetCurrentDirectory(), "bin", "debug", "netcoreapp1.0", "kadmium-osc-dmx-dotnet-core", "data");
+        static string DataLocation = Path.Combine(AppContext.BaseDirectory, "kadmium-osc-dmx-dotnet-core", "data");
         static string FixturesLocation = Path.Combine(DataLocation, "fixtures");
         static string GroupsLocation = Path.Combine(DataLocation, "groups.json");
         static string UniversesLocation = Path.Combine(DataLocation, "universes.json");

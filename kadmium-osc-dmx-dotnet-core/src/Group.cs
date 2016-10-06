@@ -23,6 +23,7 @@ namespace kadmium_osc_dmx_dotnet_core
             Solvers = new List<GroupSolver>();
             Settables = new Dictionary<string, Attribute>();
             FrameSettables = new Dictionary<string, Attribute>();
+            Solvers.AddRange(GroupSolver.GetDefaultSolvers(this, Enumerable.Empty<string>()));
         }
 
         public Group() : this("")
@@ -55,7 +56,7 @@ namespace kadmium_osc_dmx_dotnet_core
 
         internal void Update()
         {
-            foreach(KeyValuePair<string, Solvers.Attribute> kvp in Settables)
+            foreach(KeyValuePair<string, Attribute> kvp in Settables)
             {
                 FrameSettables[kvp.Key].Value = kvp.Value.Value;
             }

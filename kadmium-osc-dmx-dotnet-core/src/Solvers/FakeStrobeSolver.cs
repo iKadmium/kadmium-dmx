@@ -25,7 +25,7 @@ namespace kadmium_osc_dmx_dotnet_core.Solvers
             {
                 if (Strobe.GetValue())
                 {
-                    Attributes["Blackout"].Value = 1.0f;
+                    Attributes["Brightness"].Value = 1.0f;
                 }
             }
             

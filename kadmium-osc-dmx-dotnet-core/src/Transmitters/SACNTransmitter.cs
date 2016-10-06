@@ -39,7 +39,7 @@ namespace kadmium_osc_dmx_dotnet_core.Transmitters
             UniverseID = universeID;
             SACNClient = new SACNSender(uuid, SOURCE_NAME, port);
 
-            Status.Update(StatusCode.Running, "Multicast Sending");
+            Status.Update(StatusCode.Running, "Multicast Sending", this);
         }
 
         public new static SACNTransmitter Load(JObject element)

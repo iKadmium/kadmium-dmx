@@ -8,22 +8,22 @@ using System.Xml.Linq;
 
 namespace kadmium_osc_dmx_dotnet_core.Solvers
 {
-    public class ApeshitSolver : GroupSolver
+    public class ApeshitGroupSolver : GroupSolver
     {
         private bool? lastStrobe;
         private Strobe Strobe { get; set; }
         public double Coverage { get; set; }
         IEnumerable<Fixture> blackoutFixtures = Enumerable.Empty<Fixture>();
 
-        public ApeshitSolver(Group group, Strobe strobe, double coverage = 0.1) : base(group, "Apeshit")
+        public ApeshitGroupSolver(Group group, Strobe strobe, double coverage = 0.2) : base(group, "Apeshit")
         {
             Strobe = strobe;
             lastStrobe = null;
             Coverage = coverage;
         }
 
-        public ApeshitSolver(Group group, double coverage = 0.1) : this(group, MasterController.Instance.Strobe, coverage) { }
-        public ApeshitSolver(Group group) : this(group, MasterController.Instance.Strobe) { }
+        public ApeshitGroupSolver(Group group, double coverage = 0.2) : this(group, MasterController.Instance.Strobe, coverage) { }
+        public ApeshitGroupSolver(Group group) : this(group, MasterController.Instance.Strobe) { }
 
         public override void Solve(Dictionary<string, Attribute> Attributes)
         {
@@ -40,16 +40,9 @@ namespace kadmium_osc_dmx_dotnet_core.Solvers
                     }
                     blackoutFixtures = proposedBlackoutFixtures;   
                     lastStrobe = strobeValue;
-                }
-                foreach (Fixture fixture in blackoutFixtures)
-                {
-                    if(blackoutFixtures.Contains(fixture))
+                    foreach (Fixture fixture in Group.Fixtures)
                     {
-                        fixture.Settables["Blackout"].Value = 1f;
-                    }
-                    else
-                    {
-                        fixture.Settables["Blackout"].Value = 0f;
+                        fixture.Settables["ApeshitFixtureSelected"].Value = blackoutFixtures.Contains(fixture) ? 1f : 0f;
                     }
                 }
             }

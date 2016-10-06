@@ -4,6 +4,7 @@ module.exports = {
     entry: {
         Preview2D: "ts/Controllers/Preview2D.ts",
         Dashboard: "ts/Controllers/Dashboard.ts",
+        OSCListenerLog: "ts/Controllers/OSCListenerLog.ts",
 
         EnttecProTransmitterEdit: "ts/Controllers/EnttecProTransmitterEdit.ts",
         FixtureCollectionEdit: "ts/Controllers/FixtureCollectionEdit.ts",

@@ -30,6 +30,10 @@ namespace kadmium_osc_dmx_dotnet_core.Solvers
             {
                 solvers.Add(new FakeStrobeSolver(fixture));
             }
+            if(ApeshitFixtureSolver.SuitableFor(fixture.Definition))
+            {
+                solvers.Add(new ApeshitFixtureSolver(fixture));
+            }
             if (HSBSolver.SuitableFor(fixture.Definition))
             {
                 solvers.Add(new HSBSolver(fixture));
