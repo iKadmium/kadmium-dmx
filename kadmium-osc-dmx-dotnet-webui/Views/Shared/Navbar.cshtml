@@ -2,7 +2,7 @@
     For more information on enabling MVC for empty projects, visit http://go.microsoft.com/fwlink/?LinkID=397860
 *@
 @{
-    var Navbar = new[] {
+        var Navbar = new[] {
         new NavbarItem("Preview",
             new NavbarItem("Preview2D", "2D Preview"),
             new NavbarItem("Preview3D", "3D Preview")
@@ -20,6 +20,9 @@
         new NavbarItem("Fixtures"),
         new NavbarItem("Listeners",
             new NavbarItem("OSCListeners", "OSC")
+        ),
+        new NavbarItem("Tools",
+            new NavbarItem("RawDMX", "Raw DMX")
         ),
         new NavbarItem("Help",
             new NavbarItem("Help", "Index", "Help"),

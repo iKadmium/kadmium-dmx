@@ -17,6 +17,7 @@ namespace kadmium_osc_dmx_dotnet_core
         public List<Fixture> Fixtures { get; }
         public byte[] DMX { get; }
         public event EventHandler<DMXEventArgs> Updated;
+        public event EventHandler<DMXEventArgs> Rendered;
 
         public Universe(string name, IEnumerable<Transmitter> transmitterTargets)
         {
@@ -58,11 +59,16 @@ namespace kadmium_osc_dmx_dotnet_core
                 fixture.Update();
                 fixture.Render(DMX);
             }
-            foreach(Transmitter transmitter in TransmitterTargets)
+            Updated?.Invoke(this, new DMXEventArgs(DMX));
+        }
+
+        public void Render()
+        {
+            foreach (Transmitter transmitter in TransmitterTargets)
             {
                 transmitter.Transmit(DMX);
             }
-            Updated?.Invoke(this, new DMXEventArgs(DMX));
+            Rendered?.Invoke(this, new DMXEventArgs(DMX));
         }
     }
 

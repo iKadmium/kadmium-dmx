@@ -47,12 +47,12 @@ namespace kadmium_osc_dmx_dotnet_core
 
         public void Activate()
         {
-            MasterController.Instance.Stop();
+            MasterController.Instance.UpdatesEnabled = false;
             foreach(FixtureCollection collection in FixtureCollections)
             {
                 collection.Activate();
             }
-            MasterController.Instance.Start();
+            MasterController.Instance.UpdatesEnabled = true;
         }
     }
 }
