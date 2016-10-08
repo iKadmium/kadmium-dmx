@@ -13,12 +13,12 @@ using System.Threading.Tasks;
 
 namespace kadmium_osc_dmx_dotnet_webui.WebSockets
 {
-    public class OSCListenerLog
+    public class OSCTransmitterLive
     {
         public WebSocket Socket { get; }
         public OSCListener Listener { get; }
         
-        public OSCListenerLog(WebSocket socket, string id)
+        public OSCTransmitterLive(WebSocket socket, string id)
         {
             Socket = socket;
             Listener = MasterController.Instance.Listeners.Single(x => x.Name == id) as OSCListener;
@@ -54,13 +54,13 @@ namespace kadmium_osc_dmx_dotnet_webui.WebSockets
 
             var socket = await hc.WebSockets.AcceptWebSocketAsync();
             string id = hc.Request.Path.Value.Split('/').Last();
-            var h = new OSCListenerLog(socket, id);
+            var h = new OSCTransmitterLive(socket, id);
             await h.RenderLoop();
         }
 
         public static void Map(IApplicationBuilder app)
         {
-            app.Use(OSCListenerLog.Acceptor);
+            app.Use(OSCTransmitterLive.Acceptor);
         }
     }
 }

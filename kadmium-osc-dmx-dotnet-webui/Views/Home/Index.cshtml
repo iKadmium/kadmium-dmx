@@ -42,7 +42,6 @@
 
 @foreach (IEnumerable<Transmitter> transmitterBatch in MasterController.Instance.Transmitters.Batch(4))
 {
-    
         @foreach (Transmitter transmitter in transmitterBatch)
         {
             string controller = transmitter.GetType().Name + "s";
@@ -55,7 +54,7 @@
                         <span class="status-message">Loading...</span>
                     </div>
                     <div class="panel-footer text-center">
-                        <a class="btn btn-info" asp-controller="@controller" asp-action="Log" asp-route-id="@transmitter.Name">Log</a>
+                        <a class="btn btn-info" asp-controller="@controller" asp-action="Live" asp-route-id="@transmitter.Name">Live</a>
                     </div>
                 </div>
             </div>
@@ -76,7 +75,7 @@
                         <span class="status-message">Loading...</span>
                     </div>
                     <div class="panel-footer text-center">
-                        <a class="btn btn-info" asp-controller="@controller" asp-action="Log" asp-route-id="@listener.Name">Log</a>
+                        <a class="btn btn-info" asp-controller="@controller" asp-action="Live" asp-route-id="@listener.Name">Live</a>
                     </div>
                 </div>
             </div>

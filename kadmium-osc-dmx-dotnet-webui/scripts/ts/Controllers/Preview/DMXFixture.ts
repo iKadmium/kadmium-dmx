@@ -1,4 +1,4 @@
-﻿import {Fixture as FixtureDefinition} from "../FixtureEdit"; 
+﻿import {Fixture as FixtureDefinition} from "../List/Editors/Fixture"; 
 import {MVC} from "../../MVC";
 
 class DMXChannel

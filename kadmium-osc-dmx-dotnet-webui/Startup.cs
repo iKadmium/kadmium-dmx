@@ -58,7 +58,8 @@ namespace kadmium_osc_dmx_dotnet_webui
 
             app.Map("/Preview2D/Socket", Preview2DSocketHandler.Map);
             app.Map("/Index/Socket", DashboardSocketHandler.Map);
-            app.Map("/OSCListeners/Socket", OSCListenerLog.Map);
+            app.Map("/SACNTransmitters/Socket", SACNTransmitterLive.Map);
+            app.Map("/OSCListeners/Socket", OSCTransmitterLive.Map);
             app.Map("/RawDMX/Socket", RawDMXSocketHandler.Map);
 
             app.UseMvc(routes =>

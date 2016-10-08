@@ -106,7 +106,7 @@ namespace kadmium_osc_dmx_dotnet_webui.Controllers
             }
         }
 
-        public IActionResult Log(string id)
+        public IActionResult Live(string id)
         {
             if (MasterController.Instance.Transmitters.Any(x => x.Name == id))
             {

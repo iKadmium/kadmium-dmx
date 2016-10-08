@@ -18,9 +18,6 @@
 		"name": "drumLEDs"
 	},
 	{
-		"name": "guitarLEDs"
-	},
-	{
 		"name": "audience"
 	}
 ]

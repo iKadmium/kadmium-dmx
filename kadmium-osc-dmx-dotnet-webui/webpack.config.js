@@ -4,17 +4,19 @@ module.exports = {
     entry: {
         Preview2D: "ts/Controllers/Preview2D.ts",
         Dashboard: "ts/Controllers/Dashboard.ts",
-        OSCListenerLog: "ts/Controllers/OSCListenerLog.ts",
+        SACNTransmitterLive: "ts/Controllers/SACNTransmitterLive.ts",
+        OSCListenerLive: "ts/Controllers/OSCListenerLive.ts",
         RawDMX: "ts/Controllers/RawDMX.ts",
 
-        EnttecProTransmitterEdit: "ts/Controllers/EnttecProTransmitterEdit.ts",
-        FixtureCollectionEdit: "ts/Controllers/FixtureCollectionEdit.ts",
-        FixtureEdit: "ts/Controllers/FixtureEdit.ts",
-        GroupEdit: "ts/Controllers/GroupEdit.ts",
-        OSCListenerEdit: "ts/Controllers/OSCListenerEdit.ts",
-        SACNTransmitterEdit: "ts/Controllers/SACNTransmitterEdit.ts",
-        UniverseEdit: "ts/Controllers/UniverseEdit.ts",
-        VenuesEdit: "ts/Controllers/VenuesEdit.ts",
+        EnttecProTransmitterEdit: "ts/Controllers/List/Editors/EnttecProTransmitter.ts",
+        FixtureCollectionEdit: "ts/Controllers/List/Editors/FixtureCollection.ts",
+        FixtureEdit: "ts/Controllers/List/Editors/Fixture.ts",
+        GroupEdit: "ts/Controllers/List/Editors/Group.ts",
+        OSCListenerEdit: "ts/Controllers/List/Editors/OSCListener.ts",
+        SACNTransmitterEdit: "ts/Controllers/List/Editors/SACNTransmitter.ts",
+        UniverseEdit: "ts/Controllers/List/Editors/Universe.ts",
+        VenuesEdit: "ts/Controllers/List/Editors/Venues.ts",
+
         validator: "js/validator.js"
     },
     output: {

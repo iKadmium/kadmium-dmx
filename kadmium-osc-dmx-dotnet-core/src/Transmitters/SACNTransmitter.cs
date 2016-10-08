@@ -19,6 +19,7 @@ namespace kadmium_osc_dmx_dotnet_core.Transmitters
         public IPAddress UnicastAddress { get; set; }
         public bool Multicast { get { return UnicastAddress != null; } }
         public int Port { get; set; }
+        public event EventHandler<TransmitterEventArgs> OnTransmit;
 
         public new string DisplayName
         {
@@ -27,10 +28,11 @@ namespace kadmium_osc_dmx_dotnet_core.Transmitters
                 return "SACN Transmitter [" + Name + "] - Universe " + UniverseID;
             }
         }
-
+        
         public override void TransmitInternal(byte[] dmx)
         {
             SACNClient.Send(UniverseID, dmx);
+            OnTransmit?.Invoke(this, new TransmitterEventArgs(dmx));
         }
 
         public SACNTransmitter(Guid uuid, Int16 universeID, string name, bool enabled, int port) : base(name, enabled)
@@ -70,5 +72,12 @@ namespace kadmium_osc_dmx_dotnet_core.Transmitters
         }
     }
 
-    
+    public class TransmitterEventArgs : EventArgs
+    {
+        public byte[] DMX { get; }
+        public TransmitterEventArgs(byte[] dmx)
+        {
+            DMX = dmx;
+        }
+    }
 }

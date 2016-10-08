@@ -38,6 +38,10 @@ namespace kadmium_osc_dmx_dotnet_core.Solvers
             {
                 solvers.Add(new HSBSolver(fixture));
             }
+            if (RandomMove.SuitableFor(fixture.Definition))
+            {
+                solvers.Add(new RandomMove(fixture, options));
+            }
             if (PanTilt16BitSolver.SuitableFor(fixture.Definition))
             {
                 solvers.Add(new PanTilt16BitSolver(fixture, options));

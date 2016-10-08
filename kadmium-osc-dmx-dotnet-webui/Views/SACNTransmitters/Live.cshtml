@@ -1,0 +1,39 @@
+﻿@model kadmium_osc_dmx_dotnet_core.Transmitters.SACNTransmitter
+@using kadmium_osc_dmx_dotnet_webui.ViewHelpers;
+@*
+    For more information on enabling MVC for empty projects, visit http://go.microsoft.com/fwlink/?LinkID=397860
+*@
+@{
+    ViewData["Title"] = "sACN Transmitter Live View";
+}
+
+<table class="table table-striped">
+    <thead>
+        <tr>
+            <th></th>
+            @for(int i = 0; i < 10; i++)
+            {
+                <th>@i</th>
+            }
+        </tr>
+    </thead>
+    <tbody id="dmx">
+        @for (int row = 0; row < 52; row++)
+        {
+            <tr>
+                <th>@(row * 10)</th>
+                @for(int column = 0; column < 10; column++)
+                {
+                    int address = 10 * row + column;
+                    <td title="@address" id="dmx-@address">
+                        @if (address >= 1 && address <= 512)
+                        {
+                            <text>?</text>
+                        }
+                    </td>
+                }
+            </tr>
+        }
+    </tbody>
+</table>
+<script src="~/js/SACNTransmitterLive.js"></script>
