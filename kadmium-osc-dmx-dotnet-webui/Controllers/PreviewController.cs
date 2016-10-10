@@ -11,10 +11,20 @@ using kadmium_osc_dmx_dotnet_core;
 
 namespace kadmium_osc_dmx_dotnet_webui.Controllers
 {
-    public class Preview2DController : Controller
+    public class PreviewController : Controller
     {
         // GET: /<controller>/
         public IActionResult Index()
+        {
+            return Preview2D();
+        }
+
+        public IActionResult Preview2D()
+        {
+            return View();
+        }
+
+        public IActionResult Preview3D()
         {
             return View();
         }

@@ -13,7 +13,7 @@ export class DMXUniverse
     constructor()
     {
         this.fixtures = [];
-        let url = MVC.getActionURL("Preview2D", "Fixtures", null);
+        let url = MVC.getActionURL("Preview", "Fixtures", null);
 
         let that = this;
         $.ajax({
@@ -39,4 +39,6 @@ export class DMXUniverse
             fixture.render(data);
         }
     }
+
+
 }

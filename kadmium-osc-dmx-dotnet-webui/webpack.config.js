@@ -3,6 +3,7 @@ var path = require("path");
 module.exports = {
     entry: {
         Preview2D: "ts/Controllers/Preview2D.ts",
+        Preview3D: "ts/Controllers/Preview3D.ts",
         Dashboard: "ts/Controllers/Dashboard.ts",
         SACNTransmitterLive: "ts/Controllers/SACNTransmitterLive.ts",
         OSCListenerLive: "ts/Controllers/OSCListenerLive.ts",
@@ -17,6 +18,7 @@ module.exports = {
         UniverseEdit: "ts/Controllers/List/Editors/Universe.ts",
         VenuesEdit: "ts/Controllers/List/Editors/Venues.ts",
 
+        volumetricspotlightmaterialdatgui: "js/threex.volumetricspotlightmaterialdatgui.js",
         validator: "js/validator.js"
     },
     output: {

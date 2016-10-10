@@ -13,12 +13,12 @@ using kadmium_osc_dmx_dotnet_core.Fixtures;
 
 namespace kadmium_osc_dmx_dotnet_webui.WebSockets
 {
-    public class Preview2DSocketHandler
+    public class PreviewSocketHandler
     {
         public WebSocket Socket { get; }
         public byte[] DMX { get; }
         
-        public Preview2DSocketHandler(WebSocket socket)
+        public PreviewSocketHandler(WebSocket socket)
         {
             Socket = socket;
             DMX = new byte[Universe.DMX_UNIVERSE_SIZE ];
@@ -57,13 +57,13 @@ namespace kadmium_osc_dmx_dotnet_webui.WebSockets
                 return;
 
             var socket = await hc.WebSockets.AcceptWebSocketAsync();
-            var h = new Preview2DSocketHandler(socket);
+            var h = new PreviewSocketHandler(socket);
             await h.RenderLoop();
         }
 
         public static void Map(IApplicationBuilder app)
         {
-            app.Use(Preview2DSocketHandler.Acceptor);
+            app.Use(PreviewSocketHandler.Acceptor);
         }
     }
 }

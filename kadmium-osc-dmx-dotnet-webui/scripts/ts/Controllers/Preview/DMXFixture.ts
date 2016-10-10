@@ -4,12 +4,32 @@ import {MVC} from "../../MVC";
 class DMXChannel
 {
     address: number;
-    span: HTMLSpanElement;
-
+    
     constructor(address: number)
     {
         this.address = address;
-        this.span = $("#channel-" + (address + 1))[0] as HTMLSpanElement;
+    }
+}
+
+class MovementDefinition
+{
+    name: string;
+    min: number;
+    max: number;
+
+    constructor(name: string, min: number, max: number)
+    {
+        this.name = name;
+        this.min = min;
+        this.max = max;
+    }
+}
+
+class MovementSet
+{
+    [name: string]: MovementDefinition;
+    constructor()
+    {
     }
 }
 
@@ -18,20 +38,22 @@ class DMXChannelSet
     [name: string]: DMXChannel;
 
     constructor()
-    {
-        
+    {   
     }
 }
 
 export class DMXFixture
 {
     channels: DMXChannelSet;
+    movements: MovementSet;
     address: number;
-    canvas: HTMLCanvasElement;
-    ctx: CanvasRenderingContext2D;
+
     red: number;
     green: number;
     blue: number;
+
+    pan: number;
+    tilt: number;
 
     static STROBE_HZ = 15;
     static STROBE_MILLIS = 1000 / DMXFixture.STROBE_HZ;
@@ -39,9 +61,9 @@ export class DMXFixture
     constructor(type: string, address: number)
     {
         this.address = address;
-        this.canvas = $("#canvas-" + address)[0] as HTMLCanvasElement;
-        this.ctx = this.canvas.getContext("2d");
+        
         this.channels = new DMXChannelSet();
+        this.movements = new MovementSet();
 
         let url = MVC.getActionURL("Fixtures", "Load", type);
         
@@ -59,53 +81,45 @@ export class DMXFixture
         {
             this.channels[channel.name] = new DMXChannel(this.address + channel.dmx - 2);
         }
+        for (let movement of definition.movements)
+        {
+            this.movements[movement.name] = new MovementDefinition(movement.name, movement.min, movement.max);
+        }
     }
-
-    private draw() : void
-    {
-        let fillStyle = "rgb( " + this.red + ", " + this.green + ", " + this.blue + ")";
-
-        this.ctx.fillStyle = fillStyle;
-        this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
-        this.ctx.fillRect(0, 0, this.canvas.width, this.canvas.height);
-        this.ctx.strokeStyle = DMXFixture.invertColor(this.red, this.green, this.blue);
-    }
-
+    
     render(data: number[]): void
     {
-        this.renderText(data);
         this.renderRGB(data);
         this.renderStrobe(data);
-
-        this.draw();
-        this.drawMovements(data);
+        this.renderPanTilt(data);
     }
 
-    private renderText(data: number[]) : void
+    private renderPanTilt(data: number[]): void
     {
-        for (let channelName in this.channels)
+        if (this.channels["Pan"] != null)
         {
-            let channel = this.channels[channelName];
-            channel.span.innerText = data[channel.address] + "";
+            this.pan = this.getChannelValue("Pan", data) / 255.0;
+        }
+        else if (this.channels["PanCoarse"] != null)
+        {
+            this.pan = this.getChannelValue("PanCoarse", data) / 255.0 + this.getChannelValue("PanFine", data) / 65025.0;
+        }
+
+        if (this.channels["Tilt"] != null)
+        {
+            this.tilt = this.getChannelValue("Tilt", data) / 255.0;
+        }
+        else if (this.channels["TiltCoarse"] != null)
+        {
+            this.tilt = this.getChannelValue("TiltCoarse", data) / 255.0 + this.getChannelValue("TiltFine", data) / 65025.0;
         }
     }
-
+    
     private renderRGB(data: number[]) : void
     {
-        if (this.channels["Red"] != null)
-        {
-            this.red = data[this.channels["Red"].address];
-        }
-
-        if (this.channels["Green"] != null)
-        {
-            this.green = data[this.channels["Green"].address];
-        }
-
-        if (this.channels["Blue"] != null)
-        {
-            this.blue = data[this.channels["Blue"].address];
-        }
+        this.red = this.getChannelValue("Red", data);
+        this.green = this.getChannelValue("Green", data);
+        this.blue = this.getChannelValue("Blue", data);
     }
 
     private renderStrobe(data: number[]) : void
@@ -128,30 +142,18 @@ export class DMXFixture
         }
     }
 
-    private drawMovements(data: number[]) : void
+    getChannelValue(name: string, data: number[]): number
     {
-        if (this.channels["PanCoarse"] != null)
+        if (this.channels[name] != null)
         {
-            let value = data[this.channels["PanCoarse"].address] / 255;
-            let x = this.canvas.width * value;
-            this.ctx.beginPath();
-            this.ctx.moveTo(x, 0);
-            this.ctx.lineTo(x, this.canvas.height);
-            this.ctx.closePath();
-            this.ctx.stroke();
+            return data[this.channels[name].address];
         }
-        if (this.channels["TiltCoarse"] != null)
+        else
         {
-            let value = data[this.channels["TiltCoarse"].address] / 255;
-            let y = this.canvas.height * value;
-            this.ctx.beginPath();
-            this.ctx.moveTo(0, y);
-            this.ctx.lineTo(this.canvas.width, y);
-            this.ctx.closePath();
-            this.ctx.stroke();
+            return null;
         }
     }
-
+    
     static invertColor(red: number, green: number, blue: number): string
     {
         red = 255 - red;
@@ -159,5 +161,26 @@ export class DMXFixture
         blue = 255 - blue;
 
         return "rgb(" + red + ", " + green + ", " + blue + ")";
+    }
+
+    get panDegrees(): number
+    {
+        return DMXFixture.rebaseRange(this.pan, 0, 1, this.movements["Pan"].min, this.movements["Pan"].max);
+    }
+
+    get tiltDegrees(): number
+    {
+        return DMXFixture.rebaseRange(this.tilt, 0, 1, this.movements["Tilt"].min, this.movements["Tilt"].max);
+    }
+
+    static rebaseRange(value: number, oldMin: number, oldMax: number, newMin: number, newMax: number): number
+    {
+        let oldRange = oldMax - oldMin;
+        let percentageOfOldRange = (value - oldMin) / oldRange;
+
+        let newRange = newMax - newMin;
+        let newValue = percentageOfOldRange * newRange + newMin;
+
+        return newValue;
     }
 }
