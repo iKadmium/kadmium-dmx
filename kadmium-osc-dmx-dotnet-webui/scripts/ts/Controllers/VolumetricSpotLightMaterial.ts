@@ -1,91 +1,121 @@
-﻿declare let THREE: any;
+﻿class FloatUniform extends THREE.Uniform
+{
+    value: number;
+    constructor(value: number)
+    {
+        super(value);
+        this.type = "f";
+    }
+}
+
+class Vector3Uniform extends THREE.Uniform
+{
+    value: THREE.Vector3;
+    constructor(value: THREE.Vector3)
+    {
+        super(value);
+        this.type = "v3";
+    }
+}
+
+class ColorUniform extends THREE.Uniform
+{
+    value: THREE.Color;
+    constructor(value: THREE.Color)
+    {
+        super(value);
+        this.type = "c";
+    }
+}
+
+class VolumetricSpotLightMaterialUniforms
+{
+    attenuation: FloatUniform;
+    anglePower: FloatUniform;
+    spotPosition: Vector3Uniform;
+    lightColor: ColorUniform;
+    constructor()
+    {
+        this.attenuation = new FloatUniform(5.0);
+        this.anglePower = new FloatUniform(1.2);
+        this.spotPosition = new Vector3Uniform(new THREE.Vector3(0, 0, 0));
+        this.lightColor = new ColorUniform(new THREE.Color("cyan"));
+    }
+}
 
 /**
  * from http://stemkoski.blogspot.fr/2013/07/shaders-in-threejs-glow-and-halo.html
  * @return {[type]} [description]
  */
-export function VolumetricSpotLightMaterial(): any
+export class VolumetricSpotLightMaterial extends THREE.ShaderMaterial
 {
     // 
-    var vertexShader = [
-        'varying vec3 vNormal;',
-        'varying vec3 vWorldPosition;',
+    vertexShader: string;
+    fragmentShader: string;
+    material: THREE.ShaderMaterial;
+    uniforms: VolumetricSpotLightMaterialUniforms;
 
-        'void main(){',
-        '// compute intensity',
-        'vNormal		= normalize( normalMatrix * normal );',
+    constructor()
+    {
+        super();
+        this.vertexShader = [
+            'varying vec3 vNormal;',
+            'varying vec3 vWorldPosition;',
 
-        'vec4 worldPosition	= modelMatrix * vec4( position, 1.0 );',
-        'vWorldPosition		= worldPosition.xyz;',
+            'void main(){',
+            '// compute intensity',
+            'vNormal		= normalize( normalMatrix * normal );',
 
-        '// set gl_Position',
-        'gl_Position	= projectionMatrix * modelViewMatrix * vec4( position, 1.0 );',
-        '}',
-    ].join('\n')
-    var fragmentShader = [
-        'varying vec3		vNormal;',
-        'varying vec3		vWorldPosition;',
+            'vec4 worldPosition	= modelMatrix * vec4( position, 1.0 );',
+            'vWorldPosition		= worldPosition.xyz;',
 
-        'uniform vec3		lightColor;',
+            '// set gl_Position',
+            'gl_Position	= projectionMatrix * modelViewMatrix * vec4( position, 1.0 );',
+            '}',
+        ].join('\n')
 
-        'uniform vec3		spotPosition;',
+        this.fragmentShader = [
+            'varying vec3		vNormal;',
+            'varying vec3		vWorldPosition;',
 
-        'uniform float		attenuation;',
-        'uniform float		anglePower;',
+            'uniform vec3		lightColor;',
 
-        'void main(){',
-        'float intensity;',
+            'uniform vec3		spotPosition;',
 
-        //////////////////////////////////////////////////////////
-        // distance attenuation					//
-        //////////////////////////////////////////////////////////
-        'intensity	= distance(vWorldPosition, spotPosition)/attenuation;',
-        'intensity	= 1.0 - clamp(intensity, 0.0, 1.0);',
+            'uniform float		attenuation;',
+            'uniform float		anglePower;',
 
-        //////////////////////////////////////////////////////////
-        // intensity on angle					//
-        //////////////////////////////////////////////////////////
-        'vec3 normal	= vec3(vNormal.x, vNormal.y, abs(vNormal.z));',
-        'float angleIntensity	= pow( dot(normal, vec3(0.0, 0.0, 1.0)), anglePower );',
-        'intensity	= intensity * angleIntensity;',
-        // 'gl_FragColor	= vec4( lightColor, intensity );',
+            'void main(){',
+            'float intensity;',
 
-        //////////////////////////////////////////////////////////
-        // final color						//
-        //////////////////////////////////////////////////////////
+            //////////////////////////////////////////////////////////
+            // distance attenuation					//
+            //////////////////////////////////////////////////////////
+            'intensity	= distance(vWorldPosition, spotPosition)/attenuation;',
+            'intensity	= 1.0 - clamp(intensity, 0.0, 1.0);',
 
-        // set the final color
-        'gl_FragColor	= vec4( lightColor, intensity);',
-        '}',
-    ].join('\n')
+            //////////////////////////////////////////////////////////
+            // intensity on angle					//
+            //////////////////////////////////////////////////////////
+            'vec3 normal	= vec3(vNormal.x, vNormal.y, abs(vNormal.z));',
+            'float angleIntensity	= pow( dot(normal, vec3(0.0, 0.0, 1.0)), anglePower );',
+            'intensity	= intensity * angleIntensity;',
+            // 'gl_FragColor	= vec4( lightColor, intensity );',
 
-    // create custom material from the shader code above
-    //   that is within specially labeled script tags
-    var material = new THREE.ShaderMaterial({
-        uniforms: {
-            attenuation: {
-                type: "f",
-                value: 5.0
-            },
-            anglePower: {
-                type: "f",
-                value: 1.2
-            },
-            spotPosition: {
-                type: "v3",
-                value: new THREE.Vector3(0, 0, 0)
-            },
-            lightColor: {
-                type: "c",
-                value: new THREE.Color('cyan')
-            },
-        },
-        vertexShader: vertexShader,
-        fragmentShader: fragmentShader,
-        // side		: THREE.DoubleSide,
-        // blending	: THREE.AdditiveBlending,
-        transparent: true,
-        depthWrite: false,
-    });
-    return material
+            //////////////////////////////////////////////////////////
+            // final color						//
+            //////////////////////////////////////////////////////////
+
+            // set the final color
+            'gl_FragColor	= vec4( lightColor, intensity);',
+            '}',
+        ].join('\n')
+
+        this.uniforms = new VolumetricSpotLightMaterialUniforms();
+        
+        this.transparent = true;
+        this.depthWrite = false;
+
+    }
+
 }

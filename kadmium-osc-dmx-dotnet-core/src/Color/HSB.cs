@@ -6,13 +6,9 @@ namespace kadmium_osc_dmx_dotnet_core.Color
 	/// <summary>
 	/// Structure to define HSB.
 	/// </summary>
-	public struct HSB
+	public class HSB
 	{
-		/// <summary>
-		/// Gets an empty HSB structure;
-		/// </summary>
-		public static readonly HSB Empty = new HSB();
-
+		
 		#region Fields
 		private double hue;
 		private double saturation;
@@ -51,8 +47,8 @@ namespace kadmium_osc_dmx_dotnet_core.Color
 				return hue;
 			} 
 			set
-			{ 
-				hue = (value>360)? 360 : ((value<0)?0:value); 
+			{
+                hue = (value >= 360) ? 0 : ((value < 0) ? 0 : value);
 			} 
 		} 
 
@@ -95,9 +91,9 @@ namespace kadmium_osc_dmx_dotnet_core.Color
 		/// <param name="b">Brightness value.</param>
 		public HSB(double h, double s, double b) 
 		{
-			hue = (h>360)? 360 : ((h<0)?0:h); 
-			saturation = (s>1)? 1 : ((s<0)?0:s);
-			brightness = (b>1)? 1 : ((b<0)?0:b);
+            Hue = h;
+            Saturation = s;
+            Brightness = b;
 		}
 
 		#region Methods

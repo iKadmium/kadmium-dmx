@@ -33,16 +33,26 @@ namespace kadmium_osc_dmx_dotnet_core.Solvers
                 if (strobeValue != lastStrobe)
                 {
                     int count = (int)Math.Floor((double)(Group.Fixtures.Count * (1.0 - Coverage)));
-                    IEnumerable<Fixture> proposedBlackoutFixtures = Group.Fixtures.PickRandom(count);
-                    while(proposedBlackoutFixtures.SequenceEqualIgnoreOrder(blackoutFixtures))
+                    while(count > Group.Fixtures.Count && count > 0)
                     {
-                        proposedBlackoutFixtures = Group.Fixtures.PickRandom(count);
+                        count--;
                     }
-                    blackoutFixtures = proposedBlackoutFixtures;   
-                    lastStrobe = strobeValue;
-                    foreach (Fixture fixture in Group.Fixtures)
+                    var applicableFixtures = from fixture in Group.Fixtures
+                                             where fixture.Solvers.Any(x => x.GetType() == typeof(ApeshitFixtureSolver))
+                                             select fixture;
+                    if (applicableFixtures.Count() > count)
                     {
-                        fixture.Settables["ApeshitFixtureSelected"].Value = blackoutFixtures.Contains(fixture) ? 1f : 0f;
+                        IEnumerable<Fixture> proposedBlackoutFixtures = applicableFixtures.PickRandom(count);
+                        while (proposedBlackoutFixtures.SequenceEqualIgnoreOrder(blackoutFixtures))
+                        {
+                            proposedBlackoutFixtures = applicableFixtures.PickRandom(count);
+                        }
+                        blackoutFixtures = proposedBlackoutFixtures;
+                        lastStrobe = strobeValue;
+                        foreach (Fixture fixture in applicableFixtures)
+                        {
+                            fixture.Settables["ApeshitFixtureSelected"].Value = blackoutFixtures.Contains(fixture) ? 1f : 0f;
+                        }
                     }
                 }
             }

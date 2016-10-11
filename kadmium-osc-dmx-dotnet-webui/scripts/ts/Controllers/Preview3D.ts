@@ -3,44 +3,89 @@ import {DMXFixture} from "./Preview/DMXFixture";
 import {MVC} from "../MVC";
 import {VolumetricSpotLightMaterial} from "./VolumetricSpotLightMaterial";
 
-declare let THREE: any;
+class Vector3 
+{
+    x: number;
+    y: number;
+    z: number;
+}
 
 class DMXLight
 {
-    threeLight: any;
-    threeVolume: any;
-    threeLookAtTarget: any;
-    helper: any;
+    light: THREE.SpotLight;
+    volume: THREE.Mesh;
+    helper: THREE.SpotLightHelper;
     fixture: DMXFixture;
+    inverted: boolean;
+    initialRotation: THREE.Euler;
 
-    pivot: any;
+    lookAtHelper: THREE.Object3D;
+    lookAtPivot: THREE.Object3D;
+    lookAtVector: THREE.Vector3;
 
-    constructor(scene: any, x: number, y: number, z: number, fixture: DMXFixture)
+    constructor(scene: THREE.Scene, initialPosition: THREE.Vector3, initialRotation: THREE.Euler, fixture: DMXFixture)
     {
-        this.threeLookAtTarget = Preview3DController.createLookAtTarget(0, -10, 0);
-        this.threeLight = Preview3DController.createSpotLight(this.threeLookAtTarget);
-        this.threeVolume = Preview3DController.createVolumetricLight(scene, 10);
-        
-        this.threeVolume.position.set(x, y, z);
-        this.threeLight.position.set(x, y, z);
-
-        scene.add(this.threeVolume);
-        scene.add(this.threeLight);
-
-        this.helper = new THREE.SpotLightHelper(this.threeLight);
-        scene.add(this.helper);
-
-        this.pivot = new THREE.Object3D();
-        this.pivot.add(this.threeLookAtTarget);
-        this.pivot.position.set(x, y, z);
-        scene.add(this.pivot);
-
         this.fixture = fixture;
+        this.initialRotation = initialRotation;
 
-        if (! (y > 0))
+        this.lookAtHelper = Preview3DController.createLookAtTarget();
+        this.lookAtPivot = Preview3DController.createLookAtTarget();
+        
+        this.lookAtHelper.translateY(10);
+        scene.add(this.lookAtPivot);
+        this.lookAtPivot.add(this.lookAtHelper);
+        
+        this.light = Preview3DController.createSpotLight(this.lookAtHelper);
+        this.light.position.copy(initialPosition);
+        this.volume = Preview3DController.createVolumetricLight(scene, 15);
+        this.lookAtPivot.add(this.volume);
+        this.helper = new THREE.SpotLightHelper(this.light);
+        
+        this.lookAtPivot.rotation.copy(initialRotation);
+        this.lookAtPivot.position.copy(initialPosition);
+
+        let lookAtAbsolute = new THREE.Vector3(this.lookAtHelper.position.x, this.lookAtHelper.position.y, this.lookAtHelper.position.z);
+        this.lookAtHelper.localToWorld(lookAtAbsolute);
+
+        this.volume.lookAt(lookAtAbsolute);
+
+        this.updateTargetPosition();
+        
+        //scene.add(this.helper);
+        scene.add(this.light);
+    }
+
+    update(): void
+    {
+        this.light.color.r = this.fixture.red / 255;
+        this.light.color.g = this.fixture.green / 255;
+        this.light.color.b = this.fixture.blue / 255;
+        let material = this.volume.material as VolumetricSpotLightMaterial;
+        material.uniforms.lightColor.value.r = this.fixture.red / 255;
+        material.uniforms.lightColor.value.g = this.fixture.green / 255;
+        material.uniforms.lightColor.value.b = this.fixture.blue / 255;
+
+        this.updateTargetPosition();
+
+        
+        this.helper.update();
+    }
+
+    updateTargetPosition(): void
+    {
+        let rotation = new THREE.Euler(this.initialRotation.x, this.initialRotation.y, this.initialRotation.z);
+        
+        if (this.fixture.pan != null)
         {
-            //this.threeVolumePivot.rotation.x = Math.PI / 180;
+            rotation.y += this.fixture.panDegrees * Math.PI / 180;
         }
+        if (this.fixture.tilt != null)
+        {
+            rotation.x += this.fixture.tiltDegrees * Math.PI / 180;
+        }
+
+        this.lookAtPivot.rotation.copy(rotation);
+        
     }
 }
 
@@ -51,20 +96,20 @@ class DMXLightSet
 
 class Preview3DController
 {
-    renderer: any;
-    scene: any;
-    camera: any;
+    renderer: THREE.Renderer;
+    scene: THREE.Scene;
+    camera: THREE.Camera;
 
-    stage: any;
+    stage: THREE.Mesh;
 
     socket: WebSocket;
     universe: DMXUniverse;
     lightSet: DMXLightSet;
 
-    tomina: any;
-    jesse: any;
-    matty: any;
-    james: any;
+    tomina: THREE.Mesh;
+    jesse: THREE.Mesh;
+    matty: THREE.Mesh;
+    james: THREE.Mesh;
 
     constructor()
     {
@@ -103,6 +148,9 @@ class Preview3DController
         
         this.camera.position.z = 5;
 
+        let ambientLight = new THREE.AmbientLight(0xFFFFFF, 0.2);
+        this.scene.add(ambientLight);
+
         this.renderer = new THREE.WebGLRenderer();
         this.renderer.setSize(window.innerWidth, window.innerHeight);
 
@@ -130,35 +178,35 @@ class Preview3DController
                     switch (fixture.address)
                     {
                         case 301:
-                            light = new DMXLight(that.scene, -3.75, 0, -2.5, fixture);
+                            light = new DMXLight(that.scene, new THREE.Vector3(- 3.75, 0, -2.5), new THREE.Euler(0, 0, 0), fixture);
                             that.lightSet[fixture.address] = light;
                             break;
                         case 315:
-                            light = new DMXLight(that.scene, -1.25, 0, -2.5, fixture);
+                            light = new DMXLight(that.scene, new THREE.Vector3(-1.25, 0, -2.5), new THREE.Euler(0, 0, 0), fixture);
                             that.lightSet[fixture.address] = light;
                             break;
                         case 329:
-                            light = new DMXLight(that.scene, 1.25, 0, -2.5, fixture);
+                            light = new DMXLight(that.scene, new THREE.Vector3(1.25, 0, -2.5), new THREE.Euler(0, 0, 0), fixture);
                             that.lightSet[fixture.address] = light;
                             break;
                         case 343:
-                            light = new DMXLight(that.scene, 3.75, 0, -2.5, fixture);
+                            light = new DMXLight(that.scene, new THREE.Vector3(3.75, 0, -2.5), new THREE.Euler(0, 0, 0), fixture);
                             that.lightSet[fixture.address] = light;
                             break;
                         case 400:
-                            light = new DMXLight(that.scene, 0, 10, 0, fixture);
+                            light = new DMXLight(that.scene, new THREE.Vector3(0, 10, 0), new THREE.Euler(Math.PI, 0, 0), fixture);
                             that.lightSet[fixture.address] = light;
                             break;
                         case 405:
-                            light = new DMXLight(that.scene, -5, 10, 0, fixture);
+                            light = new DMXLight(that.scene, new THREE.Vector3(-5, 10, 0), new THREE.Euler(Math.PI, 0, 0), fixture);
                             that.lightSet[fixture.address] = light;
                             break;
                         case 410:
-                            light = new DMXLight(that.scene, 5, 10, 0, fixture);
+                            light = new DMXLight(that.scene, new THREE.Vector3(5, 10, 0), new THREE.Euler(Math.PI, 0, 0), fixture);
                             that.lightSet[fixture.address] = light;
                             break;
                         case 415:
-                            light = new DMXLight(that.scene, 0, 10, -5, fixture);
+                            light = new DMXLight(that.scene, new THREE.Vector3(0, 10, -5), new THREE.Euler(Math.PI, 0, 0), fixture);
                             that.lightSet[fixture.address] = light;
                             break;
                     }
@@ -166,13 +214,7 @@ class Preview3DController
                 light = that.lightSet[fixture.address];
                 if (light != null)
                 {
-                    light.threeLight.color.r = light.fixture.red / 255;
-                    light.threeLight.color.g = light.fixture.green / 255;
-                    light.threeLight.color.b = light.fixture.blue / 255;
-                    light.threeVolume.material.uniforms.lightColor.value.r = light.fixture.red / 255;
-                    light.threeVolume.material.uniforms.lightColor.value.g = light.fixture.green / 255;
-                    light.threeVolume.material.uniforms.lightColor.value.b = light.fixture.blue / 255;
-                    light.threeVolume.lookAt(light.threeLookAtTarget.localToWorld(light.threeLookAtTarget.position));
+                    light.update();
                 }
             }
         });
@@ -181,14 +223,10 @@ class Preview3DController
     render(): void
     {
         requestAnimationFrame(this.render.bind(this));
-        for (let address in this.lightSet)
-        {
-            this.lightSet[address].helper.update();
-        }
         this.renderer.render(this.scene, this.camera)
     }
 
-    static createSpotLight(target: any): any
+    static createSpotLight(target: any): THREE.SpotLight
     {
         let spotLight = new THREE.SpotLight(0xffffff);
         spotLight.angle = 0.2;
@@ -197,19 +235,18 @@ class Preview3DController
         return spotLight;
     }
 
-    static createLookAtTarget(x: number, y: number, z: number): any
+    static createLookAtTarget(): THREE.Object3D
     {
         let target = new THREE.Object3D();
-        target.position.set(x, y, z);
         return target;
     }
 
-    static createVolumetricLight(scene: any, height: number): any
+    static createVolumetricLight(scene: any, height: number): THREE.Mesh
     {
         let geometry = new THREE.CylinderGeometry(0.0, 1.5, height, 32 * 2, 20, true);
         geometry.applyMatrix(new THREE.Matrix4().makeTranslation(0, -geometry.parameters.height / 2, 0));
         geometry.applyMatrix(new THREE.Matrix4().makeRotationX(-Math.PI / 2));
-        let material = VolumetricSpotLightMaterial();
+        let material = new VolumetricSpotLightMaterial();
         let mesh = new THREE.Mesh(geometry, material);
         
         material.uniforms.attenuation.value = 10;
@@ -217,6 +254,15 @@ class Preview3DController
         material.uniforms.spotPosition.value = mesh.position;
 
         return mesh;
+    }
+
+    static createDot(): any
+    {
+        let dotGeometry = new THREE.Geometry();
+        dotGeometry.vertices.push(new THREE.Vector3(0, 0, 0));
+        let dotMaterial = new THREE.PointCloudMaterial({ size: 1, sizeAttenuation: false });
+        let dot = new THREE.PointCloud(dotGeometry, dotMaterial);
+        return dot;
     }
 }
 
