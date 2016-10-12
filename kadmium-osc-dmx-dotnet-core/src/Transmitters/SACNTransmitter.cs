@@ -49,7 +49,7 @@ namespace kadmium_osc_dmx_dotnet_core.Transmitters
             Int16 universeID = element["universeID"].Value<Int16>();
             string id = element["name"].Value<string>();
             bool enabled = true;// bool.Parse(element.Attribute("enabled").Value);
-            int port = 6454;//int.Parse(element.Attribute("port").Value);
+            int port = 5568;//int.Parse(element.Attribute("port").Value);
             SACNTransmitter transmitter = new SACNTransmitter(Guid.NewGuid(), universeID, id, enabled, port);
             return transmitter;
         }

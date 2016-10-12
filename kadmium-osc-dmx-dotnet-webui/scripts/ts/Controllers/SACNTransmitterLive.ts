@@ -5,9 +5,11 @@ class SACNTransmitterLiveController
 {
     webSocket: WebSocket;
     attributesBody: HTMLTableSectionElement;
+    cache: number[];
 
     constructor()
     {
+        this.cache = new Array<number>(512);
         this.webSocket = new WebSocket(document.URL.replace("http://", "ws://").replace("Live", "Socket"));
         this.webSocket.addEventListener("message", (ev: MessageEvent) =>
         {
@@ -15,7 +17,14 @@ class SACNTransmitterLiveController
             for (let address in message)
             {
                 let trueAddress = parseInt(address);
-                $("#dmx-" + (trueAddress + 1)).text(message[trueAddress]);
+                let value = message[trueAddress];
+                if (this.cache[trueAddress] != value)
+                {
+                    this.cache[trueAddress] = value;
+                    let cell = $("#dmx-" + (trueAddress + 1));
+                    cell.text(value);
+                    cell.css("background-color", "rgb(255, " + (255 - value) + ", " + (255 - value) + ")");
+                }
             }
         });
 

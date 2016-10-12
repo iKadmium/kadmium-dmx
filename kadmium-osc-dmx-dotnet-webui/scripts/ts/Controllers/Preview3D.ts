@@ -152,7 +152,9 @@ class Preview3DController
         this.scene.add(ambientLight);
 
         this.renderer = new THREE.WebGLRenderer();
-        this.renderer.setSize(window.innerWidth, window.innerHeight);
+        let container = $("#preview-container");
+
+        this.renderer.setSize(container.width(), container.width() / 16 * 9);
 
         let controls = new THREE.OrbitControls(this.camera, this.renderer.domElement);
 
