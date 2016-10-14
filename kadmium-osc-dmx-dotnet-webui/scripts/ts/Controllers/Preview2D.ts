@@ -22,15 +22,16 @@ class Preview2DController
             {
                 let canvas = $("#canvas-" + fixture.address)[0] as HTMLCanvasElement;
                 let ctx = canvas.getContext("2d");
-                Preview2DController.draw(fixture, canvas, ctx);
+                Preview2DController.draw(fixture, data, canvas, ctx);
             }
         });
     }
 
-    static draw(fixture: DMXFixture, canvas: HTMLCanvasElement, ctx: CanvasRenderingContext2D) : void
+    static draw(fixture: DMXFixture, data: number[], canvas: HTMLCanvasElement, ctx: CanvasRenderingContext2D) : void
     {
         Preview2DController.drawFill(fixture, canvas, ctx);
         Preview2DController.drawMovements(fixture, canvas, ctx);
+        Preview2DController.drawText(fixture, data);
     }
 
     static drawFill(fixture: DMXFixture, canvas: HTMLCanvasElement, ctx: CanvasRenderingContext2D): void
@@ -72,7 +73,7 @@ class Preview2DController
         for (let channelName in fixture.channels)
         {
             let channel = fixture.channels[channelName];
-            let span = $("dmx-channel-" + channel.address);
+            let span = $("#channel-" + (channel.address + 1));
             span.text(data[channel.address]);
         }
     }

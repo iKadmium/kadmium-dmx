@@ -46,7 +46,7 @@
     "emitEntryPoint": true,
     "preserveCompilationContext": true,
     "copyToOutput": {
-      "include": "../kadmium-osc-dmx-dotnet-core/data"
+      "include": "../data"
     },
     "debugType": "portable"
   },
@@ -61,7 +61,7 @@
       "**/*.cshtml",
       "appsettings.json",
       "web.config",
-      "../kadmium-osc-dmx-dotnet-core/data"
+      "../data"
     ]
   },
   "runtimes": {
@@ -70,7 +70,7 @@
   "scripts": {
     "prepublish": [
       "bower install",
-      "dotnet bundle"
+      "webpack"
     ],
     "postpublish": [
       "dotnet publish-iis --publish-folder %publish:OutputPath% --framework %publish:FullTargetFramework%"

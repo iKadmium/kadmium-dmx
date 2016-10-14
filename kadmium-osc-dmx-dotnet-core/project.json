@@ -1,8 +1,7 @@
 {
   "version": "1.0.1",
   "buildOptions": {
-    "debugType": "portable",
-    "copyToOutput": { "include": "data"}
+    "debugType": "portable"
   },
   "dependencies": {
     "OSCforPCL": "0.0.1",

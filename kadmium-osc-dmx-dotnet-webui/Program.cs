@@ -17,6 +17,7 @@ namespace kadmium_osc_dmx_dotnet_webui
             MasterController.Instance.LoadVenue(@"Rehearsal Room");
             
             var host = new WebHostBuilder()
+                .UseUrls("http://*:5000/")
                 .UseKestrel()
                 .UseContentRoot(Directory.GetCurrentDirectory())
                 .UseIISIntegration()
