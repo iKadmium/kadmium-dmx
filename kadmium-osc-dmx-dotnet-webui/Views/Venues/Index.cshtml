@@ -7,13 +7,47 @@
     ViewData["Title"] = "Venues";
     ViewData["Activate"] = true;
 
+    var options = new InputSubWindow("options", "Options",
+        new InputCollection("restrictedAxis", "Axis Restrictions",
+            new InputSelect("axis", "Axis", new Dictionary<string, string>()
+            {
+                ["Pan"] = "Pan",
+                ["Tilt"] = "Tilt"
+            }),
+            new InputNumber("min", "Minimum", -270, 270),
+            new InputNumber("min", "Maximum", -270, 270)
+        ),
+        new InputCollection("invertedAxis", "Axis Inversions",
+            new InputSelect("axis", "Axis", new Dictionary<string, string>()
+            {
+                ["Pan"] = "Pan",
+                ["Tilt"] = "Tilt"
+            })
+        )
+    );
+
+    var fixtures = new InputSubWindow("fixtures", "Fixtures",
+        new InputCollection("fixtures", "Fixtures:",
+            new InputSelect("type", "Model", FileAccess.GetFixtureNames().ToDictionary(x => x)),
+            new InputNumber("channel", "Channel", 1, 512),
+            new InputSelect("group", "Group", MasterController.Instance.Groups.Keys.ToDictionary(x => x)),
+            options
+        )
+    );
+
     var inputs = new InputElement[]
     {
         new InputText("name", "Name:"),
-        new InputMultiSelect("fixtureCollections", "Fixture Collections:", FileAccess.GetFixtureCollectionNames().ToDictionary(x => x))
+        new InputCollection("universes", "Universes:",
+            new InputSelect("universe", "Universe:", MasterController.Instance.Universes.Keys.ToDictionary(x => x)),
+            fixtures
+        )
     };
 }
 
+@Html.Partial("InputSubWindowModal", fixtures)
+@Html.Partial("InputSubWindowModal", options)
 @Html.Partial("ModalEdit", inputs)
+
 
 <script src="~/js/VenuesEdit.js"></script>

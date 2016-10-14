@@ -1,6 +1,11 @@
 ﻿import {ModalEditorCollection} from "./ModalEditorCollection";
 
-export abstract class ListControllerData
+export interface Indexed
+{
+    [key: string]: any;
+}
+
+export abstract class ListControllerData implements Indexed
 {
     name: string;
     [key: string]: any;
@@ -53,7 +58,7 @@ export abstract class ListControllerData
         }
     }
 
-    static getObject<T extends ListControllerData>(controllerConstructor: () => T): T
+    static getObject<T extends Indexed>(parentWindow: HTMLDivElement, controllerConstructor: () => T): T
     {
         let obj: T = controllerConstructor();
 
@@ -62,7 +67,7 @@ export abstract class ListControllerData
             let value: any = obj[key];
             if (Array.isArray(value)) 
             {
-                let parentElement = $("#" + key);
+                let parentElement = $(parentWindow).find("#" + key);
                 if (parentElement.prop("nodeName") == "TBODY")
                 {
                     let rows = parentElement.children().not(".collection-prototype");
@@ -103,7 +108,18 @@ export abstract class ListControllerData
             }
             else
             {
-                obj[key] = $("#edit-form").find("#" + key).val();
+                let inputElement = $(parentWindow).find("#" + key);
+                let inputValue: any;
+                switch (inputElement.attr("type"))
+                {
+                    case "hidden":
+                        inputValue = JSON.parse(inputElement.val());
+                        break;
+                    default:
+                        inputValue= inputElement.val();
+                        break;
+                }
+                obj[key] = inputValue;
             }
         }
 

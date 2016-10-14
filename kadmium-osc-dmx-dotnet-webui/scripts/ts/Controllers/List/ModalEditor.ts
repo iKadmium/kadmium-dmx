@@ -14,6 +14,17 @@ export class ModalEditor<T extends ListControllerData>
     {
         let that = this;
         this.controllerConstructor = controllerConstructor;
+
+        $(document).on('show.bs.modal', '.modal', function (event)
+        {
+            var zIndex = 1040 + (10 * $('.modal:visible').length);
+            $(this).css('z-index', zIndex);
+            setTimeout(function ()
+            {
+                $('.modal-backdrop').not('.modal-stack').css('z-index', zIndex - 1).addClass('modal-stack');
+            }, 0);
+        });
+
         $(".collection-remove").on("click", (e: JQueryEventObject) =>
         {
             let element = $(e.target).closest("tr");
@@ -56,7 +67,7 @@ export class ModalEditor<T extends ListControllerData>
             jQuery.ajax({
                 type: "POST",
                 url: ListController.getActionURL("Save", that.itemID),
-                data: { jsonString: JSON.stringify(ListControllerData.getObject<T>(that.controllerConstructor)) },
+                data: { jsonString: JSON.stringify(ListControllerData.getObject<T>($("#edit-form")[0] as HTMLDivElement, that.controllerConstructor)) },
                 success: $.proxy(that.onSave, that),
                 error: that.onSaveError
             });

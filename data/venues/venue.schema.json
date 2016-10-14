@@ -18,13 +18,46 @@
             "description": "The name of this universe",
             "type": "string"
           },
-          "fixtureCollections": {
-            "description": "The fixture collections contained in this venue",
+          "fixtures": {
             "type": "array",
-            "items": { "type": "string" }
+            "description": "A list of fixtures for this collection",
+            "items": {
+              "type": "object",
+              "properties": {
+                "channel": {
+                  "description": "The channel assigned to the fixture",
+                  "type": "number"
+                },
+                "type": {
+                  "description": "The model name of the fixture",
+                  "type": "string"
+                },
+                "group": {
+                  "description": "The group the fixture is assigned to",
+                  "type": "string"
+                },
+                "options": {
+                  "description": "Options",
+                  "type": "array",
+                  "items": {
+                    "type": "string"
+                  }
+                }
+              },
+              "required": [
+                "channel",
+                "group",
+                "options",
+                "type"
+              ],
+              "additionalProperties": false
+            }
           }
         },
-        "required": [ "fixtureCollections", "name" ],
+        "required": [
+          "fixtures",
+          "name"
+        ],
         "additionalProperties": false
       }
     }
