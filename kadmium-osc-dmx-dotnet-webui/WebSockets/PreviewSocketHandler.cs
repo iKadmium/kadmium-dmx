@@ -22,7 +22,7 @@ namespace kadmium_osc_dmx_dotnet_webui.WebSockets
         {
             Socket = socket;
             DMX = new byte[Universe.DMX_UNIVERSE_SIZE ];
-            foreach(Universe universe in MasterController.Instance.Universes.Values)
+            foreach(Universe universe in MasterController.Instance.Venue.Universes)
             {
                 universe.Rendered += Universe_Updated;
             }

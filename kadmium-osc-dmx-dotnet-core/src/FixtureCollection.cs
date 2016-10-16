@@ -62,19 +62,6 @@ namespace kadmium_osc_dmx_dotnet_core
                                  };
             return new FixtureCollection(name, universe, fixtureEntries);
         }
-
-        public void Activate()
-        {
-            Universe universe = MasterController.Instance.Universes[Universe];
-            foreach(var entry in FixtureEntries)
-            {
-                Definition definition = Definition.Load(entry.Type);
-                Fixture fixture = new Fixture(definition, entry.Options);
-                fixture.StartChannel = entry.StartChannel;
-                Group group = MasterController.Instance.Groups[entry.Group];
-                group.Fixtures.Add(fixture);
-                universe.Fixtures.Add(fixture);
-            }
-        }
+        
     }
 }

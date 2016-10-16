@@ -19,8 +19,10 @@ namespace kadmium_osc_dmx_dotnet_core.Fixtures
         public Dictionary<string, Solvers.Attribute> FrameSettables { get; }
         public Dictionary<string, MovementAxis> MovementAxis { get; }
         public List<FixtureSolver> Solvers { get; }
+        public IEnumerable<string> Options;
+        public Group Group { get; }
         
-        public Fixture(Definition definition, IEnumerable<string> options)
+        public Fixture(Definition definition, int startChannel, Group group, IEnumerable<string> options)
         {
             Definition = definition;
             Solvers = new List<FixtureSolver>();
@@ -37,6 +39,10 @@ namespace kadmium_osc_dmx_dotnet_core.Fixtures
                 MovementAxis.Add(axis.Name, axis);
             }
             Solvers.AddRange(FixtureSolver.GetDefaultSolvers(this, options));
+            Options = options;
+            StartChannel = startChannel;
+            Group = group;
+            Group.Fixtures.Add(this);
         }
         
         internal void Update()
@@ -50,6 +56,33 @@ namespace kadmium_osc_dmx_dotnet_core.Fixtures
             {
                 solver.Solve(FrameSettables);
             }
+        }
+
+        public JObject Serialize()
+        {
+            Group group = MasterController.Instance.Groups.Values.Single(x => x.Fixtures.Contains(this));
+
+            JObject obj = new JObject(
+                new JProperty("channel", StartChannel),
+                new JProperty("type", Definition.Name),
+                new JProperty("group", group.Name),
+                new JProperty("options", 
+                    new JArray(Options)
+                )
+            );
+
+            return obj;
+        }
+
+        public static Fixture Load(JObject obj)
+        {
+            int startChannel = obj["channel"].Value<int>();
+            string type = obj["type"].Value<string>();
+            Definition definition = Definition.Load(type);
+            Group group = MasterController.Instance.Groups[obj["group"].Value<string>()];
+            IEnumerable<string> options = obj["options"].Values<string>();
+            Fixture fixture = new Fixture(definition, startChannel, group, options);
+            return fixture;
         }
 
         public void Render(byte[] dmx)

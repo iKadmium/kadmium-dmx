@@ -1,7 +1,7 @@
 import {ListController} from "../ListController";
 import {ListControllerData} from "../ListControllerData";
 
-class OSCListener extends ListControllerData
+class OSCListener extends ListController
 {
     port: number;
 
@@ -10,6 +10,14 @@ class OSCListener extends ListControllerData
         super();
         this.port = 9000;
     }
+
+    fillInputBoxes(data: any): void
+    {
+    }
+
+    getDataFromInputBoxes(): void
+    {
+    }
 }
 
-let oscListenerController = new ListController<OSCListener>(() => new OSCListener());
+let oscListenerController = new ListController<OSCListener>(new OSCListener());

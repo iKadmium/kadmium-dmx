@@ -29,9 +29,9 @@ namespace kadmium_osc_dmx_dotnet_core.Transmitters
             }
         }
         
-        public override void TransmitInternal(byte[] dmx)
+        public override void TransmitInternal(byte[] dmx, int transmitterID)
         {
-            SACNClient.Send(UniverseID, dmx);
+            SACNClient.Send((short)transmitterID, dmx);
             OnTransmit?.Invoke(this, new TransmitterEventArgs(dmx));
         }
 

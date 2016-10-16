@@ -23,16 +23,11 @@ namespace kadmium_osc_dmx_dotnet_webui.Controllers
         {
             return View();
         }
-
-        public IActionResult Preview3D()
-        {
-            return View();
-        }
-
+        
         public IActionResult Fixtures()
         {
             JArray arr = new JArray(
-                from universe in MasterController.Instance.Universes.Values
+                from universe in MasterController.Instance.Venue.Universes
                 from fixture in universe.Fixtures
                 select new JObject(
                     new JProperty("name", fixture.Definition.Name),

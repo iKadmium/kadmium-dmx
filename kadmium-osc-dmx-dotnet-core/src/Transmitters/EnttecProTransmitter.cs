@@ -57,7 +57,7 @@ namespace kadmium_osc_dmx_dotnet_core.Transmitters
             return obj;
         }
 
-        public override void TransmitInternal(byte[] dmx)
+        public override void TransmitInternal(byte[] dmx, int universeID)
         {
             //if(SerialPort.IsOpen)
             {

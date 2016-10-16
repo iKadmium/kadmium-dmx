@@ -145,31 +145,7 @@ namespace kadmium_osc_dmx_dotnet_core
             JObject schema = ValidatedLoad(ListenersSchema, JsonSchemaSchema) as JObject;
             return schema;
         }
-
-        internal static IEnumerable<Universe> LoadUniverses()
-        {
-            JArray universesObject = ValidatedLoad(UniversesLocation, UniversesSchema).Value<JArray>();
-            var universes = from universeElement in universesObject
-                            select Universe.Load(universeElement.Value<JObject>());
-            return universes;
-        }
-
-        public static void SaveUniverses()
-        {
-            JArray universes = new JArray(
-                from universe in MasterController.Instance.Universes.Values
-                select universe.Serialize()
-            );
-
-            ValidatedSave(universes, ListenersLocation, ListenersSchema);
-        }
-
-        public static JObject GetUniverseSchema()
-        {
-            JObject schema = ValidatedLoad(UniversesSchema, JsonSchemaSchema) as JObject;
-            return schema;
-        }
-
+        
         public static bool HasFixtureDefinition(string model)
         {
             string path = Path.Combine(FixturesLocation, model + ".json");

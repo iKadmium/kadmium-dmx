@@ -1,16 +1,22 @@
 ﻿import {ListController} from "../ListController";
 import {ListControllerData} from "../ListControllerData";
 
-class FixtureCollection extends ListControllerData
+class FixtureCollection extends ListController
 {
-    universe: string;
     fixtures: FixtureDefinition[];
 
     constructor()
     {
         super();
-        this.universe = "";
         this.fixtures = [];
+    }
+
+    fillInputBoxes(data: any): void
+    {
+    }
+
+    getDataFromInputBoxes(): void
+    {
     }
 }
 
@@ -27,4 +33,4 @@ class FixtureDefinition
     }
 }
 
-let fixtureCollection = new ListController<FixtureCollection>(() => new FixtureCollection());
+let fixtureCollection = new ListController<FixtureCollection>(new FixtureCollection());

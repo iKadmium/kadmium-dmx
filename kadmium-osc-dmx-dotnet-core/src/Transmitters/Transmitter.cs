@@ -31,8 +31,8 @@ namespace kadmium_osc_dmx_dotnet_core.Transmitters
             }
         }
 
-        public abstract void TransmitInternal(byte[] dmx);
-        public async void Transmit(byte[] dmx)
+        public abstract void TransmitInternal(byte[] dmx, int transmitterID);
+        public async void Transmit(byte[] dmx, int transmitterID)
         {
             if (Enabled)
             {
@@ -40,7 +40,7 @@ namespace kadmium_osc_dmx_dotnet_core.Transmitters
                 {
                     await Task.Delay(Delay);
                 }
-                TransmitInternal(dmx);
+                TransmitInternal(dmx, transmitterID);
             }
         }
 

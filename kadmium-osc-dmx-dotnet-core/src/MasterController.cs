@@ -19,7 +19,6 @@ namespace kadmium_osc_dmx_dotnet_core
         public Dictionary<string, Group> Groups { get; private set; }
         public List<Listener> Listeners { get; private set; }
         public List<Transmitter> Transmitters { get; private set; }
-        public Dictionary<string, Universe> Universes { get; private set; }
         public Venue Venue { get; private set; }
         public Strobe Strobe { get; }
         public Random Random { get; }
@@ -42,7 +41,6 @@ namespace kadmium_osc_dmx_dotnet_core
             instance = new MasterController();
             Instance.Groups = FileAccess.LoadGroups().ToDictionary(x => x.Name, x => x);
             Instance.Transmitters = FileAccess.LoadTransmitters().ToList();
-            Instance.Universes = FileAccess.LoadUniverses().ToDictionary(x => x.Name, x => x);
             Instance.Listeners = FileAccess.LoadListeners().ToList();
             Instance.updateTimer = new Timer(Instance.UpdateTimer_Elapsed, null, UPDATE_TIME, UPDATE_TIME);
         }
@@ -60,7 +58,6 @@ namespace kadmium_osc_dmx_dotnet_core
                 group.Clear();
             }
             Venue = Venue.Load(FileAccess.LoadVenue(venue));
-            Venue.Activate();
         }
 
         public void Update()
@@ -69,18 +66,12 @@ namespace kadmium_osc_dmx_dotnet_core
             {
                 group.Update();
             }
-            foreach(Universe universe in Universes.Values)
-            {
-                universe.Update();
-            }
+            Venue?.Update();
         }
 
         public void Render()
         {
-            foreach(Universe universe in Universes.Values)
-            {
-                universe.Render();
-            }
+            Venue?.Render();
         }
         
         private void UpdateTimer_Elapsed(object state)

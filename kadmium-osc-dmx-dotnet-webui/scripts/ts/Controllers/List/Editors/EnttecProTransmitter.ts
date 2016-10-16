@@ -1,7 +1,7 @@
 ﻿import {ListController} from "../ListController";
 import {ListControllerData} from "../ListControllerData";
 
-class EnttecProTransmitter extends ListControllerData
+class EnttecProTransmitter extends ListController
 {
     address: string;
 
@@ -10,6 +10,14 @@ class EnttecProTransmitter extends ListControllerData
         super();
         this.address = "";
     }
+
+    fillInputBoxes(data: any): void
+    {
+    }
+
+    getDataFromInputBoxes(): void
+    {
+    }
 }
 
-let enttecProTransmitterController = new ListController<EnttecProTransmitter>(() => new EnttecProTransmitter());
+let enttecProTransmitterController = new ListController<EnttecProTransmitter>(new EnttecProTransmitter());

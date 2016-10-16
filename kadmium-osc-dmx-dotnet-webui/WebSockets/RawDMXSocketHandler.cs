@@ -49,7 +49,8 @@ namespace kadmium_osc_dmx_dotnet_webui.WebSockets
                         int channel = obj["channel"].Value<int>() - 1;
                         byte value = obj["value"].Value<byte>();
                         string universeName = obj["universe"].Value<string>();
-                        MasterController.Instance.Universes[universeName].DMX[channel] = value;
+                        Universe universe = MasterController.Instance.Venue.Universes.Single(x => x.Name == universeName);
+                        universe.DMX[channel] = value;
                         break;
                 }
             }

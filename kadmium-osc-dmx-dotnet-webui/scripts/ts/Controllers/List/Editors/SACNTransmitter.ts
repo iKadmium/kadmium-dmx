@@ -1,7 +1,7 @@
 ﻿import {ListController} from "../ListController";
 import {ListControllerData} from "../ListControllerData";
 
-class SACNTransmitter extends ListControllerData
+class SACNTransmitter extends ListController
 {
     description: string;
     universeID: number;
@@ -14,6 +14,14 @@ class SACNTransmitter extends ListControllerData
         this.universeID = 0;
         this.delay = 0;
     }
+
+    fillInputBoxes(data: any): void
+    {
+    }
+
+    getDataFromInputBoxes(): void
+    {
+    }
 }
 
-let sacnTransmitterController = new ListController<SACNTransmitter>(() => new SACNTransmitter());
+let sacnTransmitterController = new ListController<SACNTransmitter>(new SACNTransmitter());

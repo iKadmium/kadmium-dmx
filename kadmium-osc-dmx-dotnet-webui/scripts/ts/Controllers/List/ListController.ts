@@ -2,33 +2,32 @@
 import {ModalEditor} from "./ModalEditor";
 import {ListControllerData} from "./ListControllerData";
 
-export class ListController<T extends ListControllerData>
+export class ListController<T, U extends ListControllerData<T>>
 {
     deleteItemID: string;
-    modalEditor: ModalEditor<T>;
-    controllerConstructor: () => T;
+    modalEditor: ModalEditor<T, U>;
+    item: U;
 
-    constructor(controllerConstructor: () => T)
+    constructor(item: U)
     {
-        this.controllerConstructor = controllerConstructor;
+        this.item = item;
         this.deleteItemID = "";
-
+        
         let that = this;
-        window.addEventListener("load", (ev: Event) =>
-        {
-            $("#modal-delete").on("click", (e: JQueryEventObject) =>
-            {
-                $("#modal-delete").prop("disabled", true);
-                jQuery.post(ListController.getActionURL("Delete", that.deleteItemID), $.proxy(that.onSave, that));
-            });
 
-            $("#confirm-delete").on("show.bs.modal", (e: JQueryEventObject) =>
-            {
-                that.deleteItemID = $(e.relatedTarget).data("item-id");
-                $(".item-id").text(that.deleteItemID);
-            });
-            this.modalEditor = new ModalEditor<T>(controllerConstructor);
+        $("#modal-delete").on("click", (e: JQueryEventObject) =>
+        {
+            $("#modal-delete").prop("disabled", true);
+            jQuery.post(ListController.getActionURL("Delete", that.deleteItemID), $.proxy(that.onDelete, that));
         });
+
+        $("#confirm-delete").on("show.bs.modal", (e: JQueryEventObject) =>
+        {
+            that.deleteItemID = $(e.relatedTarget).data("item-id");
+            $(".item-id").text(that.deleteItemID);
+        });
+
+        this.modalEditor = new ModalEditor<T, U>(this.item);
     }
 
     static rename(original: string, newName: string): void
@@ -75,7 +74,7 @@ export class ListController<T extends ListControllerData>
         return $("#items").children().not(".list-item-prototype").filter((index, element) => $(element).data("item-id") == name);
     }
 
-    onSave(data: any, textStatus: string, jqXHR: JQueryXHR)
+    onDelete(data: any, textStatus: string, jqXHR: JQueryXHR)
     {
         ListController.delete(this.deleteItemID);
         $("#modal-delete").prop("disabled", false);

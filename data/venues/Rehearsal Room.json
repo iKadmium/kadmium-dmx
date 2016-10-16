@@ -3,6 +3,12 @@
   "universes": [
     {
       "name": "Private Universe",
+      "transmitters": [
+        {
+          "name": "sacnTransmitter",
+          "universeID": 1
+        }
+      ],
       "fixtures": [
         {
           "channel": 301,

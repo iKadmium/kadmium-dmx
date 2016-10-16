@@ -5,12 +5,9 @@
     "bootstrap": "3.3.6",
     "Chart.js": "2.0.2",
     "jquery": "2.0.2",
-    "jquery-validation": "1.15.0",
-    "bootstrap-validator": "0.10.2",
-    "three.js": "threejs#*"
+    "bootstrap-validator": "0.10.2"
   },
   "resolutions": {
-    "jquery": ">=1.8",
-    "jquery-validation": "1.15.0"
+    "jquery": ">=1.8"
   }
 }

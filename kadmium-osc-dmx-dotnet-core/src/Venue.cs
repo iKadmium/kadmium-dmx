@@ -9,15 +9,15 @@ namespace kadmium_osc_dmx_dotnet_core
     public class Venue
     {
         public string Name { get; }
-        public IEnumerable<FixtureCollection> FixtureCollections { get; }
+        public IEnumerable<Universe> Universes { get; }
 
-        public Venue(string name, IEnumerable<FixtureCollection> fixtureCollections)
+        public Venue(string name, IEnumerable<Universe> universes)
         {
             Name = name;
-            FixtureCollections = fixtureCollections;
+            Universes = universes;
         }
 
-        public Venue() : this("", Enumerable.Empty<FixtureCollection>())
+        public Venue() : this("", Enumerable.Empty<Universe>())
         {
         }
 
@@ -25,10 +25,10 @@ namespace kadmium_osc_dmx_dotnet_core
         {
             JObject obj = new JObject(
                 new JProperty("name", Name),
-                new JProperty("fixtureCollections", 
+                new JProperty("universes", 
                     new JArray(
-                        from collection in FixtureCollections
-                        select collection.Name
+                        from universe in Universes
+                        select universe.SerializeForVenue()
                     )
                 )
             );
@@ -38,21 +38,31 @@ namespace kadmium_osc_dmx_dotnet_core
 
         public static Venue Load(JObject obj)
         {
+            MasterController.Instance.UpdatesEnabled = false;
             string name = obj["name"].Value<string>();
-            var fixtureCollections = from collectionName in obj["fixtureCollections"].Values<string>()
-                                     select FixtureCollection.Load(FileAccess.LoadFixtureCollection(collectionName));
 
-            return new Venue(name, fixtureCollections);
+            var universes = from universeElement in obj["universes"].Values<JObject>()
+                            select Universe.Load(universeElement);
+
+            MasterController.Instance.UpdatesEnabled = true;
+
+            return new Venue(name, universes);
         }
 
-        public void Activate()
+        internal void Update()
         {
-            MasterController.Instance.UpdatesEnabled = false;
-            foreach(FixtureCollection collection in FixtureCollections)
+            foreach(Universe universe in Universes)
             {
-                collection.Activate();
+                universe.Update();
             }
-            MasterController.Instance.UpdatesEnabled = true;
+        }
+
+        public void Render()
+        {
+            foreach(Universe universe in Universes)
+            {
+                universe.Render();
+            }
         }
     }
 }

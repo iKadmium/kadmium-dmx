@@ -7,6 +7,13 @@
     ViewData["Title"] = "Venues";
     ViewData["Activate"] = true;
 
+    var transmitters = new InputSubWindow("transmitters", "Transmitters",
+        new InputCollection("transmitters", "Transmitters",
+            new InputSelect("name", "Name", MasterController.Instance.Transmitters.ToDictionary(x => x.Name, x => x.DisplayName)),
+            new InputNumber("universeID", "Universe ID", 1, 255, 1)
+        )
+    );
+
     var options = new InputSubWindow("options", "Options",
         new InputCollection("restrictedAxis", "Axis Restrictions",
             new InputSelect("axis", "Axis", new Dictionary<string, string>()
@@ -39,12 +46,14 @@
     {
         new InputText("name", "Name:"),
         new InputCollection("universes", "Universes:",
-            new InputSelect("universe", "Universe:", MasterController.Instance.Universes.Keys.ToDictionary(x => x)),
+            new InputText("name", "Name"),
+            transmitters,
             fixtures
         )
     };
 }
 
+@Html.Partial("InputSubWindowModal", transmitters)
 @Html.Partial("InputSubWindowModal", fixtures)
 @Html.Partial("InputSubWindowModal", options)
 @Html.Partial("ModalEdit", inputs)

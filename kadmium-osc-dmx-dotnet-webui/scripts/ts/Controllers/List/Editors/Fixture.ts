@@ -2,7 +2,7 @@
 import {ListControllerData} from "../ListControllerData";
 import {ModalEditorCollection} from "../ModalEditorCollection";
 
-export class Fixture extends ListControllerData
+export class Fixture extends ListController
 {
     type: string;
     channels: DMXChannel[];
@@ -14,6 +14,14 @@ export class Fixture extends ListControllerData
         this.type = "LED";
         this.channels = [];
         this.movements = [];
+    }
+
+    fillInputBoxes(data: any): void
+    {
+    }
+
+    getDataFromInputBoxes(): void
+    {
     }
 }
 
@@ -43,9 +51,9 @@ class FixtureAxis
 
 class FixtureController extends ListController<Fixture>
 {
-    constructor()
+    constructor(item: Fixture)
     {
-        super(() => new Fixture());
+        super(item);
         window.addEventListener("load", (ev) => 
         {
             $("#channels-add").off("click");
@@ -67,4 +75,4 @@ class FixtureController extends ListController<Fixture>
     }
 }
 
-let fixtureController = new FixtureController();
+let fixtureController = new FixtureController(new Fixture());

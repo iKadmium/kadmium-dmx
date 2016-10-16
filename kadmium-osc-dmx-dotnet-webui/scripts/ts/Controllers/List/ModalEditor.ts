@@ -4,16 +4,15 @@ import {ListControllerData} from "./ListControllerData";
 import { MVC } from "../../MVC";
 import { ModalEditorCollection} from "./ModalEditorCollection";
 
-export class ModalEditor<T extends ListControllerData>
+export class ModalEditor<T, U extends ListControllerData<T>>
 {
     itemID: string;
-    validate: () => boolean;
-    controllerConstructor: () => T;
-
-    constructor(controllerConstructor: () => T) 
+    item: U;
+    
+    constructor(item: U) 
     {
+        this.item = item;
         let that = this;
-        this.controllerConstructor = controllerConstructor;
 
         $(document).on('show.bs.modal', '.modal', function (event)
         {
@@ -30,14 +29,7 @@ export class ModalEditor<T extends ListControllerData>
             let element = $(e.target).closest("tr");
             ModalEditorCollection.itemRemove(element);
         });
-
-        $(".collection-add").each((index, elem) =>
-        {
-            $(elem).on("click", (e) =>
-            {
-                ModalEditorCollection.itemAdd($(elem).data("collection-id"))
-            });
-        });
+        
         
         $("#modal-edit").on("show.bs.modal", (e: JQueryEventObject) => {
             that.itemID = $(e.relatedTarget).data("item-id") as string;
@@ -67,7 +59,7 @@ export class ModalEditor<T extends ListControllerData>
             jQuery.ajax({
                 type: "POST",
                 url: ListController.getActionURL("Save", that.itemID),
-                data: { jsonString: JSON.stringify(ListControllerData.getObject<T>($("#edit-form")[0] as HTMLDivElement, that.controllerConstructor)) },
+                data: { jsonString: JSON.stringify(item) },
                 success: $.proxy(that.onSave, that),
                 error: that.onSaveError
             });
@@ -137,7 +129,7 @@ export class ModalEditor<T extends ListControllerData>
 
     onLoad(data: any, textStatus: string, jqXHR: JQueryXHR)
     {
-        ListControllerData.fillData(data);
+        this.item.fillInputBoxes(data as T);
         this.enableElements();
         $("#edit-form").show();
     }
