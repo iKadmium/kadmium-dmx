@@ -8,6 +8,8 @@ namespace kadmium_osc_dmx_dotnet_webui.ViewHelpers
     public class InputCollection : VisibleInputElement
     {
         public IEnumerable<VisibleInputElement> Items { get; set; }
+        public string AddMethod { get; set; }
+        public string RemoveMethod { get; set; }
 
         public override string ViewName
         {
@@ -17,9 +19,11 @@ namespace kadmium_osc_dmx_dotnet_webui.ViewHelpers
             }
         }
         
-        public InputCollection(string id, string label, params VisibleInputElement[] items) : base(id, label)
+        public InputCollection(string id, string label, string addMethod, string removeMethod, params VisibleInputElement[] items) : base(id, label)
         {
             Items = items;
+            AddMethod = addMethod;
+            RemoveMethod = removeMethod;
         }
     }
 }

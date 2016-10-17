@@ -110,7 +110,6 @@ class FixtureOptionsViewModel
         {
             this.axisRestrictions.push(new AxisRestrictionViewModel(restrictionItem));
         }
-        
     }
 }
 
@@ -148,21 +147,28 @@ class UniverseViewModel
     fixtures: KnockoutObservableArray<FixtureViewModel>;
     transmitters: KnockoutObservableArray<TransmitterViewModel>;
 
-    constructor(data: UniverseData)
+    constructor()
     {
-        this.name = ko.observable<string>(data.name);
+        this.name = ko.observable<string>();
         this.fixtures = ko.observableArray<FixtureViewModel>();
+        this.transmitters = ko.observableArray<TransmitterViewModel>();
+    }
+
+    static load(data: UniverseData): UniverseViewModel
+    {
+        let universeViewModel = new UniverseViewModel();
+        universeViewModel.name(data.name);
         for (let fixtureItem of data.fixtures)
         {
             let fixture = new FixtureViewModel(fixtureItem);
-            this.fixtures.push(fixture);
+            universeViewModel.fixtures.push(fixture);
         }
-        this.transmitters = ko.observableArray<TransmitterViewModel>();
         for (let transmitterItem of data.transmitters)
         {
             let transmitter = new TransmitterViewModel(transmitterItem);
-            this.transmitters.push(transmitter);
+            universeViewModel.transmitters.push(transmitter);
         }
+        return universeViewModel;
     }
 }
 
@@ -180,9 +186,19 @@ class VenueViewModel extends ItemViewModelBase<VenueData> implements NamedViewMo
         this.universes.removeAll();
         for (let universeItem of data.universes)
         {
-            let universe = new UniverseViewModel(universeItem);
+            let universe = UniverseViewModel.load(universeItem);
             this.universes.push(universe);
         }
+    }
+
+    removeUniverse(item: UniverseViewModel): void
+    {
+        this.universes.remove(item);
+    }
+
+    addUniverse(): void
+    {
+        this.universes.push(new UniverseViewModel());
     }
 }
 
@@ -199,6 +215,6 @@ let viewModel: VenuesViewModel;
 window.addEventListener("load", (ev: Event) =>
 {
     viewModel = new VenuesViewModel();
-    let listGroup = $("#list-group")[0];
-    ko.applyBindings(viewModel, listGroup);
+    let itemList = $("#item-list")[0];
+    ko.applyBindings(viewModel, itemList);
 });

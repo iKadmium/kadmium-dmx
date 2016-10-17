@@ -15,14 +15,16 @@
                 <th>Delete</th>
             </tr>
         </thead>
-        <tbody data-bind="foreach: universes">
+        <tbody data-bind="foreach: @Model.ID">
             <tr>
-                <td><input class="form-control" data-bind="value: name"></td>
-                <td></td>
-                <td></td>
-                <td></td>
+                @foreach (var inputElement in Model.Items)
+                {
+                    <td>@Html.Partial(inputElement.ViewName, inputElement)</td>
+                }
+                @{ var removeMethod = "$parent." + Model.RemoveMethod + ".bind($parent)"; }
+                <td><button class="btn btn-danger" data-bind="click: @removeMethod"><span class="glyphicon glyphicon-remove"></span></button></td>
             </tr>
         </tbody>
     </table>
-    <button class="btn btn-success collection-add" id="@Model.ID-add" data-collection-id="@Model.ID" type="button"><span class="glyphicon glyphicon-plus"></span></button>
+    <button class="btn btn-success" type="button" data-bind="click: @Model.AddMethod"><span class="glyphicon glyphicon-plus"></span></button>
 </div>
