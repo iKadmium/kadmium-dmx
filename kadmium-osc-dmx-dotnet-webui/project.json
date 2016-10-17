@@ -24,8 +24,8 @@
     "BundlerMinifier.Core": "2.2.281",
     "HtmlTags.AspNetCore": "4.2.0",
     "jquery.TypeScript.DefinitelyTyped": "3.1.2",
-    "Microsoft.TypeScript.MSBuild": "2.0.3",
-    "Microsoft.TypeScript.Compiler": "2.0.3",
+    /*"Microsoft.TypeScript.MSBuild": "2.0.3",
+    "Microsoft.TypeScript.Compiler": "2.0.3",*/
     "Microsoft.AspNetCore.WebSockets.Server": "0.1.0",
     "chartjs.TypeScript.DefinitelyTyped": "2.2.1"
   },

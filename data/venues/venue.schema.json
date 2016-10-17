@@ -60,9 +60,42 @@
                 },
                 "options": {
                   "description": "Options",
-                  "type": "array",
-                  "items": {
-                    "type": "string"
+                  "type": "object",
+                  "properties": {
+                    "axisInversions": {
+                      "type": "array",
+                      "description": "Movement axis to be inverted",
+                      "items": {
+                        "type": "string"
+                      }
+                    },
+                    "axisRestrictions": {
+                      "type": "array",
+                      "description": "Movement axis to be restricted",
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "name": {
+                            "type": "string",
+                            "description": "The name of the axis to be restricted"
+                          },
+                          "min": {
+                            "type": "integer",
+                            "description": "The minimum value, in degrees"
+                          },
+                          "max": {
+                            "type": "integer",
+                            "description": "The minimum value, in degrees"
+                          }
+                        },
+                        "required": [
+                          "name",
+                          "min",
+                          "max"
+                        ],
+                        "additionalProperties": false
+                      }
+                    }
                   }
                 }
               },

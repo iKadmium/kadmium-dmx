@@ -1,4 +1,4 @@
-﻿import {Fixture as FixtureDefinition} from "../List/Editors/Fixture"; 
+﻿//import {Fixture as FixtureDefinition} from "../List/Editors/Fixture"; 
 import {MVC} from "../../MVC";
 
 class DMXChannel
@@ -76,7 +76,7 @@ export class DMXFixture
 
     onLoadDefinition(data: any, textStatus: string, jqXHR: JQueryXHR)
     {
-        let definition = data as FixtureDefinition;
+        let definition = data as any;
         for (let channel of definition.channels)
         {
             this.channels[channel.name] = new DMXChannel(this.address + channel.dmx - 2);

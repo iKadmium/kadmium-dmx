@@ -14,39 +14,85 @@
           "channel": 301,
           "type": "Chinese Moving Wash",
           "group": "rearSides",
-          "options": [
-            "RestrictedPan",
-            "RestrictedTilt"
-          ]
+          "options": {
+            "axisInversions": [],
+            "axisRestrictions": [
+              {
+                "name": "Pan",
+                "min": -90,
+                "max": 90
+              },
+              {
+                "name": "Tilt",
+                "min": 0,
+                "max": 90
+              }
+            ]
+          }
         },
         {
           "channel": 315,
           "type": "Chinese Moving Wash",
           "group": "rearSides",
-          "options": [
-            "RestrictedPan",
-            "RestrictedTilt"
-          ]
+          "options": {
+            "axisInversions": [],
+            "axisRestrictions": [
+              {
+                "name": "Pan",
+                "min": -90,
+                "max": 90
+              },
+              {
+                "name": "Tilt",
+                "min": 0,
+                "max": 90
+              }
+            ]
+          }
         },
         {
           "channel": 329,
           "type": "Chinese Moving Wash",
           "group": "rearSides",
-          "options": [
-            "RestrictedPan",
-            "RestrictedTilt",
-            "InvertedPan"
-          ]
+          "options": {
+            "axisInversions": [
+              "Pan"
+            ],
+            "axisRestrictions": [
+              {
+                "name": "Pan",
+                "min": -90,
+                "max": 90
+              },
+              {
+                "name": "Tilt",
+                "min": 0,
+                "max": 90
+              }
+            ]
+          }
         },
         {
           "channel": 343,
           "type": "Chinese Moving Wash",
           "group": "rearSides",
-          "options": [
-            "RestrictedPan",
-            "RestrictedTilt",
-            "InvertedPan"
-          ]
+          "options": {
+            "axisInversions": [
+              "Pan"
+            ],
+            "axisRestrictions": [
+              {
+                "name": "Pan",
+                "min": -90,
+                "max": 90
+              },
+              {
+                "name": "Tilt",
+                "min": 0,
+                "max": 90
+              }
+            ]
+          }
         }
       ]
     }

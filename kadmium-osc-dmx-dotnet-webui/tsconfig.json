@@ -6,11 +6,16 @@
     "removeComments": false,
     "sourceMap": true,
     "target": "es5",
-    "moduleResolution": "classic",
-    "outDir": "scripts/bin"
+    "moduleResolution": "node",
+    "outDir": "scripts/bin",
+    "types": ["jquery", "knockout"]
   },
+  "include": [
+    "node_modules/knockout",
+    "scripts/ts"
+  ],
   "exclude": [
-    "node_modules",
+    "node_modules/typescript",
     "wwwroot"
   ]
 }

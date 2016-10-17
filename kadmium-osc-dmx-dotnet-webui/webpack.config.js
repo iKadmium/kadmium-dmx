@@ -14,16 +14,16 @@ module.exports = {
         GroupEdit: "ts/Controllers/List/Editors/Group.ts",
         OSCListenerEdit: "ts/Controllers/List/Editors/OSCListener.ts",
         SACNTransmitterEdit: "ts/Controllers/List/Editors/SACNTransmitter.ts",*/
-        VenuesEdit: "ts/Controllers/List/Editors/Venues.ts",
+        Venues: "scripts/ts/Venue/venue.viewmodel.ts",
 
-        validator: "js/validator.js"
+        validator: "scripts/js/validator.js"
     },
     output: {
         path: "wwwroot/js",
         filename: "[name].js"
     },
     resolve: {
-        root: "scripts",
+        root: "./",
         extensions: ['', '.webpack.js', '.web.js', '.ts', '.js']
     },
     resolveLoader: {

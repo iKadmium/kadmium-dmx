@@ -5,25 +5,14 @@
     string controllerURL = ViewContext.RouteData.Values["controller"].ToString();
 }
 
-<ul class="list-group" id="items" data-controller-url="@controllerURL">
-    <li class="list-group-item clearfix list-item-prototype" data-item-id="prototype">
-        <span class="list-item-id">prototype</span>
+<ul class="list-group" id="item-list" data-bind="foreach: items">
+    <li class="list-group-item clearfix">
+        <span data-bind="text: name"></span>
         <div class="pull-right btn-group">
-            <button class="btn btn-default" title="Edit" data-toggle="modal" data-target="#modal-edit"><span class="glyphicon glyphicon-pencil"></span></button>
-            <button class="btn btn-danger" title="Delete" data-toggle="modal" data-target="#confirm-delete"><span class="glyphicon glyphicon-remove"></span></button>
+            <button class="btn btn-default" title="Edit" data-bind="click: $parent.edit.bind($parent)"><span class="glyphicon glyphicon-edit"></span></button>
+            <button class="btn btn-danger" title="Delete" data-bind="click: $parent.delete.bind($parent)"><span class="glyphicon glyphicon-remove"></span></button>
         </div>
     </li>
-
-    @foreach (string name in Model.Items)
-    {
-        <li class="list-group-item clearfix" data-item-id="@name">
-            <span class="list-item-id">@name</span>
-            <div class="pull-right btn-group">
-                <button class="btn btn-default" title="Edit" data-item-id="@name" data-toggle="modal" data-target="#modal-edit" ><span class="glyphicon glyphicon-pencil"></span></button>
-                <button class="btn btn-danger" title="Delete" data-item-id="@name" data-toggle="modal" data-target="#confirm-delete"><span class="glyphicon glyphicon-remove"></span></button>
-            </div>
-        </li>
-    }
 </ul>
 
 <button class="btn btn-success" data-toggle="modal" data-target="#modal-edit"><span class="glyphicon glyphicon-plus"></span></button>

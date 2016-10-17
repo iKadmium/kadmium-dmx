@@ -5,7 +5,6 @@
 @{
     Layout = "~/Views/Shared/_ListLayout.cshtml";
     ViewData["Title"] = "Venues";
-    ViewData["Activate"] = true;
 
     var transmitters = new InputSubWindow("transmitters", "Transmitters",
         new InputCollection("transmitters", "Transmitters",
@@ -59,4 +58,4 @@
 @Html.Partial("ModalEdit", inputs)
 
 
-<script src="~/js/VenuesEdit.js"></script>
+<script src="~/js/Venues.js"></script>

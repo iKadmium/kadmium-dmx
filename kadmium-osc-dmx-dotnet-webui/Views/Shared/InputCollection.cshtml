@@ -15,13 +15,12 @@
                 <th>Delete</th>
             </tr>
         </thead>
-        <tbody id="@Model.ID">
-            <tr id="@Model.ID-prototype" class="collection-prototype">
-                @foreach (var inputElement in Model.Items)
-                {
-                    <td>@Html.Partial(inputElement.ViewName, inputElement)</td>
-                }
-                <td><button class="btn btn-danger collection-remove" type="button"><span class="glyphicon glyphicon-remove"></span></button></td>
+        <tbody data-bind="foreach: universes">
+            <tr>
+                <td><input class="form-control" data-bind="value: name"></td>
+                <td></td>
+                <td></td>
+                <td></td>
             </tr>
         </tbody>
     </table>

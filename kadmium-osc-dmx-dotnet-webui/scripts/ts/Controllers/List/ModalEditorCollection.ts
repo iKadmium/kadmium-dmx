@@ -1,6 +1,5 @@
 ﻿export class ModalEditorCollection
 {
-
     static itemRemove(row: JQuery): void
     {
         row.remove();

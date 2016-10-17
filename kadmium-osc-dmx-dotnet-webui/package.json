@@ -1,11 +1,14 @@
 {
-	"version": "1.0.0",
-	"name": "asp.net",
-	"private": true,
-	"dependencies": {},
-	"devDependencies": {
-		"typescript": "^2.0.3",
-		"ts-loader": "^0.8.2",
-		"webpack": "^1.13.2"
-	}
+  "version": "1.0.0",
+  "name": "asp.net",
+  "private": true,
+  "dependencies": {},
+  "devDependencies": {
+    "@types/jquery": "^2.0.33",
+    "@types/knockout": "^3.4.36",
+    "knockout": "^3.4.0",
+    "ts-loader": "^0.8.2",
+    "typescript": "^2.0.3",
+    "webpack": "^1.13.2"
+  }
 }

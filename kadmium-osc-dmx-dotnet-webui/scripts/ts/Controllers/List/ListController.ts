@@ -54,7 +54,6 @@ export class ListController<T, U extends ListControllerData<T>>
             $(elem).data("item-id", name);
         });
         parent.append(item);
-
     }
 
     static delete(name: string): void

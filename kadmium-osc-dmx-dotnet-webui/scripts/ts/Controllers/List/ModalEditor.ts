@@ -30,7 +30,6 @@ export class ModalEditor<T, U extends ListControllerData<T>>
             ModalEditorCollection.itemRemove(element);
         });
         
-        
         $("#modal-edit").on("show.bs.modal", (e: JQueryEventObject) => {
             that.itemID = $(e.relatedTarget).data("item-id") as string;
             $("#modal-success").hide();

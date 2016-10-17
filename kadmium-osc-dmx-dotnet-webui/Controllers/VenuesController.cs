@@ -25,6 +25,15 @@ namespace kadmium_osc_dmx_dotnet_webui.Controllers
             return Content(obj.ToString());
         }
 
+        public IActionResult List()
+        {
+            JArray names = new JArray(
+                from name in FileAccess.GetVenueNames()
+                select new JValue(name)
+            );
+            return Content(names.ToString());
+        }
+
         public IActionResult Load(string id)
         {
             if (id == null)
