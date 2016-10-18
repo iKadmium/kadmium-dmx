@@ -1,5 +1,5 @@
 ﻿import {DMXFixture} from "./DMXFixture";
-import {MVC} from "../../MVC";
+import {MVC} from "../MVC";
 
 interface FixtureJSON
 {

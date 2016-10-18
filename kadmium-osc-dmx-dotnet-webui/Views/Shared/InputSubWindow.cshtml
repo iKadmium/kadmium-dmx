@@ -4,5 +4,5 @@
 *@
 @{
 }
-<input type="hidden" id="@Model.ID" value="[]">
-<button class="btn btn-primary collection-edit" data-collection-id="@Model.ID" data-toggle="modal" data-target="#@Model.ID-edit" type="button"><span class="glyphicon glyphicon-edit"></span></button>
+<input type="hidden" id="@Model.ID" data-bind="value: ko.toJSON(@Model.ID)" value="[]">
+<button class="btn btn-primary collection-edit" type="button" data-bind="click: @Model.EditMethod"><span class="glyphicon glyphicon-edit"></span></button>

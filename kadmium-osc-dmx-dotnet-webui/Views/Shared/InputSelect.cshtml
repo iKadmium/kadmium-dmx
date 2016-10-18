@@ -4,7 +4,7 @@
 *@
 @{
 }
-<select class="form-control" id="@Model.ID">
+<select class="form-control" id="@Model.ID" data-bind="value: @Model.ID">
     @foreach (KeyValuePair<string, string> option in Model.Options)
     {
         <option value="@option.Key">@option.Value</option>

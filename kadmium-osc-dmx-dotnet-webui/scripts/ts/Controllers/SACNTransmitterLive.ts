@@ -1,5 +1,4 @@
-﻿declare let Chart: any;
-import {MVC} from "../MVC";
+﻿import {MVC} from "./MVC";
 
 class SACNTransmitterLiveController 
 {

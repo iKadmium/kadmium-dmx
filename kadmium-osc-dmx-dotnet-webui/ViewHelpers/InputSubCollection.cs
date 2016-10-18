@@ -8,6 +8,8 @@ namespace kadmium_osc_dmx_dotnet_webui.ViewHelpers
     public class InputSubWindow : VisibleInputElement
     {
         public IEnumerable<VisibleInputElement> Items { get; set; }
+        public string BindingContext { get; set; }
+        public string EditMethod { get; set; }
 
         public override string ViewName
         {
@@ -17,9 +19,11 @@ namespace kadmium_osc_dmx_dotnet_webui.ViewHelpers
             }
         }
 
-        public InputSubWindow(string id, string label, params VisibleInputElement[] items) : base(id, label)
+        public InputSubWindow(string id, string label, string editMethod, string bindingContext, params VisibleInputElement[] items) : base(id, label)
         {
             Items = items;
+            EditMethod = editMethod;
+            BindingContext = bindingContext;
         }
     }
 }

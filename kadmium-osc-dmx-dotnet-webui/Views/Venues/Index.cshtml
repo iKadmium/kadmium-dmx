@@ -6,16 +6,16 @@
     Layout = "~/Views/Shared/_ListLayout.cshtml";
     ViewData["Title"] = "Venues";
 
-    var transmitters = new InputSubWindow("transmitters", "Transmitters",
+    var transmitters = new InputSubWindow("transmitters", "Transmitters", "$parent.editTransmitters.bind($parent)", "selectedItem().selectedUniverse",
         new InputCollection("transmitters", "Transmitters", "addTransmitter", "removeTransmitter",
             new InputSelect("name", "Name", MasterController.Instance.Transmitters.ToDictionary(x => x.Name, x => x.DisplayName)),
             new InputNumber("universeID", "Universe ID", 1, 255, 1)
         )
     );
 
-    var options = new InputSubWindow("options", "Options",
-        new InputCollection("restrictedAxis", "Axis Restrictions", "addAxisRestriction", "removeAxisRestriction",
-            new InputSelect("axis", "Axis", new Dictionary<string, string>()
+    var optionsWindow = new InputSubWindow("options", "Options", "$parent.editOptions.bind($parent)", "selectedItem().selectedUniverse().selectedFixture().options",
+        new InputCollection("axisRestrictions", "Axis Restrictions", "addAxisRestriction", "removeAxisRestriction",
+            new InputSelect("name", "Axis", new Dictionary<string, string>()
             {
                 ["Pan"] = "Pan",
                 ["Tilt"] = "Tilt"
@@ -23,8 +23,8 @@
             new InputNumber("min", "Minimum", -270, 270),
             new InputNumber("min", "Maximum", -270, 270)
         ),
-        new InputCollection("invertedAxis", "Axis Inversions", "addAxisInversion", "removeAxisInversion",
-            new InputSelect("axis", "Axis", new Dictionary<string, string>()
+        new InputCollection("axisInversions", "Axis Inversions", "addAxisInversion", "removeAxisInversion",
+            new InputSelect("name", "Axis", new Dictionary<string, string>()
             {
                 ["Pan"] = "Pan",
                 ["Tilt"] = "Tilt"
@@ -32,12 +32,12 @@
         )
     );
 
-    var fixtures = new InputSubWindow("fixtures", "Fixtures",
+    var fixtures = new InputSubWindow("fixtures", "Fixtures", "$parent.editFixtures.bind($parent)", "selectedItem().selectedUniverse",
         new InputCollection("fixtures", "Fixtures:", "addFixture", "removeFixture",
             new InputSelect("type", "Model", FileAccess.GetFixtureNames().ToDictionary(x => x)),
             new InputNumber("channel", "Channel", 1, 512),
             new InputSelect("group", "Group", MasterController.Instance.Groups.Keys.ToDictionary(x => x)),
-            options
+            optionsWindow
         )
     );
 
@@ -51,10 +51,10 @@
         )
     };
 }
-@{ /*
+@{ 
   @Html.Partial("InputSubWindowModal", transmitters)
   @Html.Partial("InputSubWindowModal", fixtures)
-  @Html.Partial("InputSubWindowModal", options)*/
+  @Html.Partial("InputSubWindowModal", optionsWindow)
   @Html.Partial("ModalEdit", inputs) 
 }
 

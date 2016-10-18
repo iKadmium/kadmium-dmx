@@ -1,6 +1,6 @@
 ﻿import {DMXUniverse} from "./Preview/DMXUniverse";
 import {DMXFixture} from "./Preview/DMXFixture";
-import {MVC} from "../MVC";
+import {MVC} from "./MVC";
 
 class Preview2DController
 {

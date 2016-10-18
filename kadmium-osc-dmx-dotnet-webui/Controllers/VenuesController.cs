@@ -58,15 +58,13 @@ namespace kadmium_osc_dmx_dotnet_webui.Controllers
         {
             JObject obj = JObject.Parse(jsonString);
             string newID = obj["name"].Value<string>();
-            Venue venue;
             if (FileAccess.HasVenue(id))
             {
                 FileAccess.DeleteVenue(id);
             }
 
-            venue = Venue.Load(obj);
-            FileAccess.SaveVenue(venue.Serialize());
-
+            FileAccess.SaveVenue(obj);
+            
             Response.StatusCode = 200;
             return new EmptyResult();
         }
