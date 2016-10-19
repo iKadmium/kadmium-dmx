@@ -1,4 +1,4 @@
-﻿import {MVC} from "./MVC";
+﻿import {MVC} from "../MVC";
 
 interface Status
 {

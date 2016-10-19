@@ -7,7 +7,7 @@ export interface NamedViewModel
     originalName: KnockoutObservable<string>;
 }
 
-export abstract class ItemViewModel<ViewModelDataType> implements NamedViewModel
+export abstract class CollectionItemViewModel<ViewModelDataType> implements NamedViewModel
 {
     originalName: KnockoutObservable<string>;
     controllerName: string;
@@ -32,13 +32,14 @@ export abstract class ItemViewModel<ViewModelDataType> implements NamedViewModel
 
     onSave(): void
     {
-        let newName = $("#name").val();
+        let newName = (this as any).name();
         $("#modal-status").hide();
         $("#modal-success-text").text("Saved");
         $("#modal-success").show();
         $("#modal-submit").hide();
         $("#modal-cancel").prop("disabled", false);
         $("#modal-cancel").text("Close");
+        this.originalName(newName);
     }
 
     onSaveError(xhr: JQueryXHR, textStatus: string, errorThrown: string)

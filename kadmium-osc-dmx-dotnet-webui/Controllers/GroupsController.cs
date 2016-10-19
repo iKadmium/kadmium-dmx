@@ -27,6 +27,15 @@ namespace kadmium_osc_dmx_dotnet_webui.Controllers
             return Content(obj.ToString());
         }
 
+        public IActionResult List()
+        {
+            JArray arr = new JArray(
+                from groupName in MasterController.Instance.Groups.Keys
+                select new JValue(groupName)
+            );
+            return Content(arr.ToString());
+        }
+
         public IActionResult Load(string id)
         {
             if(id == null)

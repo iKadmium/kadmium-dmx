@@ -1,9 +1,9 @@
-﻿import {ItemViewModel, NamedViewModel} from "./ItemViewModel";
+﻿import {CollectionItemViewModel, NamedViewModel} from "./CollectionItem";
 import {MVC} from "./MVC";
 
 import * as ko from "knockout";
 
-export class CollectionViewModel<ViewModelDataType, ViewModelType extends ItemViewModel<ViewModelDataType>>
+export class CollectionViewModel<ViewModelDataType, ViewModelType extends CollectionItemViewModel<ViewModelDataType>>
 {
     items: KnockoutObservableArray<ViewModelType>;
     itemConstructor: (name: string) => ViewModelType;
@@ -56,6 +56,7 @@ export class CollectionViewModel<ViewModelDataType, ViewModelType extends ItemVi
             });
 
         });
+        $("#confirm-delete").find(".item-id").text(item.originalName());
         ($("#confirm-delete") as any).modal("toggle");
     }
 
