@@ -24,7 +24,7 @@ namespace kadmium_osc_dmx_dotnet_webui.Controllers
         {
             if (id == null)
             {
-                return Content(new EnttecProTransmitter("", "", true).Serialize().ToString());
+                return Content(new EnttecProTransmitter("", "", 0).Serialize().ToString());
             }
             else
             {
@@ -54,7 +54,7 @@ namespace kadmium_osc_dmx_dotnet_webui.Controllers
             }
             catch (Exception)
             {
-                EnttecProTransmitter transmitter = new EnttecProTransmitter(newID, obj["address"].Value<string>(), true);
+                EnttecProTransmitter transmitter = new EnttecProTransmitter(newID, obj["address"].Value<string>(), obj["delay"].Value<int>());
                 MasterController.Instance.Transmitters.Add(transmitter);
             }
             FileAccess.SaveTransmitters();

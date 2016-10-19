@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using kadmium_osc_dmx_dotnet_core.Fixtures;
+using Newtonsoft.Json.Linq;
 
 namespace kadmium_osc_dmx_dotnet_core.Solvers
 {
@@ -10,7 +11,7 @@ namespace kadmium_osc_dmx_dotnet_core.Solvers
     {
         public IEnumerable<string> InvertedAxis { get; set; }
 
-        public MovementInversionSolver(Fixture fixture, IEnumerable<string> options) : base(fixture)
+        public MovementInversionSolver(Fixture fixture, JObject options) : base(fixture)
         {
             InvertedAxis = GetInvertedAxis(fixture.Definition, options);
         }
@@ -23,11 +24,11 @@ namespace kadmium_osc_dmx_dotnet_core.Solvers
             }
         }
 
-        private static IEnumerable<string> GetInvertedAxis(Definition definition, IEnumerable<string> options)
+        private static IEnumerable<string> GetInvertedAxis(Definition definition, JObject options)
         {
-            var invertOptions = from option in options
-                                where option.StartsWith("Inverted")
-                                select option.Substring(8);
+            var invertOptions = from option in options["axisInversions"]?.Values<string>() ?? Enumerable.Empty<string>()
+                                select option;
+
             var invertedAxis = from option in invertOptions
                                where definition.Axis.Any(x => x.Name == option)
                                select option;
@@ -35,7 +36,7 @@ namespace kadmium_osc_dmx_dotnet_core.Solvers
             return invertedAxis;
         }
 
-        public static bool SuitableFor(Definition definition, IEnumerable<string> options)
+        public static bool SuitableFor(Definition definition, JObject options)
         {
             return GetInvertedAxis(definition, options).Count() > 0;
         }

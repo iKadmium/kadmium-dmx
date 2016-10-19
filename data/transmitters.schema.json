@@ -5,10 +5,18 @@
   "type": "array",
   "items": {
     "type": "object",
-    "allOf": [{"$ref": "#/definitions/transmitterCommon"}],
-    "oneOf": [
-      { "$ref": "#/definitions/sacn" },
-      { "$ref": "#/definitions/enttec" }
+    "allOf": [
+      {
+        "$ref": "#/definitions/transmitterCommon"
+      }
+    ],
+    "anyOf": [
+      {
+        "$ref": "#/definitions/sacn"
+      },
+      {
+        "$ref": "#/definitions/enttec"
+      }
     ]
   },
   "definitions": {
@@ -27,7 +35,11 @@
     },
     "enttec": {
       "properties": {
-        "type": { "enum": [ "EntTec" ] },
+        "type": {
+          "enum": [
+            "EntTec"
+          ]
+        },
         "address": {
           "description": "The address on which to transmit",
           "type": "string"
@@ -36,14 +48,14 @@
     },
     "sacn": {
       "properties": {
-        "type": { "enum": [ "sACN" ] },
+        "type": {
+          "enum": [
+            "sACN"
+          ]
+        },
         "description": {
           "description": "The name to send to sACN listeners",
           "type": "string"
-        },
-        "universeID": {
-          "description": "The Universe number that should be transmitted",
-          "type": "integer"
         }
       }
     }

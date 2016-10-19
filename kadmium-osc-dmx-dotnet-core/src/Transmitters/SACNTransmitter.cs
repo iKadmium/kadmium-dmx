@@ -14,7 +14,6 @@ namespace kadmium_osc_dmx_dotnet_core.Transmitters
     public class SACNTransmitter : Transmitter
     {
         static string SOURCE_NAME = "Kadmium-OSC-DMX";
-        public Int16 UniverseID { get; set; }
         private SACNSender SACNClient { get; set; }
         public IPAddress UnicastAddress { get; set; }
         public bool Multicast { get { return UnicastAddress != null; } }
@@ -25,7 +24,7 @@ namespace kadmium_osc_dmx_dotnet_core.Transmitters
         {
             get
             {
-                return "SACN Transmitter [" + Name + "] - Universe " + UniverseID;
+                return "SACN Transmitter [" + Name + "]";
             }
         }
         
@@ -35,10 +34,9 @@ namespace kadmium_osc_dmx_dotnet_core.Transmitters
             OnTransmit?.Invoke(this, new TransmitterEventArgs(dmx));
         }
 
-        public SACNTransmitter(Guid uuid, Int16 universeID, string name, bool enabled, int port) : base(name, enabled)
+        public SACNTransmitter(Guid uuid, string name, int port, int delay) : base(name, delay)
         {
             Port = port;
-            UniverseID = universeID;
             SACNClient = new SACNSender(uuid, SOURCE_NAME, port);
 
             Status.Update(StatusCode.Running, "Multicast Sending", this);
@@ -46,11 +44,10 @@ namespace kadmium_osc_dmx_dotnet_core.Transmitters
 
         public new static SACNTransmitter Load(JObject element)
         {
-            Int16 universeID = element["universeID"].Value<Int16>();
             string id = element["name"].Value<string>();
-            bool enabled = true;// bool.Parse(element.Attribute("enabled").Value);
             int port = 5568;//int.Parse(element.Attribute("port").Value);
-            SACNTransmitter transmitter = new SACNTransmitter(Guid.NewGuid(), universeID, id, enabled, port);
+            int delay = element["delay"].Value<int>();
+            SACNTransmitter transmitter = new SACNTransmitter(Guid.NewGuid(), id, port, delay);
             return transmitter;
         }
 
@@ -63,7 +60,6 @@ namespace kadmium_osc_dmx_dotnet_core.Transmitters
         {
             JObject obj = new JObject(
                 new JProperty("name", Name),
-                new JProperty("universeID", UniverseID),
                 new JProperty("description", SACNClient.SourceName),
                 new JProperty("delay", Delay)
             );

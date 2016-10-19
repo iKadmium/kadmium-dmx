@@ -27,11 +27,20 @@ namespace kadmium_osc_dmx_dotnet_webui.Controllers
             return Content(obj.ToString());
         }
 
+        public IActionResult List()
+        {
+            JArray arr = new JArray(
+                from transmitter in MasterController.Instance.Transmitters
+                select new JValue(transmitter.Name)
+            );
+            return Content(arr.ToString());
+        }
+
         public IActionResult Load(string id)
         {
             if (id == null)
             {
-                return Content(new SACNTransmitter(Guid.NewGuid(), 1, "", false, 6454).Serialize().ToString());
+                return Content(new SACNTransmitter(Guid.NewGuid(), "", 6454, 0).Serialize().ToString());
             }
             else
             {

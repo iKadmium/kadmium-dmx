@@ -1,5 +1,5 @@
 ﻿{
-  "$schema": "fixture.schema.json",
+  "$schema": "./fixture.schema.json",
   "name": "Chinese Moving Wash",
   "type": "LED",
   "channels": [

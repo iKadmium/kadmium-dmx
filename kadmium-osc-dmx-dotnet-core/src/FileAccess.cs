@@ -59,7 +59,24 @@ namespace kadmium_osc_dmx_dotnet_core
             JToken obj = JToken.Parse(jsonString);
             JSchema schema = JSchema.Parse(schemaString);
             IList<ValidationError> errors;
-            bool valid = obj.IsValid(schema, out errors);
+            bool valid = true;
+            try
+            {
+                valid = obj.IsValid(schema, out errors);
+            }
+            catch (JSchemaException e)
+            {
+                errors = new List<ValidationError>();
+                if (e.Message.Contains("free-quota limit"))
+                {
+                    valid = true;
+                }
+                else
+                {
+                    valid = false;
+                }
+            }
+
             if (valid)
             {
                 return obj;

@@ -11,7 +11,7 @@ namespace kadmium_osc_dmx_dotnet_core.Solvers
         public static float MAX_SPEED = 0.005f;
         public Dictionary<string, AnimatableAxis> Axis { get; set; }
 
-        public RandomMove(Fixture fixture, IEnumerable<string> options) : base(fixture, "RandomMove" )
+        public RandomMove(Fixture fixture) : base(fixture, "RandomMove" )
         {
             Axis = new Dictionary<string, AnimatableAxis>();
             foreach (string name in fixture.MovementAxis.Keys)

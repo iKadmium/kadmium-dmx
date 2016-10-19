@@ -27,7 +27,7 @@ export class FixtureViewModel
     serialize(): FixtureData
     {
         let item: FixtureData = {
-            channel: this.channel(),
+            channel: parseInt(this.channel() as any),
             group: this.group(),
             options: this.options().serialize(),
             type: this.type()

@@ -26,14 +26,22 @@ namespace kadmium_osc_dmx_dotnet_webui.Controllers
         
         public IActionResult Fixtures()
         {
-            JArray arr = new JArray(
-                from universe in MasterController.Instance.Venue.Universes
-                from fixture in universe.Fixtures
-                select new JObject(
-                    new JProperty("name", fixture.Definition.Name),
-                    new JProperty("address", fixture.StartChannel)
-                )
-            );
+            JArray arr;
+            if(MasterController.Instance.Venue != null)
+            {
+                arr = new JArray(
+                    from universe in MasterController.Instance.Venue.Universes
+                    from fixture in universe.Fixtures
+                    select new JObject(
+                        new JProperty("name", fixture.Definition.Name),
+                        new JProperty("address", fixture.StartChannel)
+                    )
+                );
+            }
+            else
+            {
+                arr = new JArray();
+            }
 
             return Content(arr.ToString());
         }

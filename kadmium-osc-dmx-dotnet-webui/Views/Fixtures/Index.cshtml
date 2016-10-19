@@ -12,21 +12,21 @@
         new InputText("name", "Name:"),
         new InputSelect("type", "Type:", Enum.GetNames(typeof(FixtureType)).ToDictionary(x => x)),
         new InputDataList("channel-names", "Master", "Red", "Green", "Blue", "White", "UV", "Strobe", "PanCoarse", "PanFine", "TiltCoarse", "TiltFine" ),
-        new InputCollection("channels", "Channels:",
+        new InputCollection("channels", "Channels:", "addChannel", "removeChannel",
             new InputList("name", "Name", "channel-names"),
             new InputNumber("dmx", "DMX", 1, 512, 1),
             new InputNumber("min", "Min", 0, 255, 0),
             new InputNumber("max", "Max", 0, 255, 255)
         ),
         new InputDataList("movement-names", "Pan", "Tilt"),
-        new InputCollection("movements", "Movements:",
+        new InputCollection("movements", "Movements Axis:", "addMovement", "removeMovement",
             new InputList("name", "Name", "movement-names"),
-            new InputNumber("min", "Min", -540, 540),
-            new InputNumber("max", "Max", -540, 540)
+            new InputNumber("min", "Min (degrees)", -540, 540),
+            new InputNumber("max", "Max (degrees)", -540, 540)
         )
     };
 }
 
 @Html.Partial("ModalEdit", inputs)
 
-<script src="~/js/FixtureEdit.js"></script>
+<script src="~/js/Fixtures.js"></script>

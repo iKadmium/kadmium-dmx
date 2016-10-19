@@ -26,9 +26,17 @@ namespace kadmium_osc_dmx_dotnet_core.Listeners
         {
             Port = port;
 
-            listener = new OSCServer(port);
-            listener.DefaultOnMessageReceived += Listener_PacketReceived;
-            Status.Update(StatusCode.NotStarted, "No messages yet", this);
+            try
+            {
+                listener = new OSCServer(port);
+                listener.DefaultOnMessageReceived += Listener_PacketReceived;
+                Status.Update(StatusCode.NotStarted, "No messages yet", this);
+            }
+            catch(Exception e)
+            {
+                Status.Update(StatusCode.Error, e.Message, this);
+            }
+            
         }
 
         private void Listener_PacketReceived(object sender, OSCMessageReceivedArgs e)

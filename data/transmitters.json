@@ -3,7 +3,6 @@
     "type": "sACN",
     "name": "sacnTransmitter",
     "description": "Kadmium-OSC-DMX",
-    "universeID": 1,
     "delay": 1500
   }
 ]

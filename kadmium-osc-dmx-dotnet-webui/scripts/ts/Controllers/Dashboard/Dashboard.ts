@@ -91,8 +91,8 @@ export class DashboardController
         let venueLoadLinks = $(".venue-load-link");
         venueLoadLinks.on("click", (e: JQueryEventObject) =>
         {
-            let id = $(this).data("id");
-            let url = MVC.getActionURL("Venues", "Load", id);
+            let id = $(e.currentTarget).data("id");
+            let url = MVC.getActionURL("Venues", "Activate", id);
             let settings: JQueryAjaxSettings =
             {
                 url: url,

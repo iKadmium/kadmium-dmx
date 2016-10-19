@@ -12,15 +12,13 @@ namespace kadmium_osc_dmx_dotnet_core.Transmitters
     public abstract class Transmitter
     {
         
-        protected Transmitter(string name, bool enabled)
+        protected Transmitter(string name, int delay)
         {
             Name = name;
             Status = new Status();
-            Enabled = enabled;
+            Delay = delay;
         }
-
         
-        public bool Enabled { get; set; }
         public int Delay { get; set; }
         public string Name { get; set; }
         public Status Status { get; set; }
@@ -34,14 +32,11 @@ namespace kadmium_osc_dmx_dotnet_core.Transmitters
         public abstract void TransmitInternal(byte[] dmx, int transmitterID);
         public async void Transmit(byte[] dmx, int transmitterID)
         {
-            if (Enabled)
+            if (Delay < 0)
             {
-                if (Delay < 0)
-                {
-                    await Task.Delay(Delay);
-                }
-                TransmitInternal(dmx, transmitterID);
+                await Task.Delay(Delay);
             }
+            TransmitInternal(dmx, transmitterID);
         }
 
         internal static Transmitter Load(JObject element)

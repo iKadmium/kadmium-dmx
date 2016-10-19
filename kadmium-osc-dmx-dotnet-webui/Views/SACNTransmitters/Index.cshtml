@@ -9,10 +9,9 @@
     {
         new InputText("name", "Name:"),
         new InputText("description", "Description:"),
-        new InputNumber("universeID", "Universe ID:", 0, 63999, 1),
         new InputNumber("delay", "Delay (ms):", 0, 30000, 0)
     };
 }
 @Html.Partial("ModalEdit", inputs)
 
-<script src="~/js/SACNTransmitterEdit.js"></script>
+<script src="~/js/SACNTransmitters.js"></script>

@@ -29,6 +29,11 @@ export class CollectionViewModel<ViewModelDataType, ViewModelType extends Collec
             }, 0);
         });
 
+        $("#modal-edit").on('hide.bs.modal', (eventObject: JQueryEventObject, ...args: any[]) =>
+        {
+            this.cancel(this.selectedItem());
+        });
+
         $.get(getURL, (data: any, textStatus: string, jqXHR: JQueryXHR) =>
         {
             let itemNames = JSON.parse(data) as string[];
@@ -82,6 +87,14 @@ export class CollectionViewModel<ViewModelDataType, ViewModelType extends Collec
         });
 
         item.openEditor();
+    }
+
+    cancel(item: ViewModelType): void
+    {
+        if (item.originalName() == "")
+        {
+            this.items.remove(item);
+        }
     }
 
     addItem(): void

@@ -41,9 +41,11 @@ namespace kadmium_osc_dmx_dotnet_core
             MasterController.Instance.UpdatesEnabled = false;
             string name = obj["name"].Value<string>();
 
-            var universes = from universeElement in obj["universes"].Values<JObject>()
+            var universesQuery = from universeElement in obj["universes"].Values<JObject>()
                             select Universe.Load(universeElement);
 
+            var universes = universesQuery.ToList();
+            
             MasterController.Instance.UpdatesEnabled = true;
 
             return new Venue(name, universes);
@@ -62,6 +64,14 @@ namespace kadmium_osc_dmx_dotnet_core
             foreach(Universe universe in Universes)
             {
                 universe.Render();
+            }
+        }
+
+        public void Clear()
+        {
+            foreach(Universe universe in Universes)
+            {
+                universe.Clear();
             }
         }
     }

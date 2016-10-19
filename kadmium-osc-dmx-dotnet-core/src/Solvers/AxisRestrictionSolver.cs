@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using kadmium_osc_dmx_dotnet_core.Fixtures;
+using Newtonsoft.Json.Linq;
 
 namespace kadmium_osc_dmx_dotnet_core.Solvers
 {
@@ -10,7 +11,7 @@ namespace kadmium_osc_dmx_dotnet_core.Solvers
     {
         public Dictionary<string, RestrictableMovementAxis> Axis { get; set; }
 
-        public AxisRestrictionSolver(Fixture fixture, IEnumerable<string> options) : base(fixture)
+        public AxisRestrictionSolver(Fixture fixture, JObject options) : base(fixture)
         {
             Axis = new Dictionary<string, RestrictableMovementAxis>();
             foreach(string restrictedAxisName in GetRestrictedAxisNames(fixture.Definition, options))
@@ -41,11 +42,10 @@ namespace kadmium_osc_dmx_dotnet_core.Solvers
             }
         }
 
-        private static IEnumerable<string> GetRestrictedAxisNames(Definition definition, IEnumerable<string> options)
+        private static IEnumerable<string> GetRestrictedAxisNames(Definition definition, JObject options)
         {
-            var restrictedNames = from option in options
-                                  where option.StartsWith("Restricted")
-                                  select option.Substring(10);
+            var restrictedNames = from option in options["axisRestrictions"]?.Values<JObject>() ?? Enumerable.Empty<JObject>()
+                                  select option["name"].Value<string>();
 
             var restrictedAxis = from name in restrictedNames
                                  where definition.Axis.Any(x => x.Name == name)
@@ -54,7 +54,7 @@ namespace kadmium_osc_dmx_dotnet_core.Solvers
             return restrictedAxis;
         }
 
-        internal static bool SuitableFor(Definition definition, IEnumerable<string> options)
+        internal static bool SuitableFor(Definition definition, JObject options)
         {
             return GetRestrictedAxisNames(definition, options).Count() > 0;
         }

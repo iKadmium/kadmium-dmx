@@ -27,6 +27,15 @@ namespace kadmium_osc_dmx_dotnet_webui.Controllers
             return Content(obj.ToString());
         }
 
+        public IActionResult List()
+        {
+            JArray arr = new JArray(
+                from listener in MasterController.Instance.Listeners
+                select new JValue(listener.Name)
+            );
+            return Content(arr.ToString());
+        }
+
         public IActionResult Load(string id)
         {
             if (id == null)
@@ -56,6 +65,7 @@ namespace kadmium_osc_dmx_dotnet_webui.Controllers
             try
             {
                 listener = MasterController.Instance.Listeners.Single(x => x is OSCListener && x.Name == newID) as OSCListener;
+                listener.Close();
                 MasterController.Instance.Listeners.Remove(listener);
             }
             catch (Exception)

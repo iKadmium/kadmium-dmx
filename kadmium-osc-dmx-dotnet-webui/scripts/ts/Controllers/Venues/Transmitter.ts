@@ -21,7 +21,7 @@ export class TransmitterViewModel
     {
         let item: TransmitterData = {
             name: this.name(),
-            universeID: this.universeID()
+            universeID: parseInt(this.universeID() as any)
         };
         return item;
     }

@@ -25,7 +25,7 @@ namespace kadmium_osc_dmx_dotnet_core.Transmitters
                 return "Enttec Pro Transmitter [" + Name + "] : " + Address;
             }
         }
-        public EnttecProTransmitter(string name, string address, bool enabled) : base(name, enabled)
+        public EnttecProTransmitter(string name, string address, int delay) : base(name, delay)
         {
             Address = address;
             /*SerialPort = new SerialPort(address, 115200, Parity.None, 8, StopBits.One);
@@ -90,8 +90,8 @@ namespace kadmium_osc_dmx_dotnet_core.Transmitters
         {
             string address = element["address"].Value<string>();
             string id = element["name"].Value<string>();
-            bool enabled = true;// bool.Parse(element.Attribute("enabled").Value);
-            EnttecProTransmitter transmitter = new EnttecProTransmitter(id, address, enabled);
+            int delay = element["delay"].Value<int>();
+            EnttecProTransmitter transmitter = new EnttecProTransmitter(id, address, delay);
             return transmitter;
         }
 

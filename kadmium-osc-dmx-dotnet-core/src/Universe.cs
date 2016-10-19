@@ -64,6 +64,14 @@ namespace kadmium_osc_dmx_dotnet_core
             return obj;
         }
 
+        public void Clear()
+        {
+            foreach(Fixture fixture in Fixtures)
+            {
+                fixture.Dispose();
+            }
+        }
+
         public JObject SerializeForVenue()
         {
             JObject obj = new JObject(
@@ -79,10 +87,14 @@ namespace kadmium_osc_dmx_dotnet_core
         public static Universe Load(JObject universeElement)
         {
             string name = universeElement["name"].Value<string>();
-            IEnumerable<TransmitterTarget> transmitterTargets = from transmitterTarget in universeElement["transmitters"].Values<JObject>()
-                                                                select TransmitterTarget.Load(transmitterTarget);
-            IEnumerable<Fixture> fixtures = from fixture in universeElement["fixtures"].Values<JObject>()
-                                            select Fixture.Load(fixture);
+            IEnumerable<TransmitterTarget> transmitterTargetsQuery = from transmitterTarget in universeElement["transmitters"].Values<JObject>()
+                                                                     select TransmitterTarget.Load(transmitterTarget);
+            IEnumerable<Fixture> fixturesQuery = from fixture in universeElement["fixtures"].Values<JObject>()
+                                                 select Fixture.Load(fixture);
+
+            var transmitterTargets = transmitterTargetsQuery.ToList();
+            var fixtures = fixturesQuery.ToList();
+
             Universe universe = new Universe(name, transmitterTargets, fixtures);
             return universe;
         }

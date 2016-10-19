@@ -55,14 +55,9 @@ export class VenueViewModel extends CollectionItemViewModel<VenueData> implement
 
     serialize(): VenueData
     {
-        let universes: UniverseData[] = [];
-        for (let universe of this.universes())
-        {
-            universes.push(universe.serialize());
-        }
         let item: VenueData = {
             name: this.name(),
-            universes: universes
+            universes: this.universes().map((value: UniverseViewModel, index: number, array: UniverseViewModel[]) => value.serialize())
         };
         return item;
     }

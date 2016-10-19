@@ -12,18 +12,13 @@ namespace kadmium_osc_dmx_dotnet_core.Solvers
     public class PanTilt16BitSolver : FixtureSolver
     {
         private IEnumerable<string> AxisNames;
-        public bool PanInverted { get; set; }
-        public bool TiltInverted { get; set; }
         
         public bool Eased { get; set; }
         
-        public PanTilt16BitSolver(Fixture fixture, IEnumerable<string> options) : base(fixture, Get16BitAxisNames(fixture.Definition).ToArray())
+        public PanTilt16BitSolver(Fixture fixture) : base(fixture, Get16BitAxisNames(fixture.Definition).ToArray())
         {
             AxisNames = from axis in fixture.Definition.Axis
                         select axis.Name;
-            
-            PanInverted = options.Contains("InvertedPan");
-            TiltInverted = options.Contains("InvertedTilt");
         }
 
         private static IEnumerable<string> Get16BitAxisNames(Definition fixtureDefinition)

@@ -32,17 +32,26 @@ namespace kadmium_osc_dmx_dotnet_webui.Controllers
         {
             if(id == null)
             {
-                return Content(new Definition().Serialize().ToString(), "text/json");
+                return Content(new Definition().Serialize().ToString());
             }
             else if (FileAccess.HasFixtureDefinition(id))
             {
-                return Content(FileAccess.LoadFixtureDefinition(id).ToString(), "text/json");
+                return Content(FileAccess.LoadFixtureDefinition(id).ToString());
             }
             else
             {
                 Response.StatusCode = 404;
                 return new EmptyResult();
             }
+        }
+
+        public IActionResult List()
+        {
+            JArray arr = new JArray(
+                from name in FileAccess.GetFixtureNames()
+                select new JValue(name)
+            );
+            return Content(arr.ToString());
         }
 
         public IActionResult Save(string id, string jsonString)

@@ -4,16 +4,15 @@ module.exports = {
     entry: {
         Preview2D: "scripts/ts/Controllers/Preview2D/Preview2D.ts",
         Dashboard: "scripts/ts/Controllers/Dashboard/Dashboard.ts",
-        SACNTransmitterLive: "scripts/ts/Controllers/SACNTransmitterLive/SACNTransmitterLive.ts",
-        OSCListenerLive: "scripts/ts/Controllers/OSCListenerLive/OSCListenerLive.ts",
+        SACNTransmitterLive: "scripts/ts/Controllers/Dashboard/SACNTransmitterLive/SACNTransmitterLive.ts",
+        OSCListenerLive: "scripts/ts/Controllers/Dashboard/OSCListenerLive/OSCListenerLive.ts",
         RawDMX: "scripts/ts/Controllers/RawDMX/RawDMX.ts",
 
         /*EnttecProTransmitterEdit: "ts/Controllers/List/Editors/EnttecProTransmitter.ts",
-        FixtureCollectionEdit: "ts/Controllers/List/Editors/FixtureCollection.ts",
-        FixtureEdit: "ts/Controllers/List/Editors/Fixture.ts",
-        GroupEdit: "ts/Controllers/List/Editors/Group.ts",
-        OSCListenerEdit: "ts/Controllers/List/Editors/OSCListener.ts",
-        SACNTransmitterEdit: "ts/Controllers/List/Editors/SACNTransmitter.ts",*/
+        FixtureCollectionEdit: "ts/Controllers/List/Editors/FixtureCollection.ts",*/
+        OSCListeners: "scripts/ts/Controllers/OSCListeners/OSCListeners.ts",
+        Fixtures: "scripts/ts/Controllers/Fixtures/Fixtures.ts",
+        SACNTransmitters: "scripts/ts/Controllers/SACNTransmitters/SACNTransmitters.ts",
         Groups: "scripts/ts/Controllers/Groups/Groups.ts",
         Venues: "scripts/ts/Controllers/Venues/Venues.ts",
 

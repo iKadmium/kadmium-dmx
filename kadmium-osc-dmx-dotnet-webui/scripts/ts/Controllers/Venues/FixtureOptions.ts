@@ -30,8 +30,8 @@ class AxisRestrictionViewModel
     {
         let item: AxisRestrictionData = {
             name: this.name(),
-            min: this.min(),
-            max: this.max()
+            min: parseInt(this.min() as any),
+            max: parseInt(this.max() as any)
         };
 
         return item;

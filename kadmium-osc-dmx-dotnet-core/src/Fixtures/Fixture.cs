@@ -19,10 +19,10 @@ namespace kadmium_osc_dmx_dotnet_core.Fixtures
         public Dictionary<string, Solvers.Attribute> FrameSettables { get; }
         public Dictionary<string, MovementAxis> MovementAxis { get; }
         public List<FixtureSolver> Solvers { get; }
-        public IEnumerable<string> Options;
+        public JObject Options;
         public Group Group { get; }
         
-        public Fixture(Definition definition, int startChannel, Group group, IEnumerable<string> options)
+        public Fixture(Definition definition, int startChannel, Group group, JObject options)
         {
             Definition = definition;
             Solvers = new List<FixtureSolver>();
@@ -74,13 +74,18 @@ namespace kadmium_osc_dmx_dotnet_core.Fixtures
             return obj;
         }
 
+        public void Dispose()
+        {
+            Group.Fixtures.Remove(this);
+        }
+
         public static Fixture Load(JObject obj)
         {
             int startChannel = obj["channel"].Value<int>();
             string type = obj["type"].Value<string>();
             Definition definition = Definition.Load(type);
             Group group = MasterController.Instance.Groups[obj["group"].Value<string>()];
-            IEnumerable<string> options = obj["options"].Values<string>();
+            JObject options = obj["options"].Value<JObject>();
             Fixture fixture = new Fixture(definition, startChannel, group, options);
             return fixture;
         }
