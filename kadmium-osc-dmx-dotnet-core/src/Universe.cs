@@ -11,8 +11,8 @@ namespace kadmium_osc_dmx_dotnet_core
 {
     public class TransmitterTarget
     {
-        public Transmitter Transmitter { get; }
-        public int UniverseID { get; }
+        public Transmitter Transmitter { get; set; }
+        public int UniverseID { get; set; }
 
         public TransmitterTarget(Transmitter transmitter, int universeID)
         {

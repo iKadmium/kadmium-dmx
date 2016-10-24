@@ -1,4 +1,6 @@
 ﻿using kadmium_osc_dmx_dotnet_core;
+using kadmium_osc_dmx_dotnet_core.Fixtures;
+using kadmium_osc_dmx_dotnet_core.Transmitters;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
 using Newtonsoft.Json.Linq;
@@ -16,6 +18,9 @@ namespace kadmium_osc_dmx_dotnet_webui.WebSockets
     {
         private static int BUFFER_SIZE = 65535;
         private static List<RawDMXSocketHandler> AllSocketHandlers;
+        private Universe Universe { get; }
+        private TransmitterTarget TransmitterTarget { get; }
+        private Timer RenderTimer { get; }
 
         public WebSocket Socket { get; }
 
@@ -26,6 +31,13 @@ namespace kadmium_osc_dmx_dotnet_webui.WebSockets
             {
                 AllSocketHandlers = new List<RawDMXSocketHandler>();
             }
+            TransmitterTarget = new TransmitterTarget(MasterController.Instance.Transmitters.First(), 1);
+            Universe = new Universe("Raw DMX Universe", new[] { TransmitterTarget }, Enumerable.Empty<Fixture>());
+
+            RenderTimer = new Timer((object state) => 
+            {
+                Universe.Render();
+            }, null, 0, 25);
         }
         
         async Task RenderLoop()
@@ -33,6 +45,7 @@ namespace kadmium_osc_dmx_dotnet_webui.WebSockets
             byte[] buffer = new byte[BUFFER_SIZE];
             ArraySegment<byte> segment = new ArraySegment<byte>(buffer);
             MasterController.Instance.UpdatesEnabled = false;
+            MasterController.Instance.RenderEnabled = false;
             AllSocketHandlers.Add(this);
             while (Socket.State == WebSocketState.Open)
             {
@@ -42,15 +55,25 @@ namespace kadmium_osc_dmx_dotnet_webui.WebSockets
                     case WebSocketMessageType.Close:
                         AllSocketHandlers.Remove(this);
                         MasterController.Instance.UpdatesEnabled = (AllSocketHandlers.Where(x => x.Socket.State == WebSocketState.Open).Count() == 0);
+                        MasterController.Instance.RenderEnabled = (AllSocketHandlers.Where(x => x.Socket.State == WebSocketState.Open).Count() == 0);
                         break;
                     case WebSocketMessageType.Text:
                         string message = Encoding.UTF8.GetString(segment.Array, segment.Offset, received.Count);
                         JObject obj = JObject.Parse(message);
-                        int channel = obj["channel"].Value<int>() - 1;
-                        byte value = obj["value"].Value<byte>();
-                        string universeName = obj["universe"].Value<string>();
-                        Universe universe = MasterController.Instance.Venue.Universes.Single(x => x.Name == universeName);
-                        universe.DMX[channel] = value;
+                        switch(obj["type"].Value<string>())
+                        {
+                            case "TransmitterUpdate":
+                                TransmitterTarget.Transmitter = MasterController.Instance.Transmitters.Single(x => x.Name == obj["transmitter"].Value<string>());
+                                break;
+                            case "UniverseIDUpdate":
+                                TransmitterTarget.UniverseID = obj["universeID"].Value<int>();
+                                break;
+                            case "ChannelUpdate":
+                                int channel = obj["channel"].Value<int>();
+                                byte value = obj["value"].Value<byte>();
+                                Universe.DMX[channel] = value;
+                                break;
+                        }
                         break;
                 }
             }

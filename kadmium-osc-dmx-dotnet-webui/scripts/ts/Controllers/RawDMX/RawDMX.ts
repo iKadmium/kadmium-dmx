@@ -1,48 +1,122 @@
-﻿class RawDMXController
+﻿import * as ko from "knockout";
+
+interface RawDMXMessage
+{
+    type: string;
+}
+
+interface TransmitterUpdate extends RawDMXMessage
+{
+    type: "TransmitterUpdate";
+    transmitter: string;
+}
+
+interface UniverseIDUpdate extends RawDMXMessage
+{
+    type: "UniverseIDUpdate";
+    universeID: number;
+}
+
+interface ChannelUpdate extends RawDMXMessage
+{
+    type: "ChannelUpdate";
+    channel: number;
+    value: number;
+}
+
+class DMXChannel
+{
+    value: KnockoutObservable<number>;
+    index: number;
+    constructor(index: number)
+    {
+        this.index = index;
+        this.value = ko.observable<number>(0);
+    }
+}
+
+class RawDMXViewModel
 {
     webSocket: WebSocket;
-    channelsBody: HTMLTableSectionElement;
+    channels: KnockoutObservableArray<DMXChannel>;
+    transmitter: KnockoutObservable<string>;
+    universeID: KnockoutObservable<number>;
 
     constructor()
     {
+        this.channels = ko.observableArray<DMXChannel>(RawDMXViewModel.getInitialDMX());
+        this.transmitter = ko.observable<string>($("#transmitter").val());
+        this.universeID = ko.observable<number>(1);
         this.webSocket = new WebSocket(document.URL.replace("http://", "ws://") + "/Socket");
         this.webSocket.addEventListener("message", (ev: MessageEvent) => 
         {
             //
         });
 
-        let that = this;
-        this.channelsBody = $("#channels-body")[0] as HTMLTableSectionElement;
-        $(this.channelsBody).find("tr").each((index: number, elem: Element) =>
+        this.transmitter.subscribe((newValue: string) =>
         {
-            let tr = elem as HTMLTableRowElement;
-            let range = $(tr).find("input[type=range]")[0] as HTMLInputElement;
-            let num = $(tr).find("input[type=number]")[0] as HTMLInputElement;
-            let channel = $(tr).data("channel") as number;
-            $(range).on("input", (eventObject: JQueryEventObject, ...args: any[]) => 
-            {
-                num.value = range.value;
-                that.webSocket.send(RawDMXController.createJSONString(channel, parseInt(range.value)));
-            });
-            $(num).on("input", (eventObject: JQueryEventObject, ...args: any[]) => 
-            {
-                range.value = num.value;
-                that.webSocket.send(RawDMXController.createJSONString(channel, parseInt(num.value)));
-            });
+            let message = JSON.stringify(RawDMXViewModel.createTransmitterUpdateMessage(newValue));
+            this.webSocket.send(message);
         });
+
+        this.universeID.subscribe((newValue: number) =>
+        {
+            let message = JSON.stringify(RawDMXViewModel.createUniverseIDUpdateMessage(newValue));
+            this.webSocket.send(message);
+        });
+
+        for (let channel of this.channels())
+        {
+            channel.value.subscribe((newValue: number) => 
+            {
+                let message = JSON.stringify(RawDMXViewModel.createChannelUpdateMessage(channel.index, newValue));
+                this.webSocket.send(message);
+            });
+        }
     }
-    
-    static createJSONString(channel: number, value: number)
+
+    static getInitialDMX(): DMXChannel[]
     {
-        let obj = { universe: $("#universe").val(), channel: channel, value: value };
-        return JSON.stringify(obj);
+        let initialDMX: DMXChannel[] = [];
+        for (let i = 0; i < 512; i++)
+        {
+            initialDMX[i] = new DMXChannel(i);
+        }
+        return initialDMX;
     }
 
+    static createTransmitterUpdateMessage(transmitter: string): TransmitterUpdate
+    {
+        let obj: TransmitterUpdate = {
+            type: "TransmitterUpdate",
+            transmitter: transmitter
+        }
+        return obj;
+    }
 
+    static createUniverseIDUpdateMessage(universeID: number): UniverseIDUpdate
+    {
+        let obj: UniverseIDUpdate = {
+            type: "UniverseIDUpdate",
+            universeID: universeID
+        }
+        return obj;
+    }
+
+    static createChannelUpdateMessage(channel: number, value: number): ChannelUpdate
+    {
+        let obj: ChannelUpdate = {
+            type: "ChannelUpdate",
+            channel: channel,
+            value: value
+        };
+        return obj;
+    }
 }
 
-let rawDMXController: RawDMXController;
+let viewModel: RawDMXViewModel;
 window.addEventListener("load", (ev: Event) =>
 {
-    rawDMXController = new RawDMXController();
+    viewModel = new RawDMXViewModel();
+    ko.applyBindings(viewModel);
 });

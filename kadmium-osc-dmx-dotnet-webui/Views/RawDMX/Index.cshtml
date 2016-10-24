@@ -1,4 +1,5 @@
 ﻿@using kadmium_osc_dmx_dotnet_core
+@using kadmium_osc_dmx_dotnet_core.Transmitters
 @*
     For more information on enabling MVC for empty projects, visit http://go.microsoft.com/fwlink/?LinkID=397860
 *@
@@ -7,13 +8,18 @@
 }
 
 <div class="form-group">
-    <label class="control-label col-sm-3" for="universe">Universe</label>
-    <select id="universe" class="form-control">
-        @foreach(string universeName in MasterController.Instance.Universes.Keys)
+    <label class="control-label col-sm-3" for="universe">Transmitter</label>
+    <select id="transmitter" class="form-control" data-bind="value: transmitter">
+        @foreach(Transmitter transmitter in MasterController.Instance.Transmitters)
         {
-            <option>@universeName</option>
+            <option>@transmitter.Name</option>
         }
     </select>
+</div>
+
+<div class="form-group">
+    <label class="control-label col-sm-3" for="universe">Universe ID</label>
+    <input type="number" id="universeID" class="form-control" min="1" max="63999" data-bind="value: universeID">
 </div>
 
 <table class="table table-striped">
@@ -24,15 +30,12 @@
             <th>Value</th>
         </tr>
     </thead>
-    <tbody id="channels-body">
-        @for (int i = 1; i <= 512; i++)
-        {
-            <tr data-channel="@i">
-                <td>@i</td>
-                <td><input class="form-control" type="range" min="0" max="255" value="0"></td>
-                <td><input class="form-control" type="number" min="0" max="255" value="0"></td>
-            </tr>
-        }
+    <tbody id="channels-body" data-bind="foreach: channels">
+        <tr>
+            <td data-bind="text: $index() + 1"></td>
+            <td><input class="form-control" type="range" min="0" max="255" data-bind="value: value, valueUpdate: 'input'"></td>
+            <td><input class="form-control" type="number" min="0" max="255" data-bind="value: value"></td>
+        </tr>
     </tbody>
 </table>
 <script src="~/js/RawDMX.js"></script>
