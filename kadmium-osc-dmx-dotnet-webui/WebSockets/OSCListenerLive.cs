@@ -15,6 +15,8 @@ namespace kadmium_osc_dmx_dotnet_webui.WebSockets
 {
     public class OSCTransmitterLive
     {
+        private static int RECEIVE_BUFFER_SIZE = 65535;
+        private static int SEND_BUFFER_SIZE = 65535;
         public WebSocket Socket { get; }
         public OSCListener Listener { get; }
         
@@ -28,6 +30,7 @@ namespace kadmium_osc_dmx_dotnet_webui.WebSockets
         private async void Listener_MessageReceived(object sender, ListenerEventArgs e)
         {
             JObject obj = new JObject(
+                new JProperty("type", "AttributeUpdate"),
                 new JProperty("group", e.Group),
                 new JProperty("attribute", e.Attribute),
                 new JProperty("value", e.Value)
@@ -36,14 +39,50 @@ namespace kadmium_osc_dmx_dotnet_webui.WebSockets
             byte[] bytes = Encoding.UTF8.GetBytes(obj.ToString());
 
             ArraySegment<byte> segment = new ArraySegment<byte>(bytes);
-            await Socket.SendAsync(segment, WebSocketMessageType.Text, true, CancellationToken.None);
+            if (Socket.State == WebSocketState.Open)
+            {
+                await Socket.SendAsync(segment, WebSocketMessageType.Text, true, CancellationToken.None);
+            }
         }
         
         async Task RenderLoop()
         {
+            byte[] receiveBuffer = new byte[RECEIVE_BUFFER_SIZE];
+            ArraySegment<byte> receiveSegment = new ArraySegment<byte>(receiveBuffer);
+            
             while (Socket.State == WebSocketState.Open)
             {
-                await Task.Delay(100);
+                WebSocketReceiveResult received = await Socket.ReceiveAsync(receiveSegment, CancellationToken.None);
+                switch (received.MessageType)
+                {
+                    case WebSocketMessageType.Text:
+                        string message = Encoding.UTF8.GetString(receiveSegment.Array, receiveSegment.Offset, received.Count);
+                        JObject obj = JObject.Parse(message);
+                        switch (obj["type"].Value<string>())
+                        {
+                            case "Init":
+                                JObject initMessage = new JObject(
+                                    new JProperty("type", "Init"),
+                                    new JProperty("groups",
+                                        new JArray(
+                                            from groupName in MasterController.Instance.Groups.Keys
+                                            select new JValue(groupName)
+                                        )
+                                    ),
+                                    new JProperty("attributes",
+                                        new JArray(
+                                            "Hue", "Saturation", "Brightness", "Strobe", "Apeshit", 
+                                            "UV", "Chase", "Program", "Pan", "Tilt", "RandomMove"
+                                        )
+                                    )
+                                );
+                                byte[] sendBuffer = Encoding.UTF8.GetBytes(initMessage.ToString());
+                                ArraySegment <byte> sendSegment = new ArraySegment<byte>(sendBuffer);
+                                await Socket.SendAsync(sendSegment, WebSocketMessageType.Text, true, CancellationToken.None);
+                                break;
+                        }
+                        break;
+                }
             }
         }
 

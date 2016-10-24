@@ -28,10 +28,10 @@ namespace kadmium_osc_dmx_dotnet_core.Transmitters
             }
         }
         
-        public override void TransmitInternal(byte[] dmx, int transmitterID)
+        public override void TransmitInternal(byte[] dmx, int universeID)
         {
-            SACNClient.Send((short)transmitterID, dmx);
-            OnTransmit?.Invoke(this, new TransmitterEventArgs(dmx));
+            SACNClient.Send((short)universeID, dmx);
+            OnTransmit?.Invoke(this, new TransmitterEventArgs(universeID, dmx));
         }
 
         public SACNTransmitter(Guid uuid, string name, int port, int delay) : base(name, delay)
@@ -71,8 +71,11 @@ namespace kadmium_osc_dmx_dotnet_core.Transmitters
     public class TransmitterEventArgs : EventArgs
     {
         public byte[] DMX { get; }
-        public TransmitterEventArgs(byte[] dmx)
+        public int UniverseID { get; }
+
+        public TransmitterEventArgs(int universeID, byte[] dmx)
         {
+            UniverseID = universeID;
             DMX = dmx;
         }
     }

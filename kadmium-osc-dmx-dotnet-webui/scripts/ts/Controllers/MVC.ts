@@ -1,5 +1,12 @@
 ﻿export class MVC
 {
+    static getSocketURL(controller: string): string
+    {
+        let actionURL = MVC.getActionURL(controller, "Socket", null);
+        let socketURL = actionURL.replace("http", "ws");
+        return socketURL;
+    }
+
     static getActionURL(controller: string, action: string, id: string): string
     {
         let originalURL: string = document.URL;

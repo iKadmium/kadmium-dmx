@@ -1,14 +1,50 @@
 ﻿import {MVC} from "../../MVC";
 
-class SACNTransmitterLiveController 
+import * as ko from "knockout";
+
+class DMXChannelViewModel
 {
-    webSocket: WebSocket;
-    attributesBody: HTMLTableSectionElement;
-    cache: number[];
+    value: KnockoutObservable<number>;
+    color: KnockoutComputed<string>;
 
     constructor()
     {
-        this.cache = new Array<number>(512);
+        this.value = ko.observable<number>(0);
+        this.color = ko.pureComputed(() =>
+        {
+            let red = 255;
+            let green = 255 - this.value();
+            let blue = 255 - this.value();
+            let color = "rgb(" + red + "," + green + "," + blue + ")";
+            return color;
+        });
+    }
+}
+
+class SACNTransmitterLiveViewModel 
+{
+    webSocket: WebSocket;
+    attributesBody: HTMLTableSectionElement;
+    channels: KnockoutObservableArray<DMXChannelViewModel>;
+    universeID: KnockoutObservable<number>;
+
+    constructor()
+    {
+        this.channels = ko.observableArray<DMXChannelViewModel>(SACNTransmitterLiveViewModel.getDefaultDMX());
+        this.universeID = ko.observable<number>(1);
+
+        this.universeID.subscribe((newValue: number) =>
+        {
+            let setUniverseIDMessage = {
+                type: "SetUniverseID",
+                universeID: newValue
+            };
+
+            this.webSocket.send(JSON.stringify(setUniverseIDMessage));
+
+            this.channels().forEach((value: DMXChannelViewModel, index: number, array: DMXChannelViewModel[]) => value.value(0));
+        });
+
         this.webSocket = new WebSocket(document.URL.replace("http://", "ws://").replace("Live", "Socket"));
         this.webSocket.addEventListener("message", (ev: MessageEvent) =>
         {
@@ -17,23 +53,28 @@ class SACNTransmitterLiveController
             {
                 let trueAddress = parseInt(address);
                 let value = message[trueAddress];
-                if (this.cache[trueAddress] != value)
-                {
-                    this.cache[trueAddress] = value;
-                    let cell = $("#dmx-" + (trueAddress + 1));
-                    cell.text(value);
-                    cell.css("background-color", "rgb(255, " + (255 - value) + ", " + (255 - value) + ")");
-                }
+                this.channels()[address].value(value);
             }
         });
 
         this.attributesBody = $("#dmx")[0] as HTMLTableSectionElement;
     }
+
+    static getDefaultDMX(): DMXChannelViewModel[]
+    {
+        let channels: DMXChannelViewModel[] = [];
+        for (let i = 0; i < 512; i++)
+        {
+            channels.push(new DMXChannelViewModel());
+        }
+        return channels;
+    }
 }
 
 
-let sacnTransmitterLiveController: SACNTransmitterLiveController;
+let sacnTransmitterLiveViewModel: SACNTransmitterLiveViewModel;
 window.addEventListener("load", (ev: Event) =>
 {
-    sacnTransmitterLiveController = new SACNTransmitterLiveController();
+    sacnTransmitterLiveViewModel = new SACNTransmitterLiveViewModel();
+    ko.applyBindings(sacnTransmitterLiveViewModel);
 });

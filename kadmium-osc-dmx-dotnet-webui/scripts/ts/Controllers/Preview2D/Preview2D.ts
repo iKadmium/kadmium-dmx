@@ -9,7 +9,7 @@ class Preview2DController
 
     constructor()
     {
-        this.socket = new WebSocket(MVC.getActionURL("Preview", "Socket", null).replace("http", "ws"));
+        this.socket = new WebSocket(MVC.getSocketURL("Preview"));
         this.universe = new DMXUniverse();
 
         let that = this;

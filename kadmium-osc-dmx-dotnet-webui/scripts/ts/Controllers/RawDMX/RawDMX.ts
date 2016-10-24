@@ -1,4 +1,5 @@
-﻿import * as ko from "knockout";
+﻿import {MVC} from "../MVC";
+import * as ko from "knockout";
 
 interface RawDMXMessage
 {
@@ -47,7 +48,7 @@ class RawDMXViewModel
         this.channels = ko.observableArray<DMXChannel>(RawDMXViewModel.getInitialDMX());
         this.transmitter = ko.observable<string>($("#transmitter").val());
         this.universeID = ko.observable<number>(1);
-        this.webSocket = new WebSocket(document.URL.replace("http://", "ws://") + "/Socket");
+        this.webSocket = new WebSocket(MVC.getSocketURL("RawDMX"));
         this.webSocket.addEventListener("message", (ev: MessageEvent) => 
         {
             //

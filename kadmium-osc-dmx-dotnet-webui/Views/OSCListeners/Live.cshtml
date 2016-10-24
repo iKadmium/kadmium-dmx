@@ -6,54 +6,27 @@
     For more information on enabling MVC for empty projects, visit http://go.microsoft.com/fwlink/?LinkID=397860
 *@
 @{
-    ViewData["Title"] = "OSC Listener Log - " + Model.Name;
-    var validAttributes = new[] { "Hue", "Saturation", "Brightness", "Strobe", "Apeshit", "UV", "Chase", "Program", "Pan", "Tilt", "RandomMove" };
+    ViewData["Title"] = "OSC Listener Live View - " + Model.Name;
 }
+
+<ul class="nav nav-pills nav-justified" data-bind="foreach: groups">
+    <li data-bind="css: { active: $parent.selectedGroup() == $data }"><a href="#" data-bind="text: name, click: $parent.selectGroup.bind($parent)"></a></li>
+</ul>
 
 <div class="row">
     <div class="col-sm-8 col-sm-offset-2">
         <table class="table table-striped">
             <thead>
                 <tr>
-                    <th>Group</th>
                     <th>Attribute</th>
                     <th>Value</th>
                 </tr>
             </thead>
-            <tbody id="attributes">
-                @foreach (Group grp in MasterController.Instance.Groups.Values)
-                            {
-                                var allFixtureSettables = from fixture in grp.Fixtures
-                                                          from settableName in fixture.Settables.Keys
-                                                          select settableName;
-                                var allGroupSettables = from settableName in grp.Settables.Keys
-                                                        select settableName;
-                                var allDistinctSettables = allFixtureSettables.Union(allGroupSettables).Distinct();
-
-                                var selectedSettables = allDistinctSettables.Where(x => validAttributes.Contains(x));
-
-                                foreach (var settableName in selectedSettables)
-                                {
-                                    kadmium_osc_dmx_dotnet_core.Solvers.Attribute settable;
-                                    if(grp.Settables.ContainsKey(settableName))
-                                    {
-                                        settable = grp.Settables[settableName];
-                                    }
-                                    else
-                                    {
-                                        var fixturesWithSettable = from fixture in grp.Fixtures
-                                                                   where fixture.Settables.ContainsKey(settableName)
-                                                                   select fixture;
-                                        settable = fixturesWithSettable.First().Settables[settableName];
-                                    }
-                                    
-                                    <tr>
-                                        <td class="attributes-group">@grp.Name</td>
-                                        <td class="attributes-attribute">@settable.Name</td>
-                                        <td class="attributes-value"> @settable.Value.ToString("0.00")</td>
-                                    </tr>
-                    }
-                }
+            <tbody data-bind="foreach: selectedGroup().attributes">
+                <tr>
+                    <td data-bind="text: name"></td>
+                    <td data-bind="text: value().toFixed(2), style: {background: backgroundColor() }"></td>
+                </tr>
             </tbody>
         </table>
     </div>

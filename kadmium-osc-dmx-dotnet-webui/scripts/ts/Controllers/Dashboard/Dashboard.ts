@@ -15,14 +15,8 @@ export class DashboardController
     static glyphs: string[] = ["glyphicon-remove-sign", "glyphicon-ok-sign", "glyphicon-info-sign", "glyphicon-question-sign"];
     webSocket: WebSocket;
 
-    updateStatus(status: Status) : void
+    updateStatus(panel: JQuery, status: Status) : void
     {
-        let panel = $(".status-panel").filter((index, element) =>
-        {
-            return $(element).data("id") == status.name
-                && $(element).data("controller") == status.controller;
-        });
-
         let glyph = panel.find(".status-glyph");
         let statusText = panel.find(".status-message");
         let panelBody = panel.find(".panel-body");
@@ -67,9 +61,16 @@ export class DashboardController
         $("#status-alerts")[0].appendChild(alertDiv);
     }
 
-    onLoadVenueSuccess(data: any, textStatus: string, xhr: JQueryXHR): void
+    onLoadVenueSuccess(venueName: string): void
     {
-        this.addAlert("Venue loaded successfully", "alert alert-success");
+        this.addAlert(venueName + " loaded successfully", "alert alert-success");
+        let status: Status = {
+            code: "Running",
+            message: venueName,
+            controller: "",
+            name: ""
+        };
+        this.updateStatus($("#venue-controller"), status);
     }
 
     onLoadVenueError(xhr: JQueryXHR, textStatus: string, errorThrown: string): void
@@ -81,11 +82,16 @@ export class DashboardController
     {
         let that = this;
 
-        this.webSocket = new WebSocket(document.URL.replace("http://", "ws://") + "Index/Socket");
+        this.webSocket = new WebSocket(MVC.getSocketURL("Index"));
         this.webSocket.addEventListener("message", (ev: MessageEvent) =>
         {
             let status = JSON.parse(ev.data) as Status;
-            this.updateStatus(status);
+            let panel = $(".status-panel").filter((index, element) =>
+            {
+                return $(element).data("id") == status.name
+                    && $(element).data("controller") == status.controller;
+            });
+            this.updateStatus(panel, status);
         });
 
         let venueLoadLinks = $(".venue-load-link");
@@ -96,7 +102,7 @@ export class DashboardController
             let settings: JQueryAjaxSettings =
             {
                 url: url,
-                success: $.proxy(that.onLoadVenueSuccess, that),
+                success: (data: any, textStatus: string, xhr: JQueryXHR, ...args: any[]) => this.onLoadVenueSuccess(id),
                 error: $.proxy(that.onLoadVenueError, that)
             }
             $.ajax(settings);

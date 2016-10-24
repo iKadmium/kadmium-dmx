@@ -15,6 +15,8 @@ namespace kadmium_osc_dmx_dotnet_webui.WebSockets
 {
     public class SACNTransmitterLive
     {
+        private static int RECEIVE_BUFFER_SIZE = 65535;
+        public int UniverseID { get; set; }
         public WebSocket Socket { get; }
         public SACNTransmitter Transmitter { get; }
 
@@ -22,27 +24,50 @@ namespace kadmium_osc_dmx_dotnet_webui.WebSockets
         {
             Socket = socket;
             Transmitter = MasterController.Instance.Transmitters.Single(x => x.Name == id) as SACNTransmitter;
+            UniverseID = 1;
             Transmitter.OnTransmit += Transmitter_OnTransmit;
         }
 
         private async void Transmitter_OnTransmit(object sender, TransmitterEventArgs e)
         {
-            JArray arr = new JArray(
-                from value in e.DMX
-                select new JValue(value)
-            );
+            if (e.UniverseID == UniverseID)
+            {
+                JArray arr = new JArray(
+                    from value in e.DMX
+                    select new JValue(value)
+                );
 
-            byte[] bytes = Encoding.UTF8.GetBytes(arr.ToString());
+                byte[] bytes = Encoding.UTF8.GetBytes(arr.ToString());
 
-            ArraySegment<byte> segment = new ArraySegment<byte>(bytes);
-            await Socket.SendAsync(segment, WebSocketMessageType.Text, true, CancellationToken.None);
+                ArraySegment<byte> segment = new ArraySegment<byte>(bytes);
+                if (Socket.State == WebSocketState.Open)
+                {
+                    await Socket.SendAsync(segment, WebSocketMessageType.Text, true, CancellationToken.None);
+                }
+            }
         }
 
         async Task RenderLoop()
         {
+            byte[] receiveBuffer = new byte[RECEIVE_BUFFER_SIZE];
+            ArraySegment<byte> receiveSegment = new ArraySegment<byte>(receiveBuffer);
+
             while (Socket.State == WebSocketState.Open)
             {
-                await Task.Delay(100);
+                WebSocketReceiveResult received = await Socket.ReceiveAsync(receiveSegment, CancellationToken.None);
+                switch (received.MessageType)
+                {
+                    case WebSocketMessageType.Text:
+                        string message = Encoding.UTF8.GetString(receiveSegment.Array, receiveSegment.Offset, received.Count);
+                        JObject obj = JObject.Parse(message);
+                        switch (obj["type"].Value<string>())
+                        {
+                            case "SetUniverseID":
+                                UniverseID = obj["universeID"].Value<int>();
+                                break;
+                        }
+                        break;
+                }
             }
         }
 

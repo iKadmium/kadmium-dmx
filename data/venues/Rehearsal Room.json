@@ -3,96 +3,132 @@
   "universes": [
     {
       "name": "Private Universe",
+      "fixtures": [
+        {
+          "channel": 301,
+          "group": "rearSides",
+          "options": {
+            "axisInversions": [],
+            "axisRestrictions": [
+              {
+                "name": "Pan",
+                "min": -90,
+                "max": 90
+              },
+              {
+                "name": "Tilt",
+                "min": 0,
+                "max": 90
+              }
+            ]
+          },
+          "type": "Chinese Moving Wash"
+        },
+        {
+          "channel": 315,
+          "group": "rearSides",
+          "options": {
+            "axisInversions": [],
+            "axisRestrictions": [
+              {
+                "name": "Pan",
+                "min": -90,
+                "max": 90
+              },
+              {
+                "name": "Tilt",
+                "min": 0,
+                "max": 90
+              }
+            ]
+          },
+          "type": "Chinese Moving Wash"
+        },
+        {
+          "channel": 329,
+          "group": "rearSides",
+          "options": {
+            "axisInversions": [
+              "Pan"
+            ],
+            "axisRestrictions": [
+              {
+                "name": "Pan",
+                "min": -90,
+                "max": 90
+              },
+              {
+                "name": "Tilt",
+                "min": 0,
+                "max": 90
+              }
+            ]
+          },
+          "type": "Chinese Moving Wash"
+        },
+        {
+          "channel": 343,
+          "group": "rearSides",
+          "options": {
+            "axisInversions": [
+              "Pan"
+            ],
+            "axisRestrictions": [
+              {
+                "name": "Pan",
+                "min": -90,
+                "max": 90
+              },
+              {
+                "name": "Tilt",
+                "min": 0,
+                "max": 90
+              }
+            ]
+          },
+          "type": "Chinese Moving Wash"
+        },
+        {
+          "channel": 400,
+          "group": "vocalist",
+          "options": {
+            "axisInversions": [],
+            "axisRestrictions": []
+          },
+          "type": "Chinese RGBW (5ch)"
+        },
+        {
+          "channel": 405,
+          "group": "guitarist",
+          "options": {
+            "axisInversions": [],
+            "axisRestrictions": []
+          },
+          "type": "Chinese RGBW (5ch)"
+        },
+        {
+          "channel": 410,
+          "group": "bassist",
+          "options": {
+            "axisInversions": [],
+            "axisRestrictions": []
+          },
+          "type": "Chinese RGBW (5ch)"
+        },
+        {
+          "channel": 415,
+          "group": "drummer",
+          "options": {
+            "axisInversions": [],
+            "axisRestrictions": []
+          },
+          "type": "Chinese RGBW (5ch)"
+        }
+      ],
       "transmitters": [
         {
           "name": "sacnTransmitter",
           "universeID": 1
-        }
-      ],
-      "fixtures": [
-        {
-          "channel": 301,
-          "type": "Chinese Moving Wash",
-          "group": "rearSides",
-          "options": {
-            "axisInversions": [],
-            "axisRestrictions": [
-              {
-                "name": "Pan",
-                "min": -90,
-                "max": 90
-              },
-              {
-                "name": "Tilt",
-                "min": 0,
-                "max": 90
-              }
-            ]
-          }
-        },
-        {
-          "channel": 315,
-          "type": "Chinese Moving Wash",
-          "group": "rearSides",
-          "options": {
-            "axisInversions": [],
-            "axisRestrictions": [
-              {
-                "name": "Pan",
-                "min": -90,
-                "max": 90
-              },
-              {
-                "name": "Tilt",
-                "min": 0,
-                "max": 90
-              }
-            ]
-          }
-        },
-        {
-          "channel": 329,
-          "type": "Chinese Moving Wash",
-          "group": "rearSides",
-          "options": {
-            "axisInversions": [
-              "Pan"
-            ],
-            "axisRestrictions": [
-              {
-                "name": "Pan",
-                "min": -90,
-                "max": 90
-              },
-              {
-                "name": "Tilt",
-                "min": 0,
-                "max": 90
-              }
-            ]
-          }
-        },
-        {
-          "channel": 343,
-          "type": "Chinese Moving Wash",
-          "group": "rearSides",
-          "options": {
-            "axisInversions": [
-              "Pan"
-            ],
-            "axisRestrictions": [
-              {
-                "name": "Pan",
-                "min": -90,
-                "max": 90
-              },
-              {
-                "name": "Tilt",
-                "min": 0,
-                "max": 90
-              }
-            ]
-          }
         }
       ]
     }
