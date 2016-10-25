@@ -30,16 +30,22 @@ namespace kadmium_osc_dmx_dotnet_core.Transmitters
         
         public override void TransmitInternal(byte[] dmx, int universeID)
         {
-            SACNClient.Send((short)universeID, dmx);
+            SACNClient?.Send((short)universeID, dmx);
             OnTransmit?.Invoke(this, new TransmitterEventArgs(universeID, dmx));
         }
 
         public SACNTransmitter(Guid uuid, string name, int port, int delay) : base(name, delay)
         {
             Port = port;
-            SACNClient = new SACNSender(uuid, SOURCE_NAME, port);
-
-            Status.Update(StatusCode.Running, "Multicast Sending", this);
+            try
+            {
+                SACNClient = new SACNSender(uuid, SOURCE_NAME, port);
+                Status.Update(StatusCode.Running, "Multicast Sending", this);
+            }
+            catch (Exception e)
+            {
+                Status.Update(StatusCode.Error, e.Message, this);
+            }
         }
 
         public new static SACNTransmitter Load(JObject element)

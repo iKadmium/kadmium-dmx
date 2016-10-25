@@ -6,29 +6,33 @@ using System.Threading.Tasks;
 
 namespace kadmium_osc_dmx_dotnet_webui.ViewHelpers
 {
+    public class EnablementOptions
+    {
+        public Func<bool> EnablementFunction { get; set; }
+        public string DisabledTitle { get; set; }
+    }
+
     public class NavbarItem
     {
         public string Controller { get; set; }
         public string Action { get; set; }
         public string Display { get; set; }
+        public string ID { get; set; }
+        public bool Active { get; set; }
         public IEnumerable<NavbarItem> Children { get; set; }
+        public EnablementOptions EnablementOptions { get; set; }
 
-        public NavbarItem(string controller, string action, string display)
+        public NavbarItem(string controller, string action = null, string display = null, string id = null, EnablementOptions enablementOptions = null, params NavbarItem[] children)
         {
             Controller = controller;
-            Action = action;
-            Display = display;
-            Children = Enumerable.Empty<NavbarItem>();
-        }
-
-        public NavbarItem(string controller, string display, params NavbarItem[] children)
-        {
-            Controller = controller;
-            Display = display;
+            Action = action ?? "Index";
+            Display = display ?? ((action == null) ? Controller : action);
+            EnablementOptions = enablementOptions;
             Children = children;
+            ID = id ?? "";
         }
 
-        public NavbarItem(string controller, params NavbarItem[] children) : this(controller, controller, children)
+        public NavbarItem(string controller, params NavbarItem[] children) : this(controller, null, null, null, null, children)
         {
             
         }

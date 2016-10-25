@@ -1,23 +1,48 @@
-﻿@*
+﻿@using kadmium_osc_dmx_dotnet_core;
+@*
     For more information on enabling MVC for empty projects, visit http://go.microsoft.com/fwlink/?LinkID=397860
 *@
 @{
+    EnablementOptions hasGroups = new EnablementOptions
+    {
+        EnablementFunction = (() => MasterController.Instance.Groups.Count > 0),
+        DisabledTitle = "At least one group must be defined"
+    };
+
+    EnablementOptions venueLoaded = new EnablementOptions
+    {
+        EnablementFunction = (() => MasterController.Instance.Venue != null),
+        DisabledTitle = "A venue must be loaded"
+    };
+
+    EnablementOptions hasTransmitters = new EnablementOptions
+    {
+        EnablementFunction = (() => MasterController.Instance.Transmitters.Count > 0),
+        DisabledTitle = "At least one transmitter must be defined"
+    };
+
+    EnablementOptions hasGroupsAndTransmitters = new EnablementOptions
+    {
+        EnablementFunction = (() => MasterController.Instance.Groups.Count > 0 && MasterController.Instance.Transmitters.Count > 0),
+        DisabledTitle = "At least one group and one transmitter must be defined"
+    };
+
     var Navbar = new[] {
-        new NavbarItem("Preview", "Preview2D", "2D Preview"),
+        new NavbarItem("Preview", "Preview2D", "2D Preview", enablementOptions: venueLoaded, id: "preview"),
         new NavbarItem("Groups"),
-        new NavbarItem("Transmitters",
-            new NavbarItem("SACNTransmitters", "sACN")
-        ),
         new NavbarItem("Venues",
-            new NavbarItem("Venues"),
+            new NavbarItem("Venues", enablementOptions: hasGroupsAndTransmitters),
             new NavbarItem("FixtureCollections", "Fixture Collections")
         ),
         new NavbarItem("Fixtures"),
         new NavbarItem("Listeners",
-            new NavbarItem("OSCListeners", "OSC")
+            new NavbarItem("OSCListeners", display: "OSC")
+        ),
+        new NavbarItem("Transmitters",
+            new NavbarItem("SACNTransmitters", display: "sACN")
         ),
         new NavbarItem("Tools",
-            new NavbarItem("RawDMX", "Raw DMX")
+            new NavbarItem("RawDMX", display: "Raw DMX", enablementOptions: hasTransmitters)
         ),
         new NavbarItem("Help",
             new NavbarItem("Help", "Index", "Help"),
@@ -51,7 +76,7 @@
                             <ul class="dropdown-menu">
                                 @foreach (NavbarItem child in item.Children)
                                 {
-                                    <li><a asp-area="" asp-controller="@child.Controller" asp-action="@child.Action">@child.Display</a></li>
+                                    @Html.Partial("NavbarItem", child);
                                 }
                                 
                             </ul>
@@ -60,15 +85,7 @@
                     }
                     else
                     {
-                        @if (item.Controller == ViewContext.RouteData.Values["controller"].ToString())
-                        {
-                            <li class="active"><a asp-area="" asp-controller="@item.Controller" asp-action="@item.Action">@item.Display</a></li>
-                        }
-                        else
-                        {
-                            <li><a asp-area="" asp-controller="@item.Controller" asp-action="@item.Action">@item.Display</a></li>
-                        }
-
+                        @Html.Partial("NavbarItem", item);
                     }
                 }
             </ul>

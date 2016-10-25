@@ -71,6 +71,7 @@ export class DashboardController
             name: ""
         };
         this.updateStatus($("#venue-controller"), status);
+        $("#preview").removeClass("disabled");
     }
 
     onLoadVenueError(xhr: JQueryXHR, textStatus: string, errorThrown: string): void
