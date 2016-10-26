@@ -43,8 +43,6 @@ namespace kadmium_osc_dmx_dotnet_core.Transmitters
         {
             switch (element["type"].Value<string>())
             {
-                case "EntTec":
-                    return EnttecProTransmitter.Load(element);
                 case "sACN":
                     return SACNTransmitter.Load(element); 
             }

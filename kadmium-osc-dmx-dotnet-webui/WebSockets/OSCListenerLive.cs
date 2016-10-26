@@ -16,14 +16,13 @@ namespace kadmium_osc_dmx_dotnet_webui.WebSockets
     public class OSCTransmitterLive
     {
         private static int RECEIVE_BUFFER_SIZE = 65535;
-        private static int SEND_BUFFER_SIZE = 65535;
         public WebSocket Socket { get; }
         public OSCListener Listener { get; }
         
         public OSCTransmitterLive(WebSocket socket, string id)
         {
             Socket = socket;
-            Listener = MasterController.Instance.Listeners.Single(x => x.Name == id) as OSCListener;
+            Listener = MasterController.Instance.Listeners[id] as OSCListener;
             Listener.MessageReceived += Listener_MessageReceived;
         }
 

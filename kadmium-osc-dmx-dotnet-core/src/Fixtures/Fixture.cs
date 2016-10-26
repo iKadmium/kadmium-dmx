@@ -66,9 +66,7 @@ namespace kadmium_osc_dmx_dotnet_core.Fixtures
                 new JProperty("channel", StartChannel),
                 new JProperty("type", Definition.Name),
                 new JProperty("group", group.Name),
-                new JProperty("options", 
-                    new JArray(Options)
-                )
+                new JProperty("options", Options)
             );
 
             return obj;

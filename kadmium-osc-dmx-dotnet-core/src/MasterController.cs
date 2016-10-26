@@ -2,6 +2,7 @@
 using kadmium_osc_dmx_dotnet_core.Listeners;
 using kadmium_osc_dmx_dotnet_core.Transmitters;
 using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -16,9 +17,9 @@ namespace kadmium_osc_dmx_dotnet_core
         static int UPDATES_PER_SECOND = 40; // in hz
         static int UPDATE_TIME = 1000 / UPDATES_PER_SECOND;
 
-        public Dictionary<string, Group> Groups { get; private set; }
-        public List<Listener> Listeners { get; private set; }
-        public List<Transmitter> Transmitters { get; private set; }
+        public ConcurrentDictionary<string, Group> Groups { get; private set; }
+        public ConcurrentDictionary<string, Listener> Listeners { get; private set; }
+        public ConcurrentDictionary<string, Transmitter> Transmitters { get; private set; }
         public Venue Venue { get; private set; }
         public Strobe Strobe { get; }
         public Random Random { get; }
@@ -39,9 +40,21 @@ namespace kadmium_osc_dmx_dotnet_core
         public static void Initialise()
         {
             instance = new MasterController();
-            Instance.Groups = FileAccess.LoadGroups().ToDictionary(x => x.Name, x => x);
-            Instance.Transmitters = FileAccess.LoadTransmitters().ToList();
-            Instance.Listeners = FileAccess.LoadListeners().ToList();
+            Instance.Groups = new ConcurrentDictionary<string, Group>();
+            foreach(Group group in FileAccess.LoadGroups())
+            {
+                Instance.Groups.TryAdd(group.Name, group);
+            }
+            Instance.Transmitters = new ConcurrentDictionary<string, Transmitter>();
+            foreach(Transmitter transmitter in FileAccess.LoadTransmitters())
+            {
+                Instance.Transmitters.TryAdd(transmitter.Name, transmitter);
+            }
+            Instance.Listeners = new ConcurrentDictionary<string, Listener>();
+            foreach(Listener listener in FileAccess.LoadListeners())
+            {
+                Instance.Listeners.TryAdd(listener.Name, listener);
+            }
             Instance.updateTimer = new Timer(Instance.UpdateTimer_Elapsed, null, UPDATE_TIME, UPDATE_TIME);
         }
 
@@ -83,11 +96,11 @@ namespace kadmium_osc_dmx_dotnet_core
         public void Close()
         {
             updateTimer.Dispose();
-            foreach (Transmitter transmitter in Transmitters)
+            foreach (Transmitter transmitter in Transmitters.Values)
             {
                 transmitter.Close();
             }
-            foreach (Listener listener in Listeners)
+            foreach (Listener listener in Listeners.Values)
             {
                 listener.Close();
             }

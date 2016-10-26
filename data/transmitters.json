@@ -3,6 +3,11 @@
     "type": "sACN",
     "name": "sacnTransmitter",
     "description": "Kadmium-OSC-DMX",
-    "delay": 1500
+    "delay": 500,
+    "multicast": true,
+    "unicast":
+    [
+      "localhost"
+    ]
   }
 ]

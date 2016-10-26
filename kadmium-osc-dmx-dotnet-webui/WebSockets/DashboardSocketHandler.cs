@@ -21,11 +21,11 @@ namespace kadmium_osc_dmx_dotnet_webui.WebSockets
         public DashboardSocketHandler(WebSocket socket)
         {
             Socket = socket;
-            foreach(Listener listener in MasterController.Instance.Listeners)
+            foreach(Listener listener in MasterController.Instance.Listeners.Values)
             {
                 listener.Status.Updated += ListenerStatusUpdated;
             }
-            foreach(Transmitter transmitter in MasterController.Instance.Transmitters)
+            foreach(Transmitter transmitter in MasterController.Instance.Transmitters.Values)
             {
                 transmitter.Status.Updated += TransmitterStatusUpdated;
             }
@@ -47,12 +47,12 @@ namespace kadmium_osc_dmx_dotnet_webui.WebSockets
 
         private void UpdateAll()
         {
-            foreach (Listener listener in MasterController.Instance.Listeners)
+            foreach (Listener listener in MasterController.Instance.Listeners.Values)
             {
                 string controller = listener.GetType().Name + "s";
                 SendUpdate(controller, listener.Name, listener.Status.StatusCode, listener.Status.Message);
             }
-            foreach (Transmitter transmitter in MasterController.Instance.Transmitters)
+            foreach (Transmitter transmitter in MasterController.Instance.Transmitters.Values)
             {
                 string controller = transmitter.GetType().Name + "s";
                 SendUpdate(controller, transmitter.Name, transmitter.Status.StatusCode, transmitter.Status.Message);

@@ -17,7 +17,7 @@ namespace kadmium_osc_dmx_dotnet_webui.Controllers
         // GET: /<controller>/
         public IActionResult Index()
         {
-            return View(new ListData("sACN Transmitter", MasterController.Instance.Transmitters.Where(x => x is SACNTransmitter).Select(x => x.Name)));
+            return View(new ListData("sACN Transmitter", MasterController.Instance.Transmitters.Values.Where(x => x is SACNTransmitter).Select(x => x.Name)));
         }
 
         public IActionResult Schema()
@@ -30,7 +30,8 @@ namespace kadmium_osc_dmx_dotnet_webui.Controllers
         public IActionResult List()
         {
             JArray arr = new JArray(
-                from transmitter in MasterController.Instance.Transmitters
+                from transmitter in MasterController.Instance.Transmitters.Values
+                where transmitter is SACNTransmitter
                 select new JValue(transmitter.Name)
             );
             return Content(arr.ToString());
@@ -38,22 +39,15 @@ namespace kadmium_osc_dmx_dotnet_webui.Controllers
 
         public IActionResult Load(string id)
         {
-            if (id == null)
+            if(id != null && MasterController.Instance.Transmitters.ContainsKey(id) && MasterController.Instance.Transmitters[id] is SACNTransmitter)
             {
-                return Content(new SACNTransmitter(Guid.NewGuid(), "", 6454, 0).Serialize().ToString());
+                SACNTransmitter transmitter = MasterController.Instance.Transmitters[id] as SACNTransmitter;
+                return Content(transmitter.Serialize().ToString());   
             }
             else
             {
-                try
-                {
-                    SACNTransmitter transmitter = MasterController.Instance.Transmitters.Single(x => x.Name == id && x is SACNTransmitter) as SACNTransmitter;
-                    return Content(transmitter.Serialize().ToString());
-                }
-                catch (Exception)
-                {
-                    Response.StatusCode = 404;
-                    return new EmptyResult();
-                }
+                Response.StatusCode = 404;
+                return new EmptyResult();
             }
         }
 
@@ -61,37 +55,68 @@ namespace kadmium_osc_dmx_dotnet_webui.Controllers
         {
             JObject obj = JObject.Parse(jsonString);
             string newID = obj["name"].Value<string>();
-            SACNTransmitter transmitter;
-            try
+            Transmitter transmitter;
+            if (id != null && MasterController.Instance.Transmitters.ContainsKey(id) && MasterController.Instance.Transmitters[id] is SACNTransmitter)
             {
-                transmitter = MasterController.Instance.Transmitters.Single(x => x is SACNTransmitter && x.Name == id) as SACNTransmitter;
-                MasterController.Instance.Transmitters.Remove(transmitter);
-            }
-            catch (Exception)
-            {
-                
-            }
 
+                if(MasterController.Instance.Transmitters.TryRemove(id, out transmitter))
+                {
+                    transmitter.Close();
+                    if (MasterController.Instance.Venue != null)
+                    {
+                        var transmitterTargets = MasterController.Instance.Venue.Universes.SelectMany(x => x.TransmitterTargets);
+                        foreach (var target in transmitterTargets)
+                        {
+                            target.TransmitterName = newID;
+                        }
+                        FileAccess.SaveVenue(MasterController.Instance.Venue.Serialize());
+                    }
+
+                    FileAccess.RenameTransmitter(id, newID);
+                }
+                else
+                {
+                    Response.StatusCode = 500;
+                    return new EmptyResult();
+                }
+            }
+            
             transmitter = SACNTransmitter.Load(obj);
-            MasterController.Instance.Transmitters.Add(transmitter);
+            if (MasterController.Instance.Transmitters.TryAdd(newID, transmitter))
+            {
+                FileAccess.SaveListeners();
 
-            FileAccess.SaveListeners();
-
-            Response.StatusCode = 200;
-            return new EmptyResult();
+                Response.StatusCode = 200;
+                return new EmptyResult();
+            }
+            else
+            {
+                Response.StatusCode = 500;
+                return new EmptyResult();
+            }
         }
         
         public IActionResult Delete(string id)
         {
-            try
+            if (id != null && MasterController.Instance.Transmitters.ContainsKey(id) && MasterController.Instance.Transmitters[id] is SACNTransmitter)
             {
-                SACNTransmitter transmitter = MasterController.Instance.Transmitters.Single(x => x.Name == id && x is SACNTransmitter) as SACNTransmitter;
-                MasterController.Instance.Transmitters.Remove(transmitter);
-                FileAccess.SaveTransmitters();
-                Response.StatusCode = 200;
-                return new EmptyResult();
+                Transmitter transmitter;
+
+                if (MasterController.Instance.Transmitters.TryRemove(id, out transmitter))
+                {
+                    transmitter.Close();
+                    FileAccess.SaveTransmitters();
+                    Response.StatusCode = 200;
+                    return new EmptyResult();
+                }
+                else
+                {
+                    Response.StatusCode = 500;
+                    return new EmptyResult();
+                }
+
             }
-            catch(Exception)
+            else
             {
                 Response.StatusCode = 404;
                 return new EmptyResult();
@@ -100,9 +125,9 @@ namespace kadmium_osc_dmx_dotnet_webui.Controllers
 
         public IActionResult Status(string id)
         {
-            if (MasterController.Instance.Transmitters.Any(x => x.Name == id))
+            if (id != null && MasterController.Instance.Transmitters.ContainsKey(id) && MasterController.Instance.Transmitters[id] is SACNTransmitter)
             {
-                SACNTransmitter transmitter = MasterController.Instance.Transmitters.Single(x => x.Name == id) as SACNTransmitter;
+                SACNTransmitter transmitter = MasterController.Instance.Transmitters[id] as SACNTransmitter;
                 JObject obj = transmitter.Status.Serialize();
                 obj.Add(new JProperty("name", id));
                 obj.Add(new JProperty("controller", ControllerContext.RouteData.Values["controller"].ToString()));
@@ -117,9 +142,9 @@ namespace kadmium_osc_dmx_dotnet_webui.Controllers
 
         public IActionResult Live(string id)
         {
-            if (MasterController.Instance.Transmitters.Any(x => x.Name == id))
+            if (id != null && MasterController.Instance.Transmitters.ContainsKey(id) && MasterController.Instance.Transmitters[id] is SACNTransmitter)
             {
-                SACNTransmitter transmitter = MasterController.Instance.Transmitters.Single(x => x.Name == id) as SACNTransmitter;
+                SACNTransmitter transmitter = MasterController.Instance.Transmitters[id] as SACNTransmitter;
                 return View(transmitter);
             }
             else

@@ -31,7 +31,7 @@ namespace kadmium_osc_dmx_dotnet_webui.WebSockets
             {
                 AllSocketHandlers = new List<RawDMXSocketHandler>();
             }
-            TransmitterTarget = new TransmitterTarget(MasterController.Instance.Transmitters.First(), 1);
+            TransmitterTarget = new TransmitterTarget(MasterController.Instance.Transmitters.Values.First()?.Name ?? "", 1);
             Universe = new Universe("Raw DMX Universe", new[] { TransmitterTarget }, Enumerable.Empty<Fixture>());
 
             RenderTimer = new Timer((object state) => 
@@ -63,7 +63,7 @@ namespace kadmium_osc_dmx_dotnet_webui.WebSockets
                         switch(obj["type"].Value<string>())
                         {
                             case "TransmitterUpdate":
-                                TransmitterTarget.Transmitter = MasterController.Instance.Transmitters.Single(x => x.Name == obj["transmitter"].Value<string>());
+                                TransmitterTarget.TransmitterName = obj["transmitter"].Value<string>();
                                 break;
                             case "UniverseIDUpdate":
                                 TransmitterTarget.UniverseID = obj["universeID"].Value<int>();

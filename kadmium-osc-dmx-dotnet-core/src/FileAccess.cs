@@ -91,6 +91,33 @@ namespace kadmium_osc_dmx_dotnet_core
             }
         }
 
+        public static void RenameTransmitter(string id, string newID)
+        {
+            var venues = from venueName in GetVenueNames()
+                         select LoadVenue(venueName);
+
+            foreach(JObject venue in venues)
+            {
+                bool dirty = false;
+                foreach(JObject universe in venue["universes"].Values<JObject>())
+                {
+                    foreach(JObject transmitter in universe["transmitters"].Values<JObject>())
+                    {
+                        if(transmitter["name"].Value<string>() == id)
+                        {
+                            transmitter["name"] = newID;
+                            dirty = true;
+                        }
+                    }
+                }
+                if(dirty)
+                {
+                    SaveVenue(venue);
+                }
+            }
+            
+        }
+
         internal static IEnumerable<Group> LoadGroups()
         {
             JArray groupsObject = ValidatedLoad(GroupsLocation, GroupsSchema).Value<JArray>();
@@ -126,7 +153,7 @@ namespace kadmium_osc_dmx_dotnet_core
         public static void SaveTransmitters()
         {
             JArray transmitters = new JArray(
-                from transmitter in MasterController.Instance.Transmitters
+                from transmitter in MasterController.Instance.Transmitters.Values
                 select transmitter.Serialize()
             );
 
@@ -150,7 +177,7 @@ namespace kadmium_osc_dmx_dotnet_core
         public static void SaveListeners()
         {
             JArray listeners = new JArray(
-                from listener in MasterController.Instance.Listeners
+                from listener in MasterController.Instance.Listeners.Values
                 select listener.Serialize()
             );
 

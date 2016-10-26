@@ -8,7 +8,7 @@
 
     var transmitters = new InputSubWindow("transmitters", "Transmitters", "$parent.editTransmitters.bind($parent)", "selectedItem().selectedUniverse",
         new InputCollection("transmitters", "Transmitters", "addTransmitter", "removeTransmitter",
-            new InputSelect("name", "Name", MasterController.Instance.Transmitters.ToDictionary(x => x.Name, x => x.DisplayName)),
+            new InputSelect("name", "Name", MasterController.Instance.Transmitters.Values.ToDictionary(x => x.Name, x => x.DisplayName)),
             new InputNumber("universeID", "Universe ID", 1, 255, 1)
         )
     );

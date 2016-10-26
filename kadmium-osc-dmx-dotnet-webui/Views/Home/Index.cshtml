@@ -40,7 +40,7 @@
     </div>
 
 
-@foreach (IEnumerable<Transmitter> transmitterBatch in MasterController.Instance.Transmitters.Batch(4))
+@foreach (IEnumerable<Transmitter> transmitterBatch in MasterController.Instance.Transmitters.Values.Batch(4))
 {
         @foreach (Transmitter transmitter in transmitterBatch)
         {
@@ -61,7 +61,7 @@
         }
 }
 
-@foreach (IEnumerable<Listener> listenerBatch in MasterController.Instance.Listeners.Batch(4))
+@foreach (IEnumerable<Listener> listenerBatch in MasterController.Instance.Listeners.Values.Batch(4))
 {
         @foreach (Listener listener in listenerBatch)
         {

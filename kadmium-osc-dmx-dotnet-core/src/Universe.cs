@@ -11,26 +11,37 @@ namespace kadmium_osc_dmx_dotnet_core
 {
     public class TransmitterTarget
     {
-        public Transmitter Transmitter { get; set; }
+        public string TransmitterName { get; set; }
         public int UniverseID { get; set; }
 
-        public TransmitterTarget(Transmitter transmitter, int universeID)
+        public TransmitterTarget(string transmitterName, int universeID)
         {
-            Transmitter = transmitter;
+            TransmitterName = transmitterName;
             UniverseID = universeID;
         }
 
         public static TransmitterTarget Load(JObject obj)
         {
             string name = obj["name"].Value<string>();
-            Transmitter transmitter = MasterController.Instance.Transmitters.Single(x => x.Name == name);
             int universeID = obj["universeID"].Value<int>();
-            return new TransmitterTarget(transmitter, universeID);
+            return new TransmitterTarget(name, universeID);
+        }
+
+        public JObject Serialize()
+        {
+            JObject obj = new JObject(
+                new JProperty("name", TransmitterName),
+                new JProperty("universeID", UniverseID)
+            );
+            return obj;
         }
 
         public void Transmit(byte[] dmx)
         {
-            Transmitter.Transmit(dmx, UniverseID);
+            if (MasterController.Instance.Transmitters.ContainsKey(TransmitterName))
+            {
+                MasterController.Instance.Transmitters[TransmitterName].Transmit(dmx, UniverseID);
+            }
         }
     }
 
@@ -58,7 +69,7 @@ namespace kadmium_osc_dmx_dotnet_core
                 new JProperty("name", Name),
                 new JProperty("transmitters",
                     from transmitter in TransmitterTargets
-                    select transmitter.Transmitter.Name
+                    select transmitter.TransmitterName
                 )
             );
             return obj;
@@ -79,6 +90,10 @@ namespace kadmium_osc_dmx_dotnet_core
                 new JProperty("fixtures",
                     from fixture in Fixtures
                     select fixture.Serialize()
+                ),
+                new JProperty("transmitters",
+                    from transmitterTarget in TransmitterTargets
+                    select transmitterTarget.Serialize()
                 )
             );
             return obj;

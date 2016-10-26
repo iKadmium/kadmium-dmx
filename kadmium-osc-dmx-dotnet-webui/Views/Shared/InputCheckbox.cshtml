@@ -1,0 +1,9 @@
+﻿@model kadmium_osc_dmx_dotnet_webui.ViewHelpers.InputCheckbox
+@*
+    For more information on enabling MVC for empty projects, visit http://go.microsoft.com/fwlink/?LinkID=397860
+*@
+@{
+}
+<div class="checkbox">
+    <label><input type="checkbox" id="@Model.ID" data-bind="value: @Model.ID" @if (Model.Default) { <text> checked</text>}></label>
+</div>

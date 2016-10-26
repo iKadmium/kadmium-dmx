@@ -13,9 +13,6 @@
     "anyOf": [
       {
         "$ref": "#/definitions/sacn"
-      },
-      {
-        "$ref": "#/definitions/enttec"
       }
     ]
   },
@@ -33,19 +30,6 @@
         }
       }
     },
-    "enttec": {
-      "properties": {
-        "type": {
-          "enum": [
-            "EntTec"
-          ]
-        },
-        "address": {
-          "description": "The address on which to transmit",
-          "type": "string"
-        }
-      }
-    },
     "sacn": {
       "properties": {
         "type": {
@@ -56,6 +40,17 @@
         "description": {
           "description": "The name to send to sACN listeners",
           "type": "string"
+        },
+        "multicast": {
+          "description": "Whether to send to multicast subscribers",
+          "type": "boolean"
+        },
+        "unicast": {
+          "description": "Unicast receivers to send to",
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
         }
       }
     }

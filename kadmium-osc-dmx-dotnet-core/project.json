@@ -7,8 +7,8 @@
     "OSCforPCL": "0.0.1",
     "Microsoft.NETCore.App": "1.0.1",
     "Newtonsoft.Json": "9.0.1",
-    "Newtonsoft.Json.Schema": "2.0.6",
-    "kadmium-sacn-core": "0.0.1"
+    "Newtonsoft.Json.Schema": "2.0.7",
+    "kadmium-sacn-core": "0.0.2"
   },
   "frameworks": {
     "netcoreapp1.0": {

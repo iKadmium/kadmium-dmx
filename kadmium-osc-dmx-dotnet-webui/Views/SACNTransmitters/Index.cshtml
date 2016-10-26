@@ -9,7 +9,11 @@
     {
         new InputText("name", "Name:"),
         new InputText("description", "Description:"),
-        new InputNumber("delay", "Delay (ms):", 0, 30000, 0)
+        new InputNumber("delay", "Delay (ms):", 0, 30000, 0),
+        new InputCheckbox("multicast", "Multicast:", true),
+        new InputCollection("unicast", "Unicast hosts:", "addUnicast", "removeUnicast", 
+            new InputText("address", "Address", true)
+        )
     };
 }
 @Html.Partial("ModalEdit", inputs)

@@ -15,10 +15,10 @@ namespace kadmium_osc_dmx_dotnet_core.Transmitters
     {
         static string SOURCE_NAME = "Kadmium-OSC-DMX";
         private SACNSender SACNClient { get; set; }
-        public IPAddress UnicastAddress { get; set; }
-        public bool Multicast { get { return UnicastAddress != null; } }
         public int Port { get; set; }
         public event EventHandler<TransmitterEventArgs> OnTransmit;
+        public IEnumerable<string> UnicastTargets { get; set; }
+        public bool Multicast { get; set; }
 
         public new string DisplayName
         {
@@ -30,17 +30,27 @@ namespace kadmium_osc_dmx_dotnet_core.Transmitters
         
         public override void TransmitInternal(byte[] dmx, int universeID)
         {
-            SACNClient?.Send((short)universeID, dmx);
+            if (Multicast)
+            {
+                SACNClient?.Send((short)universeID, dmx);
+            }
+            foreach(string target in UnicastTargets)
+            {
+                SACNClient?.Send(target, (short)universeID, dmx);
+            }
+
             OnTransmit?.Invoke(this, new TransmitterEventArgs(universeID, dmx));
         }
 
-        public SACNTransmitter(Guid uuid, string name, int port, int delay) : base(name, delay)
+        public SACNTransmitter(Guid uuid, string name, int port, int delay, bool multicast, IEnumerable<string> unicast) : base(name, delay)
         {
             Port = port;
+            UnicastTargets = unicast;
+            Multicast = multicast;
             try
             {
                 SACNClient = new SACNSender(uuid, SOURCE_NAME, port);
-                Status.Update(StatusCode.Running, "Multicast Sending", this);
+                Status.Update(StatusCode.Running, "Sending", this);
             }
             catch (Exception e)
             {
@@ -53,7 +63,9 @@ namespace kadmium_osc_dmx_dotnet_core.Transmitters
             string id = element["name"].Value<string>();
             int port = 5568;//int.Parse(element.Attribute("port").Value);
             int delay = element["delay"].Value<int>();
-            SACNTransmitter transmitter = new SACNTransmitter(Guid.NewGuid(), id, port, delay);
+            bool multicast = element["multicast"].Value<bool>();
+            IEnumerable<string> unicast = element["unicast"].Values<string>();
+            SACNTransmitter transmitter = new SACNTransmitter(Guid.NewGuid(), id, port, delay, multicast, unicast);
             return transmitter;
         }
 
@@ -67,7 +79,12 @@ namespace kadmium_osc_dmx_dotnet_core.Transmitters
             JObject obj = new JObject(
                 new JProperty("name", Name),
                 new JProperty("description", SACNClient.SourceName),
-                new JProperty("delay", Delay)
+                new JProperty("delay", Delay),
+                new JProperty("multicast", Multicast),
+                new JProperty("unicast", 
+                    new JArray(from unicastTarget in UnicastTargets
+                               select new JValue(unicastTarget))
+                )
             );
 
             return obj;

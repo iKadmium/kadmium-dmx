@@ -23,7 +23,7 @@ namespace kadmium_osc_dmx_dotnet_webui.WebSockets
         public SACNTransmitterLive(WebSocket socket, string id)
         {
             Socket = socket;
-            Transmitter = MasterController.Instance.Transmitters.Single(x => x.Name == id) as SACNTransmitter;
+            Transmitter = MasterController.Instance.Transmitters[id] as SACNTransmitter;
             UniverseID = 1;
             Transmitter.OnTransmit += Transmitter_OnTransmit;
         }

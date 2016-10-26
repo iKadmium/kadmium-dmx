@@ -68,8 +68,7 @@ namespace kadmium_osc_dmx_dotnet_webui.Controllers
             }
             else if (MasterController.Instance.Groups.ContainsKey(id))
             {
-                group = MasterController.Instance.Groups[id];
-                MasterController.Instance.Groups.Remove(id);
+                MasterController.Instance.Groups.TryRemove(id, out group);
                 group.Name = newID;
             }
             else
@@ -78,18 +77,25 @@ namespace kadmium_osc_dmx_dotnet_webui.Controllers
                 return new EmptyResult();
             }
             
-            MasterController.Instance.Groups.Add(newID, group);
-            FileAccess.SaveGroups();
+            if(MasterController.Instance.Groups.TryAdd(newID, group))
+            {
+                FileAccess.SaveGroups();
 
-            Response.StatusCode = 200;
-            return new EmptyResult();
+                Response.StatusCode = 200;
+                return new EmptyResult();
+            }
+            else
+            {
+                Response.StatusCode = 500;
+                return new EmptyResult();
+            }
         }
 
         public IActionResult Delete(string id)
         {
-            if (MasterController.Instance.Groups.ContainsKey(id))
+            Group group;
+            if(MasterController.Instance.Groups.TryRemove(id, out group))
             {
-                MasterController.Instance.Groups.Remove(id);
                 FileAccess.SaveGroups();
                 Response.StatusCode = 200;
                 return new EmptyResult();
