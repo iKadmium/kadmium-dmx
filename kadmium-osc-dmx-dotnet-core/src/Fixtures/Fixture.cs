@@ -82,7 +82,8 @@ namespace kadmium_osc_dmx_dotnet_core.Fixtures
             int startChannel = obj["channel"].Value<int>();
             string type = obj["type"].Value<string>();
             Definition definition = Definition.Load(type);
-            Group group = MasterController.Instance.Groups[obj["group"].Value<string>()];
+            string groupName = obj["group"].Value<string>();
+            Group group = MasterController.Instance.Groups.ContainsKey(groupName) ? MasterController.Instance.Groups[groupName] : MasterController.Instance.Groups.Values.First();
             JObject options = obj["options"].Value<JObject>();
             Fixture fixture = new Fixture(definition, startChannel, group, options);
             return fixture;

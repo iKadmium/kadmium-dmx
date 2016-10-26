@@ -115,7 +115,32 @@ namespace kadmium_osc_dmx_dotnet_core
                     SaveVenue(venue);
                 }
             }
-            
+        }
+
+        public static void RenameGroup(string id, string newID)
+        {
+            var venues = from venueName in GetVenueNames()
+                         select LoadVenue(venueName);
+
+            foreach (JObject venue in venues)
+            {
+                bool dirty = false;
+                foreach (JObject universe in venue["universes"].Values<JObject>())
+                {
+                    foreach (JObject fixture in universe["fixtures"].Values<JObject>())
+                    {
+                        if (fixture["group"].Value<string>() == id)
+                        {
+                            fixture["group"] = newID;
+                            dirty = true;
+                        }
+                    }
+                }
+                if (dirty)
+                {
+                    SaveVenue(venue);
+                }
+            }
         }
 
         internal static IEnumerable<Group> LoadGroups()

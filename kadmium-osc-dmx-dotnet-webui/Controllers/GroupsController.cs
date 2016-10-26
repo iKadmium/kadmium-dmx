@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Mvc;
 using kadmium_osc_dmx_dotnet_core;
 using kadmium_osc_dmx_dotnet_webui.ViewHelpers;
 using Newtonsoft.Json.Linq;
+using kadmium_osc_dmx_dotnet_core.Fixtures;
 
 // For more information on enabling MVC for empty projects, visit http://go.microsoft.com/fwlink/?LinkID=397860
 
@@ -80,6 +81,11 @@ namespace kadmium_osc_dmx_dotnet_webui.Controllers
             if(MasterController.Instance.Groups.TryAdd(newID, group))
             {
                 FileAccess.SaveGroups();
+                if (MasterController.Instance.Venue != null)
+                {
+                    FileAccess.SaveVenue(MasterController.Instance.Venue.Serialize());
+                }
+                FileAccess.RenameGroup(id, newID);
 
                 Response.StatusCode = 200;
                 return new EmptyResult();
@@ -96,6 +102,11 @@ namespace kadmium_osc_dmx_dotnet_webui.Controllers
             Group group;
             if(MasterController.Instance.Groups.TryRemove(id, out group))
             {
+                if(MasterController.Instance.Groups.Count == 0)
+                {
+                    MasterController.Instance.Groups.TryAdd("Default Group", new Group("Default Group"));
+                }
+                MasterController.Instance.Groups.Values.First().Fixtures.AddRange(group.Fixtures);
                 FileAccess.SaveGroups();
                 Response.StatusCode = 200;
                 return new EmptyResult();
