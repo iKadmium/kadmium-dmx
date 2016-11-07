@@ -9,3 +9,5 @@
 </ul>
 
 <button class="btn btn-success" data-bind="click: addItem"><span class="glyphicon glyphicon-plus"></span></button>
+
+@Html.Partial("ModalDelete", ViewContext.RouteData.Values["controller"].ToString())
