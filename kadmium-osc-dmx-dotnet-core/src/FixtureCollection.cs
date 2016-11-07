@@ -12,21 +12,19 @@ namespace kadmium_osc_dmx_dotnet_core
         public int StartChannel { get; set; }
         public string Type { get; set; }
         public string Group { get; set; }
-        public IEnumerable<string> Options { get; set; }
+        public JObject Options { get; set; }
     }
 
     public class FixtureCollection
     {
         public string Name { get; set; }
-        public string Universe { get; set; }
         public IEnumerable<FixtureEntry> FixtureEntries { get;}
         
-        public FixtureCollection() : this("", "", Enumerable.Empty<FixtureEntry>()) { }
+        public FixtureCollection() : this("", Enumerable.Empty<FixtureEntry>()) { }
 
-        public FixtureCollection(string name, string universe, IEnumerable<FixtureEntry> fixtureEntries)
+        public FixtureCollection(string name, IEnumerable<FixtureEntry> fixtureEntries)
         {
             Name = name;
-            Universe = universe;
             FixtureEntries = fixtureEntries;
         }
 
@@ -34,7 +32,6 @@ namespace kadmium_osc_dmx_dotnet_core
         {
             JObject obj = new JObject(
                 new JProperty("name", Name),
-                new JProperty("universe", Universe),
                 new JProperty("fixtures",
                     from entry in FixtureEntries
                     select new JObject(
@@ -51,16 +48,15 @@ namespace kadmium_osc_dmx_dotnet_core
         public static FixtureCollection Load(JObject obj)
         {
             string name = obj["name"].Value<string>();
-            string universe = obj["universe"].Value<string>();
             var fixtureEntries = from fixture in obj["fixtures"].ToArray()
                                  select new FixtureEntry
                                  {
                                      StartChannel = fixture["channel"].Value<int>(),
                                      Type = fixture["type"].Value<string>(),
                                      Group = fixture["group"].Value<string>(),
-                                     Options = fixture["options"].Values<string>()
+                                     Options = fixture["options"].Value<JObject>()
                                  };
-            return new FixtureCollection(name, universe, fixtureEntries);
+            return new FixtureCollection(name, fixtureEntries);
         }
         
     }

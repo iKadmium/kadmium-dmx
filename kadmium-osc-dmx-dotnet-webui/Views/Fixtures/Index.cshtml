@@ -1,32 +1,82 @@
 ﻿@using kadmium_osc_dmx_dotnet_webui.ViewHelpers
 @using kadmium_osc_dmx_dotnet_core.Fixtures
-@*
-    For more information on enabling MVC for empty projects, visit http://go.microsoft.com/fwlink/?LinkID=397860
-*@
 @{
-    Layout = "~/Views/Shared/_ListLayout.cshtml";
     ViewData["Title"] = "Fixture Definitions";
-
-    var inputs = new InputElement[]
-    {
-        new InputText("name", "Name:"),
-        new InputSelect("type", "Type:", Enum.GetNames(typeof(FixtureType)).ToDictionary(x => x)),
-        new InputDataList("channel-names", "Master", "Red", "Green", "Blue", "White", "UV", "Strobe", "PanCoarse", "PanFine", "TiltCoarse", "TiltFine" ),
-        new InputCollection("channels", "Channels:", "addChannel", "removeChannel",
-            new InputList("name", "Name", "channel-names"),
-            new InputNumber("dmx", "DMX", 1, 512, 1),
-            new InputNumber("min", "Min", 0, 255, 0),
-            new InputNumber("max", "Max", 0, 255, 255)
-        ),
-        new InputDataList("movement-names", "Pan", "Tilt"),
-        new InputCollection("movements", "Movements Axis:", "addMovement", "removeMovement",
-            new InputList("name", "Name", "movement-names"),
-            new InputNumber("min", "Min (degrees)", -540, 540),
-            new InputNumber("max", "Max (degrees)", -540, 540)
-        )
-    };
 }
 
-@Html.Partial("ModalEdit", inputs)
+<binding-context data-bind="with: selectedItem">
+    <modal-window large="true" id="modal-edit">
+        <modal-header>
+            Editing <span class="item-name" data-bind="text: name"></span>
+        </modal-header>
+        <modal-body>
+            @Html.Partial("ModalEditorStatus")
+            <div class="form-horizontal" id="edit-form">
+                <input-label label="Name:"><input type="text" class="form-control" data-bind="value: name"></input-label>
+                <input-label label="Type:">
+                    <select class="form-control" data-bind="value: type">
+                        @foreach (string fixtureType in Enum.GetNames(typeof(FixtureType)))
+                        {
+                            <option>@fixtureType</option>
+                        }
+                    </select>
+                </input-label>
+                <datalist id="channel-names">
+                    <option>Master</option>
+                    <option>Red</option>
+                    <option>Green</option>
+                    <option>Blue</option>
+                    <option>White</option>
+                    <option>UV</option>
+                    <option>Strobe</option>
+                    <option>PanCoarse</option>
+                    <option>PanFine</option>
+                    <option>TiltCoarse</option>
+                    <option>TiltFine</option>
+                </datalist>
 
+                <input-collection name="channels">
+                    <input-collection-header>Channels</input-collection-header>
+                    <input-collection-body>
+                        <input-collection-item label="Name">
+                            <input class="form-control" data-bind="value: name" list="channel-names">
+                        </input-collection-item>
+                        <input-collection-item label="DMX"><input type="number" min="1" max="512" data-bind="value: dmx" class="form-control"></input-collection-item>
+                        <input-collection-item label="Min"><input type="number" min="0" max="255" data-bind="value: min" class="form-control"></input-collection-item>
+                        <input-collection-item label="Max"><input type="number" min="0" max="255" data-bind="value: max" class="form-control"></input-collection-item>
+                        <input-collection-item label="Remove"><button asp-template="delete" data-bind="click: $parent.removeChannel.bind($parent)"></button></input-collection-item>
+                    </input-collection-body>
+                    <input-collection-footer>
+                        <button asp-template="add" data-bind="click: addChannel"></button>
+                    </input-collection-footer>
+                </input-collection>
+                <datalist id="movement-names">
+                    <option>Pan</option>
+                    <option>Tilt</option>
+                </datalist>
+                <input-collection name="movements">
+                    <input-collection-header>Movement Axis</input-collection-header>
+                    <input-collection-body>
+                        <input-collection-item label="Name">
+                            <input type="text" class="form-control" data-bind="value: name" list="movement-names">
+                        </input-collection-item>
+                        <input-collection-item label="Min (degrees)"><input type="number" min="0" max="255" data-bind="value: min" class="form-control"></input-collection-item>
+                        <input-collection-item label="Max (degrees)"><input type="number" min="0" max="255" data-bind="value: max" class="form-control"></input-collection-item>
+                    </input-collection-body>
+                    <input-collection-footer>
+                        <button asp-template="add" data-bind="click: addMovement"></button>
+                    </input-collection-footer>
+                </input-collection>
+            </div>
+        </modal-body>
+        <modal-footer>
+            @Html.Partial("ModalEditorFooter")
+        </modal-footer>
+    </modal-window>
+</binding-context>
+@Html.Partial("ItemList")
+
+@section scripts
+{
 <script src="~/js/Fixtures.js"></script>
+}

@@ -1,5 +1,7 @@
 ﻿import {TransmitterData, TransmitterViewModel} from "./Transmitter";
 import {FixtureData, FixtureViewModel} from "./Fixture";
+import {MVC} from "../MVC";
+import {FixtureCollectionData} from "../FixtureCollections/FixtureCollection";
 import * as ko from "knockout";
 
 export interface UniverseData
@@ -38,6 +40,21 @@ export class UniverseViewModel
     addFixture(): void
     {
         this.fixtures.push(new FixtureViewModel());
+    }
+
+    addFixtureCollection(eventData: UniverseViewModel, event: JQueryEventObject): void
+    {
+        let collectionName = $(event.currentTarget).text();
+        let url = MVC.getActionURL("FixtureCollections", "Load", collectionName);
+        $.get(url, (data: any, textStatus: string, jqXHR: JQueryXHR) =>
+        {
+            let collection = JSON.parse(data) as FixtureCollectionData;
+
+            for (let fixtureData of collection.fixtures)
+            {
+                this.fixtures.push(FixtureViewModel.load(fixtureData));
+            }
+        });
     }
 
     removeFixture(item: FixtureViewModel): void

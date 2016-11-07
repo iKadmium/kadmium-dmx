@@ -15,6 +15,16 @@
     }
     string listClass = String.Join(" ", listClasses);
     string title = !enabledPassed ? Model.EnablementOptions.DisabledTitle : "";
+    
 }
 
-<li class="@listClass" id="@Model.ID"><a asp-area="" asp-controller="@Model.Controller" asp-action="@Model.Action" title="@title">@Model.Display</a></li>
+<li class="@listClass" id="@Model.ID">
+    @if (enabledPassed)
+    {
+        <a asp-area="" asp-controller="@Model.Controller" asp-action="@Model.Action" title="@title">@Model.Display</a>
+    }
+    else
+    {
+        <a href="#" title="@title">@Model.Display</a>
+    }
+</li>

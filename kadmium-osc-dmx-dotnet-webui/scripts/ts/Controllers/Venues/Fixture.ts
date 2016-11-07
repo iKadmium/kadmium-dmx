@@ -21,7 +21,7 @@ export class FixtureViewModel
         this.channel = ko.observable<number>();
         this.type = ko.observable<string>();
         this.group = ko.observable<string>();
-        this.options = ko.observable<FixtureOptionsViewModel>(new FixtureOptionsViewModel());
+        this.options = ko.observable<FixtureOptionsViewModel>(new FixtureOptionsViewModel(this));
     }
 
     serialize(): FixtureData
@@ -41,7 +41,7 @@ export class FixtureViewModel
         fixture.channel(data.channel);
         fixture.type(data.type);
         fixture.group(data.group);
-        fixture.options(FixtureOptionsViewModel.load(data.options));
+        fixture.options(FixtureOptionsViewModel.load(data.options, fixture));
         return fixture;
     }
 }

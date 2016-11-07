@@ -6,24 +6,66 @@
     Layout = "~/Views/Shared/_ListLayout.cshtml";
     ViewData["Title"] = "Fixture Collections";
 
+    var optionsWindow = new InputSubWindow("options", "Options", "$parent.editOptions.bind($parent)", "selectedItem().selectedFixture().options",
+        new InputCollection("axisRestrictions", "Axis Restrictions", "addAxisRestriction", "removeAxisRestriction",
+            new InputSelect("name", "Axis", new Dictionary<string, string>()
+            {
+                ["Pan"] = "Pan",
+                ["Tilt"] = "Tilt"
+            }),
+            new InputNumber("min", "Minimum", -270, 270),
+            new InputNumber("max", "Maximum", -270, 270)
+        ),
+        new InputCollection("axisInversions", "Axis Inversions", "addAxisInversion", "removeAxisInversion",
+            new InputSelect("name", "Axis", new Dictionary<string, string>()
+            {
+                ["Pan"] = "Pan",
+                ["Tilt"] = "Tilt"
+            })
+        )
+    );
+
     var inputs = new InputElement[]
-    {
+{
         new InputText("name", "Name:"),
-        new InputSelect("universe", "Universe:", MasterController.Instance.Universes.Keys.ToDictionary(x => x)),
-        new InputCollection("fixtures", "Fixtures:",
+        new InputCollection("fixtures", "Fixtures:", "addFixture", "removeFixture",
             new InputSelect("type", "Model", FileAccess.GetFixtureNames().ToDictionary(x => x)),
             new InputNumber("channel", "Channel", 1, 512),
             new InputSelect("group", "Group", MasterController.Instance.Groups.Keys.ToDictionary(x => x)),
-            new InputMultiSelect("options", "Options", new Dictionary<string, string>()
-            {
-                ["RestrictedPan"] = "RestrictedPan",
-                ["RestrictedTilt"] = "RestrictedTilt",
-                ["InvertedPan"] = "InvertedPan",
-                ["InvertedTilt"] = "InvertedTilt"
-            })
+            optionsWindow
         )
-    };
+};
 }
-@Html.Partial("ModalEdit", inputs)
+<modal-window id="modal-edit" data-bind="with: selectedItem" large="true">
+    <modal-header>
+        @Html.Partial("ModalEditorHeader")
+    </modal-header>
+    <modal-body>
+        @Html.Partial("ModalEditorStatus")
+        <form data-toggle="validator">
+            <div class="form-horizontal" id="edit-form">
+                @foreach (var input in inputs)
+                {
+                    if (input is VisibleInputElement)
+                    {
+                        @Html.Partial("InputLabel", input);
+                    }
+                    else
+                    {
+                        @Html.Partial(input.ViewName, input);
+                    }
+                }
+            </div>
+        </form>
+    </modal-body>
+    <modal-footer>
+        @Html.Partial("ModalEditorFooter")
+    </modal-footer>
+</modal-window>
 
-<script src="~/js/FixtureCollectionEdit.js"></script>
+@Html.Partial("InputSubWindowModal", optionsWindow)
+
+@section scripts
+{
+    <script src="~/js/FixtureCollections.js"></script>
+}

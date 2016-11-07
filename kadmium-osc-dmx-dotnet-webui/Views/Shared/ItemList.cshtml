@@ -1,11 +1,4 @@
-﻿@model ListData
-
-@{ 
-    Layout = "_Layout.cshtml";
-    string controllerURL = ViewContext.RouteData.Values["controller"].ToString();
-}
-
-<ul class="list-group" id="item-list" data-bind="foreach: items">
+﻿<ul class="list-group" id="item-list" data-bind="foreach: items">
     <li class="list-group-item clearfix">
         <span data-bind="text: originalName"></span>
         <div class="pull-right btn-group">
@@ -16,12 +9,3 @@
 </ul>
 
 <button class="btn btn-success" data-bind="click: addItem"><span class="glyphicon glyphicon-plus"></span></button>
-
-@Html.Partial("ModalDelete", Model.Name)
-
-@RenderBody()
-
-@section scripts
-{
-    <script src="~/js/validator.js"></script>
-}

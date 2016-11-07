@@ -1,0 +1,51 @@
+﻿<modal-window large="true" id="options-edit">
+    <modal-header>
+        Editing <strong>Options</strong>
+        for <span class="item-name" data-bind="text: fixture().type"></span>
+        on channel <span class="item-name" data-bind="text: fixture().channel"></span>
+    </modal-header>
+    <modal-body>
+        <input-label label="Max Brightness (%):">
+            <input type="number" class="form-control" data-bind="value: maxBrightness" min="0" max="100" step="1">
+        </input-label>
+        <input-collection name="axisRestrictions" data-bind="visible: axis().length > 0">
+            <input-collection-header>
+                <strong>Axis Restrictions</strong>
+            </input-collection-header>
+            <input-collection-body>
+                <input-collection-item label="Name">
+                    <select data-bind="value: name, options: $parent.axis" class="form-control"></select>
+                </input-collection-item>
+                <input-collection-item label="Min">
+                    <input type="number" class="form-control" min="-270" max="270" data-bind="value: min">
+                </input-collection-item>
+                <input-collection-item label="Max">
+                    <input type="number" class="form-control" min="-270" max="270" data-bind="value: max">
+                </input-collection-item>
+                <input-collection-item label="Remove">
+                    <button asp-template="delete" data-bind="click: $parent.removeAxisRestriction.bind($parent)"></button>
+                </input-collection-item>
+            </input-collection-body>
+            <input-collection-footer>
+                <button asp-template="add" data-bind="click: addAxisRestriction"></button>
+            </input-collection-footer>
+        </input-collection>
+        <input-collection name="axisInversions" data-bind="visible: axis().length > 0">
+            <input-collection-header>
+                <strong>Axis Inversions</strong>
+            </input-collection-header>
+            <input-collection-body>
+                <input-collection-item label="Name">
+                    <select data-bind="value: name, options: $parent.axis" class="form-control"></select>
+                </input-collection-item>
+                <input-collection-item label="Remove">
+                    <button asp-template="delete" data-bind="click: $parent.removeAxisInversion.bind($parent)"></button>
+                </input-collection-item>
+            </input-collection-body>
+            <input-collection-footer>
+                <button asp-template="add" data-bind="click: addAxisInversion"></button>
+            </input-collection-footer>
+        </input-collection>
+    </modal-body>
+    <modal-footer><button class="btn btn-success" data-dismiss="modal">OK</button></modal-footer>
+</modal-window>

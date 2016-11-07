@@ -1,9 +1,13 @@
-﻿import * as ko from "knockout";
+﻿import {FixtureViewModel} from "./Fixture";
+import {FixtureData} from "../Fixtures/Fixture";
+import {MVC} from "../MVC";
+import * as ko from "knockout";
 
 export interface FixtureOptionsData
 {
     axisRestrictions: AxisRestrictionData[];
     axisInversions: string[];
+    maxBrightness: number;
 }
 
 interface AxisRestrictionData
@@ -51,11 +55,32 @@ export class FixtureOptionsViewModel
 {
     axisInversions: KnockoutObservableArray<string>;
     axisRestrictions: KnockoutObservableArray<AxisRestrictionViewModel>;
+    axis: KnockoutObservableArray<string>;
+    maxBrightness: KnockoutObservable<number>;
+    fixture: KnockoutObservable<FixtureViewModel>;
 
-    constructor()
+    constructor(fixture: FixtureViewModel)
     {
         this.axisInversions = ko.observableArray<string>();
         this.axisRestrictions = ko.observableArray<AxisRestrictionViewModel>();
+        this.fixture = ko.observable<FixtureViewModel>(fixture);
+        this.maxBrightness = ko.observable<number>(100);
+        this.axis = ko.observableArray<string>();
+
+        this.fixture().type.subscribe((newValue: string) => 
+        {
+            let url = MVC.getActionURL("Fixtures", "Load", fixture.type());
+            $.get(url, (data: any, textStatus: string, jqXHR: JQueryXHR) =>
+            {
+                let definition = JSON.parse(data) as FixtureData;
+                this.axis.removeAll();
+                for (let movement of definition.movements)
+                {
+                    this.axis.push(movement.name);
+                }
+            });
+        });
+        this.fixture().type.notifySubscribers();
     }
 
     addAxisRestriction(): void
@@ -83,14 +108,16 @@ export class FixtureOptionsViewModel
         let item: FixtureOptionsData = {
             axisInversions: this.axisInversions(),
             axisRestrictions: this.axisRestrictions().map((value: AxisRestrictionViewModel, index: number, array: AxisRestrictionViewModel[]) => value.serialize()),
+            maxBrightness: this.maxBrightness() / 100
         };
         return item;
     }
 
-    static load(data: FixtureOptionsData): FixtureOptionsViewModel
+    static load(data: FixtureOptionsData, fixture: FixtureViewModel): FixtureOptionsViewModel
     {
-        let fixtureOptionsViewModel = new FixtureOptionsViewModel();
+        let fixtureOptionsViewModel = new FixtureOptionsViewModel(fixture);
         fixtureOptionsViewModel.axisInversions(data.axisInversions);
+        fixtureOptionsViewModel.maxBrightness(data.maxBrightness * 100);
         for (let restrictionItem of data.axisRestrictions)
         {
             fixtureOptionsViewModel.axisRestrictions.push(AxisRestrictionViewModel.load(restrictionItem));

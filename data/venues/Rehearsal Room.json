@@ -8,6 +8,7 @@
           "channel": 301,
           "group": "rearSides",
           "options": {
+            "maxBrightness": 1,
             "axisInversions": [],
             "axisRestrictions": [
               {
@@ -28,6 +29,7 @@
           "channel": 315,
           "group": "rearSides",
           "options": {
+            "maxBrightness": 1,
             "axisInversions": [],
             "axisRestrictions": [
               {
@@ -48,6 +50,7 @@
           "channel": 329,
           "group": "rearSides",
           "options": {
+            "maxBrightness": 1,
             "axisInversions": [
               "Pan"
             ],
@@ -70,6 +73,7 @@
           "channel": 343,
           "group": "rearSides",
           "options": {
+            "maxBrightness": 1,
             "axisInversions": [
               "Pan"
             ],
@@ -92,6 +96,7 @@
           "channel": 400,
           "group": "vocalist",
           "options": {
+            "maxBrightness": 1,
             "axisInversions": [],
             "axisRestrictions": []
           },
@@ -101,6 +106,7 @@
           "channel": 405,
           "group": "guitarist",
           "options": {
+            "maxBrightness": 1,
             "axisInversions": [],
             "axisRestrictions": []
           },
@@ -110,6 +116,7 @@
           "channel": 410,
           "group": "bassist",
           "options": {
+            "maxBrightness": 1,
             "axisInversions": [],
             "axisRestrictions": []
           },
@@ -119,6 +126,7 @@
           "channel": 415,
           "group": "drummer",
           "options": {
+            "maxBrightness": 1,
             "axisInversions": [],
             "axisRestrictions": []
           },

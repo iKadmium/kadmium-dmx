@@ -10,9 +10,9 @@
 <div class="form-group">
     <label class="control-label col-sm-3" for="universe">Transmitter</label>
     <select id="transmitter" class="form-control" data-bind="value: transmitter">
-        @foreach(Transmitter transmitter in MasterController.Instance.Transmitters)
+        @foreach(string transmitterName in MasterController.Instance.Transmitters.Keys)
         {
-            <option>@transmitter.Name</option>
+            <option>@transmitterName</option>
         }
     </select>
 </div>

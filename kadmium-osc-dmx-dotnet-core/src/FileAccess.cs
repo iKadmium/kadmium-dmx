@@ -9,6 +9,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Newtonsoft.Json.Linq;
 using Newtonsoft.Json.Schema;
+using Newtonsoft.Json;
 
 namespace kadmium_osc_dmx_dotnet_core
 {
@@ -35,62 +36,63 @@ namespace kadmium_osc_dmx_dotnet_core
         private static void ValidatedSave(JToken obj, string path, string schemaPath)
         {
             string schemaString = File.ReadAllText(schemaPath);
-            JSchema schema = JSchema.Parse(schemaString);
-            IList<ValidationError> errors;
-            bool valid = obj.IsValid(schema, out errors);
-            if (valid)
+            if(Validate(obj, path, schemaPath))
             {
                 File.WriteAllText(path, obj.ToString());
             }
-            else
-            { 
-                foreach (var error in errors)
-                {
-                    Console.Error.WriteLine(error.ToString());
-                }
-                throw new InvalidDataException("Could not validate " + path);
-            }
         }
-        
+
         private static JToken ValidatedLoad(string path, string schemaPath)
         {
             string jsonString = File.ReadAllText(path);
-            string schemaString = File.ReadAllText(schemaPath);
             JToken obj = JToken.Parse(jsonString);
-            JSchema schema = JSchema.Parse(schemaString);
+            Validate(obj, path, schemaPath);
+            return obj;
+        }
+
+        private static bool Validate(JToken obj, string path, string schemaPath)
+        {
+            JSchemaUrlResolver resolver = new JSchemaUrlResolver();
+
             IList<ValidationError> errors;
             bool valid = true;
-            try
+
+            using (StreamReader file = File.OpenText(schemaPath))
+            using (JsonTextReader reader = new JsonTextReader(file))
             {
-                valid = obj.IsValid(schema, out errors);
-            }
-            catch (JSchemaException e)
-            {
-                errors = new List<ValidationError>();
-                if (e.Message.Contains("free-quota limit"))
+                JSchema schema = JSchema.Load(reader, new JSchemaReaderSettings { Resolver = resolver, BaseUri = new Uri(schemaPath) });
+                try
                 {
-                    valid = true;
+                    valid = obj.IsValid(schema, out errors);
+                }
+                catch (JSchemaException e)
+                {
+                    errors = new List<ValidationError>();
+                    if (e.Message.Contains("free-quota limit"))
+                    {
+                        valid = true;
+                    }
+                    else
+                    {
+                        valid = false;
+                    }
+                }
+
+                if (valid)
+                {
+                    return true;
                 }
                 else
                 {
-                    valid = false;
+                    foreach (var error in errors)
+                    {
+                        Console.Error.WriteLine(error.ToString());
+                    }
+                    throw new InvalidDataException("Could not validate " + path);
                 }
-            }
-
-            if (valid)
-            {
-                return obj;
-            }
-            else
-            {
-                foreach (var error in errors)
-                {
-                    Console.Error.WriteLine(error.ToString());
-                }
-                throw new InvalidDataException("Could not validate " + path);
             }
         }
-
+        
         public static void RenameTransmitter(string id, string newID)
         {
             var venues = from venueName in GetVenueNames()

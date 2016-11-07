@@ -29,10 +29,12 @@ export class CollectionViewModel<ViewModelDataType, ViewModelType extends Collec
             }, 0);
         });
 
-        $("#modal-edit").on('hide.bs.modal', (eventObject: JQueryEventObject, ...args: any[]) =>
+        $("#confirm-delete").on("hide.bs.modal", (eventObject: JQueryEventObject, ...args: any[]) =>
         {
-            this.cancel(this.selectedItem());
+            $("#modal-delete").prop("disabled", false);
         });
+
+        
 
         $.get(getURL, (data: any, textStatus: string, jqXHR: JQueryXHR) =>
         {
@@ -47,22 +49,20 @@ export class CollectionViewModel<ViewModelDataType, ViewModelType extends Collec
 
     delete(item: ViewModelType): void
     {
-        $("#modal-delete").on("click", (eventObject: JQueryEventObject, ...args: any[]) =>
-        {
-            let url = MVC.getActionURL(this.controllerName, "Delete", item.originalName());
-            $("#modal-delete").prop("disabled", true);
-            jQuery.post(url, (data: any, textStatus: string, jqXHR: JQueryXHR) => 
-            {
-                this.items.remove(item);
-                $("#modal-delete").prop("disabled", false);
-                ($('#confirm-delete') as any).modal("hide");
-                $("#modal-delete").off("click");
-                $("#modal-delete").prop("disabled", false);
-            });
-
-        });
-        $("#confirm-delete").find(".item-id").text(item.originalName());
+        this.selectedItem(item);
+        
         ($("#confirm-delete") as any).modal("toggle");
+    }
+
+    deleteConfirm(): void
+    {
+        let url = MVC.getActionURL(this.controllerName, "Delete", this.selectedItem().originalName());
+        $("#modal-delete").prop("disabled", true);
+        jQuery.post(url, (data: any, textStatus: string, jqXHR: JQueryXHR) => 
+        {
+            this.items.remove(this.selectedItem());
+            ($('#confirm-delete') as any).modal("hide");
+        });
     }
 
     edit(item: ViewModelType): void
@@ -102,5 +102,9 @@ export class CollectionViewModel<ViewModelDataType, ViewModelType extends Collec
         let item = this.itemConstructor("");
         this.items.push(item);
         this.edit(item);
+        $("#modal-edit").on("hide.bs.modal", (eventObject: JQueryEventObject, ...args: any[]) =>
+        {
+            this.cancel(item);
+        });
     }
 }

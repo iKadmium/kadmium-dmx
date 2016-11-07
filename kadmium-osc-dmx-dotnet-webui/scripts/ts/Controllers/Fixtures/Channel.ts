@@ -15,12 +15,12 @@ export class ChannelViewModel
     min: KnockoutObservable<number>;
     max: KnockoutObservable<number>;
 
-    constructor(channel: number = 1)
+    constructor(channel: number = 1, min = 0, max = 255)
     {
         this.name = ko.observable<string>();
         this.dmx = ko.observable<number>(channel);
-        this.min = ko.observable<number>(0);
-        this.max = ko.observable<number>(255);
+        this.min = ko.observable<number>(min);
+        this.max = ko.observable<number>(max);
     }
 
     static load(data: ChannelData): ChannelViewModel

@@ -64,3 +64,8 @@ textarea {
     height: auto !important;
     width: auto !important;
 }
+
+.item-name
+{
+    font-weight: bold;
+}

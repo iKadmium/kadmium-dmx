@@ -76,7 +76,7 @@ namespace kadmium_osc_dmx_dotnet_core.Listeners
 
         public override void Close()
         {
-            listener.Dispose();
+            listener?.Dispose();
         }
     }
 

@@ -1,17 +1,26 @@
-﻿@*
-    For more information on enabling MVC for empty projects, visit http://go.microsoft.com/fwlink/?LinkID=397860
-*@
-@{
-    Layout = "~/Views/Shared/_ListLayout.cshtml";
+﻿@{
     ViewData["Title"] = "OSC Listeners";
-
-    var inputs = new InputElement[]
-    {
-        new InputText("name", "Name:"),
-        new InputNumber("port", "Port:", 1, 65535)
-    };
 }
 
-@Html.Partial("ModalEdit", inputs)
+<binding-context data-bind="with: selectedItem">
+    <modal-window large="true" id="modal-edit">
+        <modal-header>Editing <span class="item-name" data-bind="text: name"></span></modal-header>
+        <modal-body>
+            @Html.Partial("ModalEditorStatus")
+            <div class="form-horizontal" id="edit-form">
+                <input-label label="Name:"><input type="text" class="form-control" data-bind="value: name"></input-label>
+                <input-label label="Port:"><input type="number" class="form-control" data-bind="value: port" min="1" max="65535"></input-label>
+            </div>
+        </modal-body>
+        <modal-footer>
+            @Html.Partial("ModalEditorFooter")
+        </modal-footer>
+    </modal-window>
+</binding-context>
 
-<script src="~/js/OSCListeners.js"></script>
+@Html.Partial("ItemList", ViewContext.RouteData.Values["controller"].ToString())
+
+@section scripts
+{
+    <script src="~/js/OSCListeners.js"></script>
+}

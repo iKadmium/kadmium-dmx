@@ -25,15 +25,21 @@ namespace kadmium_osc_dmx_dotnet_webui.Controllers
             return Content(obj.ToString());
         }
 
+        public IActionResult List()
+        {
+            JArray arr = new JArray(
+                from name in FileAccess.GetFixtureCollectionNames()
+                select new JValue(name)
+            );
+
+            return Content(arr.ToString());
+        }
+
         public IActionResult Load(string id)
         {
-            if (id == null)
+            if (id != null)
             {
-                return Content(new FixtureCollection().Serialize().ToString() );
-            }
-            else
-            {
-                if(FileAccess.HasFixtureCollection(id))
+                if (FileAccess.HasFixtureCollection(id))
                 {
                     return Content(FileAccess.LoadFixtureCollection(id).ToString());
                 }
@@ -42,6 +48,10 @@ namespace kadmium_osc_dmx_dotnet_webui.Controllers
                     Response.StatusCode = 404;
                     return new EmptyResult();
                 }
+            }
+            else
+            {
+                return Content(new FixtureCollection().Serialize().ToString());
             }
         }
 

@@ -1,30 +1,45 @@
 ﻿{
   "name": "Chinese Still Washes",
-  "universe": "Private Universe",
   "fixtures": [
     {
       "channel": 400,
-      "type": "Chinese RGBW (5ch)",
       "group": "vocalist",
-      "options": []
+      "options": {
+        "maxBrightness": 1,
+        "axisInversions": [],
+        "axisRestrictions": []
+      },
+      "type": "Chinese RGBW (5ch)"
     },
     {
       "channel": 405,
-      "type": "Chinese RGBW (5ch)",
       "group": "guitarist",
-      "options": []
+      "options": {
+        "maxBrightness": 1,
+        "axisInversions": [],
+        "axisRestrictions": []
+      },
+      "type": "Chinese RGBW (5ch)"
     },
     {
       "channel": 410,
-      "type": "Chinese RGBW (5ch)",
       "group": "bassist",
-      "options": []
+      "options": {
+        "maxBrightness": 1,
+        "axisInversions": [],
+        "axisRestrictions": []
+      },
+      "type": "Chinese RGBW (5ch)"
     },
     {
       "channel": 415,
-      "type": "Chinese RGBW (5ch)",
       "group": "drummer",
-      "options": []
+      "options": {
+        "maxBrightness": 1,
+        "axisInversions": [],
+        "axisRestrictions": []
+      },
+      "type": "Chinese RGBW (5ch)"
     }
   ]
 }

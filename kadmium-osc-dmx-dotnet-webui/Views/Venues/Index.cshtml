@@ -3,60 +3,134 @@
     For more information on enabling MVC for empty projects, visit http://go.microsoft.com/fwlink/?LinkID=397860
 *@
 @{
-    Layout = "~/Views/Shared/_ListLayout.cshtml";
-    ViewData["Title"] = "Venues";
-
-    var transmitters = new InputSubWindow("transmitters", "Transmitters", "$parent.editTransmitters.bind($parent)", "selectedItem().selectedUniverse",
-        new InputCollection("transmitters", "Transmitters", "addTransmitter", "removeTransmitter",
-            new InputSelect("name", "Name", MasterController.Instance.Transmitters.Values.ToDictionary(x => x.Name, x => x.DisplayName)),
-            new InputNumber("universeID", "Universe ID", 1, 255, 1)
-        )
-    );
-
-    var optionsWindow = new InputSubWindow("options", "Options", "$parent.editOptions.bind($parent)", "selectedItem().selectedUniverse().selectedFixture().options",
-        new InputCollection("axisRestrictions", "Axis Restrictions", "addAxisRestriction", "removeAxisRestriction",
-            new InputSelect("name", "Axis", new Dictionary<string, string>()
-            {
-                ["Pan"] = "Pan",
-                ["Tilt"] = "Tilt"
-            }),
-            new InputNumber("min", "Minimum", -270, 270),
-            new InputNumber("min", "Maximum", -270, 270)
-        ),
-        new InputCollection("axisInversions", "Axis Inversions", "addAxisInversion", "removeAxisInversion",
-            new InputSelect("name", "Axis", new Dictionary<string, string>()
-            {
-                ["Pan"] = "Pan",
-                ["Tilt"] = "Tilt"
-            })
-        )
-    );
-
-    var fixtures = new InputSubWindow("fixtures", "Fixtures", "$parent.editFixtures.bind($parent)", "selectedItem().selectedUniverse",
-        new InputCollection("fixtures", "Fixtures:", "addFixture", "removeFixture",
-            new InputSelect("type", "Model", FileAccess.GetFixtureNames().ToDictionary(x => x)),
-            new InputNumber("channel", "Channel", 1, 512),
-            new InputSelect("group", "Group", MasterController.Instance.Groups.Keys.ToDictionary(x => x)),
-            optionsWindow
-        )
-    );
-
-    var inputs = new InputElement[]
-    {
-        new InputText("name", "Name:"),
-        new InputCollection("universes", "Universes:", "addUniverse", "removeUniverse",
-            new InputText("name", "Name"),
-            transmitters,
-            fixtures
-        )
-    };
-}
-@{ 
-  @Html.Partial("InputSubWindowModal", transmitters)
-  @Html.Partial("InputSubWindowModal", fixtures)
-  @Html.Partial("InputSubWindowModal", optionsWindow)
-  @Html.Partial("ModalEdit", inputs) 
+    ViewData["Title"] = "Venues"; 
 }
 
+<binding-context data-bind="with: selectedItem()">
+    <modal-window large="true" id="modal-edit" >
+        <modal-header>
+            Editing <span class="item-name" data-bind="text: name"></span>
+        </modal-header>
+        <modal-body>
+            @Html.Partial("ModalEditorStatus")
+            <div class="form-horizontal" id="edit-form">
+                <input-label label="Name:"><input class="form-control" data-bind="value: name"></input-label>
+                <input-collection name="universes">
+                    <input-collection-header>Universes</input-collection-header>
+                    <input-collection-body>
+                        <input-collection-item label="Name">
+                            <input type="text" class="form-control" data-bind="value: name">
+                        </input-collection-item>
+                        <input-collection-item label="Transmitters">
+                            <button asp-template="edit" data-bind="click: $parent.editTransmitters.bind($parent)"></button>
+                        </input-collection-item>
+                        <input-collection-item label="Fixtures">
+                            <button asp-template="edit" data-bind="click: $parent.editFixtures.bind($parent)"></button>
+                        </input-collection-item>
+                        <input-collection-item label="Remove">
+                            <button asp-template="delete" data-bind="click: $parent.removeUniverse.bind($parent)"></button>
+                        </input-collection-item>
+                    </input-collection-body>
+                    <input-collection-footer>
+                        <button asp-template="add" data-bind="click: addUniverse"></button>
+                    </input-collection-footer>
+                </input-collection>
+            </div>
+        </modal-body>
+        <modal-footer>
+            @Html.Partial("ModalEditorFooter")
+        </modal-footer>
+    </modal-window>
 
-<script src="~/js/Venues.js"></script>
+    <binding-context data-bind="with: selectedUniverse">
+        <modal-window id="transmitters-edit">
+            <modal-header>Editing <strong>Transmitters</strong> for <span class="item-name" data-bind="text: name"></span></modal-header>
+            <modal-body>
+                <input-collection name="transmitters">
+                    <input-collection-body>
+                        <input-collection-item label="Name">
+                            <select data-bind="value: name" class="form-control">
+                                @foreach (var transmitter in MasterController.Instance.Transmitters.Values)
+                                {
+                                    <option value="@transmitter.Name">@transmitter.DisplayName</option>
+                                }
+                            </select>
+                        </input-collection-item>
+                        <input-collection-item label="Universe ID">
+                            <input data-bind="value: universeID" type="number" min="1" max="255" class="form-control">
+                        </input-collection-item>
+                        <input-collection-item label="Remove">
+                            <button asp-template="delete" data-bind="click: $parent.removeTransmitter.bind($parent)"></button>
+                        </input-collection-item>
+                    </input-collection-body>
+                    <input-collection-footer>
+                        <button asp-template="add" data-bind="click: addTransmitter"></button>
+                    </input-collection-footer>
+                </input-collection>
+            </modal-body>
+            <modal-footer><button class="btn btn-success" data-dismiss="modal">OK</button></modal-footer>
+        </modal-window>
+
+        <modal-window large="true" id="fixtures-edit">
+            <modal-header>Editing <strong>Fixtures</strong> for <span class="item-name" data-bind="text: name"></span></modal-header>
+            <modal-body>
+                <input-collection name="fixtures">
+                    <input-collection-body>
+                        <input-collection-item label="Model">
+                            <select class="form-control" data-bind="value: type">
+                                @foreach (string name in FileAccess.GetFixtureNames())
+                                {
+                                    <option>@name</option>
+                                }
+                            </select>
+                        </input-collection-item>
+                        <input-collection-item label="Channel"><input type="number" class="form-control" data-bind="value: channel" min="1" max="512"></input-collection-item>
+                        <input-collection-item label="Group">
+                            <select class="form-control" data-bind="value: group">
+                                @foreach (string groupName in MasterController.Instance.Groups.Keys)
+                                {
+                                    <option>@groupName</option>
+                                }
+                            </select>
+                        </input-collection-item>
+                        <input-collection-item label="Options">
+                            <button asp-template="edit" data-bind="click: $parent.editOptions.bind($parent)"></button>
+                        </input-collection-item>
+                        <input-collection-item label="Remove">
+                            <button asp-template="delete" data-bind="click: $parent.removeFixture.bind($parent)"></button>
+                        </input-collection-item>
+                    </input-collection-body>
+                    <input-collection-footer>
+                        <div class="dropdown">
+                            <button asp-template="add" data-bind="click: addFixture"></button>
+                            <button class="btn btn-success dropdown-toggle" type="button" data-toggle="dropdown">
+                                <span class="glyphicon glyphicon-cloud-upload"></span>
+                                <span class="caret"></span>
+                            </button>
+                            <ul class="dropdown-menu">
+                                @foreach (string fixtureCollectionName in FileAccess.GetFixtureCollectionNames())
+                                {
+                                    <li><a href="#" data-bind="click: addFixtureCollection">@fixtureCollectionName</a></li>
+                                }
+                            </ul>
+                        </div>
+                    </input-collection-footer>
+                </input-collection>
+            </modal-body>
+            <modal-footer><button class="btn btn-success" data-dismiss="modal">OK</button></modal-footer>
+        </modal-window>
+
+        <binding-context data-bind="with: selectedFixture">
+            <binding-context data-bind="with: options">
+                @Html.Partial("FixtureOptionsEditor")
+            </binding-context>
+        </binding-context>
+    </binding-context>
+</binding-context>
+
+@Html.Partial("ItemList")
+
+@section scripts
+{
+    <script src="~/js/Venues.js"></script>
+}

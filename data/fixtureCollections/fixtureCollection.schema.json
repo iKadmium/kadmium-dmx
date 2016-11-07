@@ -8,39 +8,13 @@
       "type": "string",
       "description": "The name of the collection"
     },
-    "universe": {
-      "type": "string",
-      "description": "The name of the universe to which this fixture will belong"
-    },
     "fixtures": {
-      "type": "array",
-      "description": "A list of fixtures for this collection",
-      "items": {
-        "type": "object",
-        "properties": {
-          "channel": {
-            "description": "The channel assigned to the fixture",
-            "type": "number"
-          },
-          "type": {
-            "description": "The model name of the fixture",
-            "type": "string"
-          },
-          "group": {
-            "description": "The group the fixture is assigned to",
-            "type": "string"
-          },
-          "options": {
-            "description": "Options",
-            "type": "array",
-            "items": { "type": "string" }
-          }
-        },
-        "required": [ "channel", "group", "options", "type" ],
-        "additionalProperties": false
-      }
+      "$ref": "../venues/venue.schema.json#/definitions/fixtures"
     }
   },
-  "required": [ "name", "universe", "fixtures" ],
+  "required": [
+    "name",
+    "fixtures"
+  ],
   "additionalProperties": false
 }

@@ -5,19 +5,15 @@
 @{
 }
 
-<div class="modal fade" id="confirm-delete" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
-    <div class="modal-dialog">
-        <div class="modal-content">
-            <div class="modal-header">
-                Are You Sure?
-            </div>
-            <div class="modal-body">
-                Are you sure you want to delete this @Model.ToLower() <strong><span class="item-id">insert id</span></strong>?
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-danger btn-ok" id="modal-delete">Delete</button>
-                <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
-            </div>
-        </div>
-    </div>
-</div>
+<modal-window id="confirm-delete">
+    <modal-header>
+        Are You Sure?
+    </modal-header>
+    <modal-body>
+        Are you sure you want to delete <span class="item-name" data-bind="text: selectedItem().name"></span>?
+    </modal-body>
+    <modal-footer>
+        <button type="button" class="btn btn-danger btn-ok" id="modal-delete" data-bind="click: deleteConfirm">Delete</button>
+        <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
+    </modal-footer>
+</modal-window>

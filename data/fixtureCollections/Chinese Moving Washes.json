@@ -3,41 +3,91 @@
   "fixtures": [
     {
       "channel": 301,
-      "type": "Chinese Moving Wash",
       "group": "rearSides",
-      "options": [
-        "RestrictedPan",
-        "RestrictedTilt"
-      ]
+      "options": {
+        "maxBrightness": 1,
+        "axisInversions": [],
+        "axisRestrictions": [
+          {
+            "name": "Pan",
+            "min": -90,
+            "max": 90
+          },
+          {
+            "name": "Tilt",
+            "min": 0,
+            "max": 90
+          }
+        ]
+      },
+      "type": "Chinese Moving Wash"
     },
     {
       "channel": 315,
-      "type": "Chinese Moving Wash",
       "group": "rearSides",
-      "options": [
-        "RestrictedPan",
-        "RestrictedTilt"
-      ]
+      "options": {
+        "maxBrightness": 1,
+        "axisInversions": [],
+        "axisRestrictions": [
+          {
+            "name": "Pan",
+            "min": -90,
+            "max": 90
+          },
+          {
+            "name": "Tilt",
+            "min": 0,
+            "max": 90
+          }
+        ]
+      },
+      "type": "Chinese Moving Wash"
     },
     {
       "channel": 329,
-      "type": "Chinese Moving Wash",
       "group": "rearSides",
-      "options": [
-        "RestrictedPan",
-        "RestrictedTilt",
-        "InvertedPan"
-      ]
+      "options": {
+        "maxBrightness": 1,
+        "axisInversions": [
+          "Pan"
+        ],
+        "axisRestrictions": [
+          {
+            "name": "Pan",
+            "min": -90,
+            "max": 90
+          },
+          {
+            "name": "Tilt",
+            "min": 0,
+            "max": 90
+          }
+        ]
+      },
+      "type": "Chinese Moving Wash"
     },
     {
       "channel": 343,
-      "type": "Chinese Moving Wash",
       "group": "rearSides",
-      "options": [
-        "RestrictedPan",
-        "RestrictedTilt",
-        "InvertedPan"
-      ]
+      "options": {
+        "maxBrightness": 1,
+        "axisInversions": [
+          "Pan"
+        ],
+        "axisRestrictions": [
+          {
+            "name": "Pan",
+            "min": -90,
+            "max": 90
+          },
+          {
+            "name": "Tilt",
+            "min": 0,
+            "max": 90
+          }
+        ]
+      },
+      "type": "Chinese Moving Wash"
     }
   ]
 }

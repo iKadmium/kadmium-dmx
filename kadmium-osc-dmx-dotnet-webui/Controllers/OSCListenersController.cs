@@ -39,7 +39,14 @@ namespace kadmium_osc_dmx_dotnet_webui.Controllers
 
         public IActionResult Load(string id)
         {
-            if(id != null && MasterController.Instance.Listeners.ContainsKey(id) && MasterController.Instance.Listeners[id] is OSCListener)
+            if(id == null)
+            {
+                var tempListener = new OSCListener(1, "");
+                var content = tempListener.Serialize().ToString();
+                tempListener.Close();
+                return Content(content);
+            }
+            else if(MasterController.Instance.Listeners.ContainsKey(id) && MasterController.Instance.Listeners[id] is OSCListener)
             {
                 OSCListener listener = MasterController.Instance.Listeners[id] as OSCListener;
                 return Content(listener.Serialize().ToString());

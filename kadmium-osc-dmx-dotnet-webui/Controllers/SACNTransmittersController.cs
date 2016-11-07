@@ -39,7 +39,13 @@ namespace kadmium_osc_dmx_dotnet_webui.Controllers
 
         public IActionResult Load(string id)
         {
-            if(id != null && MasterController.Instance.Transmitters.ContainsKey(id) && MasterController.Instance.Transmitters[id] is SACNTransmitter)
+            if(id == null)
+            {
+                SACNTransmitter tempTransmitter = new SACNTransmitter(Guid.NewGuid(), "", 6454, 0, false, Enumerable.Empty<string>());
+                var content = tempTransmitter.Serialize().ToString();
+                return Content(content);
+            }
+            else if(MasterController.Instance.Transmitters.ContainsKey(id) && MasterController.Instance.Transmitters[id] is SACNTransmitter)
             {
                 SACNTransmitter transmitter = MasterController.Instance.Transmitters[id] as SACNTransmitter;
                 return Content(transmitter.Serialize().ToString());   

@@ -8,8 +8,7 @@ module.exports = {
         OSCListenerLive: "scripts/ts/Controllers/Dashboard/OSCListenerLive/OSCListenerLive.ts",
         RawDMX: "scripts/ts/Controllers/RawDMX/RawDMX.ts",
 
-        /*EnttecProTransmitterEdit: "ts/Controllers/List/Editors/EnttecProTransmitter.ts",
-        FixtureCollectionEdit: "ts/Controllers/List/Editors/FixtureCollection.ts",*/
+        FixtureCollections: "scripts/ts/Controllers/FixtureCollections/Fixturecollections.ts",
         OSCListeners: "scripts/ts/Controllers/OSCListeners/OSCListeners.ts",
         Fixtures: "scripts/ts/Controllers/Fixtures/Fixtures.ts",
         SACNTransmitters: "scripts/ts/Controllers/SACNTransmitters/SACNTransmitters.ts",
