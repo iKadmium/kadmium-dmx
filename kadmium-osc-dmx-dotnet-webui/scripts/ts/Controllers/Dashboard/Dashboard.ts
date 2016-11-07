@@ -1,6 +1,9 @@
-﻿import {MVC} from "../MVC";
+﻿import { MVC } from "../MVC";
 
-interface Status
+import * as $ from "jquery";
+import * as ko from "knockout";
+
+interface StatusData
 {
     code: string;
     message: string;
@@ -8,45 +11,104 @@ interface Status
     controller: string;
 }
 
-export class DashboardController
+interface CodeLookup
 {
-    static alertClasses: string[] = ["alert-danger", "alert-success", "alert-warning"];
-    static panelClasses: string[] = ["panel-danger", "panel-success", "panel-warning"];
-    static glyphs: string[] = ["glyphicon-remove-sign", "glyphicon-ok-sign", "glyphicon-info-sign", "glyphicon-question-sign"];
-    webSocket: WebSocket;
+    ["Error"]: string,
+    ["Running"]: string,
+    ["NotStarted"]: string,
+    ["Unknown"]: string,
+    [index: string]: string
+}
 
-    updateStatus(panel: JQuery, status: Status) : void
+export class StatusViewModel
+{
+    static alertClasses: CodeLookup = { "Error": "alert-danger", "Running": "alert-success", "NotStarted": "alert-warning", "Unknown": "alert-default" };
+    static panelClasses: CodeLookup = { "Error": "panel-danger", "Running": "panel-success", "NotStarted": "panel-warning", "Unknown": "panel-default" };
+    static glyphClasses: CodeLookup = { "Error": "glyphicon-remove-sign", "Running": "glyphicon-ok-sign", "NotStarted": "glyphicon-info-sign", "Unknown": "glyphicon-question-sign" };
+
+    panelClass: KnockoutComputed<string>;
+    alertClass: KnockoutComputed<string>;
+    glyphClass: KnockoutComputed<string>;
+
+    message: KnockoutObservable<string>;
+    code: KnockoutObservable<string>;
+    name: KnockoutObservable<string>;
+    
+    constructor(name: string)
     {
-        let glyph = panel.find(".status-glyph");
-        let statusText = panel.find(".status-message");
-        let panelBody = panel.find(".panel-body");
-
-        panel.removeClass(DashboardController.panelClasses.join(" "));
-        panelBody.removeClass(DashboardController.alertClasses.join(" "));
-        glyph.removeClass(DashboardController.glyphs.join(" "));
-
-        switch (status.code)
-        {
-            case "NotStarted":
-                panel.addClass("panel-warning");
-                glyph.addClass("glyphicon-info-sign");
-                panelBody.addClass("alert-warning");
-                break;
-            case "Running":
-                panel.addClass("panel-success");
-                glyph.addClass("glyphicon-ok-sign");
-                panelBody.addClass("alert-success");
-                break;
-            case "Error":
-                panel.addClass("panel-danger");
-                glyph.addClass("glyphicon-remove-sign");
-                panelBody.addClass("alert-danger");
-                break;
-        }
-
-        statusText.text(status.message);
+        this.code = ko.observable<string>("Unknown");
+        this.message = ko.observable<string>("Loading...");
+        this.name = ko.observable<string>(name);
+        this.panelClass = ko.computed<string>(() => StatusViewModel.panelClasses[this.code()]);
+        this.alertClass = ko.computed<string>(() => StatusViewModel.alertClasses[this.code()]);
+        this.glyphClass = ko.computed<string>(() => StatusViewModel.glyphClasses[this.code()]);
     }
     
+    update(code: string, message: string)
+    {
+        this.message(message);
+        this.code(code);
+    }
+}
+
+export class LiveViewModel extends StatusViewModel
+{
+    liveURL: KnockoutObservable<string>;
+    constructor(name: string, controller: string)
+    {
+        super(name);
+        this.liveURL = ko.computed<string>(() => MVC.getActionURL(controller, "Live", this.name()));
+    }
+}
+
+export class SACNTransmitterViewModel extends LiveViewModel
+{
+    constructor(name: string)
+    {
+        super(name, "SACNTransmitters");
+    }
+}
+
+export class OSCListenerViewModel extends LiveViewModel
+{
+    constructor(name: string)
+    {
+        super(name, "OSCListeners");
+    }
+}
+
+export class VenueViewModel extends StatusViewModel
+{
+    constructor()
+    {
+        super("Venue");
+    }
+
+    loadVenue(context: StatusViewModel, event: JQueryEventObject): void
+    {
+        let id = $(event.currentTarget).text();
+        let url = MVC.getActionURL("Venues", "Activate", id);
+        let settings: JQueryAjaxSettings =
+            {
+                url: url,
+                success: (data: any, textStatus: string, xhr: JQueryXHR, ...args: any[]) => this.onLoadVenueSuccess(id),
+                error: $.proxy(this.onLoadVenueError, this)
+            }
+        $.ajax(settings);
+    }
+
+    onLoadVenueSuccess(venueName: string): void
+    {
+        this.addAlert(venueName + " loaded successfully", "alert alert-success");
+        this.name(venueName);
+        $("#preview").removeClass("disabled");
+    }
+
+    onLoadVenueError(xhr: JQueryXHR, textStatus: string, errorThrown: string): void
+    {
+        this.addAlert("Error loading venue: " + errorThrown, "alert alert-danger");
+    }
+
     addAlert(text: string, classes: string)
     {
         let alertDiv = document.createElement("div");
@@ -60,63 +122,88 @@ export class DashboardController
         alertDiv.appendChild(closeButton);
         $("#status-alerts")[0].appendChild(alertDiv);
     }
+}
 
-    onLoadVenueSuccess(venueName: string): void
-    {
-        this.addAlert(venueName + " loaded successfully", "alert alert-success");
-        let status: Status = {
-            code: "Running",
-            message: venueName,
-            controller: "",
-            name: ""
-        };
-        this.updateStatus($("#venue-controller"), status);
-        $("#preview").removeClass("disabled");
-    }
-
-    onLoadVenueError(xhr: JQueryXHR, textStatus: string, errorThrown: string): void
-    {
-        this.addAlert("Error loading venue: " + errorThrown, "alert alert-danger");
-    }
-    
-    onLoad(): void
-    {
-        let that = this;
-
-        this.webSocket = new WebSocket(MVC.getSocketURL("Index"));
-        this.webSocket.addEventListener("message", (ev: MessageEvent) =>
-        {
-            let status = JSON.parse(ev.data) as Status;
-            let panel = $(".status-panel").filter((index, element) =>
-            {
-                return $(element).data("id") == status.name
-                    && $(element).data("controller") == status.controller;
-            });
-            this.updateStatus(panel, status);
-        });
-
-        let venueLoadLinks = $(".venue-load-link");
-        venueLoadLinks.on("click", (e: JQueryEventObject) =>
-        {
-            let id = $(e.currentTarget).data("id");
-            let url = MVC.getActionURL("Venues", "Activate", id);
-            let settings: JQueryAjaxSettings =
-            {
-                url: url,
-                success: (data: any, textStatus: string, xhr: JQueryXHR, ...args: any[]) => this.onLoadVenueSuccess(id),
-                error: $.proxy(that.onLoadVenueError, that)
-            }
-            $.ajax(settings);
-        });
-    }
+export class DashboardViewModel
+{
+    webSocket: WebSocket;
+    venue: KnockoutObservable<VenueViewModel>;
+    sacnTransmitters: KnockoutObservableArray<SACNTransmitterViewModel>;
+    oscListeners: KnockoutObservableArray<OSCListenerViewModel>;
+    panelsLoaded: KnockoutComputed<boolean>;
+    sacnTransmittersLoaded: KnockoutObservable<boolean>;
+    oscListenersLoaded: KnockoutObservable<boolean>;
 
     constructor()
     {
-        window.addEventListener("load", (ev) =>
+        this.venue = ko.observable<VenueViewModel>(new VenueViewModel());
+        this.sacnTransmitters = ko.observableArray<SACNTransmitterViewModel>();
+        this.oscListeners = ko.observableArray<OSCListenerViewModel>();
+        this.oscListenersLoaded = ko.observable<boolean>(false);
+        this.sacnTransmittersLoaded = ko.observable<boolean>(false);
+        this.panelsLoaded = ko.computed<boolean>(() => this.sacnTransmittersLoaded() && this.oscListenersLoaded());
+        
+        let sacnTransmittersURL = MVC.getActionURL("SACNTransmitters", "List", null);
+        let oscListenersURL = MVC.getActionURL("OSCListeners", "List", null);
+
+        this.panelsLoaded.subscribe((newValue: boolean) =>
         {
-            this.onLoad();
+            this.webSocket = new WebSocket(MVC.getSocketURL("Index"));
+
+            this.webSocket.addEventListener("message", (ev: MessageEvent) =>
+            {
+                let status = JSON.parse(ev.data) as StatusData;
+                let statusViewModels: StatusViewModel[];
+                let statusViewModel: StatusViewModel;
+                switch (status.controller)
+                {
+                    case "Venues":
+                        statusViewModel = this.venue();
+                        break;
+                    case "SACNTransmitters":
+                        statusViewModels = this.sacnTransmitters().filter((value: StatusViewModel) => value.name() == status.name);
+                        statusViewModel = statusViewModels[0];
+                        break;
+                    case "OSCListeners":
+                        statusViewModels = this.oscListeners().filter((value: StatusViewModel) => value.name() == status.name);
+                        statusViewModel = statusViewModels[0];
+                        break;
+                    default:
+                        return;
+                }
+                if(statusViewModel != null)
+                {
+                    statusViewModel.update(status.code, status.message);
+                }
+            });
+        });
+
+        $.get(sacnTransmittersURL, (data: any) =>
+        {
+            let sacnTransmitterNames = JSON.parse(data) as string[];
+            for (let sacnTransmitterName of sacnTransmitterNames)
+            {
+                this.sacnTransmitters.push(new SACNTransmitterViewModel(sacnTransmitterName));
+            }
+            this.sacnTransmittersLoaded(true);
+        });
+
+        $.get(oscListenersURL, (data: any) =>
+        {
+            let oscListenerNames = JSON.parse(data) as string[];
+            for (let oscListenerName of oscListenerNames)
+            {
+                this.oscListeners.push(new OSCListenerViewModel(oscListenerName));
+            }
+            this.oscListenersLoaded(true);
         });
     }
 }
 
-let dashboardController = new DashboardController();
+let dashboardController: DashboardViewModel;
+window.addEventListener("load", (ev: Event) =>
+{
+    dashboardController = new DashboardViewModel();
+    ko.applyBindings(dashboardController);
+});
+

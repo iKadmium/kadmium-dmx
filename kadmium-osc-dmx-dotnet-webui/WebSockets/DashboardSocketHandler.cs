@@ -29,6 +29,12 @@ namespace kadmium_osc_dmx_dotnet_webui.WebSockets
             {
                 transmitter.Status.Updated += TransmitterStatusUpdated;
             }
+            Venue.Status.Updated += Status_Updated;
+        }
+
+        private void Status_Updated(object sender, StatusUpdateEventArgs e)
+        {
+            SendUpdate("Venues", MasterController.Instance.Venue?.Name ?? null, e.StatusCode, e.Message);
         }
 
         private void TransmitterStatusUpdated(object sender, StatusUpdateEventArgs e)
@@ -57,6 +63,15 @@ namespace kadmium_osc_dmx_dotnet_webui.WebSockets
                 string controller = transmitter.GetType().Name + "s";
                 SendUpdate(controller, transmitter.Name, transmitter.Status.StatusCode, transmitter.Status.Message);
             }
+            if(MasterController.Instance.Venue != null)
+            {
+                SendUpdate("Venues", MasterController.Instance.Venue.Name, StatusCode.Running, "Venue running");
+            }
+            else
+            {
+                SendUpdate("Venues", null, StatusCode.NotStarted, "No Venue Loaded");
+            }
+            
         }
 
         private async void SendUpdate(string controller, string id, StatusCode statusCode, string message)

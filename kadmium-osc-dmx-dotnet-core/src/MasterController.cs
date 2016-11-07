@@ -56,6 +56,7 @@ namespace kadmium_osc_dmx_dotnet_core
                 Instance.Listeners.TryAdd(listener.Name, listener);
             }
             Instance.updateTimer = new Timer(Instance.UpdateTimer_Elapsed, null, UPDATE_TIME, UPDATE_TIME);
+            Venue.Status = new Status("No Venue Loaded");
         }
 
         private MasterController()

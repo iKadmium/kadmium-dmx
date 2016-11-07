@@ -8,6 +8,7 @@ namespace kadmium_osc_dmx_dotnet_core
 {
     public class Venue
     {
+        public static Status Status { get; set; }
         public string Name { get; }
         public IEnumerable<Universe> Universes { get; }
 
@@ -15,6 +16,7 @@ namespace kadmium_osc_dmx_dotnet_core
         {
             Name = name;
             Universes = universes;
+            Status.Update(StatusCode.Running, "Venue Loaded Successfully", this);
         }
 
         public Venue() : this("", Enumerable.Empty<Universe>())
@@ -38,17 +40,24 @@ namespace kadmium_osc_dmx_dotnet_core
 
         public static Venue Load(JObject obj)
         {
-            MasterController.Instance.UpdatesEnabled = false;
-            string name = obj["name"].Value<string>();
+            try
+            {
+                MasterController.Instance.UpdatesEnabled = false;
+                string name = obj["name"].Value<string>();
 
-            var universesQuery = from universeElement in obj["universes"].Values<JObject>()
-                            select Universe.Load(universeElement);
+                var universesQuery = from universeElement in obj["universes"].Values<JObject>()
+                                     select Universe.Load(universeElement);
 
-            var universes = universesQuery.ToList();
-            
-            MasterController.Instance.UpdatesEnabled = true;
+                var universes = universesQuery.ToList();
 
-            return new Venue(name, universes);
+                MasterController.Instance.UpdatesEnabled = true;
+                return new Venue(name, universes);
+            }
+            catch(Exception e)
+            {
+                Status.Update(StatusCode.Error, e.Message, null);
+                throw e;
+            }
         }
 
         internal void Update()

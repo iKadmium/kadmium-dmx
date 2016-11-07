@@ -15,73 +15,66 @@
 <div id="status-alerts">
 
 </div>
+
 <div class="row">
-    <div class="col-sm-3">
-        <div class="panel panel-@venuePanelClass" id="venue-controller">
-            <div class="panel-heading text-center"><strong>Venue</strong></div>
-            <div class="panel-body text-center alert-@venuePanelClass">
-                <span class="status-glyph glyphicon @panelGlyph"></span><br>
-                <span class="status-message">@venueHeader</span>
-            </div>
-            <div class="panel-footer text-center">
-                <div class="dropdown">
-                    <button class="btn btn-primary dropdown-toggle" type="button" data-toggle="dropdown">Load Venue <span class="caret"></span></button>
-                    <ul class="dropdown-menu">
-                        @{
-                            foreach (string venueName in FileAccess.GetVenueNames())
-                            {
-                                <li><a href="#" class="venue-load-link" data-id="@venueName">@venueName</a></li>
+    <binding-context data-bind="with: venue">
+        <div class="col-sm-3">
+            <div class="panel" data-bind="css: panelClass">
+                <div class="panel-heading text-center"><span class="item-name" data-bind="text: name"></span></div>
+                <div class="panel-body text-center" data-bind="css: alertClass">
+                    <span class="status-glyph glyphicon" data-bind="css: glyphClass"></span><br>
+                    <span data-bind="text: message">@venueHeader</span>
+                </div>
+                <div class="panel-footer text-center">
+                    <div class="dropdown">
+                        <button class="btn btn-primary dropdown-toggle" type="button" data-toggle="dropdown">Load Venue <span class="caret"></span></button>
+                        <ul class="dropdown-menu">
+                            @{
+                                foreach (string venueName in FileAccess.GetVenueNames())
+                                {
+                                    <li><a href="#" data-bind="click: loadVenue" >@venueName</a></li>
+                                }
                             }
-                        }
-                    </ul>
+                        </ul>
+                    </div>
                 </div>
             </div>
         </div>
-    </div>
+    </binding-context>
 
-
-@foreach (IEnumerable<Transmitter> transmitterBatch in MasterController.Instance.Transmitters.Values.Batch(4))
-{
-        @foreach (Transmitter transmitter in transmitterBatch)
-        {
-            string controller = transmitter.GetType().Name + "s";
-
-            <div class="col-sm-3">
-                <div class="panel panel-default status-panel" data-controller="@controller" data-id="@transmitter.Name">
-                    <div class="panel-heading text-center"><strong>@transmitter.DisplayName</strong></div>
-                    <div class="panel-body text-center">
-                        <span class="status-glyph glyphicon glyphicon-question-sign"></span><br>
-                        <span class="status-message">Loading...</span>
-                    </div>
-                    <div class="panel-footer text-center">
-                        <a class="btn btn-info" asp-controller="@controller" asp-action="Live" asp-route-id="@transmitter.Name">Live</a>
-                    </div>
+    <binding-context data-bind="foreach: sacnTransmitters">
+        <div class="col-sm-3">
+            <div class="panel" data-bind="css: panelClass" >
+                <div class="panel-heading text-center"><span class="item-name" data-bind="text: name"></span></div>
+                <div class="panel-body text-center" data-bind="css: alertClass">
+                    <span class="glyphicon status-glyph" data-bind="css: glyphClass" ></span><br>
+                    <span data-bind="text: message" >Loading...</span>
+                </div>
+                <div class="panel-footer text-center">
+                    <a class="btn btn-info" data-bind="attr: {href: liveURL}">Live</a>
                 </div>
             </div>
-        }
-}
+        </div>
+    </binding-context>
 
-@foreach (IEnumerable<Listener> listenerBatch in MasterController.Instance.Listeners.Values.Batch(4))
-{
-        @foreach (Listener listener in listenerBatch)
-        {
-            string controller = listener.GetType().Name + "s";
-
-            <div class="col-sm-3">
-                <div class="panel panel-default status-panel" data-controller="@controller" data-id="@listener.Name">
-                    <div class="panel-heading text-center"><strong>@listener.DisplayName</strong></div>
-                    <div class="panel-body text-center">
-                        <span class="status-glyph glyphicon glyphicon-question-sign"></span><br>
-                        <span class="status-message">Loading...</span>
-                    </div>
-                    <div class="panel-footer text-center">
-                        <a class="btn btn-info" asp-controller="@controller" asp-action="Live" asp-route-id="@listener.Name">Live</a>
-                    </div>
+    <binding-context data-bind="foreach: oscListeners">
+        <div class="col-sm-3">
+            <div class="panel" data-bind="css: panelClass">
+                <div class="panel-heading text-center"><span class="item-name" data-bind="text: name"></span></div>
+                <div class="panel-body text-center" data-bind="css: alertClass">
+                    <span class="glyphicon status-glyph" data-bind="css: glyphClass"></span><br>
+                    <span data-bind="text: message">Loading...</span>
+                </div>
+                <div class="panel-footer text-center">
+                    <a class="btn btn-info" data-bind="attr: {href: liveURL}">Live</a>
                 </div>
             </div>
-        }
-    
-}
+        </div>
+    </binding-context>
 
 </div>
-<script src="~/js/Dashboard.js"></script>
+@section scripts
+{
+    <script src="~/js/Dashboard.js"></script>
+}
+

@@ -41,7 +41,7 @@ namespace kadmium_osc_dmx_dotnet_webui.Controllers
         {
             if(id == null)
             {
-                var tempListener = new OSCListener(1, "");
+                var tempListener = new OSCListener(9000, "");
                 var content = tempListener.Serialize().ToString();
                 tempListener.Close();
                 return Content(content);
@@ -66,9 +66,10 @@ namespace kadmium_osc_dmx_dotnet_webui.Controllers
             
             if (id != null && MasterController.Instance.Listeners.ContainsKey(id) && MasterController.Instance.Listeners[id] is OSCListener)
             {
-                if(MasterController.Instance.Listeners.TryRemove(id, out listener))
+                Listener oldListener;
+                if(MasterController.Instance.Listeners.TryRemove(id, out oldListener))
                 {
-                    listener.Close();
+                    oldListener.Close();
                 }
                 else
                 {
@@ -77,7 +78,6 @@ namespace kadmium_osc_dmx_dotnet_webui.Controllers
                 }
             }
             
-            listener = OSCListener.Load(obj);
             if(MasterController.Instance.Listeners.TryAdd(listener.Name, listener))
             {
                 FileAccess.SaveListeners();
