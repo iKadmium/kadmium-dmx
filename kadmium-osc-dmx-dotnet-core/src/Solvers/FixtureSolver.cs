@@ -39,6 +39,10 @@ namespace kadmium_osc_dmx_dotnet_core.Solvers
             {
                 solvers.Add(new HSBSolver(fixture));
             }
+            if(BrightnessLimiterSolver.SuitableFor(fixture.Definition, options))
+            {
+                solvers.Add(new BrightnessLimiterSolver(fixture, options));
+            }
             if (RandomMove.SuitableFor(fixture.Definition))
             {
                 solvers.Add(new RandomMove(fixture));

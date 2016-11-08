@@ -1,55 +1,71 @@
-﻿import {DMXUniverse} from "./DMXUniverse";
-import {DMXFixture} from "./DMXFixture";
+﻿import {FixtureViewModel} from "./Fixture";
+import {GroupViewModel, GroupData} from "./Group";
+import {UniverseViewModel, UniverseData} from "./Universe";
 import {MVC} from "../MVC";
 
-class Preview2DController
+import * as ko from "knockout";
+
+interface PreviewData
+{
+    groups: string[];
+    universes: UniverseData[];
+}
+
+class Preview2DViewModel
 {
     socket: WebSocket;
-    universe: DMXUniverse;
+    groups: KnockoutObservableArray<GroupViewModel>;
+    universes: KnockoutObservableArray<UniverseViewModel>;
 
     constructor()
     {
+        this.groups = ko.observableArray<GroupViewModel>();
+        this.universes = ko.observableArray<UniverseViewModel>();
         this.socket = new WebSocket(MVC.getSocketURL("Preview"));
-        this.universe = new DMXUniverse();
+        
+        let url = MVC.getActionURL("Preview", "Fixtures", null);
 
-        let that = this;
+        $.get(url, (data: any) =>
+        {
+            let previewData = JSON.parse(data) as PreviewData;
+            for (let groupData of previewData.groups)
+            {
+                let group = new GroupViewModel(groupData);
+                this.groups.push(group);
+            }
+            for (let universeData of previewData.universes)
+            {
+                let universe = UniverseViewModel.load(universeData, this.groups());
+                this.universes.push(universe);
+            }
+        });
+
         this.socket.addEventListener("message", (message: MessageEvent) =>
         {
             let data = JSON.parse(message.data) as number[];
-            that.universe.render(data);
-
-            for (let fixture of that.universe.fixtures)
+            for (let group of this.groups())
             {
-                let canvas = $("#canvas-" + fixture.address)[0] as HTMLCanvasElement;
-                let ctx = canvas.getContext("2d");
-                Preview2DController.draw(fixture, data, canvas, ctx);
+                group.update(data);
             }
         });
     }
-
-    static draw(fixture: DMXFixture, data: number[], canvas: HTMLCanvasElement, ctx: CanvasRenderingContext2D) : void
-    {
-        Preview2DController.drawFill(fixture, canvas, ctx);
-        Preview2DController.drawMovements(fixture, canvas, ctx);
-        Preview2DController.drawText(fixture, data);
-    }
-
-    static drawFill(fixture: DMXFixture, canvas: HTMLCanvasElement, ctx: CanvasRenderingContext2D): void
+    
+    /*static drawFill(fixture: DMXFixtureViewModel, canvas: HTMLCanvasElement, ctx: CanvasRenderingContext2D): void
     {
         let fillStyle = "rgb( " + fixture.red + ", " + fixture.green + ", " + fixture.blue + ")";
 
         ctx.fillStyle = fillStyle;
         ctx.clearRect(0, 0, canvas.width, canvas.height);
         ctx.fillRect(0, 0, canvas.width, canvas.height);
-        ctx.strokeStyle = DMXFixture.invertColor(fixture.red, fixture.green, fixture.blue);
+        ctx.strokeStyle = DMXFixtureViewModel.invertColor(fixture.red(), fixture.green(), fixture.blue());
     }
 
-    static drawMovements(fixture: DMXFixture, canvas: HTMLCanvasElement, ctx: CanvasRenderingContext2D): void
+    static drawMovements(fixture: DMXFixtureViewModel, canvas: HTMLCanvasElement, ctx: CanvasRenderingContext2D): void
     {
         if (fixture.pan != null)
         {
-            let value = fixture.pan;
-            let x = canvas.width * value;
+            let value: number = fixture.pan();
+            let x: number = canvas.width * value;
             ctx.beginPath();
             ctx.moveTo(x, 0);
             ctx.lineTo(x, canvas.height);
@@ -58,29 +74,20 @@ class Preview2DController
         }
         if (fixture.tilt != null)
         {
-            let value = fixture.tilt;
-            let y = canvas.height * value;
+            let value: number = fixture.tilt();
+            let y: number = canvas.height * value;
             ctx.beginPath();
             ctx.moveTo(0, y);
             ctx.lineTo(canvas.width, y);
             ctx.closePath();
             ctx.stroke();
         }
-    }
-
-    static drawText(fixture: DMXFixture, data: number[]): void
-    {
-        for (let channelName in fixture.channels)
-        {
-            let channel = fixture.channels[channelName];
-            let span = $("#channel-" + (channel.address + 1));
-            span.text(data[channel.address]);
-        }
-    }
+    }*/
 }
 
-let preview2DController: Preview2DController;
+let preview2DViewModel: Preview2DViewModel;
 window.addEventListener("load", (ev: Event) =>
 {
-    preview2DController = new Preview2DController();
+    preview2DViewModel = new Preview2DViewModel();
+    ko.applyBindings(preview2DViewModel);
 });

@@ -1,0 +1,72 @@
+{
+  "name": "New Globe Moving Head",
+  "type": "LED",
+  "channels": [
+    {
+      "name": "Master",
+      "dmx": 1,
+      "min": 255,
+      "max": 0
+    },
+    {
+      "name": "Strobe",
+      "dmx": 2,
+      "min": 255,
+      "max": 0
+    },
+    {
+      "name": "Color Macro",
+      "dmx": 3,
+      "min": 0,
+      "max": 255
+    },
+    {
+      "name": "No Idea",
+      "dmx": 4,
+      "min": 0,
+      "max": 255
+    },
+    {
+      "name": "Pan",
+      "dmx": 5,
+      "min": 0,
+      "max": 255
+    },
+    {
+      "name": "Tilt",
+      "dmx": 6,
+      "min": 0,
+      "max": 255
+    },
+    {
+      "name": "Red",
+      "dmx": 7,
+      "min": 255,
+      "max": 0
+    },
+    {
+      "name": "Green",
+      "dmx": 8,
+      "min": 255,
+      "max": 0
+    },
+    {
+      "name": "Blue",
+      "dmx": 9,
+      "min": 255,
+      "max": 0
+    }
+  ],
+  "movements": [
+    {
+      "name": "Pan",
+      "min": -270,
+      "max": 270
+    },
+    {
+      "name": "Tilt",
+      "min": -135,
+      "max": 135
+    }
+  ]
+}

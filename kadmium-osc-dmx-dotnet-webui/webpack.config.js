@@ -13,9 +13,7 @@ module.exports = {
         Fixtures: "scripts/ts/Controllers/Fixtures/Fixtures.ts",
         SACNTransmitters: "scripts/ts/Controllers/SACNTransmitters/SACNTransmitters.ts",
         Groups: "scripts/ts/Controllers/Groups/Groups.ts",
-        Venues: "scripts/ts/Controllers/Venues/Venues.ts",
-
-        validator: "scripts/js/validator.js"
+        Venues: "scripts/ts/Controllers/Venues/Venues.ts"
     },
     output: {
         path: "wwwroot/js",

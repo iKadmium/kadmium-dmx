@@ -1,0 +1,26 @@
+{
+  "name": "The New Globe",
+  "universes": [
+    {
+      "name": "Universe 1",
+      "fixtures": [
+        {
+          "channel": 55,
+          "group": "rearSides",
+          "options": {
+            "axisInversions": [],
+            "axisRestrictions": [],
+            "maxBrightness": 1
+          },
+          "type": "New Globe Moving Head"
+        }
+      ],
+      "transmitters": [
+        {
+          "name": "sacnTransmitter",
+          "universeID": 1
+        }
+      ]
+    }
+  ]
+}
