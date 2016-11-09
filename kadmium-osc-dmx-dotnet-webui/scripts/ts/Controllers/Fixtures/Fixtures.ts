@@ -10,7 +10,7 @@ class FixturesViewModel extends CollectionViewModel<FixtureData, FixtureViewMode
     }
 }
 
-let viewModel: FixturesViewModel;
+let viewModel: FixturesViewModel = new FixturesViewModel();
 
 window.addEventListener("load", (ev: Event) =>
 {

@@ -17,7 +17,7 @@
   <Import Project="$(VSToolsPath)\DotNet\Microsoft.DotNet.targets" Condition="'$(VSToolsPath)' != ''" />
   <ProjectExtensions>
     <VisualStudio>
-      <UserProperties data_4transmitters_1json__JSONSchema="transmitters.schema.json" data_4listeners_1json__JSONSchema="listeners.schema.json" data_4universes_1json__JSONSchema="universes.schema.json" data_4venues_4Rehearsal_x0020_Room_1json__JSONSchema="venue.schema.json" data_4groups_1json__JSONSchema="groups.schema.json" data_4fixtures_4Chinese_x0020_RGBW_x0020__x0028_5ch_x0029__1json__JSONSchema="fixture.schema.json" />
+      <UserProperties />
     </VisualStudio>
   </ProjectExtensions>
 </Project>

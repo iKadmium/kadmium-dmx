@@ -1,7 +1,6 @@
 ﻿import { MVC } from "../MVC";
 import {StatusViewModel} from "../Status";
 
-import * as $ from "jquery";
 import * as ko from "knockout";
 
 interface StatusData
@@ -11,8 +10,6 @@ interface StatusData
     name: string;
     controller: string;
 }
-
-
 
 export class LiveViewModel extends StatusViewModel
 {
@@ -141,10 +138,13 @@ export class DashboardViewModel
                     {
                         case "NotStarted":
                             statusCode = "Warning";
+                            break;
                         case "Running":
                             statusCode = "Success";
+                            break;
                         default:
                             statusCode = status.code;
+                            break;
                     }
                     statusViewModel.update(statusCode, status.message);
                 }

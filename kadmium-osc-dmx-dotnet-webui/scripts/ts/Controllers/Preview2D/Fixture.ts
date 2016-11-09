@@ -13,7 +13,7 @@ export interface FixtureData
     definition: FixtureDefinitionData;
 }
 
-class ChannelViewModel
+export class ChannelViewModel
 {
     name: KnockoutObservable<string>;
     address: KnockoutObservable<number>;
@@ -50,7 +50,7 @@ class ChannelViewModel
     }
 }
 
-class MovementLookupTable
+export class MovementLookupTable
 {
     [name: string]: MovementViewModel;
     constructor()
@@ -58,7 +58,7 @@ class MovementLookupTable
     }
 }
 
-class ChannelLookupTable
+export class ChannelLookupTable
 {
     [name: string]: ChannelViewModel;
 

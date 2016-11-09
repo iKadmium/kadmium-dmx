@@ -31,5 +31,9 @@
         </table>
     </div>
 </div>
-
-<script src="~/js/OSCListenerLive.js"></script>
+@section scripts
+{
+    <script>
+        require(["Controllers/Dashboard/OSCListenerLive/OSCListenerLive"])
+    </script>
+}

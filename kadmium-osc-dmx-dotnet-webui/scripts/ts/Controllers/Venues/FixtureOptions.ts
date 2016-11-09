@@ -10,14 +10,14 @@ export interface FixtureOptionsData
     maxBrightness: number;
 }
 
-interface AxisRestrictionData
+export interface AxisRestrictionData
 {
     name: string;
     min: number;
     max: number;
 }
 
-class AxisRestrictionViewModel
+export class AxisRestrictionViewModel
 {
     name: KnockoutObservable<string>;
     min: KnockoutObservable<number>;

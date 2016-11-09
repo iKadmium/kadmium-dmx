@@ -47,4 +47,9 @@
         }
     </tbody>
 </table>
-<script src="~/js/SACNTransmitterLive.js"></script>
+@section scripts
+{
+    <script>
+        require(["Controllers/Dashboard/SACNTransmitterLive/SACNTransmitterLive"])
+    </script>
+}

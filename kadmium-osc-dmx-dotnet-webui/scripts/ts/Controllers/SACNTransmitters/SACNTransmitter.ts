@@ -11,7 +11,7 @@ export interface SACNTransmitterData
     unicast: string[];
 }
 
-class UnicastViewModel
+export class UnicastViewModel
 {
     address: KnockoutObservable<string>;
 

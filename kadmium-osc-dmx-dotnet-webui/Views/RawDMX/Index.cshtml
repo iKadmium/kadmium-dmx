@@ -38,4 +38,9 @@
         </tr>
     </tbody>
 </table>
-<script src="~/js/RawDMX.js"></script>
+@section scripts
+{
+    <script>
+        require(["Controllers/RawDMX/RawDMX"])
+    </script>
+}

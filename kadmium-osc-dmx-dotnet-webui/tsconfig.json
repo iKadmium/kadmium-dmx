@@ -1,19 +1,19 @@
 {
-  "compilerOptions": {
-    "module": "amd",
-    "noImplicitAny": false,
-    "noEmitOnError": true,
-    "removeComments": false,
-    "sourceMap": true,
-    "target": "es5",
-    "moduleResolution": "node",
-    "outDir": "wwwroot/js"
-  },
-  "include": [
-    "scripts/ts/**/*"
-  ],
-  "exclude": [
-    "node_modules/typescript",
-    "wwwroot"
-  ]
+	"compilerOptions": {
+		"module": "amd",
+		"noImplicitAny": false,
+		"noEmitOnError": true,
+		"removeComments": false,
+		"sourceMap": true,
+		"target": "es5",
+		"moduleResolution": "node",
+		"outDir": "wwwroot/js"
+	},
+	"include": [
+		"scripts/ts/**/*"
+	],
+	"exclude": [
+		"node_modules/typescript",
+		"wwwroot"
+	]
 }
