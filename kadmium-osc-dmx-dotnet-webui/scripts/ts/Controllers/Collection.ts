@@ -1,7 +1,9 @@
 ﻿import {CollectionItemViewModel, NamedViewModel} from "./CollectionItem";
+import {StatusViewModel} from "./Status";
 import {MVC} from "./MVC";
 
 import * as ko from "knockout";
+import "knockout.validation";
 
 export class CollectionViewModel<ViewModelDataType, ViewModelType extends CollectionItemViewModel<ViewModelDataType>>
 {
@@ -9,15 +11,20 @@ export class CollectionViewModel<ViewModelDataType, ViewModelType extends Collec
     itemConstructor: (name: string) => ViewModelType;
     controllerName: string;
     selectedItem: KnockoutObservable<ViewModelType>;
+    statusAlerts: KnockoutObservableArray<StatusViewModel>;
+
+    private static instance: any;
 
     constructor(controllerName: string, itemConstructor: (name: string) => ViewModelType)
     {
         this.itemConstructor = itemConstructor;
         this.controllerName = controllerName;
         this.items = ko.observableArray<ViewModelType>();
-        this.selectedItem = ko.observable<ViewModelType>(itemConstructor("new item"));
+        this.statusAlerts = ko.observableArray<StatusViewModel>();
+        this.selectedItem = ko.validatedObservable<ViewModelType>(itemConstructor("new item"));
         let getURL = MVC.getActionURL(this.controllerName, "List", null);
-        let that = this;
+        
+        CollectionViewModel.instance = this;
 
         $(document).on('show.bs.modal', '.modal', (eventObject: JQueryEventObject, ...args: any[]) =>
         {
@@ -33,18 +40,49 @@ export class CollectionViewModel<ViewModelDataType, ViewModelType extends Collec
         {
             $("#modal-delete").prop("disabled", false);
         });
-
         
-
         $.get(getURL, (data: any, textStatus: string, jqXHR: JQueryXHR) =>
         {
             let itemNames = JSON.parse(data) as string[];
             for (let itemName of itemNames)
             {
                 let item = itemConstructor(itemName);
-                that.items.push(item);
+                this.items.push(item);
             }
         });
+
+        ko.validation.init({
+            errorElementClass: 'has-error',
+            errorMessageClass: 'help-block',
+            decorateInputElement: true
+        });
+
+        ko.validation.rules["uniqueName"] = {
+            validator: (value: string, item: ViewModelType) =>
+            {
+                let matchingNames = this.items()
+                    .filter((filterItem: ViewModelType) => filterItem != item && filterItem.originalName() == value);
+                return matchingNames.length == 0;
+            },
+            message: "Names must be unique"
+        };
+        ko.validation.registerExtenders();
+
+        
+    }
+
+    static addStatusAlert(code: string, message: string): void
+    {
+        let alerts = CollectionViewModel.instance.statusAlerts as KnockoutObservableArray<StatusViewModel>;
+        let status = new StatusViewModel("");
+        status.message(message);
+        status.code(code);
+        alerts.push(status);
+    }
+
+    deleteAlert(item: StatusViewModel)
+    {
+        this.statusAlerts.remove(item);
     }
 
     delete(item: ViewModelType): void
@@ -72,18 +110,17 @@ export class CollectionViewModel<ViewModelDataType, ViewModelType extends Collec
         $("#modal-success").hide();
         $("#modal-error").hide();
         $("#modal-submit").show();
-        $("#modal-back").hide();
         $("#modal-cancel").text("Cancel");
         $("#edit-form").hide();
         let url = MVC.getActionURL(this.controllerName, "Load", item.originalName());
         $("#modal-cancel").prop("disabled", true);
-        $("#modal-status").show();
-        $("#modal-status-text").text("Loading...");
+        item.statusText("Loading");
+        item.isBusy(true);
         $.getJSON(url, (data: any, textStatus: string, jqXHR: JQueryXHR) =>
         {
             $("#modal-cancel").prop("disabled", false);
-            $("#modal-status").hide();
             $("#edit-form").show();
+            item.isBusy(false);
         });
 
         item.openEditor();
@@ -106,5 +143,10 @@ export class CollectionViewModel<ViewModelDataType, ViewModelType extends Collec
         {
             this.cancel(item);
         });
+    }
+
+    static getItems<T>(): KnockoutObservableArray<T>
+    {
+        return CollectionViewModel.instance.items as KnockoutObservableArray<T>;
     }
 }

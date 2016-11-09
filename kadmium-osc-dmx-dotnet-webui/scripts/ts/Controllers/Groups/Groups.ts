@@ -1,5 +1,6 @@
 ﻿import {GroupData, GroupViewModel} from "./Group";
 import {CollectionViewModel} from "../Collection";
+
 import * as ko from "knockout";
 
 class GroupsViewModel extends CollectionViewModel<GroupData, GroupViewModel>

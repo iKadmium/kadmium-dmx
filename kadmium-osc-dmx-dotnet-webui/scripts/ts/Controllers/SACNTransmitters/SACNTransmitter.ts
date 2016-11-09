@@ -28,7 +28,6 @@ class UnicastViewModel
 
 export class SACNTransmitterViewModel extends CollectionItemViewModel<SACNTransmitterData> implements NamedViewModel
 {
-    name: KnockoutObservable<string>;
     description: KnockoutObservable<string>;
     delay: KnockoutObservable<number>;
     multicast: KnockoutObservable<boolean>;
@@ -37,9 +36,11 @@ export class SACNTransmitterViewModel extends CollectionItemViewModel<SACNTransm
     constructor(name: string)
     {
         super(name, "SACNTransmitters");
-        this.name = ko.observable<string>(name);
         this.description = ko.observable<string>("");
-        this.delay = ko.observable<number>(0);
+        this.delay = ko.validatedObservable<number>(0).extend({
+            min: 0,
+            required: true
+        });
         this.multicast = ko.observable<boolean>(true);
         this.unicast = ko.observableArray<UnicastViewModel>();
     }

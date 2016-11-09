@@ -12,7 +12,7 @@
         <modal-body>
             @Html.Partial("ModalEditorStatus")
             <div class="form-horizontal" id="edit-form">
-                <input-label label="Name:"><input type="text" class="form-control" data-bind="value: name"></input-label>
+                <input-label label="Name:" data-bind="validationElement: name"><input type="text" class="form-control" data-bind="value: name"></input-label>
                 <input-label label="Type:">
                     <select class="form-control" data-bind="value: type">
                         @foreach (string fixtureType in Enum.GetNames(typeof(FixtureType)))
@@ -60,8 +60,8 @@
                         <input-collection-item label="Name">
                             <input type="text" class="form-control" data-bind="value: name" list="movement-names">
                         </input-collection-item>
-                        <input-collection-item label="Min (degrees)"><input type="number" min="0" max="255" data-bind="value: min" class="form-control"></input-collection-item>
-                        <input-collection-item label="Max (degrees)"><input type="number" min="0" max="255" data-bind="value: max" class="form-control"></input-collection-item>
+                        <input-collection-item label="Min (degrees)"><input type="number" data-bind="value: min" class="form-control"></input-collection-item>
+                        <input-collection-item label="Max (degrees)"><input type="number" data-bind="value: max" class="form-control"></input-collection-item>
                     </input-collection-body>
                     <input-collection-footer>
                         <button asp-template="add" data-bind="click: addMovement"></button>

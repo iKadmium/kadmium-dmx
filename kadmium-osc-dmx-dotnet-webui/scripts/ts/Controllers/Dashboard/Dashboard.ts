@@ -1,4 +1,5 @@
 ﻿import { MVC } from "../MVC";
+import {StatusViewModel} from "../Status";
 
 import * as $ from "jquery";
 import * as ko from "knockout";
@@ -11,45 +12,7 @@ interface StatusData
     controller: string;
 }
 
-interface CodeLookup
-{
-    ["Error"]: string,
-    ["Running"]: string,
-    ["NotStarted"]: string,
-    ["Unknown"]: string,
-    [index: string]: string
-}
 
-export class StatusViewModel
-{
-    static alertClasses: CodeLookup = { "Error": "alert-danger", "Running": "alert-success", "NotStarted": "alert-warning", "Unknown": "alert-default" };
-    static panelClasses: CodeLookup = { "Error": "panel-danger", "Running": "panel-success", "NotStarted": "panel-warning", "Unknown": "panel-default" };
-    static glyphClasses: CodeLookup = { "Error": "glyphicon-remove-sign", "Running": "glyphicon-ok-sign", "NotStarted": "glyphicon-info-sign", "Unknown": "glyphicon-question-sign" };
-
-    panelClass: KnockoutComputed<string>;
-    alertClass: KnockoutComputed<string>;
-    glyphClass: KnockoutComputed<string>;
-
-    message: KnockoutObservable<string>;
-    code: KnockoutObservable<string>;
-    name: KnockoutObservable<string>;
-    
-    constructor(name: string)
-    {
-        this.code = ko.observable<string>("Unknown");
-        this.message = ko.observable<string>("Loading...");
-        this.name = ko.observable<string>(name);
-        this.panelClass = ko.computed<string>(() => StatusViewModel.panelClasses[this.code()]);
-        this.alertClass = ko.computed<string>(() => StatusViewModel.alertClasses[this.code()]);
-        this.glyphClass = ko.computed<string>(() => StatusViewModel.glyphClasses[this.code()]);
-    }
-    
-    update(code: string, message: string)
-    {
-        this.message(message);
-        this.code(code);
-    }
-}
 
 export class LiveViewModel extends StatusViewModel
 {
@@ -173,7 +136,17 @@ export class DashboardViewModel
                 }
                 if(statusViewModel != null)
                 {
-                    statusViewModel.update(status.code, status.message);
+                    let statusCode: string;
+                    switch (status.code)
+                    {
+                        case "NotStarted":
+                            statusCode = "Warning";
+                        case "Running":
+                            statusCode = "Success";
+                        default:
+                            statusCode = status.code;
+                    }
+                    statusViewModel.update(statusCode, status.message);
                 }
             });
         });

@@ -14,7 +14,6 @@ export interface FixtureData
 
 export class FixtureViewModel extends CollectionItemViewModel<FixtureData> implements NamedViewModel
 {
-    name: KnockoutObservable<string>;
     type: KnockoutObservable<string>;
     channels: KnockoutObservableArray<ChannelViewModel>;
     movements: KnockoutObservableArray<MovementViewModel>;
@@ -22,7 +21,6 @@ export class FixtureViewModel extends CollectionItemViewModel<FixtureData> imple
     constructor(name: string)
     {
         super(name, "Fixtures");
-        this.name = ko.observable<string>(name);
         this.type = ko.observable<string>();
         this.channels = ko.observableArray<ChannelViewModel>();
         this.movements = ko.observableArray<MovementViewModel>();

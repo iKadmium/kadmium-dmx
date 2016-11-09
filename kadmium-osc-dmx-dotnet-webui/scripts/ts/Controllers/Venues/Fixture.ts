@@ -18,10 +18,13 @@ export class FixtureViewModel
 
     constructor()
     {
-        this.channel = ko.observable<number>();
+        this.channel = ko.validatedObservable<number>().extend({
+            min: 1,
+            max: 512
+        });
         this.type = ko.observable<string>();
         this.group = ko.observable<string>();
-        this.options = ko.observable<FixtureOptionsViewModel>(new FixtureOptionsViewModel(this));
+        this.options = ko.validatedObservable<FixtureOptionsViewModel>(new FixtureOptionsViewModel(this));
     }
 
     serialize(): FixtureData

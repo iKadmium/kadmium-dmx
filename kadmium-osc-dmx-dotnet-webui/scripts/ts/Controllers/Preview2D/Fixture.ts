@@ -71,7 +71,7 @@ export class FixtureViewModel
 {
     channelLookupTable: ChannelLookupTable;
     channels: KnockoutObservableArray<ChannelViewModel>;
-    movements: MovementLookupTable;
+    movementLookupTable: MovementLookupTable;
     address: KnockoutObservable<number>;
     name: KnockoutObservable<string>;
 
@@ -88,15 +88,20 @@ export class FixtureViewModel
     static STROBE_HZ = 15;
     static STROBE_MILLIS = 1000 / FixtureViewModel.STROBE_HZ;
 
-    constructor(type: string, address: number, channelData: ChannelData[])
+    constructor(type: string, address: number, channelData: ChannelData[], movementData: MovementData[])
     {
         this.address = ko.observable<number>(address);
         this.name = ko.observable<string>(type);
         
         this.channelLookupTable = new ChannelLookupTable();
         this.channels = ko.observableArray<ChannelViewModel>(); 
-        this.movements = new MovementLookupTable();
+        this.movementLookupTable = new MovementLookupTable();
         this.strobe = ko.observable<boolean>();
+
+        for (let movementAxis of movementData)
+        {
+            this.movementLookupTable[movementAxis.name] = MovementViewModel.load(movementAxis);
+        }
 
         this.channels.subscribe((newValue: KnockoutArrayChange<ChannelViewModel>[]) =>
         {
@@ -153,34 +158,12 @@ export class FixtureViewModel
 
         this.pan = ko.computed<number>(() =>
         {
-            if (this.channelLookupTable["Pan"] != null)
-            {
-                return this.channelLookupTable["Pan"].value();
-            }
-            else if (this.channelLookupTable["PanCoarse"] != null)
-            {
-                return this.channelLookupTable["PanCoarse"].value();
-            }
-            else
-            {
-                return null;
-            }
+            return (this.movementLookupTable["Pan"] == null) ? null : this.optionalChannelGet("Pan", "PanCoarse");
         });
 
         this.tilt = ko.computed<number>(() =>
         {
-            if (this.channelLookupTable["Tilt"] != null)
-            {
-                return this.channelLookupTable["Tilt"].value();
-            }
-            else if (this.channelLookupTable["TiltCoarse"] != null)
-            {
-                return this.channelLookupTable["TiltCoarse"].value();
-            }
-            else
-            {
-                return null;
-            }
+            return (this.movementLookupTable["Tilt"] == null) ? null : this.optionalChannelGet("Tilt", "TiltCoarse");
         });
 
         this.pan.subscribe((newValue: number) =>
@@ -190,6 +173,7 @@ export class FixtureViewModel
 
         this.color.notifySubscribers();
         this.pan.notifySubscribers();
+        this.tilt.notifySubscribers();
     }
 
     render(): void
@@ -255,6 +239,18 @@ export class FixtureViewModel
         }
         return 0;
     }
+
+    hasChannel(...channels: string[]): boolean
+    {
+        for (let channelName of channels)
+        {
+            if (this.channelLookupTable[channelName] != null)
+            {
+                return true;
+            }
+        }
+        return false;
+    }
     
     update(data: number[]): void
     {
@@ -279,12 +275,7 @@ export class FixtureViewModel
     
     static load(data: FixtureData): FixtureViewModel
     {
-        let fixtureViewModel = new FixtureViewModel(data.name, data.address, data.definition.channels);
-        
-        for (let movementData of data.definition.movements)
-        {
-
-        }
+        let fixtureViewModel = new FixtureViewModel(data.name, data.address, data.definition.channels, data.definition.movements);
         return fixtureViewModel;
     }
 }

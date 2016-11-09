@@ -64,7 +64,10 @@ export class FixtureOptionsViewModel
         this.axisInversions = ko.observableArray<string>();
         this.axisRestrictions = ko.observableArray<AxisRestrictionViewModel>();
         this.fixture = ko.observable<FixtureViewModel>(fixture);
-        this.maxBrightness = ko.observable<number>(100);
+        this.maxBrightness = ko.validatedObservable<number>(100).extend({
+            min: 0,
+            max: 100
+        });
         this.axis = ko.observableArray<string>();
 
         this.fixture().type.subscribe((newValue: string) => 

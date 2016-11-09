@@ -1,18 +1,16 @@
 {
   "compilerOptions": {
-    "module": "commonjs",
-    "noImplicitAny": true,
+    "module": "amd",
+    "noImplicitAny": false,
     "noEmitOnError": true,
     "removeComments": false,
     "sourceMap": true,
     "target": "es5",
     "moduleResolution": "node",
-    "outDir": "scripts/bin",
-    "types": ["jquery", "knockout"]
+    "outDir": "wwwroot/js"
   },
   "include": [
-    "node_modules/knockout",
-    "scripts/ts"
+    "scripts/ts/**/*"
   ],
   "exclude": [
     "node_modules/typescript",

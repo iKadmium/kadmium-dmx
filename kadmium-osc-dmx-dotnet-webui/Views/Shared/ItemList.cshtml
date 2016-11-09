@@ -1,4 +1,12 @@
-﻿<ul class="list-group" id="item-list" data-bind="foreach: items">
+﻿<div data-bind="foreach: statusAlerts">
+    <div class="alert" data-bind="css: alertClass">
+        <span class="glyphicon" data-bind="css: glyphClass"></span>
+        <span data-bind="text: message"></span>
+        <a href="#" class="close" data-bind="click: $parent.deleteAlert.bind($parent)" aria-label="close">&times;</a>
+    </div>
+</div>
+
+<ul class="list-group" id="item-list" data-bind="foreach: items">
     <li class="list-group-item clearfix">
         <span data-bind="text: originalName"></span>
         <div class="pull-right btn-group">

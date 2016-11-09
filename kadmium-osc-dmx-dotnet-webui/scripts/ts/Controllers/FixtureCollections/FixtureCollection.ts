@@ -1,6 +1,8 @@
 ﻿import {CollectionItemViewModel, NamedViewModel} from "../CollectionItem";
-import {FixtureViewModel, FixtureData} from "../Venues/Fixture.ts";
+import {CollectionViewModel} from "../Collection";
+import {FixtureViewModel, FixtureData} from "../Venues/Fixture";
 import * as ko from "knockout";
+import * as validation from "knockout.validation";
 
 export interface FixtureCollectionData
 {
@@ -10,10 +12,15 @@ export interface FixtureCollectionData
 
 export class FixtureCollectionViewModel extends CollectionItemViewModel<FixtureCollectionData> implements NamedViewModel
 {
-    name: KnockoutObservable<string>;
     fixtures: KnockoutObservableArray<FixtureViewModel>;
-
     selectedFixture: KnockoutObservable<FixtureViewModel>;
+
+    constructor(name: string)
+    {
+        super(name, "FixtureCollections");
+        this.fixtures = ko.observableArray<FixtureViewModel>();
+        this.selectedFixture = ko.validatedObservable<FixtureViewModel>(new FixtureViewModel());
+    }
 
     addFixture()
     {
@@ -30,15 +37,7 @@ export class FixtureCollectionViewModel extends CollectionItemViewModel<FixtureC
         this.selectedFixture(item);
         ($("#options-edit") as any).modal("toggle");
     }
-
-    constructor(name: string)
-    {
-        super(name, "FixtureCollections");
-        this.name = ko.observable<string>(name);
-        this.fixtures = ko.observableArray<FixtureViewModel>();
-        this.selectedFixture = ko.observable<FixtureViewModel>(new FixtureViewModel());
-    }
-
+    
     load(data: FixtureCollectionData): void
     {
         this.name(data.name);

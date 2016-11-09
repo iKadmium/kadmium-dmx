@@ -8,12 +8,9 @@ export interface GroupData
 
 export class GroupViewModel extends CollectionItemViewModel<GroupData> implements NamedViewModel
 {
-    name: KnockoutObservable<string>;
-
     constructor(name: string)
     {
         super(name, "Groups");
-        this.name = ko.observable<string>(name);
     }
 
     load(data: GroupData): void

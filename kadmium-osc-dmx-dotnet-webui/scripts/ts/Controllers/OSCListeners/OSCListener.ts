@@ -10,14 +10,15 @@ export interface OSCListenerData
 
 export class OSCListenerViewModel extends CollectionItemViewModel<OSCListenerData> implements NamedViewModel
 {
-    name: KnockoutObservable<string>;
     port: KnockoutObservable<number>;
 
     constructor(name: string)
     {
         super(name, "OSCListeners");
-        this.name = ko.observable<string>(name);
-        this.port = ko.observable<number>(9000);
+        this.port = ko.validatedObservable<number>(9000).extend({
+            min: 1,
+            max: 65535
+        });
     }
 
     load(data: OSCListenerData): void

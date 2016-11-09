@@ -14,7 +14,10 @@ export class TransmitterViewModel
     constructor()
     {
         this.name = ko.observable<string>();
-        this.universeID = ko.observable<number>(1);
+        this.universeID = ko.validatedObservable<number>(1).extend({
+            min: 1,
+            max: 63999
+        });
     }
 
     serialize(): TransmitterData

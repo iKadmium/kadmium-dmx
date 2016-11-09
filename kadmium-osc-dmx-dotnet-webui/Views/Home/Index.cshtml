@@ -6,12 +6,6 @@
     ViewData["Title"] = "Dashboard";
 }
 
-@{
-    string venuePanelClass = MasterController.Instance.Venue == null ? "warning" : "success";
-    string venueHeader = MasterController.Instance.Venue == null ? "No venue selected" : MasterController.Instance.Venue.Name;
-    string panelGlyph = MasterController.Instance.Venue == null ? "glyphicon-info-sign" : "glyphicon-ok-sign";
-}
-
 <div id="status-alerts">
 
 </div>
@@ -23,7 +17,7 @@
                 <div class="panel-heading text-center"><span class="item-name" data-bind="text: name"></span></div>
                 <div class="panel-body text-center" data-bind="css: alertClass">
                     <span class="status-glyph glyphicon" data-bind="css: glyphClass"></span><br>
-                    <span data-bind="text: message">@venueHeader</span>
+                    <span data-bind="text: message"></span>
                 </div>
                 <div class="panel-footer text-center">
                     <div class="dropdown">

@@ -11,7 +11,7 @@
         <modal-body>
             @Html.Partial("ModalEditorStatus")
             <div class="form-horizontal" id="edit-form">
-                <input-label label="Name:"><input type="text" class="form-control" data-bind="value: name"></input-label>
+                <input-label label="Name:" data-bind="validationElement: name"><input type="text" class="form-control" data-bind="value: name"></input-label>
             </div>
         </modal-body>
         <modal-footer>
@@ -24,5 +24,8 @@
 
 @section scripts
 {
-    <script src="~/js/Groups.js"></script>
+    <script>
+        require(["Sortable", "lib/Sortable/knockout-sortable.js", "js/Groups/Groups.js"]);
+        
+    </script>
 }

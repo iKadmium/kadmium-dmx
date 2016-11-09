@@ -15,6 +15,9 @@ module.exports = {
         Groups: "scripts/ts/Controllers/Groups/Groups.ts",
         Venues: "scripts/ts/Controllers/Venues/Venues.ts"
     },
+    externals: {
+        "sortable": "Sortable"
+    },
     output: {
         path: "wwwroot/js",
         filename: "[name].js"

@@ -14,7 +14,7 @@
         <modal-body>
             @Html.Partial("ModalEditorStatus")
             <div class="form-horizontal" id="edit-form">
-                <input-label label="Name:"><input class="form-control" data-bind="value: name"></input-label>
+                <input-label label="Name:" data-bind="validationElement: name"><input class="form-control" data-bind="value: name"></input-label>
                 <input-collection name="universes">
                     <input-collection-header>Universes</input-collection-header>
                     <input-collection-body>
@@ -117,7 +117,7 @@
                     </input-collection-footer>
                 </input-collection>
             </modal-body>
-            <modal-footer><button class="btn btn-success" data-dismiss="modal">OK</button></modal-footer>
+            <modal-footer><button class="btn btn-success" data-dismiss="modal" >OK</button></modal-footer>
         </modal-window>
 
         <binding-context data-bind="with: selectedFixture">

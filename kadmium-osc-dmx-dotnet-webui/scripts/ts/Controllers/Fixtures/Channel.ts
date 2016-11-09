@@ -18,9 +18,17 @@ export class ChannelViewModel
     constructor(channel: number = 1, min = 0, max = 255)
     {
         this.name = ko.observable<string>();
-        this.dmx = ko.observable<number>(channel);
-        this.min = ko.observable<number>(min);
-        this.max = ko.observable<number>(max);
+        this.dmx = ko.validatedObservable<number>(channel).extend({
+                min: 1
+        });
+        this.min = ko.validatedObservable<number>(min).extend({
+            min: 0,
+            max: 255
+        });
+        this.max = ko.validatedObservable<number>(max).extend({
+            min: 0,
+            max: 255
+        });
     }
 
     static load(data: ChannelData): ChannelViewModel

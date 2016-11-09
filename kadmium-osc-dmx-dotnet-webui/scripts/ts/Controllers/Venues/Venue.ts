@@ -10,15 +10,13 @@ export interface VenueData
 
 export class VenueViewModel extends CollectionItemViewModel<VenueData> implements NamedViewModel
 {
-    name: KnockoutObservable<string>;
     universes: KnockoutObservableArray<UniverseViewModel>;
     selectedUniverse: KnockoutObservable<UniverseViewModel>;
     constructor(name: string)
     {
         super(name, "Venues");
-        this.name = ko.observable<string>(name);
         this.universes = ko.observableArray<UniverseViewModel>();
-        this.selectedUniverse = ko.observable<UniverseViewModel>(new UniverseViewModel());
+        this.selectedUniverse = ko.validatedObservable<UniverseViewModel>(new UniverseViewModel());
     }
 
     editTransmitters(item: UniverseViewModel): void
