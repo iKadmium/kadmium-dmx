@@ -29,7 +29,7 @@ export abstract class CollectionItemViewModel<ViewModelDataType> implements Name
         });
     }
 
-    openEditor()
+    openEditor() : void
     {
         ($("#modal-edit") as any).modal("toggle");
         let getURL = MVC.getActionURL(this.controllerName, "Load", this.originalName());
@@ -45,9 +45,6 @@ export abstract class CollectionItemViewModel<ViewModelDataType> implements Name
     onSave(): void
     {
         let newName = this.name();
-        $("#modal-success-text").text("Saved");
-        $("#modal-success").show();
-        $("#modal-submit").hide();
         $("#modal-cancel").prop("disabled", false);
         $("#modal-cancel").text("Close");
         this.originalName(newName);
@@ -57,9 +54,9 @@ export abstract class CollectionItemViewModel<ViewModelDataType> implements Name
 
     onSaveError(xhr: JQueryXHR, textStatus: string, errorThrown: string)
     {
-        $("#modal-error-text").text(errorThrown);
+        let errorText = (errorThrown != "") ? errorThrown : "Unknown Error";
+        $("#modal-error-text").text(errorText);
         $("#modal-error").show();
-        $("#modal-submit").prop("disabled", false);
         $("#modal-submit").text("Retry");
         $("#modal-cancel").prop("disabled", false);
         this.isBusy(false);
@@ -67,8 +64,6 @@ export abstract class CollectionItemViewModel<ViewModelDataType> implements Name
 
     save(): void
     {
-        $("#edit-form").hide();
-        $("#modal-submit").prop("disabled", true);
         $("#modal-error").hide();
         
         $("#modal-cancel").prop("disabled", true);

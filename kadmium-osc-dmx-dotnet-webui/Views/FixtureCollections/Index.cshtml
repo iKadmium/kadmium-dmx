@@ -8,6 +8,7 @@
     <modal-window large="true" id="modal-edit">
         <modal-header>Editing <span class="item-name" data-bind="text: name"></span></modal-header>
         <modal-body>
+            @Html.Partial("ModalEditorStatus")
             <div data-bind="visible: !isBusy()" class="form-horizontal">
                 <input-label label="Name:" data-bind="validationElement: name"><input type="text" class="form-control" data-bind="value: name" name="name"></input-label>
                 <input-collection name="fixtures">
@@ -41,7 +42,6 @@
                     </input-collection-footer>
                 </input-collection>
             </div>
-            @Html.Partial("ModalEditorStatus")
         </modal-body>
         <modal-footer>
             @Html.Partial("ModalEditorFooter")

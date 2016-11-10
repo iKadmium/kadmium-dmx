@@ -100,11 +100,8 @@ export class CollectionViewModel<ViewModelDataType, ViewModelType extends Collec
     {
         this.selectedItem(item);
         let editNode = $("#modal-edit")[0];
-        $("#modal-success").hide();
         $("#modal-error").hide();
-        $("#modal-submit").show();
         $("#modal-cancel").text("Cancel");
-        $("#edit-form").hide();
         let url = MVC.getActionURL(this.controllerName, "Load", item.originalName());
         $("#modal-cancel").prop("disabled", true);
         item.statusText("Loading");
@@ -112,7 +109,6 @@ export class CollectionViewModel<ViewModelDataType, ViewModelType extends Collec
         $.getJSON(url, (data: any, textStatus: string, jqXHR: JQueryXHR) =>
         {
             $("#modal-cancel").prop("disabled", false);
-            $("#edit-form").show();
             item.isBusy(false);
         });
 
