@@ -1,7 +1,8 @@
 ﻿import { MVC } from "../MVC";
-import {StatusViewModel} from "../Status";
+import {StatusTrackerViewModel, StatusViewModel} from "../Status";
 
 import * as ko from "knockout";
+import "ko.plus";
 
 interface StatusData
 {
@@ -59,28 +60,14 @@ export class VenueViewModel extends StatusViewModel
 
     onLoadVenueSuccess(venueName: string): void
     {
-        this.addAlert(venueName + " loaded successfully", "alert alert-success");
+        StatusTrackerViewModel.addStatusAlert("Success", venueName + " loaded successfully");
         this.name(venueName);
         $("#preview").removeClass("disabled");
     }
 
     onLoadVenueError(xhr: JQueryXHR, textStatus: string, errorThrown: string): void
     {
-        this.addAlert("Error loading venue: " + errorThrown, "alert alert-danger");
-    }
-
-    addAlert(text: string, classes: string)
-    {
-        let alertDiv = document.createElement("div");
-        $(alertDiv).addClass(classes);
-        $(alertDiv).text(text);
-        let closeButton = document.createElement("a");
-        $(closeButton).addClass("close");
-        closeButton.innerText = "×";
-        $(closeButton).attr("data-dismiss", "alert");
-
-        alertDiv.appendChild(closeButton);
-        $("#status-alerts")[0].appendChild(alertDiv);
+        this.update("Error", "Error loading venue: " + errorThrown);
     }
 }
 
@@ -93,9 +80,13 @@ export class DashboardViewModel
     panelsLoaded: KnockoutComputed<boolean>;
     sacnTransmittersLoaded: KnockoutObservable<boolean>;
     oscListenersLoaded: KnockoutObservable<boolean>;
+    load: KoPlus.Command;
+    statusTracker: KnockoutObservable<StatusTrackerViewModel>;
+    
 
     constructor()
     {
+        this.statusTracker = ko.observable<StatusTrackerViewModel>(new StatusTrackerViewModel());
         this.venue = ko.observable<VenueViewModel>(new VenueViewModel());
         this.sacnTransmitters = ko.observableArray<SACNTransmitterViewModel>();
         this.oscListeners = ko.observableArray<OSCListenerViewModel>();
@@ -151,25 +142,30 @@ export class DashboardViewModel
             });
         });
 
-        $.get(sacnTransmittersURL, (data: any) =>
+        this.load = ko.command(() =>
         {
-            let sacnTransmitterNames = JSON.parse(data) as string[];
-            for (let sacnTransmitterName of sacnTransmitterNames)
+            $.get(sacnTransmittersURL, (data: any) =>
             {
-                this.sacnTransmitters.push(new SACNTransmitterViewModel(sacnTransmitterName));
-            }
-            this.sacnTransmittersLoaded(true);
+                let sacnTransmitterNames = JSON.parse(data) as string[];
+                for (let sacnTransmitterName of sacnTransmitterNames)
+                {
+                    this.sacnTransmitters.push(new SACNTransmitterViewModel(sacnTransmitterName));
+                }
+                this.sacnTransmittersLoaded(true);
+            });
+
+            return $.get(oscListenersURL, (data: any) =>
+            {
+                let oscListenerNames = JSON.parse(data) as string[];
+                for (let oscListenerName of oscListenerNames)
+                {
+                    this.oscListeners.push(new OSCListenerViewModel(oscListenerName));
+                }
+                this.oscListenersLoaded(true);
+            });
         });
 
-        $.get(oscListenersURL, (data: any) =>
-        {
-            let oscListenerNames = JSON.parse(data) as string[];
-            for (let oscListenerName of oscListenerNames)
-            {
-                this.oscListeners.push(new OSCListenerViewModel(oscListenerName));
-            }
-            this.oscListenersLoaded(true);
-        });
+        this.load();
     }
 }
 

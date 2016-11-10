@@ -1,12 +1,7 @@
-﻿<div data-bind="foreach: statusAlerts">
-    <div class="alert" data-bind="css: alertClass">
-        <span class="glyphicon" data-bind="css: glyphClass"></span>
-        <span data-bind="text: message"></span>
-        <a href="#" class="close" data-bind="click: $parent.deleteAlert.bind($parent)" aria-label="close">&times;</a>
-    </div>
-</div>
+﻿@Html.Partial("LoadingPanel")
+@Html.Partial("StatusAlerts")
 
-<ul class="list-group" id="item-list" data-bind="foreach: items">
+<ul class="list-group" id="item-list" data-bind="foreach: items, visible: load.done" style="display:none">
     <li class="list-group-item clearfix">
         <span data-bind="text: originalName"></span>
         <div class="pull-right btn-group">
@@ -16,6 +11,6 @@
     </li>
 </ul>
 
-<button class="btn btn-success" data-bind="click: addItem"><span class="glyphicon glyphicon-plus"></span></button>
+<button class="btn btn-success" style="display:none" data-bind="click: addItem, visible: load.done"><span class="glyphicon glyphicon-plus"></span></button>
 
 @Html.Partial("ModalDelete", ViewContext.RouteData.Values["controller"].ToString())

@@ -23,21 +23,33 @@ gulp.task("copyLibs:knockout", function ()
         .pipe(gulp.dest("wwwroot/lib"));
 });
 
-gulp.task("copyLibs:knockoutValidation", function ()
+gulp.task("copyLibs:knockoutPlusCSS", function () {
+    return gulp
+        .src("node_modules/ko.plus/dist/ko.plus.css")
+        .pipe(gulp.dest("wwwroot/lib"));
+});
+
+gulp.task("copyLibs:knockoutPlusJS", function ()
 {
+    return gulp
+        .src("node_modules/ko.plus/dist/ko.plus.js")
+        .pipe(gulp.dest("wwwroot/lib"));
+});
+
+gulp.task("copyLibs:knockoutValidation", function () {
     return gulp
         .src("node_modules/knockout.validation/dist/knockout.validation.js")
         .pipe(gulp.dest("wwwroot/lib"));
 });
 
-gulp.task("copyLibs", ["copyLibs:requireJS", "copyLibs:knockout", "copyLibs:knockoutValidation"], function ()
+gulp.task("copyLibs", ["copyLibs:requireJS", "copyLibs:knockout", "copyLibs:knockoutValidation", "copyLibs:knockoutPlusJS", "copyLibs:knockoutPlusCSS"], function ()
 {
     gulp
         .src("node_modules/requirejs/require.js")
         .pipe(gulp.dest("wwwroot/lib"));
 });
 
-gulp.task('default', function ()
+gulp.task('default', ["copyLibs"], function ()
 {
     return gulp
         .src("scripts/ts/**/*.ts")

@@ -6,11 +6,10 @@
     ViewData["Title"] = "Dashboard";
 }
 
-<div id="status-alerts">
+@Html.Partial("StatusAlerts")
+@Html.Partial("LoadingPanel")
 
-</div>
-
-<div class="row">
+<div class="row" data-bind="visible: load.done" style="display: none">
     <binding-context data-bind="with: venue">
         <div class="col-sm-3">
             <div class="panel" data-bind="css: panelClass">

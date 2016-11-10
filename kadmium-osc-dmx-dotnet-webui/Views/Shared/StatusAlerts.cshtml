@@ -1,0 +1,11 @@
+﻿<div data-bind="visible: load.done" style="display:none">
+    <binding-context data-bind="with: statusTracker">
+        <binding-context data-bind="foreach: statusAlerts">
+            <div class="alert" data-bind="css: alertClass">
+                <span class="glyphicon" data-bind="css: glyphClass"></span>
+                <span data-bind="text: message"></span>
+                <a href="#" class="close" data-bind="click: $parent.deleteAlert.bind($parent)" aria-label="close">&times;</a>
+            </div>
+        </binding-context>
+    </binding-context>
+</div>

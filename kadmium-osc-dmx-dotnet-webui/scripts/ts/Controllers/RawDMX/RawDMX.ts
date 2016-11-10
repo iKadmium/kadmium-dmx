@@ -1,5 +1,6 @@
 ﻿import {MVC} from "../MVC";
 import * as ko from "knockout";
+import "ko.plus";
 
 interface RawDMXMessage
 {
@@ -42,6 +43,8 @@ class RawDMXViewModel
     channels: KnockoutObservableArray<DMXChannel>;
     transmitter: KnockoutObservable<string>;
     universeID: KnockoutObservable<number>;
+    finishedLoading: KnockoutObservable<boolean>;
+    load: KoPlus.Command;
 
     constructor()
     {
@@ -49,6 +52,7 @@ class RawDMXViewModel
         this.transmitter = ko.observable<string>($("#transmitter").val());
         this.universeID = ko.observable<number>(1);
         this.webSocket = new WebSocket(MVC.getSocketURL("RawDMX"));
+        
         this.webSocket.addEventListener("message", (ev: MessageEvent) => 
         {
             //
@@ -74,6 +78,8 @@ class RawDMXViewModel
                 this.webSocket.send(message);
             });
         }
+
+        this.load = ko.command(() => true);
     }
 
     static getInitialDMX(): DMXChannel[]

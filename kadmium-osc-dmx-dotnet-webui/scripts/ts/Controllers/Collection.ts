@@ -1,8 +1,9 @@
 ﻿import {CollectionItemViewModel, NamedViewModel} from "./CollectionItem";
-import {StatusViewModel} from "./Status";
+import {StatusViewModel, StatusTrackerViewModel} from "./Status";
 import {MVC} from "./MVC";
 
 import * as ko from "knockout";
+import "ko.plus";
 import "knockout.validation";
 
 export class CollectionViewModel<ViewModelDataType, ViewModelType extends CollectionItemViewModel<ViewModelDataType>>
@@ -11,7 +12,9 @@ export class CollectionViewModel<ViewModelDataType, ViewModelType extends Collec
     itemConstructor: (name: string) => ViewModelType;
     controllerName: string;
     selectedItem: KnockoutObservable<ViewModelType>;
-    statusAlerts: KnockoutObservableArray<StatusViewModel>;
+    statusTracker: KnockoutObservable<StatusTrackerViewModel>;
+    
+    load: KoPlus.Command;
 
     private static instance: any;
 
@@ -20,10 +23,10 @@ export class CollectionViewModel<ViewModelDataType, ViewModelType extends Collec
         this.itemConstructor = itemConstructor;
         this.controllerName = controllerName;
         this.items = ko.observableArray<ViewModelType>();
-        this.statusAlerts = ko.observableArray<StatusViewModel>();
         this.selectedItem = ko.validatedObservable<ViewModelType>(itemConstructor("new item"));
         let getURL = MVC.getActionURL(this.controllerName, "List", null);
-        
+        this.statusTracker = ko.observable<StatusTrackerViewModel>(new StatusTrackerViewModel());
+
         CollectionViewModel.instance = this;
 
         $(document).on('show.bs.modal', '.modal', (eventObject: JQueryEventObject, ...args: any[]) =>
@@ -41,15 +44,19 @@ export class CollectionViewModel<ViewModelDataType, ViewModelType extends Collec
             $("#modal-delete").prop("disabled", false);
         });
         
-        $.get(getURL, (data: any, textStatus: string, jqXHR: JQueryXHR) =>
+        this.load = ko.command(() =>
         {
-            let itemNames = JSON.parse(data) as string[];
-            for (let itemName of itemNames)
+            return $.get(getURL, (data: any, textStatus: string, jqXHR: JQueryXHR) =>
             {
-                let item = itemConstructor(itemName);
-                this.items.push(item);
-            }
+                let itemNames = JSON.parse(data) as string[];
+                for (let itemName of itemNames)
+                {
+                    let item = itemConstructor(itemName);
+                    this.items.push(item);
+                }
+            });
         });
+        
 
         ko.validation.init({
             errorElementClass: 'has-error',
@@ -68,23 +75,9 @@ export class CollectionViewModel<ViewModelDataType, ViewModelType extends Collec
         };
         ko.validation.registerExtenders();
 
-        
+        this.load();
     }
-
-    static addStatusAlert(code: string, message: string): void
-    {
-        let alerts = CollectionViewModel.instance.statusAlerts as KnockoutObservableArray<StatusViewModel>;
-        let status = new StatusViewModel("");
-        status.message(message);
-        status.code(code);
-        alerts.push(status);
-    }
-
-    deleteAlert(item: StatusViewModel)
-    {
-        this.statusAlerts.remove(item);
-    }
-
+    
     delete(item: ViewModelType): void
     {
         this.selectedItem(item);

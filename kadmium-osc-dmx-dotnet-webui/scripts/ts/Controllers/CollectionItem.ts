@@ -1,5 +1,6 @@
 ﻿import {MVC} from "./MVC";
 import {CollectionViewModel} from "./Collection";
+import {StatusTrackerViewModel} from "./Status";
 
 import * as ko from "knockout";
 
@@ -50,7 +51,7 @@ export abstract class CollectionItemViewModel<ViewModelDataType> implements Name
         $("#modal-cancel").prop("disabled", false);
         $("#modal-cancel").text("Close");
         this.originalName(newName);
-        CollectionViewModel.addStatusAlert("Success", "Successfully saved " + this.originalName());
+        StatusTrackerViewModel.addStatusAlert("Success", "Successfully saved " + this.originalName());
         ($("#modal-edit") as any).modal("toggle");
     }
 

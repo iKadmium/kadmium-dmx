@@ -39,3 +39,32 @@ export class StatusViewModel
         this.code(code);
     }
 }
+
+export class StatusTrackerViewModel
+{
+    statusAlerts: KnockoutObservableArray<StatusViewModel>;
+
+    static instance: StatusTrackerViewModel;
+
+    constructor()
+    {
+        this.statusAlerts = ko.observableArray<StatusViewModel>();
+        StatusTrackerViewModel.instance = this;
+    }
+
+    static addStatusAlert(code: string, message: string): void
+    {
+        let alerts = StatusTrackerViewModel.instance.statusAlerts as KnockoutObservableArray<StatusViewModel>;
+        let status = new StatusViewModel("");
+        status.message(message);
+        status.code(code);
+        alerts.push(status);
+    }
+
+    deleteAlert(item: StatusViewModel)
+    {
+        this.statusAlerts.remove(item);
+    }
+
+
+}
