@@ -22,9 +22,21 @@
 
 @Html.Partial("ItemList")
 
+<button asp-template="edit" data-bind="click: reorder, visible: load.done">Change order</button>
+
+<modal-window id="modal-reorder">
+    <modal-header>Editing group order</modal-header>
+    <modal-body>
+        <ul class="list-group" data-bind="sortable: {foreach: items}">
+            <li class="list-group-item" data-bind="text: name"></li>
+        </ul>
+    </modal-body>
+    <modal-footer><button class="btn btn-success" data-bind="click: reorderSave">OK</button> </modal-footer>
+</modal-window>
+
 @section scripts
 {
     <script>
-        require(["Controllers/Groups/Groups"]);
+        require(["Sortable", "knockout-sortablejs", "Controllers/Groups/Groups"]);
     </script>
 }

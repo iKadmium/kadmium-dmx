@@ -8,7 +8,7 @@ using System.Linq;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
-
+using System.Collections.Specialized;
 
 namespace kadmium_osc_dmx_dotnet_core
 {

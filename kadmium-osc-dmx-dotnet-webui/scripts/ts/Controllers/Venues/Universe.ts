@@ -1,5 +1,5 @@
 ﻿import {TransmitterData, TransmitterViewModel} from "./Transmitter";
-import {FixtureData, FixtureViewModel} from "./Fixture";
+import {FixtureData, FixtureViewModel, FixtureDefinitionCache} from "./Fixture";
 import {MVC} from "../MVC";
 import {FixtureCollectionData} from "../FixtureCollections/FixtureCollection";
 import * as ko from "knockout";
@@ -65,6 +65,8 @@ export class UniverseViewModel
     editOptions(item: FixtureViewModel): void
     {
         this.selectedFixture(item);
+        item.options().fixture(item);
+        item.options().load();
         ($("#options-edit") as any).modal("toggle");
     }
 

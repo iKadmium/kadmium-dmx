@@ -11,14 +11,16 @@ namespace kadmium_osc_dmx_dotnet_core
     public class Group
     {
         public string Name { get; set; }
+        public int Order { get; set; }
         public List<GroupSolver> Solvers { get; }
         public List<Fixture> Fixtures { get; }
         public Dictionary<string, Attribute> Settables { get; }
         public Dictionary<string, Attribute> FrameSettables { get; }
 
-        public Group(string name)
+        public Group(string name, int order)
         {
             Name = name;
+            Order = order;
             Fixtures = new List<Fixture>();
             Solvers = new List<GroupSolver>();
             Settables = new Dictionary<string, Attribute>();
@@ -26,7 +28,7 @@ namespace kadmium_osc_dmx_dotnet_core
             Solvers.AddRange(GroupSolver.GetDefaultSolvers(this, Enumerable.Empty<string>()));
         }
 
-        public Group() : this("")
+        public Group() : this("", MasterController.Instance.Groups.Count + 1)
         {
         }
 
@@ -49,7 +51,8 @@ namespace kadmium_osc_dmx_dotnet_core
         public JObject Serialize()
         {
             JObject obj = new JObject(
-                new JProperty("name", Name)
+                new JProperty("name", Name),
+                new JProperty("order", Order)
             );
             return obj;
         }
@@ -74,7 +77,8 @@ namespace kadmium_osc_dmx_dotnet_core
         public static Group Load(JObject groupObject)
         {
             string name = groupObject["name"].Value<string>();
-            return new Group(name);
+            int order = groupObject["order"]?.Value<int>() ?? MasterController.Instance.Groups.Count + 1;
+            return new Group(name, order);
         }
     }
 }

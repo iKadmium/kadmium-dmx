@@ -33,7 +33,9 @@
         <script>
             require.config({
                 shim: {
-                    "bootstrap": {"deps": ["jquery"]}
+                    "bootstrap": { "deps": ["jquery"] },
+                    "knockout-sortablejs": {"deps": ["Sortable"]},
+                    "Controllers/Groups/Groups": { "deps": ["knockout-sortablejs"] }
                 },
                 baseUrl: "/js",
                 paths: {
@@ -41,7 +43,9 @@
                     "knockout.validation": "/lib/knockout.validation",
                     "ko.plus": "/lib/ko.plus",
                     "jquery": "/lib/jquery/jquery",
-                    "bootstrap": "/lib/bootstrap/dist/js/bootstrap"
+                    "bootstrap": "/lib/bootstrap/dist/js/bootstrap",
+                    "Sortable": "/lib/Sortable/Sortable",
+                    "knockout-sortablejs": "/lib/knockout-sortable"
                 }
             });
             require(["jquery", "bootstrap"]);

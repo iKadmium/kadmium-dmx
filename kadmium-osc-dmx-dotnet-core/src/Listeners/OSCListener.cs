@@ -36,7 +36,6 @@ namespace kadmium_osc_dmx_dotnet_core.Listeners
             {
                 Status.Update(StatusCode.Error, e.Message, this);
             }
-            
         }
 
         private void Listener_PacketReceived(object sender, OSCMessageReceivedArgs e)

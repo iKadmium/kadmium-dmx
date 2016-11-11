@@ -1,23 +1,30 @@
 ﻿[
 	{
-		"name": "vocalist"
+		"name": "vocalist",
+		"order": 1
 	},
 	{
-		"name": "guitarist"
+		"name": "guitarist",
+		"order": 2
 	},
 	{
-		"name": "bassist"
+		"name": "bassist",
+		"order": 3
 	},
 	{
-		"name": "drummer"
+		"name": "drummer",
+		"order": 4
 	},
 	{
-		"name": "rearSides"
+		"name": "rearSides",
+		"order": 5
 	},
 	{
-		"name": "drumLEDs"
+		"name": "drumLEDs",
+		"order": 6
 	},
 	{
-		"name": "audience"
+		"name": "audience",
+		"order": 7
 	}
 ]

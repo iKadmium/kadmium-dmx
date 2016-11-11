@@ -42,7 +42,13 @@ gulp.task("copyLibs:knockoutValidation", function () {
         .pipe(gulp.dest("wwwroot/lib"));
 });
 
-gulp.task("copyLibs", ["copyLibs:requireJS", "copyLibs:knockout", "copyLibs:knockoutValidation", "copyLibs:knockoutPlusJS", "copyLibs:knockoutPlusCSS"], function ()
+gulp.task("copyLibs:knockoutSortable", function () {
+    return gulp
+        .src("node_modules/knockout-sortablejs/knockout-sortable.js")
+        .pipe(gulp.dest("wwwroot/lib"));
+});
+
+gulp.task("copyLibs", ["copyLibs:requireJS", "copyLibs:knockout", "copyLibs:knockoutValidation", "copyLibs:knockoutPlusJS", "copyLibs:knockoutPlusCSS", "copyLibs:knockoutSortable"], function ()
 {
     gulp
         .src("node_modules/requirejs/require.js")

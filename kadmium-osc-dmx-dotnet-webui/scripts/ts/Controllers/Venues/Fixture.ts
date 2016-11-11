@@ -1,4 +1,7 @@
 ﻿import {FixtureOptionsData, FixtureOptionsViewModel} from "./FixtureOptions";
+import {LazyLoad} from "../LazyLoad";
+import {MVC} from "../MVC";
+import {FixtureData as FixtureDefinitionData, FixtureViewModel as FixtureDefinitionViewModel} from "../Fixtures/Fixture";
 import * as ko from "knockout";
 
 export interface FixtureData
@@ -9,13 +12,43 @@ export interface FixtureData
     options: FixtureOptionsData;
 }
 
+export interface FixtureDefinitionDictionary
+{
+    [index: string]: JQueryPromise<FixtureDefinitionData>;
+}
+
+export class FixtureDefinitionCache
+{
+    static cache: FixtureDefinitionDictionary;
+
+    static getDefinition(fixtureType: string): JQueryPromise<FixtureDefinitionData>
+    {
+        if (FixtureDefinitionCache.cache == null)
+        {
+            FixtureDefinitionCache.cache = {};
+        }
+        if (FixtureDefinitionCache.cache[fixtureType] != null)
+        {
+            return FixtureDefinitionCache.cache[fixtureType];
+        }
+        else
+        {
+            let url = MVC.getActionURL("Fixtures", "Load", fixtureType);
+            let lazyLoad = LazyLoad.load<FixtureDefinitionData>(url);
+            FixtureDefinitionCache.cache[fixtureType] = lazyLoad;
+            return lazyLoad;
+        }
+    }
+}
+
 export class FixtureViewModel
 {
     channel: KnockoutObservable<number>;
     type: KnockoutObservable<string>;
     group: KnockoutObservable<string>;
     options: KnockoutObservable<FixtureOptionsViewModel>;
-
+    definition: KnockoutObservable<FixtureDefinitionViewModel>;
+    
     constructor()
     {
         this.channel = ko.validatedObservable<number>().extend({

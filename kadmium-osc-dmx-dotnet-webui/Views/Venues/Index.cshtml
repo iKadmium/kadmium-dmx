@@ -87,9 +87,9 @@
                         <input-collection-item label="Channel"><input type="number" class="form-control" data-bind="value: channel" min="1" max="512"></input-collection-item>
                         <input-collection-item label="Group">
                             <select class="form-control" data-bind="value: group">
-                                @foreach (string groupName in MasterController.Instance.Groups.Keys)
+                                @foreach (var grp in MasterController.Instance.Groups.Values.OrderBy(x => x.Order))
                                 {
-                                    <option>@groupName</option>
+                                    <option>@grp.Name</option>
                                 }
                             </select>
                         </input-collection-item>

@@ -1,5 +1,6 @@
-﻿import {FixtureViewModel} from "./Fixture";
-import {FixtureData} from "../Fixtures/Fixture";
+﻿import {FixtureData} from "../Fixtures/Fixture";
+import {FixtureViewModel, FixtureDefinitionCache} from "./Fixture";
+import {LazyLoad} from "../LazyLoad";
 import {MVC} from "../MVC";
 import * as ko from "knockout";
 
@@ -57,33 +58,40 @@ export class FixtureOptionsViewModel
     axisRestrictions: KnockoutObservableArray<AxisRestrictionViewModel>;
     axis: KnockoutObservableArray<string>;
     maxBrightness: KnockoutObservable<number>;
+    moving: KnockoutObservable<boolean>;
     fixture: KnockoutObservable<FixtureViewModel>;
-
+    load: KoPlus.Command;
+    
     constructor(fixture: FixtureViewModel)
     {
+        this.load = ko.command(() => 
+        {
+            let lazyDefinition = FixtureDefinitionCache.getDefinition(fixture.type());
+            return lazyDefinition.done((data: FixtureData) => 
+            {
+                this.loadDefinition(data);
+            });
+        });
+        this.fixture = ko.observable<FixtureViewModel>(fixture);
         this.axisInversions = ko.observableArray<string>();
         this.axisRestrictions = ko.observableArray<AxisRestrictionViewModel>();
-        this.fixture = ko.observable<FixtureViewModel>(fixture);
         this.maxBrightness = ko.validatedObservable<number>(100).extend({
             min: 0,
             max: 100
         });
         this.axis = ko.observableArray<string>();
+        this.moving = ko.observable<boolean>(false);
+    }
 
-        this.fixture().type.subscribe((newValue: string) => 
+    loadDefinition(data: FixtureData): void
+    {
+        this.axis.removeAll();
+        for (let movement of data.movements)
         {
-            let url = MVC.getActionURL("Fixtures", "Load", fixture.type());
-            $.get(url, (data: any, textStatus: string, jqXHR: JQueryXHR) =>
-            {
-                let definition = JSON.parse(data) as FixtureData;
-                this.axis.removeAll();
-                for (let movement of definition.movements)
-                {
-                    this.axis.push(movement.name);
-                }
-            });
-        });
-        this.fixture().type.notifySubscribers();
+            this.axis.push(movement.name);
+        }
+        this.moving(this.axis().length > 0);
+        this.axis.notifySubscribers();
     }
 
     addAxisRestriction(): void

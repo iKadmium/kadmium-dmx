@@ -31,8 +31,9 @@ namespace kadmium_osc_dmx_dotnet_webui.Controllers
         public IActionResult List()
         {
             JArray arr = new JArray(
-                from groupName in MasterController.Instance.Groups.Keys
-                select new JValue(groupName)
+                from grp in MasterController.Instance.Groups.Values
+                orderby grp.Order
+                select new JValue(grp.Name)
             );
             return Content(arr.ToString());
         }
@@ -65,7 +66,7 @@ namespace kadmium_osc_dmx_dotnet_webui.Controllers
             Group group;
             if (id == null)
             {
-                group = new Group(newID);
+                group = new Group(newID, MasterController.Instance.Groups.Count + 1);
             }
             else if (MasterController.Instance.Groups.ContainsKey(id))
             {
@@ -97,6 +98,18 @@ namespace kadmium_osc_dmx_dotnet_webui.Controllers
             }
         }
 
+        public IActionResult SaveOrder(string jsonString)
+        {
+            JObject obj = JObject.Parse(jsonString);
+            var names = obj["names"].Values<string>().ToList();
+            foreach(Group group in MasterController.Instance.Groups.Values)
+            {
+                group.Order = names.IndexOf(group.Name);
+            }
+            Response.StatusCode = 200;
+            return new EmptyResult();
+        }
+
         public IActionResult Delete(string id)
         {
             Group group;
@@ -104,7 +117,7 @@ namespace kadmium_osc_dmx_dotnet_webui.Controllers
             {
                 if(MasterController.Instance.Groups.Count == 0)
                 {
-                    MasterController.Instance.Groups.TryAdd("Default Group", new Group("Default Group"));
+                    MasterController.Instance.Groups.TryAdd("Default Group", new Group("Default Group", 1));
                 }
                 MasterController.Instance.Groups.Values.First().Fixtures.AddRange(group.Fixtures);
                 FileAccess.SaveGroups();

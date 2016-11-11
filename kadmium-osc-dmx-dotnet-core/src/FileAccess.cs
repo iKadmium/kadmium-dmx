@@ -157,6 +157,7 @@ namespace kadmium_osc_dmx_dotnet_core
         {
             JArray groups = new JArray(
                 from grp in MasterController.Instance.Groups.Values
+                orderby grp.Order
                 select grp.Serialize()
             );
 
