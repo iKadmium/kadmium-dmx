@@ -30,12 +30,16 @@ namespace kadmium_osc_dmx_dotnet_webui.WebSockets
 
         private async void Universe_Updated(object sender, DMXEventArgs e)
         {
-            JArray arr = new JArray(
-                from channel in e.DMX
-                select new JValue((int)channel)
+            Universe universe = sender as Universe;
+            JObject obj = new JObject(
+                new JProperty("universe", universe.Name),
+                new JProperty("values",
+                    from channel in e.DMX
+                    select new JValue((int)channel)
+                )
             );
 
-            string message = arr.ToString();
+            string message = obj.ToString();
 
             byte[] bytes = Encoding.UTF8.GetBytes(message);
 

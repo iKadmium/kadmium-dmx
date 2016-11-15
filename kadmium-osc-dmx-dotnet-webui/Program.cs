@@ -6,6 +6,8 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Hosting;
 using kadmium_osc_dmx_dotnet_core;
 using Microsoft.Extensions.Configuration;
+using Newtonsoft.Json.Linq;
+using Newtonsoft.Json;
 
 namespace kadmium_osc_dmx_dotnet_webui
 {
@@ -14,9 +16,12 @@ namespace kadmium_osc_dmx_dotnet_webui
         public static void Main(string[] args)
         {
             MasterController.Initialise();
-            
+
+            var settings = kadmium_osc_dmx_dotnet_core.FileAccess.LoadSettings();
+            int port = settings["port"].Value<int>();
+
             var host = new WebHostBuilder()
-                .UseUrls("http://*:5000/")
+                .UseUrls("http://*:" + port + "/")
                 .UseKestrel()
                 .UseContentRoot(Directory.GetCurrentDirectory())
                 .UseIISIntegration()

@@ -1,5 +1,6 @@
 ﻿import {MovementData, MovementViewModel} from "../Fixtures/Movement";
 import {FixtureData as FixtureDefinitionData} from "../Fixtures/Fixture";
+import {ColorWheelEntryData, ColorWheelEntryViewModel, ColorWheelViewModel} from "../Fixtures/ColorWheel";
 import {ChannelData} from "../Fixtures/Channel";
 import {MVC} from "../MVC";
 
@@ -72,6 +73,7 @@ export class FixtureViewModel
     channelLookupTable: ChannelLookupTable;
     channels: KnockoutObservableArray<ChannelViewModel>;
     movementLookupTable: MovementLookupTable;
+    colorWheel: KnockoutObservable<ColorWheelViewModel>;
     address: KnockoutObservable<number>;
     name: KnockoutObservable<string>;
 
@@ -82,13 +84,16 @@ export class FixtureViewModel
     
     color: KnockoutComputed<string>;
 
+    activeColorWheelEntry: KnockoutObservable<ColorWheelEntryViewModel>;
+
     canvas: HTMLCanvasElement;
     context: CanvasRenderingContext2D;
 
     static STROBE_HZ = 15;
     static STROBE_MILLIS = 1000 / FixtureViewModel.STROBE_HZ;
 
-    constructor(type: string, address: number, channelData: ChannelData[], movementData: MovementData[])
+    constructor(type: string, address: number, channelData: ChannelData[], movementData: MovementData[],
+        colorWheelData: ColorWheelEntryData[])
     {
         this.address = ko.observable<number>(address);
         this.name = ko.observable<string>(type);
@@ -96,13 +101,17 @@ export class FixtureViewModel
         this.channelLookupTable = new ChannelLookupTable();
         this.channels = ko.observableArray<ChannelViewModel>(); 
         this.movementLookupTable = new MovementLookupTable();
+        this.colorWheel = ko.observable<ColorWheelViewModel>(ColorWheelViewModel.load(colorWheelData));
         this.strobe = ko.observable<boolean>();
 
-        for (let movementAxis of movementData)
+        if (movementData != null)
         {
-            this.movementLookupTable[movementAxis.name] = MovementViewModel.load(movementAxis);
+            for (let movementAxis of movementData)
+            {
+                this.movementLookupTable[movementAxis.name] = MovementViewModel.load(movementAxis);
+            }
         }
-
+        
         this.channels.subscribe((newValue: KnockoutArrayChange<ChannelViewModel>[]) =>
         {
             for (let change of newValue)
@@ -142,15 +151,48 @@ export class FixtureViewModel
                 this.strobe(newValue);
             }
         }, FixtureViewModel.STROBE_MILLIS);
-        
-        this.color = ko.computed<string>(() => 
-        {
-            let red = this.strobe() ? 0 : this.optionalChannelGet("Red") * 255;
-            let green = this.strobe() ? 0 : this.optionalChannelGet("Green") * 255;
-            let blue = this.strobe() ? 0 : this.optionalChannelGet("Blue") * 255;
-            return "rgb(" + red + "," + green + "," + blue + ")";
-        });
 
+        if (this.channelLookupTable["ColorWheel"] != null)
+        {
+            this.activeColorWheelEntry = ko.observable<ColorWheelEntryViewModel>(this.colorWheel().entries()[0]);
+            this.channelLookupTable["ColorWheel"].dmxValue.subscribe((newValue: number) =>
+            {
+                this.activeColorWheelEntry(this.colorWheel().get(newValue));
+            });
+            this.color = ko.computed<string>(() => 
+            {
+                let red = this.strobe() ? 0 : this.activeColorWheelEntry().red();
+                let green = this.strobe() ? 0 : this.activeColorWheelEntry().green();
+                let blue = this.strobe() ? 0 : this.activeColorWheelEntry().blue();
+                let master = 1;
+                if (this.channelLookupTable["Master"] != null)
+                {
+                    master = this.optionalChannelGet("Master");
+                    red *= master;
+                    green *= master;
+                    blue *= master;
+                }
+                return "rgb(" + red + "," + green + "," + blue + ")";
+            });
+        }
+        else
+        {
+            this.color = ko.computed<string>(() =>
+            {
+                let red = this.strobe() ? 0 : this.optionalChannelGet("Red") * 255;
+                let green = this.strobe() ? 0 : this.optionalChannelGet("Green") * 255;
+                let blue = this.strobe() ? 0 : this.optionalChannelGet("Blue") * 255;
+                if (this.channelLookupTable["Master"] != null)
+                {
+                    let master = this.optionalChannelGet("Master");
+                    red *= master;
+                    green *= master;
+                    blue *= master;
+                }
+                return "rgb(" + red + "," + green + "," + blue + ")";
+            });
+        }
+        
         this.color.subscribe((newValue: string) =>
         {
             this.render();
@@ -275,7 +317,8 @@ export class FixtureViewModel
     
     static load(data: FixtureData): FixtureViewModel
     {
-        let fixtureViewModel = new FixtureViewModel(data.name, data.address, data.definition.channels, data.definition.movements);
+        let fixtureViewModel = new FixtureViewModel(data.name, data.address, data.definition.channels,
+            data.definition.movements, data.definition.colorWheel);
         return fixtureViewModel;
     }
 }

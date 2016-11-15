@@ -33,8 +33,9 @@ namespace kadmium_osc_dmx_dotnet_webui.Controllers
 
                 obj = new JObject(
                     new JProperty("groups",
-                        new JArray(from groupName in MasterController.Instance.Groups.Keys
-                                   select new JValue(groupName)
+                        new JArray(from grp in MasterController.Instance.Groups.Values
+                                   orderby grp.Order
+                                   select new JValue(grp.Name)
                         )
                     ),
                     new JProperty("universes",

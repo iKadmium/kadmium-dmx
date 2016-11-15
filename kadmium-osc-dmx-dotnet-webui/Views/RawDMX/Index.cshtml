@@ -9,19 +9,15 @@
 
 @Html.Partial("LoadingPanel")
 
-<binding-context data-bind="visible: load.done" style="display: none">
+<binding-context data-bind="visible: load.done, enable: websocketOpen()" style="display: none">
     <div class="form-group">
-        <label class="control-label col-sm-3" for="universe">Transmitter</label>
-        <select id="transmitter" class="form-control" data-bind="value: transmitter">
-            @foreach (string transmitterName in MasterController.Instance.Transmitters.Keys)
+        <label class="control-label col-sm-3" for="universe">Universe</label>
+        <select class="form-control" data-bind="value: universe, enable: websocketOpen">
+            @foreach (var universe in MasterController.Instance.Venue?.Universes ?? Enumerable.Empty<Universe>())
             {
-                <option>@transmitterName</option>
+                <option>@universe.Name</option>
             }
         </select>
-    </div>
-    <div class="form-group">
-        <label class="control-label col-sm-3" for="universe">Universe ID</label>
-        <input type="number" id="universeID" class="form-control" min="1" max="63999" data-bind="value: universeID">
     </div>
     <table class="table table-striped">
         <thead>
@@ -34,8 +30,8 @@
         <tbody id="channels-body" data-bind="foreach: channels">
             <tr>
                 <td data-bind="text: $index() + 1"></td>
-                <td><input class="form-control" type="range" min="0" max="255" data-bind="value: value, valueUpdate: 'input'"></td>
-                <td><input class="form-control" type="number" min="0" max="255" data-bind="value: value"></td>
+                <td><input class="form-control" type="range" min="0" max="255" data-bind="value: value, enable: $parent.websocketOpen, valueUpdate: 'input'"></td>
+                <td><input class="form-control" type="number" min="0" max="255" data-bind="value: value, enable: $parent.websocketOpen"></td>
             </tr>
         </tbody>
     </table>

@@ -7,16 +7,10 @@ interface RawDMXMessage
     type: string;
 }
 
-interface TransmitterUpdate extends RawDMXMessage
+interface UniverseUpdate extends RawDMXMessage
 {
-    type: "TransmitterUpdate";
-    transmitter: string;
-}
-
-interface UniverseIDUpdate extends RawDMXMessage
-{
-    type: "UniverseIDUpdate";
-    universeID: number;
+    type: "UniverseUpdate";
+    universe: string;
 }
 
 interface ChannelUpdate extends RawDMXMessage
@@ -41,33 +35,33 @@ class RawDMXViewModel
 {
     webSocket: WebSocket;
     channels: KnockoutObservableArray<DMXChannel>;
-    transmitter: KnockoutObservable<string>;
-    universeID: KnockoutObservable<number>;
+    universe: KnockoutObservable<string>;
     finishedLoading: KnockoutObservable<boolean>;
+    websocketOpen: KnockoutObservable<boolean>;
     load: KoPlus.Command;
 
     constructor()
     {
         this.channels = ko.observableArray<DMXChannel>(RawDMXViewModel.getInitialDMX());
-        this.transmitter = ko.observable<string>($("#transmitter").val());
-        this.universeID = ko.observable<number>(1);
+        this.universe = ko.observable<string>();
+        this.websocketOpen = ko.observable<boolean>(false);
         this.webSocket = new WebSocket(MVC.getSocketURL("RawDMX"));
         
-        this.webSocket.addEventListener("message", (ev: MessageEvent) => 
-        {
-            //
-        });
+        this.webSocket.addEventListener("open", (ev: Event) => this.websocketOpen(true));
+        this.webSocket.addEventListener("close", (ev: CloseEvent) => this.websocketOpen(false));
+        this.webSocket.addEventListener("error", (ev: ErrorEvent) => this.websocketOpen(false));
 
-        this.transmitter.subscribe((newValue: string) =>
+        this.universe.subscribe((newValue: string) =>
         {
-            let message = JSON.stringify(RawDMXViewModel.createTransmitterUpdateMessage(newValue));
-            this.webSocket.send(message);
-        });
-
-        this.universeID.subscribe((newValue: number) =>
-        {
-            let message = JSON.stringify(RawDMXViewModel.createUniverseIDUpdateMessage(newValue));
-            this.webSocket.send(message);
+            let message = JSON.stringify(RawDMXViewModel.createUniverseUpdateMessage(newValue));
+            if (this.webSocket.readyState == 1)
+            {
+                this.webSocket.send(message);
+            }
+            for (let channel of this.channels())
+            {
+                channel.value.notifySubscribers();
+            }
         });
 
         for (let channel of this.channels())
@@ -75,10 +69,18 @@ class RawDMXViewModel
             channel.value.subscribe((newValue: number) => 
             {
                 let message = JSON.stringify(RawDMXViewModel.createChannelUpdateMessage(channel.index, newValue));
-                this.webSocket.send(message);
+                if (this.webSocket.readyState == 1)
+                {
+                    this.webSocket.send(message);
+                }
             });
         }
-
+        
+        this.webSocket.addEventListener("message", (ev: MessageEvent) => 
+        {
+            //
+        });
+        
         this.load = ko.command(() => true);
     }
 
@@ -92,24 +94,15 @@ class RawDMXViewModel
         return initialDMX;
     }
 
-    static createTransmitterUpdateMessage(transmitter: string): TransmitterUpdate
+    static createUniverseUpdateMessage(universe: string): UniverseUpdate
     {
-        let obj: TransmitterUpdate = {
-            type: "TransmitterUpdate",
-            transmitter: transmitter
+        let obj: UniverseUpdate = {
+            type: "UniverseUpdate",
+            universe: universe
         }
         return obj;
     }
-
-    static createUniverseIDUpdateMessage(universeID: number): UniverseIDUpdate
-    {
-        let obj: UniverseIDUpdate = {
-            type: "UniverseIDUpdate",
-            universeID: universeID
-        }
-        return obj;
-    }
-
+    
     static createChannelUpdateMessage(channel: number, value: number): ChannelUpdate
     {
         let obj: ChannelUpdate = {

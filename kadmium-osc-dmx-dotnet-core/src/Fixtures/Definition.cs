@@ -11,12 +11,14 @@ namespace kadmium_osc_dmx_dotnet_core.Fixtures
         public string Name { get; set; }
         public List<DMXChannel> Channels { get; }
         public List<MovementAxis> Axis { get; }
+        public List<ColorWheelEntry> ColorWheel { get; }
         public FixtureType Type { get; set; }
 
         public Definition()
         {
             Channels = new List<DMXChannel>();
             Axis = new List<MovementAxis>();
+            ColorWheel = new List<ColorWheelEntry>();
             Name = "";
         }
 
@@ -38,6 +40,14 @@ namespace kadmium_osc_dmx_dotnet_core.Fixtures
                     definition.Axis.Add(axis);
                 }
             }
+            if(modelElement["colorWheel"] != null)
+            {
+                foreach (JObject colorWheelEntry in modelElement["colorWheel"])
+                {
+                    ColorWheelEntry entry = ColorWheelEntry.Load(colorWheelEntry);
+                    definition.ColorWheel.Add(entry);
+                }
+            }
             return definition;
         }
 
@@ -56,18 +66,40 @@ namespace kadmium_osc_dmx_dotnet_core.Fixtures
                             new JProperty("max", channel.Max)
                         )
                     )
-                ),
-                new JProperty("movements",
-                    new JArray(
-                        from axis in Axis
-                        select new JObject(
-                            new JProperty("name", axis.Name),
-                            new JProperty("min", axis.Min),
-                            new JProperty("max", axis.Max)
-                        )
-                    )
                 )
             );
+
+            if(Axis.Count > 0)
+            {
+                obj.Add(
+                    new JProperty("movements",
+                        new JArray(
+                            from axis in Axis
+                            select new JObject(
+                                new JProperty("name", axis.Name),
+                                new JProperty("min", axis.Min),
+                                new JProperty("max", axis.Max)
+                            )
+                        )
+                    )
+                );
+            }
+            if(ColorWheel.Count > 0)
+            {
+                obj.Add(
+                    new JProperty("colorWheel",
+                        new JArray(
+                            from entry in ColorWheel
+                            select new JObject(
+                                new JProperty("name", entry.Name),
+                                new JProperty("min", entry.Min),
+                                new JProperty("max", entry.Max),
+                                new JProperty("color", entry.Color.ToString())
+                            )
+                        )
+                    )
+                );
+            }
 
             return obj;
         }

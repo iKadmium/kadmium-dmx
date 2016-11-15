@@ -20,6 +20,14 @@ export class UniverseViewModel
         this.name = ko.observable<string>(name);
     }
 
+    update(data: number[]): void
+    {
+        for (let fixture of this.fixtures())
+        {
+            fixture.update(data);
+        }
+    }
+
     static load(data: UniverseData, groups: GroupViewModel[]): UniverseViewModel
     {
         let universe = new UniverseViewModel(data.name);

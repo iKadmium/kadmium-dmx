@@ -11,9 +11,9 @@ using kadmium_osc_dmx_dotnet_core.Color;
 namespace kadmium_osc_dmx_dotnet_core.Solvers
 {
 
-    public class HSBSolver : FixtureSolver
+    public class HSBtoRGBSolver : FixtureSolver
     {
-        public HSBSolver(Fixture fixture) : base(fixture, "Hue", "Saturation", "Brightness")
+        public HSBtoRGBSolver(Fixture fixture) : base(fixture, "Hue", "Saturation", "Brightness")
         {
             
         }

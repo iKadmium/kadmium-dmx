@@ -1,6 +1,7 @@
 ﻿import {CollectionItemViewModel, NamedViewModel} from "../CollectionItem";
 import {ChannelData, ChannelViewModel} from "./Channel";
 import {MovementData, MovementViewModel} from "./Movement";
+import {ColorWheelEntryViewModel, ColorWheelEntryData} from "./ColorWheel";
 
 import * as ko from "knockout";
 
@@ -9,7 +10,8 @@ export interface FixtureData
     name: string;
     type: string;
     channels: ChannelData[];
-    movements: MovementData[];
+    movements?: MovementData[];
+    colorWheel?: ColorWheelEntryData[];
 }
 
 export class FixtureViewModel extends CollectionItemViewModel<FixtureData> implements NamedViewModel
@@ -17,6 +19,7 @@ export class FixtureViewModel extends CollectionItemViewModel<FixtureData> imple
     type: KnockoutObservable<string>;
     channels: KnockoutObservableArray<ChannelViewModel>;
     movements: KnockoutObservableArray<MovementViewModel>;
+    colorWheel: KnockoutObservableArray<ColorWheelEntryViewModel>;
     
     constructor(name: string)
     {
@@ -24,6 +27,7 @@ export class FixtureViewModel extends CollectionItemViewModel<FixtureData> imple
         this.type = ko.observable<string>();
         this.channels = ko.observableArray<ChannelViewModel>();
         this.movements = ko.observableArray<MovementViewModel>();
+        this.colorWheel = ko.observableArray<ColorWheelEntryViewModel>();
     }
 
     addChannel(): void
@@ -54,6 +58,16 @@ export class FixtureViewModel extends CollectionItemViewModel<FixtureData> imple
         this.movements.remove(item);
     }
 
+    addColor(): void
+    {
+        this.colorWheel.push(new ColorWheelEntryViewModel());
+    }
+
+    removeColor(item: ColorWheelEntryViewModel): void
+    {
+        this.colorWheel.remove(item);
+    }
+
     load(data: FixtureData): void
     {
         this.name(data.name);
@@ -64,9 +78,19 @@ export class FixtureViewModel extends CollectionItemViewModel<FixtureData> imple
         {
             this.channels.push(ChannelViewModel.load(channel));
         }
-        for (let movement of data.movements)
+        if (data.movements != null)
         {
-            this.movements.push(MovementViewModel.load(movement));
+            for (let movement of data.movements)
+            {
+                this.movements.push(MovementViewModel.load(movement));
+            }
+        }
+        if (data.colorWheel != null)
+        {
+            for (let colorwheelEntry of data.colorWheel)
+            {
+                this.colorWheel.push(ColorWheelEntryViewModel.load(colorwheelEntry));
+            }
         }
     }
 
@@ -75,8 +99,11 @@ export class FixtureViewModel extends CollectionItemViewModel<FixtureData> imple
         let item: FixtureData = {
             name: this.name(),
             type: this.type(),
-            channels: this.channels().map((value: ChannelViewModel, index: number, array: ChannelViewModel[]) => value.serialize()),
-            movements: this.movements().map((value: MovementViewModel, index: number, array: MovementViewModel[]) => value.serialize())
+            channels: this.channels().map((value: ChannelViewModel) => value.serialize()),
+            movements: this.movements().length == 0 ? null :
+                this.movements().map((value: MovementViewModel) => value.serialize()),
+            colorWheel: this.colorWheel().length == 0 ? null :
+                this.colorWheel().map((value: ColorWheelEntryViewModel) => value.serialize()),
         };
         return item;
     }

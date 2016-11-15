@@ -14,7 +14,11 @@
 		"type": {
 			"description": "The type of light the effect contains",
 			"type": "string",
-			"enum": [ "LED", "Effect", "Tungsten" ]
+			"enum": [
+				"LED",
+				"Effect",
+				"Tungsten"
+			]
 		},
 		"channels": {
 			"description": "The DMX channels the fixture uses",
@@ -41,7 +45,13 @@
 						"default": 255
 					}
 				},
-				"required": [ "name", "dmx", "min", "max" ]
+				"required": [
+					"name",
+					"dmx",
+					"min",
+					"max"
+				],
+				"additionalProperties": false
 			}
 		},
 		"movements": {
@@ -53,11 +63,62 @@
 					"name": {
 						"description": "The name of the axis",
 						"type": "string"
+					},
+					"min": {
+						"description": "The minimum value of the axis in degrees",
+						"type": "integer"
+					},
+					"max": {
+						"description": "The maximum value of the axis in degrees",
+						"type": "integer"
 					}
-				}
+				},
+				"required": [
+					"name",
+					"min",
+					"max"
+				],
+				"additionalProperties": false
+			}
+		},
+		"colorWheel": {
+			"description": "Color wheel entries",
+			"type": "array",
+			"items": {
+				"type": "object",
+				"properties": {
+					"name": {
+						"description": "The name of the color",
+						"type": "string"
+					},
+					"min": {
+						"description": "The minimum DMX value for the color",
+						"type": "integer"
+					},
+					"max": {
+						"description": "The maximum DMX value for the color",
+						"type": "integer"
+					},
+					"color": {
+						"description": "The color itself, a hex RGB value beginning with a #",
+						"type": "string",
+						"pattern": "#[0-9A-Fa-f]{6}"
+					}
+				},
+				"required": [
+					"name",
+					"min",
+					"max",
+					"color"
+				],
+				"additionalProperties": false
 			}
 		}
 	},
-	"required": [ "name", "type", "channels", "movements" ],
+	"required": [
+		"name",
+		"type",
+		"channels"
+	],
 	"additionalProperties": false
 }

@@ -16,6 +16,7 @@ namespace kadmium_osc_dmx_dotnet_core
     public static class FileAccess
     {
         static string DataLocation = Path.Combine(AppContext.BaseDirectory, "data");
+
         static string FixturesLocation = Path.Combine(DataLocation, "fixtures");
         static string GroupsLocation = Path.Combine(DataLocation, "groups.json");
         static string UniversesLocation = Path.Combine(DataLocation, "universes.json");
@@ -23,6 +24,7 @@ namespace kadmium_osc_dmx_dotnet_core
         static string ListenersLocation = Path.Combine(DataLocation, "listeners.json");
         static string VenuesLocation = Path.Combine(DataLocation, "venues");
         static string FixtureCollectionLocation = Path.Combine(DataLocation, "fixtureCollections");
+        static string SettingsLocation = Path.Combine(DataLocation, "settings.json");
 
         static string JsonSchemaSchema = Path.Combine(DataLocation, "jsonschema.schema.json");
         static string FixturesSchema = Path.Combine(FixturesLocation, "fixture.schema.json");
@@ -32,6 +34,7 @@ namespace kadmium_osc_dmx_dotnet_core
         static string ListenersSchema = Path.Combine(DataLocation, "listeners.schema.json");
         static string VenuesSchema = Path.Combine(VenuesLocation, "venue.schema.json");
         static string FixtureCollectionsSchema = Path.Combine(FixtureCollectionLocation, "fixtureCollection.schema.json");
+        static string SettingsSchema = Path.Combine(DataLocation, "settings.schema.json");
         
         private static void ValidatedSave(JToken obj, string path, string schemaPath)
         {
@@ -335,6 +338,12 @@ namespace kadmium_osc_dmx_dotnet_core
         public static JObject GetVenuesSchema()
         {
             JObject obj = ValidatedLoad(VenuesSchema, JsonSchemaSchema) as JObject;
+            return obj;
+        }
+
+        public static JObject LoadSettings()
+        {
+            JObject obj = ValidatedLoad(SettingsLocation, SettingsSchema) as JObject;
             return obj;
         }
     }

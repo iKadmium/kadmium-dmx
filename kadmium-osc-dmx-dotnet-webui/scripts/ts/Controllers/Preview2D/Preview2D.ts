@@ -12,11 +12,23 @@ interface PreviewData
     universes: UniverseData[];
 }
 
+interface UniverseUpdateData
+{
+    universe: number;
+    values: number[];
+}
+
+interface UniverseLookupTable
+{
+    [index: string]: UniverseViewModel;
+}
+
 class Preview2DViewModel
 {
     socket: WebSocket;
     groups: KnockoutObservableArray<GroupViewModel>;
     universes: KnockoutObservableArray<UniverseViewModel>;
+    universeLookupTable: UniverseLookupTable;
     load: KoPlus.Command;
 
     constructor()
@@ -24,6 +36,7 @@ class Preview2DViewModel
         this.groups = ko.observableArray<GroupViewModel>();
         this.universes = ko.observableArray<UniverseViewModel>();
         this.socket = new WebSocket(MVC.getSocketURL("Preview"));
+        this.universeLookupTable = {};
         
         this.load = ko.command(() =>
         {
@@ -39,6 +52,7 @@ class Preview2DViewModel
                 for (let universeData of previewData.universes)
                 {
                     let universe = UniverseViewModel.load(universeData, this.groups());
+                    this.universeLookupTable[universe.name()] = universe;
                     this.universes.push(universe);
                 }
             });
@@ -46,11 +60,8 @@ class Preview2DViewModel
 
         this.socket.addEventListener("message", (message: MessageEvent) =>
         {
-            let data = JSON.parse(message.data) as number[];
-            for (let group of this.groups())
-            {
-                group.update(data);
-            }
+            let data = JSON.parse(message.data) as UniverseUpdateData;
+            this.universeLookupTable[data.universe].update(data.values);
         });
 
         this.load();

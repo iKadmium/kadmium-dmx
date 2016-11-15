@@ -9,6 +9,8 @@ namespace kadmium_osc_dmx_dotnet_core.Solvers
 {
     class MasterAtFullSolver : FixtureSolver
     {
+        static string[] AllColors = { "Red", "Green", "Blue", "UV", "Amber", "White" };
+
         public MasterAtFullSolver(Fixture fixture) : base(fixture)
         {
 
@@ -21,7 +23,8 @@ namespace kadmium_osc_dmx_dotnet_core.Solvers
 
         public static bool SuitableFor(Definition definition)
         {
-            return definition.Channels.Any(x => x.Name == "Master");
+            return definition.Channels.Any(x => x.Name == "Master") &&
+                definition.Channels.Any(x => AllColors.Contains(x.Name));
         }
     }
 }

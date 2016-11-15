@@ -95,8 +95,13 @@ namespace kadmium_osc_dmx_dotnet_core.Color
 			blue = (B>255)? 255 : ((B<0)?0 : B);
 		}
 
-		#region Methods
-		public override bool Equals(Object obj) 
+        public override string ToString()
+        {
+            return string.Format("#{0:X2}{1:X2}{2:X2}", red, green, blue);
+        }
+
+        #region Methods
+        public override bool Equals(Object obj) 
 		{
 			if(obj==null || GetType()!=obj.GetType()) return false;
 

@@ -30,15 +30,17 @@ namespace kadmium_osc_dmx_dotnet_core.Transmitters
         
         public override void TransmitInternal(byte[] dmx, int universeID)
         {
+            List<Task> tasks = new List<Task>();
             if (Multicast)
             {
-                SACNClient?.Send((short)universeID, dmx);
+                tasks.Add(Task.Run(() => SACNClient?.Send((short)universeID, dmx)));
             }
             foreach(string target in UnicastTargets)
             {
-                SACNClient?.Send(target, (short)universeID, dmx);
+                tasks.Add(Task.Run(() => SACNClient?.Send(target, (short)universeID, dmx)));
             }
 
+            Task.WaitAll(tasks.ToArray(), 50);
             OnTransmit?.Invoke(this, new TransmitterEventArgs(universeID, dmx));
         }
 

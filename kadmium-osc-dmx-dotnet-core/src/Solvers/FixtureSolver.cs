@@ -35,11 +35,15 @@ namespace kadmium_osc_dmx_dotnet_core.Solvers
             {
                 solvers.Add(new ApeshitFixtureSolver(fixture));
             }
-            if (HSBSolver.SuitableFor(fixture.Definition))
+            if (HSBtoRGBSolver.SuitableFor(fixture.Definition))
             {
-                solvers.Add(new HSBSolver(fixture));
+                solvers.Add(new HSBtoRGBSolver(fixture));
             }
-            if(BrightnessLimiterSolver.SuitableFor(fixture.Definition, options))
+            if (HSBtoColorWheelSolver.SuitableFor(fixture.Definition))
+            {
+                solvers.Add(new HSBtoColorWheelSolver(fixture));
+            }
+            if (BrightnessLimiterSolver.SuitableFor(fixture.Definition, options))
             {
                 solvers.Add(new BrightnessLimiterSolver(fixture, options));
             }
