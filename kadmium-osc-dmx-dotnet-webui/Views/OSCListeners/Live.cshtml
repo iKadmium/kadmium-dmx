@@ -33,7 +33,12 @@
 </div>
 @section scripts
 {
-    <script>
-        require(["Controllers/Dashboard/OSCListenerLive/OSCListenerLive"])
-    </script>
+    <environment names="Development">
+        <script>
+            require(["Controllers/Dashboard/OSCListenerLive/OSCListenerLive"])
+        </script>
+    </environment>
+    <environment names="Staging,Production">
+        <script src="~/js/Release/oscListenerLive.bundle.js"></script>
+    </environment>
 }

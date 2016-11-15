@@ -6,8 +6,10 @@ Click here to learn more. http://go.microsoft.com/fwlink/?LinkId=518007
 
 var gulp = require("gulp");
 var typescript = require("gulp-typescript");
+var webpack = require("webpack-stream");
 const tscConfig = require('./tsconfig.json');
 const sourcemaps = require('gulp-sourcemaps');
+
 
 gulp.task("copyLibs:requireJS", function ()
 {
@@ -48,11 +50,31 @@ gulp.task("copyLibs:knockoutSortable", function () {
         .pipe(gulp.dest("wwwroot/lib"));
 });
 
-gulp.task("copyLibs", ["copyLibs:requireJS", "copyLibs:knockout", "copyLibs:knockoutValidation", "copyLibs:knockoutPlusJS", "copyLibs:knockoutPlusCSS", "copyLibs:knockoutSortable"], function ()
+gulp.task("copyLibs:bootstrap", function () {
+    return gulp
+        .src("node_modules/bootstrap/dist/**/*")
+        .pipe(gulp.dest("wwwroot/lib/bootstrap"))
+});
+
+gulp.task("copyLibs:jquery", function () {
+    return gulp
+        .src("node_modules/jquery/dist/**/*")
+        .pipe(gulp.dest("wwwroot/lib/jquery"))
+});
+
+gulp.task("copyLibs", ["copyLibs:requireJS", "copyLibs:knockout", "copyLibs:knockoutValidation",
+    "copyLibs:knockoutPlusJS", "copyLibs:knockoutPlusCSS", "copyLibs:knockoutSortable", "copyLibs:bootstrap",
+    "copyLibs:jquery"], function ()
 {
     gulp
         .src("node_modules/requirejs/require.js")
         .pipe(gulp.dest("wwwroot/lib"));
+});
+
+gulp.task("webpack", ["copyLibs"], function () {
+    return gulp.src("src/entry.js")
+        .pipe(webpack(require("./webpack.config.js")))
+        .pipe(gulp.dest("wwwroot/js/Release"))
 });
 
 gulp.task('default', ["copyLibs"], function ()
@@ -62,7 +84,7 @@ gulp.task('default', ["copyLibs"], function ()
         .pipe(sourcemaps.init())          // <--- sourcemaps
         .pipe(typescript(tscConfig.compilerOptions))
         .pipe(sourcemaps.write('.'))      // <--- sourcemaps
-        .pipe(gulp.dest("wwwroot/js"))
+        .pipe(gulp.dest("wwwroot/js/Debug"))
 });
 
 gulp.task('watch', ['default'], function ()

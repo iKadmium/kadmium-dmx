@@ -52,7 +52,12 @@
 </binding-context>
 @section scripts
 {
-    <script>
-        require(["Controllers/Preview2D/Preview2D"])
-    </script>
+    <environment names="Development">
+        <script>
+            require(["Controllers/Preview2D/Preview2D"])
+        </script>
+    </environment>
+    <environment names="Staging,Production">
+        <script src="~/js/Release/preview2D.bundle.js"></script>
+    </environment>
 }

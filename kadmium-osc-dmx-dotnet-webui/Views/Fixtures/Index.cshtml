@@ -93,7 +93,12 @@
 
 @section scripts
 {
-    <script>
-        require(["Controllers/Fixtures/Fixtures"])
-    </script>
+    <environment names="Development">
+        <script>
+            require(["Controllers/Fixtures/Fixtures"])
+        </script>
+    </environment>
+    <environment names="Staging,Production">
+        <script src="~/js/Release/fixtures.bundle.js"></script>
+    </environment>
 }

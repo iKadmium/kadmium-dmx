@@ -37,8 +37,13 @@
 
 @section scripts
 {
-    <script>
-        require(["Controllers/SACNTransmitters/SACNTransmitters"])
-    </script>
+    <environment names="Development">
+        <script>
+            require(["Controllers/SACNTransmitters/SACNTransmitters"])
+        </script>
+    </environment>
+    <environment names="Staging,Production">
+        <script src="~/js/Release/sacnTransmitters.bundle.js"></script>
+    </environment>
 }
 

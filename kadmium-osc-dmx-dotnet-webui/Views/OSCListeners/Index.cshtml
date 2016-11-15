@@ -22,7 +22,12 @@
 
 @section scripts
 {
-    <script>
-        require(["Controllers/OSCListeners/OSCListeners"])
-    </script>
+    <environment names="Development">
+        <script>
+            require(["Controllers/OSCListeners/OSCListeners"])
+        </script>
+    </environment>
+    <environment names="Staging,Production">
+        <script src="~/js/Release/oscListeners.bundle.js"></script>
+    </environment>
 }

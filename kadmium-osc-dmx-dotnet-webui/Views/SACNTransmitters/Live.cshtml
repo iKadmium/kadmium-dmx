@@ -49,7 +49,12 @@
 </table>
 @section scripts
 {
-    <script>
-        require(["Controllers/Dashboard/SACNTransmitterLive/SACNTransmitterLive"])
-    </script>
+    <environment names="Development">
+        <script>
+            require(["Controllers/Dashboard/SACNTransmitterLive/SACNTransmitterLive"])
+        </script>
+    </environment>
+    <environment names="Staging,Production">
+        <script src="~/js/Release/sacnTransmitterLive.bundle.js"></script>
+    </environment>
 }

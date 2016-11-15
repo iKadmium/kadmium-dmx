@@ -15,7 +15,7 @@
         "ASPNETCORE_ENVIRONMENT": "Development"
       }
     },
-    "kadmium_osc_dmx_dotnet_webui": {
+    "Debug - RequireJS": {
       "commandName": "Project",
       "launchBrowser": true,
       "launchUrl": "http://localhost:5000",
@@ -23,9 +23,13 @@
         "ASPNETCORE_ENVIRONMENT": "Development"
       }
     },
-    "Docker": {
+    "Production - Webpack": {
+      "commandName": "Project",
       "launchBrowser": true,
-      "launchUrl": "http://localhost:{ServicePort}"
+      "launchUrl": "http://localhost:5000",
+      "environmentVariables": {
+        "ASPNETCORE_ENVIRONMENT": "Production"
+      }
     }
   }
 }

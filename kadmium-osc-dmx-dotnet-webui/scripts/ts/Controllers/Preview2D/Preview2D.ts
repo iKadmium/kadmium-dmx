@@ -61,7 +61,10 @@ class Preview2DViewModel
         this.socket.addEventListener("message", (message: MessageEvent) =>
         {
             let data = JSON.parse(message.data) as UniverseUpdateData;
-            this.universeLookupTable[data.universe].update(data.values);
+            if (this.universeLookupTable[data.universe] != null)
+            {
+                this.universeLookupTable[data.universe].update(data.values);
+            }
         });
 
         this.load();

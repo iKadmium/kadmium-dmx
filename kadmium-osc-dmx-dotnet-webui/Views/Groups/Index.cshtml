@@ -36,7 +36,12 @@
 
 @section scripts
 {
-    <script>
-        require(["Sortable", "knockout-sortablejs", "Controllers/Groups/Groups"]);
-    </script>
+    <environment names="Development">
+        <script>
+            require(["Sortable", "knockout-sortablejs", "Controllers/Groups/Groups"]);
+        </script>
+    </environment>
+    <environment names="Staging,Production">
+        <script src="~/js/Release/groups.bundle.js"></script>
+    </environment>
 }

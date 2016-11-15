@@ -5,16 +5,10 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>@ViewData["Title"] - kadmium-osc-dmx</title>
 
-    <environment names="Development">
-        <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.css" />
+    <environment names="Development,Staging,Production">
+        <link rel="stylesheet" href="~/lib/bootstrap/css/bootstrap.css" />
         <link rel="stylesheet" href="~/css/site.css" />
         <link rel="stylesheet" href="~/lib/ko.plus.css" />
-    </environment>
-    <environment names="Staging,Production">
-        <link rel="stylesheet" href="https://ajax.aspnetcdn.com/ajax/bootstrap/3.3.6/css/bootstrap.min.css"
-              asp-fallback-href="~/lib/bootstrap/dist/css/bootstrap.min.css"
-              asp-fallback-test-class="sr-only" asp-fallback-test-property="position" asp-fallback-test-value="absolute" />
-        <link rel="stylesheet" href="~/css/site.min.css" asp-append-version="true" />
     </environment>
 </head>
 <body>
@@ -37,13 +31,13 @@
                     "knockout-sortablejs": {"deps": ["Sortable"]},
                     "Controllers/Groups/Groups": { "deps": ["knockout-sortablejs"] }
                 },
-                baseUrl: "/js",
+                baseUrl: "/js/Debug",
                 paths: {
                     "knockout": "/lib/knockout-latest",
                     "knockout.validation": "/lib/knockout.validation",
                     "ko.plus": "/lib/ko.plus",
                     "jquery": "/lib/jquery/jquery",
-                    "bootstrap": "/lib/bootstrap/dist/js/bootstrap",
+                    "bootstrap": "/lib/bootstrap/js/bootstrap",
                     "Sortable": "/lib/Sortable/Sortable",
                     "knockout-sortablejs": "/lib/knockout-sortable"
                 }
@@ -52,15 +46,7 @@
         </script>
     </environment>
     <environment names="Staging,Production">
-        <script src="https://ajax.aspnetcdn.com/ajax/jquery/jquery-2.2.0.min.js"
-                asp-fallback-src="~/lib/jquery/jquery.min.js"
-                asp-fallback-test="window.jQuery">
-        </script>
-        <script src="https://ajax.aspnetcdn.com/ajax/bootstrap/3.3.6/bootstrap.min.js"
-                asp-fallback-src="~/lib/bootstrap/dist/js/bootstrap.min.js"
-                asp-fallback-test="window.jQuery && window.jQuery.fn && window.jQuery.fn.modal">
-        </script>
-        <script src="~/js/site.min.js" asp-append-version="true"></script>
+
     </environment>
 
     @RenderSection("scripts", required: false)

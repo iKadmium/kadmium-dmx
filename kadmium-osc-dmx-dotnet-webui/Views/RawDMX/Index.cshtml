@@ -38,7 +38,12 @@
 </binding-context>
 @section scripts
 {
-    <script>
-        require(["Controllers/RawDMX/RawDMX"])
-    </script>
+    <environment names="Development">
+        <script>
+            require(["Controllers/RawDMX/RawDMX"])
+        </script>
+    </environment>
+    <environment names="Staging,Production">
+        <script src="~/js/Release/rawDMX.bundle.js"></script>
+    </environment>
 }

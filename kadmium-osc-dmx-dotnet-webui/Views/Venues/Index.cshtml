@@ -132,7 +132,12 @@
 
 @section scripts
 {
-    <script>
-        require(["Controllers/Venues/Venues"])
-    </script>
+    <environment names="Development">
+        <script>
+            require(["Controllers/Venues/Venues"])
+        </script>
+    </environment>
+    <environment names="Staging,Production">
+        <script src="~/js/Release/venues.bundle.js"></script>
+    </environment>
 }

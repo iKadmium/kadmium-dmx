@@ -58,7 +58,12 @@
 
 @section scripts
 {
-    <script>
+    <environment names="Development">
+        <script>
         require(["Controllers/FixtureCollections/FixtureCollections"])
-    </script>
+        </script>
+    </environment>
+    <environment names="Staging,Production">
+        <script src="~/js/Release/fixtureCollection.bundle.js"></script>
+    </environment>
 }
