@@ -1,0 +1,48 @@
+{
+  "name": "AVE Par64B",
+  "type": "LED",
+  "channels": [
+    {
+      "name": "Master",
+      "dmx": 1,
+      "min": 0,
+      "max": 255
+    },
+    {
+      "name": "Red",
+      "dmx": 2,
+      "min": 0,
+      "max": 255
+    },
+    {
+      "name": "Green",
+      "dmx": 3,
+      "min": 0,
+      "max": 255
+    },
+    {
+      "name": "Blue",
+      "dmx": 4,
+      "min": 0,
+      "max": 255
+    },
+    {
+      "name": "Strobe",
+      "dmx": 5,
+      "min": 0,
+      "max": 255
+    },
+    {
+      "name": "Macros",
+      "dmx": 6,
+      "min": 0,
+      "max": 255
+    },
+    {
+      "name": "Macro Speed",
+      "dmx": 7,
+      "min": 0,
+      "max": 255
+    }
+  ]
+}

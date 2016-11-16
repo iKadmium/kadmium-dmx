@@ -10,43 +10,35 @@
             <input-label label="Max Brightness (%):" data-bind="validationElement: maxBrightness">
                 <input type="number" class="form-control" data-bind="value: maxBrightness" min="0" max="100" step="1">
             </input-label>
-            <input-collection name="axisRestrictions" data-bind="visible: axis().length > 0">
+            <input-collection name="axisRestrictions" data-bind="visible: moving">
                 <input-collection-header>
                     <strong>Axis Restrictions</strong>
                 </input-collection-header>
                 <input-collection-body>
-                    <input-collection-item label="Name">
-                        <select data-bind="value: name, options: $parent.axis" class="form-control"></select>
+                    <input-collection-item label="Name"><span data-bind="text: name"></span></input-collection-item>
+                    <input-collection-item label="Restricted">
+                        <input type="checkbox" class="checkbox" data-bind="checked: enabled">
                     </input-collection-item>
                     <input-collection-item label="Min">
-                        <input type="number" class="form-control" min="-270" max="270" data-bind="value: min">
+                        <input type="number" class="form-control" min="-270" max="270" data-bind="value: min, enable: enabled">
                     </input-collection-item>
                     <input-collection-item label="Max">
-                        <input type="number" class="form-control" min="-270" max="270" data-bind="value: max">
-                    </input-collection-item>
-                    <input-collection-item label="Remove">
-                        <button asp-template="delete" data-bind="click: $parent.removeAxisRestriction.bind($parent)"></button>
+                        <input type="number" class="form-control" min="-270" max="270" data-bind="value: max, enable: enabled">
                     </input-collection-item>
                 </input-collection-body>
-                <input-collection-footer>
-                    <button asp-template="add" data-bind="click: addAxisRestriction"></button>
-                </input-collection-footer>
             </input-collection>
-            <input-collection name="axisInversions" data-bind="visible: axis().length > 0">
+            <input-collection name="axisInversions" data-bind="visible: moving">
                 <input-collection-header>
                     <strong>Axis Inversions</strong>
                 </input-collection-header>
                 <input-collection-body>
                     <input-collection-item label="Name">
-                        <select data-bind="value: name, options: $parent.axis" class="form-control"></select>
+                        <span data-bind="text: name"></span>
                     </input-collection-item>
-                    <input-collection-item label="Remove">
-                        <button asp-template="delete" data-bind="click: $parent.removeAxisInversion.bind($parent)"></button>
+                    <input-collection-item label="Inverted">
+                        <input type="checkbox" class="checkbox" data-bind="checked: enabled" >
                     </input-collection-item>
                 </input-collection-body>
-                <input-collection-footer>
-                    <button asp-template="add" data-bind="click: addAxisInversion"></button>
-                </input-collection-footer>
             </input-collection>
         </div>
     </modal-body>

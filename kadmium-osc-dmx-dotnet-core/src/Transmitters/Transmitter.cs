@@ -30,13 +30,13 @@ namespace kadmium_osc_dmx_dotnet_core.Transmitters
         }
 
         public abstract void TransmitInternal(byte[] dmx, int transmitterID);
-        public async void Transmit(byte[] dmx, int transmitterID)
+        public async void Transmit(byte[] dmx, int universeID)
         {
             if (Delay < 0)
             {
                 await Task.Delay(Delay);
             }
-            TransmitInternal(dmx, transmitterID);
+            TransmitInternal(dmx, universeID);
         }
 
         internal static Transmitter Load(JObject element)

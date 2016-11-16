@@ -22,7 +22,7 @@
 
 @Html.Partial("ItemList")
 
-<button asp-template="edit" data-bind="click: reorder, visible: load.done">Change order</button>
+<button asp-template="edit" data-bind="click: reorder, visible: load.done" style="display: none">Change order</button>
 
 <modal-window id="modal-reorder">
     <modal-header>Editing group order</modal-header>
@@ -37,11 +37,9 @@
 @section scripts
 {
     <environment names="Development">
-        <script>
-            require(["Sortable", "knockout-sortablejs", "Controllers/Groups/Groups"]);
-        </script>
+        <script src="http://localhost:8080/groups.bundle.js"></script>
     </environment>
     <environment names="Staging,Production">
-        <script src="~/js/Release/groups.bundle.js"></script>
+        <script src="~/js/groups.bundle.js"></script>
     </environment>
 }

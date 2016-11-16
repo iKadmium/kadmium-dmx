@@ -13,16 +13,16 @@ using System.Threading.Tasks;
 
 namespace kadmium_osc_dmx_dotnet_webui.WebSockets
 {
-    public class OSCTransmitterStatus
+    public class OSCListenerStatus
     {
         private static int RECEIVE_BUFFER_SIZE = 65535;
         public WebSocket Socket { get; }
         public OSCListener Listener { get; }
         
-        public OSCTransmitterStatus(WebSocket socket, string id)
+        public OSCListenerStatus(WebSocket socket)
         {
             Socket = socket;
-            Listener = MasterController.Instance.Listeners[id] as OSCListener;
+            Listener = MasterController.Instance.Listener as OSCListener;
             Listener.MessageReceived += Listener_MessageReceived;
         }
 
@@ -91,14 +91,13 @@ namespace kadmium_osc_dmx_dotnet_webui.WebSockets
                 return;
 
             var socket = await hc.WebSockets.AcceptWebSocketAsync();
-            string id = hc.Request.Path.Value.Split('/').Last();
-            var h = new OSCTransmitterStatus(socket, id);
+            var h = new OSCListenerStatus(socket);
             await h.RenderLoop();
         }
 
         public static void Map(IApplicationBuilder app)
         {
-            app.Use(OSCTransmitterStatus.Acceptor);
+            app.Use(OSCListenerStatus.Acceptor);
         }
     }
 }

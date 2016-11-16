@@ -1,33 +1,46 @@
-﻿@{
-    ViewData["Title"] = "OSC Listeners";
+﻿@using kadmium_osc_dmx_dotnet_core.Listeners
+@using kadmium_osc_dmx_dotnet_core.Solvers
+@using kadmium_osc_dmx_dotnet_core;
+@*
+    For more information on enabling MVC for empty projects, visit http://go.microsoft.com/fwlink/?LinkID=397860
+*@
+@{
+    ViewData["Title"] = "OSC Listener Live View";
 }
 
-<binding-context data-bind="with: selectedItem">
-    <modal-window large="true" id="modal-edit">
-        <modal-header>Editing <span class="item-name" data-bind="text: name"></span></modal-header>
-        <modal-body>
-            @Html.Partial("ModalEditorStatus")
-            <div class="form-horizontal" id="edit-form">
-                <input-label label="Name:" data-bind="validationElement: name"><input type="text" class="form-control" data-bind="value: name"></input-label>
-                <input-label label="Port:" data-bind="validationElement: port"><input type="number" class="form-control" data-bind="value: port" min="1" max="65535"></input-label>
+@Html.Partial("LoadingPanel")
+<binding-context data-bind="visible: load.done" style="display: none">
+    <ul class="nav nav-pills nav-justified" data-bind="foreach: groups">
+        <li data-bind="css: { active: $parent.selectedGroup() == $data }"><a href="#" data-bind="text: name, click: $parent.selectGroup.bind($parent)"></a></li>
+    </ul>
+    <binding-context data-bind="with: selectedGroup">
+        <div class="row">
+            <div class="col-sm-8 col-sm-offset-2">
+                <table class="table table-striped">
+                    <thead>
+                        <tr>
+                            <th>Attribute</th>
+                            <th>Value</th>
+                        </tr>
+                    </thead>
+                    <tbody data-bind="foreach: attributes">
+                        <tr>
+                            <td data-bind="text: name"></td>
+                            <td data-bind="text: value().toFixed(2), style: {background: backgroundColor() }"></td>
+                        </tr>
+                    </tbody>
+                </table>
             </div>
-        </modal-body>
-        <modal-footer>
-            @Html.Partial("ModalEditorFooter")
-        </modal-footer>
-    </modal-window>
+        </div>
+    </binding-context>
 </binding-context>
-
-@Html.Partial("ItemList", ViewContext.RouteData.Values["controller"].ToString())
 
 @section scripts
 {
     <environment names="Development">
-        <script>
-            require(["Controllers/OSCListeners/OSCListeners"])
-        </script>
+        <script src="http://localhost:8080/oscListenerLive.bundle.js"></script>
     </environment>
     <environment names="Staging,Production">
-        <script src="~/js/Release/oscListeners.bundle.js"></script>
+        <script src="~/js/oscListenerLive.bundle.js"></script>
     </environment>
 }

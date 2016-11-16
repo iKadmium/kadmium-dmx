@@ -13,16 +13,16 @@ using System.Threading.Tasks;
 
 namespace kadmium_osc_dmx_dotnet_webui.WebSockets
 {
-    public class OSCTransmitterLive
+    public class OSCListenerLive
     {
         private static int RECEIVE_BUFFER_SIZE = 65535;
         public WebSocket Socket { get; }
         public OSCListener Listener { get; }
         
-        public OSCTransmitterLive(WebSocket socket, string id)
+        public OSCListenerLive(WebSocket socket, string id)
         {
             Socket = socket;
-            Listener = MasterController.Instance.Listeners[id] as OSCListener;
+            Listener = MasterController.Instance.Listener as OSCListener;
             Listener.MessageReceived += Listener_MessageReceived;
         }
 
@@ -64,8 +64,9 @@ namespace kadmium_osc_dmx_dotnet_webui.WebSockets
                                     new JProperty("type", "Init"),
                                     new JProperty("groups",
                                         new JArray(
-                                            from groupName in MasterController.Instance.Groups.Keys
-                                            select new JValue(groupName)
+                                            from grp in MasterController.Instance.Groups.Values
+                                            orderby grp.Order
+                                            select new JValue(grp.Name)
                                         )
                                     ),
                                     new JProperty("attributes",
@@ -92,13 +93,13 @@ namespace kadmium_osc_dmx_dotnet_webui.WebSockets
 
             var socket = await hc.WebSockets.AcceptWebSocketAsync();
             string id = hc.Request.Path.Value.Split('/').Last();
-            var h = new OSCTransmitterLive(socket, id);
+            var h = new OSCListenerLive(socket, id);
             await h.RenderLoop();
         }
 
         public static void Map(IApplicationBuilder app)
         {
-            app.Use(OSCTransmitterLive.Acceptor);
+            app.Use(OSCListenerLive.Acceptor);
         }
     }
 }

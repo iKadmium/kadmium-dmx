@@ -94,11 +94,9 @@
 @section scripts
 {
     <environment names="Development">
-        <script>
-            require(["Controllers/Fixtures/Fixtures"])
-        </script>
+        <script src="http://localhost:8080/fixtures.bundle.js"></script>
     </environment>
     <environment names="Staging,Production">
-        <script src="~/js/Release/fixtures.bundle.js"></script>
+        <script src="~/js/fixtures.bundle.js"></script>
     </environment>
 }

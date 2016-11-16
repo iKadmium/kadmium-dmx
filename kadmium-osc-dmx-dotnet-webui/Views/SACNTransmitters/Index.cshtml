@@ -1,49 +1,57 @@
-﻿@{
-    ViewData["Title"] = "sACN Transmitters";
+﻿@using kadmium_osc_dmx_dotnet_webui.ViewHelpers;
+@*
+    For more information on enabling MVC for empty projects, visit http://go.microsoft.com/fwlink/?LinkID=397860
+*@
+@{
+    ViewData["Title"] = "sACN Transmitter Live View";
 }
 
-<modal-window large="true" id="modal-edit" data-bind="with: selectedItem">
-    <modal-header>Editing <span class="item-name" data-bind="text: name"></span></modal-header>
-    <modal-body>
-        @Html.Partial("ModalEditorStatus")
-        <div class="form-horizontal" id="edit-form">
-            <input-label label="Name:" data-bind="validationElement: name"><input type="text" class="form-control" data-bind="value: name"></input-label>
-            <input-label label="Description:"><input class="form-control" type="text" data-bind="value: description"></input-label>
-            <input-label label="Delay (ms):" data-bind="validationElement: delay"><input class="form-control" data-bind="value: delay" min="0" max="30000"></input-label>
-            <div class="form-group clearfix">
-                <div class="col-sm-offset-2 col-sm-10 checkbox">
-                    <label><input type="checkbox" data-bind="checked: multicast">Multicast</label>
-                </div>
-            </div>
-            <input-collection name="unicast">
-                <input-collection-header>Unicast targets</input-collection-header>
-                <input-collection-body>
-                    <input-collection-item label="Address">
-                        <input class="form-control" type="url" data-bind="value: address">
-                    </input-collection-item>
-                    <input-collection-item label="Remove"><button asp-template="delete" data-bind="click: $parent.removeUnicast.bind($parent)"></button></input-collection-item>
-                </input-collection-body>
-                <input-collection-footer><button asp-template="add" data-bind="click: addUnicast"></button></input-collection-footer>
-            </input-collection>
-        </div>
-    </modal-body>
-    <modal-footer>
-        @Html.Partial("ModalEditorFooter")
-    </modal-footer>
-</modal-window>
+<div class="form-group">
+    <label for="universe-id" class="control-label col-sm-2">Universe ID</label>
+    <div class="col-sm-10">
+        <input type="number" min="1" max="63999" id="universe-id" data-bind="value: universeID" class="form-control">
+    </div>
+</div>
 
-@Html.Partial("ItemList")
-@Html.Partial("ModalDelete", ViewContext.RouteData.Values["controller"].ToString())
-
+<table class="table table-striped">
+    <thead>
+        <tr>
+            <th></th>
+            @for(int i = 0; i < 10; i++)
+            {
+                <th>@i</th>
+            }
+        </tr>
+    </thead>
+    <tbody id="dmx">
+        @for (int row = 0; row < 52; row++)
+        {
+            <tr>
+                <th>@(row * 10)</th>
+                @for (int column = 0; column < 10; column++)
+                {
+                    int address = 10 * row + column;
+                    @if (address >= 1 && address <= 512)
+                    {
+                        <td title="@address" data-bind="text: channels()[@address - 1].value(), 
+                            style: {background: channels()[@address - 1].color() }"></td>
+                    }
+                    else
+                    {
+                        <td></td>
+                    }
+                    
+                }
+            </tr>
+        }
+    </tbody>
+</table>
 @section scripts
 {
     <environment names="Development">
-        <script>
-            require(["Controllers/SACNTransmitters/SACNTransmitters"])
-        </script>
+        <script src="http://localhost:8080/sacnTransmitterLive.bundle.js"></script>
     </environment>
     <environment names="Staging,Production">
-        <script src="~/js/Release/sacnTransmitters.bundle.js"></script>
+        <script src="~/js/sacnTransmitterLive.bundle.js"></script>
     </environment>
 }
-

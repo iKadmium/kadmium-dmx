@@ -19,12 +19,6 @@ export class VenueViewModel extends CollectionItemViewModel<VenueData> implement
         this.selectedUniverse = ko.validatedObservable<UniverseViewModel>(new UniverseViewModel());
     }
 
-    editTransmitters(item: UniverseViewModel): void
-    {
-        this.selectedUniverse(item);
-        ($("#transmitters-edit") as any).modal("toggle");
-    }
-
     editFixtures(item: UniverseViewModel): void
     {
         this.selectedUniverse(item);

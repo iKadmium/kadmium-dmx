@@ -13,7 +13,7 @@
     <binding-context data-bind="with: venue">
         <div class="col-sm-3">
             <div class="panel" data-bind="css: panelClass">
-                <div class="panel-heading text-center"><span class="item-name" data-bind="text: name"></span></div>
+                <div class="panel-heading text-center"><span class="item-name">Venue</span></div>
                 <div class="panel-body text-center" data-bind="css: alertClass">
                     <span class="status-glyph glyphicon" data-bind="css: glyphClass"></span><br>
                     <span data-bind="text: message"></span>
@@ -35,46 +35,43 @@
         </div>
     </binding-context>
 
-    <binding-context data-bind="foreach: sacnTransmitters">
-        <div class="col-sm-3">
-            <div class="panel" data-bind="css: panelClass" >
-                <div class="panel-heading text-center"><span class="item-name" data-bind="text: name"></span></div>
-                <div class="panel-body text-center" data-bind="css: alertClass">
-                    <span class="glyphicon status-glyph" data-bind="css: glyphClass" ></span><br>
-                    <span data-bind="text: message" >Loading...</span>
-                </div>
-                <div class="panel-footer text-center">
-                    <a class="btn btn-info" data-bind="attr: {href: liveURL}">Live</a>
-                </div>
-            </div>
-        </div>
-    </binding-context>
-
-    <binding-context data-bind="foreach: oscListeners">
+    <binding-context data-bind="with: sacnTransmitter">
         <div class="col-sm-3">
             <div class="panel" data-bind="css: panelClass">
-                <div class="panel-heading text-center"><span class="item-name" data-bind="text: name"></span></div>
+                <div class="panel-heading text-center"><span class="item-name">sACN Transmitter</span></div>
                 <div class="panel-body text-center" data-bind="css: alertClass">
                     <span class="glyphicon status-glyph" data-bind="css: glyphClass"></span><br>
                     <span data-bind="text: message">Loading...</span>
                 </div>
                 <div class="panel-footer text-center">
-                    <a class="btn btn-info" data-bind="attr: {href: liveURL}">Live</a>
+                    <a class="btn btn-info" asp-controller="SACNTransmitters">Live</a>
                 </div>
             </div>
         </div>
     </binding-context>
 
+    <binding-context data-bind="with: oscListener">
+        <div class="col-sm-3">
+            <div class="panel" data-bind="css: panelClass">
+                <div class="panel-heading text-center"><span class="item-name">OSC Listener</span></div>
+                <div class="panel-body text-center" data-bind="css: alertClass">
+                    <span class="glyphicon status-glyph" data-bind="css: glyphClass"></span><br>
+                    <span data-bind="text: message">Loading...</span>
+                </div>
+                <div class="panel-footer text-center">
+                    <a class="btn btn-info" asp-controller="OSCListeners">Live</a>
+                </div>
+            </div>
+        </div>
+    </binding-context>
 </div>
 @section scripts
 {
     <environment names="Development">
-        <script>
-            require(["Controllers/Dashboard/Dashboard"]);
-        </script>
+        <script src="http://localhost:8080/dashboard.bundle.js"></script>
     </environment>
     <environment names="Staging,Production">
-        <script src="~/js/Release/dashboard.bundle.js"></script>
+        <script src="~/js/dashboard.bundle.js"></script>
     </environment>
 }
 

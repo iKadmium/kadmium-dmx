@@ -152,7 +152,7 @@ export class FixtureViewModel
             }
         }, FixtureViewModel.STROBE_MILLIS);
 
-        if (this.channelLookupTable["ColorWheel"] != null)
+        if (this.channelLookupTable["ColorWheel"] != null && this.channelLookupTable["Red"] == null && this.channelLookupTable["Green"] == null && this.channelLookupTable["Blue"] == null)
         {
             this.activeColorWheelEntry = ko.observable<ColorWheelEntryViewModel>(this.colorWheel().entries()[0]);
             this.channelLookupTable["ColorWheel"].dmxValue.subscribe((newValue: number) =>
@@ -299,9 +299,19 @@ export class FixtureViewModel
         for (let channel of this.channels())
         {
             let value = data[channel.address() - 1];
-            if (value >= channel.min && value <= channel.max)
+            if (channel.min < channel.max)
             {
-                channel.dmxValue(value);
+                if (value >= channel.min && value <= channel.max)
+                {
+                    channel.dmxValue(value);
+                }
+            }
+            else if(channel.min > channel.max) //reversed values
+            {
+                if (value <= channel.min && value >= channel.max)
+                {
+                    channel.dmxValue(value);
+                }
             }
         }
     }

@@ -16,7 +16,7 @@ namespace kadmium_osc_dmx_dotnet_core
         {
             Name = name;
             Universes = universes;
-            Status.Update(StatusCode.Running, "Venue Loaded Successfully", this);
+            Status.Update(StatusCode.Running, Name + " running", this);
         }
 
         public Venue() : this("", Enumerable.Empty<Universe>())

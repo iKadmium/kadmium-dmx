@@ -21,8 +21,8 @@
                         <input-collection-item label="Name">
                             <input type="text" class="form-control" data-bind="value: name">
                         </input-collection-item>
-                        <input-collection-item label="Transmitters">
-                            <button asp-template="edit" data-bind="click: $parent.editTransmitters.bind($parent)"></button>
+                        <input-collection-item label="Universe ID">
+                            <input type="number" class="form-control" min="1" max="63999" data-bind="value: universeID">
                         </input-collection-item>
                         <input-collection-item label="Fixtures">
                             <button asp-template="edit" data-bind="click: $parent.editFixtures.bind($parent)"></button>
@@ -43,34 +43,6 @@
     </modal-window>
 
     <binding-context data-bind="with: selectedUniverse">
-        <modal-window id="transmitters-edit">
-            <modal-header>Editing <strong>Transmitters</strong> for <span class="item-name" data-bind="text: name"></span></modal-header>
-            <modal-body>
-                <input-collection name="transmitters">
-                    <input-collection-body>
-                        <input-collection-item label="Name">
-                            <select data-bind="value: name" class="form-control">
-                                @foreach (var transmitter in MasterController.Instance.Transmitters.Values)
-                                {
-                                    <option value="@transmitter.Name">@transmitter.DisplayName</option>
-                                }
-                            </select>
-                        </input-collection-item>
-                        <input-collection-item label="Universe ID">
-                            <input data-bind="value: universeID" type="number" min="1" max="255" class="form-control">
-                        </input-collection-item>
-                        <input-collection-item label="Remove">
-                            <button asp-template="delete" data-bind="click: $parent.removeTransmitter.bind($parent)"></button>
-                        </input-collection-item>
-                    </input-collection-body>
-                    <input-collection-footer>
-                        <button asp-template="add" data-bind="click: addTransmitter"></button>
-                    </input-collection-footer>
-                </input-collection>
-            </modal-body>
-            <modal-footer><button class="btn btn-success" data-dismiss="modal">OK</button></modal-footer>
-        </modal-window>
-
         <modal-window large="true" id="fixtures-edit">
             <modal-header>Editing <strong>Fixtures</strong> for <span class="item-name" data-bind="text: name"></span></modal-header>
             <modal-body>
@@ -133,11 +105,9 @@
 @section scripts
 {
     <environment names="Development">
-        <script>
-            require(["Controllers/Venues/Venues"])
-        </script>
+        <script src="http://localhost:8080/venues.bundle.js"></script>
     </environment>
     <environment names="Staging,Production">
-        <script src="~/js/Release/venues.bundle.js"></script>
+        <script src="~/js/venues.bundle.js"></script>
     </environment>
 }

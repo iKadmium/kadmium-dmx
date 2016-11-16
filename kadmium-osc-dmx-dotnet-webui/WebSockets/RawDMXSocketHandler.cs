@@ -18,7 +18,6 @@ namespace kadmium_osc_dmx_dotnet_webui.WebSockets
     {
         private static int BUFFER_SIZE = 65535;
         private static List<RawDMXSocketHandler> AllSocketHandlers;
-        private TransmitterTarget TransmitterTarget { get; }
         private Timer RenderTimer { get; }
         private Universe Universe { get; set; }
 

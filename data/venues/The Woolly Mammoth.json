@@ -1,0 +1,111 @@
+{
+  "name": "The Woolly Mammoth",
+  "universes": [
+    {
+      "name": "Main Universe",
+      "fixtures": [
+        {
+          "channel": 88,
+          "group": "vocalist",
+          "options": {
+            "axisInversions": [],
+            "axisRestrictions": [],
+            "maxBrightness": 1
+          },
+          "type": "AVE Par64B"
+        },
+        {
+          "channel": 41,
+          "group": "bassist",
+          "options": {
+            "axisInversions": [],
+            "axisRestrictions": [],
+            "maxBrightness": 1
+          },
+          "type": "AVE Par64B"
+        },
+        {
+          "channel": 48,
+          "group": "guitarist",
+          "options": {
+            "axisInversions": [],
+            "axisRestrictions": [],
+            "maxBrightness": 1
+          },
+          "type": "AVE Par64B"
+        },
+        {
+          "channel": 67,
+          "group": "drummer",
+          "options": {
+            "axisInversions": [],
+            "axisRestrictions": [],
+            "maxBrightness": 1
+          },
+          "type": "AVE Par64B"
+        },
+        {
+          "channel": 74,
+          "group": "drummer",
+          "options": {
+            "axisInversions": [],
+            "axisRestrictions": [],
+            "maxBrightness": 1
+          },
+          "type": "AVE Par64B"
+        },
+        {
+          "channel": 101,
+          "group": "rearSides",
+          "options": {
+            "axisInversions": [],
+            "axisRestrictions": [],
+            "maxBrightness": 1
+          },
+          "type": "iSolution iMove 250S"
+        },
+        {
+          "channel": 117,
+          "group": "rearSides",
+          "options": {
+            "axisInversions": [],
+            "axisRestrictions": [],
+            "maxBrightness": 1
+          },
+          "type": "iSolution iMove 250S"
+        },
+        {
+          "channel": 133,
+          "group": "rearSides",
+          "options": {
+            "axisInversions": [],
+            "axisRestrictions": [],
+            "maxBrightness": 1
+          },
+          "type": "iSolution iMove 250S"
+        },
+        {
+          "channel": 149,
+          "group": "rearSides",
+          "options": {
+            "axisInversions": [],
+            "axisRestrictions": [],
+            "maxBrightness": 1
+          },
+          "type": "iSolution iMove 250S"
+        },
+        {
+          "channel": 165,
+          "group": "rearSides",
+          "options": {
+            "axisInversions": [],
+            "axisRestrictions": [],
+            "maxBrightness": 1
+          },
+          "type": "iSolution iMove 250S"
+        }
+      ],
+      "universeID": 1
+    }
+  ]
+}

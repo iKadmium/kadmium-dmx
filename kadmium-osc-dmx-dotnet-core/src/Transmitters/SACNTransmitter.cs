@@ -13,7 +13,9 @@ namespace kadmium_osc_dmx_dotnet_core.Transmitters
 {
     public class SACNTransmitter : Transmitter
     {
-        static string SOURCE_NAME = "Kadmium-OSC-DMX";
+        public static string SOURCE_NAME = "Kadmium-OSC-DMX";
+        public static int SACN_PORT = 5568;
+
         private SACNSender SACNClient { get; set; }
         public int Port { get; set; }
         public event EventHandler<TransmitterEventArgs> OnTransmit;
@@ -62,8 +64,8 @@ namespace kadmium_osc_dmx_dotnet_core.Transmitters
 
         public new static SACNTransmitter Load(JObject element)
         {
-            string id = element["name"].Value<string>();
-            int port = 5568;//int.Parse(element.Attribute("port").Value);
+            string id = "sACN Transmitter";
+            int port = 5568;
             int delay = element["delay"].Value<int>();
             bool multicast = element["multicast"].Value<bool>();
             IEnumerable<string> unicast = element["unicast"].Values<string>();
@@ -79,8 +81,6 @@ namespace kadmium_osc_dmx_dotnet_core.Transmitters
         public override JObject Serialize()
         {
             JObject obj = new JObject(
-                new JProperty("name", Name),
-                new JProperty("description", SACNClient.SourceName),
                 new JProperty("delay", Delay),
                 new JProperty("multicast", Multicast),
                 new JProperty("unicast", 

@@ -6,9 +6,8 @@
     <title>@ViewData["Title"] - kadmium-osc-dmx</title>
 
     <environment names="Development,Staging,Production">
-        <link rel="stylesheet" href="~/lib/bootstrap/css/bootstrap.css" />
+        <link rel="stylesheet" href="~/lib/bootstrap/css/bootstrap.min.css" />
         <link rel="stylesheet" href="~/css/site.css" />
-        <link rel="stylesheet" href="~/lib/ko.plus.css" />
     </environment>
 </head>
 <body>
@@ -23,32 +22,11 @@
     </div>
 
     <environment names="Development">
-        <script src="~/lib/require.js"></script>
-        <script>
-            require.config({
-                shim: {
-                    "bootstrap": { "deps": ["jquery"] },
-                    "knockout-sortablejs": {"deps": ["Sortable"]},
-                    "Controllers/Groups/Groups": { "deps": ["knockout-sortablejs"] }
-                },
-                baseUrl: "/js/Debug",
-                paths: {
-                    "knockout": "/lib/knockout-latest",
-                    "knockout.validation": "/lib/knockout.validation",
-                    "ko.plus": "/lib/ko.plus",
-                    "jquery": "/lib/jquery/jquery",
-                    "bootstrap": "/lib/bootstrap/js/bootstrap",
-                    "Sortable": "/lib/Sortable/Sortable",
-                    "knockout-sortablejs": "/lib/knockout-sortable"
-                }
-            });
-            require(["jquery", "bootstrap"]);
-        </script>
+        <script src="http://localhost:8080/commons.js"></script>
     </environment>
     <environment names="Staging,Production">
-
+        <script src="~/js/commons.js"></script>
     </environment>
-
     @RenderSection("scripts", required: false)
 </body>
 </html>

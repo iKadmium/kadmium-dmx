@@ -9,6 +9,7 @@ using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Collections.Specialized;
+using Newtonsoft.Json.Linq;
 
 namespace kadmium_osc_dmx_dotnet_core
 {
@@ -18,8 +19,8 @@ namespace kadmium_osc_dmx_dotnet_core
         static int UPDATE_TIME = 1000 / UPDATES_PER_SECOND;
 
         public ConcurrentDictionary<string, Group> Groups { get; private set; }
-        public ConcurrentDictionary<string, Listener> Listeners { get; private set; }
-        public ConcurrentDictionary<string, Transmitter> Transmitters { get; private set; }
+        public Transmitter Transmitter { get; private set; }
+        public Listener Listener { get; private set; }
         public Venue Venue { get; private set; }
         public Strobe Strobe { get; }
         public Random Random { get; }
@@ -39,22 +40,17 @@ namespace kadmium_osc_dmx_dotnet_core
 
         public static void Initialise()
         {
+            JObject settings = FileAccess.LoadSettings();
+
             instance = new MasterController();
             Instance.Groups = new ConcurrentDictionary<string, Group>();
             foreach(Group group in FileAccess.LoadGroups())
             {
                 Instance.Groups.TryAdd(group.Name, group);
             }
-            Instance.Transmitters = new ConcurrentDictionary<string, Transmitter>();
-            foreach(Transmitter transmitter in FileAccess.LoadTransmitters())
-            {
-                Instance.Transmitters.TryAdd(transmitter.Name, transmitter);
-            }
-            Instance.Listeners = new ConcurrentDictionary<string, Listener>();
-            foreach(Listener listener in FileAccess.LoadListeners())
-            {
-                Instance.Listeners.TryAdd(listener.Name, listener);
-            }
+            Instance.Transmitter = SACNTransmitter.Load(settings["sacnTransmitter"].Value<JObject>());
+            
+            Instance.Listener = new OSCListener(settings["oscPort"].Value<int>(), "OSC Listener");
             Instance.updateTimer = new Timer(Instance.UpdateTimer_Elapsed, null, UPDATE_TIME, UPDATE_TIME);
             Venue.Status = new Status("No Venue Loaded");
         }
@@ -97,14 +93,8 @@ namespace kadmium_osc_dmx_dotnet_core
         public void Close()
         {
             updateTimer.Dispose();
-            foreach (Transmitter transmitter in Transmitters.Values)
-            {
-                transmitter.Close();
-            }
-            foreach (Listener listener in Listeners.Values)
-            {
-                listener.Close();
-            }
+            Transmitter?.Close();
+            Listener?.Close();
         }
     }
 }

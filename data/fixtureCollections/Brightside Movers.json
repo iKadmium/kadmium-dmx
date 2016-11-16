@@ -1,0 +1,93 @@
+{
+  "name": "Brightside Movers",
+  "fixtures": [
+    {
+      "channel": 101,
+      "type": "Martin Mac 101",
+      "group": "rearSides",
+      "options": {
+        "axisInversions": [],
+        "axisRestrictions": [
+          {
+            "name": "Pan",
+            "min": -90,
+            "max": 90
+          },
+          {
+            "name": "Tilt",
+            "min": 0,
+            "max": 90
+          }
+        ],
+        "maxBrightness": 1
+      }
+    },
+    {
+      "channel": 113,
+      "type": "Martin Mac 101",
+      "group": "rearSides",
+      "options": {
+        "axisInversions": [],
+        "axisRestrictions": [
+          {
+            "name": "Pan",
+            "min": -90,
+            "max": 90
+          },
+          {
+            "name": "Tilt",
+            "min": 0,
+            "max": 90
+          }
+        ],
+        "maxBrightness": 1
+      }
+    },
+    {
+      "channel": 125,
+      "type": "Martin Mac 101",
+      "group": "rearSides",
+      "options": {
+        "axisInversions": [
+          "Pan"
+        ],
+        "axisRestrictions": [
+          {
+            "name": "Pan",
+            "min": -90,
+            "max": 90
+          },
+          {
+            "name": "Tilt",
+            "min": 0,
+            "max": 90
+          }
+        ],
+        "maxBrightness": 1
+      }
+    },
+    {
+      "channel": 137,
+      "type": "Martin Mac 101",
+      "group": "rearSides",
+      "options": {
+        "axisInversions": [
+          "Pan"
+        ],
+        "axisRestrictions": [
+          {
+            "name": "Pan",
+            "min": -90,
+            "max": 90
+          },
+          {
+            "name": "Tilt",
+            "min": 0,
+            "max": 90
+          }
+        ],
+        "maxBrightness": 1
+      }
+    }
+  ]
+}

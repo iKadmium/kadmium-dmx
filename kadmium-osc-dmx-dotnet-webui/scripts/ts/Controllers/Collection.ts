@@ -39,6 +39,11 @@ export class CollectionViewModel<ViewModelDataType, ViewModelType extends Collec
             }, 0);
         });
 
+        $(document).on('hidden.bs.modal', '.modal', function ()
+        {
+            $('.modal:visible').length && $(document.body).addClass('modal-open');
+        });
+
         $("#confirm-delete").on("hide.bs.modal", (eventObject: JQueryEventObject, ...args: any[]) =>
         {
             $("#modal-delete").prop("disabled", false);

@@ -1,0 +1,135 @@
+{
+  "name": "The Brightside",
+  "universes": [
+    {
+      "name": "Main Universe",
+      "fixtures": [
+        {
+          "channel": 400,
+          "group": "vocalist",
+          "options": {
+            "axisInversions": [],
+            "axisRestrictions": [],
+            "maxBrightness": 1
+          },
+          "type": "Chinese RGBW (5ch)"
+        },
+        {
+          "channel": 405,
+          "group": "guitarist",
+          "options": {
+            "axisInversions": [],
+            "axisRestrictions": [],
+            "maxBrightness": 1
+          },
+          "type": "Chinese RGBW (5ch)"
+        },
+        {
+          "channel": 410,
+          "group": "bassist",
+          "options": {
+            "axisInversions": [],
+            "axisRestrictions": [],
+            "maxBrightness": 1
+          },
+          "type": "Chinese RGBW (5ch)"
+        },
+        {
+          "channel": 415,
+          "group": "drummer",
+          "options": {
+            "axisInversions": [],
+            "axisRestrictions": [],
+            "maxBrightness": 1
+          },
+          "type": "Chinese RGBW (5ch)"
+        },
+        {
+          "channel": 101,
+          "group": "rearSides",
+          "options": {
+            "axisInversions": [],
+            "axisRestrictions": [
+              {
+                "name": "Pan",
+                "min": -90,
+                "max": 90
+              },
+              {
+                "name": "Tilt",
+                "min": 0,
+                "max": 90
+              }
+            ],
+            "maxBrightness": 1
+          },
+          "type": "Martin Mac 101"
+        },
+        {
+          "channel": 113,
+          "group": "rearSides",
+          "options": {
+            "axisInversions": [],
+            "axisRestrictions": [
+              {
+                "name": "Pan",
+                "min": -90,
+                "max": 90
+              },
+              {
+                "name": "Tilt",
+                "min": 0,
+                "max": 90
+              }
+            ],
+            "maxBrightness": 1
+          },
+          "type": "Martin Mac 101"
+        },
+        {
+          "channel": 125,
+          "group": "rearSides",
+          "options": {
+            "axisInversions": [],
+            "axisRestrictions": [
+              {
+                "name": "Pan",
+                "min": -90,
+                "max": 90
+              },
+              {
+                "name": "Tilt",
+                "min": 0,
+                "max": 90
+              }
+            ],
+            "maxBrightness": 1
+          },
+          "type": "Martin Mac 101"
+        },
+        {
+          "channel": 137,
+          "group": "rearSides",
+          "options": {
+            "axisInversions": [],
+            "axisRestrictions": [
+              {
+                "name": "Pan",
+                "min": -90,
+                "max": 90
+              },
+              {
+                "name": "Tilt",
+                "min": 0,
+                "max": 90
+              }
+            ],
+            "maxBrightness": 1
+          },
+          "type": "Martin Mac 101"
+        }
+      ],
+      "universeID": 1
+    }
+  ]
+}

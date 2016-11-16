@@ -45,7 +45,7 @@ class SACNTransmitterLiveViewModel
             this.channels().forEach((value: DMXChannelViewModel, index: number, array: DMXChannelViewModel[]) => value.value(0));
         });
 
-        this.webSocket = new WebSocket(document.URL.replace("http://", "ws://").replace("Live", "Socket"));
+        this.webSocket = new WebSocket(MVC.getSocketURL("SACNTransmitters"));
         this.webSocket.addEventListener("message", (ev: MessageEvent) =>
         {
             let message = JSON.parse(ev.data) as number[];
@@ -72,9 +72,9 @@ class SACNTransmitterLiveViewModel
 }
 
 
-let sacnTransmitterLiveViewModel: SACNTransmitterLiveViewModel;
+let viewModel: SACNTransmitterLiveViewModel;
 window.addEventListener("load", (ev: Event) =>
 {
-    sacnTransmitterLiveViewModel = new SACNTransmitterLiveViewModel();
-    ko.applyBindings(sacnTransmitterLiveViewModel);
+    viewModel = new SACNTransmitterLiveViewModel();
+    ko.applyBindings(viewModel);
 });

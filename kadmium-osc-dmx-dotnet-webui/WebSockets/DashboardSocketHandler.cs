@@ -21,64 +21,49 @@ namespace kadmium_osc_dmx_dotnet_webui.WebSockets
         public DashboardSocketHandler(WebSocket socket)
         {
             Socket = socket;
-            foreach(Listener listener in MasterController.Instance.Listeners.Values)
-            {
-                listener.Status.Updated += ListenerStatusUpdated;
-            }
-            foreach(Transmitter transmitter in MasterController.Instance.Transmitters.Values)
-            {
-                transmitter.Status.Updated += TransmitterStatusUpdated;
-            }
+            MasterController.Instance.Listener.Status.Updated += ListenerStatusUpdated;
+            MasterController.Instance.Transmitter.Status.Updated += TransmitterStatusUpdated;
             Venue.Status.Updated += Status_Updated;
         }
 
         private void Status_Updated(object sender, StatusUpdateEventArgs e)
         {
-            SendUpdate("Venues", MasterController.Instance.Venue?.Name ?? null, e.StatusCode, e.Message);
+            SendUpdate("Venues", e.StatusCode, e.Message);
         }
 
         private void TransmitterStatusUpdated(object sender, StatusUpdateEventArgs e)
         {
             string controller = sender.GetType().Name + "s";
             Transmitter transmitter = sender as Transmitter;
-            SendUpdate(controller, transmitter.Name, e.StatusCode, e.Message);
+            SendUpdate(controller, e.StatusCode, e.Message);
         }
 
         private void ListenerStatusUpdated(object sender, StatusUpdateEventArgs e)
         {
             string controller = sender.GetType().Name + "s";
             Listener listener = sender as Listener;
-            SendUpdate(controller, listener.Name, e.StatusCode, e.Message);
+            SendUpdate(controller, e.StatusCode, e.Message);
         }
 
         private void UpdateAll()
         {
-            foreach (Listener listener in MasterController.Instance.Listeners.Values)
-            {
-                string controller = listener.GetType().Name + "s";
-                SendUpdate(controller, listener.Name, listener.Status.StatusCode, listener.Status.Message);
-            }
-            foreach (Transmitter transmitter in MasterController.Instance.Transmitters.Values)
-            {
-                string controller = transmitter.GetType().Name + "s";
-                SendUpdate(controller, transmitter.Name, transmitter.Status.StatusCode, transmitter.Status.Message);
-            }
+            SendUpdate("OSCListeners", MasterController.Instance.Listener.Status.StatusCode, MasterController.Instance.Listener.Status.Message);
+            SendUpdate("SACNTransmitters", MasterController.Instance.Transmitter.Status.StatusCode, MasterController.Instance.Transmitter.Status.Message);
             if(MasterController.Instance.Venue != null)
             {
-                SendUpdate("Venues", MasterController.Instance.Venue.Name, StatusCode.Running, "Venue running");
+                SendUpdate("Venues", StatusCode.Running, MasterController.Instance.Venue.Name + " running");
             }
             else
             {
-                SendUpdate("Venues", null, StatusCode.NotStarted, "No Venue Loaded");
+                SendUpdate("Venues", StatusCode.NotStarted, "No Venue Loaded");
             }
             
         }
 
-        private async void SendUpdate(string controller, string id, StatusCode statusCode, string message)
+        private async void SendUpdate(string controller, StatusCode statusCode, string message)
         {
             JObject obj = new JObject(
                 new JProperty("controller", controller),
-                new JProperty("name", id),
                 new JProperty("code", statusCode.ToString()),
                 new JProperty("message", message)
             );

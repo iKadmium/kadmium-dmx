@@ -21,13 +21,11 @@ export class StatusViewModel
 
     message: KnockoutObservable<string>;
     code: KnockoutObservable<string>;
-    name: KnockoutObservable<string>;
-
-    constructor(name: string)
+    
+    constructor()
     {
         this.code = ko.observable<string>("Unknown");
         this.message = ko.observable<string>("Loading...");
-        this.name = ko.observable<string>(name);
         this.panelClass = ko.computed<string>(() => StatusViewModel.panelClasses[this.code()]);
         this.alertClass = ko.computed<string>(() => StatusViewModel.alertClasses[this.code()]);
         this.glyphClass = ko.computed<string>(() => StatusViewModel.glyphClasses[this.code()]);
@@ -55,7 +53,7 @@ export class StatusTrackerViewModel
     static addStatusAlert(code: string, message: string): void
     {
         let alerts = StatusTrackerViewModel.instance.statusAlerts as KnockoutObservableArray<StatusViewModel>;
-        let status = new StatusViewModel("");
+        let status = new StatusViewModel();
         status.message(message);
         status.code(code);
         alerts.push(status);

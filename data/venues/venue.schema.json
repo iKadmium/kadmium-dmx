@@ -1,131 +1,113 @@
 ﻿{
-  "$schema": "http://json-schema.org/draft-04/schema#",
-  "title": "Venue",
-  "description": "Describes a venue",
-  "type": "object",
-  "definitions": {
-    "fixtures": {
-      "type": "array",
-      "description": "A list of fixtures for this collection",
-      "items": {
-        "type": "object",
-        "properties": {
-          "channel": {
-            "description": "The channel assigned to the fixture",
-            "type": "number"
-          },
-          "type": {
-            "description": "The model name of the fixture",
-            "type": "string"
-          },
-          "group": {
-            "description": "The group the fixture is assigned to",
-            "type": "string"
-          },
-          "options": {
-            "description": "Options",
-            "type": "object",
-            "properties": {
-              "axisInversions": {
-                "type": "array",
-                "description": "Movement axis to be inverted",
-                "items": {
-                  "type": "string"
-                }
-              },
-              "maxBrightness": {
-                "type": "number",
-                "description": "The maximum brightness of this fixture",
-                "minimum": 0,
-                "maximum": 1
-              },
-              "axisRestrictions": {
-                "type": "array",
-                "description": "Movement axis to be restricted",
-                "items": {
-                  "type": "object",
-                  "properties": {
-                    "name": {
-                      "type": "string",
-                      "description": "The name of the axis to be restricted"
-                    },
-                    "min": {
-                      "type": "integer",
-                      "description": "The minimum value, in degrees"
-                    },
-                    "max": {
-                      "type": "integer",
-                      "description": "The minimum value, in degrees"
-                    }
-                  },
-                  "required": [
-                    "name",
-                    "min",
-                    "max"
-                  ],
-                  "additionalProperties": false
-                }
-              }
-            }
-          }
-        },
-        "required": [
-          "channel",
-          "group",
-          "options",
-          "type"
-        ],
-        "additionalProperties": false
-      }
-    }
-  },
-  "properties": {
-    "name": {
-      "type": "string",
-      "description": "The name of the venue"
-    },
-    "universes": {
-      "type": "array",
-      "description": "A list of universes for this venue",
-      "items": {
-        "type": "object",
-        "properties": {
-          "name": {
-            "description": "The name of this universe",
-            "type": "string"
-          },
-          "fixtures": {
-            "$ref": "#/definitions/fixtures"
-          },
-          "transmitters": {
-            "type": "array",
-            "description": "The transmitters this universe should send to",
-            "items": {
-              "type": "object",
-              "properties": {
-                "name": {
-                  "description": "The name of the transmitter",
-                  "type": "string"
-                },
-                "universeID": {
-                  "description": "The universe number the transmitter should send to",
-                  "type": "integer"
-                }
-              }
-            },
-            "required": [
-              "name",
-              "universeID"
-            ],
-            "additionalProperties": false
-          }
-        },
-        "required": [
-          "fixtures",
-          "name"
-        ],
-        "additionalProperties": false
-      }
-    }
-  }
+	"$schema": "http://json-schema.org/draft-04/schema#",
+	"title": "Venue",
+	"description": "Describes a venue",
+	"type": "object",
+	"definitions": {
+		"fixtures": {
+			"type": "array",
+			"description": "A list of fixtures for this collection",
+			"items": {
+				"type": "object",
+				"properties": {
+					"channel": {
+						"description": "The channel assigned to the fixture",
+						"type": "number"
+					},
+					"type": {
+						"description": "The model name of the fixture",
+						"type": "string"
+					},
+					"group": {
+						"description": "The group the fixture is assigned to",
+						"type": "string"
+					},
+					"options": {
+						"description": "Options",
+						"type": "object",
+						"properties": {
+							"axisInversions": {
+								"type": "array",
+								"description": "Movement axis to be inverted",
+								"items": {
+									"type": "string"
+								}
+							},
+							"maxBrightness": {
+								"type": "number",
+								"description": "The maximum brightness of this fixture",
+								"minimum": 0,
+								"maximum": 1
+							},
+							"axisRestrictions": {
+								"type": "array",
+								"description": "Movement axis to be restricted",
+								"items": {
+									"type": "object",
+									"properties": {
+										"name": {
+											"type": "string",
+											"description": "The name of the axis to be restricted"
+										},
+										"min": {
+											"type": "integer",
+											"description": "The minimum value, in degrees"
+										},
+										"max": {
+											"type": "integer",
+											"description": "The minimum value, in degrees"
+										}
+									},
+									"required": [
+										"name",
+										"min",
+										"max"
+									],
+									"additionalProperties": false
+								}
+							}
+						}
+					}
+				},
+				"required": [
+					"channel",
+					"group",
+					"options",
+					"type"
+				],
+				"additionalProperties": false
+			}
+		}
+	},
+	"properties": {
+		"name": {
+			"type": "string",
+			"description": "The name of the venue"
+		},
+		"universes": {
+			"type": "array",
+			"description": "A list of universes for this venue",
+			"items": {
+				"type": "object",
+				"properties": {
+					"name": {
+						"description": "The name of this universe",
+						"type": "string"
+					},
+					"universeID": {
+						"description": "The Universe ID to which this universe should be transmitted",
+						"type": "integer"
+					},
+					"fixtures": {
+						"$ref": "#/definitions/fixtures"
+					}
+				},
+				"required": [
+					"fixtures",
+					"name"
+				],
+				"additionalProperties": false
+			}
+		}
+	}
 }

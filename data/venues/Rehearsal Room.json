@@ -1,144 +1,139 @@
 ﻿{
-  "name": "Rehearsal Room",
-  "universes": [
-    {
-      "name": "Private Universe",
-      "fixtures": [
-        {
-          "channel": 301,
-          "group": "rearSides",
-          "options": {
-            "maxBrightness": 1,
-            "axisInversions": [],
-            "axisRestrictions": [
-              {
-                "name": "Pan",
-                "min": -90,
-                "max": 90
-              },
-              {
-                "name": "Tilt",
-                "min": 0,
-                "max": 90
-              }
-            ]
-          },
-          "type": "Chinese Moving Wash"
-        },
-        {
-          "channel": 315,
-          "group": "rearSides",
-          "options": {
-            "maxBrightness": 1,
-            "axisInversions": [],
-            "axisRestrictions": [
-              {
-                "name": "Pan",
-                "min": -90,
-                "max": 90
-              },
-              {
-                "name": "Tilt",
-                "min": 0,
-                "max": 90
-              }
-            ]
-          },
-          "type": "Chinese Moving Wash"
-        },
-        {
-          "channel": 329,
-          "group": "rearSides",
-          "options": {
-            "maxBrightness": 1,
-            "axisInversions": [
-              "Pan"
-            ],
-            "axisRestrictions": [
-              {
-                "name": "Pan",
-                "min": -90,
-                "max": 90
-              },
-              {
-                "name": "Tilt",
-                "min": 0,
-                "max": 90
-              }
-            ]
-          },
-          "type": "Chinese Moving Wash"
-        },
-        {
-          "channel": 343,
-          "group": "rearSides",
-          "options": {
-            "maxBrightness": 1,
-            "axisInversions": [
-              "Pan"
-            ],
-            "axisRestrictions": [
-              {
-                "name": "Pan",
-                "min": -90,
-                "max": 90
-              },
-              {
-                "name": "Tilt",
-                "min": 0,
-                "max": 90
-              }
-            ]
-          },
-          "type": "Chinese Moving Wash"
-        },
-        {
-          "channel": 400,
-          "group": "vocalist",
-          "options": {
-            "maxBrightness": 1,
-            "axisInversions": [],
-            "axisRestrictions": []
-          },
-          "type": "Chinese RGBW (5ch)"
-        },
-        {
-          "channel": 405,
-          "group": "guitarist",
-          "options": {
-            "maxBrightness": 1,
-            "axisInversions": [],
-            "axisRestrictions": []
-          },
-          "type": "Chinese RGBW (5ch)"
-        },
-        {
-          "channel": 410,
-          "group": "bassist",
-          "options": {
-            "maxBrightness": 1,
-            "axisInversions": [],
-            "axisRestrictions": []
-          },
-          "type": "Chinese RGBW (5ch)"
-        },
-        {
-          "channel": 415,
-          "group": "drummer",
-          "options": {
-            "maxBrightness": 1,
-            "axisInversions": [],
-            "axisRestrictions": []
-          },
-          "type": "Chinese RGBW (5ch)"
-        }
-      ],
-      "transmitters": [
-        {
-          "name": "sacnTransmitter",
-          "universeID": 1
-        }
-      ]
-    }
-  ]
+	"name": "Rehearsal Room",
+	"universes": [
+		{
+			"name": "Private Universe",
+			"universeID": 1,
+			"fixtures": [
+				{
+					"channel": 301,
+					"group": "rearSides",
+					"options": {
+						"maxBrightness": 1,
+						"axisInversions": [],
+						"axisRestrictions": [
+							{
+								"name": "Pan",
+								"min": -90,
+								"max": 90
+							},
+							{
+								"name": "Tilt",
+								"min": 0,
+								"max": 90
+							}
+						]
+					},
+					"type": "Chinese Moving Wash"
+				},
+				{
+					"channel": 315,
+					"group": "rearSides",
+					"options": {
+						"maxBrightness": 1,
+						"axisInversions": [],
+						"axisRestrictions": [
+							{
+								"name": "Pan",
+								"min": -90,
+								"max": 90
+							},
+							{
+								"name": "Tilt",
+								"min": 0,
+								"max": 90
+							}
+						]
+					},
+					"type": "Chinese Moving Wash"
+				},
+				{
+					"channel": 329,
+					"group": "rearSides",
+					"options": {
+						"maxBrightness": 1,
+						"axisInversions": [
+							"Pan"
+						],
+						"axisRestrictions": [
+							{
+								"name": "Pan",
+								"min": -90,
+								"max": 90
+							},
+							{
+								"name": "Tilt",
+								"min": 0,
+								"max": 90
+							}
+						]
+					},
+					"type": "Chinese Moving Wash"
+				},
+				{
+					"channel": 343,
+					"group": "rearSides",
+					"options": {
+						"maxBrightness": 1,
+						"axisInversions": [
+							"Pan"
+						],
+						"axisRestrictions": [
+							{
+								"name": "Pan",
+								"min": -90,
+								"max": 90
+							},
+							{
+								"name": "Tilt",
+								"min": 0,
+								"max": 90
+							}
+						]
+					},
+					"type": "Chinese Moving Wash"
+				},
+				{
+					"channel": 400,
+					"group": "vocalist",
+					"options": {
+						"maxBrightness": 1,
+						"axisInversions": [],
+						"axisRestrictions": []
+					},
+					"type": "Chinese RGBW (5ch)"
+				},
+				{
+					"channel": 405,
+					"group": "guitarist",
+					"options": {
+						"maxBrightness": 1,
+						"axisInversions": [],
+						"axisRestrictions": []
+					},
+					"type": "Chinese RGBW (5ch)"
+				},
+				{
+					"channel": 410,
+					"group": "bassist",
+					"options": {
+						"maxBrightness": 1,
+						"axisInversions": [],
+						"axisRestrictions": []
+					},
+					"type": "Chinese RGBW (5ch)"
+				},
+				{
+					"channel": 415,
+					"group": "drummer",
+					"options": {
+						"maxBrightness": 1,
+						"axisInversions": [],
+						"axisRestrictions": []
+					},
+					"type": "Chinese RGBW (5ch)"
+				}
+			]
+		}
+	]
 }

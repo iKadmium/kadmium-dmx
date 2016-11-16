@@ -20,10 +20,10 @@ namespace kadmium_osc_dmx_dotnet_webui.WebSockets
         public WebSocket Socket { get; }
         public SACNTransmitter Transmitter { get; }
 
-        public SACNTransmitterStatus(WebSocket socket, string id)
+        public SACNTransmitterStatus(WebSocket socket)
         {
             Socket = socket;
-            Transmitter = MasterController.Instance.Transmitters[id] as SACNTransmitter;
+            Transmitter = MasterController.Instance.Transmitter as SACNTransmitter;
             UniverseID = 1;
             Transmitter.OnTransmit += Transmitter_OnTransmit;
         }
@@ -77,8 +77,7 @@ namespace kadmium_osc_dmx_dotnet_webui.WebSockets
                 return;
 
             var socket = await hc.WebSockets.AcceptWebSocketAsync();
-            string id = hc.Request.Path.Value.Split('/').Last();
-            var h = new SACNTransmitterStatus(socket, id);
+            var h = new SACNTransmitterStatus(socket);
             await h.RenderLoop();
         }
 

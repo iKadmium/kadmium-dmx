@@ -1,0 +1,57 @@
+{
+  "name": "New Globe Movers",
+  "fixtures": [
+    {
+      "channel": 55,
+      "type": "New Globe Moving Head",
+      "group": "rearSides",
+      "options": {
+        "axisInversions": [],
+        "axisRestrictions": [
+          {
+            "name": "Pan",
+            "min": -90,
+            "max": 90
+          },
+          {
+            "name": "Tilt",
+            "min": 0,
+            "max": 90
+          }
+        ],
+        "maxBrightness": 1
+      }
+    },
+    {
+      "channel": 67,
+      "type": "New Globe Moving Head",
+      "group": "drummer",
+      "options": {
+        "axisInversions": [],
+        "axisRestrictions": [
+          {
+            "name": "Pan",
+            "min": -1,
+            "max": 1
+          },
+          {
+            "name": "Tilt",
+            "min": -1,
+            "max": 1
+          }
+        ],
+        "maxBrightness": 1
+      }
+    },
+    {
+      "channel": 79,
+      "type": "New Globe Moving Head",
+      "group": "rearSides",
+      "options": {
+        "axisInversions": [],
+        "axisRestrictions": [],
+        "maxBrightness": 1
+      }
+    }
+  ]
+}

@@ -1,0 +1,25 @@
+{
+  "name": "New Globe PARs",
+  "fixtures": [
+    {
+      "channel": 25,
+      "type": "AVE Par64B",
+      "group": "guitarist",
+      "options": {
+        "axisInversions": [],
+        "axisRestrictions": [],
+        "maxBrightness": 1
+      }
+    },
+    {
+      "channel": 46,
+      "type": "AVE Par64B",
+      "group": "bassist",
+      "options": {
+        "axisInversions": [],
+        "axisRestrictions": [],
+        "maxBrightness": 1
+      }
+    }
+  ]
+}

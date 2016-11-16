@@ -18,12 +18,11 @@ namespace kadmium_osc_dmx_dotnet_webui.WebSockets
         private static int RECEIVE_BUFFER_SIZE = 65535;
         public int UniverseID { get; set; }
         public WebSocket Socket { get; }
-        public SACNTransmitter Transmitter { get; }
-
-        public SACNTransmitterLive(WebSocket socket, string id)
+        
+        public SACNTransmitterLive(WebSocket socket)
         {
             Socket = socket;
-            Transmitter = MasterController.Instance.Transmitters[id] as SACNTransmitter;
+            var Transmitter = MasterController.Instance.Transmitter as SACNTransmitter;
             UniverseID = 1;
             Transmitter.OnTransmit += Transmitter_OnTransmit;
         }
@@ -77,8 +76,7 @@ namespace kadmium_osc_dmx_dotnet_webui.WebSockets
                 return;
 
             var socket = await hc.WebSockets.AcceptWebSocketAsync();
-            string id = hc.Request.Path.Value.Split('/').Last();
-            var h = new SACNTransmitterLive(socket, id);
+            var h = new SACNTransmitterLive(socket);
             await h.RenderLoop();
         }
 

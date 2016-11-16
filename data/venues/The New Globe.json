@@ -5,7 +5,47 @@
       "name": "Universe 1",
       "fixtures": [
         {
+          "channel": 25,
+          "group": "guitarist",
+          "options": {
+            "axisInversions": [],
+            "axisRestrictions": [],
+            "maxBrightness": 1
+          },
+          "type": "AVE Par64B"
+        },
+        {
+          "channel": 46,
+          "group": "bassist",
+          "options": {
+            "axisInversions": [],
+            "axisRestrictions": [],
+            "maxBrightness": 1
+          },
+          "type": "AVE Par64B"
+        },
+        {
           "channel": 55,
+          "group": "rearSides",
+          "options": {
+            "axisInversions": [],
+            "axisRestrictions": [],
+            "maxBrightness": 1
+          },
+          "type": "New Globe Moving Head"
+        },
+        {
+          "channel": 67,
+          "group": "drummer",
+          "options": {
+            "axisInversions": [],
+            "axisRestrictions": [],
+            "maxBrightness": 1
+          },
+          "type": "New Globe Moving Head"
+        },
+        {
+          "channel": 79,
           "group": "rearSides",
           "options": {
             "axisInversions": [],
@@ -15,12 +55,7 @@
           "type": "New Globe Moving Head"
         }
       ],
-      "transmitters": [
-        {
-          "name": "sacnTransmitter",
-          "universeID": 1
-        }
-      ]
+      "universeID": 1
     }
   ]
 }

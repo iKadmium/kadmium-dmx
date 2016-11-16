@@ -39,11 +39,9 @@
 @section scripts
 {
     <environment names="Development">
-        <script>
-            require(["Controllers/RawDMX/RawDMX"])
-        </script>
+        <script src="http://localhost:8080/rawDMX.bundle.js"></script>
     </environment>
     <environment names="Staging,Production">
-        <script src="~/js/Release/rawDMX.bundle.js"></script>
+        <script src="~/js/rawDMX.bundle.js"></script>
     </environment>
 }

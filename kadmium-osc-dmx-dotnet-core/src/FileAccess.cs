@@ -20,8 +20,6 @@ namespace kadmium_osc_dmx_dotnet_core
         static string FixturesLocation = Path.Combine(DataLocation, "fixtures");
         static string GroupsLocation = Path.Combine(DataLocation, "groups.json");
         static string UniversesLocation = Path.Combine(DataLocation, "universes.json");
-        static string TransmittersLocation = Path.Combine(DataLocation, "transmitters.json");
-        static string ListenersLocation = Path.Combine(DataLocation, "listeners.json");
         static string VenuesLocation = Path.Combine(DataLocation, "venues");
         static string FixtureCollectionLocation = Path.Combine(DataLocation, "fixtureCollections");
         static string SettingsLocation = Path.Combine(DataLocation, "settings.json");
@@ -30,8 +28,6 @@ namespace kadmium_osc_dmx_dotnet_core
         static string FixturesSchema = Path.Combine(FixturesLocation, "fixture.schema.json");
         static string GroupsSchema = Path.Combine(DataLocation, "groups.schema.json");
         static string UniversesSchema = Path.Combine(DataLocation, "universes.schema.json");
-        static string TransmittersSchema = Path.Combine(DataLocation, "transmitters.schema.json");
-        static string ListenersSchema = Path.Combine(DataLocation, "listeners.schema.json");
         static string VenuesSchema = Path.Combine(VenuesLocation, "venue.schema.json");
         static string FixtureCollectionsSchema = Path.Combine(FixtureCollectionLocation, "fixtureCollection.schema.json");
         static string SettingsSchema = Path.Combine(DataLocation, "settings.schema.json");
@@ -172,54 +168,6 @@ namespace kadmium_osc_dmx_dotnet_core
             JObject schema = ValidatedLoad(GroupsSchema, JsonSchemaSchema) as JObject;
             return schema;
         }
-
-        internal static IEnumerable<Transmitter> LoadTransmitters()
-        {
-            JArray transmittersObject = ValidatedLoad(TransmittersLocation, TransmittersSchema).Value<JArray>();
-            var transmitters = from transmitterObject in transmittersObject.Children<JObject>()
-                         select Transmitter.Load(transmitterObject);
-            return transmitters;
-        }
-
-        public static void SaveTransmitters()
-        {
-            JArray transmitters = new JArray(
-                from transmitter in MasterController.Instance.Transmitters.Values
-                select transmitter.Serialize()
-            );
-
-            ValidatedSave(transmitters, TransmittersLocation, TransmittersSchema);
-        }
-        
-        public static JObject GetTransmitterSchema()
-        {
-            JObject schema = ValidatedLoad(TransmittersSchema, JsonSchemaSchema) as JObject;
-            return schema;
-        }
-
-        internal static IEnumerable<Listener> LoadListeners()
-        {
-            JArray listenersObject = ValidatedLoad(ListenersLocation, ListenersSchema).Value<JArray>();
-            var listeners = from listenerElement in listenersObject
-                            select Listener.Load(listenerElement.Value<JObject>());
-            return listeners;
-        }
-
-        public static void SaveListeners()
-        {
-            JArray listeners = new JArray(
-                from listener in MasterController.Instance.Listeners.Values
-                select listener.Serialize()
-            );
-
-            ValidatedSave(listeners, ListenersLocation, ListenersSchema);
-        }
-
-        public static JObject GetListenerSchema()
-        {
-            JObject schema = ValidatedLoad(ListenersSchema, JsonSchemaSchema) as JObject;
-            return schema;
-        }
         
         public static bool HasFixtureDefinition(string model)
         {
@@ -345,6 +293,12 @@ namespace kadmium_osc_dmx_dotnet_core
         {
             JObject obj = ValidatedLoad(SettingsLocation, SettingsSchema) as JObject;
             return obj;
+        }
+
+        public static void SaveSettings(JObject settings)
+        {
+            string path = SettingsLocation;
+            ValidatedSave(settings, SettingsLocation, SettingsSchema);
         }
     }
 }

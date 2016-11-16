@@ -58,6 +58,10 @@ export class FixtureViewModel
         this.type = ko.observable<string>();
         this.group = ko.observable<string>();
         this.options = ko.validatedObservable<FixtureOptionsViewModel>(new FixtureOptionsViewModel(this));
+        this.type.subscribe((newValue: string) =>
+        {
+            this.options(new FixtureOptionsViewModel(this));
+        });
     }
 
     serialize(): FixtureData

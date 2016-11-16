@@ -14,35 +14,20 @@
         EnablementFunction = (() => MasterController.Instance.Venue != null),
         DisabledTitle = "A venue must be loaded"
     };
-
-    EnablementOptions hasTransmitters = new EnablementOptions
-    {
-        EnablementFunction = (() => MasterController.Instance.Transmitters.Count > 0),
-        DisabledTitle = "At least one transmitter must be defined"
-    };
-
-    EnablementOptions hasGroupsAndTransmitters = new EnablementOptions
-    {
-        EnablementFunction = (() => MasterController.Instance.Groups.Count > 0 && MasterController.Instance.Transmitters.Count > 0),
-        DisabledTitle = "At least one group and one transmitter must be defined"
-    };
-
+    
     var Navbar = new[] {
-        new NavbarItem("Preview", "Preview2D", "2D Preview", enablementOptions: venueLoaded, id: "preview"),
-        new NavbarItem("Groups"),
+        new NavbarItem("Setup",
+            new NavbarItem("Settings"),
+            new NavbarItem("Groups")
+        ),
         new NavbarItem("Venues",
-            new NavbarItem("Venues", enablementOptions: hasGroupsAndTransmitters),
+            new NavbarItem("Venues", enablementOptions: hasGroups),
             new NavbarItem("FixtureCollections", display: "Fixture Collections")
         ),
-        new NavbarItem("Fixtures"),
-        new NavbarItem("Listeners",
-            new NavbarItem("OSCListeners", display: "OSC")
-        ),
-        new NavbarItem("Transmitters",
-            new NavbarItem("SACNTransmitters", display: "sACN")
-        ),
+        new NavbarItem("Fixtures", display: "Fixture Definitions"),
         new NavbarItem("Tools",
-            new NavbarItem("RawDMX", display: "Raw DMX", enablementOptions: hasTransmitters)
+            new NavbarItem("Preview", "Preview2D", "2D Preview", enablementOptions: venueLoaded, id: "preview"),
+            new NavbarItem("RawDMX", display: "Raw DMX", enablementOptions: venueLoaded, id: "rawDMX")
         ),
         new NavbarItem("Help",
             new NavbarItem("Help", "Index", "Help"),

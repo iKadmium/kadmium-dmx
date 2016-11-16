@@ -1,6 +1,7 @@
 ﻿import {MVC} from "../../MVC";
 
 import * as ko from "knockout";
+import "ko.plus";
 
 interface OSCListenerLogUpdateMessage
 {
@@ -74,10 +75,11 @@ class OSCListenerLiveViewModel
     groups: KnockoutObservableArray<GroupViewModel>;
     attributesBody: HTMLTableSectionElement;
     selectedGroup: KnockoutObservable<GroupViewModel>;
+    load: KoPlus.Command;
 
     constructor()
     {
-        this.webSocket = new WebSocket(document.URL.replace("http://", "ws://").replace("Live", "Socket"));
+        this.webSocket = new WebSocket(MVC.getSocketURL("OSCListeners"));
 
         this.webSocket.addEventListener("open", (ev: Event) => 
         {
@@ -100,15 +102,13 @@ class OSCListenerLiveViewModel
                     break;
             }
         });
-
+        
         this.groups = ko.observableArray<GroupViewModel>();
-
-        let loadingGroup = new GroupViewModel("loading", ["loading"]);
-
-        this.selectedGroup = ko.observable<GroupViewModel>(loadingGroup);
-        this.groups().push(loadingGroup);
+        this.selectedGroup = ko.observable<GroupViewModel>();
 
         this.attributesBody = $("#attributes")[0] as HTMLTableSectionElement;
+
+        this.load = ko.command(() => true);
     }
 
     init(groups: string[], attributes: string[])

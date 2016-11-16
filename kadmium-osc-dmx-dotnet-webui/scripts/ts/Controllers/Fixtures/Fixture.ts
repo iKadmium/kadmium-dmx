@@ -32,12 +32,13 @@ export class FixtureViewModel extends CollectionItemViewModel<FixtureData> imple
 
     addChannel(): void
     {
-        let maxChannel = 1;
+        let maxChannel = 0;
         this.channels().forEach((value: ChannelViewModel, index: number, array: ChannelViewModel[]) =>
         {
-            if (value.dmx() > maxChannel)
+            let dmx = parseInt(value.dmx() + "");
+            if (dmx > maxChannel)
             {
-                maxChannel = value.dmx();
+                maxChannel = dmx;
             }
         });
         this.channels.push(new ChannelViewModel(maxChannel + 1));

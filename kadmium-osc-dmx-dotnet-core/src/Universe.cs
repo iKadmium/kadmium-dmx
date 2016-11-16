@@ -9,56 +9,20 @@ using System.Threading.Tasks;
 
 namespace kadmium_osc_dmx_dotnet_core
 {
-    public class TransmitterTarget
-    {
-        public string TransmitterName { get; set; }
-        public int UniverseID { get; set; }
-
-        public TransmitterTarget(string transmitterName, int universeID)
-        {
-            TransmitterName = transmitterName;
-            UniverseID = universeID;
-        }
-
-        public static TransmitterTarget Load(JObject obj)
-        {
-            string name = obj["name"].Value<string>();
-            int universeID = obj["universeID"].Value<int>();
-            return new TransmitterTarget(name, universeID);
-        }
-
-        public JObject Serialize()
-        {
-            JObject obj = new JObject(
-                new JProperty("name", TransmitterName),
-                new JProperty("universeID", UniverseID)
-            );
-            return obj;
-        }
-
-        public void Transmit(byte[] dmx)
-        {
-            if (MasterController.Instance.Transmitters.ContainsKey(TransmitterName))
-            {
-                MasterController.Instance.Transmitters[TransmitterName].Transmit(dmx, UniverseID);
-            }
-        }
-    }
-
     public class Universe
     {
         public static int DMX_UNIVERSE_SIZE = 512;
         public string Name { get; set; }
-        public IEnumerable<TransmitterTarget> TransmitterTargets { get; set; }
+        public int UniverseID { get; set; }
         public IEnumerable<Fixture> Fixtures { get; }
         public byte[] DMX { get; }
         public event EventHandler<DMXEventArgs> Updated;
         public event EventHandler<DMXEventArgs> Rendered;
 
-        public Universe(string name, IEnumerable<TransmitterTarget> transmitterTargets, IEnumerable<Fixture> fixtures)
+        public Universe(string name, int universeID, IEnumerable<Fixture> fixtures)
         {
             Name = name;
-            TransmitterTargets = transmitterTargets;
+            UniverseID = universeID;
             Fixtures = fixtures;
             DMX = new byte[DMX_UNIVERSE_SIZE];
         }
@@ -67,10 +31,7 @@ namespace kadmium_osc_dmx_dotnet_core
         {
             JObject obj = new JObject(
                 new JProperty("name", Name),
-                new JProperty("transmitters",
-                    from transmitter in TransmitterTargets
-                    select transmitter.TransmitterName
-                )
+                new JProperty("universeID", UniverseID)
             );
             return obj;
         }
@@ -85,15 +46,11 @@ namespace kadmium_osc_dmx_dotnet_core
 
         public JObject SerializeForVenue()
         {
-            JObject obj = new JObject(
-                new JProperty("name", Name),
+            JObject obj = Serialize();
+            obj.Add(
                 new JProperty("fixtures",
                     from fixture in Fixtures
                     select fixture.Serialize()
-                ),
-                new JProperty("transmitters",
-                    from transmitterTarget in TransmitterTargets
-                    select transmitterTarget.Serialize()
                 )
             );
             return obj;
@@ -102,15 +59,13 @@ namespace kadmium_osc_dmx_dotnet_core
         public static Universe Load(JObject universeElement)
         {
             string name = universeElement["name"].Value<string>();
-            IEnumerable<TransmitterTarget> transmitterTargetsQuery = from transmitterTarget in universeElement["transmitters"].Values<JObject>()
-                                                                     select TransmitterTarget.Load(transmitterTarget);
+            int universeID = universeElement["universeID"].Value<int>();
             IEnumerable<Fixture> fixturesQuery = from fixture in universeElement["fixtures"].Values<JObject>()
                                                  select Fixture.Load(fixture);
 
-            var transmitterTargets = transmitterTargetsQuery.ToList();
             var fixtures = fixturesQuery.ToList();
 
-            Universe universe = new Universe(name, transmitterTargets, fixtures);
+            Universe universe = new Universe(name, universeID, fixtures);
             return universe;
         }
 
@@ -126,10 +81,7 @@ namespace kadmium_osc_dmx_dotnet_core
 
         public void Render()
         {
-            foreach (TransmitterTarget transmitterTarget in TransmitterTargets)
-            {
-                transmitterTarget.Transmit(DMX);
-            }
+            MasterController.Instance.Transmitter.Transmit(DMX, UniverseID);
             Rendered?.Invoke(this, new DMXEventArgs(DMX));
         }
     }

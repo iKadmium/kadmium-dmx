@@ -1,13 +1,40 @@
 {
-    "$schema": "http://json-schema.org/draft-04/schema#",
-    "title": "Settings",
-    "description": "Settings for kadmium-osc-dmx",
-    "type": "object",
-    "properties": {
-        "port": {
-            "description": "The port to listen on",
-            "type": "integer"
-        }
-    },
-    "additionalProperties": false
+	"$schema": "http://json-schema.org/draft-04/schema#",
+	"title": "Settings",
+	"description": "Settings for kadmium-osc-dmx",
+	"type": "object",
+	"properties": {
+		"webPort": {
+			"description": "The port on which the web server should listen",
+			"type": "integer"
+		},
+		"oscPort": {
+			"description": "The port on which the OSC listener should listen",
+			"type": "integer"
+		},
+		"sacnTransmitter": {
+			"description": "Settings for the sACN transmitter",
+			"type": "object",
+			"properties": {
+				"delay": {
+					"description": "Time to delay transmissions, in ms",
+					"type": "integer",
+					"default": 0
+				},
+				"multicast": {
+					"description": "Whether to send to multicast subscribers",
+					"type": "boolean"
+				},
+				"unicast": {
+					"description": "Unicast receivers to send to",
+					"type": "array",
+					"items": {
+						"type": "string"
+					}
+				}
+			},
+			"additionalProperties": false
+		}
+	},
+	"additionalProperties": false
 }

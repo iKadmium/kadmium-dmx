@@ -50,19 +50,12 @@ textarea {
 .fixture-canvas
 {
     border: 1px solid black;
-    fill: green;
+    fill: black;
 }
 
 .status-glyph
 {
     font-size: 72px;
-}
-
-.log-chart
-{
-    display: inline !important;
-    height: auto !important;
-    width: auto !important;
 }
 
 .item-name

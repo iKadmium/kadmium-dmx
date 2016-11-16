@@ -1,0 +1,41 @@
+﻿@{
+    ViewData["Title"] = "Settings";
+}
+
+@Html.Partial("LoadingPanel")
+@Html.Partial("StatusAlerts")
+<div class="form-horizontal" style="display: none" data-bind="visible: load.done()">
+    <input-label label="Web Port"><input class="form-control" data-bind="value: webPort, disable: save.isRunning" type="number" min="1" max="65535"></input-label>
+    <input-label label="OSC Port"><input class="form-control" data-bind="value: oscPort, disable: save.isRunning" type="number" min="1" max="65535"></input-label>
+
+    <input-label label="Delay (ms):" data-bind="validationElement: delay"><input class="form-control" data-bind="value: delay" min="0"></input-label>
+    <div class="form-group clearfix">
+        <div class="col-sm-offset-2 col-sm-10 checkbox">
+            <label><input type="checkbox" data-bind="checked: multicast">Multicast</label>
+        </div>
+    </div>
+    <input-label label="Unicast Targets">
+        <div class="col-md-6">
+            <input-collection name="unicast">
+                <input-collection-body>
+                    <input-collection-item label="Address">
+                        <input class="form-control" type="url" data-bind="value: address">
+                    </input-collection-item>
+                    <input-collection-item label="Remove"><button asp-template="delete" data-bind="click: $parent.removeUnicast.bind($parent)"></button></input-collection-item>
+                </input-collection-body>
+                <input-collection-footer><button asp-template="add" data-bind="click: addUnicast"></button></input-collection-footer>
+            </input-collection>
+        </div>
+    </input-label>
+    <button class="btn btn-success col-md-offset-2" data-bind="click: save, disable: save.isRunning">Save</button>
+</div>
+
+@section scripts
+{
+    <environment names="Development">
+        <script src="http://localhost:8080/settings.bundle.js"></script>
+    </environment>
+    <environment names="Staging,Production">
+        <script src="~/js/settings.bundle.js"></script>
+    </environment>
+}

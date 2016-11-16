@@ -18,7 +18,7 @@ namespace kadmium_osc_dmx_dotnet_webui
             MasterController.Initialise();
 
             var settings = kadmium_osc_dmx_dotnet_core.FileAccess.LoadSettings();
-            int port = settings["port"].Value<int>();
+            int port = settings["webPort"].Value<int>();
 
             var host = new WebHostBuilder()
                 .UseUrls("http://*:" + port + "/")

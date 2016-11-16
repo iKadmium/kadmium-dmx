@@ -1,3 +1,11 @@
 {
-    "port": 5000
+	"webPort": 5000,
+	"oscPort": 9001,
+	"sacnTransmitter": {
+		"delay": 500,
+		"multicast": true,
+		"unicast": [
+			"localhost"
+		]
+	}
 }
