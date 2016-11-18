@@ -1,5 +1,6 @@
 ﻿const merge = require("webpack-merge");
-const common = require("webpack.common.config");
+const webpack = require("webpack");
+const common = require("./webpack.config");
 
 const development = {
     devtool: "eval-source-map",
