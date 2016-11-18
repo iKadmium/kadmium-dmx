@@ -4,8 +4,6 @@
 	"sacnTransmitter": {
 		"delay": 500,
 		"multicast": true,
-		"unicast": [
-			"localhost"
-		]
+		"unicast": []
 	}
 }

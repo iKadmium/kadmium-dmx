@@ -59,7 +59,18 @@
           "group": "rearSides",
           "options": {
             "axisInversions": [],
-            "axisRestrictions": [],
+            "axisRestrictions": [
+              {
+                "name": "Pan",
+                "min": 0,
+                "max": 90
+              },
+              {
+                "name": "Tilt",
+                "min": 0,
+                "max": 90
+              }
+            ],
             "maxBrightness": 1
           },
           "type": "iSolution iMove 250S"
