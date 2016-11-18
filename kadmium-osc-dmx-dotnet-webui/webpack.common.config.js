@@ -1,7 +1,6 @@
-/// <binding ProjectOpened='Hot' />
-var webpack = require("webpack");
+const webpack = require("webpack");
 
-module.exports = {
+const common = {
     entry:
     {
         dashboard: ["jQuery", "bootstrap", "./scripts/ts/Controllers/Dashboard/Dashboard.ts"],
@@ -20,7 +19,6 @@ module.exports = {
         filename: "[name].bundle.js",
         path: __dirname + "/wwwroot/js"
     },
-    devtool: "eval-source-map",
     resolve: {
         extensions: ["", ".webpack.js", ".web.js", ".ts", ".js"],
         alias: {
@@ -28,7 +26,6 @@ module.exports = {
         }
     },
     plugins: [
-        new webpack.optimize.UglifyJsPlugin(),
         new webpack.ProvidePlugin({
             $: "jquery",
             "jQuery": "jquery"
@@ -44,3 +41,5 @@ module.exports = {
         ]
     }
 }
+
+module.exports = common;
