@@ -146,10 +146,18 @@ namespace kadmium_osc_dmx_dotnet_core
 
         internal static IEnumerable<Group> LoadGroups()
         {
-            JArray groupsObject = ValidatedLoad(GroupsLocation, GroupsSchema).Value<JArray>();
-            var groups = from groupObject in groupsObject
-                         select Group.Load(groupObject as JObject);
-            return groups;
+            try
+            {
+                JArray groupsObject = ValidatedLoad(GroupsLocation, GroupsSchema).Value<JArray>();
+                var groups = from groupObject in groupsObject
+                             select Group.Load(groupObject as JObject);
+                return groups;
+            }
+            catch(Exception)
+            {
+                return new[] { new Group("Default Group", 1) };
+            }
+            
         }
 
         public static void SaveGroups()
@@ -291,8 +299,27 @@ namespace kadmium_osc_dmx_dotnet_core
 
         public static JObject LoadSettings()
         {
-            JObject obj = ValidatedLoad(SettingsLocation, SettingsSchema) as JObject;
-            return obj;
+            try
+            {
+                JObject obj = ValidatedLoad(SettingsLocation, SettingsSchema) as JObject;
+                return obj;
+            }
+            catch (Exception)
+            {
+                JObject obj = new JObject(
+                    new JProperty("webPort", 5000),
+                    new JProperty("oscPort", 9001),
+                    new JProperty("sacnTransmitter", 
+                        new JObject(
+                            new JProperty("delay", 0),
+                            new JProperty("multicast", true),
+                            new JProperty("unicast", new JArray())
+                        )
+                    )
+                );
+                return obj;
+            }
+            
         }
 
         public static void SaveSettings(JObject settings)

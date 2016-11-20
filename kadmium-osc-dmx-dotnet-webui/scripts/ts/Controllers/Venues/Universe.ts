@@ -54,7 +54,6 @@ export class UniverseViewModel
     editOptions(item: FixtureViewModel): void
     {
         this.selectedFixture(item);
-        item.options().fixture(item);
         ($("#options-edit") as any).modal("toggle");
     }
 

@@ -1,0 +1,20 @@
+{
+	"version": "1.0.0-*",
+	"testRunner": "xunit",
+      "dependencies": {
+            "xunit": "2.2.0-beta4-build3444",
+            "kadmium-osc-dmx-dotnet-core": "1.0.1",
+            "dotnet-test-xunit": "2.2.0-preview2-build1029"
+      },
+
+	"frameworks": {
+		"netcoreapp1.0": {
+			"dependencies": {
+				"Microsoft.NETCore.App": {
+					"type": "platform",
+					"version": "1.0.0"
+				}
+			}
+		}
+	}
+}

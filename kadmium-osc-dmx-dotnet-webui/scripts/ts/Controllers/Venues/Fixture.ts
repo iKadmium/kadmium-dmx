@@ -48,6 +48,7 @@ export class FixtureViewModel
     group: KnockoutObservable<string>;
     options: KnockoutObservable<FixtureOptionsViewModel>;
     definition: KnockoutObservable<FixtureDefinitionViewModel>;
+    definitionLoadPromise: JQueryPromise<FixtureDefinitionData>;
     
     constructor()
     {
@@ -57,10 +58,19 @@ export class FixtureViewModel
         });
         this.type = ko.observable<string>();
         this.group = ko.observable<string>();
-        this.options = ko.validatedObservable<FixtureOptionsViewModel>(new FixtureOptionsViewModel(this));
+        this.definition = ko.observable<FixtureDefinitionViewModel>();
+        this.options = ko.validatedObservable<FixtureOptionsViewModel>(new FixtureOptionsViewModel(this, this.definition));
         this.type.subscribe((newValue: string) =>
         {
-            this.options(new FixtureOptionsViewModel(this));
+            //this.definitionLoadPromise = FixtureDefinitionCache.getDefinition(newValue);
+            let url = MVC.getActionURL("Fixtures", "Load", newValue);
+            this.definitionLoadPromise = $.get(url).then((data: any) => JSON.parse(data) as FixtureDefinitionData);
+            this.definitionLoadPromise.done((definitionData: FixtureDefinitionData) =>
+            {
+                let definition: FixtureDefinitionViewModel = new FixtureDefinitionViewModel(newValue);
+                definition.load(definitionData);
+                this.definition(definition);
+            });
         });
     }
 
@@ -81,7 +91,10 @@ export class FixtureViewModel
         fixture.channel(data.channel);
         fixture.type(data.type);
         fixture.group(data.group);
-        fixture.options(FixtureOptionsViewModel.load(data.options, fixture));
+        fixture.definitionLoadPromise.done(() =>
+        {
+            fixture.options().load(data.options, fixture);
+        });
         return fixture;
     }
 }

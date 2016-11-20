@@ -45,7 +45,7 @@ namespace kadmium_osc_dmx_dotnet_core.Fixtures
             Group.Fixtures.Add(this);
         }
         
-        internal void Update()
+        public void Update()
         {
             foreach(KeyValuePair<string, Solvers.Attribute> kvp in Settables)
             {

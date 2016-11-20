@@ -5,8 +5,7 @@
         on channel <span class="item-name" data-bind="text: fixture().channel"></span>
     </modal-header>
     <modal-body>
-        @Html.Partial("LoadingPanel")
-        <div class="form-horizontal" data-bind="visible: load.done">
+        <div class="form-horizontal" data-bind="">
             <input-label label="Max Brightness (%):" data-bind="validationElement: maxBrightness">
                 <input type="number" class="form-control" data-bind="value: maxBrightness" min="0" max="100" step="1">
             </input-label>

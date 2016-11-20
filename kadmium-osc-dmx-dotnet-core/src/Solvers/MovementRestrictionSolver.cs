@@ -7,29 +7,20 @@ using Newtonsoft.Json.Linq;
 
 namespace kadmium_osc_dmx_dotnet_core.Solvers
 {
-    public class AxisRestrictionSolver : FixtureSolver
+    public class MovementRestrictionSolver : FixtureSolver
     {
         public Dictionary<string, RestrictableMovementAxis> Axis { get; set; }
 
-        public AxisRestrictionSolver(Fixture fixture, JObject options) : base(fixture)
+        public MovementRestrictionSolver(Fixture fixture, JObject options) : base(fixture)
         {
             Axis = new Dictionary<string, RestrictableMovementAxis>();
-            foreach(string restrictedAxisName in GetRestrictedAxisNames(fixture.Definition, options))
+            foreach(JObject obj in options["axisRestrictions"].Values<JObject>())
             {
-                MovementAxis movement = fixture.MovementAxis[restrictedAxisName];
-                RestrictableMovementAxis axis;
-                switch(movement.Name)
-                {
-                    case "Pan":
-                        axis = new RestrictableMovementAxis(movement, -90, 90);
-                        break;
-                    case "Tilt":
-                        axis = new RestrictableMovementAxis(movement, 0, 90);
-                        break;
-                    default:
-                        axis = new RestrictableMovementAxis(movement);
-                        break;
-                }
+                MovementAxis movement = fixture.MovementAxis[obj["name"].Value<string>()];
+
+                int min = obj["min"].Value<int>();
+                int max = obj["max"].Value<int>();
+                var axis = new RestrictableMovementAxis(movement, min, max);
                 Axis.Add(movement.Name, axis);
             }
         }

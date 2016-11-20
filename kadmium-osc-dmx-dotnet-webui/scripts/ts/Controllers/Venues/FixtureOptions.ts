@@ -1,4 +1,5 @@
-﻿import {FixtureData} from "../Fixtures/Fixture";
+﻿import {FixtureData, FixtureViewModel as FixtureDefinitionViewModel} from "../Fixtures/Fixture";
+import {MovementViewModel} from "../Fixtures/Movement";
 import {FixtureViewModel, FixtureDefinitionCache} from "./Fixture";
 import {LazyLoad} from "../LazyLoad";
 import {MVC} from "../MVC";
@@ -79,33 +80,56 @@ export class FixtureOptionsViewModel
     axisInversions: KnockoutObservableArray<AxisInversionViewModel>;
     axisRestrictions: KnockoutObservableArray<AxisRestrictionViewModel>;
     maxBrightness: KnockoutObservable<number>;
-    moving: KnockoutObservable<boolean>;
+    moving: KnockoutComputed<boolean>;
     fixture: KnockoutObservable<FixtureViewModel>;
-    load: KoPlus.Command;
+    definition: KnockoutObservable<FixtureDefinitionViewModel>;
 
     lastFixtureModel: string;
-    
-    constructor(fixture: FixtureViewModel)
-    {
-        this.load = ko.command(() => 
-        {
-            let lazyDefinition = FixtureDefinitionCache.getDefinition(fixture.type());
-            return lazyDefinition.done((data: FixtureData) => 
-            {
-                this.moving(data.movements != null && data.movements.length > 0);
-                this.axisRestrictions.removeAll();
-                this.axisInversions.removeAll();
-                if (data.movements != null)
-                {
-                    for (let movement of data.movements)
-                    {
-                        this.axisRestrictions.push(new AxisRestrictionViewModel(movement.name, movement.min, movement.max));
-                        this.axisInversions.push(new AxisInversionViewModel(movement.name, false));
-                    }
-                }
 
+    constructor(fixture: FixtureViewModel, definition: KnockoutObservable<FixtureDefinitionViewModel>)
+    {
+        this.definition = definition;
+        definition.subscribe((newValue: FixtureDefinitionViewModel) =>
+        {
+            if (newValue == undefined)
+            {
+                return;
+            }
+
+            /* from value in this.axisRestrictions
+               where !newValue.movements().contains(x => x.name() == value.name())
+               select value
+            */
+            let axisToRemove = this.axisRestrictions().filter((value: AxisRestrictionViewModel) =>
+            {
+                return !newValue.movements().some((other: MovementViewModel) => other.name() == value.name());
             });
+
+            /* from value in newValue.movements()
+               where !axisRestrictions().contains(x => x.name() == value.name())
+               select value
+            */
+            let axisToAdd = newValue.movements().filter((value: MovementViewModel) =>
+            {
+                return !this.axisRestrictions().some((other: AxisRestrictionViewModel) => other.name() == value.name());
+            });
+            
+            for (let axis of axisToAdd)
+            {
+                this.axisRestrictions.push(new AxisRestrictionViewModel(axis.name(), axis.min(), axis.max()));
+                this.axisInversions.push(new AxisInversionViewModel(axis.name(), false));
+            }
+
+            for (let axis of axisToRemove)
+            {
+                this.axisRestrictions.remove(axis);
+                this.axisInversions.remove((item: AxisInversionViewModel) => item.name() == axis.name());
+            }
         });
+        if (definition() != null && definition().name() != "")
+        {
+            definition.notifySubscribers();
+        }
         this.fixture = ko.observable<FixtureViewModel>(fixture);
         this.axisInversions = ko.observableArray<AxisInversionViewModel>();
         this.axisRestrictions = ko.observableArray<AxisRestrictionViewModel>();
@@ -113,15 +137,7 @@ export class FixtureOptionsViewModel
             min: 0,
             max: 100
         });
-        this.moving = ko.observable<boolean>(false);
-        this.fixture.subscribe((newValue: FixtureViewModel) =>
-        {
-            if (newValue.type() != this.lastFixtureModel)
-            {
-                this.lastFixtureModel = newValue.type();
-                this.load();
-            }
-        });
+        this.moving = ko.computed<boolean>(() => this.definition() != null && this.definition().movements().length > 0);
     }
     
     
@@ -135,21 +151,20 @@ export class FixtureOptionsViewModel
         return item;
     }
 
-    static load(data: FixtureOptionsData, fixture: FixtureViewModel): FixtureOptionsViewModel
+    load(data: FixtureOptionsData, fixture: FixtureViewModel): void
     {
-        let fixtureOptionsViewModel = new FixtureOptionsViewModel(fixture);
-        fixtureOptionsViewModel.load.done(() =>
+        fixture.definitionLoadPromise.done(() =>
         {
-            for (let axisInversion of fixtureOptionsViewModel.axisInversions())
+            for (let axisInversion of this.axisInversions())
             {
                 axisInversion.enabled(data.axisInversions.indexOf(axisInversion.name()) != -1);
             }
 
-            fixtureOptionsViewModel.maxBrightness(data.maxBrightness * 100);
+            this.maxBrightness(data.maxBrightness * 100);
 
             for (let restrictionItem of data.axisRestrictions)
             {
-                let matches = fixtureOptionsViewModel.axisRestrictions().filter((value: AxisRestrictionViewModel) => value.name() == restrictionItem.name);
+                let matches = this.axisRestrictions().filter((value: AxisRestrictionViewModel) => value.name() == restrictionItem.name);
                 for (let match of matches)
                 {
                     match.enabled(true);
@@ -157,7 +172,5 @@ export class FixtureOptionsViewModel
                 }
             }
         });
-        
-        return fixtureOptionsViewModel;
     }
 }

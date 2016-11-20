@@ -38,7 +38,7 @@ namespace kadmium_osc_dmx_dotnet_core.Solvers
 
         internal static bool SuitableFor(Definition definition, JObject options)
         {
-            return options["maxBrightness"].Value<float>() < 1f;
+            return options["maxBrightness"]?.Value<float>() < 1f;
         }
     }
 }

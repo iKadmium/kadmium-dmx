@@ -16,4 +16,5 @@ window.addEventListener("load", (ev: Event) =>
 {
     viewModel = new VenuesViewModel();
     ko.applyBindings(viewModel);
+    window["ko"] = ko;
 });

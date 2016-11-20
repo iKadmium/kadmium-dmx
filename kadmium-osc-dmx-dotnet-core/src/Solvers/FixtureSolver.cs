@@ -51,9 +51,9 @@ namespace kadmium_osc_dmx_dotnet_core.Solvers
             {
                 solvers.Add(new RandomMove(fixture));
             }
-            if (AxisRestrictionSolver.SuitableFor(fixture.Definition, options))
+            if (MovementRestrictionSolver.SuitableFor(fixture.Definition, options))
             {
-                solvers.Add(new AxisRestrictionSolver(fixture, options));
+                solvers.Add(new MovementRestrictionSolver(fixture, options));
             }
             if (MovementInversionSolver.SuitableFor(fixture.Definition, options))
             {
