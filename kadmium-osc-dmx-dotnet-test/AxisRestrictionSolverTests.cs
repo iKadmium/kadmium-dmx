@@ -34,18 +34,39 @@ namespace kadmium_osc_dmx_dotnet_test
             Assert.Equal(expected, value);
         }
 
-        [Fact]
-        public void TestDefaultSolverAddition()
-        {
-            var fixture = GetRestrictedFixture("Pan", -270, 270, -90, 90);
-            Assert.Contains<Solver>(fixture.Solvers, (solver => solver is MovementRestrictionSolver));
+        [Theory]
+        [InlineData("Pan", -270, 270, -19, 37)]
+        [InlineData("Flarb", 0, 10, -5, 4000)]
+        public void TestDefaultSolverAddition(string axisName, int originalMin, int originalMax, int restrictedMin, int restrictedMax)
+        {   
+            var fixture = GetRestrictedFixture(axisName, originalMin, originalMax, restrictedMin, restrictedMax);
+            Assert.Contains<Solver>(fixture.Solvers, (x => x is MovementRestrictionSolver));
+            var solver = fixture.Solvers.Single(x => x is MovementRestrictionSolver) as MovementRestrictionSolver;
+            Assert.Equal(originalMin, solver.Axis[axisName].FixtureMin);
+            Assert.Equal(originalMax, solver.Axis[axisName].FixtureMax);
+            Assert.Equal(restrictedMin, solver.Axis[axisName].RestrictedMin);
+            Assert.Equal(restrictedMax, solver.Axis[axisName].RestrictedMax);
         }
 
-        public static Fixture GetRestrictedFixture(string restrictionAxis, int originalMin, int originalMax, int restrictedMin, int restrictedMax)
+        [Fact]
+        public void TestUnrestrictedDefaultSolverAddition()
+        {
+            var fixture = GetUnrestrictedFixture("Pan", -90, 90);
+            Assert.DoesNotContain<Solver>(fixture.Solvers, (x => x is MovementRestrictionSolver));
+        }
+
+        public static Fixture GetUnrestrictedFixture(string movementAxis, int originalMin, int originalMax)
         {
             MasterController.Initialise();
-            JObject options = GetRestrictionOptions(restrictionAxis, restrictedMin, restrictedMax);
-            Fixture fixture = FixtureTests.GetMovingFixture(restrictionAxis, originalMin, originalMax, options);
+            Fixture fixture = FixtureTests.GetMovingFixture(movementAxis, originalMin, originalMax);
+            return fixture;
+        }
+
+        public static Fixture GetRestrictedFixture(string movementAxis, int originalMin, int originalMax, int restrictedMin, int restrictedMax)
+        {
+            MasterController.Initialise();
+            JObject options = GetRestrictionOptions(movementAxis, restrictedMin, restrictedMax);
+            Fixture fixture = FixtureTests.GetMovingFixture(movementAxis, originalMin, originalMax, options);
             return fixture;
         }
 
