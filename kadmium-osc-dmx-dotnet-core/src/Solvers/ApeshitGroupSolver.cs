@@ -23,7 +23,7 @@ namespace kadmium_osc_dmx_dotnet_core.Solvers
         }
 
         public ApeshitGroupSolver(Group group, double coverage = 0.2) : this(group, MasterController.Instance.Strobe, coverage) { }
-        public ApeshitGroupSolver(Group group) : this(group, MasterController.Instance.Strobe) { }
+        public ApeshitGroupSolver(Group group) : this(group, MasterController.Instance?.Strobe ?? new Strobe(20.0)) { }
 
         public override void Solve(Dictionary<string, Attribute> Attributes)
         {

@@ -17,7 +17,7 @@ namespace kadmium_osc_dmx_dotnet_core.Solvers
             Strobe = strobe;
         }
 
-        public FakeStrobeSolver(Fixture fixture) : this(fixture, MasterController.Instance.Strobe) { }
+        public FakeStrobeSolver(Fixture fixture) : this(fixture, MasterController.Instance?.Strobe ?? new Strobe(20)) { }
 
         public override void Solve(Dictionary<string, Attribute> Attributes)
         {

@@ -47,6 +47,7 @@ namespace kadmium_osc_dmx_dotnet_core.Solvers
     
     public class AnimatableAxis
     {
+        private Random Random { get; }
         public string Name { get; set; }
         public float SourceValue { get; set; }
         public float TargetValue { get; set; }
@@ -72,7 +73,7 @@ namespace kadmium_osc_dmx_dotnet_core.Solvers
         public void PickNewTarget()
         {
             SourceValue = Value;
-            TargetValue = (float)MasterController.Instance.Random.NextDouble();
+            TargetValue = (float)Random.NextDouble();
             Percentage = 0.0f;
         }
 
@@ -80,6 +81,7 @@ namespace kadmium_osc_dmx_dotnet_core.Solvers
         {
             Name = name;
             TargetValue = sourceValue;
+            Random = new Random();
             PickNewTarget();
         }
 

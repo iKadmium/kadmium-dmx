@@ -23,7 +23,6 @@ namespace kadmium_osc_dmx_dotnet_core
         public Listener Listener { get; private set; }
         public Venue Venue { get; private set; }
         public Strobe Strobe { get; }
-        public Random Random { get; }
         public bool UpdatesEnabled { get; set; }
         public bool RenderEnabled { get; set; }
         private Timer updateTimer;
@@ -57,7 +56,6 @@ namespace kadmium_osc_dmx_dotnet_core
 
         private MasterController()
         {
-            Random = new Random();
             Strobe = new Strobe(20);
         }
 

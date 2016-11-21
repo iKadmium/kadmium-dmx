@@ -13,12 +13,15 @@ namespace kadmium_osc_dmx_dotnet_test
     public class AxisRestrictionSolverTests
     {
         [Theory]
-        [InlineData(-100, 100, -50, 50, 0.0f, 0.25f)]
+        [InlineData(-100, 100, -50, 50, 0.0f, 0.25f)] // [-100 to 100] => [-50 to 50] => 0.0 to 0.25
         [InlineData(-100, 100, -50, 50, 1.0f, 0.75f)]
         [InlineData(-100, 100, 0, 100, 0.0f, 0.5f)]
         [InlineData(-100, 100, 0, 100, 1.0f, 1.0f)]
         [InlineData(-100, 100, -10, 10, 0.5f, 0.5f)]
         [InlineData(-100, 100, 100, -100, 0.0f, 1.0f)]
+        [InlineData(-100, 100, 100, -100, 0.0f, 1.0f)]
+        [InlineData(-270, 270, 0, 0, 0.0f, 0.5f)]
+        [InlineData(-270, 270, 0, 0, 1.0f, 0.5f)]
         public void TestAxisRestriction(int originalMin, int originalMax, int restrictedMin, int restrictedMax, float axisValue, float expected)
         {
             string axisName = "Pan";
@@ -57,14 +60,12 @@ namespace kadmium_osc_dmx_dotnet_test
 
         public static Fixture GetUnrestrictedFixture(string movementAxis, int originalMin, int originalMax)
         {
-            MasterController.Initialise();
             Fixture fixture = FixtureTests.GetMovingFixture(movementAxis, originalMin, originalMax);
             return fixture;
         }
 
         public static Fixture GetRestrictedFixture(string movementAxis, int originalMin, int originalMax, int restrictedMin, int restrictedMax)
         {
-            MasterController.Initialise();
             JObject options = GetRestrictionOptions(movementAxis, restrictedMin, restrictedMax);
             Fixture fixture = FixtureTests.GetMovingFixture(movementAxis, originalMin, originalMax, options);
             return fixture;
