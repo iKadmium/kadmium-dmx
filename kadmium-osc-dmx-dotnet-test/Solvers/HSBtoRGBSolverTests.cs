@@ -1,12 +1,13 @@
 ﻿using kadmium_osc_dmx_dotnet_core.Fixtures;
 using kadmium_osc_dmx_dotnet_core.Solvers;
+using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Xunit;
 
-namespace kadmium_osc_dmx_dotnet_test
+namespace kadmium_osc_dmx_dotnet_test.Solvers
 {
     public class HSBtoRGBSolverTests
     {
@@ -42,13 +43,13 @@ namespace kadmium_osc_dmx_dotnet_test
             Assert.Contains(fixture.Solvers, (x => x is HSBtoRGBSolver));
         }
 
-        public static Fixture GetRGBFixture()
+        public static Fixture GetRGBFixture(JObject options = null)
         {
             var definition = new Definition();
             definition.Channels.Add(new DMXChannel("Red", definition.Channels.Count + 1));
             definition.Channels.Add(new DMXChannel("Green", definition.Channels.Count + 1));
             definition.Channels.Add(new DMXChannel("Blue", definition.Channels.Count + 1));
-            var fixture = new Fixture(definition, 1, GroupTests.GetGroup(), new Newtonsoft.Json.Linq.JObject());
+            var fixture = new Fixture(definition, 1, GroupTests.GetGroup(), options ?? new JObject());
             return fixture;
         }
 

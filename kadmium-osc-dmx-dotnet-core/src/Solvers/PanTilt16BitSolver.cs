@@ -42,9 +42,9 @@ namespace kadmium_osc_dmx_dotnet_core.Solvers
                 UInt16 value16bit = (UInt16)(value * UInt16.MaxValue);
 
                 byte[] valueBytes = BitConverter.GetBytes(value16bit);
-                float valueFine = (float)valueBytes[0] / (float)byte.MaxValue;
-                float valueCoarse = (float)valueBytes[1] / (float)byte.MaxValue;
-
+                float valueFine = valueBytes[0] / (float)byte.MaxValue;
+                float valueCoarse = valueBytes[1] / (float)byte.MaxValue;
+                
                 Attributes[axisName + "Coarse"].Value = valueCoarse;
                 Attributes[axisName + "Fine"].Value = valueFine;
             }

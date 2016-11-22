@@ -7,7 +7,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Xunit;
 
-namespace kadmium_osc_dmx_dotnet_test
+namespace kadmium_osc_dmx_dotnet_test.Solvers
 {
     public class ColorWheelSolverTests
     {
