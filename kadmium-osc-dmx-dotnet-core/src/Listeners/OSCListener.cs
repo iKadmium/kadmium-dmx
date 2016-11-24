@@ -20,7 +20,7 @@ namespace kadmium_osc_dmx_dotnet_core.Listeners
         }
 
         private OSCServer listener;
-        public event EventHandler<ListenerEventArgs> MessageReceived;
+        public event EventHandler<OSCListenerEventArgs> MessageReceived;
 
         public OSCListener(int port, string name) : base(name)
         {
@@ -45,14 +45,17 @@ namespace kadmium_osc_dmx_dotnet_core.Listeners
             string[] parts = message.Address.Contents.Split('/');
             string groupName = parts[2];
             string attribute = parts[3];
+            bool recognised = false;
+            float value = 0.0f;
             if (MasterController.Instance.Groups.ContainsKey(groupName))
             {
                 Group group = MasterController.Instance.Groups[groupName];
-                float value = (float)message.Arguments[0].GetValue();
+                value = (float)message.Arguments[0].GetValue();
                 group.Set(attribute, value);
-                MessageReceived?.Invoke(this, new ListenerEventArgs(group.Name, attribute, value));
                 Status.Update(StatusCode.Running, "Messages received", this);
+                recognised = true;
             }
+            MessageReceived?.Invoke(this, new OSCListenerEventArgs(recognised, DateTime.Now, sender.ToString(), e.Message.Address.Contents, value));
         }
 
         public override JObject Serialize()
@@ -79,16 +82,20 @@ namespace kadmium_osc_dmx_dotnet_core.Listeners
         }
     }
 
-    public class ListenerEventArgs : EventArgs
+    public class OSCListenerEventArgs : EventArgs
     {
-        public string Attribute { get; }
-        public string Group { get; }
+        public bool Recognised { get; }
+        public DateTime Time { get; }
+        public string Source { get; }
+        public string Address { get; }
         public float Value { get; }
 
-        public ListenerEventArgs(string group, string attribute, float value)
+        public OSCListenerEventArgs(bool recognised, DateTime time, string source, string address, float value)
         {
-            Attribute = attribute;
-            Group = group;
+            Recognised = recognised;
+            Time = time;
+            Source = source;
+            Address = address;
             Value = value;
         }
     }

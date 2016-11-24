@@ -26,12 +26,13 @@ namespace kadmium_osc_dmx_dotnet_webui.WebSockets
             Listener.MessageReceived += Listener_MessageReceived;
         }
 
-        private async void Listener_MessageReceived(object sender, ListenerEventArgs e)
+        private async void Listener_MessageReceived(object sender, OSCListenerEventArgs e)
         {
             JObject obj = new JObject(
-                new JProperty("type", "AttributeUpdate"),
-                new JProperty("group", e.Group),
-                new JProperty("attribute", e.Attribute),
+                new JProperty("recognised", e.Recognised),
+                new JProperty("time", e.Time),
+                new JProperty("source", e.Source),
+                new JProperty("address", e.Address),
                 new JProperty("value", e.Value)
             );
             

@@ -3,149 +3,63 @@
 import * as ko from "knockout";
 import "ko.plus";
 
-interface OSCListenerLogUpdateMessage
+interface OSCListenerLogMessage
 {
-    type: "AttributeUpdate";
-    group: string;
-    attribute: string;
+    recognised: boolean;
+    time: Date;
+    source: string;
+    address: string;
     value: number;
 }
 
-interface OSCListenerLogInitMessage
+class OSCMessageViewModel
 {
-    type: "Init";
-    groups: string[];
-    attributes: string[];
-}
-
-interface OSCListenerLogMessage
-{
-    type: string;
-}
-
-class AttributeViewModel
-{
-    name: KnockoutObservable<string>;
+    time: KnockoutObservable<Date>;
+    source: KnockoutObservable<string>;
+    address: KnockoutObservable<string>;
     value: KnockoutObservable<number>;
-    backgroundColor: KnockoutComputed<string>;
 
-    constructor(name: string)
+    constructor(time: Date, source: string, address: string, value: number)
     {
-        this.name = ko.observable<string>(name);
-        this.value = ko.observable<number>(0);
-        this.backgroundColor = ko.pureComputed<string>(() =>
-        {
-            let red = 255;
-            let green = 255 - (this.value() * 255);
-            let blue = 255 - (this.value() * 255);
-            let color = "rgb(" + Math.floor(red) + "," + Math.floor(green) + "," + Math.floor(blue) + ")";
-            return color;
-        });
-    }
-}
-
-class GroupViewModel
-{
-    name: KnockoutObservable<string>;
-    attributes: KnockoutObservableArray<AttributeViewModel>;
-
-    constructor(name: string, attributeNames: string[])
-    {
-        this.name = ko.observable<string>(name);
-        this.attributes = ko.observableArray<AttributeViewModel>();
-        for (let attributeName of attributeNames)
-        {
-            this.attributes.push(new AttributeViewModel(attributeName));
-        }
-    }
-
-    getAttribute(name: string): AttributeViewModel
-    {
-        let filtered = this.attributes().filter((value: AttributeViewModel, index: number, array: AttributeViewModel[]) =>
-        {
-            return value.name() == name;
-        })
-        return filtered[0];
+        this.time = ko.observable<Date>(time);
+        this.source = ko.observable<string>(source);
+        this.address = ko.observable<string>(address);
+        this.value = ko.observable<number>(value);
     }
 }
 
 class OSCListenerLiveViewModel 
 {
     webSocket: WebSocket;
-    groups: KnockoutObservableArray<GroupViewModel>;
-    attributesBody: HTMLTableSectionElement;
-    selectedGroup: KnockoutObservable<GroupViewModel>;
+    recognised: KnockoutObservableArray<OSCMessageViewModel>;
+    unrecognised: KnockoutObservableArray<OSCMessageViewModel>;
     load: KoPlus.Command;
 
     constructor()
     {
+        this.recognised = ko.observableArray<OSCMessageViewModel>();
+        this.unrecognised = ko.observableArray<OSCMessageViewModel>();
+
         this.webSocket = new WebSocket(MVC.getSocketURL("OSCListeners"));
-
-        this.webSocket.addEventListener("open", (ev: Event) => 
-        {
-            let getGroupsRequest = { type: "Init" };
-            this.webSocket.send(JSON.stringify(getGroupsRequest));
-        });
-
+        
         this.webSocket.addEventListener("message", (ev: MessageEvent) =>
         {
             let message = JSON.parse(ev.data) as OSCListenerLogMessage;
-            switch (message.type)
+            let messageString = message.address + " " + message.value + "\r\n";
+            let textArea = message.recognised ? $("#recognisedTextarea") : $("#unrecognisedTextarea");
+
+            textArea.append(messageString);
+            let text = textArea.text();
+            let lines = text.split("\r\n");
+            if (lines.length > 40)
             {
-                case "AttributeUpdate":
-                    let attributeUpdate = message as OSCListenerLogUpdateMessage;
-                    this.setAttribute(attributeUpdate.group, attributeUpdate.attribute, attributeUpdate.value);
-                    break;
-                case "Init":
-                    let initMessage = message as OSCListenerLogInitMessage;
-                    this.init(initMessage.groups, initMessage.attributes);
-                    break;
+                let numberToCull = lines.length - 40;
+                lines.splice(0, numberToCull);
+                textArea.text(lines.join("\r\n"));
             }
         });
-        
-        this.groups = ko.observableArray<GroupViewModel>();
-        this.selectedGroup = ko.observable<GroupViewModel>();
-
-        this.attributesBody = $("#attributes")[0] as HTMLTableSectionElement;
 
         this.load = ko.command(() => true);
-    }
-
-    init(groups: string[], attributes: string[])
-    {
-        this.groups.removeAll();
-        for (let groupName of groups)
-        {
-            this.groups.push(new GroupViewModel(groupName, attributes));
-        }
-        this.selectGroup(this.groups()[0]);
-    }
-
-    selectGroup(group: GroupViewModel): void
-    {
-        this.selectedGroup(group);
-    }
-
-    setAttribute(groupName: string, attributeName: string, value: number)
-    {
-        let group = this.getGroup(groupName);
-        if (group != null)
-        {
-            let attribute = group.getAttribute(attributeName);
-            if (attribute != null)
-            {
-                attribute.value(value);
-            }
-        }
-    }
-
-    getGroup(name: string): GroupViewModel
-    {
-        let filtered = this.groups().filter((value: GroupViewModel, index: number, array: GroupViewModel[]) =>
-        {
-            return value.name() == name;
-        })
-        return filtered[0];
     }
 }
 
@@ -153,6 +67,5 @@ let oscListenerLiveViewModel: OSCListenerLiveViewModel;
 window.addEventListener("load", (ev: Event) =>
 {
     oscListenerLiveViewModel = new OSCListenerLiveViewModel();
-    (window as any)["viewModel"] = oscListenerLiveViewModel;
     ko.applyBindings(oscListenerLiveViewModel);
 });

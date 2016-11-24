@@ -48,7 +48,8 @@ namespace kadmium_osc_dmx_dotnet_webui.WebSockets
                                                 where (attribute is DMXChannel || attribute is FixtureSolverAttribute)
                                                 select new JObject(
                                                     new JProperty("name", attribute.Name),
-                                                    new JProperty("value", attribute.Value)
+                                                    new JProperty("value", attribute.Value),
+                                                    new JProperty("dmx", attribute is DMXChannel)
                                                 )
                                             )
                                         )
@@ -144,7 +145,12 @@ namespace kadmium_osc_dmx_dotnet_webui.WebSockets
             );
             byte[] sendBuffer = Encoding.UTF8.GetBytes(obj.ToString());
             ArraySegment<byte> sendSegment = new ArraySegment<byte>(sendBuffer);
-            await Socket.SendAsync(sendSegment, WebSocketMessageType.Text, true, CancellationToken.None);
+            try
+            {
+                await Socket.SendAsync(sendSegment, WebSocketMessageType.Text, true, CancellationToken.None);
+            }
+            catch(Exception)
+            { }
         }
 
         static async Task Acceptor(HttpContext hc, Func<Task> n)
