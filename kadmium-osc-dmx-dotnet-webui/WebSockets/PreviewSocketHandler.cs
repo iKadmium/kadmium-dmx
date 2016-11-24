@@ -15,6 +15,7 @@ namespace kadmium_osc_dmx_dotnet_webui.WebSockets
 {
     public class PreviewSocketHandler
     {
+        private static int BUFFER_SIZE = 65535;
         public WebSocket Socket { get; }
         public byte[] DMX { get; }
         
@@ -22,7 +23,7 @@ namespace kadmium_osc_dmx_dotnet_webui.WebSockets
         {
             Socket = socket;
             DMX = new byte[Universe.DMX_UNIVERSE_SIZE ];
-            foreach(Universe universe in MasterController.Instance.Venue?.Universes ?? Enumerable.Empty<Universe>())
+            foreach(Universe universe in MasterController.Instance.Venue?.Universes.Values ?? Enumerable.Empty<Universe>())
             {
                 universe.Rendered += Universe_Updated;
             }
@@ -49,9 +50,20 @@ namespace kadmium_osc_dmx_dotnet_webui.WebSockets
 
         async Task RenderLoop()
         {
+            byte[] buffer = new byte[BUFFER_SIZE];
+            ArraySegment<byte> segment = new ArraySegment<byte>(buffer);
             while (Socket.State == WebSocketState.Open)
-            {   
-                await Task.Delay(100);
+            {
+                WebSocketReceiveResult received = await Socket.ReceiveAsync(segment, CancellationToken.None);
+                switch(received.MessageType)
+                {
+                    case WebSocketMessageType.Close:
+                        foreach (Universe universe in MasterController.Instance.Venue?.Universes.Values ?? Enumerable.Empty<Universe>())
+                        {
+                            universe.Rendered -= Universe_Updated;
+                        }
+                        break;
+                }
             }
         }
         

@@ -1,0 +1,102 @@
+﻿@using kadmium_osc_dmx_dotnet_webui.ViewHelpers
+@using kadmium_osc_dmx_dotnet_core.Fixtures
+@{
+    ViewData["Title"] = "Fixture Definitions";
+}
+
+<binding-context data-bind="with: selectedItem">
+    <modal-window large="true" id="modal-edit">
+        <modal-header>
+            Editing <span class="item-name" data-bind="text: name"></span>
+        </modal-header>
+        <modal-body>
+            @Html.Partial("ModalEditorStatus")
+            <div class="form-horizontal" id="edit-form">
+                <input-label label="Name:" data-bind="validationElement: name"><input type="text" class="form-control" data-bind="value: name"></input-label>
+                <input-label label="Type:">
+                    <select class="form-control" data-bind="value: type">
+                        @foreach (string fixtureType in Enum.GetNames(typeof(FixtureType)))
+                        {
+                            <option>@fixtureType</option>
+                        }
+                    </select>
+                </input-label>
+                <datalist id="channel-names">
+                    <option>Master</option>
+                    <option>Red</option>
+                    <option>Green</option>
+                    <option>Blue</option>
+                    <option>White</option>
+                    <option>UV</option>
+                    <option>ColorWheel</option>
+                    <option>Strobe</option>
+                    <option>PanCoarse</option>
+                    <option>PanFine</option>
+                    <option>TiltCoarse</option>
+                    <option>TiltFine</option>
+                </datalist>
+
+                <input-collection name="channels">
+                    <input-collection-header>Channels</input-collection-header>
+                    <input-collection-body>
+                        <input-collection-item label="Name">
+                            <input class="form-control" data-bind="value: name" list="channel-names">
+                        </input-collection-item>
+                        <input-collection-item label="DMX"><input type="number" min="1" max="512" data-bind="value: dmx" class="form-control"></input-collection-item>
+                        <input-collection-item label="Min"><input type="number" min="0" max="255" data-bind="value: min" class="form-control"></input-collection-item>
+                        <input-collection-item label="Max"><input type="number" min="0" max="255" data-bind="value: max" class="form-control"></input-collection-item>
+                        <input-collection-item label="Remove"><button asp-template="delete" data-bind="click: $parent.removeChannel.bind($parent)"></button></input-collection-item>
+                    </input-collection-body>
+                    <input-collection-footer>
+                        <button asp-template="add" data-bind="click: addChannel"></button>
+                    </input-collection-footer>
+                </input-collection>
+                <datalist id="movement-names">
+                    <option>Pan</option>
+                    <option>Tilt</option>
+                </datalist>
+                <input-collection name="movements">
+                    <input-collection-header>Movement Axis</input-collection-header>
+                    <input-collection-body>
+                        <input-collection-item label="Name">
+                            <input type="text" class="form-control" data-bind="value: name" list="movement-names">
+                        </input-collection-item>
+                        <input-collection-item label="Min (degrees)"><input type="number" data-bind="value: min" class="form-control"></input-collection-item>
+                        <input-collection-item label="Max (degrees)"><input type="number" data-bind="value: max" class="form-control"></input-collection-item>
+                        <input-collection-item label="Remove"><button asp-template="delete" data-bind="click: $parent.removeMovement.bind($parent)"></button></input-collection-item>
+                    </input-collection-body>
+                    <input-collection-footer>
+                        <button asp-template="add" data-bind="click: addMovement"></button>
+                    </input-collection-footer>
+                </input-collection>
+                <input-collection name="colorWheel">
+                    <input-collection-header>Color Wheel</input-collection-header>
+                    <input-collection-body>
+                        <input-collection-item label="Name"><input type="text" class="form-control" data-bind="value: name"></input-collection-item>
+                        <input-collection-item label="DMX Start"><input type="number" min="0" max="255" data-bind="value: min" class="form-control" ></input-collection-item>
+                        <input-collection-item label="DMX End"><input type="number" min="0" max="255" data-bind="value: max" class="form-control"></input-collection-item>
+                        <input-collection-item label="Color"><input type="color" class="form-control" data-bind="value: color" /> </input-collection-item>
+                        <input-collection-item label="Remove"><button asp-template="delete" data-bind="click: $parent.removeColor.bind($parent)"></button></input-collection-item>
+                    </input-collection-body>
+                    <input-collection-footer>
+                        <button asp-template="add" data-bind="click: addColor"></button>
+                    </input-collection-footer>
+                </input-collection>
+            </div>
+        </modal-body>
+        <modal-footer>
+            @Html.Partial("ModalEditorFooter")
+        </modal-footer>
+    </modal-window>
+</binding-context>
+@Html.Partial("ItemList")
+
+@section scripts
+{
+    <environment names="Development">
+        <script src="http://localhost:8080/fixtureDefinitions.bundle.js"></script>
+    </environment>
+    <environment names="Staging,Production">
+        <script src="~/js/fixtureDefinitions.bundle.js"></script>
+    </environment>
+}

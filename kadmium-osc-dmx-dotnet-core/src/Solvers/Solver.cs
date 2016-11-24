@@ -11,19 +11,18 @@ namespace kadmium_osc_dmx_dotnet_core.Solvers
     {
         public List<string> SolvableAttributes { get; set; }
 
-        protected Solver(Dictionary<string, Attribute> settables, Dictionary<string, Attribute> frameSettables, params string[] attributes)
+        protected Solver(Dictionary<string, Attribute> settables, Dictionary<string, Attribute> frameSettables, IEnumerable<Attribute> attributes)
         {
             SolvableAttributes = new List<string>();
-            foreach (string attributeName in attributes)
+            foreach (Attribute attribute in attributes)
             {
-                Attribute attribute = new Attribute(attributeName);
-                if(!settables.ContainsKey(attributeName))
+                if(!settables.ContainsKey(attribute.Name))
                 {
-                    settables.Add(attribute.Name, new Attribute(attribute.Name));
+                    settables.Add(attribute.Name, attribute);
                 }
-                if(!frameSettables.ContainsKey(attributeName))
+                if(!frameSettables.ContainsKey(attribute.Name))
                 {
-                    frameSettables.Add(attribute.Name, new Attribute(attribute.Name));
+                    frameSettables.Add(attribute.Name, attribute.Clone());
                 }
             }
         }

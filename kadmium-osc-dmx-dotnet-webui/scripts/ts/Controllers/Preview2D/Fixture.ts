@@ -1,7 +1,7 @@
-﻿import {MovementData, MovementViewModel} from "../Fixtures/Movement";
-import {FixtureData as FixtureDefinitionData} from "../Fixtures/Fixture";
-import {ColorWheelEntryData, ColorWheelEntryViewModel, ColorWheelViewModel} from "../Fixtures/ColorWheel";
-import {ChannelData} from "../Fixtures/Channel";
+﻿import {MovementData, MovementViewModel} from "../FixtureDefinitions/Movement";
+import {FixtureDefinitionData} from "../FixtureDefinitions/FixtureDefinition";
+import {ColorWheelEntryData, ColorWheelEntryViewModel, ColorWheelViewModel} from "../FixtureDefinitions/ColorWheel";
+import {ChannelData} from "../FixtureDefinitions/Channel";
 import {MVC} from "../MVC";
 
 import * as ko from "knockout";

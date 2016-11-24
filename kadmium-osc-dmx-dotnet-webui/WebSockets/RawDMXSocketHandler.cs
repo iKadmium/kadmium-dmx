@@ -30,7 +30,7 @@ namespace kadmium_osc_dmx_dotnet_webui.WebSockets
             {
                 AllSocketHandlers = new List<RawDMXSocketHandler>();
             }
-            Universe = MasterController.Instance.Venue?.Universes.First();
+            Universe = MasterController.Instance.Venue?.Universes.Values.First();
         }
         
         async Task RenderLoop()
@@ -54,7 +54,7 @@ namespace kadmium_osc_dmx_dotnet_webui.WebSockets
                         switch(obj["type"].Value<string>())
                         {
                             case "UniverseUpdate":
-                                Universe = MasterController.Instance.Venue?.Universes.Single(x => x.Name == obj["universe"].Value<string>());
+                                Universe = MasterController.Instance.Venue?.Universes.Values.Single(x => x.Name == obj["universe"].Value<string>());
                                 break;
                             case "ChannelUpdate":
                                 int channel = obj["channel"].Value<int>();

@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace kadmium_osc_dmx_dotnet_core.Solvers
 {
-    public class Attribute
+    public abstract class Attribute
     {
         private float value;
 
@@ -30,5 +30,7 @@ namespace kadmium_osc_dmx_dotnet_core.Solvers
             Name = name;
             Value = value;
         }
+
+        public abstract Attribute Clone();
     }
 }

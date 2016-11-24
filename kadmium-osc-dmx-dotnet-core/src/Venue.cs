@@ -10,12 +10,16 @@ namespace kadmium_osc_dmx_dotnet_core
     {
         public static Status Status { get; set; }
         public string Name { get; }
-        public IEnumerable<Universe> Universes { get; }
+        public Dictionary<int, Universe> Universes { get; }
 
         public Venue(string name, IEnumerable<Universe> universes)
         {
             Name = name;
-            Universes = universes;
+            Universes = new Dictionary<int, Universe>();
+            foreach(Universe universe in universes)
+            {
+                Universes.Add(universe.UniverseID, universe);
+            }
             Status.Update(StatusCode.Running, Name + " running", this);
         }
 
@@ -29,7 +33,7 @@ namespace kadmium_osc_dmx_dotnet_core
                 new JProperty("name", Name),
                 new JProperty("universes", 
                     new JArray(
-                        from universe in Universes
+                        from universe in Universes.Values
                         select universe.SerializeForVenue()
                     )
                 )
@@ -62,7 +66,7 @@ namespace kadmium_osc_dmx_dotnet_core
 
         internal void Update()
         {
-            foreach(Universe universe in Universes)
+            foreach(Universe universe in Universes.Values)
             {
                 universe.Update();
             }
@@ -70,7 +74,7 @@ namespace kadmium_osc_dmx_dotnet_core
 
         public void Render()
         {
-            foreach(Universe universe in Universes)
+            foreach(Universe universe in Universes.Values)
             {
                 universe.Render();
             }
@@ -78,7 +82,7 @@ namespace kadmium_osc_dmx_dotnet_core
 
         public void Clear()
         {
-            foreach(Universe universe in Universes)
+            foreach(Universe universe in Universes.Values)
             {
                 universe.Clear();
             }

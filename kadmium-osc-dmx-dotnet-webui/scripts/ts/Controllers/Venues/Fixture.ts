@@ -1,7 +1,7 @@
 ﻿import {FixtureOptionsData, FixtureOptionsViewModel} from "./FixtureOptions";
 import {LazyLoad} from "../LazyLoad";
 import {MVC} from "../MVC";
-import {FixtureData as FixtureDefinitionData, FixtureViewModel as FixtureDefinitionViewModel} from "../Fixtures/Fixture";
+import {FixtureDefinitionData, FixtureDefinitionViewModel} from "../FixtureDefinitions/FixtureDefinition";
 import * as ko from "knockout";
 
 export interface FixtureData
@@ -33,7 +33,7 @@ export class FixtureDefinitionCache
         }
         else
         {
-            let url = MVC.getActionURL("Fixtures", "Load", fixtureType);
+            let url = MVC.getActionURL("FixtureDefinitions", "Load", fixtureType);
             let lazyLoad = LazyLoad.load<FixtureDefinitionData>(url);
             FixtureDefinitionCache.cache[fixtureType] = lazyLoad;
             return lazyLoad;
@@ -63,7 +63,7 @@ export class FixtureViewModel
         this.type.subscribe((newValue: string) =>
         {
             //this.definitionLoadPromise = FixtureDefinitionCache.getDefinition(newValue);
-            let url = MVC.getActionURL("Fixtures", "Load", newValue);
+            let url = MVC.getActionURL("FixtureDefinitions", "Load", newValue);
             this.definitionLoadPromise = $.get(url).then((data: any) => JSON.parse(data) as FixtureDefinitionData);
             this.definitionLoadPromise.done((definitionData: FixtureDefinitionData) =>
             {

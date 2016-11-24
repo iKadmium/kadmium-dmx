@@ -26,9 +26,17 @@ namespace kadmium_osc_dmx_dotnet_webui.WebSockets
             Venue.Status.Updated += Status_Updated;
         }
 
-        private void Status_Updated(object sender, StatusUpdateEventArgs e)
+        private async void Status_Updated(object sender, StatusUpdateEventArgs e)
         {
             SendUpdate("Venues", e.StatusCode, e.Message);
+            if(e.StatusCode == StatusCode.Running)
+            {
+                await Task.Delay(50);
+                int fixtureCount = (from universe in MasterController.Instance.Venue.Universes.Values
+                                    select universe.Fixtures.Count()).Sum();
+                SendUpdate("Fixtures", e.StatusCode, fixtureCount + " fixtures loaded");
+            }
+            
         }
 
         private void TransmitterStatusUpdated(object sender, StatusUpdateEventArgs e)
@@ -52,10 +60,14 @@ namespace kadmium_osc_dmx_dotnet_webui.WebSockets
             if(MasterController.Instance.Venue != null)
             {
                 SendUpdate("Venues", StatusCode.Running, MasterController.Instance.Venue.Name + " running");
+                int fixtureCount = (from universe in MasterController.Instance.Venue.Universes.Values
+                                   select universe.Fixtures.Count()).Sum();
+                SendUpdate("Fixtures", StatusCode.Running, fixtureCount + " fixtures loaded");
             }
             else
             {
-                SendUpdate("Venues", StatusCode.NotStarted, "No Venue Loaded");
+                SendUpdate("Venues", StatusCode.NotStarted, "No venue loaded");
+                SendUpdate("Fixtures", StatusCode.NotStarted, "No fixtures loaded");
             }
             
         }

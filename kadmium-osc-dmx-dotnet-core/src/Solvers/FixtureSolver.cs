@@ -13,7 +13,7 @@ namespace kadmium_osc_dmx_dotnet_core.Solvers
     public abstract class FixtureSolver : Solver
     {
      
-        public FixtureSolver(Fixture fixture, params string[] attributes) : base(fixture.Settables, fixture.FrameSettables, attributes)
+        public FixtureSolver(Fixture fixture, params string[] attributes) : base(fixture.Settables, fixture.FrameSettables, from attributeName in attributes select new FixtureSolverAttribute(attributeName))
         { }
 
         public static IEnumerable<FixtureSolver> GetDefaultSolvers(Fixture fixture, JObject options)

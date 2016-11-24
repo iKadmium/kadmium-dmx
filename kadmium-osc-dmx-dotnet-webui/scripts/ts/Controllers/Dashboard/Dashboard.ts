@@ -49,6 +49,7 @@ export class DashboardViewModel
     venue: KnockoutObservable<VenueViewModel>;
     sacnTransmitter: KnockoutObservable<StatusViewModel>;
     oscListener: KnockoutObservable<StatusViewModel>;
+    fixtures: KnockoutObservable<StatusViewModel>;
     load: KoPlus.Command;
     statusTracker: KnockoutObservable<StatusTrackerViewModel>;
     
@@ -58,6 +59,7 @@ export class DashboardViewModel
         this.venue = ko.observable<VenueViewModel>(new VenueViewModel("Venue"));
         this.sacnTransmitter = ko.observable<StatusViewModel>(new StatusViewModel());
         this.oscListener = ko.observable<StatusViewModel>(new StatusViewModel());
+        this.fixtures = ko.observable<StatusViewModel>(new StatusViewModel());
 
         this.webSocket = new WebSocket(MVC.getSocketURL("Index"));
 
@@ -76,6 +78,9 @@ export class DashboardViewModel
                     break;
                 case "OSCListeners":
                     statusViewModel = this.oscListener();
+                    break;
+                case "Fixtures":
+                    statusViewModel = this.fixtures();
                     break;
                 default:
                     return;

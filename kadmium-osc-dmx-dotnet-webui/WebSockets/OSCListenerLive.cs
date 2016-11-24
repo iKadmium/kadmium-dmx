@@ -54,6 +54,9 @@ namespace kadmium_osc_dmx_dotnet_webui.WebSockets
                 WebSocketReceiveResult received = await Socket.ReceiveAsync(receiveSegment, CancellationToken.None);
                 switch (received.MessageType)
                 {
+                    case WebSocketMessageType.Close:
+                        Listener.MessageReceived -= Listener_MessageReceived;
+                        break;
                     case WebSocketMessageType.Text:
                         string message = Encoding.UTF8.GetString(receiveSegment.Array, receiveSegment.Offset, received.Count);
                         JObject obj = JObject.Parse(message);

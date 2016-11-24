@@ -1,5 +1,5 @@
-﻿import {FixtureData, FixtureViewModel as FixtureDefinitionViewModel} from "../Fixtures/Fixture";
-import {MovementViewModel} from "../Fixtures/Movement";
+﻿import {FixtureDefinitionData, FixtureDefinitionViewModel as FixtureDefinitionViewModel} from "../FixtureDefinitions/FixtureDefinition";
+import {MovementViewModel} from "../FixtureDefinitions/Movement";
 import {FixtureViewModel, FixtureDefinitionCache} from "./Fixture";
 import {LazyLoad} from "../LazyLoad";
 import {MVC} from "../MVC";

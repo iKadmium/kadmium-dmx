@@ -5,7 +5,7 @@ import {ColorWheelEntryViewModel, ColorWheelEntryData} from "./ColorWheel";
 
 import * as ko from "knockout";
 
-export interface FixtureData
+export interface FixtureDefinitionData
 {
     name: string;
     type: string;
@@ -14,7 +14,7 @@ export interface FixtureData
     colorWheel?: ColorWheelEntryData[];
 }
 
-export class FixtureViewModel extends CollectionItemViewModel<FixtureData> implements NamedViewModel
+export class FixtureDefinitionViewModel extends CollectionItemViewModel<FixtureDefinitionData> implements NamedViewModel
 {
     type: KnockoutObservable<string>;
     channels: KnockoutObservableArray<ChannelViewModel>;
@@ -23,7 +23,7 @@ export class FixtureViewModel extends CollectionItemViewModel<FixtureData> imple
     
     constructor(name: string)
     {
-        super(name, "Fixtures");
+        super(name, "FixtureDefinitions");
         this.type = ko.observable<string>();
         this.channels = ko.observableArray<ChannelViewModel>();
         this.movements = ko.observableArray<MovementViewModel>();
@@ -69,7 +69,7 @@ export class FixtureViewModel extends CollectionItemViewModel<FixtureData> imple
         this.colorWheel.remove(item);
     }
 
-    load(data: FixtureData): void
+    load(data: FixtureDefinitionData): void
     {
         this.name(data.name);
         this.type(data.type);
@@ -95,9 +95,9 @@ export class FixtureViewModel extends CollectionItemViewModel<FixtureData> imple
         }
     }
 
-    serialize(): FixtureData
+    serialize(): FixtureDefinitionData
     {
-        let item: FixtureData = {
+        let item: FixtureDefinitionData = {
             name: this.name(),
             type: this.type(),
             channels: this.channels().map((value: ChannelViewModel) => value.serialize()),

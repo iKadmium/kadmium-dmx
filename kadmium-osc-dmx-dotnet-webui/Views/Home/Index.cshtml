@@ -64,6 +64,22 @@
             </div>
         </div>
     </binding-context>
+    
+    <binding-context data-bind="with: fixtures">
+        <div class="col-sm-3">
+            <div class="panel" data-bind="css: panelClass">
+                <div class="panel-heading text-center"><span class="item-name">Fixtures</span></div>
+                <div class="panel-body text-center" data-bind="css: alertClass">
+                    <span class="glyphicon status-glyph" data-bind="css: glyphClass"></span><br>
+                    <span data-bind="text: message">Loading...</span>
+                </div>
+                <div class="panel-footer text-center">
+                    <a class="btn btn-info" asp-controller="Fixtures">Live</a>
+                </div>
+            </div>
+        </div>
+    </binding-context>
+
 </div>
 @section scripts
 {

@@ -39,5 +39,11 @@ namespace kadmium_osc_dmx_dotnet_core.Fixtures
         {
             return Name + " -> " + ByteValue;
         }
+
+        public override Attribute Clone()
+        {
+            DMXChannel other = new DMXChannel(Name, RelativeAddress, Min, Max);
+            return other;
+        }
     }
 }

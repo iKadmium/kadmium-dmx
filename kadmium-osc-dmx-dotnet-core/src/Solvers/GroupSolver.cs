@@ -12,7 +12,7 @@ namespace kadmium_osc_dmx_dotnet_core.Solvers
     {
         protected Group Group { get; set; }
 
-        public GroupSolver(Group group, params string[] attributes) : base(group.Settables, group.FrameSettables, attributes)
+        public GroupSolver(Group group, params string[] attributes) : base(group.Settables, group.FrameSettables, from attribute in attributes select new GroupSolverAttribute(attribute) )
         {
             Group = group;
         }
