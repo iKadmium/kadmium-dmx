@@ -16,6 +16,7 @@ namespace kadmium_osc_dmx_dotnet_webui.WebSockets
 {
     public class DashboardSocketHandler
     {
+        private static int RECEIVE_BUFFER_SIZE = 65535;
         public WebSocket Socket { get; }
         
         public DashboardSocketHandler(WebSocket socket)
@@ -83,11 +84,19 @@ namespace kadmium_osc_dmx_dotnet_webui.WebSockets
             byte[] bytes = Encoding.UTF8.GetBytes(obj.ToString());
 
             ArraySegment<byte> segment = new ArraySegment<byte>(bytes);
-            await Socket.SendAsync(segment, WebSocketMessageType.Text, true, CancellationToken.None);
+            try
+            {
+                await Socket.SendAsync(segment, WebSocketMessageType.Text, true, CancellationToken.None);
+            }
+            catch (ObjectDisposedException)
+            { }
         }
 
         async Task RenderLoop()
         {
+            byte[] receiveBuffer = new byte[RECEIVE_BUFFER_SIZE];
+            ArraySegment<byte> receiveSegment = new ArraySegment<byte>(receiveBuffer);
+
             while (Socket.State != WebSocketState.Open)
             {
                 await Task.Delay(100);
@@ -95,7 +104,16 @@ namespace kadmium_osc_dmx_dotnet_webui.WebSockets
             UpdateAll();
             while (Socket.State == WebSocketState.Open)
             {
-                await Task.Delay(100);
+                WebSocketReceiveResult received = await Socket.ReceiveAsync(receiveSegment, CancellationToken.None);
+                switch(received.MessageType)
+                {
+                    case WebSocketMessageType.Close:
+                        MasterController.Instance.Listener.Status.Updated += ListenerStatusUpdated;
+                        MasterController.Instance.Transmitter.Status.Updated += TransmitterStatusUpdated;
+                        Venue.Status.Updated += Status_Updated;
+                        break;
+                }
+                
             }
         }
         

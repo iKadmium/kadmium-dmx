@@ -45,7 +45,12 @@ namespace kadmium_osc_dmx_dotnet_webui.WebSockets
             byte[] bytes = Encoding.UTF8.GetBytes(message);
 
             ArraySegment<byte> segment = new ArraySegment<byte>(bytes);
-            await Socket.SendAsync(segment, WebSocketMessageType.Text, true, CancellationToken.None);
+            try
+            {
+                await Socket.SendAsync(segment, WebSocketMessageType.Text, true, CancellationToken.None);
+            }
+            catch (ObjectDisposedException)
+            { }
         }
 
         async Task RenderLoop()

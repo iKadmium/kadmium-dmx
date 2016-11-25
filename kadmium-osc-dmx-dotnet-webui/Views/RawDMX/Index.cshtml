@@ -13,7 +13,7 @@
     <div class="form-group">
         <label class="control-label col-sm-3" for="universe">Universe</label>
         <select class="form-control" data-bind="value: universe, enable: websocketOpen">
-            @foreach (var universe in MasterController.Instance.Venue?.Universes ?? Enumerable.Empty<Universe>())
+            @foreach (var universe in MasterController.Instance.Venue?.Universes.Values ?? Enumerable.Empty<Universe>())
             {
                 <option>@universe.Name</option>
             }

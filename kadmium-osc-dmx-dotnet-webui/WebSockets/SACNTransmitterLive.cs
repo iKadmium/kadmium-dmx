@@ -66,6 +66,10 @@ namespace kadmium_osc_dmx_dotnet_webui.WebSockets
                                 break;
                         }
                         break;
+                    case WebSocketMessageType.Close:
+                        var Transmitter = MasterController.Instance.Transmitter as SACNTransmitter;
+                        Transmitter.OnTransmit -= Transmitter_OnTransmit;
+                        break;
                 }
             }
         }
