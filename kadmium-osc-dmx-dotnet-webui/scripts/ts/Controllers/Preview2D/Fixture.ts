@@ -212,6 +212,10 @@ export class FixtureViewModel
         {
             this.render();
         });
+        this.tilt.subscribe((newValue: number) =>
+        {
+            this.render();
+        });
 
         this.color.notifySubscribers();
         this.pan.notifySubscribers();

@@ -20,6 +20,7 @@ namespace kadmium_osc_dmx_dotnet_core.Solvers
                 if(Attributes["ApeshitFixtureSelected"].Value == 1f)
                 {
                     Attributes["Strobe"].Value = 1f;
+                    Attributes["Strobe"].Controlled = true;
                 }
                 else
                 {
@@ -27,6 +28,7 @@ namespace kadmium_osc_dmx_dotnet_core.Solvers
                     if (Attributes.ContainsKey("Strobe"))
                     {
                         Attributes["Strobe"].Value = 0f;
+                        Attributes["Strobe"].Controlled = false;
                     }
                 }
             }

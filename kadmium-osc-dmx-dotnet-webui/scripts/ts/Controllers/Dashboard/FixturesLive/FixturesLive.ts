@@ -17,7 +17,6 @@ interface AttributeUpdateMessage extends WebSocketMessage
     attributeValue: number;
 }
 
-
 interface AttributeUpdateData
 {
     name: string;
@@ -41,6 +40,10 @@ interface AttributeData
 {
     name: string;
     value: number;
+    dmx: boolean;
+    dmxMin: number;
+    dmxMax: number;
+    controlled: boolean;
 }
 
 interface FixtureData
@@ -63,7 +66,7 @@ interface InitMessage extends WebSocketMessage
     universes: UniverseData[];
 }
 
-class AttributeViewModel
+abstract class AttributeViewModel
 {
     name: KnockoutObservable<string>;
     value: KnockoutObservable<number>;
@@ -82,8 +85,48 @@ class AttributeViewModel
 
     static load(data: AttributeData, parent: FixtureViewModel): AttributeViewModel
     {
-        let attribute = new AttributeViewModel(data.name, parent, data.value);
+        let attribute: AttributeViewModel;
+        if (data.dmx)
+        {
+            attribute = new DmxChannelViewModel(data.name, parent, data.dmxMin, data.dmxMax, data.controlled, data.value);
+        }
+        else
+        {
+            attribute = new SolverAttributeViewModel(data.name, parent, data.value);
+        }
         return attribute;
+    }
+}
+
+class SolverAttributeViewModel extends AttributeViewModel
+{
+    dmxValue: KnockoutObservable<string>;
+    controlled: KnockoutObservable<boolean>;
+
+    constructor(name: string, parent: FixtureViewModel, value = 0.0)
+    {
+        super(name, parent, value);
+        this.dmxValue = ko.observable<string>("N/A");
+        this.controlled = ko.observable<boolean>(false);
+    }
+}
+
+class DmxChannelViewModel extends AttributeViewModel
+{
+    min: number;
+    max: number;
+    dmxValue: KnockoutComputed<string>;
+    controlled: KnockoutObservable<boolean>;
+
+    constructor(name: string, parent: FixtureViewModel, min: number, max: number, controlled: boolean, value = 0.0)
+    {
+        super(name, parent, value);
+        this.dmxValue = ko.computed(() =>
+        {
+            let range = max - min;
+            return (Math.round(this.value() * range) + min + "");
+        });
+        this.controlled = ko.observable<boolean>(controlled);
     }
 }
 

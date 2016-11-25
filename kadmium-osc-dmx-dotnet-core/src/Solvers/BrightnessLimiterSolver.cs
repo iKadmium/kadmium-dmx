@@ -15,6 +15,13 @@ namespace kadmium_osc_dmx_dotnet_core.Solvers
         public BrightnessLimiterSolver(Fixture fixture, JObject options) : base(fixture)
         {
             MaxBrightness = options["maxBrightness"].Value<float>();
+            var matchingAttributes = from attribute in fixture.Settables.Values
+                                     where TargetAttributes.Contains(attribute.Name)
+                                     select attribute;
+            foreach(var attribute in matchingAttributes)
+            {
+                attribute.Controlled = true;
+            }
         }
 
         public override void Solve(Dictionary<string, Attribute> Attributes)

@@ -24,11 +24,13 @@ namespace kadmium_osc_dmx_dotnet_core.Solvers
             }
         }
         public string Name { get; set; }
+        public bool Controlled { get; set; }
 
         public Attribute(string name, float value = 0.0f)
         {
             Name = name;
             Value = value;
+            Controlled = false;
         }
 
         public abstract Attribute Clone();

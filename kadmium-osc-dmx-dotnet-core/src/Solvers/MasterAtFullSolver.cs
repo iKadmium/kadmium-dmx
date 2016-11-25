@@ -13,7 +13,7 @@ namespace kadmium_osc_dmx_dotnet_core.Solvers
 
         public MasterAtFullSolver(Fixture fixture) : base(fixture)
         {
-
+            fixture.Settables["Master"].Controlled = true;
         }
 
         public override void Solve(Dictionary<string, Attribute> Attributes)

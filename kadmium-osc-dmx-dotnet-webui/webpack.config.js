@@ -1,3 +1,4 @@
+/// <binding ProjectOpened='config: development' />
 const webpack = require("webpack");
 
 const common = {

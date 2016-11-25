@@ -49,6 +49,9 @@ namespace kadmium_osc_dmx_dotnet_webui.WebSockets
                                                 select new JObject(
                                                     new JProperty("name", attribute.Name),
                                                     new JProperty("value", attribute.Value),
+                                                    new JProperty("dmxMin", (attribute as DMXChannel)?.Min ?? 0),
+                                                    new JProperty("dmxMax", (attribute as DMXChannel)?.Max ?? 0),
+                                                    new JProperty("controlled", (attribute as DMXChannel)?.Controlled ?? false),
                                                     new JProperty("dmx", attribute is DMXChannel)
                                                 )
                                             )

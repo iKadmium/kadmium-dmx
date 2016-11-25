@@ -19,6 +19,11 @@ namespace kadmium_osc_dmx_dotnet_core.Solvers
         {
             AxisNames = from axis in fixture.Definition.Axis
                         select axis.Name;
+            foreach(var name in Get16BitAxisNames(fixture.Definition))
+            {
+                fixture.Settables[name + "Coarse"].Controlled = true;
+                fixture.Settables[name + "Fine"].Controlled = true;
+            }
         }
 
         private static IEnumerable<string> Get16BitAxisNames(Definition fixtureDefinition)

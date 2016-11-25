@@ -15,7 +15,9 @@ namespace kadmium_osc_dmx_dotnet_core.Solvers
     {
         public HSBtoRGBSolver(Fixture fixture) : base(fixture, "Hue", "Saturation", "Brightness")
         {
-            
+            fixture.Settables["Red"].Controlled = true;
+            fixture.Settables["Green"].Controlled = true;
+            fixture.Settables["Blue"].Controlled = true;
         }
 
         public override void Solve(Dictionary<string, Attribute> Attributes)
