@@ -1,6 +1,6 @@
 ﻿const merge = require("webpack-merge");
 const webpack = require("webpack");
-const common = require("./webpack.config");
+const common = require("./webpack.common.config.js");
 
 const production = {
     plugins: [
@@ -8,4 +8,4 @@ const production = {
     ]
 };
 
-module.exports = production;
+module.exports = merge(common, production);
