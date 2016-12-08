@@ -39,12 +39,10 @@
     "copyToOutput": {
       "include": [
         "../data",
-        "node_modules/bootstrap/dist/bootstrap.min.css",
         "node_modules/bootstrap/dist/bootstrap.min.css"
       ],
       "mappings": {
-        "wwwroot/bootstrap.min.css": "node_modules/bootstrap/dist/bootstrap.min.css",
-        "wwwroot/bootstrap-theme.min.css": "node_modules/bootstrap/dist/bootstrap.min.css"
+        "wwwroot/bootstrap.min.css": "node_modules/bootstrap/dist/bootstrap.min.css"
       }
     },
     "debugType": "portable"

@@ -8,4 +8,4 @@ const production = {
     ]
 };
 
-module.exports = merge(common, production);
+module.exports = production;

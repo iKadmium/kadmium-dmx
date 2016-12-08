@@ -27,6 +27,18 @@ namespace kadmium_osc_dmx_dotnet_test
             Assert.Equal(expected, dmx[0]);
         }
 
+        [Fact]
+        public void TestAllIncludedFixtures()
+        {
+            MasterController.Initialise();
+            foreach(string fixtureName in FileAccess.GetFixtureNames())
+            {
+                JObject definitionJSON = FileAccess.LoadFixtureDefinition(fixtureName);
+                Definition definition = Definition.Load(definitionJSON);
+                Fixture fixture = new Fixture(definition, 1, new Group(), new JObject());
+            }
+        }
+
         public static Fixture GetSharedMasterAndStrobeFixture()
         {
             Definition definition = new Definition();

@@ -1,5 +1,6 @@
 /// <binding ProjectOpened='config: development' />
 const webpack = require("webpack");
+const merge = require("webpack-merge");
 
 const common = {
     entry:
@@ -43,4 +44,15 @@ const common = {
     }
 }
 
-module.exports = common;
+var config = {};
+
+switch(process.env.NODE_ENV)
+{
+    case "development":
+        config = merge(common, require("./webpack.development.config.js"));
+        break;
+    case "production":
+        config = merge(common, require("./webpack.production.config.js"));
+        break;
+}
+module.exports = config;
