@@ -1,5 +1,5 @@
-﻿import {UniverseData, UniverseViewModel} from "./Universe";
-import {CollectionItemViewModel, NamedViewModel} from "../CollectionItem";
+﻿import { UniverseData, UniverseViewModel } from "./Universe";
+import { CollectionItemViewModel, NamedViewModel } from "../CollectionItem";
 import * as ko from "knockout";
 
 export interface VenueData
@@ -35,12 +35,12 @@ export class VenueViewModel extends CollectionItemViewModel<VenueData> implement
         this.universes.remove(item);
     }
 
-    load(data: VenueData): void
+    async load(data: VenueData): Promise<void>
     {
         this.universes.removeAll();
         for (let universeItem of data.universes)
         {
-            let universe = UniverseViewModel.load(universeItem);
+            let universe = await UniverseViewModel.load(universeItem);
             this.universes.push(universe);
         }
     }

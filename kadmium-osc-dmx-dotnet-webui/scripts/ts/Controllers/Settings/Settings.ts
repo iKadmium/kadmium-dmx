@@ -1,5 +1,6 @@
-﻿import {MVC} from "../MVC";
-import {StatusTrackerViewModel} from "../Status";
+﻿import { MVC } from "../MVC";
+import { StatusTrackerViewModel } from "../Status";
+import { AsyncJSON } from "../AsyncJSON";
 import * as ko from "knockout";
 import "ko.plus";
 import "knockout.validation";
@@ -50,7 +51,7 @@ class SettingsViewModel
     {
         this.webPort = ko.observable<number>();
         this.oscPort = ko.observable<number>();
-        
+
         this.delay = ko.validatedObservable<number>(0).extend({
             min: 0,
             required: true
@@ -60,20 +61,17 @@ class SettingsViewModel
 
         this.statusTracker = ko.observable<StatusTrackerViewModel>(new StatusTrackerViewModel());
 
-        this.load = ko.command(() =>
+        this.load = ko.command(async () =>
         {
             let url = MVC.getActionURL("Settings", "Load", null);
-            return $.get(url, (data: any) =>
-            {
-                let trueData = JSON.parse(data) as SettingsData;
-                this.webPort(trueData.webPort);
-                this.oscPort(trueData.oscPort);
+            let data = await AsyncJSON.loadAsync<SettingsData>(url);
+            this.webPort(data.webPort);
+            this.oscPort(data.oscPort);
 
-                this.delay(trueData.sacnTransmitter.delay);
-                this.multicast(trueData.sacnTransmitter.multicast);
-                this.unicast.removeAll();
-                this.unicast(trueData.sacnTransmitter.unicast.map((value: string) => new UnicastViewModel(value)));
-            });
+            this.delay(data.sacnTransmitter.delay);
+            this.multicast(data.sacnTransmitter.multicast);
+            this.unicast.removeAll();
+            this.unicast(data.sacnTransmitter.unicast.map((value: string) => new UnicastViewModel(value)));
         });
 
         this.save = ko.command(() =>

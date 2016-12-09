@@ -1,9 +1,5 @@
 ﻿using kadmium_osc_dmx_dotnet_core.Color;
 using Newtonsoft.Json.Linq;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 
 namespace kadmium_osc_dmx_dotnet_core.Fixtures
 {
@@ -25,7 +21,7 @@ namespace kadmium_osc_dmx_dotnet_core.Fixtures
         public static ColorWheelEntry Load(JObject obj)
         {
             string name = obj["name"].Value<string>();
-            byte min= obj["min"].Value<byte>();
+            byte min = obj["min"].Value<byte>();
             byte max = obj["max"].Value<byte>();
             string colorString = obj["color"].Value<string>();
             int red = int.Parse(colorString.Substring(1, 2), System.Globalization.NumberStyles.AllowHexSpecifier);

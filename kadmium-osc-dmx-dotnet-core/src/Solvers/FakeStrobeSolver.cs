@@ -1,10 +1,6 @@
 ﻿using kadmium_osc_dmx_dotnet_core.Fixtures;
-using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Xml.Linq;
 
 namespace kadmium_osc_dmx_dotnet_core.Solvers
 {
@@ -21,14 +17,14 @@ namespace kadmium_osc_dmx_dotnet_core.Solvers
 
         public override void Solve(Dictionary<string, Attribute> Attributes)
         {
-            if(Attributes["Strobe"].Value > 0.0f)
+            if (Attributes["Strobe"].Value > 0.0f)
             {
                 if (Strobe.GetValue())
                 {
                     Attributes["Brightness"].Value = 1.0f;
                 }
             }
-            
+
         }
 
         internal static bool SuitableFor(Definition definition)

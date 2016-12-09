@@ -1,10 +1,5 @@
 ﻿using Newtonsoft.Json.Linq;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Xml.Linq;
 
 namespace kadmium_osc_dmx_dotnet_core.Listeners
 {
@@ -22,7 +17,7 @@ namespace kadmium_osc_dmx_dotnet_core.Listeners
 
         internal static Listener Load(JObject listenerElement)
         {
-            switch(listenerElement["type"].Value<string>())
+            switch (listenerElement["type"].Value<string>())
             {
                 case "OSC":
                     return OSCListener.Load(listenerElement);

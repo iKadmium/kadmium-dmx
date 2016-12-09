@@ -1,9 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Diagnostics;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace kadmium_osc_dmx_dotnet_core.Solvers
 {
@@ -16,7 +11,7 @@ namespace kadmium_osc_dmx_dotnet_core.Solvers
             get { return value; }
             set
             {
-                if(value < 0.0f || value > 1.0f)
+                if (value < 0.0f || value > 1.0f)
                 {
                     throw new ArgumentException(value + " is out of range for an attribute");
                 }

@@ -1,7 +1,7 @@
-﻿import {FixtureOptionsData, FixtureOptionsViewModel} from "./FixtureOptions";
-import {LazyLoad} from "../LazyLoad";
-import {MVC} from "../MVC";
-import {FixtureDefinitionData, FixtureDefinitionViewModel} from "../FixtureDefinitions/FixtureDefinition";
+﻿import { FixtureOptionsData, FixtureOptionsViewModel } from "./FixtureOptions";
+import { AsyncJSON } from "../AsyncJSON";
+import { MVC } from "../MVC";
+import { FixtureDefinitionData, FixtureDefinitionViewModel } from "../FixtureDefinitions/FixtureDefinition";
 import * as ko from "knockout";
 
 export interface FixtureData
@@ -14,14 +14,14 @@ export interface FixtureData
 
 export interface FixtureDefinitionDictionary
 {
-    [index: string]: JQueryPromise<FixtureDefinitionData>;
+    [index: string]: FixtureDefinitionData;
 }
 
 export class FixtureDefinitionCache
 {
     static cache: FixtureDefinitionDictionary;
 
-    static getDefinition(fixtureType: string): JQueryPromise<FixtureDefinitionData>
+    static async getDefinition(fixtureType: string): Promise<FixtureDefinitionData>
     {
         if (FixtureDefinitionCache.cache == null)
         {
@@ -34,9 +34,9 @@ export class FixtureDefinitionCache
         else
         {
             let url = MVC.getActionURL("FixtureDefinitions", "Load", fixtureType);
-            let lazyLoad = LazyLoad.load<FixtureDefinitionData>(url);
-            FixtureDefinitionCache.cache[fixtureType] = lazyLoad;
-            return lazyLoad;
+            let definition = await AsyncJSON.loadAsync<FixtureDefinitionData>(url);
+            FixtureDefinitionCache.cache[fixtureType] = definition;
+            return definition;
         }
     }
 }
@@ -48,8 +48,7 @@ export class FixtureViewModel
     group: KnockoutObservable<string>;
     options: KnockoutObservable<FixtureOptionsViewModel>;
     definition: KnockoutObservable<FixtureDefinitionViewModel>;
-    definitionLoadPromise: JQueryPromise<FixtureDefinitionData>;
-    
+
     constructor()
     {
         this.channel = ko.validatedObservable<number>().extend({
@@ -60,17 +59,20 @@ export class FixtureViewModel
         this.group = ko.observable<string>();
         this.definition = ko.observable<FixtureDefinitionViewModel>();
         this.options = ko.validatedObservable<FixtureOptionsViewModel>(new FixtureOptionsViewModel(this, this.definition));
-        this.type.subscribe((newValue: string) =>
+        this.type.subscribe(async (newValue: string) => 
         {
-            //this.definitionLoadPromise = FixtureDefinitionCache.getDefinition(newValue);
-            let url = MVC.getActionURL("FixtureDefinitions", "Load", newValue);
-            this.definitionLoadPromise = $.get(url).then((data: any) => JSON.parse(data) as FixtureDefinitionData);
-            this.definitionLoadPromise.done((definitionData: FixtureDefinitionData) =>
-            {
-                let definition: FixtureDefinitionViewModel = new FixtureDefinitionViewModel(newValue);
-                definition.load(definitionData);
-                this.definition(definition);
-            });
+            await this.updateType(newValue);
+        });
+    }
+
+    async updateType(type: string): Promise<void>
+    {
+        return new Promise<void>(async (resolve) =>
+        {
+            let definition: FixtureDefinitionViewModel = new FixtureDefinitionViewModel(type);
+            definition.load(await FixtureDefinitionCache.getDefinition(type));
+            this.definition(definition);
+            resolve();
         });
     }
 
@@ -85,16 +87,14 @@ export class FixtureViewModel
         return item;
     }
 
-    static load(data: FixtureData): FixtureViewModel
+    static async load(data: FixtureData): Promise<FixtureViewModel>
     {
         let fixture = new FixtureViewModel();
         fixture.channel(data.channel);
         fixture.type(data.type);
+        await fixture.updateType(data.type);
+        fixture.options().load(data.options);
         fixture.group(data.group);
-        fixture.definitionLoadPromise.done(() =>
-        {
-            fixture.options().load(data.options, fixture);
-        });
         return fixture;
     }
 }

@@ -1,7 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
-using System.Threading.Tasks;
 using kadmium_osc_dmx_dotnet_core.Fixtures;
 using Newtonsoft.Json.Linq;
 
@@ -9,7 +7,7 @@ namespace kadmium_osc_dmx_dotnet_core.Solvers
 {
     public class BrightnessLimiterSolver : FixtureSolver
     {
-        public string[] TargetAttributes = {"Red", "Green", "Blue", "White", "Amber", "UV" };
+        public string[] TargetAttributes = { "Red", "Green", "Blue", "White", "Amber", "UV" };
         public float MaxBrightness { get; set; }
 
         public BrightnessLimiterSolver(Fixture fixture, JObject options) : base(fixture)
@@ -18,7 +16,7 @@ namespace kadmium_osc_dmx_dotnet_core.Solvers
             var matchingAttributes = from attribute in fixture.Settables.Values
                                      where TargetAttributes.Contains(attribute.Name)
                                      select attribute;
-            foreach(var attribute in matchingAttributes)
+            foreach (var attribute in matchingAttributes)
             {
                 attribute.Controlled = true;
             }
@@ -26,7 +24,7 @@ namespace kadmium_osc_dmx_dotnet_core.Solvers
 
         public override void Solve(Dictionary<string, Attribute> Attributes)
         {
-            if(Attributes.ContainsKey("Master"))
+            if (Attributes.ContainsKey("Master"))
             {
                 //just dim the master
                 Attributes["Master"].Value *= MaxBrightness;
@@ -36,7 +34,7 @@ namespace kadmium_osc_dmx_dotnet_core.Solvers
                 var matchingAttributes = from attribute in Attributes.Values
                                          where TargetAttributes.Contains(attribute.Name)
                                          select attribute;
-                foreach(var attribute in matchingAttributes)
+                foreach (var attribute in matchingAttributes)
                 {
                     attribute.Value *= MaxBrightness;
                 }

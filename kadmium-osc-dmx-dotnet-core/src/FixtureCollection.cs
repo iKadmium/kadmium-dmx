@@ -1,9 +1,6 @@
-﻿using kadmium_osc_dmx_dotnet_core.Fixtures;
-using Newtonsoft.Json.Linq;
-using System;
+﻿using Newtonsoft.Json.Linq;
 using System.Collections.Generic;
 using System.Linq;
-using System.Threading.Tasks;
 
 namespace kadmium_osc_dmx_dotnet_core
 {
@@ -18,8 +15,8 @@ namespace kadmium_osc_dmx_dotnet_core
     public class FixtureCollection
     {
         public string Name { get; set; }
-        public IEnumerable<FixtureEntry> FixtureEntries { get;}
-        
+        public IEnumerable<FixtureEntry> FixtureEntries { get; }
+
         public FixtureCollection() : this("", Enumerable.Empty<FixtureEntry>()) { }
 
         public FixtureCollection(string name, IEnumerable<FixtureEntry> fixtureEntries)
@@ -44,7 +41,7 @@ namespace kadmium_osc_dmx_dotnet_core
             );
             return obj;
         }
-        
+
         public static FixtureCollection Load(JObject obj)
         {
             string name = obj["name"].Value<string>();
@@ -58,6 +55,6 @@ namespace kadmium_osc_dmx_dotnet_core
                                  };
             return new FixtureCollection(name, fixtureEntries);
         }
-        
+
     }
 }

@@ -32,7 +32,12 @@ namespace kadmium_osc_dmx_dotnet_webui.WebSockets
             SendUpdate("Venues", e.StatusCode, e.Message);
             if(e.StatusCode == StatusCode.Running)
             {
-                await Task.Delay(50);
+                int tries = 0;
+                while (MasterController.Instance.Venue == null && tries < 10)
+                {
+                    await Task.Delay(50);
+                    tries++;
+                }
                 int fixtureCount = (from universe in MasterController.Instance.Venue.Universes.Values
                                     select universe.Fixtures.Count()).Sum();
                 SendUpdate("Fixtures", e.StatusCode, fixtureCount + " fixtures loaded");

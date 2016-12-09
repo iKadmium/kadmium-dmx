@@ -1,6 +1,7 @@
-﻿import {FixtureData, FixtureViewModel, FixtureDefinitionCache} from "./Fixture";
-import {MVC} from "../MVC";
-import {FixtureCollectionData} from "../FixtureCollections/FixtureCollection";
+﻿import { FixtureData, FixtureViewModel, FixtureDefinitionCache } from "./Fixture";
+import { MVC } from "../MVC";
+import { FixtureCollectionData } from "../FixtureCollections/FixtureCollection";
+import { AsyncJSON } from "../AsyncJSON";
 import * as ko from "knockout";
 
 export interface UniverseData
@@ -25,25 +26,21 @@ export class UniverseViewModel
         this.universeID = ko.observable<number>();
         this.selectedFixture = ko.observable<FixtureViewModel>(new FixtureViewModel());
     }
-    
+
     addFixture(): void
     {
         this.fixtures.push(new FixtureViewModel());
     }
 
-    addFixtureCollection(eventData: UniverseViewModel, event: JQueryEventObject): void
+    async addFixtureCollection(eventData: UniverseViewModel, event: JQueryEventObject): Promise<void>
     {
         let collectionName = $(event.currentTarget).text();
         let url = MVC.getActionURL("FixtureCollections", "Load", collectionName);
-        $.get(url, (data: any, textStatus: string, jqXHR: JQueryXHR) =>
+        let collection = await AsyncJSON.loadAsync<FixtureCollectionData>(url);
+        for (let fixtureData of collection.fixtures)
         {
-            let collection = JSON.parse(data) as FixtureCollectionData;
-
-            for (let fixtureData of collection.fixtures)
-            {
-                this.fixtures.push(FixtureViewModel.load(fixtureData));
-            }
-        });
+            this.fixtures.push(await FixtureViewModel.load(fixtureData));
+        }
     }
 
     removeFixture(item: FixtureViewModel): void
@@ -68,13 +65,13 @@ export class UniverseViewModel
         return item;
     }
 
-    static load(data: UniverseData): UniverseViewModel
+    static async load(data: UniverseData): Promise<UniverseViewModel>
     {
         let universeViewModel = new UniverseViewModel();
         universeViewModel.name(data.name);
         for (let fixtureItem of data.fixtures)
         {
-            let fixture = FixtureViewModel.load(fixtureItem);
+            let fixture = await FixtureViewModel.load(fixtureItem);
             universeViewModel.fixtures.push(fixture);
         }
         universeViewModel.universeID(data.universeID);

@@ -1,7 +1,8 @@
-﻿import {FixtureViewModel} from "./Fixture";
-import {GroupViewModel, GroupData} from "./Group";
-import {UniverseViewModel, UniverseData} from "./Universe";
-import {MVC} from "../MVC";
+﻿import { FixtureViewModel } from "./Fixture";
+import { GroupViewModel, GroupData } from "./Group";
+import { UniverseViewModel, UniverseData } from "./Universe";
+import { MVC } from "../MVC";
+import { AsyncJSON } from "../AsyncJSON";
 
 import * as ko from "knockout";
 import "ko.plus";
@@ -37,25 +38,22 @@ class Preview2DViewModel
         this.universes = ko.observableArray<UniverseViewModel>();
         this.socket = new WebSocket(MVC.getSocketURL("Preview"));
         this.universeLookupTable = {};
-        
-        this.load = ko.command(() =>
+
+        this.load = ko.command(async () =>
         {
             let url = MVC.getActionURL("Preview", "Fixtures", null);
-            return $.get(url, (data: any) =>
+            let previewData = await AsyncJSON.loadAsync<PreviewData>(url);
+            for (let groupData of previewData.groups)
             {
-                let previewData = JSON.parse(data) as PreviewData;
-                for (let groupData of previewData.groups)
-                {
-                    let group = new GroupViewModel(groupData);
-                    this.groups.push(group);
-                }
-                for (let universeData of previewData.universes)
-                {
-                    let universe = UniverseViewModel.load(universeData, this.groups());
-                    this.universeLookupTable[universe.name()] = universe;
-                    this.universes.push(universe);
-                }
-            });
+                let group = new GroupViewModel(groupData);
+                this.groups.push(group);
+            }
+            for (let universeData of previewData.universes)
+            {
+                let universe = UniverseViewModel.load(universeData, this.groups());
+                this.universeLookupTable[universe.name()] = universe;
+                this.universes.push(universe);
+            }
         });
 
         this.socket.addEventListener("message", (message: MessageEvent) =>

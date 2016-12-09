@@ -1,14 +1,8 @@
 ﻿using kadmium_osc_dmx_dotnet_core.Fixtures;
 using kadmium_osc_dmx_dotnet_core.Listeners;
 using kadmium_osc_dmx_dotnet_core.Transmitters;
-using System;
 using System.Collections.Concurrent;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Threading;
-using System.Threading.Tasks;
-using System.Collections.Specialized;
 using Newtonsoft.Json.Linq;
 
 namespace kadmium_osc_dmx_dotnet_core
@@ -43,12 +37,12 @@ namespace kadmium_osc_dmx_dotnet_core
 
             instance = new MasterController();
             Instance.Groups = new ConcurrentDictionary<string, Group>();
-            foreach(Group group in FileAccess.LoadGroups())
+            foreach (Group group in FileAccess.LoadGroups())
             {
                 Instance.Groups.TryAdd(group.Name, group);
             }
             Instance.Transmitter = SACNTransmitter.Load(settings["sacnTransmitter"].Value<JObject>());
-            
+
             Instance.Listener = new OSCListener(settings["oscPort"].Value<int>(), "OSC Listener");
             Instance.updateTimer = new Timer(Instance.UpdateTimer_Elapsed, null, UPDATE_TIME, UPDATE_TIME);
             Venue.Status = new Status("No Venue Loaded");
@@ -67,7 +61,7 @@ namespace kadmium_osc_dmx_dotnet_core
 
         public void Update()
         {
-            foreach(Group group in Groups.Values)
+            foreach (Group group in Groups.Values)
             {
                 group.Update();
             }
@@ -78,10 +72,10 @@ namespace kadmium_osc_dmx_dotnet_core
         {
             Venue?.Render();
         }
-        
+
         private void UpdateTimer_Elapsed(object state)
         {
-            if(UpdatesEnabled)
+            if (UpdatesEnabled)
             {
                 Update();
             }

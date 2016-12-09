@@ -1,6 +1,7 @@
-﻿import {CollectionItemViewModel, NamedViewModel} from "./CollectionItem";
-import {StatusViewModel, StatusTrackerViewModel} from "./Status";
-import {MVC} from "./MVC";
+﻿import { CollectionItemViewModel, NamedViewModel } from "./CollectionItem";
+import { StatusViewModel, StatusTrackerViewModel } from "./Status";
+import { MVC } from "./MVC";
+import { AsyncJSON } from "./AsyncJSON";
 
 import * as ko from "knockout";
 import "ko.plus";
@@ -13,7 +14,7 @@ export class CollectionViewModel<ViewModelDataType, ViewModelType extends Collec
     controllerName: string;
     selectedItem: KnockoutObservable<ViewModelType>;
     statusTracker: KnockoutObservable<StatusTrackerViewModel>;
-    
+
     load: KoPlus.Command;
 
     private static instance: any;
@@ -48,20 +49,17 @@ export class CollectionViewModel<ViewModelDataType, ViewModelType extends Collec
         {
             $("#modal-delete").prop("disabled", false);
         });
-        
-        this.load = ko.command(() =>
+
+        this.load = ko.command(async () =>
         {
-            return $.get(getURL, (data: any, textStatus: string, jqXHR: JQueryXHR) =>
+            let itemNames = await AsyncJSON.loadAsync<string[]>(getURL);
+            for (let itemName of itemNames)
             {
-                let itemNames = JSON.parse(data) as string[];
-                for (let itemName of itemNames)
-                {
-                    let item = itemConstructor(itemName);
-                    this.items.push(item);
-                }
-            });
+                let item = itemConstructor(itemName);
+                this.items.push(item);
+            }
         });
-        
+
 
         ko.validation.init({
             errorElementClass: 'has-error',
@@ -82,11 +80,11 @@ export class CollectionViewModel<ViewModelDataType, ViewModelType extends Collec
 
         this.load();
     }
-    
+
     delete(item: ViewModelType): void
     {
         this.selectedItem(item);
-        
+
         ($("#confirm-delete") as any).modal("toggle");
     }
 
@@ -106,17 +104,7 @@ export class CollectionViewModel<ViewModelDataType, ViewModelType extends Collec
         this.selectedItem(item);
         let editNode = $("#modal-edit")[0];
         $("#modal-error").hide();
-        $("#modal-cancel").text("Cancel");
-        let url = MVC.getActionURL(this.controllerName, "Load", item.originalName());
-        $("#modal-cancel").prop("disabled", true);
         item.statusText("Loading");
-        item.isBusy(true);
-        $.getJSON(url, (data: any, textStatus: string, jqXHR: JQueryXHR) =>
-        {
-            $("#modal-cancel").prop("disabled", false);
-            item.isBusy(false);
-        });
-
         item.openEditor();
     }
 

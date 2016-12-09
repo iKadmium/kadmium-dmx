@@ -1,12 +1,7 @@
-﻿using kadmium_osc_dmx_dotnet_core.Fixtures;
-using kadmium_osc_dmx_dotnet_core.Listeners;
-using kadmium_osc_dmx_dotnet_core.Transmitters;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using Newtonsoft.Json.Linq;
 using Newtonsoft.Json.Schema;
 using Newtonsoft.Json;
@@ -31,11 +26,11 @@ namespace kadmium_osc_dmx_dotnet_core
         static string VenuesSchema = Path.Combine(VenuesLocation, "venue.schema.json");
         static string FixtureCollectionsSchema = Path.Combine(FixtureCollectionLocation, "fixtureCollection.schema.json");
         static string SettingsSchema = Path.Combine(DataLocation, "settings.schema.json");
-        
+
         private static void ValidatedSave(JToken obj, string path, string schemaPath)
         {
             string schemaString = File.ReadAllText(schemaPath);
-            if(Validate(obj, path, schemaPath))
+            if (Validate(obj, path, schemaPath))
             {
                 File.WriteAllText(path, obj.ToString());
             }
@@ -91,27 +86,27 @@ namespace kadmium_osc_dmx_dotnet_core
                 }
             }
         }
-        
+
         public static void RenameTransmitter(string id, string newID)
         {
             var venues = from venueName in GetVenueNames()
                          select LoadVenue(venueName);
 
-            foreach(JObject venue in venues)
+            foreach (JObject venue in venues)
             {
                 bool dirty = false;
-                foreach(JObject universe in venue["universes"].Values<JObject>())
+                foreach (JObject universe in venue["universes"].Values<JObject>())
                 {
-                    foreach(JObject transmitter in universe["transmitters"].Values<JObject>())
+                    foreach (JObject transmitter in universe["transmitters"].Values<JObject>())
                     {
-                        if(transmitter["name"].Value<string>() == id)
+                        if (transmitter["name"].Value<string>() == id)
                         {
                             transmitter["name"] = newID;
                             dirty = true;
                         }
                     }
                 }
-                if(dirty)
+                if (dirty)
                 {
                     SaveVenue(venue);
                 }
@@ -153,11 +148,11 @@ namespace kadmium_osc_dmx_dotnet_core
                              select Group.Load(groupObject as JObject);
                 return groups;
             }
-            catch(Exception)
+            catch (Exception)
             {
                 return new[] { new Group("Default Group", 1) };
             }
-            
+
         }
 
         public static void SaveGroups()
@@ -176,7 +171,7 @@ namespace kadmium_osc_dmx_dotnet_core
             JObject schema = ValidatedLoad(GroupsSchema, JsonSchemaSchema) as JObject;
             return schema;
         }
-        
+
         public static bool HasFixtureDefinition(string model)
         {
             string path = Path.Combine(FixturesLocation, model + ".json");
@@ -216,7 +211,7 @@ namespace kadmium_osc_dmx_dotnet_core
                         select Path.GetFileNameWithoutExtension(filename);
             return files;
         }
-        
+
         public static IEnumerable<string> GetFixtureCollectionNames()
         {
             var files = from filename in Directory.EnumerateFiles(FixtureCollectionLocation)
@@ -309,7 +304,7 @@ namespace kadmium_osc_dmx_dotnet_core
                 JObject obj = new JObject(
                     new JProperty("webPort", 5000),
                     new JProperty("oscPort", 9001),
-                    new JProperty("sacnTransmitter", 
+                    new JProperty("sacnTransmitter",
                         new JObject(
                             new JProperty("delay", 0),
                             new JProperty("multicast", true),
@@ -319,7 +314,7 @@ namespace kadmium_osc_dmx_dotnet_core
                 );
                 return obj;
             }
-            
+
         }
 
         public static void SaveSettings(JObject settings)

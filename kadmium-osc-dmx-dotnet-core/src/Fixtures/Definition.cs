@@ -2,7 +2,6 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Threading.Tasks;
 
 namespace kadmium_osc_dmx_dotnet_core.Fixtures
 {
@@ -40,7 +39,7 @@ namespace kadmium_osc_dmx_dotnet_core.Fixtures
                     definition.Axis.Add(axis);
                 }
             }
-            if(modelElement["colorWheel"] != null)
+            if (modelElement["colorWheel"] != null)
             {
                 foreach (JObject colorWheelEntry in modelElement["colorWheel"])
                 {
@@ -69,7 +68,7 @@ namespace kadmium_osc_dmx_dotnet_core.Fixtures
                 )
             );
 
-            if(Axis.Count > 0)
+            if (Axis.Count > 0)
             {
                 obj.Add(
                     new JProperty("movements",
@@ -84,7 +83,7 @@ namespace kadmium_osc_dmx_dotnet_core.Fixtures
                     )
                 );
             }
-            if(ColorWheel.Count > 0)
+            if (ColorWheel.Count > 0)
             {
                 obj.Add(
                     new JProperty("colorWheel",

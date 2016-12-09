@@ -1,6 +1,7 @@
-﻿import {MVC} from "./MVC";
-import {CollectionViewModel} from "./Collection";
-import {StatusTrackerViewModel} from "./Status";
+﻿import { MVC } from "./MVC";
+import { CollectionViewModel } from "./Collection";
+import { StatusTrackerViewModel } from "./Status";
+import { AsyncJSON } from "./AsyncJSON";
 
 import * as ko from "knockout";
 
@@ -29,17 +30,13 @@ export abstract class CollectionItemViewModel<ViewModelDataType> implements Name
         });
     }
 
-    openEditor() : void
+    async openEditor(): Promise<void>
     {
         ($("#modal-edit") as any).modal("toggle");
         let getURL = MVC.getActionURL(this.controllerName, "Load", this.originalName());
         let that = this;
-
-        $.get(getURL, (data: any, textStatus: string, jqXHR: JQueryXHR) =>
-        {
-            let itemData = JSON.parse(data) as ViewModelDataType;
-            that.load(itemData);
-        });
+        let itemData = await AsyncJSON.loadAsync<ViewModelDataType>(getURL);
+        this.load(itemData);
     }
 
     onSave(): void
@@ -65,7 +62,7 @@ export abstract class CollectionItemViewModel<ViewModelDataType> implements Name
     save(): void
     {
         $("#modal-error").hide();
-        
+
         $("#modal-cancel").prop("disabled", true);
         this.statusText("Saving");
 

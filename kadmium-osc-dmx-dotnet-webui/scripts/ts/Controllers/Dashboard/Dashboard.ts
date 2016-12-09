@@ -1,5 +1,6 @@
 ﻿import { MVC } from "../MVC";
-import {StatusTrackerViewModel, StatusViewModel} from "../Status";
+import { StatusTrackerViewModel, StatusViewModel } from "../Status";
+import { AsyncJSON } from "../AsyncJSON";
 
 import * as ko from "knockout";
 import "ko.plus";
@@ -21,17 +22,18 @@ export class VenueViewModel extends StatusViewModel
         this.name = ko.observable<string>(name);
     }
 
-    loadVenue(context: StatusViewModel, event: JQueryEventObject): void
+    async loadVenue(context: StatusViewModel, event: JQueryEventObject): Promise<void>
     {
         let id = $(event.currentTarget).text();
         let url = MVC.getActionURL("Venues", "Activate", id);
-        let settings: JQueryAjaxSettings =
-            {
-                url: url,
-                success: (data: any, textStatus: string, xhr: JQueryXHR, ...args: any[]) => this.onLoadVenueSuccess(id),
-                error: (xhr: JQueryXHR, textStatus: string, errorThrown: string) => this.update("Error", "Error loading venue: " + errorThrown)
-            }
-        $.ajax(settings);
+        try
+        {
+            await AsyncJSON.loadAsync<string>(url);
+            this.onLoadVenueSuccess(id);
+        } catch (err)
+        {
+            this.update("Error", "Error loading venue: " + err);
+        }
     }
 
     onLoadVenueSuccess(venueName: string): void
@@ -52,7 +54,7 @@ export class DashboardViewModel
     fixtures: KnockoutObservable<StatusViewModel>;
     load: KoPlus.Command;
     statusTracker: KnockoutObservable<StatusTrackerViewModel>;
-    
+
     constructor()
     {
         this.statusTracker = ko.observable<StatusTrackerViewModel>(new StatusTrackerViewModel());

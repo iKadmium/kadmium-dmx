@@ -1,10 +1,6 @@
 ﻿using kadmium_osc_dmx_dotnet_core.Solvers;
-using System;
 using System.Collections.Generic;
-using System.ComponentModel;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using Newtonsoft.Json.Linq;
 
 namespace kadmium_osc_dmx_dotnet_core.Fixtures
@@ -21,7 +17,7 @@ namespace kadmium_osc_dmx_dotnet_core.Fixtures
         public List<FixtureSolver> Solvers { get; }
         public JObject Options;
         public Group Group { get; }
-        
+
         public Fixture(Definition definition, int startChannel, Group group, JObject options)
         {
             Definition = definition;
@@ -34,7 +30,7 @@ namespace kadmium_osc_dmx_dotnet_core.Fixtures
                 FrameSettables.Add(attribute.Name, attribute);
             }
             MovementAxis = new Dictionary<string, MovementAxis>();
-            foreach(var axis in Definition.Axis)
+            foreach (var axis in Definition.Axis)
             {
                 MovementAxis.Add(axis.Name, axis);
             }
@@ -44,15 +40,15 @@ namespace kadmium_osc_dmx_dotnet_core.Fixtures
             Group = group;
             Group.Fixtures.Add(this);
         }
-        
+
         public void Update()
         {
-            foreach(KeyValuePair<string, Solvers.Attribute> kvp in Settables)
+            foreach (KeyValuePair<string, Solvers.Attribute> kvp in Settables)
             {
                 FrameSettables[kvp.Key].Value = kvp.Value.Value;
             }
 
-            foreach(FixtureSolver solver in Solvers.Where(solver => solver != null))
+            foreach (FixtureSolver solver in Solvers.Where(solver => solver != null))
             {
                 solver.Solve(FrameSettables);
             }
@@ -98,11 +94,11 @@ namespace kadmium_osc_dmx_dotnet_core.Fixtures
             foreach (var channelGroup in channels)
             {
                 DMXChannel channel;
-                if(channelGroup.Count() > 1)
+                if (channelGroup.Count() > 1)
                 {
                     var channelsWithValue = channelGroup.Where(x => x.Value > 0);
-                    
-                    if(channelsWithValue.Count() > 0)
+
+                    if (channelsWithValue.Count() > 0)
                     {
                         channel = channelsWithValue.OrderByDescending(x => x.Min).First();
                     }

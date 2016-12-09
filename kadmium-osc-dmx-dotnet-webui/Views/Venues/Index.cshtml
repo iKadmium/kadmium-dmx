@@ -13,6 +13,7 @@
         </modal-header>
         <modal-body>
             @Html.Partial("ModalEditorStatus")
+            @Html.Partial("LoadingPanel")
             <div class="form-horizontal" id="edit-form" data-bind="visible: !isBusy()">
                 <input-label label="Name:" data-bind="validationElement: name"><input class="form-control" data-bind="value: name"></input-label>
                 <input-collection name="universes">

@@ -1,8 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc.Routing;
-using System;
+﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 
 namespace kadmium_osc_dmx_dotnet_webui.ViewHelpers
 {
@@ -34,7 +31,7 @@ namespace kadmium_osc_dmx_dotnet_webui.ViewHelpers
 
         public NavbarItem(string controller, params NavbarItem[] children) : this(controller, null, null, null, null, children)
         {
-            
+
         }
     }
 }

@@ -2,8 +2,6 @@
 using kadmium_osc_dmx_dotnet_core.Solvers;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using Newtonsoft.Json.Linq;
 
 namespace kadmium_osc_dmx_dotnet_core
@@ -34,14 +32,14 @@ namespace kadmium_osc_dmx_dotnet_core
 
         public void Set(string attribute, float value)
         {
-            if(Settables.ContainsKey(attribute))
+            if (Settables.ContainsKey(attribute))
             {
                 Settables[attribute].Value = value;
             }
 
-            foreach(Fixture fixture in Fixtures)
+            foreach (Fixture fixture in Fixtures)
             {
-                if(fixture.Settables.ContainsKey(attribute))
+                if (fixture.Settables.ContainsKey(attribute))
                 {
                     fixture.Settables[attribute].Value = value;
                 }
@@ -59,7 +57,7 @@ namespace kadmium_osc_dmx_dotnet_core
 
         internal void Update()
         {
-            foreach(KeyValuePair<string, Attribute> kvp in Settables)
+            foreach (KeyValuePair<string, Attribute> kvp in Settables)
             {
                 FrameSettables[kvp.Key].Value = kvp.Value.Value;
             }
