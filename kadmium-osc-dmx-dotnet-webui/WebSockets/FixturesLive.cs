@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Http;
 using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Net.WebSockets;
 using System.Text;
@@ -20,10 +21,12 @@ namespace kadmium_osc_dmx_dotnet_webui.WebSockets
         private static int RECEIVE_BUFFER_SIZE = 65535;
         public int UniverseID { get; set; }
         public WebSocket Socket { get; }
+        public bool Sending { get; set; }
         
         public FixturesLive(WebSocket socket)
         {
             Socket = socket;
+            Sending = false;
         }
 
         private JObject GetInitMessage()
@@ -86,38 +89,50 @@ namespace kadmium_osc_dmx_dotnet_webui.WebSockets
 
             while (Socket.State == WebSocketState.Open)
             {
-                WebSocketReceiveResult received = await Socket.ReceiveAsync(receiveSegment, CancellationToken.None);
-                switch (received.MessageType)
+                try
                 {
-                    case WebSocketMessageType.Text:
-                        string message = Encoding.UTF8.GetString(receiveSegment.Array, receiveSegment.Offset, received.Count);
-                        JObject obj = JObject.Parse(message);
-                        switch(obj["messageType"].Value<string>())
-                        {
-                            case "attributeUpdate":
-                                int universeID = obj["universeID"].Value<int>();
-                                int channel = obj["fixtureChannel"].Value<int>();
-                                string attributeName = obj["attributeName"].Value<string>();
-                                float attributeValue = obj["attributeValue"].Value<float>();
-                                Universe universe = MasterController.Instance.Venue.Universes[universeID];
-                                if (universe != null)
-                                {
-                                    Fixture fixture = universe.Fixtures.SingleOrDefault(x => x.StartChannel == channel);
-                                    if(fixture != null)
+                    WebSocketReceiveResult received = await Socket.ReceiveAsync(receiveSegment, CancellationToken.None);
+                    switch (received.MessageType)
+                    {
+                        case WebSocketMessageType.Text:
+                            string message = Encoding.UTF8.GetString(receiveSegment.Array, receiveSegment.Offset, received.Count);
+                            JObject obj = JObject.Parse(message);
+                            switch (obj["messageType"].Value<string>())
+                            {
+                                case "attributeUpdate":
+                                    int universeID = obj["universeID"].Value<int>();
+                                    int channel = obj["fixtureChannel"].Value<int>();
+                                    string attributeName = obj["attributeName"].Value<string>();
+                                    float attributeValue = obj["attributeValue"].Value<float>();
+                                    Universe universe = MasterController.Instance.Venue.Universes[universeID];
+                                    if (universe != null)
                                     {
-                                        fixture.Settables[attributeName].Value = attributeValue;
+                                        Fixture fixture = universe.Fixtures.SingleOrDefault(x => x.StartChannel == channel);
+                                        if (fixture != null)
+                                        {
+                                            fixture.Settables[attributeName].Value = attributeValue;
+                                        }
                                     }
-                                }
-                                break;
-                        }
-                        break;
-                    case WebSocketMessageType.Close:
-                        foreach (Universe universe in MasterController.Instance.Venue?.Universes.Values)
-                        {
-                            universe.Updated -= Universe_Updated;
-                        }
-                        break;
+                                    break;
+                            }
+                            break;
+                        case WebSocketMessageType.Close:
+                            Close();
+                            break;
+                    }
                 }
+                catch(IOException)
+                {
+                    Close();
+                }
+            }
+        }
+
+        private void Close()
+        {
+            foreach (Universe universe in MasterController.Instance.Venue?.Universes.Values)
+            {
+                universe.Updated -= Universe_Updated;
             }
         }
 
@@ -148,12 +163,21 @@ namespace kadmium_osc_dmx_dotnet_webui.WebSockets
             );
             byte[] sendBuffer = Encoding.UTF8.GetBytes(obj.ToString());
             ArraySegment<byte> sendSegment = new ArraySegment<byte>(sendBuffer);
-            try
+            if (!Sending)
             {
-                await Socket.SendAsync(sendSegment, WebSocketMessageType.Text, true, CancellationToken.None);
+                try
+                {
+                    Sending = true;
+                    await Socket.SendAsync(sendSegment, WebSocketMessageType.Text, true, CancellationToken.None);
+                }
+                catch (Exception)
+                {
+                }
+                finally
+                {
+                    Sending = false;
+                }
             }
-            catch(Exception)
-            { }
         }
 
         static async Task Acceptor(HttpContext hc, Func<Task> n)
