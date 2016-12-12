@@ -60,7 +60,12 @@ namespace kadmium_osc_dmx_dotnet_core.Fixtures
 
             JObject obj = new JObject(
                 new JProperty("channel", StartChannel),
-                new JProperty("type", Definition.Name),
+                new JProperty("type", 
+                    new JObject(
+                        new JProperty("manufacturer", Definition.Manufacturer),
+                        new JProperty("name", Definition.Name)
+                    )
+                ),
                 new JProperty("group", group.Name),
                 new JProperty("options", Options)
             );
@@ -76,8 +81,10 @@ namespace kadmium_osc_dmx_dotnet_core.Fixtures
         public static Fixture Load(JObject obj)
         {
             int startChannel = obj["channel"].Value<int>();
-            string type = obj["type"].Value<string>();
-            Definition definition = Definition.Load(type);
+            JObject type = obj["type"].Value<JObject>();
+            string name = type["name"].Value<string>();
+            string manufacturer = type["manufacturer"].Value<string>();
+            Definition definition = Definition.Load(manufacturer, name);
             string groupName = obj["group"].Value<string>();
             Group group = MasterController.Instance.Groups.ContainsKey(groupName) ? MasterController.Instance.Groups[groupName] : MasterController.Instance.Groups.Values.First();
             JObject options = obj["options"].Value<JObject>();

@@ -112,7 +112,7 @@ namespace kadmium_osc_dmx_dotnet_webui.WebSockets
                         }
                         break;
                     case WebSocketMessageType.Close:
-                        foreach (Universe universe in MasterController.Instance.Venue.Universes.Values)
+                        foreach (Universe universe in MasterController.Instance.Venue?.Universes.Values)
                         {
                             universe.Updated -= Universe_Updated;
                         }

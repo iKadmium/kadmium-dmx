@@ -14,6 +14,7 @@ namespace kadmium_osc_dmx_dotnet_test
             definition.Channels.Add(new DMXChannel(axisName, definition.Channels.Count + 1));
             definition.Axis.Add(new MovementAxis(axisName, min, max));
             definition.Name = "Moving Fixture";
+            definition.Manufacturer = "Generic";
             return definition;
         }
     }

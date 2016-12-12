@@ -11,6 +11,10 @@
 			"description": "The name of the fixture. This should be the same as the filename (without .json)",
 			"type": "string"
 		},
+		"manufacturer": {
+			"description": "The manufacturer of the fixture",
+			"type": "string"
+		},
 		"type": {
 			"description": "The type of light the effect contains",
 			"type": "string",
@@ -117,6 +121,7 @@
 	},
 	"required": [
 		"name",
+		"manufacturer",
 		"type",
 		"channels"
 	],

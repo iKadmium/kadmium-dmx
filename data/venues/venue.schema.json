@@ -15,8 +15,18 @@
 						"type": "number"
 					},
 					"type": {
-						"description": "The model name of the fixture",
-						"type": "string"
+						"description": "The model of the fixture",
+						"type": "object",
+						"properties": {
+							"name": {
+								"type": "string",
+								"description": "The model name of the fixture"
+							},
+							"manufacturer": {
+								"type": "string",
+								"description": "The manufacturer of the fixture"
+							}
+						}
 					},
 					"group": {
 						"description": "The group the fixture is assigned to",

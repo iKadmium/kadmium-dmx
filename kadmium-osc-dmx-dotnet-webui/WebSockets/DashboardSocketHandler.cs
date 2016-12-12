@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Http;
 using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Net.WebSockets;
 using System.Text;
@@ -109,17 +110,29 @@ namespace kadmium_osc_dmx_dotnet_webui.WebSockets
             UpdateAll();
             while (Socket.State == WebSocketState.Open)
             {
-                WebSocketReceiveResult received = await Socket.ReceiveAsync(receiveSegment, CancellationToken.None);
-                switch(received.MessageType)
+                try
                 {
-                    case WebSocketMessageType.Close:
-                        MasterController.Instance.Listener.Status.Updated += ListenerStatusUpdated;
-                        MasterController.Instance.Transmitter.Status.Updated += TransmitterStatusUpdated;
-                        Venue.Status.Updated += Status_Updated;
-                        break;
+                    WebSocketReceiveResult received = await Socket.ReceiveAsync(receiveSegment, CancellationToken.None);
+                    switch (received.MessageType)
+                    {
+                        case WebSocketMessageType.Close:
+                            Close();
+                            break;
+                    }
+                }
+                catch(IOException)
+                {
+                    Close();
                 }
                 
             }
+        }
+
+        private void Close()
+        {
+            MasterController.Instance.Listener.Status.Updated += ListenerStatusUpdated;
+            MasterController.Instance.Transmitter.Status.Updated += TransmitterStatusUpdated;
+            Venue.Status.Updated += Status_Updated;
         }
         
         static async Task Acceptor(HttpContext hc, Func<Task> n)

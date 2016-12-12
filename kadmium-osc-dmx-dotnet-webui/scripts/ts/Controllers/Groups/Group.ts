@@ -1,4 +1,4 @@
-﻿import {CollectionItemViewModel, NamedViewModel} from "../CollectionItem";
+﻿import { CollectionItemViewModel } from "../CollectionItem";
 import * as ko from "knockout";
 
 export interface GroupData
@@ -6,11 +6,16 @@ export interface GroupData
     name: string;
 }
 
-export class GroupViewModel extends CollectionItemViewModel<GroupData> implements NamedViewModel
+export class GroupViewModel extends CollectionItemViewModel<GroupData, string>
 {
+    name: KnockoutObservable<string>;
+
     constructor(name: string)
     {
-        super(name, "Groups");
+        let nameObservable = ko.observable<string>(name);
+        let nameComputed = ko.computed<string>(() => nameObservable());
+        super(nameComputed, nameComputed, "Groups");
+        this.name = nameObservable;
     }
 
     load(data: GroupData): void

@@ -1,4 +1,5 @@
 {
+  "$schema": "./venue.schema.json",
   "name": "The Woolly Mammoth",
   "universes": [
     {
@@ -12,7 +13,10 @@
             "axisRestrictions": [],
             "maxBrightness": 1
           },
-          "type": "AVE Par64B"
+          "type": {
+            "name": "Par64B",
+            "manufacturer": "AVE"
+          }
         },
         {
           "channel": 41,
@@ -22,7 +26,10 @@
             "axisRestrictions": [],
             "maxBrightness": 1
           },
-          "type": "AVE Par64B"
+          "type": {
+            "name": "Par64B",
+            "manufacturer": "AVE"
+          }
         },
         {
           "channel": 48,
@@ -32,7 +39,10 @@
             "axisRestrictions": [],
             "maxBrightness": 1
           },
-          "type": "AVE Par64B"
+          "type": {
+            "name": "Par64B",
+            "manufacturer": "AVE"
+          }
         },
         {
           "channel": 67,
@@ -42,7 +52,10 @@
             "axisRestrictions": [],
             "maxBrightness": 1
           },
-          "type": "AVE Par64B"
+          "type": {
+            "name": "Par64B",
+            "manufacturer": "AVE"
+          }
         },
         {
           "channel": 74,
@@ -52,7 +65,10 @@
             "axisRestrictions": [],
             "maxBrightness": 1
           },
-          "type": "AVE Par64B"
+          "type": {
+            "name": "Par64B",
+            "manufacturer": "AVE"
+          }
         },
         {
           "channel": 101,
@@ -73,7 +89,10 @@
             ],
             "maxBrightness": 1
           },
-          "type": "iSolution iMove 250S"
+          "type": {
+            "name": "iMove 250s",
+            "manufacturer": "iSolution"
+          }
         },
         {
           "channel": 117,
@@ -83,7 +102,10 @@
             "axisRestrictions": [],
             "maxBrightness": 1
           },
-          "type": "iSolution iMove 250S"
+          "type": {
+            "name": "iMove 250s",
+            "manufacturer": "iSolution"
+          }
         },
         {
           "channel": 133,
@@ -93,7 +115,10 @@
             "axisRestrictions": [],
             "maxBrightness": 1
           },
-          "type": "iSolution iMove 250S"
+          "type": {
+            "name": "iMove 250s",
+            "manufacturer": "iSolution"
+          }
         },
         {
           "channel": 149,
@@ -103,7 +128,10 @@
             "axisRestrictions": [],
             "maxBrightness": 1
           },
-          "type": "iSolution iMove 250S"
+          "type": {
+            "name": "iMove 250s",
+            "manufacturer": "iSolution"
+          }
         },
         {
           "channel": 165,
@@ -113,7 +141,10 @@
             "axisRestrictions": [],
             "maxBrightness": 1
           },
-          "type": "iSolution iMove 250S"
+          "type": {
+            "name": "iMove 250s",
+            "manufacturer": "iSolution"
+          }
         }
       ],
       "universeID": 1

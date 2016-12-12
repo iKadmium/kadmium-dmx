@@ -5,76 +5,78 @@ import { AsyncJSON } from "./AsyncJSON";
 
 import * as ko from "knockout";
 
-export interface NamedViewModel
+export abstract class CollectionItemViewModel<ViewModelDataType, ViewModelKey>
 {
-    originalName: KnockoutObservable<string>;
-}
-
-export abstract class CollectionItemViewModel<ViewModelDataType> implements NamedViewModel
-{
-    originalName: KnockoutObservable<string>;
-    name: KnockoutObservable<string>;
+    originalKey: ViewModelKey;
+    key: KnockoutComputed<ViewModelKey>;
     controllerName: string;
     isBusy: KnockoutObservable<boolean>;
     statusText: KnockoutObservable<string>;
+    displayName: KnockoutComputed<string>;
 
-    constructor(name: string, controllerName: string)
+    constructor(key: KnockoutComputed<ViewModelKey>, displayName: KnockoutComputed<string>, controllerName: string)
     {
-        this.originalName = ko.observable<string>(name);
+        this.originalKey = key();
         this.controllerName = controllerName;
         this.isBusy = ko.observable<boolean>();
         this.statusText = ko.observable<string>();
-        this.name = ko.validatedObservable<string>(name).extend({
+        this.key = key;
+        this.displayName = displayName;
+        /*this.key = ko.validatedObservable<ViewModelKey>(name).extend({
             required: true,
             uniqueName: this
-        });
+        });*/
+    }
+
+    getLoadURL(): string
+    {
+        return MVC.getActionURL(this.controllerName, "Load", String(this.originalKey));
+    }
+
+    getSaveURL(): string
+    {
+        return MVC.getActionURL(this.controllerName, "Save", String(this.originalKey));
+    }
+
+    getDeleteURL(): string
+    {
+        return MVC.getActionURL(this.controllerName, "Delete", String(this.originalKey));
     }
 
     async openEditor(): Promise<void>
     {
         ($("#modal-edit") as any).modal("toggle");
-        let getURL = MVC.getActionURL(this.controllerName, "Load", this.originalName());
-        let that = this;
-        let itemData = await AsyncJSON.loadAsync<ViewModelDataType>(getURL);
+        let itemData = await AsyncJSON.loadAsync<ViewModelDataType>(this.getLoadURL());
         this.load(itemData);
     }
 
-    onSave(): void
-    {
-        let newName = this.name();
-        $("#modal-cancel").prop("disabled", false);
-        $("#modal-cancel").text("Close");
-        this.originalName(newName);
-        StatusTrackerViewModel.addStatusAlert("Success", "Successfully saved " + this.originalName());
-        ($("#modal-edit") as any).modal("toggle");
-    }
-
-    onSaveError(xhr: JQueryXHR, textStatus: string, errorThrown: string)
-    {
-        let errorText = (errorThrown != "") ? errorThrown : "Unknown Error";
-        $("#modal-error-text").text(errorText);
-        $("#modal-error").show();
-        $("#modal-submit").text("Retry");
-        $("#modal-cancel").prop("disabled", false);
-        this.isBusy(false);
-    }
-
-    save(): void
+    async save(): Promise<void>
     {
         $("#modal-error").hide();
 
         $("#modal-cancel").prop("disabled", true);
         this.statusText("Saving");
 
-        let url = MVC.getActionURL(this.controllerName, "Save", this.originalName());
+        let url = this.getSaveURL();
         this.isBusy(true);
-        jQuery.ajax({
-            type: "POST",
-            url: url,
-            data: { jsonString: JSON.stringify(this.serialize()) },
-            success: $.proxy(this.onSave, this),
-            error: $.proxy(this.onSaveError, this)
-        });
+        try
+        {
+            await AsyncJSON.saveAsync<ViewModelDataType>(this.getSaveURL(), this.serialize());
+            let newName = this.key();
+            $("#modal-cancel").prop("disabled", false);
+            $("#modal-cancel").text("Close");
+            this.originalKey = newName;
+            StatusTrackerViewModel.addStatusAlert("Success", "Successfully saved " + this.displayName());
+            ($("#modal-edit") as any).modal("toggle");
+        }
+        catch (err)
+        {
+            $("#modal-error-text").text(err);
+            $("#modal-error").show();
+            $("#modal-submit").text("Retry");
+            $("#modal-cancel").prop("disabled", false);
+            this.isBusy(false);
+        }
     }
 
     abstract serialize(): ViewModelDataType;

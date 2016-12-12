@@ -28,7 +28,7 @@
     <modal-header>Editing group order</modal-header>
     <modal-body>
         <ul class="list-group" data-bind="sortable: {foreach: items}">
-            <li class="list-group-item" data-bind="text: name"></li>
+            <li class="list-group-item" data-bind="text: displayName"></li>
         </ul>
     </modal-body>
     <modal-footer><button class="btn btn-success" data-bind="click: reorderSave">OK</button> </modal-footer>

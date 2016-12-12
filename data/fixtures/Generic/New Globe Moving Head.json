@@ -1,5 +1,7 @@
 {
+  "$schema": "../fixture.schema.json",
   "name": "New Globe Moving Head",
+  "manufacturer": "Generic",
   "type": "LED",
   "channels": [
     {

@@ -1,51 +1,44 @@
-﻿{
-  "$schema": "fixture.schema.json",
-  "name": "FadeCandy (program mode)",
+{
+  "$schema": "../fixture.schema.json",
+  "name": "New Globe PAR",
+  "manufacturer": "Generic",
   "type": "LED",
   "channels": [
     {
-      "name": "Red",
+      "name": "Master",
       "dmx": 1,
       "min": 0,
       "max": 255
     },
     {
-      "name": "Green",
+      "name": "Red",
       "dmx": 2,
       "min": 0,
       "max": 255
     },
     {
-      "name": "Blue",
+      "name": "Green",
       "dmx": 3,
       "min": 0,
       "max": 255
     },
     {
-      "name": "Strobe",
+      "name": "Blue",
       "dmx": 4,
       "min": 0,
       "max": 255
     },
     {
-      "name": "Apeshit",
+      "name": "ColorWheel",
       "dmx": 5,
       "min": 0,
       "max": 255
     },
     {
-      "name": "Chase",
+      "name": "Strobe",
       "dmx": 6,
       "min": 0,
       "max": 255
-    },
-    {
-      "name": "Program",
-      "dmx": 7,
-      "min": 0,
-      "max": 255
     }
-  ],
-  "movements": []
-
+  ]
 }

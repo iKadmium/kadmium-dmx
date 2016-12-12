@@ -63,7 +63,7 @@ class SettingsViewModel
 
         this.load = ko.command(async () =>
         {
-            let url = MVC.getActionURL("Settings", "Load", null);
+            let url = MVC.getActionURL("Settings", "Load");
             let data = await AsyncJSON.loadAsync<SettingsData>(url);
             this.webPort(data.webPort);
             this.oscPort(data.oscPort);
@@ -76,7 +76,7 @@ class SettingsViewModel
 
         this.save = ko.command(() =>
         {
-            let url = MVC.getActionURL("Settings", "Save", null);
+            let url = MVC.getActionURL("Settings", "Save");
             return $.ajax({
                 url: url,
                 type: "POST",

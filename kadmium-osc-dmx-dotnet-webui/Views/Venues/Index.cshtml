@@ -6,6 +6,25 @@
     ViewData["Title"] = "Venues"; 
 }
 
+<binding-context >
+    <modal-window id="modal-fixture-select">
+        <modal-header>Select fixture model</modal-header>
+        <modal-body>
+            <div class="form-horizontal">
+                <div class="form-group">
+                    <label class="control-label col-sm-3">Manufacturer</label>
+                    <select class="form-control" data-bind="value: selectedManufacturer, options: manufacturers, optionsText: 'name'"></select>
+                </div>
+                <div class="form-group">
+                    <label class="control-label col-sm-3">Model</label>
+                    <select class="form-control" data-bind="value: selectedModel, options: selectedManufacturer().models"></select>
+                </div>
+            </div>
+        </modal-body>
+        <modal-footer><button class="btn btn-success" data-bind="click: selectModel">OK</button></modal-footer>
+    </modal-window>
+</binding-context>
+
 <binding-context data-bind="with: selectedItem()">
     <modal-window large="true" id="modal-edit" >
         <modal-header>
@@ -50,12 +69,10 @@
                 <input-collection name="fixtures">
                     <input-collection-body>
                         <input-collection-item label="Model">
-                            <select class="form-control" data-bind="value: type">
-                                @foreach (string name in FileAccess.GetFixtureNames())
-                                {
-                                    <option>@name</option>
-                                }
-                            </select>
+                            <a data-bind="click: $parent.editType.bind($parent), with: type" href="#">
+                                <span data-bind="text: manufacturer"></span>
+                                <span data-bind="text: model"></span>
+                            </a>
                         </input-collection-item>
                         <input-collection-item label="Channel"><input type="number" class="form-control" data-bind="value: channel" min="1" max="512"></input-collection-item>
                         <input-collection-item label="Group">

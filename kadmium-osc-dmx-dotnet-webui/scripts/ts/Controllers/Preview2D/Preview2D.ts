@@ -41,7 +41,7 @@ class Preview2DViewModel
 
         this.load = ko.command(async () =>
         {
-            let url = MVC.getActionURL("Preview", "Fixtures", null);
+            let url = MVC.getActionURL("Preview", "Fixtures");
             let previewData = await AsyncJSON.loadAsync<PreviewData>(url);
             for (let groupData of previewData.groups)
             {

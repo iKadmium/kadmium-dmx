@@ -1,15 +1,15 @@
-﻿import {GroupData, GroupViewModel} from "./Group";
-import {StatusViewModel, StatusTrackerViewModel} from "../Status";
-import {CollectionViewModel} from "../Collection";
-import {MVC} from "../MVC";
+﻿import { GroupData, GroupViewModel } from "./Group";
+import { StatusViewModel, StatusTrackerViewModel } from "../Status";
+import { CollectionViewModel } from "../Collection";
+import { MVC } from "../MVC";
 
 import * as ko from "knockout";
 
-class GroupsViewModel extends CollectionViewModel<GroupData, GroupViewModel>
+class GroupsViewModel extends CollectionViewModel<GroupData, string, GroupViewModel>
 {
     constructor()
     {
-        super("Groups", (name) => new GroupViewModel(name));
+        super("Groups", "New Group", (name) => new GroupViewModel(name));
     }
 
     reorder(): void
@@ -20,11 +20,11 @@ class GroupsViewModel extends CollectionViewModel<GroupData, GroupViewModel>
     reorderSave(): void
     {
         ($("#modal-reorder") as any).modal("hide");
-        let url = MVC.getActionURL("Groups", "SaveOrder", null);
+        let url = MVC.getActionURL("Groups", "SaveOrder");
         let data = {
-            names: this.items().map((value: GroupViewModel) => value.name())
+            names: this.items().map((value: GroupViewModel) => value.key())
         };
-        
+
         jQuery.ajax({
             type: "POST",
             url: url,
@@ -45,6 +45,7 @@ let viewModel: GroupsViewModel;
 
 window.addEventListener("load", (ev: Event) =>
 {
+    (window as any)["ko"] = ko;
     viewModel = new GroupsViewModel();
     ko.applyBindings(viewModel);
 });

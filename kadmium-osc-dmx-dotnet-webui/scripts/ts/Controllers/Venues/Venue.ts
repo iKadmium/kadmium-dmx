@@ -1,5 +1,5 @@
 ﻿import { UniverseData, UniverseViewModel } from "./Universe";
-import { CollectionItemViewModel, NamedViewModel } from "../CollectionItem";
+import { CollectionItemViewModel } from "../CollectionItem";
 import * as ko from "knockout";
 
 export interface VenueData
@@ -8,13 +8,18 @@ export interface VenueData
     universes: UniverseData[];
 }
 
-export class VenueViewModel extends CollectionItemViewModel<VenueData> implements NamedViewModel
+export class VenueViewModel extends CollectionItemViewModel<VenueData, string>
 {
     universes: KnockoutObservableArray<UniverseViewModel>;
     selectedUniverse: KnockoutObservable<UniverseViewModel>;
+    name: KnockoutObservable<string>;
+
     constructor(name: string)
     {
-        super(name, "Venues");
+        let nameObservable = ko.observable<string>(name);
+        let nameComputed = ko.computed<string>(() => nameObservable());
+        super(nameComputed, nameComputed, "Venues");
+        this.name = nameObservable;
         this.universes = ko.observableArray<UniverseViewModel>();
         this.selectedUniverse = ko.validatedObservable<UniverseViewModel>(new UniverseViewModel());
     }
@@ -48,7 +53,7 @@ export class VenueViewModel extends CollectionItemViewModel<VenueData> implement
     serialize(): VenueData
     {
         let item: VenueData = {
-            name: this.name(),
+            name: this.key(),
             universes: this.universes().map((value: UniverseViewModel, index: number, array: UniverseViewModel[]) => value.serialize())
         };
         return item;

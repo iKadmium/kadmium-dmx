@@ -89,14 +89,40 @@
         </modal-footer>
     </modal-window>
 </binding-context>
-@Html.Partial("ItemList")
 
-@section scripts
+@Html.Partial("LoadingPanel")
+@Html.Partial("StatusAlerts")
+
+<binding-context data-bind="visible: load.done" style="display: none">
+    <div class="form-group form-inline">
+        <div class="checkbox">
+            <label><input type="checkbox" data-bind="checked: manufacturerFilterEnabled">Filter by manufacturer</label>
+        </div>
+        
+        <select id="manufacturer-filter" class="form-control" data-bind="value: manufacturerFilter, options: manufacturers, enable: manufacturerFilterEnabled "></select>
+    </div>
+</binding-context>
+
+    <ul class="list-group" id="item-list" data-bind="foreach: filteredItems, visible: load.done" style="display:none">
+        <li class="list-group-item clearfix">
+            <span data-bind="text: displayName"></span>
+            <div class="pull-right btn-group">
+                <button class="btn btn-default" title="Edit" data-bind="click: $parent.edit.bind($parent)"><span class="glyphicon glyphicon-edit"></span></button>
+                <button class="btn btn-danger" title="Delete" data-bind="click: $parent.delete.bind($parent)"><span class="glyphicon glyphicon-remove"></span></button>
+            </div>
+        </li>
+    </ul>
+
+    <button class="btn btn-success" style="display:none" data-bind="click: addItem, visible: load.done"><span class="glyphicon glyphicon-plus"></span></button>
+
+    @Html.Partial("ModalDelete", ViewContext.RouteData.Values["controller"].ToString())
+
+    @section scripts
 {
-    <environment names="Development">
-        <script src="http://localhost:8080/fixtureDefinitions.bundle.js"></script>
-    </environment>
-    <environment names="Staging,Production">
-        <script src="~/js/fixtureDefinitions.bundle.js"></script>
-    </environment>
-}
+        <environment names="Development">
+            <script src="http://localhost:8080/fixtureDefinitions.bundle.js"></script>
+        </environment>
+        <environment names="Staging,Production">
+            <script src="~/js/fixtureDefinitions.bundle.js"></script>
+        </environment>
+    }

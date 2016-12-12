@@ -1,5 +1,7 @@
 {
-  "name": "New Globe PAR",
+  "$schema": "../fixture.schema.json",
+  "name": "Par64B",
+  "manufacturer": "AVE",
   "type": "LED",
   "channels": [
     {
@@ -27,14 +29,20 @@
       "max": 255
     },
     {
-      "name": "ColorWheel",
+      "name": "Strobe",
       "dmx": 5,
       "min": 0,
       "max": 255
     },
     {
-      "name": "Strobe",
+      "name": "Macros",
       "dmx": 6,
+      "min": 0,
+      "max": 255
+    },
+    {
+      "name": "Macro Speed",
+      "dmx": 7,
       "min": 0,
       "max": 255
     }

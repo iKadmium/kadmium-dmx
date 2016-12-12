@@ -172,29 +172,30 @@ namespace kadmium_osc_dmx_dotnet_core
             return schema;
         }
 
-        public static bool HasFixtureDefinition(string model)
+        public static bool HasFixtureDefinition(string manufacturer, string model)
         {
-            string path = Path.Combine(FixturesLocation, model + ".json");
+            string path = Path.Combine(FixturesLocation, manufacturer, model + ".json");
             return File.Exists(path);
         }
 
-        public static JObject LoadFixtureDefinition(string model)
+        public static JObject LoadFixtureDefinition(string manufacturer, string model)
         {
-            string path = Path.Combine(FixturesLocation, model + ".json");
+            string path = Path.Combine(FixturesLocation, manufacturer, model + ".json");
             JObject definitionRoot = ValidatedLoad(path, FixturesSchema).Value<JObject>();
             return definitionRoot;
         }
 
-        public static void DeleteFixtureDefinition(string model)
+        public static void DeleteFixtureDefinition(string manufacturer, string model)
         {
-            string path = Path.Combine(FixturesLocation, model + ".json");
+            string path = Path.Combine(FixturesLocation, manufacturer, model + ".json");
             File.Delete(path);
         }
 
         public static void SaveFixtureDefinition(JObject definition)
         {
             string model = definition["name"].Value<string>();
-            string path = Path.Combine(FixturesLocation, model + ".json");
+            string manufacturer = definition["manufacturer"].Value<string>();
+            string path = Path.Combine(FixturesLocation, manufacturer, model + ".json");
             ValidatedSave(definition, path, FixturesSchema);
         }
 
@@ -204,12 +205,34 @@ namespace kadmium_osc_dmx_dotnet_core
             return schema;
         }
 
-        public static IEnumerable<string> GetFixtureNames()
+        public static IEnumerable<string> GetFixtureManufacturers()
         {
-            var files = from filename in Directory.EnumerateFiles(FixturesLocation)
+            var directories = from directory in Directory.EnumerateDirectories(FixturesLocation)
+                        select Path.GetFileNameWithoutExtension(directory);
+            return directories;
+        }
+
+        public static IEnumerable<string> GetFixtureNames(string manufacturer)
+        {
+            var manufacturerDirectory = Path.Combine(FixturesLocation, manufacturer);
+            var files = from filename in Directory.EnumerateFiles(manufacturerDirectory)
                         where !filename.Contains(".schema")
                         select Path.GetFileNameWithoutExtension(filename);
             return files;
+        }
+
+        public static IEnumerable<Tuple<string, string>> GetAllFixtures()
+        {
+            List<Tuple<string, string>> returnVal = new List<Tuple<string, string>>();
+            foreach(string manufacturer in GetFixtureManufacturers())
+            {
+                foreach (string fixtureName in GetFixtureNames(manufacturer))
+                {
+                    returnVal.Add(Tuple.Create(manufacturer, fixtureName));
+                }
+            }
+
+            return returnVal;
         }
 
         public static IEnumerable<string> GetFixtureCollectionNames()

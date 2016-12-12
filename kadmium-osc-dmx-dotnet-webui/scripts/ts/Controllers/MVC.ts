@@ -2,27 +2,22 @@
 {
     static getSocketURL(controller: string): string
     {
-        let actionURL = MVC.getActionURL(controller, "Socket", null);
+        let actionURL = MVC.getActionURL(controller, "Socket");
         let socketURL = actionURL.replace("http", "ws");
         return socketURL;
     }
 
-    static getActionURL(controller: string, action: string, id: string): string
+    static getActionURL(...parts: string[]): string
     {
         let originalURL: string = document.URL;
         let urlParts: string[] = document.URL.split("/");
         let protocol: string = urlParts[0];
         let host: string = urlParts[2];
 
-        let root:string = protocol + "//" + host;
-        
-        if (id == null)
-        {
-            return root + "/" + controller + "/" + action;
-        }
-        else
-        {
-            return root + "/" + controller + "/" + action + "/" + id;
-        }
+        let root: string = protocol + "//" + host;
+
+        let partsJoined = parts.join("/");
+
+        return root + "/" + partsJoined;
     }
 }

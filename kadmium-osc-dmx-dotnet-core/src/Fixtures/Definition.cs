@@ -12,6 +12,7 @@ namespace kadmium_osc_dmx_dotnet_core.Fixtures
         public List<MovementAxis> Axis { get; }
         public List<ColorWheelEntry> ColorWheel { get; }
         public FixtureType Type { get; set; }
+        public string Manufacturer { get; set; }
 
         public Definition()
         {
@@ -19,6 +20,7 @@ namespace kadmium_osc_dmx_dotnet_core.Fixtures
             Axis = new List<MovementAxis>();
             ColorWheel = new List<ColorWheelEntry>();
             Name = "";
+            Manufacturer = "";
         }
 
         public static Definition Load(JObject modelElement)
@@ -31,6 +33,7 @@ namespace kadmium_osc_dmx_dotnet_core.Fixtures
             }
             definition.Type = (FixtureType)Enum.Parse(typeof(FixtureType), modelElement["type"].Value<string>());
             definition.Name = modelElement["name"].Value<string>();
+            definition.Manufacturer = modelElement["manufacturer"].Value<string>();
             if (modelElement["movements"] != null)
             {
                 foreach (JObject movementAxis in modelElement["movements"])
@@ -54,6 +57,7 @@ namespace kadmium_osc_dmx_dotnet_core.Fixtures
         {
             JObject obj = new JObject(
                 new JProperty("name", Name),
+                new JProperty("manufacturer", Manufacturer),
                 new JProperty("type", Type.ToString()),
                 new JProperty("channels",
                     new JArray(
@@ -103,9 +107,9 @@ namespace kadmium_osc_dmx_dotnet_core.Fixtures
             return obj;
         }
 
-        public static Definition Load(string name)
+        public static Definition Load(string manufacturer, string name)
         {
-            return Load(FileAccess.LoadFixtureDefinition(name));
+            return Load(FileAccess.LoadFixtureDefinition(manufacturer, name));
         }
     }
 }

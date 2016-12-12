@@ -31,11 +31,14 @@ namespace kadmium_osc_dmx_dotnet_test
         public void TestAllIncludedFixtures()
         {
             MasterController.Initialise();
-            foreach(string fixtureName in FileAccess.GetFixtureNames())
+            foreach (string manufacturer in FileAccess.GetFixtureManufacturers())
             {
-                JObject definitionJSON = FileAccess.LoadFixtureDefinition(fixtureName);
-                Definition definition = Definition.Load(definitionJSON);
-                Fixture fixture = new Fixture(definition, 1, new Group(), new JObject());
+                foreach (string fixtureName in FileAccess.GetFixtureNames(manufacturer))
+                {
+                    JObject definitionJSON = FileAccess.LoadFixtureDefinition(manufacturer, fixtureName);
+                    Definition definition = Definition.Load(definitionJSON);
+                    Fixture fixture = new Fixture(definition, 1, new Group(), new JObject());
+                }
             }
         }
 

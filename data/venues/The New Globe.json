@@ -12,7 +12,10 @@
             "axisRestrictions": [],
             "maxBrightness": 1
           },
-          "type": "AVE Par64B"
+          "type": {
+            "name": "Par64B",
+            "manufacturer": "AVE"
+          }
         },
         {
           "channel": 46,
@@ -22,7 +25,10 @@
             "axisRestrictions": [],
             "maxBrightness": 1
           },
-          "type": "AVE Par64B"
+          "type": {
+            "name": "Par64B",
+            "manufacturer": "AVE"
+          }
         },
         {
           "channel": 55,
@@ -43,7 +49,10 @@
             ],
             "maxBrightness": 1
           },
-          "type": "New Globe Moving Head"
+          "type": {
+            "manufacturer": "Generic",
+            "name": "New Globe Moving Head"
+          }
         },
         {
           "channel": 67,
@@ -53,7 +62,10 @@
             "axisRestrictions": [],
             "maxBrightness": 1
           },
-          "type": "New Globe Moving Head"
+          "type": {
+            "manufacturer": "Generic",
+            "name": "New Globe Moving Head"
+          }
         },
         {
           "channel": 79,
@@ -63,7 +75,10 @@
             "axisRestrictions": [],
             "maxBrightness": 1
           },
-          "type": "New Globe Moving Head"
+          "type": {
+            "manufacturer": "Generic",
+            "name": "New Globe Moving Head"
+          }
         }
       ],
       "universeID": 1

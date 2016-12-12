@@ -18,7 +18,7 @@ namespace kadmium_osc_dmx_dotnet_webui.Controllers
         // GET: /<controller>/
         public IActionResult Index()
         {
-            return View(new ListData("group", MasterController.Instance.Groups.Keys));
+            return View();
         }
 
         public IActionResult Schema()

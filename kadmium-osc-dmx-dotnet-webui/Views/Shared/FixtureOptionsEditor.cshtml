@@ -1,7 +1,8 @@
 ﻿<modal-window large="true" id="options-edit">
     <modal-header>
         Editing <strong>Options</strong>
-        for <span class="item-name" data-bind="text: fixture().type"></span>
+        for <span class="item-name" data-bind="text: fixture().type().manufacturer"></span>
+        <span class="item-name" data-bind="text: fixture().type().model"></span>
         on channel <span class="item-name" data-bind="text: fixture().channel"></span>
     </modal-header>
     <modal-body>

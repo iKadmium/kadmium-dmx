@@ -48,6 +48,12 @@ export class UniverseViewModel
         this.fixtures.remove(item);
     }
 
+    editType(item: FixtureViewModel): void
+    {
+        this.selectedFixture(item);
+        ($("#modal-fixture-select") as any).modal("toggle");
+    }
+
     editOptions(item: FixtureViewModel): void
     {
         this.selectedFixture(item);

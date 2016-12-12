@@ -2,11 +2,11 @@
 import {CollectionViewModel} from "../Collection";
 import * as ko from "knockout";
 
-class FixtureCollectionsViewModel extends CollectionViewModel<FixtureCollectionData, FixtureCollectionViewModel>
+class FixtureCollectionsViewModel extends CollectionViewModel<FixtureCollectionData, string, FixtureCollectionViewModel>
 {
     constructor()
     {
-        super("FixtureCollections", (name) => new FixtureCollectionViewModel(name));
+        super("FixtureCollections", "New Fixture Collection", (name) => new FixtureCollectionViewModel(name));
     }
 }
 

@@ -18,7 +18,7 @@ namespace kadmium_osc_dmx_dotnet_webui.Controllers
         // GET: /<controller>/
         public IActionResult Index()
         {
-            return View(new ListData("fixture", FileAccess.GetFixtureNames()));
+            return View();
         }
         
         public IActionResult Schema()
@@ -28,15 +28,15 @@ namespace kadmium_osc_dmx_dotnet_webui.Controllers
             return Content(obj.ToString());
         }
     
-        public IActionResult Load(string id)
+        public IActionResult Load(string manufacturer, string model)
         {
-            if(id == null)
+            if(model == null)
             {
                 return Content(new Definition().Serialize().ToString());
             }
-            else if (FileAccess.HasFixtureDefinition(id))
+            else if (FileAccess.HasFixtureDefinition(manufacturer, model))
             {
-                return Content(FileAccess.LoadFixtureDefinition(id).ToString());
+                return Content(FileAccess.LoadFixtureDefinition(manufacturer, model).ToString());
             }
             else
             {
@@ -48,30 +48,33 @@ namespace kadmium_osc_dmx_dotnet_webui.Controllers
         public IActionResult List()
         {
             JArray arr = new JArray(
-                from name in FileAccess.GetFixtureNames()
-                select new JValue(name)
+                from fixture in FileAccess.GetAllFixtures()
+                select new JObject(
+                    new JProperty("manufacturer", fixture.Item1),
+                    new JProperty("name", fixture.Item2)
+                )
             );
             return Content(arr.ToString());
         }
 
-        public IActionResult Save(string id, string jsonString)
+        public IActionResult Save(string manufacturer, string model, string jsonString)
         {
             JObject fixtureObj = JObject.Parse(jsonString);
             Definition definition = Definition.Load(fixtureObj);
-            if(FileAccess.HasFixtureDefinition(id))
+            if(FileAccess.HasFixtureDefinition(manufacturer, model))
             {
-                FileAccess.DeleteFixtureDefinition(id);
+                FileAccess.DeleteFixtureDefinition(manufacturer, model);
             }
             FileAccess.SaveFixtureDefinition(definition.Serialize());
             Response.StatusCode = 200;
             return new EmptyResult();
         }
 
-        public IActionResult Delete(string id)
+        public IActionResult Delete(string manufacturer, string model)
         {
-            if(FileAccess.HasFixtureDefinition(id))
+            if(FileAccess.HasFixtureDefinition(manufacturer, model))
             {
-                FileAccess.DeleteFixtureDefinition(id);
+                FileAccess.DeleteFixtureDefinition(manufacturer, model);
                 Response.StatusCode = 200;
                 return new EmptyResult();
             }

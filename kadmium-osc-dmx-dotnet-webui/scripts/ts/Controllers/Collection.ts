@@ -1,4 +1,4 @@
-﻿import { CollectionItemViewModel, NamedViewModel } from "./CollectionItem";
+﻿import { CollectionItemViewModel } from "./CollectionItem";
 import { StatusViewModel, StatusTrackerViewModel } from "./Status";
 import { MVC } from "./MVC";
 import { AsyncJSON } from "./AsyncJSON";
@@ -7,59 +7,111 @@ import * as ko from "knockout";
 import "ko.plus";
 import "knockout.validation";
 
-export class CollectionViewModel<ViewModelDataType, ViewModelType extends CollectionItemViewModel<ViewModelDataType>>
+export class CollectionViewModel<ViewModelDataType, ViewModelKeyType, ViewModelType extends CollectionItemViewModel<ViewModelDataType, ViewModelKeyType>>
 {
     items: KnockoutObservableArray<ViewModelType>;
-    itemConstructor: (name: string) => ViewModelType;
+    itemConstructor: (key: ViewModelKeyType) => ViewModelType;
     controllerName: string;
     selectedItem: KnockoutObservable<ViewModelType>;
     statusTracker: KnockoutObservable<StatusTrackerViewModel>;
+    defaultKey: ViewModelKeyType;
 
     load: KoPlus.Command;
 
     private static instance: any;
 
-    constructor(controllerName: string, itemConstructor: (name: string) => ViewModelType)
-    {
+    constructor(controllerName: string, defaultKey: ViewModelKeyType, itemConstructor: (key: ViewModelKeyType) => ViewModelType) {
         this.itemConstructor = itemConstructor;
         this.controllerName = controllerName;
         this.items = ko.observableArray<ViewModelType>();
-        this.selectedItem = ko.validatedObservable<ViewModelType>(itemConstructor("new item"));
-        let getURL = MVC.getActionURL(this.controllerName, "List", null);
+        this.selectedItem = ko.validatedObservable<ViewModelType>(itemConstructor(defaultKey));
+        this.defaultKey = defaultKey;
         this.statusTracker = ko.observable<StatusTrackerViewModel>(new StatusTrackerViewModel());
 
-        CollectionViewModel.instance = this;
+        ko.validation.rules["uniqueName"] = {
+            validator: (value: ViewModelKeyType, item: ViewModelType) => {
+                let matchingNames = this.items()
+                    .filter((filterItem: ViewModelType) => filterItem != item && filterItem.originalKey == value);
+                return matchingNames.length == 0;
+            },
+            message: "Names must be unique"
+        };
 
-        $(document).on('show.bs.modal', '.modal', (eventObject: JQueryEventObject, ...args: any[]) =>
-        {
+        CollectionViewModel.instance = this;
+        CollectionViewModel.initialise();
+
+        let getURL = MVC.getActionURL(this.controllerName, "List");
+        AsyncJSON.loadAsync<ViewModelKeyType[]>(getURL).then((itemKeys: ViewModelKeyType[]) => {
+            for (let itemKey of itemKeys) {
+                let item = itemConstructor(itemKey);
+                this.items.push(item);
+            }
+            this.load();
+        });
+
+        this.load = ko.command(() => true);
+
+
+    }
+
+    delete(item: ViewModelType): void {
+        this.selectedItem(item);
+        ($("#confirm-delete") as any).modal("toggle");
+    }
+
+    async deleteConfirm(): Promise<void> {
+        let url = this.selectedItem().getDeleteURL();
+        $("#modal-delete").prop("disabled", true);
+        try {
+            await AsyncJSON.saveAsync(url, {});
+            this.items.remove(this.selectedItem());
+            ($('#confirm-delete') as any).modal("hide");
+            StatusTrackerViewModel.addStatusAlert("Success", "Successfully deleted " + this.selectedItem().displayName());
+        }
+        catch (err) {
+            StatusTrackerViewModel.addStatusAlert("Error", err);
+        }
+
+    }
+
+    edit(item: ViewModelType): void {
+        this.selectedItem(item);
+        $("#modal-error").hide();
+        item.statusText("Loading");
+        item.openEditor();
+    }
+
+    cancel(item: ViewModelType): void {
+        if (item.originalKey == null) {
+            this.items.remove(item);
+        }
+    }
+
+    addItem(): void {
+        let item = this.itemConstructor(this.defaultKey);
+        this.items.push(item);
+        this.edit(item);
+        $("#modal-edit").on("hide.bs.modal", (eventObject: JQueryEventObject, ...args: any[]) => {
+            this.cancel(item);
+        });
+    }
+
+    static initialise(): void {
+        $(document).on('show.bs.modal', '.modal', (eventObject: JQueryEventObject, ...args: any[]) => {
             let zIndex = 1040 + (10 * $('.modal:visible').length);
             $(eventObject.currentTarget).css('z-index', zIndex);
-            setTimeout(function ()
-            {
+            setTimeout(function() {
                 $('.modal-backdrop').not('.modal-stack').css('z-index', zIndex - 1).addClass('modal-stack');
             }, 0);
         });
 
-        $(document).on('hidden.bs.modal', '.modal', function ()
-        {
+        $(document).on('hidden.bs.modal', '.modal', function() {
             $('.modal:visible').length && $(document.body).addClass('modal-open');
         });
 
-        $("#confirm-delete").on("hide.bs.modal", (eventObject: JQueryEventObject, ...args: any[]) =>
-        {
+        $("#confirm-delete").on("hide.bs.modal", (eventObject: JQueryEventObject, ...args: any[]) => {
             $("#modal-delete").prop("disabled", false);
         });
-
-        this.load = ko.command(async () =>
-        {
-            let itemNames = await AsyncJSON.loadAsync<string[]>(getURL);
-            for (let itemName of itemNames)
-            {
-                let item = itemConstructor(itemName);
-                this.items.push(item);
-            }
-        });
-
 
         ko.validation.init({
             errorElementClass: 'has-error',
@@ -67,68 +119,11 @@ export class CollectionViewModel<ViewModelDataType, ViewModelType extends Collec
             decorateInputElement: true
         });
 
-        ko.validation.rules["uniqueName"] = {
-            validator: (value: string, item: ViewModelType) =>
-            {
-                let matchingNames = this.items()
-                    .filter((filterItem: ViewModelType) => filterItem != item && filterItem.originalName() == value);
-                return matchingNames.length == 0;
-            },
-            message: "Names must be unique"
-        };
+
         ko.validation.registerExtenders();
-
-        this.load();
     }
 
-    delete(item: ViewModelType): void
-    {
-        this.selectedItem(item);
-
-        ($("#confirm-delete") as any).modal("toggle");
-    }
-
-    deleteConfirm(): void
-    {
-        let url = MVC.getActionURL(this.controllerName, "Delete", this.selectedItem().originalName());
-        $("#modal-delete").prop("disabled", true);
-        jQuery.post(url, (data: any, textStatus: string, jqXHR: JQueryXHR) => 
-        {
-            this.items.remove(this.selectedItem());
-            ($('#confirm-delete') as any).modal("hide");
-        });
-    }
-
-    edit(item: ViewModelType): void
-    {
-        this.selectedItem(item);
-        let editNode = $("#modal-edit")[0];
-        $("#modal-error").hide();
-        item.statusText("Loading");
-        item.openEditor();
-    }
-
-    cancel(item: ViewModelType): void
-    {
-        if (item.originalName() == "")
-        {
-            this.items.remove(item);
-        }
-    }
-
-    addItem(): void
-    {
-        let item = this.itemConstructor("");
-        this.items.push(item);
-        this.edit(item);
-        $("#modal-edit").on("hide.bs.modal", (eventObject: JQueryEventObject, ...args: any[]) =>
-        {
-            this.cancel(item);
-        });
-    }
-
-    static getItems<T>(): KnockoutObservableArray<T>
-    {
+    static getItems<T>(): KnockoutObservableArray<T> {
         return CollectionViewModel.instance.items as KnockoutObservableArray<T>;
     }
 }

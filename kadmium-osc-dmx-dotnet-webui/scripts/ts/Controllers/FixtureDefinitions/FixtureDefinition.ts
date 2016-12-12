@@ -1,33 +1,71 @@
-﻿import {CollectionItemViewModel, NamedViewModel} from "../CollectionItem";
-import {ChannelData, ChannelViewModel} from "./Channel";
-import {MovementData, MovementViewModel} from "./Movement";
-import {ColorWheelEntryViewModel, ColorWheelEntryData} from "./ColorWheel";
+﻿import { CollectionItemViewModel } from "../CollectionItem";
+import { ChannelData, ChannelViewModel } from "./Channel";
+import { MovementData, MovementViewModel } from "./Movement";
+import { ColorWheelEntryViewModel, ColorWheelEntryData } from "./ColorWheel";
+import { MVC } from "../MVC";
 
 import * as ko from "knockout";
+
+export interface FixtureDefinitionKey
+{
+    manufacturer: string;
+    name: string;
+}
 
 export interface FixtureDefinitionData
 {
     name: string;
+    manufacturer: string;
     type: string;
     channels: ChannelData[];
     movements?: MovementData[];
     colorWheel?: ColorWheelEntryData[];
 }
 
-export class FixtureDefinitionViewModel extends CollectionItemViewModel<FixtureDefinitionData> implements NamedViewModel
+export class FixtureDefinitionViewModel extends CollectionItemViewModel<FixtureDefinitionData, FixtureDefinitionKey>
 {
+    manufacturer: KnockoutObservable<string>;
+    name: KnockoutObservable<string>;
     type: KnockoutObservable<string>;
     channels: KnockoutObservableArray<ChannelViewModel>;
     movements: KnockoutObservableArray<MovementViewModel>;
     colorWheel: KnockoutObservableArray<ColorWheelEntryViewModel>;
-    
-    constructor(name: string)
+
+    constructor(key: FixtureDefinitionKey)
     {
-        super(name, "FixtureDefinitions");
+        let name = ko.observable<string>(key.name);
+        let manufacturer = ko.observable<string>(key.manufacturer);
+        let computedKey = ko.computed<FixtureDefinitionKey>(() => { return { manufacturer: manufacturer(), name: name() } });
+        let displayName = ko.computed<string>(() => manufacturer() + " " + name());
+        super(computedKey, displayName, "FixtureDefinitions");
+
+        this.manufacturer = manufacturer;
+        this.name = name;
         this.type = ko.observable<string>();
         this.channels = ko.observableArray<ChannelViewModel>();
         this.movements = ko.observableArray<MovementViewModel>();
         this.colorWheel = ko.observableArray<ColorWheelEntryViewModel>();
+    }
+
+    getLoadURL(): string
+    {
+        let baseUrl = MVC.getActionURL(this.controllerName, "Load", this.manufacturer());
+        let url = baseUrl + "/" + this.name();
+        return url;
+    }
+
+    getSaveURL(): string
+    {
+        let baseUrl = MVC.getActionURL(this.controllerName, "Save", this.originalKey.manufacturer);
+        let url = baseUrl + "/" + this.originalKey.name;
+        return url;
+    }
+
+    getDeleteURL(): string
+    {
+        let baseUrl = MVC.getActionURL(this.controllerName, "Delete", this.originalKey.manufacturer);
+        let url = baseUrl + "/" + this.originalKey.name;
+        return url;
     }
 
     addChannel(): void
@@ -72,6 +110,7 @@ export class FixtureDefinitionViewModel extends CollectionItemViewModel<FixtureD
     load(data: FixtureDefinitionData): void
     {
         this.name(data.name);
+        this.manufacturer(data.manufacturer);
         this.type(data.type);
         this.channels.removeAll();
         this.movements.removeAll();
@@ -98,7 +137,8 @@ export class FixtureDefinitionViewModel extends CollectionItemViewModel<FixtureD
     serialize(): FixtureDefinitionData
     {
         let item: FixtureDefinitionData = {
-            name: this.name(),
+            name: this.key().name,
+            manufacturer: this.manufacturer(),
             type: this.type(),
             channels: this.channels().map((value: ChannelViewModel) => value.serialize()),
             movements: this.movements().length == 0 ? null :

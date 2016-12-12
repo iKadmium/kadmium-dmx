@@ -1,4 +1,5 @@
 {
+  "$schema": "./venue.schema.json",
   "name": "The Brightside",
   "universes": [
     {
@@ -12,7 +13,10 @@
             "axisRestrictions": [],
             "maxBrightness": 1
           },
-          "type": "Chinese RGBW (5ch)"
+          "type": {
+            "name": "Chinese RGBW (5ch)",
+            "manufacturer": "Generic"
+          }
         },
         {
           "channel": 405,
@@ -22,7 +26,10 @@
             "axisRestrictions": [],
             "maxBrightness": 1
           },
-          "type": "Chinese RGBW (5ch)"
+          "type": {
+            "name": "Chinese RGBW (5ch)",
+            "manufacturer": "Generic"
+          }
         },
         {
           "channel": 410,
@@ -32,7 +39,10 @@
             "axisRestrictions": [],
             "maxBrightness": 1
           },
-          "type": "Chinese RGBW (5ch)"
+          "type": {
+            "name": "Chinese RGBW (5ch)",
+            "manufacturer": "Generic"
+          }
         },
         {
           "channel": 415,
@@ -42,7 +52,10 @@
             "axisRestrictions": [],
             "maxBrightness": 1
           },
-          "type": "Chinese RGBW (5ch)"
+          "type": {
+            "name": "Chinese RGBW (5ch)",
+            "manufacturer": "Generic"
+          }
         },
         {
           "channel": 101,
@@ -63,7 +76,10 @@
             ],
             "maxBrightness": 1
           },
-          "type": "Martin Mac 101"
+          "type": {
+            "name": "Mac 101",
+            "manufacturer": "Martin"
+          }
         },
         {
           "channel": 113,
@@ -84,7 +100,10 @@
             ],
             "maxBrightness": 1
           },
-          "type": "Martin Mac 101"
+          "type": {
+            "name": "Mac 101",
+            "manufacturer": "Martin"
+          }
         },
         {
           "channel": 125,
@@ -105,7 +124,10 @@
             ],
             "maxBrightness": 1
           },
-          "type": "Martin Mac 101"
+          "type": {
+            "name": "Mac 101",
+            "manufacturer": "Martin"
+          }
         },
         {
           "channel": 137,
@@ -126,7 +148,10 @@
             ],
             "maxBrightness": 1
           },
-          "type": "Martin Mac 101"
+          "type": {
+            "name": "Mac 101",
+            "manufacturer": "Martin"
+          }
         }
       ],
       "universeID": 1

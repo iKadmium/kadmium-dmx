@@ -126,7 +126,7 @@ export class FixtureOptionsViewModel
                 this.axisInversions.remove((item: AxisInversionViewModel) => item.name() == axis.name());
             }
         });
-        if (definition() != null && definition().name() != "")
+        if (definition() != null)
         {
             definition.notifySubscribers();
         }
@@ -139,7 +139,6 @@ export class FixtureOptionsViewModel
         });
         this.moving = ko.computed<boolean>(() => this.definition() != null && this.definition().movements().length > 0);
     }
-
 
     serialize(): FixtureOptionsData
     {

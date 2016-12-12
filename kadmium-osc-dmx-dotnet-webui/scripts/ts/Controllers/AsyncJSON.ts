@@ -14,7 +14,7 @@ export class AsyncJSON
         });
     }
 
-    static async saveAsync(url: string, data: Object): Promise<void>
+    static async saveAsync<T>(url: string, data: T): Promise<void>
     {
         return new Promise<void>((resolve, reject) =>
         {

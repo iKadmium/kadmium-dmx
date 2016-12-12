@@ -1,4 +1,4 @@
-﻿import { CollectionItemViewModel, NamedViewModel } from "../CollectionItem";
+﻿import { CollectionItemViewModel } from "../CollectionItem";
 import { CollectionViewModel } from "../Collection";
 import { FixtureViewModel, FixtureData } from "../Venues/Fixture";
 import * as ko from "knockout";
@@ -10,14 +10,18 @@ export interface FixtureCollectionData
     fixtures: FixtureData[];
 }
 
-export class FixtureCollectionViewModel extends CollectionItemViewModel<FixtureCollectionData> implements NamedViewModel
+export class FixtureCollectionViewModel extends CollectionItemViewModel<FixtureCollectionData, string>
 {
     fixtures: KnockoutObservableArray<FixtureViewModel>;
     selectedFixture: KnockoutObservable<FixtureViewModel>;
+    name: KnockoutObservable<string>;
 
     constructor(name: string)
     {
-        super(name, "FixtureCollections");
+        let nameObservable = ko.observable<string>(name);
+        let nameComputed = ko.computed<string>(() => nameObservable());
+        super(nameComputed, nameComputed, "FixtureCollections");
+        this.name = nameObservable;
         this.fixtures = ko.observableArray<FixtureViewModel>();
         this.selectedFixture = ko.validatedObservable<FixtureViewModel>(new FixtureViewModel());
     }
@@ -40,7 +44,7 @@ export class FixtureCollectionViewModel extends CollectionItemViewModel<FixtureC
 
     async load(data: FixtureCollectionData): Promise<void>
     {
-        this.name(data.name);
+        this.key(data.name);
         this.fixtures.removeAll();
         for (let item of data.fixtures)
         {
@@ -51,7 +55,7 @@ export class FixtureCollectionViewModel extends CollectionItemViewModel<FixtureC
     serialize(): FixtureCollectionData
     {
         let item: FixtureCollectionData = {
-            name: this.name(),
+            name: this.key(),
             fixtures: this.fixtures().map((value: FixtureViewModel) => value.serialize())
         };
         return item;

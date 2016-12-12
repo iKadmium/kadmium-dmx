@@ -1,5 +1,6 @@
 ﻿{
-  "$schema": "fixture.schema.json",
+  "$schema": "../fixture.schema.json",
+  "manufacturer": "Generic",
   "name": "Chinese RGBW (5ch)",
   "type": "LED",
   "channels": [
@@ -35,5 +36,4 @@
     }
   ],
   "movements": []
-
 }

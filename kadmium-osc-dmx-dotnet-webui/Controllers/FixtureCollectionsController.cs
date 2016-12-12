@@ -16,7 +16,7 @@ namespace kadmium_osc_dmx_dotnet_webui.Controllers
         // GET: /<controller>/
         public IActionResult Index()
         {
-            return View(new ListData("Fixture Collection", FileAccess.GetFixtureCollectionNames()));
+            return View();
         }
 
         public IActionResult Schema()

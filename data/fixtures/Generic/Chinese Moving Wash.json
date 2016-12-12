@@ -1,76 +1,84 @@
-{
-  "name": "Martin Mac 101",
+﻿{
+  "$schema": "../fixture.schema.json",
+  "name": "Chinese Moving Wash",
+  "manufacturer": "Generic",
   "type": "LED",
   "channels": [
     {
-      "name": "Strobe",
-      "dmx": 1,
-      "min": 85,
-      "max": 70
-    },
-    {
-      "name": "Master",
-      "dmx": 2,
-      "min": 0,
-      "max": 255
-    },
-    {
       "name": "PanCoarse",
-      "dmx": 3,
+      "dmx": 1,
       "min": 0,
       "max": 255
     },
     {
       "name": "PanFine",
-      "dmx": 4,
+      "dmx": 2,
       "min": 0,
       "max": 255
     },
     {
       "name": "TiltCoarse",
-      "dmx": 5,
+      "dmx": 3,
       "min": 0,
       "max": 255
     },
     {
       "name": "TiltFine",
+      "dmx": 4,
+      "min": 0,
+      "max": 255
+    },
+    {
+      "name": "MotorSpeed",
+      "dmx": 5,
+      "min": 0,
+      "max": 255
+    },
+    {
+      "name": "Master",
       "dmx": 6,
       "min": 0,
       "max": 255
     },
     {
-      "name": "FixtureControls",
+      "name": "Strobe",
       "dmx": 7,
       "min": 0,
       "max": 255
     },
     {
-      "name": "ColorWheel",
+      "name": "ColorMacro",
       "dmx": 8,
       "min": 0,
       "max": 255
     },
     {
-      "name": "Red",
+      "name": "MacroSpeed",
       "dmx": 9,
       "min": 0,
       "max": 255
     },
     {
-      "name": "Green",
+      "name": "Red",
       "dmx": 10,
       "min": 0,
       "max": 255
     },
     {
-      "name": "Blue",
+      "name": "Green",
       "dmx": 11,
       "min": 0,
       "max": 255
     },
     {
-      "name": "Color Temperature",
+      "name": "Blue",
       "dmx": 12,
+      "min": 0,
+      "max": 255
+    },
+    {
+      "name": "White",
+      "dmx": 13,
       "min": 0,
       "max": 255
     }
@@ -83,8 +91,8 @@
     },
     {
       "name": "Tilt",
-      "min": -120,
-      "max": 120
+      "min": -135,
+      "max": 135
     }
   ]
 }
