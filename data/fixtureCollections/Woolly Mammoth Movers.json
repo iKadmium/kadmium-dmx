@@ -3,7 +3,10 @@
   "fixtures": [
     {
       "channel": 101,
-      "type": "iSolution iMove 250S",
+      "type": {
+        "manufacturer": "iSolution",
+        "name": "iMove 250S"
+      },
       "group": "rearSides",
       "options": {
         "axisInversions": [],
@@ -24,7 +27,10 @@
     },
     {
       "channel": 117,
-      "type": "iSolution iMove 250S",
+      "type": {
+        "manufacturer": "iSolution",
+        "name": "iMove 250S"
+      },
       "group": "rearSides",
       "options": {
         "axisInversions": [],
@@ -45,7 +51,10 @@
     },
     {
       "channel": 133,
-      "type": "iSolution iMove 250S",
+      "type": {
+        "manufacturer": "iSolution",
+        "name": "iMove 250S"
+      },
       "group": "rearSides",
       "options": {
         "axisInversions": [
@@ -68,7 +77,10 @@
     },
     {
       "channel": 149,
-      "type": "iSolution iMove 250S",
+      "type": {
+        "manufacturer": "iSolution",
+        "name": "iMove 250S"
+      },
       "group": "rearSides",
       "options": {
         "axisInversions": [
@@ -91,7 +103,10 @@
     },
     {
       "channel": 165,
-      "type": "iSolution iMove 250S",
+      "type": {
+        "manufacturer": "iSolution",
+        "name": "iMove 250S"
+      },
       "group": "rearSides",
       "options": {
         "axisInversions": [

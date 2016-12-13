@@ -4,6 +4,8 @@
     ViewData["Title"] = "Fixture Collections";
 }
 
+@Html.Partial("FixtureModelPicker")
+
 <binding-context data-bind="with: selectedItem">
     <modal-window large="true" id="modal-edit">
         <modal-header>Editing <span class="item-name" data-bind="text: name"></span></modal-header>
@@ -14,12 +16,10 @@
                 <input-collection name="fixtures">
                     <input-collection-body>
                         <input-collection-item label="Model">
-                            <select class="form-control" data-bind="value: type">
-                                @foreach (string name in FileAccess.GetFixtureNames())
-                                {
-                                    <option>@name</option>
-                                }
-                            </select>
+                            <a data-bind="click: $parent.editType.bind($parent), with: type" href="#">
+                                <span data-bind="text: manufacturer"></span>
+                                <span data-bind="text: model"></span>
+                            </a>
                         </input-collection-item>
                         <input-collection-item label="Channel"><input type="number" class="form-control" data-bind="value: channel" min="1" max="512"></input-collection-item>
                         <input-collection-item label="Group">

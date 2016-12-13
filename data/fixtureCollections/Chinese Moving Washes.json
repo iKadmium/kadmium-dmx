@@ -20,7 +20,10 @@
           }
         ]
       },
-      "type": "Chinese Moving Wash"
+      "type": {
+        "manufacturer": "Generic",
+        "name": "Chinese Moving Wash"
+      }
     },
     {
       "channel": 315,
@@ -41,7 +44,10 @@
           }
         ]
       },
-      "type": "Chinese Moving Wash"
+      "type": {
+        "manufacturer": "Generic",
+        "name": "Chinese Moving Wash"
+      }
     },
     {
       "channel": 329,
@@ -64,7 +70,10 @@
           }
         ]
       },
-      "type": "Chinese Moving Wash"
+      "type": {
+        "manufacturer": "Generic",
+        "name": "Chinese Moving Wash"
+      }
     },
     {
       "channel": 343,
@@ -87,7 +96,10 @@
           }
         ]
       },
-      "type": "Chinese Moving Wash"
+      "type": {
+        "manufacturer": "Generic",
+        "name": "Chinese Moving Wash"
+      }
     }
   ]
 }

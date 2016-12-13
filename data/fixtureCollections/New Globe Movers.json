@@ -3,7 +3,10 @@
   "fixtures": [
     {
       "channel": 55,
-      "type": "New Globe Moving Head",
+      "type": {
+        "manufacturer": "Generic",
+        "name": "New Globe Moving Head"
+      },
       "group": "rearSides",
       "options": {
         "axisInversions": [],
@@ -24,7 +27,10 @@
     },
     {
       "channel": 67,
-      "type": "New Globe Moving Head",
+      "type": {
+        "manufacturer": "Generic",
+        "name": "New Globe Moving Head"
+      },
       "group": "drummer",
       "options": {
         "axisInversions": [],
@@ -45,7 +51,10 @@
     },
     {
       "channel": 79,
-      "type": "New Globe Moving Head",
+      "type": {
+        "manufacturer": "Generic",
+        "name": "New Globe Moving Head"
+      },
       "group": "rearSides",
       "options": {
         "axisInversions": [],

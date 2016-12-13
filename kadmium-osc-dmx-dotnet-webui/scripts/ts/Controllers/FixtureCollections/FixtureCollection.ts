@@ -36,6 +36,12 @@ export class FixtureCollectionViewModel extends CollectionItemViewModel<FixtureC
         this.fixtures.remove(item);
     }
 
+    editType(item: FixtureViewModel): void
+    {
+        this.selectedFixture(item);
+        ($("#modal-fixture-select") as any).modal("toggle");
+    }
+
     editOptions(item: FixtureViewModel): void
     {
         this.selectedFixture(item);
@@ -44,7 +50,7 @@ export class FixtureCollectionViewModel extends CollectionItemViewModel<FixtureC
 
     async load(data: FixtureCollectionData): Promise<void>
     {
-        this.key(data.name);
+        this.name(data.name);
         this.fixtures.removeAll();
         for (let item of data.fixtures)
         {
@@ -55,7 +61,7 @@ export class FixtureCollectionViewModel extends CollectionItemViewModel<FixtureC
     serialize(): FixtureCollectionData
     {
         let item: FixtureCollectionData = {
-            name: this.key(),
+            name: this.name(),
             fixtures: this.fixtures().map((value: FixtureViewModel) => value.serialize())
         };
         return item;

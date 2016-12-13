@@ -3,7 +3,10 @@
   "fixtures": [
     {
       "channel": 25,
-      "type": "AVE Par64B",
+      "type": {
+        "manufacturer": "AVE",
+        "name": "Par64B"
+      },
       "group": "guitarist",
       "options": {
         "axisInversions": [],
@@ -13,7 +16,10 @@
     },
     {
       "channel": 46,
-      "type": "AVE Par64B",
+      "type": {
+        "manufacturer": "AVE",
+        "name": "Par64B"
+      },
       "group": "bassist",
       "options": {
         "axisInversions": [],

@@ -4,35 +4,88 @@ import { MVC } from "../MVC";
 import { FixtureDefinitionData, FixtureDefinitionViewModel, FixtureDefinitionKey } from "../FixtureDefinitions/FixtureDefinition";
 import * as ko from "knockout";
 
-export interface FixtureData {
+class ManufacturerViewModel
+{
+    models: KnockoutObservableArray<string>;
+    name: KnockoutObservable<string>;
+
+    constructor(name: string)
+    {
+        this.models = ko.observableArray<string>();
+        this.name = ko.observable<string>(name);
+    }
+}
+
+export class FixtureModelPicker
+{
+    static selectedManufacturer: KnockoutObservable<ManufacturerViewModel>;
+    static selectedModel: KnockoutObservable<string>;
+    static manufacturers: KnockoutObservableArray<ManufacturerViewModel>;
+
+    static async loadFixtures(): Promise<void>
+    {
+        FixtureModelPicker.manufacturers = ko.observableArray<ManufacturerViewModel>();
+
+        let url = MVC.getActionURL("FixtureDefinitions", "List");
+        let data = await AsyncJSON.loadAsync<FixtureDefinitionKey[]>(url);
+        for (let item of data)
+        {
+            let filtered = FixtureModelPicker.manufacturers().filter((value: ManufacturerViewModel) => value.name() == item.manufacturer);
+            let manufacturer: ManufacturerViewModel;
+            if (filtered.length == 1)
+            {
+                manufacturer = filtered[0];
+            }
+            else
+            {
+                manufacturer = new ManufacturerViewModel(item.manufacturer);
+                this.manufacturers.push(manufacturer);
+            }
+            manufacturer.models.push(item.name);
+        }
+        FixtureModelPicker.selectedManufacturer = ko.observable<ManufacturerViewModel>(FixtureModelPicker.manufacturers()[0]);
+        FixtureModelPicker.selectedModel = ko.observable<string>(FixtureModelPicker.selectedManufacturer().models()[0]);
+    }
+}
+
+export interface FixtureData
+{
     type: FixtureDefinitionKey;
     channel: number;
     group: string;
     options: FixtureOptionsData;
 }
 
-export interface FixtureDefinitionDictionary {
+export interface FixtureDefinitionDictionary
+{
     [model: string]: FixtureDefinitionData;
 }
 
-export interface ManufacturerDictionary {
+export interface ManufacturerDictionary
+{
     [manufacturer: string]: FixtureDefinitionDictionary;
 }
 
-export class FixtureDefinitionCache {
+export class FixtureDefinitionCache
+{
     static cache: ManufacturerDictionary;
 
-    static async getDefinition(manufacturer: string, model: string): Promise<FixtureDefinitionData> {
-        if (FixtureDefinitionCache.cache == null) {
+    static async getDefinition(manufacturer: string, model: string): Promise<FixtureDefinitionData>
+    {
+        if (FixtureDefinitionCache.cache == null)
+        {
             FixtureDefinitionCache.cache = {};
         }
-        if (FixtureDefinitionCache.cache[manufacturer] == null) {
+        if (FixtureDefinitionCache.cache[manufacturer] == null)
+        {
             FixtureDefinitionCache.cache[manufacturer] = {};
         }
-        if (FixtureDefinitionCache.cache[manufacturer][model] != null) {
+        if (FixtureDefinitionCache.cache[manufacturer][model] != null)
+        {
             return FixtureDefinitionCache.cache[manufacturer][model];
         }
-        else {
+        else
+        {
             let url = MVC.getActionURL("FixtureDefinitions", "Load", manufacturer, model);
             let definition = await AsyncJSON.loadAsync<FixtureDefinitionData>(url);
             FixtureDefinitionCache.cache[manufacturer][model] = definition;
@@ -41,21 +94,25 @@ export class FixtureDefinitionCache {
     }
 }
 
-class FixtureKeyViewModel {
+class FixtureKeyViewModel
+{
     manufacturer: KnockoutObservable<string>;
     model: KnockoutObservable<string>;
 
-    constructor() {
-        this.manufacturer = ko.observable<string>();
-        this.model = ko.observable<string>();
+    constructor()
+    {
+        this.manufacturer = ko.observable<string>(FixtureModelPicker.selectedManufacturer().name());
+        this.model = ko.observable<string>(FixtureModelPicker.selectedModel());
     }
 
-    load(data: FixtureDefinitionKey): void {
+    load(data: FixtureDefinitionKey): void
+    {
         this.manufacturer(data.manufacturer);
         this.model(data.name);
     }
 
-    serialize(): FixtureDefinitionKey {
+    serialize(): FixtureDefinitionKey
+    {
         let data: FixtureDefinitionKey = {
             manufacturer: this.manufacturer(),
             name: this.model()
@@ -65,7 +122,8 @@ class FixtureKeyViewModel {
     }
 }
 
-export class FixtureViewModel {
+export class FixtureViewModel
+{
     channel: KnockoutObservable<number>;
     type: KnockoutObservable<FixtureKeyViewModel>;
     group: KnockoutObservable<string>;
@@ -73,7 +131,8 @@ export class FixtureViewModel {
     definition: KnockoutObservable<FixtureDefinitionViewModel>;
     selectedFixture: KnockoutObservable<FixtureKeyViewModel>;
 
-    constructor() {
+    constructor()
+    {
         this.channel = ko.validatedObservable<number>().extend({
             min: 1,
             max: 512
@@ -85,8 +144,10 @@ export class FixtureViewModel {
         this.options = ko.validatedObservable<FixtureOptionsViewModel>(new FixtureOptionsViewModel(this, this.definition));
     }
 
-    async updateType(type: FixtureDefinitionKey): Promise<void> {
-        return new Promise<void>(async (resolve) => {
+    async updateType(type: FixtureDefinitionKey): Promise<void>
+    {
+        return new Promise<void>(async (resolve) =>
+        {
             let definition: FixtureDefinitionViewModel = new FixtureDefinitionViewModel(type);
             definition.load(await FixtureDefinitionCache.getDefinition(type.manufacturer, type.name));
             this.definition(definition);
@@ -94,7 +155,8 @@ export class FixtureViewModel {
         });
     }
 
-    serialize(): FixtureData {
+    serialize(): FixtureData
+    {
         let item: FixtureData = {
             channel: parseInt(this.channel() as any),
             group: this.group(),
@@ -104,7 +166,8 @@ export class FixtureViewModel {
         return item;
     }
 
-    static async load(data: FixtureData): Promise<FixtureViewModel> {
+    static async load(data: FixtureData): Promise<FixtureViewModel>
+    {
         let fixture = new FixtureViewModel();
         fixture.channel(data.channel);
         fixture.type().load(data.type);

@@ -12,6 +12,8 @@ using Microsoft.Extensions.Logging;
 using System.Threading;
 using System.Text;
 using kadmium_osc_dmx_dotnet_webui.WebSockets;
+using Microsoft.AspNetCore.ResponseCompression;
+using System.IO.Compression;
 
 namespace kadmium_osc_dmx_dotnet_webui
 {
@@ -33,6 +35,13 @@ namespace kadmium_osc_dmx_dotnet_webui
         public void ConfigureServices(IServiceCollection services)
         {
             // Add framework services.
+            services.Configure<GzipCompressionProviderOptions>
+                (options => options.Level = CompressionLevel.Fastest);
+            services.AddResponseCompression(options =>
+            {
+                options.Providers.Add<GzipCompressionProvider>();
+            });
+
             services.AddMvc();
         }
 
@@ -54,6 +63,7 @@ namespace kadmium_osc_dmx_dotnet_webui
             app.UseWebSockets();
             app.UseDefaultFiles();
             app.UseStaticFiles();
+            app.UseResponseCompression();
 
             app.Map("/Preview/Socket", PreviewSocketHandler.Map);
             app.Map("/Index/Socket", DashboardSocketHandler.Map);

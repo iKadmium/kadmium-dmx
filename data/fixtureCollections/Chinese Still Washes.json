@@ -9,7 +9,10 @@
         "axisInversions": [],
         "axisRestrictions": []
       },
-      "type": "Chinese RGBW (5ch)"
+      "type": {
+        "manufacturer": "Generic",
+        "name": "Chinese RGBW (5ch)"
+      }
     },
     {
       "channel": 405,
@@ -19,7 +22,10 @@
         "axisInversions": [],
         "axisRestrictions": []
       },
-      "type": "Chinese RGBW (5ch)"
+      "type": {
+        "manufacturer": "Generic",
+        "name": "Chinese RGBW (5ch)"
+      }
     },
     {
       "channel": 410,
@@ -29,7 +35,10 @@
         "axisInversions": [],
         "axisRestrictions": []
       },
-      "type": "Chinese RGBW (5ch)"
+      "type": {
+        "manufacturer": "Generic",
+        "name": "Chinese RGBW (5ch)"
+      }
     },
     {
       "channel": 415,
@@ -39,7 +48,10 @@
         "axisInversions": [],
         "axisRestrictions": []
       },
-      "type": "Chinese RGBW (5ch)"
+      "type": {
+        "manufacturer": "Generic",
+        "name": "Chinese RGBW (5ch)"
+      }
     }
   ]
 }

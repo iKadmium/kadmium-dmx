@@ -3,7 +3,10 @@
   "fixtures": [
     {
       "channel": 88,
-      "type": "AVE Par64B",
+      "type": {
+        "manufacturer": "AVE",
+        "name": "Par64B"
+      },
       "group": "vocalist",
       "options": {
         "axisInversions": [],
@@ -13,7 +16,10 @@
     },
     {
       "channel": 41,
-      "type": "AVE Par64B",
+      "type": {
+        "manufacturer": "AVE",
+        "name": "Par64B"
+      },
       "group": "bassist",
       "options": {
         "axisInversions": [],
@@ -23,7 +29,10 @@
     },
     {
       "channel": 48,
-      "type": "AVE Par64B",
+      "type": {
+        "manufacturer": "AVE",
+        "name": "Par64B"
+      },
       "group": "guitarist",
       "options": {
         "axisInversions": [],
@@ -33,7 +42,10 @@
     },
     {
       "channel": 67,
-      "type": "AVE Par64B",
+      "type": {
+        "manufacturer": "AVE",
+        "name": "Par64B"
+      },
       "group": "drummer",
       "options": {
         "axisInversions": [],
@@ -43,7 +55,10 @@
     },
     {
       "channel": 74,
-      "type": "AVE Par64B",
+      "type": {
+        "manufacturer": "AVE",
+        "name": "Par64B"
+      },
       "group": "drummer",
       "options": {
         "axisInversions": [],
