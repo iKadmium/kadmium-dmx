@@ -3,13 +3,11 @@ using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
 using Newtonsoft.Json.Linq;
 using System;
-using System.Collections.Generic;
 using System.Linq;
 using System.Net.WebSockets;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
-using kadmium_osc_dmx_dotnet_core.Fixtures;
 
 namespace kadmium_osc_dmx_dotnet_webui.WebSockets
 {
@@ -18,12 +16,12 @@ namespace kadmium_osc_dmx_dotnet_webui.WebSockets
         private static int BUFFER_SIZE = 65535;
         public WebSocket Socket { get; }
         public byte[] DMX { get; }
-        
+
         public PreviewSocketHandler(WebSocket socket)
         {
             Socket = socket;
-            DMX = new byte[Universe.DMX_UNIVERSE_SIZE ];
-            foreach(Universe universe in MasterController.Instance.Venue?.Universes.Values ?? Enumerable.Empty<Universe>())
+            DMX = new byte[Universe.DMX_UNIVERSE_SIZE];
+            foreach (Universe universe in MasterController.Instance.Venue?.Universes.Values ?? Enumerable.Empty<Universe>())
             {
                 universe.Rendered += Universe_Updated;
             }
@@ -60,7 +58,7 @@ namespace kadmium_osc_dmx_dotnet_webui.WebSockets
             while (Socket.State == WebSocketState.Open)
             {
                 WebSocketReceiveResult received = await Socket.ReceiveAsync(segment, CancellationToken.None);
-                switch(received.MessageType)
+                switch (received.MessageType)
                 {
                     case WebSocketMessageType.Close:
                         foreach (Universe universe in MasterController.Instance.Venue?.Universes.Values ?? Enumerable.Empty<Universe>())
@@ -71,7 +69,7 @@ namespace kadmium_osc_dmx_dotnet_webui.WebSockets
                 }
             }
         }
-        
+
         static async Task Acceptor(HttpContext hc, Func<Task> n)
         {
             if (!hc.WebSockets.IsWebSocketRequest)

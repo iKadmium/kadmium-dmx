@@ -2,9 +2,6 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Xml.Linq;
 
 namespace kadmium_osc_dmx_dotnet_core.Solvers
 {
@@ -33,7 +30,7 @@ namespace kadmium_osc_dmx_dotnet_core.Solvers
                 if (strobeValue != lastStrobe)
                 {
                     int count = (int)Math.Floor((double)(Group.Fixtures.Count * (1.0 - Coverage)));
-                    while(count > Group.Fixtures.Count && count > 0)
+                    while (count > Group.Fixtures.Count && count > 0)
                     {
                         count--;
                     }
@@ -63,14 +60,14 @@ namespace kadmium_osc_dmx_dotnet_core.Solvers
     {
         public static IEnumerable<T> PickRandom<T>(this IEnumerable<T> original, int count, Random random = null)
         {
-            if(random == null)
+            if (random == null)
             {
                 random = new Random();
             }
             List<T> randomItems = new List<T>();
             List<T> originalItems = new List<T>(original);
-            
-            for(int i = 0; i < count; i++)
+
+            for (int i = 0; i < count; i++)
             {
                 int current = random.Next(originalItems.Count);
                 T item = originalItems.Skip(current).First();

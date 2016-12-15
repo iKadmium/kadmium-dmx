@@ -1,10 +1,5 @@
 ﻿using Newtonsoft.Json.Linq;
 using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace kadmium_osc_dmx_dotnet_core
 {
@@ -21,13 +16,13 @@ namespace kadmium_osc_dmx_dotnet_core
 
         public string Message { get; private set; }
         public StatusCode StatusCode { get; private set; }
-        
+
         public Status(string notStartedMessage = "Not started yet")
         {
             StatusCode = StatusCode.NotStarted;
             Message = notStartedMessage;
         }
-        
+
         public void Update(StatusCode statusCode, string message, object sender)
         {
             Message = message;

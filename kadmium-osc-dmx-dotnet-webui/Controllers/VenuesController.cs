@@ -1,9 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+﻿using System.Linq;
 using Microsoft.AspNetCore.Mvc;
-using kadmium_osc_dmx_dotnet_webui.ViewHelpers;
 using Newtonsoft.Json.Linq;
 using kadmium_osc_dmx_dotnet_core;
 
@@ -64,7 +60,7 @@ namespace kadmium_osc_dmx_dotnet_webui.Controllers
             }
 
             FileAccess.SaveVenue(obj);
-            
+
             Response.StatusCode = 200;
             return new EmptyResult();
         }
@@ -85,7 +81,7 @@ namespace kadmium_osc_dmx_dotnet_webui.Controllers
 
         public IActionResult Activate(string id)
         {
-            if(FileAccess.HasVenue(id))
+            if (FileAccess.HasVenue(id))
             {
                 MasterController.Instance.LoadVenue(id);
                 Response.StatusCode = 200;

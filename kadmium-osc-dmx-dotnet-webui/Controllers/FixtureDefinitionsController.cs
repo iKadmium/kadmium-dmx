@@ -1,13 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+﻿using System.Linq;
 using Microsoft.AspNetCore.Mvc;
 using kadmium_osc_dmx_dotnet_core;
 using kadmium_osc_dmx_dotnet_core.Fixtures;
-using kadmium_osc_dmx_dotnet_webui.ViewHelpers;
 using Newtonsoft.Json.Linq;
-using System.Net;
 
 // For more information on enabling MVC for empty projects, visit http://go.microsoft.com/fwlink/?LinkID=397860
 
@@ -20,17 +15,17 @@ namespace kadmium_osc_dmx_dotnet_webui.Controllers
         {
             return View();
         }
-        
+
         public IActionResult Schema()
         {
             JObject obj = FileAccess.GetFixtureDefinitionSchema();
             Response.StatusCode = 200;
             return Content(obj.ToString());
         }
-    
+
         public IActionResult Load(string manufacturer, string model)
         {
-            if(model == null)
+            if (model == null)
             {
                 return Content(new Definition().Serialize().ToString());
             }
@@ -61,7 +56,7 @@ namespace kadmium_osc_dmx_dotnet_webui.Controllers
         {
             JObject fixtureObj = JObject.Parse(jsonString);
             Definition definition = Definition.Load(fixtureObj);
-            if(FileAccess.HasFixtureDefinition(manufacturer, model))
+            if (FileAccess.HasFixtureDefinition(manufacturer, model))
             {
                 FileAccess.DeleteFixtureDefinition(manufacturer, model);
             }
@@ -72,7 +67,7 @@ namespace kadmium_osc_dmx_dotnet_webui.Controllers
 
         public IActionResult Delete(string manufacturer, string model)
         {
-            if(FileAccess.HasFixtureDefinition(manufacturer, model))
+            if (FileAccess.HasFixtureDefinition(manufacturer, model))
             {
                 FileAccess.DeleteFixtureDefinition(manufacturer, model);
                 Response.StatusCode = 200;
@@ -83,7 +78,7 @@ namespace kadmium_osc_dmx_dotnet_webui.Controllers
                 Response.StatusCode = 404;
                 return new EmptyResult();
             }
-            
+
         }
     }
 }

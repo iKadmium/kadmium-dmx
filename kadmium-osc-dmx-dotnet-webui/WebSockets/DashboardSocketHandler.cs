@@ -5,7 +5,6 @@ using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
 using Newtonsoft.Json.Linq;
 using System;
-using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Net.WebSockets;
@@ -19,7 +18,7 @@ namespace kadmium_osc_dmx_dotnet_webui.WebSockets
     {
         private static int RECEIVE_BUFFER_SIZE = 65535;
         public WebSocket Socket { get; }
-        
+
         public DashboardSocketHandler(WebSocket socket)
         {
             Socket = socket;
@@ -31,7 +30,7 @@ namespace kadmium_osc_dmx_dotnet_webui.WebSockets
         private async void Status_Updated(object sender, StatusUpdateEventArgs e)
         {
             SendUpdate("Venues", e.StatusCode, e.Message);
-            if(e.StatusCode == StatusCode.Running)
+            if (e.StatusCode == StatusCode.Running)
             {
                 int tries = 0;
                 while (MasterController.Instance.Venue == null && tries < 10)
@@ -43,7 +42,7 @@ namespace kadmium_osc_dmx_dotnet_webui.WebSockets
                                     select universe.Fixtures.Count()).Sum();
                 SendUpdate("Fixtures", e.StatusCode, fixtureCount + " fixtures loaded");
             }
-            
+
         }
 
         private void TransmitterStatusUpdated(object sender, StatusUpdateEventArgs e)
@@ -64,11 +63,11 @@ namespace kadmium_osc_dmx_dotnet_webui.WebSockets
         {
             SendUpdate("OSCListeners", MasterController.Instance.Listener.Status.StatusCode, MasterController.Instance.Listener.Status.Message);
             SendUpdate("SACNTransmitters", MasterController.Instance.Transmitter.Status.StatusCode, MasterController.Instance.Transmitter.Status.Message);
-            if(MasterController.Instance.Venue != null)
+            if (MasterController.Instance.Venue != null)
             {
                 SendUpdate("Venues", StatusCode.Running, MasterController.Instance.Venue.Name + " running");
                 int fixtureCount = (from universe in MasterController.Instance.Venue.Universes.Values
-                                   select universe.Fixtures.Count()).Sum();
+                                    select universe.Fixtures.Count()).Sum();
                 SendUpdate("Fixtures", StatusCode.Running, fixtureCount + " fixtures loaded");
             }
             else
@@ -76,7 +75,7 @@ namespace kadmium_osc_dmx_dotnet_webui.WebSockets
                 SendUpdate("Venues", StatusCode.NotStarted, "No venue loaded");
                 SendUpdate("Fixtures", StatusCode.NotStarted, "No fixtures loaded");
             }
-            
+
         }
 
         private async void SendUpdate(string controller, StatusCode statusCode, string message)
@@ -86,7 +85,7 @@ namespace kadmium_osc_dmx_dotnet_webui.WebSockets
                 new JProperty("code", statusCode.ToString()),
                 new JProperty("message", message)
             );
-            
+
             byte[] bytes = Encoding.UTF8.GetBytes(obj.ToString());
 
             ArraySegment<byte> segment = new ArraySegment<byte>(bytes);
@@ -120,11 +119,11 @@ namespace kadmium_osc_dmx_dotnet_webui.WebSockets
                             break;
                     }
                 }
-                catch(IOException)
+                catch (IOException)
                 {
                     Close();
                 }
-                
+
             }
         }
 
@@ -134,7 +133,7 @@ namespace kadmium_osc_dmx_dotnet_webui.WebSockets
             MasterController.Instance.Transmitter.Status.Updated += TransmitterStatusUpdated;
             Venue.Status.Updated += Status_Updated;
         }
-        
+
         static async Task Acceptor(HttpContext hc, Func<Task> n)
         {
             if (!hc.WebSockets.IsWebSocketRequest)

@@ -1,12 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+﻿using System.Linq;
 using Microsoft.AspNetCore.Mvc;
 using kadmium_osc_dmx_dotnet_core;
-using kadmium_osc_dmx_dotnet_webui.ViewHelpers;
 using Newtonsoft.Json.Linq;
-using kadmium_osc_dmx_dotnet_core.Fixtures;
 
 // For more information on enabling MVC for empty projects, visit http://go.microsoft.com/fwlink/?LinkID=397860
 
@@ -40,14 +35,14 @@ namespace kadmium_osc_dmx_dotnet_webui.Controllers
 
         public IActionResult Load(string id)
         {
-            if(id == null)
+            if (id == null)
             {
                 JObject obj = new JObject(
                     new JProperty("name", "")
                 );
                 return Content(new Group().Serialize().ToString());
             }
-            else if(MasterController.Instance.Groups.ContainsKey(id))
+            else if (MasterController.Instance.Groups.ContainsKey(id))
             {
                 Group group = MasterController.Instance.Groups[id];
                 return Content(group.Serialize().ToString());
@@ -78,8 +73,8 @@ namespace kadmium_osc_dmx_dotnet_webui.Controllers
                 Response.StatusCode = 404;
                 return new EmptyResult();
             }
-            
-            if(MasterController.Instance.Groups.TryAdd(newID, group))
+
+            if (MasterController.Instance.Groups.TryAdd(newID, group))
             {
                 FileAccess.SaveGroups();
                 if (MasterController.Instance.Venue != null)
@@ -102,7 +97,7 @@ namespace kadmium_osc_dmx_dotnet_webui.Controllers
         {
             JObject obj = JObject.Parse(jsonString);
             var names = obj["names"].Values<string>().ToList();
-            foreach(Group group in MasterController.Instance.Groups.Values)
+            foreach (Group group in MasterController.Instance.Groups.Values)
             {
                 group.Order = names.IndexOf(group.Name);
             }
@@ -113,9 +108,9 @@ namespace kadmium_osc_dmx_dotnet_webui.Controllers
         public IActionResult Delete(string id)
         {
             Group group;
-            if(MasterController.Instance.Groups.TryRemove(id, out group))
+            if (MasterController.Instance.Groups.TryRemove(id, out group))
             {
-                if(MasterController.Instance.Groups.Count == 0)
+                if (MasterController.Instance.Groups.Count == 0)
                 {
                     MasterController.Instance.Groups.TryAdd("Default Group", new Group("Default Group", 1));
                 }

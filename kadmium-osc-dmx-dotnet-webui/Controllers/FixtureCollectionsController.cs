@@ -1,9 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+﻿using System.Linq;
 using Microsoft.AspNetCore.Mvc;
-using kadmium_osc_dmx_dotnet_webui.ViewHelpers;
 using kadmium_osc_dmx_dotnet_core;
 using Newtonsoft.Json.Linq;
 
@@ -60,11 +56,11 @@ namespace kadmium_osc_dmx_dotnet_webui.Controllers
             JObject obj = JObject.Parse(jsonString);
             string newID = obj["name"].Value<string>();
             FixtureCollection collection;
-            if(FileAccess.HasFixtureCollection(id))
+            if (FileAccess.HasFixtureCollection(id))
             {
                 FileAccess.DeleteFixtureCollection(id);
             }
-            
+
             collection = FixtureCollection.Load(obj);
             FileAccess.SaveFixtureCollection(collection.Serialize());
 
@@ -74,7 +70,7 @@ namespace kadmium_osc_dmx_dotnet_webui.Controllers
 
         public IActionResult Delete(string id)
         {
-            if(FileAccess.HasFixtureCollection(id))
+            if (FileAccess.HasFixtureCollection(id))
             {
                 FileAccess.DeleteFixtureCollection(id);
                 Response.StatusCode = 200;

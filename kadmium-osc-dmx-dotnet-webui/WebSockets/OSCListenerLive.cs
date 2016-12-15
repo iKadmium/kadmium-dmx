@@ -4,7 +4,6 @@ using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
 using Newtonsoft.Json.Linq;
 using System;
-using System.Collections.Generic;
 using System.Linq;
 using System.Net.WebSockets;
 using System.Text;
@@ -18,7 +17,7 @@ namespace kadmium_osc_dmx_dotnet_webui.WebSockets
         private static int RECEIVE_BUFFER_SIZE = 65535;
         public WebSocket Socket { get; }
         public OSCListener Listener { get; }
-        
+
         public OSCListenerLive(WebSocket socket, string id)
         {
             Socket = socket;
@@ -35,7 +34,7 @@ namespace kadmium_osc_dmx_dotnet_webui.WebSockets
                 new JProperty("address", e.Address),
                 new JProperty("value", e.Value)
             );
-            
+
             byte[] bytes = Encoding.UTF8.GetBytes(obj.ToString());
 
             ArraySegment<byte> segment = new ArraySegment<byte>(bytes);
@@ -44,12 +43,12 @@ namespace kadmium_osc_dmx_dotnet_webui.WebSockets
                 await Socket.SendAsync(segment, WebSocketMessageType.Text, true, CancellationToken.None);
             }
         }
-        
+
         async Task RenderLoop()
         {
             byte[] receiveBuffer = new byte[RECEIVE_BUFFER_SIZE];
             ArraySegment<byte> receiveSegment = new ArraySegment<byte>(receiveBuffer);
-            
+
             while (Socket.State == WebSocketState.Open)
             {
                 WebSocketReceiveResult received = await Socket.ReceiveAsync(receiveSegment, CancellationToken.None);
@@ -75,13 +74,13 @@ namespace kadmium_osc_dmx_dotnet_webui.WebSockets
                                     ),
                                     new JProperty("attributes",
                                         new JArray(
-                                            "Hue", "Saturation", "Brightness", "Strobe", "Apeshit", 
+                                            "Hue", "Saturation", "Brightness", "Strobe", "Apeshit",
                                             "UV", "Chase", "Program", "Pan", "Tilt", "RandomMove"
                                         )
                                     )
                                 );
                                 byte[] sendBuffer = Encoding.UTF8.GetBytes(initMessage.ToString());
-                                ArraySegment <byte> sendSegment = new ArraySegment<byte>(sendBuffer);
+                                ArraySegment<byte> sendSegment = new ArraySegment<byte>(sendBuffer);
                                 try
                                 {
                                     await Socket.SendAsync(sendSegment, WebSocketMessageType.Text, true, CancellationToken.None);

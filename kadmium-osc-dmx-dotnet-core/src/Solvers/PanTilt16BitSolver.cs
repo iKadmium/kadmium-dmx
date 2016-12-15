@@ -2,24 +2,20 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows;
-using System.Xml.Linq;
 
 namespace kadmium_osc_dmx_dotnet_core.Solvers
 {
     public class PanTilt16BitSolver : FixtureSolver
     {
         private IEnumerable<string> AxisNames;
-        
+
         public bool Eased { get; set; }
-        
+
         public PanTilt16BitSolver(Fixture fixture) : base(fixture, Get16BitAxisNames(fixture.Definition).ToArray())
         {
             AxisNames = from axis in fixture.Definition.Axis
                         select axis.Name;
-            foreach(var name in Get16BitAxisNames(fixture.Definition))
+            foreach (var name in Get16BitAxisNames(fixture.Definition))
             {
                 fixture.Settables[name + "Coarse"].Controlled = true;
                 fixture.Settables[name + "Fine"].Controlled = true;
@@ -38,7 +34,7 @@ namespace kadmium_osc_dmx_dotnet_core.Solvers
             return definition.Channels.Any(x => x.Name == "PanCoarse") ||
                 definition.Channels.Any(x => x.Name == "TiltCoarse");
         }
-        
+
         public override void Solve(Dictionary<string, Attribute> Attributes)
         {
             foreach (string axisName in AxisNames)
@@ -49,13 +45,13 @@ namespace kadmium_osc_dmx_dotnet_core.Solvers
                 byte[] valueBytes = BitConverter.GetBytes(value16bit);
                 float valueFine = valueBytes[0] / (float)byte.MaxValue;
                 float valueCoarse = valueBytes[1] / (float)byte.MaxValue;
-                
+
                 Attributes[axisName + "Coarse"].Value = valueCoarse;
                 Attributes[axisName + "Fine"].Value = valueFine;
             }
         }
     }
 
-    
+
 
 }

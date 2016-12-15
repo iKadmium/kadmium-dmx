@@ -1,8 +1,5 @@
 ﻿using Microsoft.AspNetCore.Razor.TagHelpers;
-using System;
-using System.Collections.Generic;
 using System.IO;
-using System.Linq;
 using System.Threading.Tasks;
 
 namespace kadmium_osc_dmx_dotnet_webui.ViewHelpers
@@ -51,7 +48,7 @@ namespace kadmium_osc_dmx_dotnet_webui.ViewHelpers
                 contextItem.Content.WriteTo(newContent, enc);
                 newContent.Write("</td>");
             }
-            
+
             newContent.Write("</tr>");
             newContent.Write("</tbody>");
 

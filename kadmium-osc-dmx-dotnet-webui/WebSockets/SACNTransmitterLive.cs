@@ -4,7 +4,6 @@ using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
 using Newtonsoft.Json.Linq;
 using System;
-using System.Collections.Generic;
 using System.Linq;
 using System.Net.WebSockets;
 using System.Text;
@@ -18,7 +17,7 @@ namespace kadmium_osc_dmx_dotnet_webui.WebSockets
         private static int RECEIVE_BUFFER_SIZE = 65535;
         public int UniverseID { get; set; }
         public WebSocket Socket { get; }
-        
+
         public SACNTransmitterLive(WebSocket socket)
         {
             Socket = socket;

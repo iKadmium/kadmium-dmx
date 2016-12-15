@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Xml.Linq;
+﻿using System.Collections.Generic;
 
 namespace kadmium_osc_dmx_dotnet_core.Solvers
 {
@@ -16,11 +11,11 @@ namespace kadmium_osc_dmx_dotnet_core.Solvers
             SolvableAttributes = new List<string>();
             foreach (Attribute attribute in attributes)
             {
-                if(!settables.ContainsKey(attribute.Name))
+                if (!settables.ContainsKey(attribute.Name))
                 {
                     settables.Add(attribute.Name, attribute);
                 }
-                if(!frameSettables.ContainsKey(attribute.Name))
+                if (!frameSettables.ContainsKey(attribute.Name))
                 {
                     frameSettables.Add(attribute.Name, attribute.Clone());
                 }

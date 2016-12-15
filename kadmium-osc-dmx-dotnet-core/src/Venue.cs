@@ -2,7 +2,6 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Threading.Tasks;
 
 namespace kadmium_osc_dmx_dotnet_core
 {
@@ -16,7 +15,7 @@ namespace kadmium_osc_dmx_dotnet_core
         {
             Name = name;
             Universes = new Dictionary<int, Universe>();
-            foreach(Universe universe in universes)
+            foreach (Universe universe in universes)
             {
                 Universes.Add(universe.UniverseID, universe);
             }
@@ -31,7 +30,7 @@ namespace kadmium_osc_dmx_dotnet_core
         {
             JObject obj = new JObject(
                 new JProperty("name", Name),
-                new JProperty("universes", 
+                new JProperty("universes",
                     new JArray(
                         from universe in Universes.Values
                         select universe.SerializeForVenue()
@@ -57,7 +56,7 @@ namespace kadmium_osc_dmx_dotnet_core
                 MasterController.Instance.UpdatesEnabled = true;
                 return new Venue(name, universes);
             }
-            catch(Exception e)
+            catch (Exception e)
             {
                 Status.Update(StatusCode.Error, e.Message, null);
                 throw e;
@@ -66,7 +65,7 @@ namespace kadmium_osc_dmx_dotnet_core
 
         internal void Update()
         {
-            foreach(Universe universe in Universes.Values)
+            foreach (Universe universe in Universes.Values)
             {
                 universe.Update();
             }
@@ -74,7 +73,7 @@ namespace kadmium_osc_dmx_dotnet_core
 
         public void Render()
         {
-            foreach(Universe universe in Universes.Values)
+            foreach (Universe universe in Universes.Values)
             {
                 universe.Render();
             }
@@ -82,7 +81,7 @@ namespace kadmium_osc_dmx_dotnet_core
 
         public void Clear()
         {
-            foreach(Universe universe in Universes.Values)
+            foreach (Universe universe in Universes.Values)
             {
                 universe.Clear();
             }

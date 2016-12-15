@@ -1,10 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
-using System.Reflection;
-using System.Text;
-using System.Threading.Tasks;
-using System.Xml.Linq;
 
 namespace kadmium_osc_dmx_dotnet_core.Solvers
 {
@@ -12,7 +7,7 @@ namespace kadmium_osc_dmx_dotnet_core.Solvers
     {
         protected Group Group { get; set; }
 
-        public GroupSolver(Group group, params string[] attributes) : base(group.Settables, group.FrameSettables, from attribute in attributes select new GroupSolverAttribute(attribute) )
+        public GroupSolver(Group group, params string[] attributes) : base(group.Settables, group.FrameSettables, from attribute in attributes select new GroupSolverAttribute(attribute))
         {
             Group = group;
         }

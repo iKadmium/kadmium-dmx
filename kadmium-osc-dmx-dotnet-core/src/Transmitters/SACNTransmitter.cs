@@ -1,10 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.IO;
 using System.Linq;
-using System.Net;
-using System.Net.Sockets;
-using System.Text;
 using System.Threading.Tasks;
 using Newtonsoft.Json.Linq;
 using kadmium_sacn_core;
@@ -29,7 +25,7 @@ namespace kadmium_osc_dmx_dotnet_core.Transmitters
                 return "SACN Transmitter [" + Name + "]";
             }
         }
-        
+
         public override void TransmitInternal(byte[] dmx, int universeID)
         {
             List<Task> tasks = new List<Task>();
@@ -37,7 +33,7 @@ namespace kadmium_osc_dmx_dotnet_core.Transmitters
             {
                 tasks.Add(Task.Run(() => SACNClient?.Send((short)universeID, dmx)));
             }
-            foreach(string target in UnicastTargets)
+            foreach (string target in UnicastTargets)
             {
                 tasks.Add(Task.Run(() => SACNClient?.Send(target, (short)universeID, dmx)));
             }
@@ -83,7 +79,7 @@ namespace kadmium_osc_dmx_dotnet_core.Transmitters
             JObject obj = new JObject(
                 new JProperty("delay", Delay),
                 new JProperty("multicast", Multicast),
-                new JProperty("unicast", 
+                new JProperty("unicast",
                     new JArray(from unicastTarget in UnicastTargets
                                select new JValue(unicastTarget))
                 )

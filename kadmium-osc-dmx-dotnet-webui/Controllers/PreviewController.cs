@@ -1,12 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+﻿using System.Linq;
 using Microsoft.AspNetCore.Mvc;
-using System.Net.WebSockets;
 using Newtonsoft.Json.Linq;
 using kadmium_osc_dmx_dotnet_core;
-using kadmium_osc_dmx_dotnet_core.Fixtures;
 
 // For more information on enabling MVC for empty projects, visit http://go.microsoft.com/fwlink/?LinkID=397860
 
@@ -24,11 +19,11 @@ namespace kadmium_osc_dmx_dotnet_webui.Controllers
         {
             return View();
         }
-        
+
         public IActionResult Fixtures()
         {
             JObject obj;
-            if(MasterController.Instance.Venue != null)
+            if (MasterController.Instance.Venue != null)
             {
 
                 obj = new JObject(

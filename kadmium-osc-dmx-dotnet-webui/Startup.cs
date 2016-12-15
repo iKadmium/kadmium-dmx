@@ -1,16 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Net.WebSockets;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Builder;
+﻿using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
-using System.Threading;
-using System.Text;
 using kadmium_osc_dmx_dotnet_webui.WebSockets;
 using Microsoft.AspNetCore.ResponseCompression;
 using System.IO.Compression;
@@ -77,14 +69,14 @@ namespace kadmium_osc_dmx_dotnet_webui
                 routes.MapRoute(
                     name: "Fixture definitions",
                     template: "FixtureDefinitions/{action}/{manufacturer}/{model}",
-                    defaults: new {controller = "FixtureDefinitions" }
+                    defaults: new { controller = "FixtureDefinitions" }
                 );
                 routes.MapRoute(
                     name: "default",
                     template: "{controller=Home}/{action=Index}/{id?}");
             });
         }
-        
+
 
     }
 }

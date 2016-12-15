@@ -1,11 +1,8 @@
 ﻿using kadmium_osc_dmx_dotnet_core.Fixtures;
-using kadmium_osc_dmx_dotnet_core.Transmitters;
 using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace kadmium_osc_dmx_dotnet_core
 {
@@ -26,7 +23,7 @@ namespace kadmium_osc_dmx_dotnet_core
             Fixtures = fixtures;
             DMX = new byte[DMX_UNIVERSE_SIZE];
         }
-        
+
         public JObject Serialize()
         {
             JObject obj = new JObject(
@@ -38,7 +35,7 @@ namespace kadmium_osc_dmx_dotnet_core
 
         public void Clear()
         {
-            foreach(Fixture fixture in Fixtures)
+            foreach (Fixture fixture in Fixtures)
             {
                 fixture.Dispose();
             }
@@ -55,7 +52,7 @@ namespace kadmium_osc_dmx_dotnet_core
             );
             return obj;
         }
-        
+
         public static Universe Load(JObject universeElement)
         {
             string name = universeElement["name"].Value<string>();
@@ -71,7 +68,7 @@ namespace kadmium_osc_dmx_dotnet_core
 
         public void Update()
         {
-            foreach(Fixture fixture in Fixtures)
+            foreach (Fixture fixture in Fixtures)
             {
                 fixture.Update();
                 fixture.Render(DMX);

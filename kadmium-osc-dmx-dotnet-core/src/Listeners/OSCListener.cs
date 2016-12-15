@@ -1,10 +1,6 @@
 ﻿using Newtonsoft.Json.Linq;
 using OSCforPCL;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace kadmium_osc_dmx_dotnet_core.Listeners
 {
@@ -32,7 +28,7 @@ namespace kadmium_osc_dmx_dotnet_core.Listeners
                 listener.DefaultOnMessageReceived += Listener_PacketReceived;
                 Status.Update(StatusCode.NotStarted, "No messages yet", this);
             }
-            catch(Exception e)
+            catch (Exception e)
             {
                 Status.Update(StatusCode.Error, e.Message, this);
             }

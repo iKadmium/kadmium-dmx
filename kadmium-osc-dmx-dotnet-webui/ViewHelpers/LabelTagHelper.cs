@@ -1,8 +1,5 @@
 ﻿using Microsoft.AspNetCore.Razor.TagHelpers;
-using System;
-using System.Collections.Generic;
 using System.IO;
-using System.Linq;
 using System.Threading.Tasks;
 
 namespace kadmium_osc_dmx_dotnet_webui.ViewHelpers
@@ -21,7 +18,7 @@ namespace kadmium_osc_dmx_dotnet_webui.ViewHelpers
             var label = new HtmlTags.HtmlTag("label")
                 .AddClasses("control-label", "col-sm-2")
                 .Text(Label);
-            
+
             var innerDiv = new HtmlTags.DivTag()
                 .AddClass("col-sm-10");
 

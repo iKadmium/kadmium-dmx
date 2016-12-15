@@ -1,7 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 using kadmium_osc_dmx_dotnet_core.Fixtures;
 
 namespace kadmium_osc_dmx_dotnet_core.Solvers
@@ -11,7 +9,7 @@ namespace kadmium_osc_dmx_dotnet_core.Solvers
         public static float MAX_SPEED = 0.005f;
         public Dictionary<string, AnimatableAxis> Axis { get; set; }
 
-        public RandomMove(Fixture fixture) : base(fixture, "RandomMove" )
+        public RandomMove(Fixture fixture) : base(fixture, "RandomMove")
         {
             Axis = new Dictionary<string, AnimatableAxis>();
             foreach (string name in fixture.MovementAxis.Keys)
@@ -20,7 +18,7 @@ namespace kadmium_osc_dmx_dotnet_core.Solvers
                 Axis.Add(name, animAxis);
             }
         }
-        
+
         public override void Solve(Dictionary<string, Attribute> Attributes)
         {
             if (Attributes["RandomMove"].Value > 0)
@@ -44,7 +42,7 @@ namespace kadmium_osc_dmx_dotnet_core.Solvers
             return definition.Axis.Count > 0;
         }
     }
-    
+
     public class AnimatableAxis
     {
         private Random Random { get; }
@@ -62,7 +60,7 @@ namespace kadmium_osc_dmx_dotnet_core.Solvers
                 {
                     value = 1.0f;
                 }
-                if(value < 0.0f)
+                if (value < 0.0f)
                 {
                     value = 0.0f;
                 }

@@ -1,12 +1,7 @@
 ﻿using kadmium_osc_dmx_dotnet_core.Fixtures;
 using Newtonsoft.Json.Linq;
-using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Reflection;
-using System.Text;
-using System.Threading.Tasks;
-using System.Xml.Linq;
 
 namespace kadmium_osc_dmx_dotnet_core.Solvers
 {
@@ -22,7 +17,7 @@ namespace kadmium_osc_dmx_dotnet_core.Solvers
             {
                 solvers.Add(new MasterAtFullSolver(fixture));
             }
-            if(FakeUVSolver.SuitableFor(fixture.Definition))
+            if (FakeUVSolver.SuitableFor(fixture.Definition))
             {
                 solvers.Add(new FakeUVSolver(fixture));
             }
@@ -30,7 +25,7 @@ namespace kadmium_osc_dmx_dotnet_core.Solvers
             {
                 solvers.Add(new FakeStrobeSolver(fixture));
             }
-            if(ApeshitFixtureSolver.SuitableFor(fixture.Definition))
+            if (ApeshitFixtureSolver.SuitableFor(fixture.Definition))
             {
                 solvers.Add(new ApeshitFixtureSolver(fixture));
             }

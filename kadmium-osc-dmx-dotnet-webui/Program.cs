@@ -1,13 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Threading.Tasks;
+﻿using System.IO;
 using Microsoft.AspNetCore.Hosting;
 using kadmium_osc_dmx_dotnet_core;
-using Microsoft.Extensions.Configuration;
 using Newtonsoft.Json.Linq;
-using Newtonsoft.Json;
 
 namespace kadmium_osc_dmx_dotnet_webui
 {

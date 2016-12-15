@@ -1,12 +1,10 @@
 ﻿using kadmium_osc_dmx_dotnet_core;
 using kadmium_osc_dmx_dotnet_core.Fixtures;
 using kadmium_osc_dmx_dotnet_core.Solvers;
-using kadmium_osc_dmx_dotnet_core.Transmitters;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
 using Newtonsoft.Json.Linq;
 using System;
-using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Net.WebSockets;
@@ -22,7 +20,7 @@ namespace kadmium_osc_dmx_dotnet_webui.WebSockets
         public int UniverseID { get; set; }
         public WebSocket Socket { get; }
         public bool Sending { get; set; }
-        
+
         public FixturesLive(WebSocket socket)
         {
             Socket = socket;
@@ -33,19 +31,19 @@ namespace kadmium_osc_dmx_dotnet_webui.WebSockets
         {
             JObject obj = new JObject(
                 new JProperty("messageType", "init"),
-                new JProperty("universes", 
+                new JProperty("universes",
                     new JArray(
                         from universe in MasterController.Instance.Venue?.Universes.Values ?? Enumerable.Empty<Universe>()
                         select new JObject(
                             new JProperty("universeID", universe.UniverseID),
                             new JProperty("name", universe.Name),
-                            new JProperty("fixtures", 
+                            new JProperty("fixtures",
                                 new JArray(
                                     from fixture in universe.Fixtures
                                     select new JObject(
                                         new JProperty("type", fixture.Definition.Name),
                                         new JProperty("channel", fixture.StartChannel),
-                                        new JProperty("attributes", 
+                                        new JProperty("attributes",
                                             new JArray(
                                                 from attribute in fixture.Settables.Values
                                                 where (attribute is DMXChannel || attribute is FixtureSolverAttribute)
@@ -74,14 +72,14 @@ namespace kadmium_osc_dmx_dotnet_webui.WebSockets
         {
             byte[] receiveBuffer = new byte[RECEIVE_BUFFER_SIZE];
             ArraySegment<byte> receiveSegment = new ArraySegment<byte>(receiveBuffer);
-            
-            if(Socket.State == WebSocketState.Open)
+
+            if (Socket.State == WebSocketState.Open)
             {
                 JObject initMessage = GetInitMessage();
                 byte[] sendBuffer = Encoding.UTF8.GetBytes(initMessage.ToString());
                 ArraySegment<byte> sendSegment = new ArraySegment<byte>(sendBuffer);
                 await Socket.SendAsync(sendSegment, WebSocketMessageType.Text, true, CancellationToken.None);
-                foreach(Universe universe in MasterController.Instance.Venue?.Universes.Values ?? Enumerable.Empty<Universe>())
+                foreach (Universe universe in MasterController.Instance.Venue?.Universes.Values ?? Enumerable.Empty<Universe>())
                 {
                     universe.Updated += Universe_Updated;
                 }
@@ -121,7 +119,7 @@ namespace kadmium_osc_dmx_dotnet_webui.WebSockets
                             break;
                     }
                 }
-                catch(IOException)
+                catch (IOException)
                 {
                     Close();
                 }
@@ -147,7 +145,7 @@ namespace kadmium_osc_dmx_dotnet_webui.WebSockets
                         from fixture in universe.Fixtures
                         select new JObject(
                             new JProperty("channel", fixture.StartChannel),
-                            new JProperty("attributes", 
+                            new JProperty("attributes",
                                 new JArray(
                                     from attribute in fixture.Settables.Values
                                     where (attribute is FixtureSolverAttribute || attribute is DMXChannel)

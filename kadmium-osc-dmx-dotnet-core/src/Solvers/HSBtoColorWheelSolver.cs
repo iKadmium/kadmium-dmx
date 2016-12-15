@@ -1,7 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
-using System.Threading.Tasks;
 using kadmium_osc_dmx_dotnet_core.Fixtures;
 using kadmium_osc_dmx_dotnet_core.Color;
 
@@ -28,7 +26,7 @@ namespace kadmium_osc_dmx_dotnet_core.Solvers
             foreach (ColorWheelEntry entry in ColorWheel)
             {
                 double distance = ColorSpaceHelper.GetColorDistance(rgb, entry.Color);
-                if(distance < minDistance)
+                if (distance < minDistance)
                 {
                     closestEntry = entry;
                     minDistance = distance;
@@ -39,7 +37,7 @@ namespace kadmium_osc_dmx_dotnet_core.Solvers
             var closestValue = closestValueDMX / 255f;
             Attributes["ColorWheel"].Value = closestValue;
 
-            if(Attributes["Master"] != null)
+            if (Attributes["Master"] != null)
             {
                 Attributes["Master"].Value = Attributes["Brightness"].Value;
             }

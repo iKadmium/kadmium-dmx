@@ -1,8 +1,4 @@
 ﻿using Microsoft.AspNetCore.Razor.TagHelpers;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 
 namespace kadmium_osc_dmx_dotnet_webui.ViewHelpers
 {
@@ -22,7 +18,7 @@ namespace kadmium_osc_dmx_dotnet_webui.ViewHelpers
             var middleDiv = new HtmlTags.DivTag()
                 .AddClasses("modal-dialog", Large ? "modal-lg" : "")
                 .Attr("role", "document");
-            
+
             output.Attributes.Add("class", "modal fade " + (Large ? "bs-example-modal-lg" : ""));
             output.Attributes.Add("tabIndex", "-1");
             output.Attributes.Add("role", "dialog");
@@ -30,7 +26,7 @@ namespace kadmium_osc_dmx_dotnet_webui.ViewHelpers
 
             output.PreContent.AppendHtml(middleDiv.NoClosingTag());
             output.PreContent.AppendHtml(innerDiv.NoClosingTag());
-            
+
             output.PostContent.AppendHtml("</div>");
             output.PostContent.AppendHtml("</div>");
 

@@ -1,11 +1,5 @@
-﻿using Microsoft.AspNetCore.Html;
-using Microsoft.AspNetCore.Razor.TagHelpers;
-using System;
+﻿using Microsoft.AspNetCore.Razor.TagHelpers;
 using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace kadmium_osc_dmx_dotnet_webui.ViewHelpers
 {

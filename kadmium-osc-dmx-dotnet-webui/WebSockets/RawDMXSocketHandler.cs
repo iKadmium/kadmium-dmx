@@ -1,6 +1,4 @@
 ﻿using kadmium_osc_dmx_dotnet_core;
-using kadmium_osc_dmx_dotnet_core.Fixtures;
-using kadmium_osc_dmx_dotnet_core.Transmitters;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
 using Newtonsoft.Json.Linq;
@@ -32,7 +30,7 @@ namespace kadmium_osc_dmx_dotnet_webui.WebSockets
             }
             Universe = MasterController.Instance.Venue?.Universes.Values.First();
         }
-        
+
         async Task RenderLoop()
         {
             byte[] buffer = new byte[BUFFER_SIZE];
@@ -42,7 +40,7 @@ namespace kadmium_osc_dmx_dotnet_webui.WebSockets
             while (Socket.State == WebSocketState.Open)
             {
                 WebSocketReceiveResult received = await Socket.ReceiveAsync(segment, CancellationToken.None);
-                switch(received.MessageType)
+                switch (received.MessageType)
                 {
                     case WebSocketMessageType.Close:
                         AllSocketHandlers.Remove(this);
@@ -51,7 +49,7 @@ namespace kadmium_osc_dmx_dotnet_webui.WebSockets
                     case WebSocketMessageType.Text:
                         string message = Encoding.UTF8.GetString(segment.Array, segment.Offset, received.Count);
                         JObject obj = JObject.Parse(message);
-                        switch(obj["type"].Value<string>())
+                        switch (obj["type"].Value<string>())
                         {
                             case "UniverseUpdate":
                                 Universe = MasterController.Instance.Venue?.Universes.Values.Single(x => x.Name == obj["universe"].Value<string>());
@@ -59,7 +57,7 @@ namespace kadmium_osc_dmx_dotnet_webui.WebSockets
                             case "ChannelUpdate":
                                 int channel = obj["channel"].Value<int>();
                                 byte value = obj["value"]?.Value<byte>() ?? 0;
-                                if(Universe != null)
+                                if (Universe != null)
                                 {
                                     Universe.DMX[channel] = value;
                                 }

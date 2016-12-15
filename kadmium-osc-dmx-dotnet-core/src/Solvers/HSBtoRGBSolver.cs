@@ -1,16 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using kadmium_osc_dmx_dotnet_core.Fixtures;
-using kadmium_osc_dmx_dotnet_core;
-using System.Xml.Linq;
 using kadmium_osc_dmx_dotnet_core.Color;
 
 namespace kadmium_osc_dmx_dotnet_core.Solvers
 {
-
     public class HSBtoRGBSolver : FixtureSolver
     {
         public HSBtoRGBSolver(Fixture fixture) : base(fixture, "Hue", "Saturation", "Brightness")
@@ -24,7 +18,7 @@ namespace kadmium_osc_dmx_dotnet_core.Solvers
         {
             HSB hsb = new HSB(Attributes["Hue"].Value * 360.0, Attributes["Saturation"].Value, Attributes["Brightness"].Value);
             RGB rgb = ColorSpaceHelper.HSBtoRGB(hsb);
-            
+
             Attributes["Red"].Value = rgb.Red / 255f;
             Attributes["Green"].Value = rgb.Green / 255f;
             Attributes["Blue"].Value = rgb.Blue / 255f;
@@ -38,6 +32,6 @@ namespace kadmium_osc_dmx_dotnet_core.Solvers
         }
 
     }
-    
+
 
 }
