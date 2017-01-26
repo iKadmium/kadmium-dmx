@@ -12,6 +12,7 @@
         <modal-body>
             @Html.Partial("ModalEditorStatus")
             <div class="form-horizontal" id="edit-form">
+                <input-label label="Manufacturer:" data-bind="validationElement: name"><input type="text" class="form-control" data-bind="value: manufacturer"></input-label>
                 <input-label label="Name:" data-bind="validationElement: name"><input type="text" class="form-control" data-bind="value: name"></input-label>
                 <input-label label="Type:">
                     <select class="form-control" data-bind="value: type">

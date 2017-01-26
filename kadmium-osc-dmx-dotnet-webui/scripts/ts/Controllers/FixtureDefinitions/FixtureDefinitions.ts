@@ -12,7 +12,7 @@ class FixtureDefinitionsViewModel extends CollectionViewModel<FixtureDefinitionD
     constructor()
     {
         super("FixtureDefinitions",
-            { manufacturer: "", name: "New Fixture Definition" },
+            { manufacturer: "Default Manufacturer", name: "New Fixture Definition" },
             (key) => new FixtureDefinitionViewModel(key)
         );
 

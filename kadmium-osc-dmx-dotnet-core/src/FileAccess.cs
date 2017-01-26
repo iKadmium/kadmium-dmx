@@ -32,6 +32,7 @@ namespace kadmium_osc_dmx_dotnet_core
             string schemaString = File.ReadAllText(schemaPath);
             if (Validate(obj, path, schemaPath))
             {
+                Directory.CreateDirectory(Path.GetDirectoryName(path));
                 File.WriteAllText(path, obj.ToString());
             }
         }
