@@ -5,34 +5,34 @@
   "type": "LED",
   "channels": [
     {
-      "name": "Strobe",
+      "name": "Red",
       "dmx": 1,
       "min": 0,
       "max": 255
     },
     {
-      "name": "Red",
+      "name": "Green",
       "dmx": 2,
       "min": 0,
       "max": 255
     },
     {
-      "name": "Green",
+      "name": "Blue",
       "dmx": 3,
       "min": 0,
       "max": 255
     },
     {
-      "name": "Blue",
+      "name": "White",
       "dmx": 4,
       "min": 0,
       "max": 255
     },
     {
-      "name": "White",
+      "name": "Strobe",
       "dmx": 5,
       "min": 0,
-      "max": 255
+      "max": 223
     }
   ]
 }
