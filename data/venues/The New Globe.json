@@ -5,32 +5,6 @@
       "name": "Universe 1",
       "fixtures": [
         {
-          "channel": 25,
-          "group": "guitarist",
-          "options": {
-            "axisInversions": [],
-            "axisRestrictions": [],
-            "maxBrightness": 1
-          },
-          "type": {
-            "name": "Par64B",
-            "manufacturer": "AVE"
-          }
-        },
-        {
-          "channel": 46,
-          "group": "bassist",
-          "options": {
-            "axisInversions": [],
-            "axisRestrictions": [],
-            "maxBrightness": 1
-          },
-          "type": {
-            "name": "Par64B",
-            "manufacturer": "AVE"
-          }
-        },
-        {
           "channel": 55,
           "group": "rearSides",
           "options": {
@@ -50,8 +24,8 @@
             "maxBrightness": 1
           },
           "type": {
-            "manufacturer": "Generic",
-            "name": "New Globe Moving Head"
+            "manufacturer": "Venue - The New Globe",
+            "name": "Moving Head"
           }
         },
         {
@@ -59,25 +33,75 @@
           "group": "drummer",
           "options": {
             "axisInversions": [],
-            "axisRestrictions": [],
+            "axisRestrictions": [
+              {
+                "name": "Pan",
+                "min": 0,
+                "max": 0
+              },
+              {
+                "name": "Tilt",
+                "min": 0,
+                "max": 0
+              }
+            ],
             "maxBrightness": 1
           },
           "type": {
-            "manufacturer": "Generic",
-            "name": "New Globe Moving Head"
+            "manufacturer": "Venue - The New Globe",
+            "name": "Moving Head"
           }
         },
         {
           "channel": 79,
           "group": "rearSides",
           "options": {
+            "axisInversions": [
+              "Pan"
+            ],
+            "axisRestrictions": [
+              {
+                "name": "Pan",
+                "min": -90,
+                "max": 90
+              },
+              {
+                "name": "Tilt",
+                "min": 0,
+                "max": 90
+              }
+            ],
+            "maxBrightness": 1
+          },
+          "type": {
+            "manufacturer": "Venue - The New Globe",
+            "name": "Moving Head"
+          }
+        },
+        {
+          "channel": 25,
+          "group": "guitarist",
+          "options": {
             "axisInversions": [],
             "axisRestrictions": [],
             "maxBrightness": 1
           },
           "type": {
-            "manufacturer": "Generic",
-            "name": "New Globe Moving Head"
+            "manufacturer": "Venue - The New Globe",
+            "name": "PAR"
+          }
+        },
+        {
+          "channel": 46,
+          "group": "bassist",
+          "options": {
+            "axisInversions": [],
+            "axisRestrictions": [],
+            "maxBrightness": 1
+          },
+          "type": {
+            "manufacturer": "Venue - The New Globe",
+            "name": "PAR"
           }
         }
       ],

@@ -4,8 +4,8 @@
     {
       "channel": 25,
       "type": {
-        "manufacturer": "AVE",
-        "name": "Par64B"
+        "name": "PAR",
+        "manufacturer": "Venue - The New Globe"
       },
       "group": "guitarist",
       "options": {
@@ -17,8 +17,8 @@
     {
       "channel": 46,
       "type": {
-        "manufacturer": "AVE",
-        "name": "Par64B"
+        "name": "PAR",
+        "manufacturer": "Venue - The New Globe"
       },
       "group": "bassist",
       "options": {

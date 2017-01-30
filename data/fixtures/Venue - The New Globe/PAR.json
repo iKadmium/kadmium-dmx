@@ -1,7 +1,6 @@
 {
-  "$schema": "../fixture.schema.json",
-  "name": "New Globe PAR",
-  "manufacturer": "Generic",
+  "name": "PAR",
+  "manufacturer": "Venue - The New Globe",
   "type": "LED",
   "channels": [
     {

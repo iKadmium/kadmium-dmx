@@ -1,7 +1,6 @@
 {
-  "$schema": "../fixture.schema.json",
-  "name": "New Globe Moving Head",
-  "manufacturer": "Generic",
+  "name": "Moving Head",
+  "manufacturer": "Venue - The New Globe",
   "type": "LED",
   "channels": [
     {

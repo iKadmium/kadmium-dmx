@@ -1,4 +1,5 @@
-﻿using Newtonsoft.Json.Linq;
+﻿using kadmium_osc_dmx_dotnet_core.Fixtures;
+using Newtonsoft.Json.Linq;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -7,6 +8,7 @@ namespace kadmium_osc_dmx_dotnet_core
     public class FixtureEntry
     {
         public int StartChannel { get; set; }
+        public string Manufacturer { get; set; }
         public string Type { get; set; }
         public string Group { get; set; }
         public JObject Options { get; set; }
@@ -33,7 +35,12 @@ namespace kadmium_osc_dmx_dotnet_core
                     from entry in FixtureEntries
                     select new JObject(
                         new JProperty("channel", entry.StartChannel),
-                        new JProperty("type", entry.Type),
+                        new JProperty("type", 
+                            new JObject(
+                                new JProperty("name", entry.Type),
+                                new JProperty("manufacturer", entry.Manufacturer)
+                            )
+                        ),
                         new JProperty("group", entry.Group),
                         new JProperty("options", entry.Options)
                     )
@@ -49,7 +56,8 @@ namespace kadmium_osc_dmx_dotnet_core
                                  select new FixtureEntry
                                  {
                                      StartChannel = fixture["channel"].Value<int>(),
-                                     Type = fixture["type"].Value<string>(),
+                                     Type = fixture["type"].Value<JObject>()["name"].Value<string>(),
+                                     Manufacturer = fixture["type"].Value<JObject>()["manufacturer"].Value<string>(),
                                      Group = fixture["group"].Value<string>(),
                                      Options = fixture["options"].Value<JObject>()
                                  };
