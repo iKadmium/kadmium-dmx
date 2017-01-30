@@ -4,7 +4,10 @@ const common = require("./webpack.common.config.js");
 
 const production = {
     plugins: [
-        new webpack.optimize.UglifyJsPlugin()
+        new webpack.optimize.UglifyJsPlugin({
+            sourceMap: true,
+            compress: { warnings: true }
+        })
     ]
 };
 

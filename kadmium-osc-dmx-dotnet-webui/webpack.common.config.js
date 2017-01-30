@@ -1,4 +1,5 @@
-﻿const webpack = require("webpack");
+﻿const path = require("path");
+const webpack = require("webpack");
 
 const common = {
     entry:
@@ -20,9 +21,10 @@ const common = {
         path: __dirname + "/wwwroot/js"
     },
     resolve: {
-        extensions: ["", ".webpack.js", ".web.js", ".ts", ".js"],
+        extensions: [".webpack.js", ".web.js", ".ts", ".js"],
         alias: {
-            bootstrap: "./node_modules/bootstrap/dist/js/bootstrap.min.js"
+            bootstrap: path.resolve(__dirname, "./node_modules/bootstrap/dist/js/bootstrap"),
+            jquery: path.resolve(__dirname, "./node_modules/jquery/src/jquery")
         }
     },
     plugins: [
@@ -36,8 +38,15 @@ const common = {
         })
     ],
     module: {
-        loaders: [
-            { test: /\.ts$/, loader: "ts-loader" }
+        rules: [
+            {
+                test: /\.ts$/,
+                use: [
+                    {
+                        loader: "ts-loader"
+                    }
+                ]
+            }
         ]
     }
 }
