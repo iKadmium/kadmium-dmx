@@ -1,4 +1,5 @@
 {
+  "$schema": "../fixture.schema.json",
   "name": "PAR",
   "manufacturer": "Venue - The New Globe",
   "type": "LED",

@@ -29,6 +29,7 @@ namespace kadmium_osc_dmx_dotnet_core
         public JObject Serialize()
         {
             JObject obj = new JObject(
+                new JProperty("$schema", FileAccess.GetRelativePath(FileAccess.GetVenueLocation(Name), FileAccess.VenuesSchema)),
                 new JProperty("name", Name),
                 new JProperty("universes",
                     new JArray(

@@ -4,74 +4,79 @@
   "universes": [
     {
       "name": "Main Universe",
+      "universeID": 1,
       "fixtures": [
         {
           "channel": 88,
+          "type": {
+            "manufacturer": "AVE",
+            "name": "Par64B"
+          },
           "group": "vocalist",
           "options": {
             "axisInversions": [],
             "axisRestrictions": [],
             "maxBrightness": 1
-          },
-          "type": {
-            "name": "Par64B",
-            "manufacturer": "AVE"
           }
         },
         {
           "channel": 41,
+          "type": {
+            "manufacturer": "AVE",
+            "name": "Par64B"
+          },
           "group": "bassist",
           "options": {
             "axisInversions": [],
             "axisRestrictions": [],
             "maxBrightness": 1
-          },
-          "type": {
-            "name": "Par64B",
-            "manufacturer": "AVE"
           }
         },
         {
           "channel": 48,
+          "type": {
+            "manufacturer": "AVE",
+            "name": "Par64B"
+          },
           "group": "guitarist",
           "options": {
             "axisInversions": [],
             "axisRestrictions": [],
             "maxBrightness": 1
-          },
-          "type": {
-            "name": "Par64B",
-            "manufacturer": "AVE"
           }
         },
         {
           "channel": 67,
+          "type": {
+            "manufacturer": "AVE",
+            "name": "Par64B"
+          },
           "group": "drummer",
           "options": {
             "axisInversions": [],
             "axisRestrictions": [],
             "maxBrightness": 1
-          },
-          "type": {
-            "name": "Par64B",
-            "manufacturer": "AVE"
           }
         },
         {
           "channel": 74,
+          "type": {
+            "manufacturer": "AVE",
+            "name": "Par64B"
+          },
           "group": "drummer",
           "options": {
             "axisInversions": [],
             "axisRestrictions": [],
             "maxBrightness": 1
-          },
-          "type": {
-            "name": "Par64B",
-            "manufacturer": "AVE"
           }
         },
         {
           "channel": 101,
+          "type": {
+            "manufacturer": "iSolution",
+            "name": "iMove 250S"
+          },
           "group": "rearSides",
           "options": {
             "axisInversions": [],
@@ -88,66 +93,61 @@
               }
             ],
             "maxBrightness": 1
-          },
-          "type": {
-            "name": "iMove 250s",
-            "manufacturer": "iSolution"
           }
         },
         {
           "channel": 117,
+          "type": {
+            "manufacturer": "iSolution",
+            "name": "iMove 250S"
+          },
           "group": "rearSides",
           "options": {
             "axisInversions": [],
             "axisRestrictions": [],
             "maxBrightness": 1
-          },
-          "type": {
-            "name": "iMove 250s",
-            "manufacturer": "iSolution"
           }
         },
         {
           "channel": 133,
+          "type": {
+            "manufacturer": "iSolution",
+            "name": "iMove 250S"
+          },
           "group": "rearSides",
           "options": {
             "axisInversions": [],
             "axisRestrictions": [],
             "maxBrightness": 1
-          },
-          "type": {
-            "name": "iMove 250s",
-            "manufacturer": "iSolution"
           }
         },
         {
           "channel": 149,
+          "type": {
+            "manufacturer": "iSolution",
+            "name": "iMove 250S"
+          },
           "group": "rearSides",
           "options": {
             "axisInversions": [],
             "axisRestrictions": [],
             "maxBrightness": 1
-          },
-          "type": {
-            "name": "iMove 250s",
-            "manufacturer": "iSolution"
           }
         },
         {
           "channel": 165,
+          "type": {
+            "manufacturer": "iSolution",
+            "name": "iMove 250S"
+          },
           "group": "rearSides",
           "options": {
             "axisInversions": [],
             "axisRestrictions": [],
             "maxBrightness": 1
-          },
-          "type": {
-            "name": "iMove 250s",
-            "manufacturer": "iSolution"
           }
         }
-      ],
-      "universeID": 1
+      ]
     }
   ]
 }

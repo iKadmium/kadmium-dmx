@@ -1,4 +1,5 @@
 {
+  "$schema": "../fixture.schema.json",
   "name": "iMove 250S",
   "manufacturer": "iSolution",
   "type": "LED",

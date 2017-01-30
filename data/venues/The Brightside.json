@@ -4,61 +4,66 @@
   "universes": [
     {
       "name": "Main Universe",
+      "universeID": 1,
       "fixtures": [
         {
           "channel": 400,
+          "type": {
+            "manufacturer": "Generic",
+            "name": "Chinese RGBW (5ch)"
+          },
           "group": "vocalist",
           "options": {
             "axisInversions": [],
             "axisRestrictions": [],
             "maxBrightness": 1
-          },
-          "type": {
-            "name": "Chinese RGBW (5ch)",
-            "manufacturer": "Generic"
           }
         },
         {
           "channel": 405,
+          "type": {
+            "manufacturer": "Generic",
+            "name": "Chinese RGBW (5ch)"
+          },
           "group": "guitarist",
           "options": {
             "axisInversions": [],
             "axisRestrictions": [],
             "maxBrightness": 1
-          },
-          "type": {
-            "name": "Chinese RGBW (5ch)",
-            "manufacturer": "Generic"
           }
         },
         {
           "channel": 410,
+          "type": {
+            "manufacturer": "Generic",
+            "name": "Chinese RGBW (5ch)"
+          },
           "group": "bassist",
           "options": {
             "axisInversions": [],
             "axisRestrictions": [],
             "maxBrightness": 1
-          },
-          "type": {
-            "name": "Chinese RGBW (5ch)",
-            "manufacturer": "Generic"
           }
         },
         {
           "channel": 415,
+          "type": {
+            "manufacturer": "Generic",
+            "name": "Chinese RGBW (5ch)"
+          },
           "group": "drummer",
           "options": {
             "axisInversions": [],
             "axisRestrictions": [],
             "maxBrightness": 1
-          },
-          "type": {
-            "name": "Chinese RGBW (5ch)",
-            "manufacturer": "Generic"
           }
         },
         {
           "channel": 101,
+          "type": {
+            "manufacturer": "Martin",
+            "name": "Mac 101"
+          },
           "group": "rearSides",
           "options": {
             "axisInversions": [],
@@ -75,14 +80,14 @@
               }
             ],
             "maxBrightness": 1
-          },
-          "type": {
-            "name": "Mac 101",
-            "manufacturer": "Martin"
           }
         },
         {
           "channel": 113,
+          "type": {
+            "manufacturer": "Martin",
+            "name": "Mac 101"
+          },
           "group": "rearSides",
           "options": {
             "axisInversions": [],
@@ -99,14 +104,14 @@
               }
             ],
             "maxBrightness": 1
-          },
-          "type": {
-            "name": "Mac 101",
-            "manufacturer": "Martin"
           }
         },
         {
           "channel": 125,
+          "type": {
+            "manufacturer": "Martin",
+            "name": "Mac 101"
+          },
           "group": "rearSides",
           "options": {
             "axisInversions": [],
@@ -123,14 +128,14 @@
               }
             ],
             "maxBrightness": 1
-          },
-          "type": {
-            "name": "Mac 101",
-            "manufacturer": "Martin"
           }
         },
         {
           "channel": 137,
+          "type": {
+            "manufacturer": "Martin",
+            "name": "Mac 101"
+          },
           "group": "rearSides",
           "options": {
             "axisInversions": [],
@@ -147,14 +152,9 @@
               }
             ],
             "maxBrightness": 1
-          },
-          "type": {
-            "name": "Mac 101",
-            "manufacturer": "Martin"
           }
         }
-      ],
-      "universeID": 1
+      ]
     }
   ]
 }

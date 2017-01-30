@@ -14,18 +14,16 @@ namespace kadmium_osc_dmx_dotnet_core
 
         static string FixturesLocation = Path.Combine(DataLocation, "fixtures");
         static string GroupsLocation = Path.Combine(DataLocation, "groups.json");
-        static string UniversesLocation = Path.Combine(DataLocation, "universes.json");
         static string VenuesLocation = Path.Combine(DataLocation, "venues");
         static string FixtureCollectionLocation = Path.Combine(DataLocation, "fixtureCollections");
         static string SettingsLocation = Path.Combine(DataLocation, "settings.json");
-
-        static string JsonSchemaSchema = Path.Combine(DataLocation, "jsonschema.schema.json");
-        static string FixturesSchema = Path.Combine(FixturesLocation, "fixture.schema.json");
-        static string GroupsSchema = Path.Combine(DataLocation, "groups.schema.json");
-        static string UniversesSchema = Path.Combine(DataLocation, "universes.schema.json");
-        static string VenuesSchema = Path.Combine(VenuesLocation, "venue.schema.json");
-        static string FixtureCollectionsSchema = Path.Combine(FixtureCollectionLocation, "fixtureCollection.schema.json");
-        static string SettingsSchema = Path.Combine(DataLocation, "settings.schema.json");
+        
+        public static string JsonSchemaSchema = Path.Combine(DataLocation, "jsonschema.schema.json");
+        public static string FixtureDefinitionSchema = Path.Combine(FixturesLocation, "fixture.schema.json");
+        public static string GroupsSchema = Path.Combine(DataLocation, "groups.schema.json");
+        public static string VenuesSchema = Path.Combine(VenuesLocation, "venue.schema.json");
+        public static string FixtureCollectionsSchema = Path.Combine(FixtureCollectionLocation, "fixtureCollection.schema.json");
+        public static string SettingsSchema = Path.Combine(DataLocation, "settings.schema.json");
 
         private static void ValidatedSave(JToken obj, string path, string schemaPath)
         {
@@ -44,7 +42,7 @@ namespace kadmium_osc_dmx_dotnet_core
             Validate(obj, path, schemaPath);
             return obj;
         }
-
+        
         private static bool Validate(JToken obj, string path, string schemaPath)
         {
             JSchemaUrlResolver resolver = new JSchemaUrlResolver();
@@ -173,36 +171,39 @@ namespace kadmium_osc_dmx_dotnet_core
             return schema;
         }
 
+        public static string GetFixtureDefinitionPath(string manufacturer, string model)
+        {
+            return Path.Combine(FixturesLocation, manufacturer, model + ".json");
+        }
+
         public static bool HasFixtureDefinition(string manufacturer, string model)
         {
-            string path = Path.Combine(FixturesLocation, manufacturer, model + ".json");
-            return File.Exists(path);
+            return File.Exists(GetFixtureDefinitionPath(manufacturer, model));
         }
 
         public static JObject LoadFixtureDefinition(string manufacturer, string model)
         {
-            string path = Path.Combine(FixturesLocation, manufacturer, model + ".json");
-            JObject definitionRoot = ValidatedLoad(path, FixturesSchema).Value<JObject>();
+            string path = GetFixtureDefinitionPath(manufacturer, model);
+            JObject definitionRoot = ValidatedLoad(path, FixtureDefinitionSchema).Value<JObject>();
             return definitionRoot;
         }
 
         public static void DeleteFixtureDefinition(string manufacturer, string model)
         {
-            string path = Path.Combine(FixturesLocation, manufacturer, model + ".json");
-            File.Delete(path);
+            File.Delete(GetFixtureDefinitionPath(manufacturer, model));
         }
 
         public static void SaveFixtureDefinition(JObject definition)
         {
             string model = definition["name"].Value<string>();
             string manufacturer = definition["manufacturer"].Value<string>();
-            string path = Path.Combine(FixturesLocation, manufacturer, model + ".json");
-            ValidatedSave(definition, path, FixturesSchema);
+            string path = GetFixtureDefinitionPath(manufacturer, model);
+            ValidatedSave(definition, path, FixtureDefinitionSchema);
         }
 
         public static JObject GetFixtureDefinitionSchema()
         {
-            JObject schema = ValidatedLoad(FixturesSchema, JsonSchemaSchema) as JObject;
+            JObject schema = ValidatedLoad(FixtureDefinitionSchema, JsonSchemaSchema) as JObject;
             return schema;
         }
 
@@ -284,29 +285,32 @@ namespace kadmium_osc_dmx_dotnet_core
             return files;
         }
 
+        public static string GetVenueLocation(string id)
+        {
+            return Path.Combine(VenuesLocation, id + ".json");
+        }
+
         public static bool HasVenue(string id)
         {
-            string path = Path.Combine(VenuesLocation, id + ".json");
-            return File.Exists(path);
+            return File.Exists(GetVenueLocation(id));
         }
 
         public static void DeleteVenue(string id)
         {
             string path = Path.Combine(VenuesLocation, id + ".json");
-            File.Delete(path);
+            File.Delete(GetVenueLocation(id));
         }
 
         public static void SaveVenue(JObject venue)
         {
             string name = venue["name"].Value<string>();
-            string path = Path.Combine(VenuesLocation, name + ".json");
+            string path = GetVenueLocation(name);
             ValidatedSave(venue, path, VenuesSchema);
         }
 
         public static JObject LoadVenue(string id)
         {
-            string path = Path.Combine(VenuesLocation, id + ".json");
-            JObject obj = ValidatedLoad(path, VenuesSchema) as JObject;
+            JObject obj = ValidatedLoad(GetVenueLocation(id), VenuesSchema) as JObject;
             return obj;
         }
 
@@ -345,6 +349,16 @@ namespace kadmium_osc_dmx_dotnet_core
         {
             string path = SettingsLocation;
             ValidatedSave(settings, SettingsLocation, SettingsSchema);
+        }
+
+        public static string GetRelativePath(string source, string destination)
+        {
+            var path = new Uri(source).MakeRelativeUri(new Uri(destination)).ToString();
+            if (Path.GetDirectoryName(source) == Path.GetDirectoryName(destination))
+            {
+                path = "./" + path;
+            }
+            return path;
         }
     }
 }

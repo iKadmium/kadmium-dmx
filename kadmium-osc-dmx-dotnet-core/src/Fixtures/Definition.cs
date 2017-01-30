@@ -56,6 +56,7 @@ namespace kadmium_osc_dmx_dotnet_core.Fixtures
         public JObject Serialize()
         {
             JObject obj = new JObject(
+                new JProperty("$schema", FileAccess.GetRelativePath(FileAccess.GetFixtureDefinitionPath(Manufacturer, Name), FileAccess.FixtureDefinitionSchema)),
                 new JProperty("name", Name),
                 new JProperty("manufacturer", Manufacturer),
                 new JProperty("type", Type.ToString()),

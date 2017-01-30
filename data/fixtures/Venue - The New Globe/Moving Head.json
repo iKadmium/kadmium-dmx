@@ -1,4 +1,5 @@
 {
+  "$schema": "../fixture.schema.json",
   "name": "Moving Head",
   "manufacturer": "Venue - The New Globe",
   "type": "LED",

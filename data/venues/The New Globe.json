@@ -1,11 +1,17 @@
 {
+  "$schema": "./venue.schema.json",
   "name": "The New Globe",
   "universes": [
     {
       "name": "Universe 1",
+      "universeID": 1,
       "fixtures": [
         {
           "channel": 55,
+          "type": {
+            "manufacturer": "Venue - The New Globe",
+            "name": "Moving Head"
+          },
           "group": "rearSides",
           "options": {
             "axisInversions": [],
@@ -22,14 +28,14 @@
               }
             ],
             "maxBrightness": 1
-          },
-          "type": {
-            "manufacturer": "Venue - The New Globe",
-            "name": "Moving Head"
           }
         },
         {
           "channel": 67,
+          "type": {
+            "manufacturer": "Venue - The New Globe",
+            "name": "Moving Head"
+          },
           "group": "drummer",
           "options": {
             "axisInversions": [],
@@ -46,14 +52,14 @@
               }
             ],
             "maxBrightness": 1
-          },
-          "type": {
-            "manufacturer": "Venue - The New Globe",
-            "name": "Moving Head"
           }
         },
         {
           "channel": 79,
+          "type": {
+            "manufacturer": "Venue - The New Globe",
+            "name": "Moving Head"
+          },
           "group": "rearSides",
           "options": {
             "axisInversions": [
@@ -72,40 +78,35 @@
               }
             ],
             "maxBrightness": 1
-          },
-          "type": {
-            "manufacturer": "Venue - The New Globe",
-            "name": "Moving Head"
           }
         },
         {
           "channel": 25,
+          "type": {
+            "manufacturer": "Venue - The New Globe",
+            "name": "PAR"
+          },
           "group": "guitarist",
           "options": {
             "axisInversions": [],
             "axisRestrictions": [],
             "maxBrightness": 1
-          },
-          "type": {
-            "manufacturer": "Venue - The New Globe",
-            "name": "PAR"
           }
         },
         {
           "channel": 46,
+          "type": {
+            "manufacturer": "Venue - The New Globe",
+            "name": "PAR"
+          },
           "group": "bassist",
           "options": {
             "axisInversions": [],
             "axisRestrictions": [],
             "maxBrightness": 1
-          },
-          "type": {
-            "manufacturer": "Venue - The New Globe",
-            "name": "PAR"
           }
         }
-      ],
-      "universeID": 1
+      ]
     }
   ]
 }

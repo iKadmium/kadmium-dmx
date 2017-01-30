@@ -1,13 +1,25 @@
-﻿using kadmium_osc_dmx_dotnet_core.Fixtures;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+﻿using kadmium_osc_dmx_dotnet_core;
+using kadmium_osc_dmx_dotnet_core.Fixtures;
+using Newtonsoft.Json.Linq;
+using Xunit;
 
 namespace kadmium_osc_dmx_dotnet_test
 {
     public class FixtureDefinitionTests
     {
+        [Fact]
+        public static void TestSerialization()
+        {
+            foreach(var fixtureDefinitionPair in FileAccess.GetAllFixtures())
+            {
+                var sourceDefinitionJson = FileAccess.LoadFixtureDefinition(fixtureDefinitionPair.Item1, fixtureDefinitionPair.Item2);
+                var definition = Definition.Load(sourceDefinitionJson);
+                var destinationDefinitionJson = definition.Serialize();
+
+                Assert.Equal(sourceDefinitionJson.ToString(), destinationDefinitionJson.ToString());
+            }
+        }
+
         public static Definition GetMovingFixtureDefinition(string axisName, int min, int max)
         {
             Definition definition = new Definition();

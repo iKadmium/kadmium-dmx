@@ -1,7 +1,7 @@
 ﻿{
   "$schema": "../fixture.schema.json",
-  "manufacturer": "Scanlime",
   "name": "FadeCandy (program mode)",
+  "manufacturer": "Scanlime",
   "type": "LED",
   "channels": [
     {
@@ -46,6 +46,5 @@
       "min": 0,
       "max": 255
     }
-  ],
-  "movements": []
+  ]
 }
