@@ -7,7 +7,7 @@ import { AsyncJSON } from "../AsyncJSON";
 import * as ko from "knockout";
 import "ko.plus";
 
-interface PreviewData
+export interface PreviewData
 {
     groups: string[];
     universes: UniverseData[];

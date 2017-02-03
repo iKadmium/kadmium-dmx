@@ -14,6 +14,7 @@ const common = {
         preview2D: ["jQuery", "bootstrap", "./scripts/ts/Controllers/Preview2D/Preview2D.ts"],
         rawDMX: ["jQuery", "bootstrap", "./scripts/ts/Controllers/RawDMX/RawDMX.ts"],
         settings: ["jQuery", "bootstrap", "./scripts/ts/Controllers/Settings/Settings.ts"],
+        testing: ["jQuery", "bootstrap", "./scripts/ts/Controllers/Testing/Testing.ts"],
         venues: ["jQuery", "bootstrap", "./scripts/ts/Controllers/Venues/Venues.ts"]
     },
     output: {
