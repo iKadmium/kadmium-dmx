@@ -14,7 +14,7 @@ using System.Threading.Tasks;
 
 namespace kadmium_osc_dmx_dotnet_webui.WebSockets
 {
-    public class FixturesLive
+    public class FixturesLive : IDisposable
     {
         private static int RECEIVE_BUFFER_SIZE = 65535;
         public int UniverseID { get; set; }
@@ -114,25 +114,12 @@ namespace kadmium_osc_dmx_dotnet_webui.WebSockets
                                     break;
                             }
                             break;
-                        case WebSocketMessageType.Close:
-                            Close();
-                            break;
                     }
                 }
                 catch (IOException)
-                {
-                    Close();
-                }
+                { }
             }
-        }
-
-        private void Close()
-        {
-            foreach (Universe universe in MasterController.Instance.Venue?.Universes.Values)
-            {
-                universe.Updated -= Universe_Updated;
-            }
-        }
+        }        
 
         private async void Universe_Updated(object sender, DMXEventArgs e)
         {
@@ -178,14 +165,24 @@ namespace kadmium_osc_dmx_dotnet_webui.WebSockets
             }
         }
 
+        public void Dispose()
+        {
+            foreach (Universe universe in MasterController.Instance.Venue?.Universes.Values)
+            {
+                universe.Updated -= Universe_Updated;
+            }
+        }
+
         static async Task Acceptor(HttpContext hc, Func<Task> n)
         {
             if (!hc.WebSockets.IsWebSocketRequest)
                 return;
 
             var socket = await hc.WebSockets.AcceptWebSocketAsync();
-            var h = new FixturesLive(socket);
-            await h.RenderLoop();
+            using (var h = new FixturesLive(socket))
+            {
+                await h.RenderLoop();
+            }
         }
 
         public static void Map(IApplicationBuilder app)

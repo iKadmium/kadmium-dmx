@@ -48,7 +48,10 @@ namespace kadmium_osc_dmx_dotnet_core.Listeners
                 Group group = MasterController.Instance.Groups[groupName];
                 value = (float)message.Arguments[0].GetValue();
                 group.Set(attribute, value);
-                Status.Update(StatusCode.Running, "Messages received", this);
+                if (Status.StatusCode != StatusCode.Running)
+                {
+                    Status.Update(StatusCode.Running, "Messages received", this);
+                }
                 recognised = true;
             }
             MessageReceived?.Invoke(this, new OSCListenerEventArgs(recognised, DateTime.Now, sender.ToString(), e.Message.Address.Contents, value));

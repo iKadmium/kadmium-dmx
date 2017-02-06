@@ -12,7 +12,7 @@ using System.Threading.Tasks;
 
 namespace kadmium_osc_dmx_dotnet_webui.WebSockets
 {
-    public class RawDMXSocketHandler
+    public class RawDMXSocketHandler : IDisposable
     {
         private static int BUFFER_SIZE = 65535;
         private static List<RawDMXSocketHandler> AllSocketHandlers;
@@ -42,10 +42,6 @@ namespace kadmium_osc_dmx_dotnet_webui.WebSockets
                 WebSocketReceiveResult received = await Socket.ReceiveAsync(segment, CancellationToken.None);
                 switch (received.MessageType)
                 {
-                    case WebSocketMessageType.Close:
-                        AllSocketHandlers.Remove(this);
-                        MasterController.Instance.UpdatesEnabled = (AllSocketHandlers.Where(x => x.Socket.State == WebSocketState.Open).Count() == 0);
-                        break;
                     case WebSocketMessageType.Text:
                         string message = Encoding.UTF8.GetString(segment.Array, segment.Offset, received.Count);
                         JObject obj = JObject.Parse(message);
@@ -68,14 +64,22 @@ namespace kadmium_osc_dmx_dotnet_webui.WebSockets
             }
         }
 
+        public void Dispose()
+        {
+            AllSocketHandlers.Remove(this);
+            MasterController.Instance.UpdatesEnabled = (AllSocketHandlers.Where(x => x.Socket.State == WebSocketState.Open).Count() == 0);
+        }
+
         static async Task Acceptor(HttpContext hc, Func<Task> n)
         {
             if (!hc.WebSockets.IsWebSocketRequest)
                 return;
 
             var socket = await hc.WebSockets.AcceptWebSocketAsync();
-            var h = new RawDMXSocketHandler(socket);
-            await h.RenderLoop();
+            using (var h = new RawDMXSocketHandler(socket))
+            {
+                await h.RenderLoop();
+            }
         }
 
         public static void Map(IApplicationBuilder app)

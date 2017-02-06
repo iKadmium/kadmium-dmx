@@ -8,7 +8,7 @@
     <input-label label="Web Port"><input class="form-control" data-bind="value: webPort, disable: save.isRunning" type="number" min="1" max="65535"></input-label>
     <input-label label="OSC Port"><input class="form-control" data-bind="value: oscPort, disable: save.isRunning" type="number" min="1" max="65535"></input-label>
 
-    <input-label label="Delay (ms):" data-bind="validationElement: delay"><input class="form-control" data-bind="value: delay" min="0"></input-label>
+    <input-label label="Delay (ms):" data-bind="validationElement: delay"><input class="form-control" data-bind="value: delay" type="number" min="0"></input-label>
     <div class="form-group clearfix">
         <div class="col-sm-offset-2 col-sm-10 checkbox">
             <label><input type="checkbox" data-bind="checked: multicast">Multicast</label>

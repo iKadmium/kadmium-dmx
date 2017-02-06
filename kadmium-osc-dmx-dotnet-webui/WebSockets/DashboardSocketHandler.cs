@@ -14,7 +14,7 @@ using System.Threading.Tasks;
 
 namespace kadmium_osc_dmx_dotnet_webui.WebSockets
 {
-    public class DashboardSocketHandler
+    public class DashboardSocketHandler : IDisposable
     {
         private static int RECEIVE_BUFFER_SIZE = 65535;
         public WebSocket Socket { get; }
@@ -27,18 +27,12 @@ namespace kadmium_osc_dmx_dotnet_webui.WebSockets
             Venue.Status.Updated += Status_Updated;
         }
 
-        private async void Status_Updated(object sender, StatusUpdateEventArgs e)
+        private void Status_Updated(object sender, StatusUpdateEventArgs e)
         {
             SendUpdate("Venues", e.StatusCode, e.Message);
             if (e.StatusCode == StatusCode.Running)
             {
-                int tries = 0;
-                while (MasterController.Instance.Venue == null && tries < 10)
-                {
-                    await Task.Delay(50);
-                    tries++;
-                }
-                int fixtureCount = (from universe in MasterController.Instance.Venue.Universes.Values
+                int fixtureCount = (from universe in (sender as Venue).Universes.Values
                                     select universe.Fixtures.Count()).Sum();
                 SendUpdate("Fixtures", e.StatusCode, fixtureCount + " fixtures loaded");
             }
@@ -112,22 +106,14 @@ namespace kadmium_osc_dmx_dotnet_webui.WebSockets
                 try
                 {
                     WebSocketReceiveResult received = await Socket.ReceiveAsync(receiveSegment, CancellationToken.None);
-                    switch (received.MessageType)
-                    {
-                        case WebSocketMessageType.Close:
-                            Close();
-                            break;
-                    }
                 }
                 catch (IOException)
-                {
-                    Close();
-                }
+                {}
 
             }
         }
-
-        private void Close()
+        
+        public void Dispose()
         {
             MasterController.Instance.Listener.Status.Updated += ListenerStatusUpdated;
             MasterController.Instance.Transmitter.Status.Updated += TransmitterStatusUpdated;
@@ -140,8 +126,10 @@ namespace kadmium_osc_dmx_dotnet_webui.WebSockets
                 return;
 
             var socket = await hc.WebSockets.AcceptWebSocketAsync();
-            var h = new DashboardSocketHandler(socket);
-            await h.RenderLoop();
+            using (var h = new DashboardSocketHandler(socket))
+            {
+                await h.RenderLoop();
+            }
         }
 
         public static void Map(IApplicationBuilder app)

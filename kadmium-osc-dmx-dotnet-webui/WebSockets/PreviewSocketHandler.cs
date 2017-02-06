@@ -11,7 +11,7 @@ using System.Threading.Tasks;
 
 namespace kadmium_osc_dmx_dotnet_webui.WebSockets
 {
-    public class PreviewSocketHandler
+    public class PreviewSocketHandler : IDisposable
     {
         private static int BUFFER_SIZE = 65535;
         public WebSocket Socket { get; }
@@ -57,16 +57,20 @@ namespace kadmium_osc_dmx_dotnet_webui.WebSockets
             ArraySegment<byte> segment = new ArraySegment<byte>(buffer);
             while (Socket.State == WebSocketState.Open)
             {
-                WebSocketReceiveResult received = await Socket.ReceiveAsync(segment, CancellationToken.None);
-                switch (received.MessageType)
+                try
                 {
-                    case WebSocketMessageType.Close:
-                        foreach (Universe universe in MasterController.Instance.Venue?.Universes.Values ?? Enumerable.Empty<Universe>())
-                        {
-                            universe.Rendered -= Universe_Updated;
-                        }
-                        break;
+                    WebSocketReceiveResult received = await Socket.ReceiveAsync(segment, CancellationToken.None);
                 }
+                catch(System.IO.IOException)
+                {}
+            }
+        }
+
+        public void Dispose()
+        {
+            foreach (Universe universe in MasterController.Instance.Venue?.Universes.Values ?? Enumerable.Empty<Universe>())
+            {
+                universe.Rendered -= Universe_Updated;
             }
         }
 
@@ -76,8 +80,10 @@ namespace kadmium_osc_dmx_dotnet_webui.WebSockets
                 return;
 
             var socket = await hc.WebSockets.AcceptWebSocketAsync();
-            var h = new PreviewSocketHandler(socket);
-            await h.RenderLoop();
+            using (var h = new PreviewSocketHandler(socket))
+            {
+                await h.RenderLoop();
+            }
         }
 
         public static void Map(IApplicationBuilder app)
