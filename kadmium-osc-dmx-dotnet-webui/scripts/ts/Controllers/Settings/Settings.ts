@@ -102,10 +102,10 @@ class SettingsViewModel
     serialize(): SettingsData
     {
         let obj: SettingsData = {
-            webPort: this.webPort(),
-            oscPort: this.oscPort(),
+            webPort: parseInt(this.webPort() + ""),
+            oscPort: parseInt(this.oscPort() + ""),
             sacnTransmitter: {
-                delay: this.delay(),
+                delay: parseInt(this.delay() + ""),
                 multicast: this.multicast(),
                 unicast: this.unicast().map((value: UnicastViewModel) => value.serialize())
             }
