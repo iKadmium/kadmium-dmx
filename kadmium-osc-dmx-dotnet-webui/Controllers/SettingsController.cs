@@ -1,29 +1,33 @@
-﻿using Microsoft.AspNetCore.Mvc;
-using kadmium_osc_dmx_dotnet_core;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
+using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json.Linq;
+using kadmium_osc_dmx_dotnet_core;
 
-// For more information on enabling MVC for empty projects, visit http://go.microsoft.com/fwlink/?LinkID=397860
+// For more information on enabling Web API for empty projects, visit http://go.microsoft.com/fwlink/?LinkID=397860
 
 namespace kadmium_osc_dmx_dotnet_webui.Controllers
 {
+    [Route("api/[controller]")]
     public class SettingsController : Controller
     {
-        // GET: /<controller>/
-        public IActionResult Index()
+        // GET: api/values
+        [HttpGet]
+        public JObject Get()
         {
-            return View();
+            return FileAccess.LoadSettings();
         }
-
-        public IActionResult Load()
+        
+        // POST api/values
+        [HttpPost]
+        public void Post([FromBody]string value)
         {
-            return Content(FileAccess.LoadSettings().ToString());
-        }
-
-        public IActionResult Save(string jsonString)
-        {
-            JObject obj = JObject.Parse(jsonString);
+            JObject obj = JObject.Parse(value);
             FileAccess.SaveSettings(obj);
-            return new EmptyResult();
         }
     }
+
+    
 }

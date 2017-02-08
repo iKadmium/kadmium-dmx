@@ -15,7 +15,7 @@
         "ASPNETCORE_ENVIRONMENT": "Development"
       }
     },
-    "Debug - Webpack Dev Server": {
+    "Debug": {
       "commandName": "Project",
       "launchBrowser": true,
       "launchUrl": "http://localhost:5000",
@@ -23,7 +23,7 @@
         "ASPNETCORE_ENVIRONMENT": "Development"
       }
     },
-    "Production - Webpack": {
+    "Production": {
       "commandName": "Project",
       "launchBrowser": true,
       "launchUrl": "http://localhost:5000",

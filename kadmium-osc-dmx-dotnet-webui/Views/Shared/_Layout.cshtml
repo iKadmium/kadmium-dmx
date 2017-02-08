@@ -3,30 +3,16 @@
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>@ViewData["Title"] - kadmium-osc-dmx</title>
-
-    <environment names="Development,Staging,Production">
-        <link rel="stylesheet" href="~/lib/bootstrap/css/bootstrap.min.css" />
-        <link rel="stylesheet" href="~/css/site.css" />
-    </environment>
+    <title>@ViewData["Title"] - Kadmium OSC DMX</title>
+    <base href="/" />
+    <link rel="stylesheet" type="text/css" href="/bootstrap.min.css" />
+    <link rel="stylesheet" type="text/css" href="/primeng/resources/themes/bootstrap/theme.css" />
+    <link rel="stylesheet" type="text/css" href="/primeng/resources/primeng.min.css" />
+    <link rel="stylesheet" type="text/css" href="/font-awesome.min.css" />
 </head>
 <body>
-    @Html.Partial("Navbar")
-    <div class="container body-content">
-        <h2>@ViewData["Title"]</h2>
-        @RenderBody()
-        <hr />
-        <footer>
-            <p>&copy; 2016 - Jesse Higginson</p>
-        </footer>
-    </div>
+    @RenderBody()
 
-    <environment names="Development">
-        <script src="http://localhost:8080/commons.js"></script>
-    </environment>
-    <environment names="Staging,Production">
-        <script src="~/js/commons.js"></script>
-    </environment>
     @RenderSection("scripts", required: false)
 </body>
 </html>
