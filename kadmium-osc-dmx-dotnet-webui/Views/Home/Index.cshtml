@@ -1,7 +1,18 @@
 ﻿@{
     ViewData["Title"] = "Home Page";
 }
-<app>Loading...</app>
+<app>
+    <div class="container">
+        <div class="page-header">
+            <h1>Loading...</h1>
+        </div>
+        <div class="progress">
+            <div class="progress-bar progress-bar-striped active" role="progressbar"
+                 aria-valuenow="100" aria-valuemin="0" aria-valuemax="100" style="width:100%">
+            </div>
+        </div>
+    </div>
+</app>
 <script src="~/dist/vendor.js" asp-append-version="true"></script>
 @section scripts {
     <script src="~/dist/main-client.js" asp-append-version="true"></script>

@@ -1,5 +1,4 @@
-﻿using kadmium_osc_dmx_dotnet_core.Fixtures;
-using Newtonsoft.Json.Linq;
+﻿using Newtonsoft.Json.Linq;
 using System.Collections.Generic;
 using System.Linq;
 

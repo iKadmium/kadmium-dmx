@@ -1,4 +1,5 @@
 import { Component } from '@angular/core';
+import { StatusPanelComponent } from "../status-panel/status-panel.component";
 
 @Component({
     selector: 'dashboard',
