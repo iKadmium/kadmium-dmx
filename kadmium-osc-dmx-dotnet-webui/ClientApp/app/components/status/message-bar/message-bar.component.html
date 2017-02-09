@@ -1,0 +1,6 @@
+<div *ngFor="let message of messages">
+    <div class="alert" [ngClass]="message.alertStyle">
+        <a class="close" (click)="remove(message)" aria-label="close">&times;</a>
+        <span class="glyphicon" [ngClass]="message.glyphIcon"></span> {{message.message}}
+    </div>
+</div>

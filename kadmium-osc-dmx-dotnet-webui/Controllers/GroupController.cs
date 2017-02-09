@@ -2,35 +2,28 @@
 using Microsoft.AspNetCore.Mvc;
 using kadmium_osc_dmx_dotnet_core;
 using Newtonsoft.Json.Linq;
+using System.Collections.Generic;
 
 // For more information on enabling MVC for empty projects, visit http://go.microsoft.com/fwlink/?LinkID=397860
 
 namespace kadmium_osc_dmx_dotnet_webui.Controllers
 {
 
-    public class GroupsController : Controller
+    [Route("api/[controller]")]
+    public class GroupController : Controller
     {
         // GET: /<controller>/
-        public IActionResult Index()
+        [HttpGet]
+        public IEnumerable<string> Get()
         {
-            return View();
+            return MasterController.Instance.Groups.Keys;
         }
 
-        public IActionResult Schema()
+        [HttpGet]
+        [RouteAttribute("{id}")]
+        public Group Get(string id)
         {
-            JObject obj = FileAccess.GetGroupsSchema();
-            Response.StatusCode = 200;
-            return Content(obj.ToString());
-        }
-
-        public IActionResult List()
-        {
-            JArray arr = new JArray(
-                from grp in MasterController.Instance.Groups.Values
-                orderby grp.Order
-                select new JValue(grp.Name)
-            );
-            return Content(arr.ToString());
+            return MasterController.Instance.Groups[id];
         }
 
         public IActionResult Load(string id)

@@ -1,17 +1,52 @@
-<h2>Settings</h2>
+<div class="page-header">
+    <h1>Settings</h1>
+</div>
 <p *ngIf="!settings">Loading...</p>
-<form *ngIf="settings" class="form-horizontal">
+<message-bar #messageBar></message-bar>
+<div *ngIf="settings" class="form-horizontal">
     <div class="form-group">
         <label class="control-label col-sm-2" for="webPort">HTTP Port:</label>
         <div class="col-sm-10">
-            <input type="number" class="form-control" id="webPort" min="0" max="65535" [(ngModel)]="settings.httpPort" [ngModelOptions]="{standalone: true}">
+            <input type="number" name="webPort" id="webPort" class="form-control" min="0" max="65535" [(ngModel)]="settings.webPort">
         </div>
     </div>
     <div class="form-group">
-        <label class="control-label col-sm-2" for="reaperWebUri">Reaper Web URI:</label>
+        <label class="control-label col-sm-2" for="oscPort">OSC Port:</label>
         <div class="col-sm-10">
-            <input type="text" class="form-control" id="reaperWebUri" [(ngModel)]="settings.reaperURI" [ngModelOptions]="{standalone: true}">
+            <input type="number" name="oscPort" id="oscPort" class="form-control" min="0" max="65535" [(ngModel)]="settings.oscPort">
         </div>
     </div>
-    <button class="btn btn-default col-sm-offset-2"><span class="glyphicon glyphicon-disk"></span> Save</button>
-</form>
+    <div class="form-group">
+        <label class="control-label col-sm-2" for="sacnTransmitterDelay">sACN Transmitter Delay:</label>
+        <div class="col-sm-10">
+            <input type="number" name="sacnTransmitterDelay" id="sacnTransmitterDelay" class="form-control" min="0" max="10000" [(ngModel)]="settings.sacnTransmitter.delay">
+        </div>
+    </div>
+    <div class="form-group">
+        <label class="control-label col-sm-2" for="sacnMulticast">sACN Multicast:</label>
+        <div class="col-sm-10">
+            <div class="checkbox">
+                <label><input type="checkbox" name="sacnMulticast"  id="sacnMulticast" [(ngModel)]="settings.sacnTransmitter.multicast">Multicast</label>
+            </div>
+        </div>
+    </div>
+    <div class="form-group">
+        <label class="control-label col-sm-2" for="sacnTransmitterDelay">sACN Unicast Targets:</label>
+        <div class="col-sm-10">
+            <div class="form-group" *ngFor="let target of settings.sacnTransmitter.unicast; let idx = index" id="unicast" name="unicast">
+                <div class="col-sm-8">
+                    <input type="text" class="form-control col-sm-8" [(ngModel)]="settings.sacnTransmitter.unicast[idx].target">
+                </div>
+                <div class="col-sm-4">
+                    <button class="btn btn-danger" (click)="removeTarget(idx)"><span class="glyphicon glyphicon-remove"></span></button>
+                </div>
+            </div>
+            <button class="btn btn-success clearfix" (click)="addTarget()">Add Target</button>
+        </div>
+    </div>
+    <div class="form-group">
+        <div class="col-sm-offset-2 col-sm-10">
+            <button class="btn btn-primary" (click)="save()"><span class="glyphicon glyphicon-floppy-disk"></span> Save</button>
+        </div>
+    </div>
+</div>

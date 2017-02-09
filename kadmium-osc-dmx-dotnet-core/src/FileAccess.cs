@@ -5,6 +5,7 @@ using System.Linq;
 using Newtonsoft.Json.Linq;
 using Newtonsoft.Json.Schema;
 using Newtonsoft.Json;
+using System.Threading.Tasks;
 
 namespace kadmium_osc_dmx_dotnet_core
 {
@@ -12,26 +13,32 @@ namespace kadmium_osc_dmx_dotnet_core
     {
         static string DataLocation = Path.Combine(AppContext.BaseDirectory, "data");
 
-        static string FixturesLocation = Path.Combine(DataLocation, "fixtures");
-        static string GroupsLocation = Path.Combine(DataLocation, "groups.json");
-        static string VenuesLocation = Path.Combine(DataLocation, "venues");
-        static string FixtureCollectionLocation = Path.Combine(DataLocation, "fixtureCollections");
-        static string SettingsLocation = Path.Combine(DataLocation, "settings.json");
-        
-        public static string JsonSchemaSchema = Path.Combine(DataLocation, "jsonschema.schema.json");
-        public static string FixtureDefinitionSchema = Path.Combine(FixturesLocation, "fixture.schema.json");
-        public static string GroupsSchema = Path.Combine(DataLocation, "groups.schema.json");
-        public static string VenuesSchema = Path.Combine(VenuesLocation, "venue.schema.json");
-        public static string FixtureCollectionsSchema = Path.Combine(FixtureCollectionLocation, "fixtureCollection.schema.json");
-        public static string SettingsSchema = Path.Combine(DataLocation, "settings.schema.json");
+        private static string FixturesLocation = Path.Combine(DataLocation, "fixtures");
+        private static string GroupsLocation = Path.Combine(DataLocation, "groups.json");
+        private static string VenuesLocation = Path.Combine(DataLocation, "venues");
+        private static string FixtureCollectionLocation = Path.Combine(DataLocation, "fixtureCollections");
+        private static string SettingsLocation = Path.Combine(DataLocation, "settings.json");
 
-        private static void ValidatedSave(JToken obj, string path, string schemaPath)
+        private static string JsonSchemaSchema = Path.Combine(DataLocation, "jsonschema.schema.json");
+        public static string FixtureDefinitionSchema = Path.Combine(FixturesLocation, "fixture.schema.json");
+        private static string GroupsSchema = Path.Combine(DataLocation, "groups.schema.json");
+        public static string VenuesSchema = Path.Combine(VenuesLocation, "venue.schema.json");
+        private static string FixtureCollectionsSchema = Path.Combine(FixtureCollectionLocation, "fixtureCollection.schema.json");
+        private static string SettingsSchema = Path.Combine(DataLocation, "settings.schema.json");
+
+        private static FileInfo GroupsFile = new FileInfo(GroupsLocation);
+        private static FileInfo VenuesFile = new FileInfo(GroupsLocation);
+        private static FileInfo SettingsFile = new FileInfo(SettingsLocation);
+
+        private static async Task ValidatedSave(JToken obj, FileInfo file, string schemaPath)
         {
             string schemaString = File.ReadAllText(schemaPath);
-            if (Validate(obj, path, schemaPath))
+            if (Validate(obj, file.FullName, schemaPath))
             {
-                Directory.CreateDirectory(Path.GetDirectoryName(path));
-                File.WriteAllText(path, obj.ToString());
+                Directory.CreateDirectory(Path.GetDirectoryName(file.FullName));
+                var writer = SettingsFile.OpenWrite();
+                var bytes = System.Text.Encoding.UTF8.GetBytes(obj.ToString());
+                await writer.WriteAsync(bytes, 0, bytes.Length);
             }
         }
 
@@ -42,7 +49,7 @@ namespace kadmium_osc_dmx_dotnet_core
             Validate(obj, path, schemaPath);
             return obj;
         }
-        
+
         private static bool Validate(JToken obj, string path, string schemaPath)
         {
             JSchemaUrlResolver resolver = new JSchemaUrlResolver();
@@ -86,7 +93,7 @@ namespace kadmium_osc_dmx_dotnet_core
             }
         }
 
-        public static void RenameTransmitter(string id, string newID)
+        public static async Task RenameTransmitter(string id, string newID)
         {
             var venues = from venueName in GetVenueNames()
                          select LoadVenue(venueName);
@@ -107,12 +114,12 @@ namespace kadmium_osc_dmx_dotnet_core
                 }
                 if (dirty)
                 {
-                    SaveVenue(venue);
+                    await SaveVenue(venue);
                 }
             }
         }
 
-        public static void RenameGroup(string id, string newID)
+        public static async Task RenameGroup(string id, string newID)
         {
             var venues = from venueName in GetVenueNames()
                          select LoadVenue(venueName);
@@ -133,7 +140,7 @@ namespace kadmium_osc_dmx_dotnet_core
                 }
                 if (dirty)
                 {
-                    SaveVenue(venue);
+                    await SaveVenue(venue);
                 }
             }
         }
@@ -162,7 +169,10 @@ namespace kadmium_osc_dmx_dotnet_core
                 select grp.Serialize()
             );
 
-            ValidatedSave(groups, GroupsLocation, GroupsSchema);
+            lock (GroupsFile)
+            {
+                ValidatedSave(groups, GroupsFile, GroupsSchema).Wait();
+            }
         }
 
         public static JObject GetGroupsSchema()
@@ -193,12 +203,13 @@ namespace kadmium_osc_dmx_dotnet_core
             File.Delete(GetFixtureDefinitionPath(manufacturer, model));
         }
 
-        public static void SaveFixtureDefinition(JObject definition)
+        public static async Task SaveFixtureDefinition(JObject definition)
         {
             string model = definition["name"].Value<string>();
             string manufacturer = definition["manufacturer"].Value<string>();
             string path = GetFixtureDefinitionPath(manufacturer, model);
-            ValidatedSave(definition, path, FixtureDefinitionSchema);
+            FileInfo file = new FileInfo(path);
+            await ValidatedSave(definition, file, FixtureDefinitionSchema);
         }
 
         public static JObject GetFixtureDefinitionSchema()
@@ -210,7 +221,7 @@ namespace kadmium_osc_dmx_dotnet_core
         public static IEnumerable<string> GetFixtureManufacturers()
         {
             var directories = from directory in Directory.EnumerateDirectories(FixturesLocation)
-                        select Path.GetFileNameWithoutExtension(directory);
+                              select Path.GetFileNameWithoutExtension(directory);
             return directories;
         }
 
@@ -226,7 +237,7 @@ namespace kadmium_osc_dmx_dotnet_core
         public static IEnumerable<Tuple<string, string>> GetAllFixtures()
         {
             List<Tuple<string, string>> returnVal = new List<Tuple<string, string>>();
-            foreach(string manufacturer in GetFixtureManufacturers())
+            foreach (string manufacturer in GetFixtureManufacturers())
             {
                 foreach (string fixtureName in GetFixtureNames(manufacturer))
                 {
@@ -257,11 +268,12 @@ namespace kadmium_osc_dmx_dotnet_core
             File.Delete(path);
         }
 
-        public static void SaveFixtureCollection(JObject chunk)
+        public static async Task SaveFixtureCollection(JObject chunk)
         {
             string name = chunk["name"].Value<string>();
             string path = Path.Combine(FixtureCollectionLocation, name + ".json");
-            ValidatedSave(chunk, path, FixtureCollectionsSchema);
+            FileInfo file = new FileInfo(path);
+            await ValidatedSave(chunk, file, FixtureCollectionsSchema);
         }
 
         public static JObject LoadFixtureCollection(string id)
@@ -301,11 +313,12 @@ namespace kadmium_osc_dmx_dotnet_core
             File.Delete(GetVenueLocation(id));
         }
 
-        public static void SaveVenue(JObject venue)
+        public static async Task SaveVenue(JObject venue)
         {
             string name = venue["name"].Value<string>();
             string path = GetVenueLocation(name);
-            ValidatedSave(venue, path, VenuesSchema);
+            FileInfo file = new FileInfo(path);
+            await ValidatedSave(venue, file, VenuesSchema);
         }
 
         public static JObject LoadVenue(string id)
@@ -347,8 +360,10 @@ namespace kadmium_osc_dmx_dotnet_core
 
         public static void SaveSettings(JObject settings)
         {
-            string path = SettingsLocation;
-            ValidatedSave(settings, SettingsLocation, SettingsSchema);
+            lock (SettingsFile)
+            {
+                ValidatedSave(settings, SettingsFile, SettingsSchema).Wait();
+            }
         }
 
         public static string GetRelativePath(string source, string destination)

@@ -1,0 +1,13 @@
+<div class="page-header">
+    <h1>Groups</h1>
+</div>
+<message-bar #messageBar></message-bar>
+<ul class='list-group' *ngIf="groups">
+    <li *ngFor="let group of groups" class="list-group-item clearfix">
+        {{ group }}
+        <div class="btn-group pull-right">
+            <button class="btn btn-default" (click)="edit(group)"><span class="glyphicon glyphicon-pencil"></span> Edit</button>
+            <button class="btn btn-danger" (click)="delete(group)"><span class="glyphicon glyphicon-remove"></span> Delete</button>
+        </div>
+    </li>
+</ul>

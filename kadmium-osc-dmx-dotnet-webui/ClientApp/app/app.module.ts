@@ -6,12 +6,16 @@ import { HttpModule } from "@angular/http";
 import { AppComponent } from './components/app/app.component'
 
 import { NavMenuComponent } from './components/navmenu/navmenu.component';
-import { StatusPanelComponent } from "./components/status-panel/status-panel.component";
+import { StatusPanelComponent } from "./components/status/status-panel/status-panel.component";
+import { MessageBarComponent } from "./components/status/message-bar/message-bar.component";
 
 import { DashboardComponent } from './components/dashboard/dashboard.component';
 import { SettingsComponent } from './components/settings/settings.component';
+import { GroupsComponent } from './components/groups/groups.component';
 
 import { SettingsService } from "./components/settings/settings.service";
+import { VenueService } from "./components/venue/venue.service";
+import { GroupsService } from "./components/groups/groups.service";
 
 declare var jQuery: any;
 
@@ -19,10 +23,14 @@ declare var jQuery: any;
     bootstrap: [AppComponent],
     declarations: [
         AppComponent,
-        NavMenuComponent,
+
         SettingsComponent,
         DashboardComponent,
-        StatusPanelComponent
+        GroupsComponent,
+
+        NavMenuComponent,
+        StatusPanelComponent,
+        MessageBarComponent
     ],
     imports: [
         UniversalModule, // Must be first import. This automatically imports BrowserModule, HttpModule, and JsonpModule too.
@@ -33,6 +41,7 @@ declare var jQuery: any;
             { path: '', redirectTo: 'dashboard', pathMatch: 'full' },
             { path: 'dashboard', component: DashboardComponent },
             { path: 'settings', component: SettingsComponent },
+            { path: 'groups', component: GroupsComponent },
             { path: '**', redirectTo: 'sets' }
         ])
     ],

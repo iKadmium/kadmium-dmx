@@ -50,7 +50,7 @@ namespace kadmium_osc_dmx_dotnet_core.Transmitters
             try
             {
                 SACNClient = new SACNSender(uuid, SOURCE_NAME, port);
-                Status.Update(StatusCode.Running, "Sending", this);
+                Status.Update(StatusCode.Success, "Sending", this);
             }
             catch (Exception e)
             {

@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { Headers, Http } from '@angular/http';
 import 'rxjs/add/operator/toPromise';
 
-import { Settings } from "./settings";
+import { Settings, SettingsData } from "./settings";
 
 @Injectable()
 export class SettingsService
@@ -17,15 +17,15 @@ export class SettingsService
             .toPromise()
             .then(response =>
             {
-                let data = (response.json() as Settings);
-                return data;
+                let data = (response.json() as SettingsData);
+                return Settings.deserialize(data);
             })
             .catch(this.handleError);
     }
 
     public save(data: Settings): Promise<void>
     {
-        return this.http.put(this.settingsUrl, data)
+        return this.http.post(this.settingsUrl, data.serialize())
             .toPromise()
             .then(response =>
             {

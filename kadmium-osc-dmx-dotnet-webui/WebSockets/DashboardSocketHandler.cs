@@ -30,7 +30,7 @@ namespace kadmium_osc_dmx_dotnet_webui.WebSockets
         private void Status_Updated(object sender, StatusUpdateEventArgs e)
         {
             SendUpdate("Venues", e.StatusCode, e.Message);
-            if (e.StatusCode == StatusCode.Running)
+            if (e.StatusCode == StatusCode.Success)
             {
                 int fixtureCount = (from universe in (sender as Venue).Universes.Values
                                     select universe.Fixtures.Count()).Sum();
@@ -59,15 +59,15 @@ namespace kadmium_osc_dmx_dotnet_webui.WebSockets
             SendUpdate("SACNTransmitters", MasterController.Instance.Transmitter.Status.StatusCode, MasterController.Instance.Transmitter.Status.Message);
             if (MasterController.Instance.Venue != null)
             {
-                SendUpdate("Venues", StatusCode.Running, MasterController.Instance.Venue.Name + " running");
+                SendUpdate("Venues", StatusCode.Success, MasterController.Instance.Venue.Name + " running");
                 int fixtureCount = (from universe in MasterController.Instance.Venue.Universes.Values
                                     select universe.Fixtures.Count()).Sum();
-                SendUpdate("Fixtures", StatusCode.Running, fixtureCount + " fixtures loaded");
+                SendUpdate("Fixtures", StatusCode.Success, fixtureCount + " fixtures loaded");
             }
             else
             {
-                SendUpdate("Venues", StatusCode.NotStarted, "No venue loaded");
-                SendUpdate("Fixtures", StatusCode.NotStarted, "No fixtures loaded");
+                SendUpdate("Venues", StatusCode.Warning, "No venue loaded");
+                SendUpdate("Fixtures", StatusCode.Warning, "No fixtures loaded");
             }
 
         }

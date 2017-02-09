@@ -26,7 +26,7 @@ namespace kadmium_osc_dmx_dotnet_core.Listeners
             {
                 listener = new OSCServer(port);
                 listener.DefaultOnMessageReceived += Listener_PacketReceived;
-                Status.Update(StatusCode.NotStarted, "No messages yet", this);
+                Status.Update(StatusCode.Warning, "No messages yet", this);
             }
             catch (Exception e)
             {
@@ -48,9 +48,9 @@ namespace kadmium_osc_dmx_dotnet_core.Listeners
                 Group group = MasterController.Instance.Groups[groupName];
                 value = (float)message.Arguments[0].GetValue();
                 group.Set(attribute, value);
-                if (Status.StatusCode != StatusCode.Running)
+                if (Status.StatusCode != StatusCode.Success)
                 {
-                    Status.Update(StatusCode.Running, "Messages received", this);
+                    Status.Update(StatusCode.Success, "Messages received", this);
                 }
                 recognised = true;
             }

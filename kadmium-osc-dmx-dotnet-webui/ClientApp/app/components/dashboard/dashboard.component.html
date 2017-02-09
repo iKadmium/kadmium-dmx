@@ -1,10 +1,34 @@
 <div class="page-header">
     <h1>Dashboard</h1>
 </div>
+<message-bar #messageBar></message-bar>
 <div class="row">
     <div class="col-md-3">
-        <status-panel>
-
+        <status-panel #venue name="Venue">
+            <div class="dropdown" *ngIf="venueNames">
+                <button class="btn btn-primary dropdown-toggle" type="button" data-toggle="dropdown">Load Venue
+                <span class="caret"></span></button>
+                <ul class="dropdown-menu">
+                    <li *ngFor="let venueName of venueNames">
+                        <a (click)="activateVenue(venueName)">{{venueName}}</a>
+                    </li>
+                </ul>
+            </div>
+        </status-panel>
+    </div>
+    <div class="col-md-3">
+        <status-panel #sacnTransmitter name="sACN Transmitter">
+            <a class="btn btn-primary" routerLink="/sacnTransmitterLive">Live</a>
+        </status-panel>
+    </div>
+    <div class="col-md-3">
+        <status-panel #oscListener name="OSC Listener">
+            <a class="btn btn-primary" routerLink="/oscListenerLive">Live</a>
+        </status-panel>
+    </div>
+    <div class="col-md-3">
+        <status-panel #fixtures name="Fixtures">
+            <a class="btn btn-primary" routerLink="/fixturesLive">Live</a>
         </status-panel>
     </div>
 </div>

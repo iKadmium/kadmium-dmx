@@ -19,7 +19,7 @@ namespace kadmium_osc_dmx_dotnet_core
             {
                 Universes.Add(universe.UniverseID, universe);
             }
-            Status.Update(StatusCode.Running, Name + " running", this);
+            Status.Update(StatusCode.Success, Name + " running", this);
         }
 
         public Venue() : this("", Enumerable.Empty<Universe>())

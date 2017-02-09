@@ -5,9 +5,10 @@ namespace kadmium_osc_dmx_dotnet_core
 {
     public enum StatusCode
     {
-        NotStarted,
-        Running,
-        Error
+        Warning,
+        Success,
+        Error,
+        Unknown
     }
 
     public class Status
@@ -19,7 +20,7 @@ namespace kadmium_osc_dmx_dotnet_core
 
         public Status(string notStartedMessage = "Not started yet")
         {
-            StatusCode = StatusCode.NotStarted;
+            StatusCode = StatusCode.Warning;
             Message = notStartedMessage;
         }
 
