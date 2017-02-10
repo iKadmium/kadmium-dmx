@@ -3,50 +3,48 @@
 </div>
 <p *ngIf="!settings">Loading...</p>
 <message-bar #messageBar></message-bar>
-<div *ngIf="settings" class="form-horizontal">
-    <div class="form-group">
-        <label class="control-label col-sm-2" for="webPort">HTTP Port:</label>
-        <div class="col-sm-10">
-            <input type="number" name="webPort" id="webPort" class="form-control" min="0" max="65535" [(ngModel)]="settings.webPort">
-        </div>
-    </div>
-    <div class="form-group">
-        <label class="control-label col-sm-2" for="oscPort">OSC Port:</label>
-        <div class="col-sm-10">
-            <input type="number" name="oscPort" id="oscPort" class="form-control" min="0" max="65535" [(ngModel)]="settings.oscPort">
-        </div>
-    </div>
-    <div class="form-group">
-        <label class="control-label col-sm-2" for="sacnTransmitterDelay">sACN Transmitter Delay:</label>
-        <div class="col-sm-10">
-            <input type="number" name="sacnTransmitterDelay" id="sacnTransmitterDelay" class="form-control" min="0" max="10000" [(ngModel)]="settings.sacnTransmitter.delay">
-        </div>
-    </div>
-    <div class="form-group">
-        <label class="control-label col-sm-2" for="sacnMulticast">sACN Multicast:</label>
-        <div class="col-sm-10">
+<form *ngIf="settings" class="form-horizontal" #settingsForm="ngForm">
+    <fieldset [disabled]="saving">
+        <labelled-input label="HTTP Port:" [inputElement]="webPort">
+            <input type="number" name="webPort" class="form-control" min="1" max="65535" [(ngModel)]="settings.webPort" #webPort="ngModel"
+            />
+            <div class="alert alert-danger" *ngIf="webPort.errors">The port must be between 1 and 65535</div>
+        </labelled-input>
+        <labelled-input label="OSC Port:" [inputElement]="oscPort">
+            <input required type="number" name="oscPort" class="form-control" min="1" max="65535" [(ngModel)]="settings.oscPort" #oscPort="ngModel"
+            />
+            <div class="alert alert-danger" *ngIf="oscPort.errors">The port must be between 1 and 65535</div>
+        </labelled-input>
+        <labelled-input label="sACN Transmitter Delay (ms):" [inputElement]="oscPort">
+            <input type="number" name="sacnTransmitterDelay" class="form-control" min="0" max="10000" [(ngModel)]="settings.sacnTransmitter.delay"
+                #sacnTransmitterDelay="ngModel" />
+            <div class="alert alert-danger" *ngIf="sacnTransmitterDelay.errors">Delay must be betwene 0 and 10000ms</div>
+        </labelled-input>
+        <labelled-input label="sACN Transmitter Delay (ms):" [inputElement]="sacnMulticast">
             <div class="checkbox">
-                <label><input type="checkbox" name="sacnMulticast"  id="sacnMulticast" [(ngModel)]="settings.sacnTransmitter.multicast">Multicast</label>
+                <label><input type="checkbox" name="sacnMulticast" [(ngModel)]="settings.sacnTransmitter.multicast" #sacnMulticast="ngModel">Multicast</label>
+            </div>
+        </labelled-input>
+        <div class="form-group">
+            <label class="control-label col-sm-2" for="sacnTransmitterDelay">sACN Unicast Targets:</label>
+            <div class="col-sm-10">
+                <div class="form-group" *ngFor="let target of settings.sacnTransmitter.unicast; let idx = index" id="unicast" name="unicast">
+                    <div class="col-sm-8" [ngClass]="{'has-error': targetName.errors && targetName.touched}">
+                        <input required type="text" class="form-control col-sm-8" [(ngModel)]="settings.sacnTransmitter.unicast[idx].target" [ngModelOptions]="{standalone: true}"
+                            #targetName="ngModel" />
+                        <div class="alert alert-danger" *ngIf="targetName.errors && targetName.touched">This field is required</div>
+                    </div>
+                    <div class="col-sm-4">
+                        <button class="btn btn-danger" (click)="removeTarget(idx)"><span class="glyphicon glyphicon-remove"></span></button>
+                    </div>
+                </div>
+                <button class="btn btn-success clearfix" (click)="addTarget()"><span class="glyphicon glyphicon-plus"></span> Add Target</button>
             </div>
         </div>
-    </div>
-    <div class="form-group">
-        <label class="control-label col-sm-2" for="sacnTransmitterDelay">sACN Unicast Targets:</label>
-        <div class="col-sm-10">
-            <div class="form-group" *ngFor="let target of settings.sacnTransmitter.unicast; let idx = index" id="unicast" name="unicast">
-                <div class="col-sm-8">
-                    <input type="text" class="form-control col-sm-8" [(ngModel)]="settings.sacnTransmitter.unicast[idx].target">
-                </div>
-                <div class="col-sm-4">
-                    <button class="btn btn-danger" (click)="removeTarget(idx)"><span class="glyphicon glyphicon-remove"></span></button>
-                </div>
+        <div class="form-group">
+            <div class="col-sm-offset-2 col-sm-10">
+                <button class="btn btn-primary" (click)="save()" [disabled]="!settingsForm.valid || !validateTargets()"><span class="glyphicon glyphicon-floppy-disk"></span> Save</button>
             </div>
-            <button class="btn btn-success clearfix" (click)="addTarget()">Add Target</button>
         </div>
-    </div>
-    <div class="form-group">
-        <div class="col-sm-offset-2 col-sm-10">
-            <button class="btn btn-primary" (click)="save()"><span class="glyphicon glyphicon-floppy-disk"></span> Save</button>
-        </div>
-    </div>
-</div>
+    </fieldset>
+</form>

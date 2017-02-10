@@ -36,9 +36,11 @@ namespace kadmium_osc_dmx_dotnet_core
             if (Validate(obj, file.FullName, schemaPath))
             {
                 Directory.CreateDirectory(Path.GetDirectoryName(file.FullName));
-                var writer = SettingsFile.OpenWrite();
-                var bytes = System.Text.Encoding.UTF8.GetBytes(obj.ToString());
-                await writer.WriteAsync(bytes, 0, bytes.Length);
+                using (var writer = file.OpenWrite())
+                {
+                    var bytes = System.Text.Encoding.UTF8.GetBytes(obj.ToString());
+                    await writer.WriteAsync(bytes, 0, bytes.Length);
+                }
             }
         }
 
@@ -237,11 +239,13 @@ namespace kadmium_osc_dmx_dotnet_core
         public static IEnumerable<Tuple<string, string>> GetAllFixtures()
         {
             List<Tuple<string, string>> returnVal = new List<Tuple<string, string>>();
+
             foreach (string manufacturer in GetFixtureManufacturers())
             {
                 foreach (string fixtureName in GetFixtureNames(manufacturer))
                 {
-                    returnVal.Add(Tuple.Create(manufacturer, fixtureName));
+                    Tuple<string, string> tuple = Tuple.Create(manufacturer, fixtureName);
+                    returnVal.Add(tuple);
                 }
             }
 

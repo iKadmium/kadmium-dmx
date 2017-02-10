@@ -2,12 +2,41 @@
     <h1>Groups</h1>
 </div>
 <message-bar #messageBar></message-bar>
-<ul class='list-group' *ngIf="groups">
-    <li *ngFor="let group of groups" class="list-group-item clearfix">
-        {{ group }}
-        <div class="btn-group pull-right">
-            <button class="btn btn-default" (click)="edit(group)"><span class="glyphicon glyphicon-pencil"></span> Edit</button>
-            <button class="btn btn-danger" (click)="delete(group)"><span class="glyphicon glyphicon-remove"></span> Delete</button>
+<form *ngIf="groups">
+    <fieldset [disabled]="saving">
+        <table class="table table-striped">
+            <thead>
+                <tr>
+                    <th>Order</th>
+                    <th>Name</th>
+                    <th>Remove</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr *ngFor="let group of groups; let idx = index">
+                    <td>
+                        <button class="btn" (click)="move(group, -1)" [disabled]="idx == 0"><span class="glyphicon glyphicon-arrow-up"></span></button>
+                        <button class="btn" (click)="move(group, 1)" [disabled]="idx == groups.length - 1"><span class="glyphicon glyphicon-arrow-down"></span></button>
+                    </td>
+                    <td [ngClass]="{'has-error': name.errors}">
+                        <input required class="form-control" type="text" [(ngModel)]="group.name" [ngModelOptions]="{standalone: true}" #name="ngModel">
+                        <div class="alert alert-danger" *ngIf="name.errors && name.touched">
+                            A name is required
+                        </div>
+                    </td>
+                    <td>
+                        <div class="btn-group">
+                            <button class="btn btn-danger" (click)="delete(group)"><span class="glyphicon glyphicon-remove"></span></button>
+                        </div>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+        <div class="form-group">
+            <button class="btn btn-success" (click)="add()"><span class="glyphicon glyphicon-plus"></span> Add</button>
         </div>
-    </li>
-</ul>
+        <div class="form-group">
+            <button class="btn btn-primary" [disabled]="!validate()" (click)="save()"><span class="glyphicon glyphicon-floppy-disk"></span> Save</button>
+        </div>
+    </fieldset>
+</form>

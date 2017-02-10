@@ -1,7 +1,6 @@
 ﻿using System.Linq;
 using Microsoft.AspNetCore.Mvc;
 using kadmium_osc_dmx_dotnet_core;
-using Newtonsoft.Json.Linq;
 using System.Collections.Generic;
 
 // For more information on enabling MVC for empty projects, visit http://go.microsoft.com/fwlink/?LinkID=397860
@@ -16,107 +15,20 @@ namespace kadmium_osc_dmx_dotnet_webui.Controllers
         [HttpGet]
         public IEnumerable<string> Get()
         {
-            return MasterController.Instance.Groups.Keys;
+            return MasterController.Instance.Groups.Values.OrderBy(x => x.Order).Select(x => x.Name);
         }
 
-        [HttpGet]
-        [RouteAttribute("{id}")]
-        public Group Get(string id)
+        [HttpPut]
+        public void Put([FromBody]string[] groups)
         {
-            return MasterController.Instance.Groups[id];
-        }
-
-        public IActionResult Load(string id)
-        {
-            if (id == null)
+            MasterController.Instance.Groups.Clear();
+            for (int i = 0; i < groups.Length; i++)
             {
-                JObject obj = new JObject(
-                    new JProperty("name", "")
-                );
-                return Content(new Group().Serialize().ToString());
+                string groupName = groups[i];
+                Group group = new Group(groupName, i);
+                MasterController.Instance.Groups.TryAdd(groupName, group);
             }
-            else if (MasterController.Instance.Groups.ContainsKey(id))
-            {
-                Group group = MasterController.Instance.Groups[id];
-                return Content(group.Serialize().ToString());
-            }
-            else
-            {
-                Response.StatusCode = 404;
-                return new EmptyResult();
-            }
-        }
-
-        public IActionResult Save(string id, string jsonString)
-        {
-            JObject obj = JObject.Parse(jsonString);
-            string newID = obj["name"].Value<string>();
-            Group group;
-            if (id == null)
-            {
-                group = new Group(newID, MasterController.Instance.Groups.Count + 1);
-            }
-            else if (MasterController.Instance.Groups.ContainsKey(id))
-            {
-                MasterController.Instance.Groups.TryRemove(id, out group);
-                group.Name = newID;
-            }
-            else
-            {
-                Response.StatusCode = 404;
-                return new EmptyResult();
-            }
-
-            if (MasterController.Instance.Groups.TryAdd(newID, group))
-            {
-                FileAccess.SaveGroups();
-                if (MasterController.Instance.Venue != null)
-                {
-                    FileAccess.SaveVenue(MasterController.Instance.Venue.Serialize());
-                }
-                FileAccess.RenameGroup(id, newID);
-
-                Response.StatusCode = 200;
-                return new EmptyResult();
-            }
-            else
-            {
-                Response.StatusCode = 500;
-                return new EmptyResult();
-            }
-        }
-
-        public IActionResult SaveOrder(string jsonString)
-        {
-            JObject obj = JObject.Parse(jsonString);
-            var names = obj["names"].Values<string>().ToList();
-            foreach (Group group in MasterController.Instance.Groups.Values)
-            {
-                group.Order = names.IndexOf(group.Name);
-            }
-            Response.StatusCode = 200;
-            return new EmptyResult();
-        }
-
-        public IActionResult Delete(string id)
-        {
-            Group group;
-            if (MasterController.Instance.Groups.TryRemove(id, out group))
-            {
-                if (MasterController.Instance.Groups.Count == 0)
-                {
-                    MasterController.Instance.Groups.TryAdd("Default Group", new Group("Default Group", 1));
-                }
-                MasterController.Instance.Groups.Values.First().Fixtures.AddRange(group.Fixtures);
-                FileAccess.SaveGroups();
-                Response.StatusCode = 200;
-                return new EmptyResult();
-            }
-            else
-            {
-                Response.StatusCode = 404;
-                return new EmptyResult();
-            }
+            FileAccess.SaveGroups();
         }
     }
 }

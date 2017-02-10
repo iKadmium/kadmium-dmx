@@ -19,9 +19,13 @@ export class SettingsComponent
 {
     @ViewChild("messageBar") messageBar: MessageBarComponent;
     settings: Settings;
+    saving: boolean;
+    testElement: string;
 
     constructor(private settingsService: SettingsService)
     {
+        this.testElement = "stuff";
+        this.saving = false;
         this.settingsService.get().then(data =>
         {
             this.settings = data;
@@ -30,11 +34,20 @@ export class SettingsComponent
 
     public async save(): Promise<void>
     {
-        this.settingsService
-            .save(this.settings)
-            .then(() => this.messageBar.add("Success", "Saved Successfully"))
-            .catch((reason) => this.messageBar.add("Error", reason));
-        await this.settingsService.save(this.settings);
+        this.saving = true;
+        try
+        {
+            await this.settingsService.save(this.settings);
+            this.messageBar.add("Success", "Saved Successfully");
+        }
+        catch (reason)
+        {
+            this.messageBar.add("Error", reason);
+        }
+        finally
+        {
+            this.saving = false;
+        }
     }
 
     public addTarget(): void
@@ -45,6 +58,12 @@ export class SettingsComponent
     public removeTarget(index: number): void
     {
         this.settings.sacnTransmitter.unicast.splice(index, 1);
+    }
+
+    public validateTargets(): boolean
+    {
+        let badTargets = this.settings.sacnTransmitter.unicast.filter((value: UnicastTarget) => value.target == "" || value.target == undefined || value.target == null);
+        return badTargets.length == 0;
     }
 
 }

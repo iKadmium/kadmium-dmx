@@ -11,25 +11,21 @@ export class GroupsService
 
     constructor(private http: Http) { }
 
-    public get(id: string): Promise<Group>
-    {
-        return this.http.get(this.groupsUrl + "/" + id)
-            .toPromise()
-            .then(response =>
-            {
-                let data = (response.json() as Group);
-                return data;
-            });
-    }
-
-    public getNames(): Promise<string[]>
+    public get(): Promise<Group[]>
     {
         return this.http.get(this.groupsUrl)
             .toPromise()
             .then(response =>
             {
                 let data = (response.json() as string[]);
-                return data;
+                return data.map((value: string) => new Group(value));
             });
+    }
+
+    public put(groups: Group[]): Promise<void>
+    {
+        return this.http.put(this.groupsUrl, groups.map((value: Group) => value.name))
+            .toPromise()
+            .then(response => { });
     }
 }
