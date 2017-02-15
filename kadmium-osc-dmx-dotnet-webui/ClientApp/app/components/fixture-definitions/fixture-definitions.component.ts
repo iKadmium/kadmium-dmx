@@ -23,7 +23,7 @@ export class FixtureDefinitionsComponent
     constructor(private fixtureDefinitionsService: FixtureDefinitionsService)
     {
         this.fixtureDefinitionsService
-            .get()
+            .getSkeletons()
             .then((value: FixtureDefinitionSkeleton[]) => this.data = value)
             .catch((reason) => this.messageBar.add("Error", reason));
     }
@@ -47,9 +47,9 @@ export class FixtureDefinitionsComponent
         }
     }
 
-    private edit(fixture: FixtureDefinitionSkeleton): void
+    private getEditUrl(fixture: FixtureDefinitionSkeleton): string
     {
-
+        return "fixture-definitions" + "/" + fixture.manufacturer + "/" + fixture.model;
     }
 
     private async deleteConfirm(fixture: FixtureDefinitionSkeleton): Promise<void>
@@ -62,11 +62,15 @@ export class FixtureDefinitionsComponent
         );
         if (result)
         {
-            this.messageBar.add("Success", "");
-        }
-        else
-        {
-            this.messageBar.add("Error", "");
+            this.fixtureDefinitionsService
+                .delete(fixture)
+                .then(() =>
+                {
+                    this.messageBar.add("Success", fixture.manufacturer + " " + fixture.model + " was deleted");
+                    let index = this.data.indexOf(fixture);
+                    this.data.splice(index, 1);
+                })
+                .catch(reason => this.messageBar.add("Error", "Could not delete " + fixture.manufacturer + " " + fixture.model + ". " + reason));
         }
     }
 }

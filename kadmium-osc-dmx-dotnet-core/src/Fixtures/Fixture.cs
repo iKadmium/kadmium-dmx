@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using Newtonsoft.Json.Linq;
+using System.Threading.Tasks;
 
 namespace kadmium_osc_dmx_dotnet_core.Fixtures
 {
@@ -60,7 +61,7 @@ namespace kadmium_osc_dmx_dotnet_core.Fixtures
 
             JObject obj = new JObject(
                 new JProperty("channel", StartChannel),
-                new JProperty("type", 
+                new JProperty("type",
                     new JObject(
                         new JProperty("manufacturer", Definition.Manufacturer),
                         new JProperty("name", Definition.Name)
@@ -78,13 +79,13 @@ namespace kadmium_osc_dmx_dotnet_core.Fixtures
             Group.Fixtures.Remove(this);
         }
 
-        public static Fixture Load(JObject obj)
+        public async static Task<Fixture> Load(JObject obj)
         {
             int startChannel = obj["channel"].Value<int>();
             JObject type = obj["type"].Value<JObject>();
             string name = type["name"].Value<string>();
             string manufacturer = type["manufacturer"].Value<string>();
-            Definition definition = Definition.Load(manufacturer, name);
+            Definition definition = await Definition.Load(manufacturer, name);
             string groupName = obj["group"].Value<string>();
             Group group = MasterController.Instance.Groups.ContainsKey(groupName) ? MasterController.Instance.Groups[groupName] : MasterController.Instance.Groups.Values.First();
             JObject options = obj["options"].Value<JObject>();

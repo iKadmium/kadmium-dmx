@@ -27,7 +27,7 @@
             <td>{{entry.model}}</td>
             <td>
                 <div class="btn-group">
-                    <button class="btn btn-default" (click)="edit(entry)"><span class="glyphicon glyphicon-edit"></span></button>
+                    <a class="btn btn-default" [href]="getEditUrl(entry)"><span class="glyphicon glyphicon-edit"></span></a>
                     <button class="btn btn-danger" (click)="deleteConfirm(entry)"><span class="glyphicon glyphicon-remove"></span></button>
                 </div>
             </td>

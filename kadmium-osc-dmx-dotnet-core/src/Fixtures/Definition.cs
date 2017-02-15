@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 
 namespace kadmium_osc_dmx_dotnet_core.Fixtures
 {
@@ -108,9 +109,9 @@ namespace kadmium_osc_dmx_dotnet_core.Fixtures
             return obj;
         }
 
-        public static Definition Load(string manufacturer, string name)
+        public static async Task<Definition> Load(string manufacturer, string name)
         {
-            return Load(FileAccess.LoadFixtureDefinition(manufacturer, name));
+            return Load(await FileAccess.LoadFixtureDefinition(manufacturer, name));
         }
     }
 }

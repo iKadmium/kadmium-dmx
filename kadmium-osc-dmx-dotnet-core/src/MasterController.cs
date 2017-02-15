@@ -4,6 +4,7 @@ using kadmium_osc_dmx_dotnet_core.Transmitters;
 using System.Collections.Concurrent;
 using System.Threading;
 using Newtonsoft.Json.Linq;
+using System.Threading.Tasks;
 
 namespace kadmium_osc_dmx_dotnet_core
 {
@@ -31,13 +32,13 @@ namespace kadmium_osc_dmx_dotnet_core
             }
         }
 
-        public static void Initialise()
+        public static async Task Initialise()
         {
-            JObject settings = FileAccess.LoadSettings();
+            JObject settings = await FileAccess.LoadSettings();
 
             instance = new MasterController();
             Instance.Groups = new ConcurrentDictionary<string, Group>();
-            foreach (Group group in FileAccess.LoadGroups())
+            foreach (Group group in await FileAccess.LoadGroups())
             {
                 Instance.Groups.TryAdd(group.Name, group);
             }
@@ -53,10 +54,10 @@ namespace kadmium_osc_dmx_dotnet_core
             Strobe = new Strobe(20);
         }
 
-        public void LoadVenue(string venue)
+        public async Task LoadVenue(string venue)
         {
             Venue?.Clear();
-            Venue = Venue.Load(FileAccess.LoadVenue(venue));
+            Venue = await Venue.Load(await FileAccess.LoadVenue(venue));
         }
 
         public void Update()

@@ -3,6 +3,7 @@ using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 
 namespace kadmium_osc_dmx_dotnet_core
 {
@@ -11,12 +12,12 @@ namespace kadmium_osc_dmx_dotnet_core
         public static int DMX_UNIVERSE_SIZE = 512;
         public string Name { get; set; }
         public int UniverseID { get; set; }
-        public IEnumerable<Fixture> Fixtures { get; }
+        public List<Fixture> Fixtures { get; }
         public byte[] DMX { get; }
         public event EventHandler<DMXEventArgs> Updated;
         public event EventHandler<DMXEventArgs> Rendered;
 
-        public Universe(string name, int universeID, IEnumerable<Fixture> fixtures)
+        public Universe(string name, int universeID, List<Fixture> fixtures)
         {
             Name = name;
             UniverseID = universeID;
@@ -53,14 +54,15 @@ namespace kadmium_osc_dmx_dotnet_core
             return obj;
         }
 
-        public static Universe Load(JObject universeElement)
+        public static async Task<Universe> Load(JObject universeElement)
         {
             string name = universeElement["name"].Value<string>();
             int universeID = universeElement["universeID"].Value<int>();
-            IEnumerable<Fixture> fixturesQuery = from fixture in universeElement["fixtures"].Values<JObject>()
-                                                 select Fixture.Load(fixture);
+            IEnumerable<Task<Fixture>> fixturesQuery = from fixture in universeElement["fixtures"].Values<JObject>()
+                                                       select Fixture.Load(fixture);
 
-            var fixtures = fixturesQuery.ToList();
+
+            List<Fixture> fixtures = (await Task.WhenAll(fixturesQuery)).ToList();
 
             Universe universe = new Universe(name, universeID, fixtures);
             return universe;

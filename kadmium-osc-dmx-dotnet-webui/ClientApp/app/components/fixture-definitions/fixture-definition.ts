@@ -1,12 +1,35 @@
-export class FixtureDefinition
+export class FixtureDefinition implements FixtureDefinitionData
 {
-    private manufacturer: string;
-    private name: string;
-    private type: FixtureType;
+    manufacturer: string;
+    name: string;
+    type: FixtureType;
 
-    private channels: DMXChannel[];
-    private movements: Axis[];
-    private colorWheel: ColorWheelEntry[];
+    channels: DMXChannel[];
+    movements: Axis[];
+    colorWheel: ColorWheelEntry[];
+
+    constructor()
+    {
+
+    }
+
+    static load(data: FixtureDefinitionData): FixtureDefinition
+    {
+        let definition = new FixtureDefinition();
+        Object.assign(definition, data);
+        return definition;
+    }
+}
+
+export interface FixtureDefinitionData
+{
+    manufacturer: string;
+    name: string;
+    type: FixtureType;
+
+    channels: DMXChannel[];
+    movements: Axis[];
+    colorWheel: ColorWheelEntry[];
 }
 
 export class FixtureDefinitionSkeleton

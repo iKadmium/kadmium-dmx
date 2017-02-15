@@ -19,9 +19,9 @@ namespace kadmium_osc_dmx_dotnet_webui.Controllers
 
         [HttpGet]
         [RouteAttribute("[action]/{id}")]
-        public void Activate(string id)
+        public async void Activate(string id)
         {
-            MasterController.Instance.LoadVenue(id);
+            await MasterController.Instance.LoadVenue(id);
         }
 
         // POST api/values

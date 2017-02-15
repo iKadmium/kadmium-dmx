@@ -18,6 +18,7 @@ import { DashboardComponent } from './components/dashboard/dashboard.component';
 import { SettingsComponent } from './components/settings/settings.component';
 import { GroupsComponent } from './components/groups/groups.component';
 import { FixtureDefinitionsComponent } from './components/fixture-definitions/fixture-definitions.component';
+import { FixtureDefinitionEditorComponent } from './components/fixture-definitions/fixture-definition-editor.component';
 
 import { SettingsService } from "./components/settings/settings.service";
 import { VenueService } from "./components/venue/venue.service";
@@ -35,6 +36,7 @@ declare var jQuery: any;
         DashboardComponent,
         GroupsComponent,
         FixtureDefinitionsComponent,
+        FixtureDefinitionEditorComponent,
 
         MINMAX_DIRECTIVES,
 
@@ -55,6 +57,8 @@ declare var jQuery: any;
             { path: 'settings', component: SettingsComponent },
             { path: 'groups', component: GroupsComponent },
             { path: 'fixture-definitions', component: FixtureDefinitionsComponent },
+            { path: 'fixture-definitions/new', component: FixtureDefinitionEditorComponent },
+            { path: 'fixture-definitions/:manufacturer/:model', component: FixtureDefinitionEditorComponent },
             { path: '**', redirectTo: 'sets' }
         ])
     ],

@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 
 namespace kadmium_osc_dmx_dotnet_core
 {
@@ -42,7 +43,7 @@ namespace kadmium_osc_dmx_dotnet_core
             return obj;
         }
 
-        public static Venue Load(JObject obj)
+        public static async Task<Venue> Load(JObject obj)
         {
             try
             {
@@ -52,7 +53,7 @@ namespace kadmium_osc_dmx_dotnet_core
                 var universesQuery = from universeElement in obj["universes"].Values<JObject>()
                                      select Universe.Load(universeElement);
 
-                var universes = universesQuery.ToList();
+                List<Universe> universes = (await Task.WhenAll(universesQuery)).ToList();
 
                 MasterController.Instance.UpdatesEnabled = true;
                 return new Venue(name, universes);

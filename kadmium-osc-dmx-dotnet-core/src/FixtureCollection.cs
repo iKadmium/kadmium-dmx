@@ -16,11 +16,11 @@ namespace kadmium_osc_dmx_dotnet_core
     public class FixtureCollection
     {
         public string Name { get; set; }
-        public IEnumerable<FixtureEntry> FixtureEntries { get; }
+        public List<FixtureEntry> FixtureEntries { get; }
 
-        public FixtureCollection() : this("", Enumerable.Empty<FixtureEntry>()) { }
+        public FixtureCollection() : this("", new List<FixtureEntry>()) { }
 
-        public FixtureCollection(string name, IEnumerable<FixtureEntry> fixtureEntries)
+        public FixtureCollection(string name, List<FixtureEntry> fixtureEntries)
         {
             Name = name;
             FixtureEntries = fixtureEntries;
@@ -34,7 +34,7 @@ namespace kadmium_osc_dmx_dotnet_core
                     from entry in FixtureEntries
                     select new JObject(
                         new JProperty("channel", entry.StartChannel),
-                        new JProperty("type", 
+                        new JProperty("type",
                             new JObject(
                                 new JProperty("name", entry.Type),
                                 new JProperty("manufacturer", entry.Manufacturer)
@@ -60,7 +60,7 @@ namespace kadmium_osc_dmx_dotnet_core
                                      Group = fixture["group"].Value<string>(),
                                      Options = fixture["options"].Value<JObject>()
                                  };
-            return new FixtureCollection(name, fixtureEntries);
+            return new FixtureCollection(name, fixtureEntries.ToList());
         }
 
     }

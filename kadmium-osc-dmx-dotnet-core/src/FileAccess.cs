@@ -44,12 +44,15 @@ namespace kadmium_osc_dmx_dotnet_core
             }
         }
 
-        private static JToken ValidatedLoad(string path, string schemaPath)
+        private static async Task<JToken> ValidatedLoad(string path, string schemaPath)
         {
-            string jsonString = File.ReadAllText(path);
-            JToken obj = JToken.Parse(jsonString);
-            Validate(obj, path, schemaPath);
-            return obj;
+            return await Task.Factory.StartNew(() =>
+            {
+                string jsonString = File.ReadAllText(path);
+                JToken obj = JToken.Parse(jsonString);
+                Validate(obj, path, schemaPath);
+                return obj;
+            });
         }
 
         private static bool Validate(JToken obj, string path, string schemaPath)
@@ -100,8 +103,9 @@ namespace kadmium_osc_dmx_dotnet_core
             var venues = from venueName in GetVenueNames()
                          select LoadVenue(venueName);
 
-            foreach (JObject venue in venues)
+            foreach (Task<JObject> venueTask in venues)
             {
+                JObject venue = await venueTask;
                 bool dirty = false;
                 foreach (JObject universe in venue["universes"].Values<JObject>())
                 {
@@ -126,8 +130,9 @@ namespace kadmium_osc_dmx_dotnet_core
             var venues = from venueName in GetVenueNames()
                          select LoadVenue(venueName);
 
-            foreach (JObject venue in venues)
+            foreach (Task<JObject> venueTask in venues)
             {
+                JObject venue = await venueTask;
                 bool dirty = false;
                 foreach (JObject universe in venue["universes"].Values<JObject>())
                 {
@@ -147,11 +152,11 @@ namespace kadmium_osc_dmx_dotnet_core
             }
         }
 
-        internal static IEnumerable<Group> LoadGroups()
+        internal static async Task<IEnumerable<Group>> LoadGroups()
         {
             try
             {
-                JArray groupsObject = ValidatedLoad(GroupsLocation, GroupsSchema).Value<JArray>();
+                JArray groupsObject = (await ValidatedLoad(GroupsLocation, GroupsSchema)).Value<JArray>();
                 var groups = from groupObject in groupsObject
                              select Group.Load(groupObject as JObject);
                 return groups;
@@ -177,9 +182,9 @@ namespace kadmium_osc_dmx_dotnet_core
             }
         }
 
-        public static JObject GetGroupsSchema()
+        public static async Task<JObject> GetGroupsSchema()
         {
-            JObject schema = ValidatedLoad(GroupsSchema, JsonSchemaSchema) as JObject;
+            JObject schema = await ValidatedLoad(GroupsSchema, JsonSchemaSchema) as JObject;
             return schema;
         }
 
@@ -193,15 +198,46 @@ namespace kadmium_osc_dmx_dotnet_core
             return File.Exists(GetFixtureDefinitionPath(manufacturer, model));
         }
 
-        public static JObject LoadFixtureDefinition(string manufacturer, string model)
+        public static async Task<JObject> LoadFixtureDefinition(string manufacturer, string model)
         {
             string path = GetFixtureDefinitionPath(manufacturer, model);
-            JObject definitionRoot = ValidatedLoad(path, FixtureDefinitionSchema).Value<JObject>();
+            JObject definitionRoot = (await ValidatedLoad(path, FixtureDefinitionSchema)).Value<JObject>();
             return definitionRoot;
         }
 
-        public static void DeleteFixtureDefinition(string manufacturer, string model)
+        public async static Task DeleteFixtureDefinition(string manufacturer, string model)
         {
+            List<Task> tasks = new List<Task>();
+            foreach (string venueName in FileAccess.GetVenueNames())
+            {
+                JObject venueJson = await FileAccess.LoadVenue(venueName);
+                Venue venue = await Venue.Load(venueJson);
+                bool dirty = false;
+                foreach (Universe universe in venue.Universes.Values)
+                {
+                    var matches = universe.Fixtures.Where(x => x.Definition.Manufacturer == manufacturer && x.Definition.Name == model).ToList();
+                    if (matches.Count > 0)
+                    {
+                        matches.ForEach(x => universe.Fixtures.Remove(x));
+                    }
+                }
+                if (dirty)
+                {
+                    tasks.Add(FileAccess.SaveVenue(venue.Serialize()));
+                }
+            }
+            foreach (string fixtureCollectionName in FileAccess.GetFixtureCollectionNames())
+            {
+                JObject fixtureCollectionJson = await FileAccess.LoadFixtureCollection(fixtureCollectionName);
+                FixtureCollection collection = FixtureCollection.Load(fixtureCollectionJson);
+                var matches = collection.FixtureEntries.Where(x => x.Manufacturer == manufacturer && x.Type == model).ToList();
+                if (matches.Count > 0)
+                {
+                    matches.ForEach(x => collection.FixtureEntries.Remove(x));
+                    tasks.Add(FileAccess.SaveFixtureCollection(collection.Serialize()));
+                }
+            }
+            await Task.WhenAll(tasks);
             File.Delete(GetFixtureDefinitionPath(manufacturer, model));
         }
 
@@ -214,9 +250,9 @@ namespace kadmium_osc_dmx_dotnet_core
             await ValidatedSave(definition, file, FixtureDefinitionSchema);
         }
 
-        public static JObject GetFixtureDefinitionSchema()
+        public static async Task<JObject> GetFixtureDefinitionSchema()
         {
-            JObject schema = ValidatedLoad(FixtureDefinitionSchema, JsonSchemaSchema) as JObject;
+            JObject schema = await ValidatedLoad(FixtureDefinitionSchema, JsonSchemaSchema) as JObject;
             return schema;
         }
 
@@ -280,16 +316,16 @@ namespace kadmium_osc_dmx_dotnet_core
             await ValidatedSave(chunk, file, FixtureCollectionsSchema);
         }
 
-        public static JObject LoadFixtureCollection(string id)
+        public static async Task<JObject> LoadFixtureCollection(string id)
         {
             string path = Path.Combine(FixtureCollectionLocation, id + ".json");
-            JObject obj = ValidatedLoad(path, FixtureCollectionsSchema) as JObject;
+            JObject obj = await ValidatedLoad(path, FixtureCollectionsSchema) as JObject;
             return obj;
         }
 
-        public static JObject GetFixtureCollectionSchema()
+        public static async Task<JObject> GetFixtureCollectionSchema()
         {
-            JObject obj = ValidatedLoad(FixtureCollectionsSchema, JsonSchemaSchema) as JObject;
+            JObject obj = await ValidatedLoad(FixtureCollectionsSchema, JsonSchemaSchema) as JObject;
             return obj;
         }
 
@@ -325,23 +361,23 @@ namespace kadmium_osc_dmx_dotnet_core
             await ValidatedSave(venue, file, VenuesSchema);
         }
 
-        public static JObject LoadVenue(string id)
+        public static async Task<JObject> LoadVenue(string id)
         {
-            JObject obj = ValidatedLoad(GetVenueLocation(id), VenuesSchema) as JObject;
+            JObject obj = await ValidatedLoad(GetVenueLocation(id), VenuesSchema) as JObject;
             return obj;
         }
 
-        public static JObject GetVenuesSchema()
+        public static async Task<JObject> GetVenuesSchema()
         {
-            JObject obj = ValidatedLoad(VenuesSchema, JsonSchemaSchema) as JObject;
+            JObject obj = await ValidatedLoad(VenuesSchema, JsonSchemaSchema) as JObject;
             return obj;
         }
 
-        public static JObject LoadSettings()
+        public static async Task<JObject> LoadSettings()
         {
             try
             {
-                JObject obj = ValidatedLoad(SettingsLocation, SettingsSchema) as JObject;
+                JObject obj = await ValidatedLoad(SettingsLocation, SettingsSchema) as JObject;
                 return obj;
             }
             catch (Exception)
