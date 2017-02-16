@@ -21,11 +21,10 @@ namespace kadmium_osc_dmx_dotnet_webui.Controllers
 
         [HttpGet]
         [Route("{manufacturer}/{model}")]
-        public async Task<Definition> Get(string manufacturer, string model)
+        public async Task<JObject> Get(string manufacturer, string model)
         {
             JObject obj = await FileAccess.LoadFixtureDefinition(manufacturer, model);
-            Definition definition = Definition.Load(obj);
-            return definition;
+            return obj;
         }
 
         [HttpDelete]
@@ -33,6 +32,18 @@ namespace kadmium_osc_dmx_dotnet_webui.Controllers
         public async void Delete(string manufacturer, string model)
         {
             await FileAccess.DeleteFixtureDefinition(manufacturer, model);
+        }
+
+        [HttpPut]
+        [Route("{manufacturer}/{model}")]
+        public async void Put(string manufacturer, string model, [FromBody]JObject definitionJson)
+        {
+            Definition definition = Definition.Load(definitionJson);
+            if (manufacturer != definition.Manufacturer || model != definition.Name)
+            {
+                await FileAccess.RenameFixtureDefinition(manufacturer, model, definition.Manufacturer, definition.Name);
+            }
+            await FileAccess.SaveFixtureDefinition(definition.Serialize());
         }
     }
     public class FixtureDefinitionSkeleton

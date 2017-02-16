@@ -51,6 +51,11 @@ export class GroupsComponent
         return result;
     }
 
+    private get groupNames(): string[]
+    {
+        return this.groups.map((value: Group) => value.name);
+    }
+
     private async save(): Promise<void>
     {
         this.saving = true;

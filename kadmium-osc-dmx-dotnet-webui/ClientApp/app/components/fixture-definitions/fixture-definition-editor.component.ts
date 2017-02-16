@@ -4,7 +4,7 @@ import { ActivatedRoute, Params } from "@angular/router";
 import { MessageBarComponent } from "../status/message-bar/message-bar.component";
 import { ConfirmationComponent } from "../confirmation/confirmation.component";
 
-import { FixtureDefinition, FixtureDefinitionSkeleton } from "./fixture-definition";
+import { FixtureDefinition, FixtureDefinitionSkeleton, DMXChannel, Axis, ColorWheelEntry } from "./fixture-definition";
 
 import { FixtureDefinitionsService } from "./fixture-definitions.service";
 
@@ -25,9 +25,12 @@ export class FixtureDefinitionEditorComponent
 
     private definition: FixtureDefinition;
 
+    private saving: boolean;
+
     constructor(private route: ActivatedRoute, private fixtureService: FixtureDefinitionsService)
     {
         this.allManufacturers = [];
+        this.saving = false;
     }
 
     ngOnInit(): void
@@ -58,8 +61,104 @@ export class FixtureDefinitionEditorComponent
             .catch((reason) => { });
     }
 
+    private addChannel(): void
+    {
+        let maxChannel = 0;
+        this.definition.channels.forEach((value: DMXChannel) => 
+        {
+            if (value.dmx > maxChannel) 
+            {
+                maxChannel = value.dmx;
+            }
+        });
+
+        this.definition.channels.push(new DMXChannel("", maxChannel + 1));
+    }
+
+    private removeChannel(channel: DMXChannel): void
+    {
+        let index = this.definition.channels.indexOf(channel);
+        this.definition.channels.splice(index, 1);
+    }
+
+    private addAxis(): void
+    {
+        this.definition.movements.push(new Axis());
+    }
+
+    private removeAxis(axis: Axis): void
+    {
+        let index = this.definition.movements.indexOf(axis);
+        this.definition.movements.splice(index, 1);
+    }
+
+    private addColorWheelEntry(): void
+    {
+        let minValue = 0;
+        this.definition.colorWheel.forEach((value: ColorWheelEntry) => 
+        {
+            if (value.dmxEnd > minValue) 
+            {
+                minValue = value.dmxEnd;
+            }
+        });
+        minValue = minValue < 255 ? minValue + 1 : 255;
+        this.definition.colorWheel.push(new ColorWheelEntry("", minValue));
+    }
+
+    private removeColorWheelEntry(colorWheelEntry: ColorWheelEntry): void
+    {
+        let index = this.definition.colorWheel.indexOf(colorWheelEntry);
+        this.definition.colorWheel.splice(index, 1);
+    }
+
+    private validateNames(): boolean
+    {
+        let channelNameProblems = this.channelNames
+            .filter((value, index: number, array) => array.indexOf(value) != index || value == "");
+        let axisNameProblems = this.axisNames
+            .filter((value, index: number, array) => array.indexOf(value) != index || value == "");
+        let colorWheelNameProblems = this.colorWheelNames
+            .filter((value, index: number, array) => array.indexOf(value) != index || value == "");
+
+        return channelNameProblems.length == 0 && axisNameProblems.length == 0 && colorWheelNameProblems.length == 0;
+    }
+
+    private get channelNames(): string[]
+    {
+        return this.definition.channels.map((value: DMXChannel) => value.name);
+    }
+
+    private get colorWheelNames(): string[]
+    {
+        return this.definition.colorWheel.map((value: ColorWheelEntry) => value.name);
+    }
+
+    private get axisNames(): string[]
+    {
+        return this.definition.movements.map((value: Axis) => value.name);
+    }
+
     private isNewItem(): boolean
     {
         return this.originalManufacturer == null && this.originalModel == null;
+    }
+
+    private save(): void
+    {
+        this.saving = true;
+        let manufacturer = this.isNewItem() ? this.definition.manufacturer : this.originalManufacturer;
+        let model = this.isNewItem() ? this.definition.name : this.originalModel;
+        this.fixtureService
+            .put(manufacturer, model, this.definition)
+            .then(() =>
+            {
+                window.location.href = "/fixture-definitions";
+            })
+            .catch((reason) => 
+            {
+                this.messageBar.add("Error", reason);
+                this.saving = false;
+            });
     }
 }

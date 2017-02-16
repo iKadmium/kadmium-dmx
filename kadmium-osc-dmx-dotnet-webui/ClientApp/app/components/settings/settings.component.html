@@ -5,37 +5,34 @@
 <message-bar #messageBar></message-bar>
 <form *ngIf="settings" class="form-horizontal" #settingsForm="ngForm">
     <fieldset [disabled]="saving">
-        <labelled-input label="HTTP Port:" [inputElement]="webPort">
-            <input type="number" name="webPort" class="form-control" min="1" max="65535" [(ngModel)]="settings.webPort" #webPort="ngModel"
+        <labelled-input label="HTTP Port:">
+            <input #input type="number" name="webPort" class="form-control" min="1" max="65535" [(ngModel)]="settings.webPort" #model="ngModel"
             />
-            <div class="alert alert-danger" *ngIf="webPort.errors">The port must be between 1 and 65535</div>
         </labelled-input>
-        <labelled-input label="OSC Port:" [inputElement]="oscPort">
-            <input required type="number" name="oscPort" class="form-control" min="1" max="65535" [(ngModel)]="settings.oscPort" #oscPort="ngModel"
-            />
-            <div class="alert alert-danger" *ngIf="oscPort.errors">The port must be between 1 and 65535</div>
+        <labelled-input label="OSC Port:">
+            <input #input required type="number" name="oscPort" class="form-control" min="1" max="65535" [(ngModel)]="settings.oscPort"
+                #model="ngModel" />
         </labelled-input>
-        <labelled-input label="sACN Transmitter Delay (ms):" [inputElement]="oscPort">
-            <input type="number" name="sacnTransmitterDelay" class="form-control" min="0" max="10000" [(ngModel)]="settings.sacnTransmitter.delay"
-                #sacnTransmitterDelay="ngModel" />
-            <div class="alert alert-danger" *ngIf="sacnTransmitterDelay.errors">Delay must be betwene 0 and 10000ms</div>
+        <labelled-input label="sACN Transmitter Delay (ms):">
+            <input #input type="number" name="sacnTransmitterDelay" class="form-control" min="0" max="10000" [(ngModel)]="settings.sacnTransmitter.delay"
+                #model="ngModel" />
         </labelled-input>
-        <labelled-input label="sACN Transmitter Delay (ms):" [inputElement]="sacnMulticast">
+        <labelled-input label="sACN Transmitter Delay (ms):">
             <div class="checkbox">
-                <label><input type="checkbox" name="sacnMulticast" [(ngModel)]="settings.sacnTransmitter.multicast" #sacnMulticast="ngModel">Multicast</label>
+                <label><input #input type="checkbox" name="sacnMulticast" [(ngModel)]="settings.sacnTransmitter.multicast" #sacnMulticast="ngModel" #model="ngModel" >Multicast</label>
             </div>
         </labelled-input>
         <div class="form-group">
             <label class="control-label col-sm-2" for="sacnTransmitterDelay">sACN Unicast Targets:</label>
             <div class="col-sm-10">
-                <div class="form-group" *ngFor="let target of settings.sacnTransmitter.unicast; let idx = index" id="unicast" name="unicast">
+                <div class="form-group" *ngFor="let target of settings.sacnTransmitter.unicast; let i = index" id="unicast" name="unicast">
                     <div class="col-sm-8" [ngClass]="{'has-error': targetName.errors && targetName.touched}">
-                        <input required type="text" class="form-control col-sm-8" [(ngModel)]="settings.sacnTransmitter.unicast[idx].target" [ngModelOptions]="{standalone: true}"
+                        <input required type="text" class="form-control col-sm-8" [(ngModel)]="settings.sacnTransmitter.unicast[i].target" [name]="'unicast[' + i + ']'"
                             #targetName="ngModel" />
                         <div class="alert alert-danger" *ngIf="targetName.errors && targetName.touched">This field is required</div>
                     </div>
                     <div class="col-sm-4">
-                        <button class="btn btn-danger" (click)="removeTarget(idx)"><span class="glyphicon glyphicon-remove"></span></button>
+                        <button class="btn btn-danger" (click)="removeTarget(i)"><span class="glyphicon glyphicon-remove"></span></button>
                     </div>
                 </div>
                 <button class="btn btn-success clearfix" (click)="addTarget()"><span class="glyphicon glyphicon-plus"></span> Add Target</button>
@@ -43,7 +40,7 @@
         </div>
         <div class="form-group">
             <div class="col-sm-offset-2 col-sm-10">
-                <button class="btn btn-primary" (click)="save()" [disabled]="!settingsForm.valid || !validateTargets()"><span class="glyphicon glyphicon-floppy-disk"></span> Save</button>
+                <button class="btn btn-primary" (click)="save()" [disabled]="!settingsForm.valid"><span class="glyphicon glyphicon-floppy-disk"></span> Save</button>
             </div>
         </div>
     </fieldset>

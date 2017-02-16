@@ -2,7 +2,7 @@ export class FixtureDefinition implements FixtureDefinitionData
 {
     manufacturer: string;
     name: string;
-    type: FixtureType;
+    type: "LED" | "Tungsten" | "Effect";
 
     channels: DMXChannel[];
     movements: Axis[];
@@ -10,7 +10,12 @@ export class FixtureDefinition implements FixtureDefinitionData
 
     constructor()
     {
-
+        this.name = "";
+        this.manufacturer = "";
+        this.type = "LED";
+        this.channels = [];
+        this.movements = [];
+        this.colorWheel = [];
     }
 
     static load(data: FixtureDefinitionData): FixtureDefinition
@@ -25,7 +30,7 @@ export interface FixtureDefinitionData
 {
     manufacturer: string;
     name: string;
-    type: FixtureType;
+    type: "LED" | "Tungsten" | "Effect";
 
     channels: DMXChannel[];
     movements: Axis[];
@@ -38,19 +43,20 @@ export class FixtureDefinitionSkeleton
     public model: string;
 }
 
-export enum FixtureType
-{
-    LED,
-    Tungsten,
-    Effect
-}
-
 export class DMXChannel
 {
     name: string;
     dmx: number;
     min: number;
     max: number;
+
+    constructor(name?: string, dmx?: number, min?: number, max?: number)
+    {
+        this.name = name ? name : "";
+        this.dmx = dmx ? dmx : 1;
+        this.min = min ? min : 0;
+        this.max = max ? max : 255;
+    }
 }
 
 export class Axis
@@ -66,4 +72,12 @@ export class ColorWheelEntry
     dmxStart: number;
     dmxEnd: number;
     color: string;
+
+    constructor(name?: string, dmxStart?: number, dmxEnd?: number, color?: string)
+    {
+        this.name = name ? name : "";
+        this.dmxStart = dmxStart ? dmxStart : 0;
+        this.dmxEnd = dmxEnd ? dmxEnd : 255;
+        this.color = color ? color : "000000";
+    }
 }

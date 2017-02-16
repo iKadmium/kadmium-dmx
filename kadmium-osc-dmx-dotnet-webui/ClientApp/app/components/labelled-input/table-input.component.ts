@@ -1,10 +1,10 @@
 import { Component, ContentChild, ElementRef, Input } from '@angular/core';
 
 @Component({
-    selector: 'labelled-input',
-    template: require('./labelled-input.component.html')
+    selector: 'table-input',
+    template: require('./table-input.component.html')
 })
-export class LabelledInputComponent
+export class TableInputComponent
 {
     @Input() private label: string;
     @ContentChild("model") public model: ElementRef;

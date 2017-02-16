@@ -73,4 +73,9 @@ export class FixtureDefinitionsComponent
                 .catch(reason => this.messageBar.add("Error", "Could not delete " + fixture.manufacturer + " " + fixture.model + ". " + reason));
         }
     }
+
+    private add(): void
+    {
+        window.location.href = "/fixture-definitions/new";
+    }
 }

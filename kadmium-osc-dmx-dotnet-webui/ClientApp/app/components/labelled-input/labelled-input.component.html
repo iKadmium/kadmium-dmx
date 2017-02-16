@@ -1,6 +1,10 @@
-<div class="form-group" [ngClass]="{'has-error': inputElement.errors}">
-    <label class="control-label col-sm-2" [attr.for]="inputElement.name">{{ label }}</label>
+<div class="form-group" [ngClass]="{'has-error': model.errors && model.touched}">
+    <label class="control-label col-sm-2" [attr.for]="input.name">{{ label }}</label>
     <div class="col-sm-10">
         <ng-content></ng-content>
+        <div class="alert alert-danger" *ngIf="model && model.touched && model.errors?.required">This field is required</div>
+        <div class="alert alert-danger" *ngIf="model && model.touched && model.errors?.min">This field has a minimum value of {{model.errors?.min.minValue}}</div>
+        <div class="alert alert-danger" *ngIf="model && model.touched && model.errors?.max">This field has a maximum value of {{model.errors?.max.maxValue}}</div>
+        <div class="alert alert-danger" *ngIf="model && model.touched && model.dirty && model.errors?.unique">Entries in this field must be unique</div>
     </div>
 </div>

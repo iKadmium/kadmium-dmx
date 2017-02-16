@@ -2,7 +2,7 @@
     <h1>Groups</h1>
 </div>
 <message-bar #messageBar></message-bar>
-<form *ngIf="groups">
+<form *ngIf="groups" #groupsForm="ngForm">
     <fieldset [disabled]="saving">
         <table class="table table-striped">
             <thead>
@@ -13,16 +13,15 @@
                 </tr>
             </thead>
             <tbody>
-                <tr *ngFor="let group of groups; let idx = index">
+                <tr *ngFor="let group of groups; let i = index">
                     <td>
-                        <button class="btn" (click)="move(group, -1)" [disabled]="idx == 0"><span class="glyphicon glyphicon-arrow-up"></span></button>
-                        <button class="btn" (click)="move(group, 1)" [disabled]="idx == groups.length - 1"><span class="glyphicon glyphicon-arrow-down"></span></button>
+                        <button class="btn" (click)="move(group, -1)" [disabled]="i == 0"><span class="glyphicon glyphicon-arrow-up"></span></button>
+                        <button class="btn" (click)="move(group, 1)" [disabled]="i == groups.length - 1"><span class="glyphicon glyphicon-arrow-down"></span></button>
                     </td>
-                    <td [ngClass]="{'has-error': name.errors}">
-                        <input required class="form-control" type="text" [(ngModel)]="group.name" [ngModelOptions]="{standalone: true}" #name="ngModel">
-                        <div class="alert alert-danger" *ngIf="name.errors && name.touched">
-                            A name is required
-                        </div>
+                    <td>
+                        <table-input>
+                            <input required [unique]="groupNames" #input #model="ngModel" class="form-control" type="text" [(ngModel)]="group.name" [name]="'groupName[' + i + ']'">
+                        </table-input>
                     </td>
                     <td>
                         <div class="btn-group">
@@ -36,7 +35,7 @@
             <button class="btn btn-success" (click)="add()"><span class="glyphicon glyphicon-plus"></span> Add</button>
         </div>
         <div class="form-group">
-            <button class="btn btn-primary" [disabled]="!validate()" (click)="save()"><span class="glyphicon glyphicon-floppy-disk"></span> Save</button>
+            <button class="btn btn-primary" [disabled]="!groupsForm.valid" (click)="save()"><span class="glyphicon glyphicon-floppy-disk"></span> Save</button>
         </div>
     </fieldset>
 </form>

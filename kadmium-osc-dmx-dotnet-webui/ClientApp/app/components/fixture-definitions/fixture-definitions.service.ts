@@ -33,6 +33,13 @@ export class FixtureDefinitionsService
             });
     }
 
+    public put(manufacturer: string, model: string, definition: FixtureDefinition): Promise<void>
+    {
+        return this.http.put(this.fixtureDefinitionsUrl + "/" + manufacturer + "/" + model, definition)
+            .toPromise()
+            .then(response => { });
+    }
+
     public delete(fixture: FixtureDefinitionSkeleton): Promise<void>
     {
         return this.http.delete(this.fixtureDefinitionsUrl + "/" + fixture.manufacturer + "/" + fixture.model)

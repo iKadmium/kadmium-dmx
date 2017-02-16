@@ -27,6 +27,7 @@ namespace kadmium_osc_dmx_dotnet_core
         private static string SettingsSchema = Path.Combine(DataLocation, "settings.schema.json");
 
         private static FileInfo GroupsFile = new FileInfo(GroupsLocation);
+
         private static FileInfo VenuesFile = new FileInfo(GroupsLocation);
         private static FileInfo SettingsFile = new FileInfo(SettingsLocation);
 
@@ -248,6 +249,50 @@ namespace kadmium_osc_dmx_dotnet_core
             string path = GetFixtureDefinitionPath(manufacturer, model);
             FileInfo file = new FileInfo(path);
             await ValidatedSave(definition, file, FixtureDefinitionSchema);
+        }
+
+        public static async Task RenameFixtureDefinition(string originalManufacturer, string originalModel, string manufacturer, string model)
+        {
+            List<Task> tasks = new List<Task>();
+            foreach (string venueName in FileAccess.GetVenueNames())
+            {
+                JObject venueJson = await FileAccess.LoadVenue(venueName);
+                Venue venue = await Venue.Load(venueJson);
+                bool dirty = false;
+                foreach (Universe universe in venue.Universes.Values)
+                {
+                    var matches = universe.Fixtures.Where(x => x.Definition.Manufacturer == originalManufacturer && x.Definition.Name == originalModel).ToList();
+                    foreach (var match in matches)
+                    {
+                        match.Definition.Manufacturer = manufacturer;
+                        match.Definition.Name = model;
+                        dirty = true;
+                    }
+                }
+                if (dirty)
+                {
+                    tasks.Add(FileAccess.SaveVenue(venue.Serialize()));
+                }
+            }
+            foreach (string fixtureCollectionName in FileAccess.GetFixtureCollectionNames())
+            {
+                JObject fixtureCollectionJson = await FileAccess.LoadFixtureCollection(fixtureCollectionName);
+                FixtureCollection collection = FixtureCollection.Load(fixtureCollectionJson);
+                var matches = collection.FixtureEntries.Where(x => x.Manufacturer == manufacturer && x.Type == model).ToList();
+                if (matches.Count > 0)
+                {
+                    foreach (var match in matches)
+                    {
+                        match.Manufacturer = manufacturer;
+                        match.Type = model;
+                    }
+                    tasks.Add(FileAccess.SaveFixtureCollection(collection.Serialize()));
+                }
+            }
+            await Task.WhenAll(tasks);
+            string oldPath = FileAccess.GetFixtureDefinitionPath(originalManufacturer, originalModel);
+            string newPath = FileAccess.GetFixtureDefinitionPath(manufacturer, model);
+            File.Move(oldPath, newPath);
         }
 
         public static async Task<JObject> GetFixtureDefinitionSchema()

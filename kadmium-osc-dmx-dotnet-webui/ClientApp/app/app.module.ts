@@ -7,11 +7,13 @@ import { AppComponent } from './components/app/app.component'
 
 import { MINMAX_DIRECTIVES } from './components/minmax/index';
 import { MaxValueValidator } from './components/minmax/index';
+import { UniqueValidator } from "./components/unique/unique.directive";
 
 import { NavMenuComponent } from './components/navmenu/navmenu.component';
 import { StatusPanelComponent } from "./components/status/status-panel/status-panel.component";
 import { MessageBarComponent } from "./components/status/message-bar/message-bar.component";
 import { LabelledInputComponent } from "./components/labelled-input/labelled-input.component";
+import { TableInputComponent } from "./components/labelled-input/table-input.component";
 import { ConfirmationComponent } from "./components/confirmation/confirmation.component";
 
 import { DashboardComponent } from './components/dashboard/dashboard.component';
@@ -39,11 +41,13 @@ declare var jQuery: any;
         FixtureDefinitionEditorComponent,
 
         MINMAX_DIRECTIVES,
+        UniqueValidator,
 
         NavMenuComponent,
         StatusPanelComponent,
         MessageBarComponent,
         LabelledInputComponent,
+        TableInputComponent,
         ConfirmationComponent
     ],
     imports: [

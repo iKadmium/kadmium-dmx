@@ -1,0 +1,7 @@
+<div [ngClass]="{'has-error': model.errors && model.touched && model.dirty}">
+    <ng-content></ng-content>
+    <div class="alert alert-danger" *ngIf="model && model.touched && model.errors?.required">This field is required</div>
+    <div class="alert alert-danger" *ngIf="model && model.touched && model.errors?.min">This field has a minimum value of {{model.errors?.min.minValue}}</div>
+    <div class="alert alert-danger" *ngIf="model && model.touched && model.errors?.max">This field has a maximum value of {{model.errors?.max.maxValue}}</div>
+    <div class="alert alert-danger" *ngIf="model && model.touched && model.errors?.unique">Entries in this field must be unique</div>
+</div>

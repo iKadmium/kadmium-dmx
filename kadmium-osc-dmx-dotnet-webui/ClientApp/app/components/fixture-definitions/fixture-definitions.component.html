@@ -9,7 +9,7 @@
             Filter by manufacturer
         </label>
     </div>
-    <select class="form-control" [disabled]="!manufacturerFilterEnabled" [(ngModel)]="manufacturerFilter">
+    <select required class="form-control" [disabled]="!manufacturerFilterEnabled" [(ngModel)]="manufacturerFilter">
         <option *ngFor="let manufacturer of manufacturers">{{manufacturer}}</option>
     </select>
 </div>
@@ -34,4 +34,5 @@
         </tr>
     </tbody>
 </table>
+<button class="btn btn-success" (click)="add()"><span class="glyphicon glyphicon-plus"></span></button>
 <confirmation #confirmation></confirmation>
