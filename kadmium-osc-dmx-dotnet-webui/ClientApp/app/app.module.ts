@@ -19,12 +19,14 @@ import { ConfirmationComponent } from "./components/confirmation/confirmation.co
 import { DashboardComponent } from './components/dashboard/dashboard.component';
 import { SettingsComponent } from './components/settings/settings.component';
 import { GroupsComponent } from './components/groups/groups.component';
+import { VenuesComponent } from "./components/venues/venues.component";
+import { VenueEditorComponent } from "./components/venues/venue-editor.component";
 import { FixtureDefinitionsComponent } from './components/fixture-definitions/fixture-definitions.component';
 import { FixtureDefinitionEditorComponent } from './components/fixture-definitions/fixture-definition-editor.component';
 
 import { SettingsService } from "./components/settings/settings.service";
-import { VenueService } from "./components/venue/venue.service";
-import { GroupsService } from "./components/groups/groups.service";
+import { VenueService } from "./components/venues/venue.service";
+import { GroupService } from "./components/groups/group.service";
 import { FixtureDefinitionsService } from "./components/fixture-definitions/fixture-definitions.service";
 
 declare var jQuery: any;
@@ -37,6 +39,8 @@ declare var jQuery: any;
         SettingsComponent,
         DashboardComponent,
         GroupsComponent,
+        VenuesComponent,
+        VenueEditorComponent,
         FixtureDefinitionsComponent,
         FixtureDefinitionEditorComponent,
 
@@ -60,6 +64,9 @@ declare var jQuery: any;
             { path: 'dashboard', component: DashboardComponent },
             { path: 'settings', component: SettingsComponent },
             { path: 'groups', component: GroupsComponent },
+            { path: 'venues', component: VenuesComponent },
+            { path: 'venues/new', component: VenueEditorComponent },
+            { path: 'venues/:id', component: VenueEditorComponent },
             { path: 'fixture-definitions', component: FixtureDefinitionsComponent },
             { path: 'fixture-definitions/new', component: FixtureDefinitionEditorComponent },
             { path: 'fixture-definitions/:manufacturer/:model', component: FixtureDefinitionEditorComponent },

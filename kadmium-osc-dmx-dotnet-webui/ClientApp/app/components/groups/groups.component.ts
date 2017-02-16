@@ -2,13 +2,13 @@ import { Component, ViewChild } from '@angular/core';
 
 import { MessageBarComponent } from "../status/message-bar/message-bar.component";
 
-import { GroupsService } from "./groups.service";
+import { GroupService } from "./group.service";
 import { Group } from "./group";
 
 @Component({
     selector: 'groups',
     template: require('./groups.component.html'),
-    providers: [GroupsService]
+    providers: [GroupService]
 })
 export class GroupsComponent
 {
@@ -17,7 +17,7 @@ export class GroupsComponent
     saving: boolean;
     groups: Group[];
 
-    constructor(private groupsService: GroupsService)
+    constructor(private groupsService: GroupService)
     {
         this.saving = false;
         this.groupsService

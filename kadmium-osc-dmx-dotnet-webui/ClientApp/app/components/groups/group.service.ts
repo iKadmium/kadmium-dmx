@@ -5,7 +5,7 @@ import 'rxjs/add/operator/toPromise';
 import { Group } from "./group";
 
 @Injectable()
-export class GroupsService
+export class GroupService
 {
     private groupsUrl = "/api/Group";
 

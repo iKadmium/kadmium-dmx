@@ -17,31 +17,40 @@
             <input #input type="number" name="sacnTransmitterDelay" class="form-control" min="0" max="10000" [(ngModel)]="settings.sacnTransmitter.delay"
                 #model="ngModel" />
         </labelled-input>
-        <labelled-input label="sACN Transmitter Delay (ms):">
+        <labelled-input label="sACN Transmitter Multicast:">
             <div class="checkbox">
                 <label><input #input type="checkbox" name="sacnMulticast" [(ngModel)]="settings.sacnTransmitter.multicast" #sacnMulticast="ngModel" #model="ngModel" >Multicast</label>
             </div>
         </labelled-input>
-        <div class="form-group">
-            <label class="control-label col-sm-2" for="sacnTransmitterDelay">sACN Unicast Targets:</label>
-            <div class="col-sm-10">
-                <div class="form-group" *ngFor="let target of settings.sacnTransmitter.unicast; let i = index" id="unicast" name="unicast">
-                    <div class="col-sm-8" [ngClass]="{'has-error': targetName.errors && targetName.touched}">
-                        <input required type="text" class="form-control col-sm-8" [(ngModel)]="settings.sacnTransmitter.unicast[i].target" [name]="'unicast[' + i + ']'"
-                            #targetName="ngModel" />
-                        <div class="alert alert-danger" *ngIf="targetName.errors && targetName.touched">This field is required</div>
-                    </div>
-                    <div class="col-sm-4">
-                        <button class="btn btn-danger" (click)="removeTarget(i)"><span class="glyphicon glyphicon-remove"></span></button>
-                    </div>
-                </div>
-                <button class="btn btn-success clearfix" (click)="addTarget()"><span class="glyphicon glyphicon-plus"></span> Add Target</button>
+        <div class="panel panel-default">
+            <div class="panel-heading">sACN Unicast Targets</div>
+            <div class="panel-body">
+                <table class="table table-striped">
+                    <thead>
+                        <tr>
+                            <th>Address</th>
+                            <th>Remove</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr *ngFor="let target of settings.sacnTransmitter.unicast; let i = index">
+                            <td>
+                                <table-input>
+                                    <input required type="text" class="form-control col-sm-8" [(ngModel)]="settings.sacnTransmitter.unicast[i].target" [name]="'unicast[' + i + ']'"
+                                        #input #model="ngModel" />
+                                </table-input>
+                            </td>
+                            <td>
+                                <button class="btn btn-danger" (click)="removeTarget(i)"><span class="glyphicon glyphicon-remove"></span></button>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
             </div>
+            <div class="panel-footer"><button class="btn btn-success" (click)="addTarget()"><span class="glyphicon glyphicon-plus"></span></button></div>
         </div>
         <div class="form-group">
-            <div class="col-sm-offset-2 col-sm-10">
-                <button class="btn btn-primary" (click)="save()" [disabled]="!settingsForm.valid"><span class="glyphicon glyphicon-floppy-disk"></span> Save</button>
-            </div>
+            <button class="btn btn-primary" (click)="save()" [disabled]="!settingsForm.valid"><span class="glyphicon glyphicon-floppy-disk"></span> Save</button>
         </div>
     </fieldset>
 </form>

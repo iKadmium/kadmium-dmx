@@ -3,7 +3,7 @@ import { Component, ViewChild } from '@angular/core';
 import { StatusPanelComponent } from "../status/status-panel/status-panel.component";
 import { MessageBarComponent } from "../status/message-bar/message-bar.component";
 
-import { VenueService } from "../venue/venue.service";
+import { VenueService } from "../venues/venue.service";
 
 import { StatusCode } from "../status/status";
 

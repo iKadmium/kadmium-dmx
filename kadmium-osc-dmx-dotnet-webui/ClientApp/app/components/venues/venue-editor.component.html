@@ -1,0 +1,50 @@
+<div class="page-header">
+    <h1>Venue Editor</h1>
+</div>
+<message-bar #messageBar></message-bar>
+<form *ngIf="venue" class="form-horizontal" #editorForm="ngForm">
+    <fieldset [disabled]="saving">
+        <labelled-input label="Name:">
+            <input required #input class="form-control" type="text" name="name" [(ngModel)]="venue.name" #model="ngModel">
+        </labelled-input>
+        <div class="panel panel-default">
+            <div class="panel-heading">Universes</div>
+            <div class="panel-body">
+                <table class="table table-striped">
+                    <thead>
+                        <tr>
+                            <th>Name</th>
+                            <th>Universe Number</th>
+                            <th>Actions</th>
+                    </thead>
+                    <tbody>
+                        <tr *ngFor="let universe of venue.universes; let i = index">
+                            <td>
+                                <table-input>
+                                    <input required #input #model="ngModel" [(ngModel)]="universe.name" type="text" class="form-control" [name]="'universeName[' + i + ']'"
+                                    />
+                                </table-input>
+                            </td>
+                            <td>
+                                <table-input>
+                                    <input #input #model="ngModel" [(ngModel)]="universe.universeID" type="number" class="form-control" min="1" max="65535" [name]="'universeNumber[' + i + ']'"
+                                    />
+                                </table-input>
+                            </td>
+                            <td class="btn-group">
+                                <button class="btn btn-primary"><span class="glyphicon glyphicon-edit"></span></button>
+                                <button class="btn btn-danger" (click)="removeUniverse(i)"><span class="glyphicon glyphicon-remove"></span></button>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            <div class="panel-footer">
+                <button class="btn btn-success" (click)="addUniverse()"><span class="glyphicon glyphicon-plus"></span></button>
+            </div>
+        </div>
+        <div class="form-group">
+            <button class="btn btn-primary" (click)="save()" [disabled]="!editorForm.valid"><span class="glyphicon glyphicon-floppy-disk"></span> Save</button>
+        </div>
+    </fieldset>
+</form>
