@@ -9,23 +9,30 @@ import { MINMAX_DIRECTIVES } from './components/minmax/index';
 import { MaxValueValidator } from './components/minmax/index';
 import { UniqueValidator } from "./components/unique/unique.directive";
 
+import { ModalModule } from 'angular2-modal';
+import { BootstrapModalModule } from 'angular2-modal/plugins/bootstrap';
+
 import { NavMenuComponent } from './components/navmenu/navmenu.component';
 import { StatusPanelComponent } from "./components/status/status-panel/status-panel.component";
 import { MessageBarComponent } from "./components/status/message-bar/message-bar.component";
 import { LabelledInputComponent } from "./components/labelled-input/labelled-input.component";
 import { TableInputComponent } from "./components/labelled-input/table-input.component";
 import { ConfirmationComponent } from "./components/confirmation/confirmation.component";
+import { InputBoxComponent } from "./components/input-box/input-box.component";
 
 import { DashboardComponent } from './components/dashboard/dashboard.component';
 import { SettingsComponent } from './components/settings/settings.component';
 import { GroupsComponent } from './components/groups/groups.component';
 import { VenuesComponent } from "./components/venues/venues.component";
 import { VenueEditorComponent } from "./components/venues/venue-editor.component";
+import { UniverseEditorComponent } from "./components/venues/universe-editor.component";
+import { FixtureOptionsEditorComponent } from "./components/venues/fixture-options-editor.component";
 import { FixtureDefinitionsComponent } from './components/fixture-definitions/fixture-definitions.component';
 import { FixtureDefinitionEditorComponent } from './components/fixture-definitions/fixture-definition-editor.component';
 
 import { SettingsService } from "./components/settings/settings.service";
 import { VenueService } from "./components/venues/venue.service";
+import { VenuePresetService } from "./components/venues/venue-preset.service";
 import { GroupService } from "./components/groups/group.service";
 import { FixtureDefinitionsService } from "./components/fixture-definitions/fixture-definitions.service";
 
@@ -41,6 +48,8 @@ declare var jQuery: any;
         GroupsComponent,
         VenuesComponent,
         VenueEditorComponent,
+        UniverseEditorComponent,
+        FixtureOptionsEditorComponent,
         FixtureDefinitionsComponent,
         FixtureDefinitionEditorComponent,
 
@@ -52,12 +61,16 @@ declare var jQuery: any;
         MessageBarComponent,
         LabelledInputComponent,
         TableInputComponent,
-        ConfirmationComponent
+        ConfirmationComponent,
+        InputBoxComponent
     ],
     imports: [
         UniversalModule, // Must be first import. This automatically imports BrowserModule, HttpModule, and JsonpModule too.
         FormsModule,
         HttpModule,
+
+        ModalModule.forRoot(),
+        BootstrapModalModule,
 
         RouterModule.forRoot([
             { path: '', redirectTo: 'dashboard', pathMatch: 'full' },

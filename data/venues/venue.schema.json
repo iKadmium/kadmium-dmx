@@ -18,7 +18,7 @@
 						"description": "The model of the fixture",
 						"type": "object",
 						"properties": {
-							"name": {
+							"model": {
 								"type": "string",
 								"description": "The model name of the fixture"
 							},

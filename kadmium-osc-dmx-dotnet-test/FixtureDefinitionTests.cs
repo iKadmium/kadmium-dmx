@@ -8,11 +8,11 @@ namespace kadmium_osc_dmx_dotnet_test
     public class FixtureDefinitionTests
     {
         [Fact]
-        public static void TestSerialization()
+        public static async void TestSerialization()
         {
             foreach(var fixtureDefinitionPair in FileAccess.GetAllFixtures())
             {
-                var sourceDefinitionJson = FileAccess.LoadFixtureDefinition(fixtureDefinitionPair.Item1, fixtureDefinitionPair.Item2);
+                var sourceDefinitionJson = await FileAccess.LoadFixtureDefinition(fixtureDefinitionPair.Item1, fixtureDefinitionPair.Item2);
                 var definition = Definition.Load(sourceDefinitionJson);
                 var destinationDefinitionJson = definition.Serialize();
 
@@ -25,7 +25,7 @@ namespace kadmium_osc_dmx_dotnet_test
             Definition definition = new Definition();
             definition.Channels.Add(new DMXChannel(axisName, definition.Channels.Count + 1));
             definition.Axis.Add(new MovementAxis(axisName, min, max));
-            definition.Name = "Moving Fixture";
+            definition.Model = "Moving Fixture";
             definition.Manufacturer = "Generic";
             return definition;
         }

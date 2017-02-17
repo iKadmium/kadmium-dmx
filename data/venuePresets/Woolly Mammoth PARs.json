@@ -5,7 +5,7 @@
       "channel": 88,
       "type": {
         "manufacturer": "AVE",
-        "name": "Par64B"
+        "model": "Par64B"
       },
       "group": "vocalist",
       "options": {
@@ -18,7 +18,7 @@
       "channel": 41,
       "type": {
         "manufacturer": "AVE",
-        "name": "Par64B"
+        "model": "Par64B"
       },
       "group": "bassist",
       "options": {
@@ -31,7 +31,7 @@
       "channel": 48,
       "type": {
         "manufacturer": "AVE",
-        "name": "Par64B"
+        "model": "Par64B"
       },
       "group": "guitarist",
       "options": {
@@ -44,7 +44,7 @@
       "channel": 67,
       "type": {
         "manufacturer": "AVE",
-        "name": "Par64B"
+        "model": "Par64B"
       },
       "group": "drummer",
       "options": {
@@ -57,7 +57,7 @@
       "channel": 74,
       "type": {
         "manufacturer": "AVE",
-        "name": "Par64B"
+        "model": "Par64B"
       },
       "group": "drummer",
       "options": {

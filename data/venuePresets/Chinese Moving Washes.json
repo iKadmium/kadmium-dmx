@@ -1,4 +1,5 @@
 ﻿{
+  "$schema": "./venuePreset.schema.json",
   "name": "Chinese Moving Washes",
   "fixtures": [
     {
@@ -22,7 +23,7 @@
       },
       "type": {
         "manufacturer": "Generic",
-        "name": "Chinese Moving Wash"
+        "model": "Chinese Moving Wash"
       }
     },
     {
@@ -46,7 +47,7 @@
       },
       "type": {
         "manufacturer": "Generic",
-        "name": "Chinese Moving Wash"
+        "model": "Chinese Moving Wash"
       }
     },
     {
@@ -72,7 +73,7 @@
       },
       "type": {
         "manufacturer": "Generic",
-        "name": "Chinese Moving Wash"
+        "model": "Chinese Moving Wash"
       }
     },
     {
@@ -98,7 +99,7 @@
       },
       "type": {
         "manufacturer": "Generic",
-        "name": "Chinese Moving Wash"
+        "model": "Chinese Moving Wash"
       }
     }
   ]

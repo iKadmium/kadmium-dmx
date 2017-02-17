@@ -4,7 +4,7 @@
     {
       "channel": 25,
       "type": {
-        "name": "PAR",
+        "model": "PAR",
         "manufacturer": "Venue - The New Globe"
       },
       "group": "guitarist",
@@ -17,7 +17,7 @@
     {
       "channel": 46,
       "type": {
-        "name": "PAR",
+        "model": "PAR",
         "manufacturer": "Venue - The New Globe"
       },
       "group": "bassist",

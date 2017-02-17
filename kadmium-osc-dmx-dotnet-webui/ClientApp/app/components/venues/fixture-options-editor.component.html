@@ -1,0 +1,74 @@
+<div *ngIf="fixture && definition" class="modal fade" tabindex="-1" [ngClass]="{'in': visibleAnimate}" [ngStyle]="{'display': visible ? 'block' : 'none', 'opacity': visibleAnimate ? 1 : 0}">
+    <div class="modal-dialog modal-lg">
+        <!-- Modal content-->
+        <div class="modal-content">
+            <form class="form-horizontal" #editorForm="ngForm">
+                <div class="modal-header">
+                    <button type="button" class="close" (click)="cancelClick()">&times;</button>
+                    <h4 class="modal-title">Editing {{fixture.type.manufacturer}} {{fixture.type.model}} on Channel {{fixture.channel}}</h4>
+                </div>
+                <div class="modal-body">
+                    <labelled-input label="Max Brightness:">
+                        <input #input #model="ngModel" class="form-control" [(ngModel)]="fixture.options.maxBrightness" type="number" min="0" max="1"
+                            step="0.01" name="maxBrightness" />
+                    </labelled-input>
+                    <div *ngIf="moving" class="panel panel-default">
+                        <div class="panel-heading">Axis Options</div>
+                        <div class="panel-body">
+                            <table class="table table-striped">
+                                <thead>
+                                    <tr>
+                                        <th>Name</th>
+                                        <th>Inverted</th>
+                                        <th>Restricted</th>
+                                        <th>Min (degrees)</th>
+                                        <th>Max (degrees)</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr *ngFor="let axis of restrictionAxis">
+                                        <td>{{axis.name}}</td>
+                                        <td>
+                                            <div class="checkbox">
+                                                <label>
+                                                    <input type="checkbox" [(ngModel)]="axis.inverted" [name]="'inverted[' + axis.name + ']'" >
+                                                    Inverted
+                                                </label>
+                                            </div>
+                                        </td>
+                                        <td>
+                                            <div class="checkbox">
+                                                <label>
+                                                    <input type="checkbox" [(ngModel)]="axis.restricted" [name]="'restricted[' + axis.name + ']'" >
+                                                    Restricted
+                                                </label>
+                                            </div>
+                                        </td>
+                                        <td>
+                                            <table-input>
+                                                <input #input #model="ngModel" class="form-control" type="number" [(ngModel)]="axis.restrictionMin" [name]="'restrictionMin[' + axis.name + ']'"
+                                                    [min]="getAxisMin(axis.name)" [max]="getAxisMax(axis.name)" [disabled]="!axis.restricted"
+                                                />
+                                            </table-input>
+                                        </td>
+                                        <td>
+                                            <table-input>
+                                                <input #input #model="ngModel" class="form-control" type="number" [(ngModel)]="axis.restrictionMax" [name]="'restrictionMax[' + axis.name + ']'"
+                                                    [min]="getAxisMin(axis.name)" [max]="getAxisMax(axis.name)" [disabled]="!axis.restricted"
+                                                />
+                                            </table-input>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-primary" (click)="acceptClick()" [disabled]="!editorForm.valid">OK</button>
+                    <button type="button" class="btn btn-danger" (click)="cancelClick()">Cancel</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>

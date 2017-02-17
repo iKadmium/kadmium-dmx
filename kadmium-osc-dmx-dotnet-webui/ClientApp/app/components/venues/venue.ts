@@ -69,3 +69,9 @@ export class AxisRestrictionOptions
         this.max = 0;
     }
 }
+
+export class VenuePreset
+{
+    name: string;
+    fixtures: Fixture[];
+}

@@ -6,14 +6,14 @@ namespace kadmium_osc_dmx_dotnet_test
     public class VenueTests
     {
         [Fact]
-        public void TestSerialization()
+        public async void TestSerialization()
         {
-            MasterController.Initialise();
+            await MasterController.Initialise();
 
             foreach (string venueName in FileAccess.GetVenueNames())
             {
-                var venueSourceJson = FileAccess.LoadVenue(venueName);
-                var venue = Venue.Load(venueSourceJson);
+                var venueSourceJson = await FileAccess.LoadVenue(venueName);
+                var venue = await Venue.Load(venueSourceJson);
                 var destinationJson = venue.Serialize();
 
                 Assert.Equal(venueSourceJson.ToString(), destinationJson.ToString());
@@ -21,12 +21,12 @@ namespace kadmium_osc_dmx_dotnet_test
         }
 
         [Fact]
-        public void LoadAllIncludedVenues()
+        public async void LoadAllIncludedVenues()
         {
-            MasterController.Initialise();
+            await MasterController.Initialise();
             foreach (string venueName in FileAccess.GetVenueNames())
             {
-                MasterController.Instance.LoadVenue(venueName);
+                await MasterController.Instance.LoadVenue(venueName);
             }
         }
     }

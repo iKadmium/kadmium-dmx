@@ -11,7 +11,7 @@
       },
       "type": {
         "manufacturer": "Generic",
-        "name": "Chinese RGBW (5ch)"
+        "model": "Chinese RGBW (5ch)"
       }
     },
     {
@@ -24,7 +24,7 @@
       },
       "type": {
         "manufacturer": "Generic",
-        "name": "Chinese RGBW (5ch)"
+        "model": "Chinese RGBW (5ch)"
       }
     },
     {
@@ -37,7 +37,7 @@
       },
       "type": {
         "manufacturer": "Generic",
-        "name": "Chinese RGBW (5ch)"
+        "model": "Chinese RGBW (5ch)"
       }
     },
     {
@@ -50,7 +50,7 @@
       },
       "type": {
         "manufacturer": "Generic",
-        "name": "Chinese RGBW (5ch)"
+        "model": "Chinese RGBW (5ch)"
       }
     }
   ]

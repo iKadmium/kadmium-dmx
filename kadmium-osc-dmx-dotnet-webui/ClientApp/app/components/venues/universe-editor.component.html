@@ -1,0 +1,90 @@
+<div class="panel panel-default" *ngIf="universe && skeletons">
+    <div class="panel-heading">Fixtures</div>
+    <div class="panel-body">
+        <table class="table table-striped">
+            <thead>
+                <tr>
+                    <th>Selected</th>
+                    <th>Manufacturer</th>
+                    <th>Model</th>
+                    <th>Channel</th>
+                    <th>Group</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr *ngFor="let fixture of universe.fixtures; let i = index">
+                    <td>
+                        <div class="checkbox">
+                            <label>
+                                <input type="checkbox" [ngModel]="isSelected(fixture)" (ngModelChange)="selectFixture(fixture, $event)" [name]="'selected[' + i + ']'" >
+                            </label>
+                        </div>
+                    </td>
+                    <td>
+                        <table-input>
+                            <select class="form-control" [(ngModel)]="fixture.type.manufacturer" #input #model="ngModel" [name]="'manufacturer[' + i +']'">
+                                <option *ngFor="let manufacturer of getManufacturers()">{{manufacturer}}</option>
+                            </select>
+                        </table-input>
+                    </td>
+                    <td>
+                        <table-input>
+                            <select class="form-control" [(ngModel)]="fixture.type.model" #input #model="ngModel" [name]="'model[' + i +']'">
+                                <option *ngFor="let model of getModels(fixture.type.manufacturer)">{{model}}</option>
+                            </select>
+                        </table-input>
+                    </td>
+                    <td>
+                        <table-input>
+                            <input #input #model="ngModel" class="form-control" type="number" min="1" max="512" [(ngModel)]="fixture.channel" [name]="'channel[' + i + ']'"
+                            />
+                        </table-input>
+                    </td>
+                    <td>
+                        <table-input>
+                            <select class="form-control" [(ngModel)]="fixture.group" #input #model="ngModel" [name]="'group[' + i + ']'">
+                                <option *ngFor="let group of groups">{{group}}</option>
+                            </select>
+                        </table-input>
+                    </td>
+                    <td>
+                        <div class="btn-group">
+                            <button type="button" class="btn btn-primary" (click)="editOptions(fixture)"><span class="glyphicon glyphicon-edit"></span></button>
+                            <button type="button" class="btn btn-danger" (click)="removeFixture(i)"><span class="glyphicon glyphicon-remove"></span> </button>
+                        </div>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+    <div class="panel-footer">
+        <div class="row">
+            <div class="col-sm-4">
+                <button class="btn btn-success" (click)="addFixture()"><span class="glyphicon glyphicon-plus"></span></button>
+            </div>
+            <div class="col-sm-8 text-right">
+                <div class="col-sm-8">
+                    <select class="form-control" [(ngModel)]="selectedPresetName" name="selectedPreset">
+                    <option *ngFor="let venuePresetName of venuePresetNames">{{venuePresetName}}</option>
+                </select>
+                </div>
+                <div class="col-sm-4">
+                    <button type="button" class="btn btn-success" [disabled]="selectedPresetName == null" (click)="loadPreset(selectedPresetName)">
+                    <span class="glyphicon glyphicon-floppy-open"></span>
+                </button>
+                    <button type="button" class="btn btn-primary" [disabled]="selectedFixtures.length == 0" (click)="savePreset()">
+                    <span class="glyphicon glyphicon-floppy-save"></span>
+                </button>
+                    <button type="button" class="btn btn-danger" [disabled]="selectedPresetName == null" (click)="removePreset(selectedPresetName)">
+                    <span class="glyphicon glyphicon-remove"></span>
+                </button>
+                </div>
+            </div>
+        </div>
+        <div class="col-sm-3 text-right">
+
+        </div>
+    </div>
+</div>
+<fixture-options-editor #fixtureOptionsEditor></fixture-options-editor>

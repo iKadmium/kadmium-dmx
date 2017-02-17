@@ -1,11 +1,11 @@
 {
-  "name": "Brightside Movers",
+  "name": "New Globe Movers",
   "fixtures": [
     {
-      "channel": 101,
+      "channel": 55,
       "type": {
-        "manufacturer": "Martin",
-        "name": "Mac 101"
+        "model": "Moving Head",
+        "manufacturer": "Venue - The New Globe"
       },
       "group": "rearSides",
       "options": {
@@ -26,60 +26,34 @@
       }
     },
     {
-      "channel": 113,
+      "channel": 67,
       "type": {
-        "manufacturer": "Martin",
-        "name": "Mac 101"
+        "model": "Moving Head",
+        "manufacturer": "Venue - The New Globe"
       },
-      "group": "rearSides",
+      "group": "drummer",
       "options": {
         "axisInversions": [],
         "axisRestrictions": [
           {
             "name": "Pan",
-            "min": -90,
-            "max": 90
+            "min": 0,
+            "max": 0
           },
           {
             "name": "Tilt",
             "min": 0,
-            "max": 90
+            "max": 0
           }
         ],
         "maxBrightness": 1
       }
     },
     {
-      "channel": 125,
+      "channel": 79,
       "type": {
-        "manufacturer": "Martin",
-        "name": "Mac 101"
-      },
-      "group": "rearSides",
-      "options": {
-        "axisInversions": [
-          "Pan"
-        ],
-        "axisRestrictions": [
-          {
-            "name": "Pan",
-            "min": -90,
-            "max": 90
-          },
-          {
-            "name": "Tilt",
-            "min": 0,
-            "max": 90
-          }
-        ],
-        "maxBrightness": 1
-      }
-    },
-    {
-      "channel": 137,
-      "type": {
-        "manufacturer": "Martin",
-        "name": "Mac 101"
+        "model": "Moving Head",
+        "manufacturer": "Venue - The New Globe"
       },
       "group": "rearSides",
       "options": {

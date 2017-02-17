@@ -8,7 +8,7 @@ namespace kadmium_osc_dmx_dotnet_core.Fixtures
 {
     public class Definition
     {
-        public string Name { get; set; }
+        public string Model { get; set; }
         public List<DMXChannel> Channels { get; }
         public List<MovementAxis> Axis { get; }
         public List<ColorWheelEntry> ColorWheel { get; }
@@ -20,7 +20,7 @@ namespace kadmium_osc_dmx_dotnet_core.Fixtures
             Channels = new List<DMXChannel>();
             Axis = new List<MovementAxis>();
             ColorWheel = new List<ColorWheelEntry>();
-            Name = "";
+            Model = "";
             Manufacturer = "";
         }
 
@@ -33,7 +33,7 @@ namespace kadmium_osc_dmx_dotnet_core.Fixtures
                 definition.Channels.Add(channel);
             }
             definition.Type = (FixtureType)Enum.Parse(typeof(FixtureType), modelElement["type"].Value<string>());
-            definition.Name = modelElement["name"].Value<string>();
+            definition.Model = modelElement["name"].Value<string>();
             definition.Manufacturer = modelElement["manufacturer"].Value<string>();
             if (modelElement["movements"] != null)
             {
@@ -57,8 +57,8 @@ namespace kadmium_osc_dmx_dotnet_core.Fixtures
         public JObject Serialize()
         {
             JObject obj = new JObject(
-                new JProperty("$schema", FileAccess.GetRelativePath(FileAccess.GetFixtureDefinitionPath(Manufacturer, Name), FileAccess.FixtureDefinitionSchema)),
-                new JProperty("name", Name),
+                new JProperty("$schema", FileAccess.GetRelativePath(FileAccess.GetFixtureDefinitionPath(Manufacturer, Model), FileAccess.FixtureDefinitionSchema)),
+                new JProperty("name", Model),
                 new JProperty("manufacturer", Manufacturer),
                 new JProperty("type", Type.ToString()),
                 new JProperty("channels",

@@ -10,7 +10,7 @@
           "channel": 55,
           "type": {
             "manufacturer": "Venue - The New Globe",
-            "name": "Moving Head"
+            "model": "Moving Head"
           },
           "group": "rearSides",
           "options": {
@@ -34,7 +34,7 @@
           "channel": 67,
           "type": {
             "manufacturer": "Venue - The New Globe",
-            "name": "Moving Head"
+            "model": "Moving Head"
           },
           "group": "drummer",
           "options": {
@@ -58,7 +58,7 @@
           "channel": 79,
           "type": {
             "manufacturer": "Venue - The New Globe",
-            "name": "Moving Head"
+            "model": "Moving Head"
           },
           "group": "rearSides",
           "options": {
@@ -84,7 +84,7 @@
           "channel": 25,
           "type": {
             "manufacturer": "Venue - The New Globe",
-            "name": "PAR"
+            "model": "PAR"
           },
           "group": "guitarist",
           "options": {
@@ -97,7 +97,7 @@
           "channel": 46,
           "type": {
             "manufacturer": "Venue - The New Globe",
-            "name": "PAR"
+            "model": "PAR"
           },
           "group": "bassist",
           "options": {

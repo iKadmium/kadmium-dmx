@@ -10,7 +10,7 @@
           "channel": 301,
           "type": {
             "manufacturer": "Generic",
-            "name": "Chinese Moving Wash"
+            "model": "Chinese Moving Wash"
           },
           "group": "rearSides",
           "options": {
@@ -34,7 +34,7 @@
           "channel": 315,
           "type": {
             "manufacturer": "Generic",
-            "name": "Chinese Moving Wash"
+            "model": "Chinese Moving Wash"
           },
           "group": "rearSides",
           "options": {
@@ -58,7 +58,7 @@
           "channel": 329,
           "type": {
             "manufacturer": "Generic",
-            "name": "Chinese Moving Wash"
+            "model": "Chinese Moving Wash"
           },
           "group": "rearSides",
           "options": {
@@ -84,7 +84,7 @@
           "channel": 343,
           "type": {
             "manufacturer": "Generic",
-            "name": "Chinese Moving Wash"
+            "model": "Chinese Moving Wash"
           },
           "group": "rearSides",
           "options": {
@@ -110,7 +110,7 @@
           "channel": 400,
           "type": {
             "manufacturer": "Generic",
-            "name": "Chinese RGBW (5ch)"
+            "model": "Chinese RGBW (5ch)"
           },
           "group": "vocalist",
           "options": {
@@ -123,7 +123,7 @@
           "channel": 405,
           "type": {
             "manufacturer": "Generic",
-            "name": "Chinese RGBW (5ch)"
+            "model": "Chinese RGBW (5ch)"
           },
           "group": "guitarist",
           "options": {
@@ -136,7 +136,7 @@
           "channel": 410,
           "type": {
             "manufacturer": "Generic",
-            "name": "Chinese RGBW (5ch)"
+            "model": "Chinese RGBW (5ch)"
           },
           "group": "bassist",
           "options": {
@@ -149,7 +149,7 @@
           "channel": 415,
           "type": {
             "manufacturer": "Generic",
-            "name": "Chinese RGBW (5ch)"
+            "model": "Chinese RGBW (5ch)"
           },
           "group": "drummer",
           "options": {

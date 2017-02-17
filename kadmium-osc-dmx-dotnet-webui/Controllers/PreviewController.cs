@@ -41,7 +41,7 @@ namespace kadmium_osc_dmx_dotnet_webui.Controllers
                                 new JProperty("fixtures",
                                     from fixture in universe.Fixtures
                                     select new JObject(
-                                        new JProperty("name", fixture.Definition.Name),
+                                        new JProperty("name", fixture.Definition.Model),
                                         new JProperty("address", fixture.StartChannel),
                                         new JProperty("group", fixture.Group.Name),
                                         new JProperty("definition", fixture.Definition.Serialize())

@@ -10,7 +10,7 @@
           "channel": 400,
           "type": {
             "manufacturer": "Generic",
-            "name": "Chinese RGBW (5ch)"
+            "model": "Chinese RGBW (5ch)"
           },
           "group": "vocalist",
           "options": {
@@ -23,7 +23,7 @@
           "channel": 405,
           "type": {
             "manufacturer": "Generic",
-            "name": "Chinese RGBW (5ch)"
+            "model": "Chinese RGBW (5ch)"
           },
           "group": "guitarist",
           "options": {
@@ -36,7 +36,7 @@
           "channel": 410,
           "type": {
             "manufacturer": "Generic",
-            "name": "Chinese RGBW (5ch)"
+            "model": "Chinese RGBW (5ch)"
           },
           "group": "bassist",
           "options": {
@@ -49,7 +49,7 @@
           "channel": 415,
           "type": {
             "manufacturer": "Generic",
-            "name": "Chinese RGBW (5ch)"
+            "model": "Chinese RGBW (5ch)"
           },
           "group": "drummer",
           "options": {
@@ -62,7 +62,7 @@
           "channel": 101,
           "type": {
             "manufacturer": "Martin",
-            "name": "Mac 101"
+            "model": "Mac 101"
           },
           "group": "rearSides",
           "options": {
@@ -86,7 +86,7 @@
           "channel": 113,
           "type": {
             "manufacturer": "Martin",
-            "name": "Mac 101"
+            "model": "Mac 101"
           },
           "group": "rearSides",
           "options": {
@@ -110,7 +110,7 @@
           "channel": 125,
           "type": {
             "manufacturer": "Martin",
-            "name": "Mac 101"
+            "model": "Mac 101"
           },
           "group": "rearSides",
           "options": {
@@ -134,7 +134,7 @@
           "channel": 137,
           "type": {
             "manufacturer": "Martin",
-            "name": "Mac 101"
+            "model": "Mac 101"
           },
           "group": "rearSides",
           "options": {

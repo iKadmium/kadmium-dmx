@@ -39,9 +39,9 @@ namespace kadmium_osc_dmx_dotnet_webui.Controllers
         public async void Put(string manufacturer, string model, [FromBody]JObject definitionJson)
         {
             Definition definition = Definition.Load(definitionJson);
-            if (manufacturer != definition.Manufacturer || model != definition.Name)
+            if (manufacturer != definition.Manufacturer || model != definition.Model)
             {
-                await FileAccess.RenameFixtureDefinition(manufacturer, model, definition.Manufacturer, definition.Name);
+                await FileAccess.RenameFixtureDefinition(manufacturer, model, definition.Manufacturer, definition.Model);
             }
             await FileAccess.SaveFixtureDefinition(definition.Serialize());
         }

@@ -7,44 +7,38 @@
         <labelled-input label="Name:">
             <input required #input class="form-control" type="text" name="name" [(ngModel)]="venue.name" #model="ngModel">
         </labelled-input>
-        <div class="panel panel-default">
-            <div class="panel-heading">Universes</div>
+
+        <div role="tabpanel">
+            <!-- Nav tabs -->
+            <ul class="nav nav-tabs" role="tablist">
+                <li *ngFor="let universe of venue.universes; let i = index" [ngClass]="{'active': selectedUniverse == universe}" class="active">
+                    <a (click)="selectedUniverse = universe">{{universe.name}}
+                        <span *ngIf="i > 0" class="glyphicon glyphicon-remove" (click)="removeUniverse(i)"></span>
+                    </a>
+                </li>
+                <li>
+                    <a class="btn" (click)="addUniverse()"><span class="glyphicon glyphicon-plus"></span></a>
+                </li>
+            </ul>
+        </div>
+
+        <div class="panel panel-default" *ngIf="selectedUniverse">
             <div class="panel-body">
-                <table class="table table-striped">
-                    <thead>
-                        <tr>
-                            <th>Name</th>
-                            <th>Universe Number</th>
-                            <th>Actions</th>
-                    </thead>
-                    <tbody>
-                        <tr *ngFor="let universe of venue.universes; let i = index">
-                            <td>
-                                <table-input>
-                                    <input required #input #model="ngModel" [(ngModel)]="universe.name" type="text" class="form-control" [name]="'universeName[' + i + ']'"
-                                    />
-                                </table-input>
-                            </td>
-                            <td>
-                                <table-input>
-                                    <input #input #model="ngModel" [(ngModel)]="universe.universeID" type="number" class="form-control" min="1" max="65535" [name]="'universeNumber[' + i + ']'"
-                                    />
-                                </table-input>
-                            </td>
-                            <td class="btn-group">
-                                <button class="btn btn-primary"><span class="glyphicon glyphicon-edit"></span></button>
-                                <button class="btn btn-danger" (click)="removeUniverse(i)"><span class="glyphicon glyphicon-remove"></span></button>
-                            </td>
-                        </tr>
-                    </tbody>
-                </table>
+                <labelled-input label="Name:">
+                    <input required #input #model="ngModel" [(ngModel)]="selectedUniverse.name" type="text" class="form-control" [name]="'universeName[' + i + ']'"
+                    />
+                </labelled-input>
+                <labelled-input label="Universe ID:">
+                    <input #input #model="ngModel" [(ngModel)]="selectedUniverse.universeID" type="number" class="form-control" min="1" max="65535"
+                        [name]="'universeNumber[' + i + ']'" />
+                </labelled-input>
             </div>
-            <div class="panel-footer">
-                <button class="btn btn-success" (click)="addUniverse()"><span class="glyphicon glyphicon-plus"></span></button>
-            </div>
+
+            <universe-editor [universe]="selectedUniverse" [messageBar]="messageBar" [inputBox]="inputBox"></universe-editor>
         </div>
         <div class="form-group">
             <button class="btn btn-primary" (click)="save()" [disabled]="!editorForm.valid"><span class="glyphicon glyphicon-floppy-disk"></span> Save</button>
         </div>
     </fieldset>
 </form>
+<input-box #inputBox></input-box>

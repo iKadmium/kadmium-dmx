@@ -16,14 +16,14 @@ namespace kadmium_osc_dmx_dotnet_core
         private static string FixturesLocation = Path.Combine(DataLocation, "fixtures");
         private static string GroupsLocation = Path.Combine(DataLocation, "groups.json");
         private static string VenuesLocation = Path.Combine(DataLocation, "venues");
-        private static string FixtureCollectionLocation = Path.Combine(DataLocation, "fixtureCollections");
+        private static string VenuePresetsLocation = Path.Combine(DataLocation, "venuePresets");
         private static string SettingsLocation = Path.Combine(DataLocation, "settings.json");
 
         private static string JsonSchemaSchema = Path.Combine(DataLocation, "jsonschema.schema.json");
         public static string FixtureDefinitionSchema = Path.Combine(FixturesLocation, "fixture.schema.json");
         private static string GroupsSchema = Path.Combine(DataLocation, "groups.schema.json");
         public static string VenuesSchema = Path.Combine(VenuesLocation, "venue.schema.json");
-        private static string FixtureCollectionsSchema = Path.Combine(FixtureCollectionLocation, "fixtureCollection.schema.json");
+        public static string VenuePresetsSchema = Path.Combine(VenuePresetsLocation, "venuePreset.schema.json");
         private static string SettingsSchema = Path.Combine(DataLocation, "settings.schema.json");
 
         private static FileInfo GroupsFile = new FileInfo(GroupsLocation);
@@ -37,7 +37,7 @@ namespace kadmium_osc_dmx_dotnet_core
             if (Validate(obj, file.FullName, schemaPath))
             {
                 Directory.CreateDirectory(Path.GetDirectoryName(file.FullName));
-                using (var writer = file.OpenWrite())
+                using (var writer = file.Create())
                 {
                     var bytes = System.Text.Encoding.UTF8.GetBytes(obj.ToString());
                     await writer.WriteAsync(bytes, 0, bytes.Length);
@@ -216,7 +216,7 @@ namespace kadmium_osc_dmx_dotnet_core
                 bool dirty = false;
                 foreach (Universe universe in venue.Universes.Values)
                 {
-                    var matches = universe.Fixtures.Where(x => x.Definition.Manufacturer == manufacturer && x.Definition.Name == model).ToList();
+                    var matches = universe.Fixtures.Where(x => x.Definition.Manufacturer == manufacturer && x.Definition.Model == model).ToList();
                     if (matches.Count > 0)
                     {
                         matches.ForEach(x => universe.Fixtures.Remove(x));
@@ -227,15 +227,15 @@ namespace kadmium_osc_dmx_dotnet_core
                     tasks.Add(FileAccess.SaveVenue(venue.Serialize()));
                 }
             }
-            foreach (string fixtureCollectionName in FileAccess.GetFixtureCollectionNames())
+            foreach (string venuePresetName in FileAccess.GetVenuePresetNames())
             {
-                JObject fixtureCollectionJson = await FileAccess.LoadFixtureCollection(fixtureCollectionName);
-                FixtureCollection collection = FixtureCollection.Load(fixtureCollectionJson);
+                JObject venuePresetJson = await FileAccess.LoadVenuePreset(venuePresetName);
+                VenuePreset collection = VenuePreset.Load(venuePresetJson);
                 var matches = collection.FixtureEntries.Where(x => x.Manufacturer == manufacturer && x.Type == model).ToList();
                 if (matches.Count > 0)
                 {
                     matches.ForEach(x => collection.FixtureEntries.Remove(x));
-                    tasks.Add(FileAccess.SaveFixtureCollection(collection.Serialize()));
+                    tasks.Add(FileAccess.SaveVenuePreset(collection.Serialize()));
                 }
             }
             await Task.WhenAll(tasks);
@@ -261,11 +261,11 @@ namespace kadmium_osc_dmx_dotnet_core
                 bool dirty = false;
                 foreach (Universe universe in venue.Universes.Values)
                 {
-                    var matches = universe.Fixtures.Where(x => x.Definition.Manufacturer == originalManufacturer && x.Definition.Name == originalModel).ToList();
+                    var matches = universe.Fixtures.Where(x => x.Definition.Manufacturer == originalManufacturer && x.Definition.Model == originalModel).ToList();
                     foreach (var match in matches)
                     {
                         match.Definition.Manufacturer = manufacturer;
-                        match.Definition.Name = model;
+                        match.Definition.Model = model;
                         dirty = true;
                     }
                 }
@@ -274,10 +274,10 @@ namespace kadmium_osc_dmx_dotnet_core
                     tasks.Add(FileAccess.SaveVenue(venue.Serialize()));
                 }
             }
-            foreach (string fixtureCollectionName in FileAccess.GetFixtureCollectionNames())
+            foreach (string venuePresetName in FileAccess.GetVenuePresetNames())
             {
-                JObject fixtureCollectionJson = await FileAccess.LoadFixtureCollection(fixtureCollectionName);
-                FixtureCollection collection = FixtureCollection.Load(fixtureCollectionJson);
+                JObject venuePresetJson = await FileAccess.LoadVenuePreset(venuePresetName);
+                VenuePreset collection = VenuePreset.Load(venuePresetJson);
                 var matches = collection.FixtureEntries.Where(x => x.Manufacturer == manufacturer && x.Type == model).ToList();
                 if (matches.Count > 0)
                 {
@@ -286,7 +286,7 @@ namespace kadmium_osc_dmx_dotnet_core
                         match.Manufacturer = manufacturer;
                         match.Type = model;
                     }
-                    tasks.Add(FileAccess.SaveFixtureCollection(collection.Serialize()));
+                    tasks.Add(FileAccess.SaveVenuePreset(collection.Serialize()));
                 }
             }
             await Task.WhenAll(tasks);
@@ -333,45 +333,56 @@ namespace kadmium_osc_dmx_dotnet_core
             return returnVal;
         }
 
-        public static IEnumerable<string> GetFixtureCollectionNames()
+        public static IEnumerable<string> GetVenuePresetNames()
         {
-            var files = from filename in Directory.EnumerateFiles(FixtureCollectionLocation)
+            var files = from filename in Directory.EnumerateFiles(VenuePresetsLocation)
                         where !filename.Contains(".schema")
                         select Path.GetFileNameWithoutExtension(filename);
             return files;
         }
 
-        public static bool HasFixtureCollection(string id)
+        public static bool HasVenuePreset(string id)
         {
-            string path = Path.Combine(FixtureCollectionLocation, id + ".json");
+            string path = GetVenuePresetLocation(id);
             return File.Exists(path);
         }
 
-        public static void DeleteFixtureCollection(string id)
+        public static void DeleteVenuePreset(string id)
         {
-            string path = Path.Combine(FixtureCollectionLocation, id + ".json");
+            string path = GetVenuePresetLocation(id);
             File.Delete(path);
         }
 
-        public static async Task SaveFixtureCollection(JObject chunk)
+        public static void RenameVenuePreset(string id, string newName)
+        {
+            string oldPath = GetVenuePresetLocation(id);
+            string newPath = GetVenuePresetLocation(newName);
+            File.Move(oldPath, newPath);
+        }
+
+        public static async Task SaveVenuePreset(JObject chunk)
         {
             string name = chunk["name"].Value<string>();
-            string path = Path.Combine(FixtureCollectionLocation, name + ".json");
+            string path = GetVenuePresetLocation(name);
             FileInfo file = new FileInfo(path);
-            await ValidatedSave(chunk, file, FixtureCollectionsSchema);
+            await ValidatedSave(chunk, file, VenuePresetsSchema);
         }
 
-        public static async Task<JObject> LoadFixtureCollection(string id)
+        public static async Task<JObject> LoadVenuePreset(string id)
         {
-            string path = Path.Combine(FixtureCollectionLocation, id + ".json");
-            JObject obj = await ValidatedLoad(path, FixtureCollectionsSchema) as JObject;
+            JObject obj = await ValidatedLoad(GetVenuePresetLocation(id), VenuePresetsSchema) as JObject;
             return obj;
         }
 
-        public static async Task<JObject> GetFixtureCollectionSchema()
+        public static async Task<JObject> GetVenuePresetSchema()
         {
-            JObject obj = await ValidatedLoad(FixtureCollectionsSchema, JsonSchemaSchema) as JObject;
+            JObject obj = await ValidatedLoad(VenuePresetsSchema, JsonSchemaSchema) as JObject;
             return obj;
+        }
+
+        public static string GetVenuePresetLocation(string name)
+        {
+            return Path.Combine(VenuePresetsLocation, name + ".json");
         }
 
         public static IEnumerable<string> GetVenueNames()
@@ -390,6 +401,13 @@ namespace kadmium_osc_dmx_dotnet_core
         public static bool HasVenue(string id)
         {
             return File.Exists(GetVenueLocation(id));
+        }
+
+        public static void RenameVenue(string oldName, string newName)
+        {
+            string oldPath = GetVenueLocation(oldName);
+            string newPath = GetVenueLocation(newName);
+            File.Move(oldPath, newPath);
         }
 
         public static void DeleteVenue(string id)
@@ -440,7 +458,6 @@ namespace kadmium_osc_dmx_dotnet_core
                 );
                 return obj;
             }
-
         }
 
         public static void SaveSettings(JObject settings)

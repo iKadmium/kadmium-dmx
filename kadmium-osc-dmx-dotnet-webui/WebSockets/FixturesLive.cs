@@ -41,7 +41,7 @@ namespace kadmium_osc_dmx_dotnet_webui.WebSockets
                                 new JArray(
                                     from fixture in universe.Fixtures
                                     select new JObject(
-                                        new JProperty("type", fixture.Definition.Name),
+                                        new JProperty("type", fixture.Definition.Model),
                                         new JProperty("channel", fixture.StartChannel),
                                         new JProperty("attributes",
                                             new JArray(

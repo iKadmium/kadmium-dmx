@@ -5,7 +5,7 @@
       "channel": 101,
       "type": {
         "manufacturer": "iSolution",
-        "name": "iMove 250S"
+        "model": "iMove 250S"
       },
       "group": "rearSides",
       "options": {
@@ -29,7 +29,7 @@
       "channel": 117,
       "type": {
         "manufacturer": "iSolution",
-        "name": "iMove 250S"
+        "model": "iMove 250S"
       },
       "group": "rearSides",
       "options": {
@@ -53,7 +53,7 @@
       "channel": 133,
       "type": {
         "manufacturer": "iSolution",
-        "name": "iMove 250S"
+        "model": "iMove 250S"
       },
       "group": "rearSides",
       "options": {
@@ -79,7 +79,7 @@
       "channel": 149,
       "type": {
         "manufacturer": "iSolution",
-        "name": "iMove 250S"
+        "model": "iMove 250S"
       },
       "group": "rearSides",
       "options": {
@@ -105,7 +105,7 @@
       "channel": 165,
       "type": {
         "manufacturer": "iSolution",
-        "name": "iMove 250S"
+        "model": "iMove 250S"
       },
       "group": "rearSides",
       "options": {

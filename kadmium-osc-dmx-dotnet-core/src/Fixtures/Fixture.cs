@@ -64,7 +64,7 @@ namespace kadmium_osc_dmx_dotnet_core.Fixtures
                 new JProperty("type",
                     new JObject(
                         new JProperty("manufacturer", Definition.Manufacturer),
-                        new JProperty("name", Definition.Name)
+                        new JProperty("model", Definition.Model)
                     )
                 ),
                 new JProperty("group", group.Name),
@@ -83,9 +83,9 @@ namespace kadmium_osc_dmx_dotnet_core.Fixtures
         {
             int startChannel = obj["channel"].Value<int>();
             JObject type = obj["type"].Value<JObject>();
-            string name = type["name"].Value<string>();
+            string model = type["model"].Value<string>();
             string manufacturer = type["manufacturer"].Value<string>();
-            Definition definition = await Definition.Load(manufacturer, name);
+            Definition definition = await Definition.Load(manufacturer, model);
             string groupName = obj["group"].Value<string>();
             Group group = MasterController.Instance.Groups.ContainsKey(groupName) ? MasterController.Instance.Groups[groupName] : MasterController.Instance.Groups.Values.First();
             JObject options = obj["options"].Value<JObject>();
@@ -125,7 +125,7 @@ namespace kadmium_osc_dmx_dotnet_core.Fixtures
 
         public override string ToString()
         {
-            return Definition.Name + " [" + StartChannel + " - " + EndChannel + "]";
+            return Definition.Model + " [" + StartChannel + " - " + EndChannel + "]";
         }
     }
 }
