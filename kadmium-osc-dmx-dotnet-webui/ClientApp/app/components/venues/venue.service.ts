@@ -46,4 +46,11 @@ export class VenueService
             .toPromise()
             .then(() => { });
     }
+
+    public delete(id: string): Promise<void>
+    {
+        return this.http.delete(this.venueUrl + "/" + id)
+            .toPromise()
+            .then(() => {});
+    }
 }

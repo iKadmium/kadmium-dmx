@@ -2,7 +2,7 @@
     <h1>Venues</h1>
 </div>
 <message-bar #messageBar></message-bar>
-<table class="table table-striped" *ngIf="data">
+<table class="table table-striped" *ngIf="venues">
     <thead>
         <tr>
             <th>Venue</th>
@@ -10,16 +10,15 @@
         </tr>
     </thead>
     <tbody>
-        <tr *ngFor="let entry of venues">
+        <tr *ngFor="let entry of venues; let i = index">
             <td>{{entry.name}}</td>
             <td>
                 <div class="btn-group">
                     <a class="btn btn-default" [href]="getEditUrl(entry)"><span class="glyphicon glyphicon-edit"></span></a>
-                    <button class="btn btn-danger" (click)="deleteConfirm(entry)"><span class="glyphicon glyphicon-remove"></span></button>
+                    <button class="btn btn-danger" (click)="deleteConfirm(i)"><span class="glyphicon glyphicon-remove"></span></button>
                 </div>
             </td>
         </tr>
     </tbody>
 </table>
 <button class="btn btn-success" (click)="add()"><span class="glyphicon glyphicon-plus"></span></button>
-<confirmation #confirmation></confirmation>

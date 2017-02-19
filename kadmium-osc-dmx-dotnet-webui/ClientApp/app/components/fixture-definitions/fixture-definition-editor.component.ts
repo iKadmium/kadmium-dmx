@@ -1,8 +1,9 @@
-import { Component, ViewChild } from '@angular/core';
+import { Component, ViewChild, ViewContainerRef } from '@angular/core';
 import { ActivatedRoute, Params } from "@angular/router";
 
 import { MessageBarComponent } from "../status/message-bar/message-bar.component";
-import { ConfirmationComponent } from "../confirmation/confirmation.component";
+import { Overlay } from "angular2-modal";
+import { Modal } from "angular2-modal/plugins/bootstrap";
 
 import { FixtureDefinition, FixtureDefinitionSkeleton, DMXChannel, Axis, ColorWheelEntry } from "./fixture-definition";
 
@@ -16,7 +17,6 @@ import { FixtureDefinitionsService } from "./fixture-definitions.service";
 export class FixtureDefinitionEditorComponent
 {
     @ViewChild("messageBar") messageBar: MessageBarComponent;
-    @ViewChild("confirmation") confirmation: ConfirmationComponent;
 
     private originalManufacturer: string;
     private originalModel: string;
@@ -27,7 +27,7 @@ export class FixtureDefinitionEditorComponent
 
     private saving: boolean;
 
-    constructor(private route: ActivatedRoute, private fixtureService: FixtureDefinitionsService)
+    constructor(private route: ActivatedRoute, private fixtureService: FixtureDefinitionsService, overlay: Overlay, vcRef: ViewContainerRef, private modal: Modal)
     {
         this.allManufacturers = [];
         this.saving = false;

@@ -2,7 +2,6 @@ import { Component, ViewChild } from '@angular/core';
 import { ActivatedRoute, Params } from "@angular/router";
 
 import { MessageBarComponent } from "../status/message-bar/message-bar.component";
-import { ConfirmationComponent } from "../confirmation/confirmation.component";
 import { UniverseEditorComponent } from "./universe-editor.component";
 import { FixtureOptionsEditorComponent } from "./fixture-options-editor.component";
 import { InputBoxComponent } from "../input-box/input-box.component";
@@ -19,7 +18,6 @@ import { VenueService } from "./venue.service";
 export class VenueEditorComponent
 {
     @ViewChild("messageBar") messageBar: MessageBarComponent;
-    @ViewChild("confirmation") confirmation: ConfirmationComponent;
     @ViewChild("universeEditor") universeEditor: UniverseEditorComponent;
     @ViewChild("inputBox") inputBox: InputBoxComponent;
     @ViewChild("fixtureOptionsEditor") fixtureOptionsEditor: FixtureOptionsEditorComponent;

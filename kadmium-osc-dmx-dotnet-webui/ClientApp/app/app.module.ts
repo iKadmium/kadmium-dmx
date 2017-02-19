@@ -17,7 +17,6 @@ import { StatusPanelComponent } from "./components/status/status-panel/status-pa
 import { MessageBarComponent } from "./components/status/message-bar/message-bar.component";
 import { LabelledInputComponent } from "./components/labelled-input/labelled-input.component";
 import { TableInputComponent } from "./components/labelled-input/table-input.component";
-import { ConfirmationComponent } from "./components/confirmation/confirmation.component";
 import { InputBoxComponent } from "./components/input-box/input-box.component";
 
 import { DashboardComponent } from './components/dashboard/dashboard.component';
@@ -61,7 +60,6 @@ declare var jQuery: any;
         MessageBarComponent,
         LabelledInputComponent,
         TableInputComponent,
-        ConfirmationComponent,
         InputBoxComponent
     ],
     imports: [
@@ -86,7 +84,8 @@ declare var jQuery: any;
             { path: '**', redirectTo: 'sets' }
         ])
     ],
-    providers: []
+    providers: [],
+    entryComponents: [FixtureOptionsEditorComponent]
 })
 export class AppModule
 {

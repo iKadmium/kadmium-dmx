@@ -1,10 +1,10 @@
-import { Component, Input, ViewChild, ViewContainerRef } from '@angular/core';
+import { Component, Input, ViewContainerRef, TemplateRef } from '@angular/core';
 import { ActivatedRoute, Params } from "@angular/router";
 
 import { FixtureOptionsEditorComponent } from "./fixture-options-editor.component";
 import { MessageBarComponent } from "../status/message-bar/message-bar.component"
 import { InputBoxComponent } from "../input-box/input-box.component";
-import { Overlay } from "angular2-modal";
+import { Overlay, OverlayConfig } from "angular2-modal";
 import { Modal } from "angular2-modal/plugins/bootstrap";
 
 import { FixtureDefinitionsService } from "../fixture-definitions/fixture-definitions.service"
@@ -25,8 +25,8 @@ export class UniverseEditorComponent
     @Input("universe") universe: Universe;
     @Input("messageBar") messageBar: MessageBarComponent;
     @Input("inputBox") inputBox: InputBoxComponent;
-    @ViewChild("fixtureOptionsEditor") fixtureOptionsEditor: FixtureOptionsEditorComponent;
 
+    private selectedFixture: Fixture;
     private selectedFixtures: Fixture[];
     private selectedPresetName: string;
     private skeletons: FixtureDefinitionSkeleton[];
@@ -34,10 +34,11 @@ export class UniverseEditorComponent
     private groups: string[];
 
     constructor(private fixtureDefinitionsService: FixtureDefinitionsService, private venuePresetService: VenuePresetService, private groupService: GroupService,
-        overlay: Overlay, vcRef: ViewContainerRef, private modal: Modal)
+        overlay: Overlay, private vcRef: ViewContainerRef, private modal: Modal)
     {
         overlay.defaultViewContainer = vcRef;
         this.selectedFixtures = [];
+        this.selectedFixture = null;
         this.venuePresetService
             .getNames()
             .then(value => this.venuePresetNames = value)
@@ -52,39 +53,36 @@ export class UniverseEditorComponent
             .catch(reason => this.messageBar.add("Error", reason));
     }
 
-    private getManufacturers(): string[]
+    private async removeFixture(index: number): Promise<void>
     {
-        return this.skeletons
-            .map((value: FixtureDefinitionSkeleton) => value.manufacturer)
-            .filter((value, index, array) => array.indexOf(value) == index);
-    }
+        let fixture = this.universe.fixtures[index];
+        let promise = await this.modal.confirm()
+            .title("Are you sure?")
+            .body("Are you sure you want to delete " + fixture.type.manufacturer + " " + fixture.type.model + "?")
+            .isBlocking(true)
+            .open();
 
-    private getModels(manufacturer: string): string[]
-    {
-        return this.skeletons
-            .filter(value => value.manufacturer == manufacturer)
-            .map(value => value.model);
-    }
-
-    private editOptions(fixture: Fixture)
-    {
-        this.fixtureOptionsEditor
-            .show(fixture)
-            .then(value => fixture.options = value)
-            .catch(() => { });
-    }
-
-    private removeFixture(index: number): void
-    {
-        this.universe.fixtures.splice(index, 1);
+        try
+        {
+            let result = await promise.result;
+            if (result)
+            {
+                this.universe.fixtures.splice(index, 1);
+            }
+        }
+        catch (error)
+        {
+            //errors are generated when the message box is cancelled
+        }
+        
     }
 
     private addFixture(): void
     {
         let fixture = new Fixture();
-        fixture.type.manufacturer = this.getManufacturers()[0];
-        fixture.type.model = this.getModels(fixture.type.manufacturer)[0];
+        fixture.group = this.groups[0];
         this.universe.fixtures.push(fixture);
+        this.selectedFixture = fixture;
     }
 
     private isSelected(fixture: Fixture): boolean
@@ -170,10 +168,6 @@ export class UniverseEditorComponent
         {
             //errors are generated when the message box is cancelled
         }
-
-
-
-
     }
 
 }
