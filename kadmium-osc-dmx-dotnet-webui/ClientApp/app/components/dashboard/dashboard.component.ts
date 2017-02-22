@@ -24,7 +24,7 @@ export class DashboardComponent
 
     private webSocket: WebSocket;
 
-    private static socketURL = URL.getSocketURL("Index");
+    private static socketURL = URL.getSocketURL("Dashboard");
     private venueNames: string[];
 
     constructor(private venueService: VenueService)

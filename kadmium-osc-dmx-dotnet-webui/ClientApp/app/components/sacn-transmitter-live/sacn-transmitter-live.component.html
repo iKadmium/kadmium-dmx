@@ -1,0 +1,26 @@
+<div class="page-header">
+    <h1>sACN Transmitter Live</h1>
+</div>
+<table class="table table-striped">
+    <thead>
+        <tr>
+            <th></th>
+            <th>0</th>
+            <th>1</th>
+            <th>2</th>
+            <th>3</th>
+            <th>4</th>
+            <th>5</th>
+            <th>6</th>
+            <th>7</th>
+            <th>8</th>
+            <th>9</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr *ngFor="let row of getRows()">
+            <th>{{row * 10}}</th>
+            <td *ngFor="let column of getColumns(row)" title="{{row * 10 + column}}" [ngStyle]="{'background-color': 'rgb(255,' + (255 - data[row * 10 + column]) + ',' + (255 - data[row * 10 + column]) + ')'}">{{padNumber(data[row * 10 + column])}}</td>
+        </tr>
+    </tbody>
+</table>

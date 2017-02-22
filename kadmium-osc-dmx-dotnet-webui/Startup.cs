@@ -61,12 +61,12 @@ namespace kadmium_osc_dmx_dotnet_webui
             app.UseStaticFiles();
             app.UseResponseCompression();
 
-            app.Map("/Preview/Socket", PreviewSocketHandler.Map);
-            app.Map("/Index/Socket", DashboardSocketHandler.Map);
-            app.Map("/SACNTransmitters/Socket", SACNTransmitterLive.Map);
-            app.Map("/OSCListeners/Socket", OSCListenerLive.Map);
-            app.Map("/Fixtures/Socket", FixturesLive.Map);
-            app.Map("/RawDMX/Socket", RawDMXSocketHandler.Map);
+            app.Map("/socket/Preview", PreviewSocketHandler.Map);
+            app.Map("/socket/Dashboard", DashboardSocketHandler.Map);
+            app.Map("/socket/SACN", SACNTransmitterLive.Map);
+            app.Map("/socket/OSC", OSCListenerLive.Map);
+            app.Map("/socket/Fixtures", FixturesLive.Map);
+            app.Map("/socket/RawDMX", RawDMXSocketHandler.Map);
 
             app.UseMvc(routes =>
             {

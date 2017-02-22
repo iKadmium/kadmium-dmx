@@ -47,7 +47,6 @@ namespace kadmium_osc_dmx_dotnet_core
         {
             try
             {
-                MasterController.Instance.UpdatesEnabled = false;
                 string name = obj["name"].Value<string>();
 
                 var universesQuery = from universeElement in obj["universes"].Values<JObject>()
@@ -55,7 +54,6 @@ namespace kadmium_osc_dmx_dotnet_core
 
                 List<Universe> universes = (await Task.WhenAll(universesQuery)).ToList();
 
-                MasterController.Instance.UpdatesEnabled = true;
                 return new Venue(name, universes);
             }
             catch (Exception e)

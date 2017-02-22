@@ -56,8 +56,11 @@ namespace kadmium_osc_dmx_dotnet_core
 
         public async Task LoadVenue(string venue)
         {
+            var venueObj = await FileAccess.LoadVenue(venue);
+            UpdatesEnabled = false;
             Venue?.Clear();
-            Venue = await Venue.Load(await FileAccess.LoadVenue(venue));
+            Venue = Venue.Load(venueObj).Result;
+            UpdatesEnabled = true;
         }
 
         public void Update()
