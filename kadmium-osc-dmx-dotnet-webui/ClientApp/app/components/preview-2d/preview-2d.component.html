@@ -1,0 +1,10 @@
+<div class="page-header">
+    <h1>Preview</h1>
+</div>
+<message-bar #messageBar></message-bar>
+<div class="panel panel-default" *ngFor="let group of groups">
+    <div class="panel-heading">{{group}}</div>
+    <div class="panel-body">
+        <preview-2d-fixture *ngFor="let fixture of getFixtures(activeUniverse, group)" [data]="universeData" [fixture]="fixture"></preview-2d-fixture>
+    </div>
+</div>

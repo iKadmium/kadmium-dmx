@@ -108,11 +108,13 @@ namespace kadmium_osc_dmx_dotnet_webui.WebSockets
                     WebSocketReceiveResult received = await Socket.ReceiveAsync(receiveSegment, CancellationToken.None);
                 }
                 catch (IOException)
-                {}
+                {
+                    Socket.Abort();
+                }
 
             }
         }
-        
+
         public void Dispose()
         {
             MasterController.Instance.Listener.Status.Updated += ListenerStatusUpdated;

@@ -61,8 +61,10 @@ namespace kadmium_osc_dmx_dotnet_webui.WebSockets
                 {
                     WebSocketReceiveResult received = await Socket.ReceiveAsync(segment, CancellationToken.None);
                 }
-                catch(System.IO.IOException)
-                {}
+                catch (System.IO.IOException)
+                {
+                    Socket.Abort();
+                }
             }
         }
 

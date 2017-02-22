@@ -7,6 +7,8 @@ import { VenueService } from "../venues/venue.service";
 
 import { StatusCode } from "../status/status";
 
+import { URL } from "../../shared/url";
+
 @Component({
     selector: 'dashboard',
     template: require('./dashboard.component.html'),
@@ -22,7 +24,7 @@ export class DashboardComponent
 
     private webSocket: WebSocket;
 
-    private static socketURL = getSocketURL("Index");
+    private static socketURL = URL.getSocketURL("Index");
     private venueNames: string[];
 
     constructor(private venueService: VenueService)
@@ -71,25 +73,4 @@ interface StatusData
     code: StatusCode;
     message: string;
     controller: string;
-}
-
-function getSocketURL(controller: string): string
-{
-    let actionURL = getActionURL(controller, "Socket");
-    let socketURL = actionURL.replace("http", "ws");
-    return socketURL;
-}
-
-function getActionURL(...parts: string[]): string
-{
-    let originalURL: string = document.URL;
-    let urlParts: string[] = document.URL.split("/");
-    let protocol: string = urlParts[0];
-    let host: string = urlParts[2];
-
-    let root: string = protocol + "//" + host;
-
-    let partsJoined = parts.join("/");
-
-    return root + "/" + partsJoined;
 }

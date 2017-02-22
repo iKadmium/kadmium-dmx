@@ -28,6 +28,8 @@ import { UniverseEditorComponent } from "./components/venues/universe-editor.com
 import { FixtureOptionsEditorComponent } from "./components/venues/fixture-options-editor.component";
 import { FixtureDefinitionsComponent } from './components/fixture-definitions/fixture-definitions.component';
 import { FixtureDefinitionEditorComponent } from './components/fixture-definitions/fixture-definition-editor.component';
+import { Preview2DComponent } from "./components/preview-2d/preview-2d.component";
+import { Preview2DFixtureComponent } from "./components/preview-2d/preview-2d-fixture.component";
 
 import { SettingsService } from "./components/settings/settings.service";
 import { VenueService } from "./components/venues/venue.service";
@@ -51,6 +53,8 @@ declare var jQuery: any;
         FixtureOptionsEditorComponent,
         FixtureDefinitionsComponent,
         FixtureDefinitionEditorComponent,
+        Preview2DComponent,
+        Preview2DFixtureComponent,
 
         MINMAX_DIRECTIVES,
         UniqueValidator,
@@ -81,6 +85,7 @@ declare var jQuery: any;
             { path: 'fixture-definitions', component: FixtureDefinitionsComponent },
             { path: 'fixture-definitions/new', component: FixtureDefinitionEditorComponent },
             { path: 'fixture-definitions/:manufacturer/:model', component: FixtureDefinitionEditorComponent },
+            { path: 'preview2d', component: Preview2DComponent },
             { path: '**', redirectTo: 'sets' }
         ])
     ],

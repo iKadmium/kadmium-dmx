@@ -7,20 +7,12 @@ using kadmium_osc_dmx_dotnet_core;
 
 namespace kadmium_osc_dmx_dotnet_webui.Controllers
 {
+    [Route("api/[controller]")]
     public class PreviewController : Controller
     {
         // GET: /<controller>/
-        public IActionResult Index()
-        {
-            return Preview2D();
-        }
-
-        public IActionResult Preview2D()
-        {
-            return View();
-        }
-
-        public IActionResult Fixtures()
+        [HttpGet]
+        public JObject Get()
         {
             JObject obj;
             if (MasterController.Instance.Venue != null)
@@ -41,8 +33,7 @@ namespace kadmium_osc_dmx_dotnet_webui.Controllers
                                 new JProperty("fixtures",
                                     from fixture in universe.Fixtures
                                     select new JObject(
-                                        new JProperty("name", fixture.Definition.Model),
-                                        new JProperty("address", fixture.StartChannel),
+                                        new JProperty("channel", fixture.StartChannel),
                                         new JProperty("group", fixture.Group.Name),
                                         new JProperty("definition", fixture.Definition.Serialize())
                                     )
@@ -56,8 +47,7 @@ namespace kadmium_osc_dmx_dotnet_webui.Controllers
             {
                 obj = new JObject();
             }
-
-            return Content(obj.ToString());
+            return obj;
         }
     }
 }
