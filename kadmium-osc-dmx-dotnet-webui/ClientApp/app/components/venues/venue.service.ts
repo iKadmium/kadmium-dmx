@@ -3,11 +3,12 @@ import { Headers, Http } from '@angular/http';
 import 'rxjs/add/operator/toPromise';
 
 import { Venue } from "./venue";
+import { URLs } from "../../shared/url";
 
 @Injectable()
 export class VenueService
 {
-    private venueUrl = "/api/Venue";
+    private venueUrl = URLs.getAPIUrl("Venue");
 
     constructor(private http: Http) { }
 
@@ -51,6 +52,6 @@ export class VenueService
     {
         return this.http.delete(this.venueUrl + "/" + id)
             .toPromise()
-            .then(() => {});
+            .then(() => { });
     }
 }

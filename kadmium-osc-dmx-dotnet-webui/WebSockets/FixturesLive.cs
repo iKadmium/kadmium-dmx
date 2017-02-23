@@ -27,47 +27,6 @@ namespace kadmium_osc_dmx_dotnet_webui.WebSockets
             Sending = false;
         }
 
-        private JObject GetInitMessage()
-        {
-            JObject obj = new JObject(
-                new JProperty("messageType", "init"),
-                new JProperty("universes",
-                    new JArray(
-                        from universe in MasterController.Instance.Venue?.Universes.Values ?? Enumerable.Empty<Universe>()
-                        select new JObject(
-                            new JProperty("universeID", universe.UniverseID),
-                            new JProperty("name", universe.Name),
-                            new JProperty("fixtures",
-                                new JArray(
-                                    from fixture in universe.Fixtures
-                                    select new JObject(
-                                        new JProperty("type", fixture.Definition.Model),
-                                        new JProperty("channel", fixture.StartChannel),
-                                        new JProperty("attributes",
-                                            new JArray(
-                                                from attribute in fixture.Settables.Values
-                                                where (attribute is DMXChannel || attribute is FixtureSolverAttribute)
-                                                select new JObject(
-                                                    new JProperty("name", attribute.Name),
-                                                    new JProperty("value", attribute.Value),
-                                                    new JProperty("dmxMin", (attribute as DMXChannel)?.Min ?? 0),
-                                                    new JProperty("dmxMax", (attribute as DMXChannel)?.Max ?? 0),
-                                                    new JProperty("controlled", (attribute as DMXChannel)?.Controlled ?? false),
-                                                    new JProperty("dmx", attribute is DMXChannel)
-                                                )
-                                            )
-                                        )
-                                    )
-                                )
-                            )
-                        )
-                    )
-                )
-            );
-
-            return obj;
-        }
-
         async Task RenderLoop()
         {
             byte[] receiveBuffer = new byte[RECEIVE_BUFFER_SIZE];
@@ -75,10 +34,6 @@ namespace kadmium_osc_dmx_dotnet_webui.WebSockets
 
             if (Socket.State == WebSocketState.Open)
             {
-                JObject initMessage = GetInitMessage();
-                byte[] sendBuffer = Encoding.UTF8.GetBytes(initMessage.ToString());
-                ArraySegment<byte> sendSegment = new ArraySegment<byte>(sendBuffer);
-                await Socket.SendAsync(sendSegment, WebSocketMessageType.Text, true, CancellationToken.None);
                 foreach (Universe universe in MasterController.Instance.Venue?.Universes.Values ?? Enumerable.Empty<Universe>())
                 {
                     universe.Updated += Universe_Updated;
@@ -119,7 +74,7 @@ namespace kadmium_osc_dmx_dotnet_webui.WebSockets
                 catch (IOException)
                 { }
             }
-        }        
+        }
 
         private async void Universe_Updated(object sender, DMXEventArgs e)
         {

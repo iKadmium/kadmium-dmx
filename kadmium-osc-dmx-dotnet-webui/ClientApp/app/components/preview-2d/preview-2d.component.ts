@@ -7,7 +7,7 @@ import { PreviewUniverseData, PreviewFixtureData, UniverseUpdateData } from "./p
 import { DMXChannel } from "../fixture-definitions/fixture-definition";
 import { Universe } from "../venues/venue";
 
-import { URL } from "../../shared/url";
+import { URLs } from "../../shared/url";
 
 import { PreviewService } from "./preview.service";
 import { Preview2DFixtureComponent } from "./preview-2d-fixture.component";

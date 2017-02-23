@@ -32,6 +32,7 @@ import { Preview2DComponent } from "./components/preview-2d/preview-2d.component
 import { Preview2DFixtureComponent } from "./components/preview-2d/preview-2d-fixture.component";
 import { SACNTransmitterLiveComponent } from "./components/sacn-transmitter-live/sacn-transmitter-live.component";
 import { OSCListenerLiveComponent } from "./components/osc-listener-live/osc-listener-live.component";
+import { FixturesLiveComponent } from "./components/fixtures-live/fixtures-live.component";
 
 import { SettingsService } from "./components/settings/settings.service";
 import { VenueService } from "./components/venues/venue.service";
@@ -60,6 +61,7 @@ declare var jQuery: any;
         Preview2DFixtureComponent,
         SACNTransmitterLiveComponent,
         OSCListenerLiveComponent,
+        FixturesLiveComponent,
 
         MINMAX_DIRECTIVES,
         UniqueValidator,
@@ -84,6 +86,7 @@ declare var jQuery: any;
             { path: 'dashboard', component: DashboardComponent },
             { path: 'sacnTransmitterLive', component: SACNTransmitterLiveComponent },
             { path: 'oscListenerLive', component: OSCListenerLiveComponent },
+            { path: 'fixturesLive', component: FixturesLiveComponent },
             { path: 'settings', component: SettingsComponent },
             { path: 'groups', component: GroupsComponent },
             { path: 'venues', component: VenuesComponent },

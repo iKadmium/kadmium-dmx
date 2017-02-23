@@ -1,6 +1,5 @@
-export class URL
+export class URLs
 {
-
     static getSocketURL(socketName: string): string
     {
         let originalURL: string = document.URL;

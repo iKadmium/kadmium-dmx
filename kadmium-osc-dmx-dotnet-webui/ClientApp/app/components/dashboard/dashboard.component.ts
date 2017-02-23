@@ -4,15 +4,16 @@ import { StatusPanelComponent } from "../status/status-panel/status-panel.compon
 import { MessageBarComponent } from "../status/message-bar/message-bar.component";
 
 import { VenueService } from "../venues/venue.service";
+import { DashboardService } from "./dashboard.service";
 
 import { StatusCode } from "../status/status";
 
-import { URL } from "../../shared/url";
+import { URLs } from "../../shared/url";
 
 @Component({
     selector: 'dashboard',
     template: require('./dashboard.component.html'),
-    providers: [VenueService]
+    providers: [VenueService, DashboardService]
 })
 export class DashboardComponent
 {
@@ -22,20 +23,15 @@ export class DashboardComponent
     @ViewChild("oscListener") oscListener: StatusPanelComponent;
     @ViewChild("fixtures") fixtures: StatusPanelComponent;
 
-    private webSocket: WebSocket;
-
-    private static socketURL = URL.getSocketURL("Dashboard");
     private venueNames: string[];
 
-    constructor(private venueService: VenueService)
+    constructor(private venueService: VenueService, private dashboardService: DashboardService)
     {
         venueService.getNames()
             .then(names => this.venueNames = names)
             .catch((reason: any) => this.messageBar.add("Error", reason));
-        this.webSocket = new WebSocket(DashboardComponent.socketURL);
-        this.webSocket.addEventListener("message", (ev: MessageEvent) =>
+        dashboardService.subscribe(status => 
         {
-            let status = JSON.parse(ev.data) as StatusData;
             let statusPanel: StatusPanelComponent;
             switch (status.controller)
             {
@@ -66,11 +62,4 @@ export class DashboardComponent
             .then(() => this.messageBar.add("Success", venueName + " successfully loaded"))
             .catch((reason) => this.messageBar.add("Error", reason));
     }
-}
-
-interface StatusData
-{
-    code: StatusCode;
-    message: string;
-    controller: string;
 }

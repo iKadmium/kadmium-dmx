@@ -3,11 +3,12 @@ import { Headers, Http } from '@angular/http';
 import 'rxjs/add/operator/toPromise';
 
 import { FixtureDefinitionSkeleton, FixtureDefinition, FixtureDefinitionData } from "./fixture-definition";
+import { URLs } from "../../shared/url";
 
 @Injectable()
 export class FixtureDefinitionsService
 {
-    private fixtureDefinitionsUrl = "/api/FixtureDefinition";
+    private fixtureDefinitionsUrl = URLs.getAPIUrl("FixtureDefinition");
 
     constructor(private http: Http) { }
 

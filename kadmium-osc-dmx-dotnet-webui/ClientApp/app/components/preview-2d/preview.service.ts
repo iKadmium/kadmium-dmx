@@ -3,13 +3,13 @@ import { Headers, Http } from '@angular/http';
 import 'rxjs/add/operator/toPromise';
 
 import { PreviewData, UniverseUpdateData } from "./preview";
-import { URL } from "../../shared/url";
+import { URLs } from "../../shared/url";
 
 @Injectable()
 export class PreviewService
 {
-    private previewUrl = "/api/Preview";
-    private socketUrl = URL.getSocketURL("Preview");
+    private previewUrl = URLs.getAPIUrl("Preview");
+    private socketUrl = URLs.getSocketURL("Preview");
     private socket: WebSocket;
 
     constructor(private http: Http)

@@ -1,0 +1,34 @@
+<div class="page-header">
+    <h1>Fixtures Live</h1>
+</div>
+
+<div role="tabpanel" *ngIf="universes">
+    <!-- Nav tabs -->
+    <ul class="nav nav-tabs" role="tablist">
+        <li *ngFor="let universe of universes" role="presentation" [ngClass]="{'active': 'activeUniverse == universe'}">
+            <a role="tab" data-toggle="tab" (click)="activeUniverse = universe">{{universe.name}}</a>
+        </li>
+
+    </ul>
+
+    <div class="panel panel-default">
+        <div class="panel-heading">{{activeUniverse.name}}</div>
+        <div class="panel-body">
+            <div role="tabpanel">
+                <!-- Nav tabs -->
+                <ul class="nav nav-tabs" role="tablist">
+                    <li *ngFor="let fixture of activeUniverse.fixtures" role="presentation" [ngClass]="{'active': 'activeUniverse == universe'}">
+                        <a role="tab" data-toggle="tab" (click)="activeFixture = fixture">{{fixture.channel}} {{fixture.type}}</a>
+                    </li>
+                </ul>
+
+                <!-- Tab panes -->
+                <div class="tab-content">
+                    <div role="tabpanel" class="tab-pane active">
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
