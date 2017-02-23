@@ -22,6 +22,7 @@ export class FixturesLiveComponent
             {
                 this.universes = data;
                 this.activeUniverse = this.universes[0];
+                this.activeFixture = this.activeUniverse.fixtures[0];
             })
             .catch();
     }
