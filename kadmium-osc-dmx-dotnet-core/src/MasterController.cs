@@ -67,7 +67,7 @@ namespace kadmium_osc_dmx_dotnet_core
             Instance.Listener = new OSCListener(settings["oscPort"].Value<int>(), "OSC Listener");
             Instance.updateTimer = new Timer(Instance.UpdateTimer_Elapsed, null, UPDATE_TIME, UPDATE_TIME);
             Venue.Status = new Status("No Venue Loaded");
-            Instance.UpdatesEnabled = true;
+            //Instance.UpdatesEnabled = true;
         }
 
         private MasterController()
@@ -79,11 +79,10 @@ namespace kadmium_osc_dmx_dotnet_core
         public async Task LoadVenue(string venue)
         {
             var venueObj = await FileAccess.LoadVenue(venue);
-            bool oldValue = UpdatesEnabled;
             UpdatesEnabled = false;
             Venue?.Clear();
             Venue = Venue.Load(venueObj).Result;
-            UpdatesEnabled = oldValue;
+            UpdatesEnabled = true;
         }
 
         public void Update()

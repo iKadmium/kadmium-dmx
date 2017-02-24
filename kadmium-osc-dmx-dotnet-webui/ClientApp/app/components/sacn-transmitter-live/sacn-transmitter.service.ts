@@ -1,16 +1,18 @@
 import { Injectable } from '@angular/core';
-import { Http } from "@angular/http";
+import { Headers, Http } from '@angular/http';
+import 'rxjs/add/operator/toPromise';
+
 import { URLs } from "../../shared/url";
 
 @Injectable()
-export class SolversService
+export class SACNTransmitterService
 {
-    private url = URLs.getAPIUrl("Solvers");
+    private url = URLs.getAPIUrl("SACNTransmitter");
 
     constructor(private http: Http)
     {
-
     }
+
 
     public getEnabled(): Promise<boolean>
     {

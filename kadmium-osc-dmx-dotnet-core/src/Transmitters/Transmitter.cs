@@ -14,6 +14,19 @@ namespace kadmium_osc_dmx_dotnet_core.Transmitters
             Delay = delay;
         }
 
+        protected bool enabled;
+        public bool Enabled
+        {
+            get { return enabled; }
+            set
+            {
+                enabled = value;
+                if (!value)
+                {
+                    Status.Update(StatusCode.Error, "Transmission is disabled", this);
+                }
+            }
+        }
         public int Delay { get; set; }
         public string Name { get; set; }
         public Status Status { get; set; }
@@ -32,7 +45,10 @@ namespace kadmium_osc_dmx_dotnet_core.Transmitters
             {
                 await Task.Delay(Delay);
             }
-            TransmitInternal(dmx, universeID);
+            if (Enabled)
+            {
+                TransmitInternal(dmx, universeID);
+            }
         }
 
         internal static Transmitter Load(JObject element)

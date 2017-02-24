@@ -63,6 +63,7 @@ namespace kadmium_osc_dmx_dotnet_webui.WebSockets
 
         private void UpdateAll()
         {
+            SendUpdate("Solvers", MasterController.Instance.SolverStatus.StatusCode, MasterController.Instance.SolverStatus.Message);
             SendUpdate("OSCListeners", MasterController.Instance.Listener.Status.StatusCode, MasterController.Instance.Listener.Status.Message);
             SendUpdate("SACNTransmitters", MasterController.Instance.Transmitter.Status.StatusCode, MasterController.Instance.Transmitter.Status.Message);
             if (MasterController.Instance.Venue != null)

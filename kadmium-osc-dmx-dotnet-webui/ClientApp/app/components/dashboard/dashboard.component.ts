@@ -10,11 +10,13 @@ import { StatusCode } from "../status/status";
 
 import { URLs } from "../../shared/url";
 import { SolversService } from "../solvers/solvers.service";
+import { OSCListenerService } from "../osc-listener-live/osc-listener.service";
+import { SACNTransmitterService } from "../sacn-transmitter-live/sacn-transmitter.service";
 
 @Component({
     selector: 'dashboard',
     template: require('./dashboard.component.html'),
-    providers: [VenueService, DashboardService, SolversService]
+    providers: [VenueService, DashboardService, SolversService, OSCListenerService, SACNTransmitterService]
 })
 export class DashboardComponent
 {
@@ -31,10 +33,18 @@ export class DashboardComponent
 
     private venueNames: string[];
 
-    constructor(private venueService: VenueService, private dashboardService: DashboardService, private solversService: SolversService)
+    constructor(private venueService: VenueService, private dashboardService: DashboardService,
+        private solversService: SolversService, private oscService: OSCListenerService,
+        private sacnService: SACNTransmitterService)
     {
-        this.sacnEnabled = true;
-        this.oscEnabled = true;
+        this.sacnService
+            .getEnabled()
+            .then(value => this.sacnEnabled = value)
+            .catch(error => this.messageBar.add("Error", error));
+        this.oscService
+            .getEnabled()
+            .then(value => this.oscEnabled = value)
+            .catch(error => this.messageBar.add("Error", error));
         this.solversService
             .getEnabled()
             .then(value => this.solversEnabled = value)
@@ -62,6 +72,10 @@ export class DashboardComponent
                     break;
                 case "Solvers":
                     statusPanel = this.solvers;
+                    if (status.code == "Success")
+                    {
+                        this.solversEnabled = true;
+                    }
                     break;
                 default:
                     return;
@@ -99,7 +113,16 @@ export class DashboardComponent
     {
         let targetValue = !this.sacnEnabled;
         this.sacnEnabled = null;
-        await delay(1000);
+        try
+        {
+            await this.sacnService.setEnabled(targetValue);
+            this.sacnEnabled = targetValue;
+        }
+        catch (error)
+        {
+            this.messageBar.add("Error", error);
+            this.sacnEnabled = !targetValue;
+        }
         this.sacnEnabled = targetValue;
     }
 
@@ -107,7 +130,16 @@ export class DashboardComponent
     {
         let targetValue = !this.oscEnabled;
         this.oscEnabled = null;
-        await delay(1000);
+        try
+        {
+            await this.oscService.setEnabled(targetValue);
+            this.oscEnabled = targetValue;
+        }
+        catch (error)
+        {
+            this.messageBar.add("Error", error);
+            this.oscEnabled = !targetValue;
+        }
         this.oscEnabled = targetValue;
     }
 
@@ -115,8 +147,17 @@ export class DashboardComponent
     {
         let targetValue = !this.solversEnabled;
         this.solversEnabled = null;
-        await delay(1000);
-        this.solversEnabled = targetValue;
+        try
+        {
+            await this.solversService.setEnabled(targetValue);
+            this.solversEnabled = targetValue;
+        }
+        catch (error)
+        {
+            this.messageBar.add("Error", error);
+            this.solversEnabled = !targetValue;
+        }
+
     }
 }
 

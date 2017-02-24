@@ -6,20 +6,20 @@ using kadmium_osc_dmx_dotnet_core;
 namespace kadmium_osc_dmx_dotnet_webui.Controllers
 {
     [Route("api/[controller]")]
-    public class SolversController : Controller
+    public class SACNTransmitterController : Controller
     {
         [HttpGet]
         [Route("[action]")]
         public bool Enabled()
         {
-            return MasterController.Instance.UpdatesEnabled;
+            return MasterController.Instance.Transmitter.Enabled;
         }
 
         [HttpGet]
         [Route("[action]/{value}")]
         public void Enabled(bool value)
         {
-            MasterController.Instance.UpdatesEnabled = value;
+            MasterController.Instance.Transmitter.Enabled = value;
         }
     }
 }

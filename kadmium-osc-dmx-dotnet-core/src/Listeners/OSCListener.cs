@@ -26,7 +26,7 @@ namespace kadmium_osc_dmx_dotnet_core.Listeners
             {
                 listener = new OSCServer(port);
                 listener.DefaultOnMessageReceived += Listener_PacketReceived;
-                Status.Update(StatusCode.Warning, "No messages yet", this);
+                Enabled = true;
             }
             catch (Exception e)
             {
@@ -36,25 +36,28 @@ namespace kadmium_osc_dmx_dotnet_core.Listeners
 
         private void Listener_PacketReceived(object sender, OSCMessageReceivedArgs e)
         {
-            OSCMessage message = e.Message;
-
-            string[] parts = message.Address.Contents.Split('/');
-            string groupName = parts[2];
-            string attribute = parts[3];
-            bool recognised = false;
-            float value = 0.0f;
-            if (MasterController.Instance.Groups.ContainsKey(groupName))
+            if (Enabled)
             {
-                Group group = MasterController.Instance.Groups[groupName];
-                value = (float)message.Arguments[0].GetValue();
-                group.Set(attribute, value);
-                if (Status.StatusCode != StatusCode.Success)
+                OSCMessage message = e.Message;
+
+                string[] parts = message.Address.Contents.Split('/');
+                string groupName = parts[2];
+                string attribute = parts[3];
+                bool recognised = false;
+                float value = 0.0f;
+                if (MasterController.Instance.Groups.ContainsKey(groupName))
                 {
-                    Status.Update(StatusCode.Success, "Messages received", this);
+                    Group group = MasterController.Instance.Groups[groupName];
+                    value = (float)message.Arguments[0].GetValue();
+                    group.Set(attribute, value);
+                    if (Status.StatusCode != StatusCode.Success)
+                    {
+                        Status.Update(StatusCode.Success, "Messages received", this);
+                    }
+                    recognised = true;
                 }
-                recognised = true;
+                MessageReceived?.Invoke(this, new OSCListenerEventArgs(recognised, DateTime.Now, sender.ToString(), e.Message.Address.Contents, value));
             }
-            MessageReceived?.Invoke(this, new OSCListenerEventArgs(recognised, DateTime.Now, sender.ToString(), e.Message.Address.Contents, value));
         }
 
         public override JObject Serialize()

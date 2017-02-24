@@ -11,6 +11,23 @@ namespace kadmium_osc_dmx_dotnet_core.Listeners
             Status = new Status();
         }
 
+        private bool enabled;
+        public bool Enabled
+        {
+            get { return enabled; }
+            set
+            {
+                enabled = value;
+                if (enabled)
+                {
+                    Status.Update(StatusCode.Warning, "Listening", this);
+                }
+                else
+                {
+                    Status.Update(StatusCode.Error, "Updates are disabled", this);
+                }
+            }
+        }
         public string Name { get; set; }
         public Status Status { get; set; }
         public string DisplayName { get { return Name; } }

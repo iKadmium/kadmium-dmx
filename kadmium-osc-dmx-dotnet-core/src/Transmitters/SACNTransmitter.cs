@@ -40,6 +40,10 @@ namespace kadmium_osc_dmx_dotnet_core.Transmitters
 
             Task.WaitAll(tasks.ToArray(), 50);
             OnTransmit?.Invoke(this, new TransmitterEventArgs(universeID, dmx));
+            if (this.Status.StatusCode != StatusCode.Success)
+            {
+                this.Status.Update(StatusCode.Success, "Sending", this);
+            }
         }
 
         public SACNTransmitter(Guid uuid, string name, int port, int delay, bool multicast, IEnumerable<string> unicast) : base(name, delay)
@@ -50,7 +54,7 @@ namespace kadmium_osc_dmx_dotnet_core.Transmitters
             try
             {
                 SACNClient = new SACNSender(uuid, SOURCE_NAME, port);
-                Status.Update(StatusCode.Success, "Sending", this);
+                Enabled = true;
             }
             catch (Exception e)
             {
