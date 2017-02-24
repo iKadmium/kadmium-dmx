@@ -72,7 +72,9 @@ namespace kadmium_osc_dmx_dotnet_webui.WebSockets
                     }
                 }
                 catch (IOException)
-                { }
+                {
+                    Socket.Abort();
+                }
             }
         }
 

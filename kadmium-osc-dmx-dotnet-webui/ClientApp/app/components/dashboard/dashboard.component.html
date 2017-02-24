@@ -18,17 +18,31 @@
     </div>
     <div class="col-md-3">
         <status-panel #sacnTransmitter name="sACN Transmitter">
-            <a class="btn btn-primary" routerLink="/sacnTransmitterLive">Live</a>
+            <div class="btn-group">
+                <button class="btn" [ngClass]="{'btn-success': sacnEnabled, 'btn-danger': sacnEnabled == false, 'btn-warning': sacnEnabled == null}"
+                    (click)="toggleSACN()" [disabled]="sacnEnabled == null">{{getStatusText(sacnEnabled)}}</button>
+                    <a class="btn btn-primary" routerLink="/sacnTransmitterLive">Debug</a>
+            </div>
         </status-panel>
     </div>
     <div class="col-md-3">
         <status-panel #oscListener name="OSC Listener">
-            <a class="btn btn-primary" routerLink="/oscListenerLive">Live</a>
+            <div class="btn-group">
+                <button class="btn" [ngClass]="{'btn-success': oscEnabled, 'btn-danger': oscEnabled == false, 'btn-warning': oscEnabled == null}"
+                    (click)="toggleOSC()" [disabled]="oscEnabled == null">{{getStatusText(oscEnabled)}}</button>
+                    <a class="btn btn-primary" routerLink="/oscListenerLive">Debug</a>
+            </div>
         </status-panel>
     </div>
     <div class="col-md-3">
         <status-panel #fixtures name="Fixtures">
-            <a class="btn btn-primary" routerLink="/fixturesLive">Live</a>
+            <a class="btn btn-primary" routerLink="/fixturesLive">Debug</a>
+        </status-panel>
+    </div>
+    <div class="col-md-3">
+        <status-panel #solvers name="Solvers">
+            <button class="btn" [ngClass]="{'btn-success': solversEnabled, 'btn-danger': solversEnabled == false, 'btn-warning': solversEnabled == null}"
+                (click)="toggleSolvers()" [disabled]="solversEnabled == null || fixtures.status.code != 'Success'">{{getStatusText(solversEnabled)}}</button>
         </status-panel>
     </div>
 </div>

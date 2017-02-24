@@ -25,6 +25,7 @@ namespace kadmium_osc_dmx_dotnet_webui.WebSockets
             MasterController.Instance.Listener.Status.Updated += ListenerStatusUpdated;
             MasterController.Instance.Transmitter.Status.Updated += TransmitterStatusUpdated;
             Venue.Status.Updated += Status_Updated;
+            MasterController.Instance.SolverStatus.Updated += SolverStatusUpdated;
         }
 
         private void Status_Updated(object sender, StatusUpdateEventArgs e)
@@ -49,6 +50,13 @@ namespace kadmium_osc_dmx_dotnet_webui.WebSockets
         private void ListenerStatusUpdated(object sender, StatusUpdateEventArgs e)
         {
             string controller = sender.GetType().Name + "s";
+            Listener listener = sender as Listener;
+            SendUpdate(controller, e.StatusCode, e.Message);
+        }
+
+        private void SolverStatusUpdated(object sender, StatusUpdateEventArgs e)
+        {
+            string controller = "Solvers";
             Listener listener = sender as Listener;
             SendUpdate(controller, e.StatusCode, e.Message);
         }
@@ -111,7 +119,6 @@ namespace kadmium_osc_dmx_dotnet_webui.WebSockets
                 {
                     Socket.Abort();
                 }
-
             }
         }
 
@@ -120,6 +127,7 @@ namespace kadmium_osc_dmx_dotnet_webui.WebSockets
             MasterController.Instance.Listener.Status.Updated += ListenerStatusUpdated;
             MasterController.Instance.Transmitter.Status.Updated += TransmitterStatusUpdated;
             Venue.Status.Updated += Status_Updated;
+            MasterController.Instance.SolverStatus.Updated -= SolverStatusUpdated;
         }
 
         static async Task Acceptor(HttpContext hc, Func<Task> n)

@@ -5,6 +5,7 @@ using System.Collections.Concurrent;
 using System.Threading;
 using Newtonsoft.Json.Linq;
 using System.Threading.Tasks;
+using System.Linq;
 
 namespace kadmium_osc_dmx_dotnet_core
 {
@@ -18,9 +19,28 @@ namespace kadmium_osc_dmx_dotnet_core
         public Listener Listener { get; private set; }
         public Venue Venue { get; private set; }
         public Strobe Strobe { get; }
-        public bool UpdatesEnabled { get; set; }
+        private bool updatesEnabled;
+        public bool UpdatesEnabled
+        {
+            get { return updatesEnabled; }
+            set
+            {
+                updatesEnabled = value;
+                if (value)
+                {
+                    int count = (from universe in Venue.Universes.Values
+                                 select universe.Fixtures.Count()).Sum();
+                    SolverStatus.Update(StatusCode.Success, "Solving for " + count + " fixtures", this);
+                }
+                else
+                {
+                    SolverStatus.Update(StatusCode.Error, "Solvers are Disabled", this);
+                }
+            }
+        }
         public bool RenderEnabled { get; set; }
         private Timer updateTimer;
+        public Status SolverStatus { get; private set; }
 
         private static MasterController instance;
 
@@ -47,20 +67,23 @@ namespace kadmium_osc_dmx_dotnet_core
             Instance.Listener = new OSCListener(settings["oscPort"].Value<int>(), "OSC Listener");
             Instance.updateTimer = new Timer(Instance.UpdateTimer_Elapsed, null, UPDATE_TIME, UPDATE_TIME);
             Venue.Status = new Status("No Venue Loaded");
+            Instance.UpdatesEnabled = true;
         }
 
         private MasterController()
         {
             Strobe = new Strobe(20);
+            this.SolverStatus = new Status("No Solvers Loaded");
         }
 
         public async Task LoadVenue(string venue)
         {
             var venueObj = await FileAccess.LoadVenue(venue);
+            bool oldValue = UpdatesEnabled;
             UpdatesEnabled = false;
             Venue?.Clear();
             Venue = Venue.Load(venueObj).Result;
-            UpdatesEnabled = true;
+            UpdatesEnabled = oldValue;
         }
 
         public void Update()

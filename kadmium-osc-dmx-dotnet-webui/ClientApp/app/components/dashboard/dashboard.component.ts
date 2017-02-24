@@ -9,11 +9,12 @@ import { DashboardService } from "./dashboard.service";
 import { StatusCode } from "../status/status";
 
 import { URLs } from "../../shared/url";
+import { SolversService } from "../solvers/solvers.service";
 
 @Component({
     selector: 'dashboard',
     template: require('./dashboard.component.html'),
-    providers: [VenueService, DashboardService]
+    providers: [VenueService, DashboardService, SolversService]
 })
 export class DashboardComponent
 {
@@ -22,11 +23,23 @@ export class DashboardComponent
     @ViewChild("sacnTransmitter") sacnTransmitter: StatusPanelComponent;
     @ViewChild("oscListener") oscListener: StatusPanelComponent;
     @ViewChild("fixtures") fixtures: StatusPanelComponent;
+    @ViewChild("solvers") solvers: StatusPanelComponent;
+
+    sacnEnabled: boolean;
+    oscEnabled: boolean;
+    solversEnabled: boolean;
 
     private venueNames: string[];
 
-    constructor(private venueService: VenueService, private dashboardService: DashboardService)
+    constructor(private venueService: VenueService, private dashboardService: DashboardService, private solversService: SolversService)
     {
+        this.sacnEnabled = true;
+        this.oscEnabled = true;
+        this.solversService
+            .getEnabled()
+            .then(value => this.solversEnabled = value)
+            .catch(reason => this.messageBar.add("Error", reason));
+
         venueService.getNames()
             .then(names => this.venueNames = names)
             .catch((reason: any) => this.messageBar.add("Error", reason));
@@ -42,10 +55,13 @@ export class DashboardComponent
                     statusPanel = this.sacnTransmitter;
                     break;
                 case "OSCListeners":
-                    statusPanel = this.oscListener
+                    statusPanel = this.oscListener;
                     break;
                 case "Fixtures":
-                    statusPanel = this.fixtures
+                    statusPanel = this.fixtures;
+                    break;
+                case "Solvers":
+                    statusPanel = this.solvers;
                     break;
                 default:
                     return;
@@ -62,4 +78,52 @@ export class DashboardComponent
             .then(() => this.messageBar.add("Success", venueName + " successfully loaded"))
             .catch((reason) => this.messageBar.add("Error", reason));
     }
+
+    private getStatusText(value: boolean | null): string
+    {
+        if (value == true)
+        {
+            return "Enabled";
+        }
+        else if (value == false)
+        {
+            return "Disabled";
+        }
+        else
+        {
+            return "Unknown";
+        }
+    }
+
+    private async toggleSACN(): Promise<void>
+    {
+        let targetValue = !this.sacnEnabled;
+        this.sacnEnabled = null;
+        await delay(1000);
+        this.sacnEnabled = targetValue;
+    }
+
+    private async toggleOSC(): Promise<void>
+    {
+        let targetValue = !this.oscEnabled;
+        this.oscEnabled = null;
+        await delay(1000);
+        this.oscEnabled = targetValue;
+    }
+
+    private async toggleSolvers(): Promise<void>
+    {
+        let targetValue = !this.solversEnabled;
+        this.solversEnabled = null;
+        await delay(1000);
+        this.solversEnabled = targetValue;
+    }
+}
+
+async function delay(milliseconds: number)
+{
+    return new Promise<void>(resolve =>
+    {
+        setTimeout(resolve, milliseconds);
+    });
 }
