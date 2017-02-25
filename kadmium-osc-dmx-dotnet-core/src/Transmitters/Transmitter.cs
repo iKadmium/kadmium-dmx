@@ -48,6 +48,10 @@ namespace kadmium_osc_dmx_dotnet_core.Transmitters
             if (Enabled)
             {
                 TransmitInternal(dmx, universeID);
+                if(Status.StatusCode != StatusCode.Success)
+                {
+                    Status.Update(StatusCode.Success, "Transmitting", this);
+                }
             }
         }
 

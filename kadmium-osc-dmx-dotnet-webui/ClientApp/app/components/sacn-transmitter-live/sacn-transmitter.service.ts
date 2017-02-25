@@ -27,4 +27,11 @@ export class SACNTransmitterService
             .toPromise()
             .then(response => { });
     }
+
+    public set(universeID: number, channel: number, value: number): Promise<void>
+    {
+        return this.http.get(this.url + `/Set/${universeID}/${channel}/${value}`)
+            .toPromise()
+            .then(response => { });
+    }
 }

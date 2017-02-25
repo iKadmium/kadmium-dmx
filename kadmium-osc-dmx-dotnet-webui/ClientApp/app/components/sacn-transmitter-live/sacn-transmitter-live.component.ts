@@ -1,60 +1,104 @@
-import { Component } from '@angular/core';
+import { Component, ViewChild } from '@angular/core';
 
 import { PreviewService } from "../preview-2d/preview.service"
+import { SACNTransmitterService } from "./sacn-transmitter.service";
+import { MessageBarComponent } from "../status/message-bar/message-bar.component";
 
 @Component({
     selector: 'sacn-transmitter-live',
     template: require('./sacn-transmitter-live.component.html'),
-    providers: [PreviewService]
+    providers: [PreviewService, SACNTransmitterService]
 })
 export class SACNTransmitterLiveComponent
 {
-    data: number[];
+    @ViewChild("messageBar") messageBar: MessageBarComponent;
 
-    constructor(previewService: PreviewService)
+    data: DMXChannel[];
+    rows: DMXChannel[][];
+    editMode: boolean;
+
+    constructor(previewService: PreviewService, private sacnTransmitterService: SACNTransmitterService)
     {
-        this.data = Array<number>(512).fill(0);
+        this.editMode = false;
+        this.data = [];
+        for(let i = 0; i < 512; i++)
+        {
+            this.data[i] = new DMXChannel(i);
+        }
+        this.rows = this.getRows();
         previewService.subscribe(data => 
         {
-            this.data = data.values;
+            for(let channel of this.data)
+            {
+                if(channel.value != data.values[channel.address])
+                {
+                    channel.value = data.values[channel.address];
+                }
+            }
         });
     }
 
-    getRows(): number[]
+    getRows(): DMXChannel[][]
     {
-        return new Array<number>(52).fill(0).map((x, i) => i);
+        let result = [];
+        for(let i = 0; i < 51; i++)
+        {
+            let row = [];
+            for(let j = 0; j < 10; j++)
+            {
+                let address = i * 10 + j;
+                row[j] = this.data[address];
+            }
+            result[i] = row;
+        }
+        let finalRow = [this.data[510], this.data[511]];
+        result[51] = finalRow;
+        return result;
     }
 
-    getColumns(row: number): number[]
+    private async updateValue(channel: DMXChannel, value: number): Promise<void>
     {
-        if (row < 51)
+        await this.sacnTransmitterService
+            .set(1, channel.address, value)
+            .catch(reason => 
+            {
+                this.messageBar.add("Error", reason);
+                let bob = reason;
+                let fred = bob;
+            }
+            );
+    }
+}
+
+class DMXChannel
+{
+    value: number;
+    address: number;
+    constructor(address: number)
+    {
+        this.address = address;
+        this.value = 0;
+    }
+
+    get displayValue(): string
+    {
+        if (this.value < 10)
         {
-            return new Array<number>(10).fill(0).map((x, i) => i);
+            return "00" + this.value;
         }
-        else if (row == 51)
+        else if (this.value < 100)
         {
-            return new Array<number>(3).fill(0).map((x, i) => i);
+            return "0" + this.value;
         }
-        else
+        else if (this.value < 1000)
         {
-            return [];
+            return this.value + "";
         }
     }
 
-    padNumber(num: number): string
+    get style(): string
     {
-        if (num < 10)
-        {
-            return "00" + num;
-        }
-        else if (num < 100)
-        {
-            return "0" + num;
-        }
-        else if (num < 1000)
-        {
-            return num + "";
-        }
+        let style = `rgb(255,${255 - this.value},${255 - this.value})`;
+        return style;
     }
-
 }
