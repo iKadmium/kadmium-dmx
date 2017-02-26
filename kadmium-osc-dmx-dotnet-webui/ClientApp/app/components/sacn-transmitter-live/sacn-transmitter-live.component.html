@@ -2,12 +2,25 @@
     <h1>sACN Transmitter Live</h1>
 </div>
 <message-bar #messageBar></message-bar>
-<ul class="nav nav-pills">
-    <li [ngClass]="{'active': !editMode}"><a (click)="editMode = false">View Mode</a></li>
-    <li [ngClass]="{'active': editMode}"><a (click)="editMode = true">Edit Mode</a></li>
-</ul>
-<div class="panel panel-default" *ngIf="data.length == 512">
-    <div *ngIf="!editMode" class="panel-body">
+
+<div role="tabpanel">
+    <!-- Nav tabs -->
+    <ul class="nav nav-tabs" role="tablist">
+        <li *ngFor="let universe of universes" [ngClass]="{'active': activeUniverse == universe}">
+            <a (click)="activeUniverse = universe">{{universe.name}}</a>
+        </li>
+    </ul>
+</div>
+
+
+<div class="tab-content" *ngIf="activeUniverse">
+
+    <ul class="nav nav-tabs" *ngIf="activeUniverse">
+        <li [ngClass]="{'active': !editMode}"><a (click)="editMode = false">View Mode</a></li>
+        <li [ngClass]="{'active': editMode}"><a (click)="editMode = true">Edit Mode</a></li>
+    </ul>
+
+    <div *ngIf="!editMode" class="tab-content">
         <table class="table table-striped">
             <thead>
                 <tr>
@@ -25,16 +38,15 @@
                 </tr>
             </thead>
             <tbody>
-                <tr *ngFor="let row of rows; let rowNumber = index">
+                <tr *ngFor="let row of activeUniverse.rows; let rowNumber = index">
                     <th>{{rowNumber}}</th>
-                    <td *ngFor="let channel of row" title="{{channel.address}}" 
-                        [ngStyle]="{'background-color': channel.style}">
+                    <td *ngFor="let channel of row" title="{{channel.address}}" [ngStyle]="{'background-color': channel.style}">
                         {{channel.displayValue}}</td>
                 </tr>
             </tbody>
         </table>
     </div>
-    <div *ngIf="editMode" class="panel-body">
+    <div *ngIf="editMode" class="tab-content">
         <table class="table table-striped">
             <thead>
                 <tr>
@@ -44,12 +56,15 @@
                 </tr>
             </thead>
             <tbody>
-                <tr *ngFor="let channel of data; let i = index">
+                <tr *ngFor="let channel of activeUniverse.channels; let i = index">
                     <td>{{i + 1}}</td>
-                    <td><input type="range" min="0" max="255" step="1" [(ngModel)]="channel.value" (input)="updateValue(channel, $event.target.value)" [name]="'dmxRange' + i" /></td>
-                    <td><input class="form-control" type="number" min="0" max="255" step="1" [(ngModel)]="channel.value" (input)="updateValue(channel, $event.target.value)" [name]="'dmxNum' + i" /></td>
+                    <td><input type="range" min="0" max="255" step="1" [(ngModel)]="channel.value" (input)="updateValue(channel, $event.target.value)"
+                            [name]="'dmxRange' + i" /></td>
+                    <td><input class="form-control" type="number" min="0" max="255" step="1" [(ngModel)]="channel.value" (input)="updateValue(channel, $event.target.value)"
+                            [name]="'dmxNum' + i" /></td>
                 </tr>
             </tbody>
         </table>
     </div>
+
 </div>

@@ -3,57 +3,57 @@ import { Component, ViewChild } from '@angular/core';
 import { PreviewService } from "../preview-2d/preview.service"
 import { SACNTransmitterService } from "./sacn-transmitter.service";
 import { MessageBarComponent } from "../status/message-bar/message-bar.component";
+import { VenueService } from "../venues/venue.service";
+import { Universe } from "../venues/venue";
 
 @Component({
     selector: 'sacn-transmitter-live',
     template: require('./sacn-transmitter-live.component.html'),
-    providers: [PreviewService, SACNTransmitterService]
+    providers: [PreviewService, SACNTransmitterService, VenueService]
 })
 export class SACNTransmitterLiveComponent
 {
     @ViewChild("messageBar") messageBar: MessageBarComponent;
 
-    data: DMXChannel[];
-    rows: DMXChannel[][];
     editMode: boolean;
 
-    constructor(previewService: PreviewService, private sacnTransmitterService: SACNTransmitterService)
-    {
-        this.editMode = false;
-        this.data = [];
-        for(let i = 0; i < 512; i++)
-        {
-            this.data[i] = new DMXChannel(i);
-        }
-        this.rows = this.getRows();
-        previewService.subscribe(data => 
-        {
-            for(let channel of this.data)
-            {
-                if(channel.value != data.values[channel.address])
-                {
-                    channel.value = data.values[channel.address];
-                }
-            }
-        });
-    }
+    activeUniverse: DMXUniverse;
+    universes: DMXUniverse[];
 
-    getRows(): DMXChannel[][]
+    constructor(previewService: PreviewService, venueService: VenueService, private sacnTransmitterService: SACNTransmitterService)
     {
-        let result = [];
-        for(let i = 0; i < 51; i++)
-        {
-            let row = [];
-            for(let j = 0; j < 10; j++)
+        this.universes = [];
+        this.activeUniverse = null;
+
+        this.editMode = false;
+
+        venueService.getActive()
+            .then(venue => 
             {
-                let address = i * 10 + j;
-                row[j] = this.data[address];
-            }
-            result[i] = row;
-        }
-        let finalRow = [this.data[510], this.data[511]];
-        result[51] = finalRow;
-        return result;
+                for (let universe of venue.universes)
+                {
+                    this.universes.push(new DMXUniverse(universe));
+                }
+                if (this.universes.length > 0)
+                {
+                    this.activeUniverse = this.universes[0];
+                }
+
+                previewService.subscribe(data => 
+                {
+                    if (this.activeUniverse != null && this.activeUniverse != undefined)
+                    {
+                        for (let channel of this.activeUniverse.channels)
+                        {
+                            if (channel.value != data.values[channel.address])
+                            {
+                                channel.value = data.values[channel.address];
+                            }
+                        }
+                    }
+                });
+            })
+            .catch(error => this.messageBar.add("Error", error));
     }
 
     private async updateValue(channel: DMXChannel, value: number): Promise<void>
@@ -63,10 +63,46 @@ export class SACNTransmitterLiveComponent
             .catch(reason => 
             {
                 this.messageBar.add("Error", reason);
-                let bob = reason;
-                let fred = bob;
+            });
+    }
+}
+
+class DMXUniverse
+{
+    channels: DMXChannel[]
+    name: string;
+    universeID: number;
+
+    rows: DMXChannel[][];
+
+    constructor(universe: Universe)
+    {
+        this.universeID = universe.universeID;
+        this.name = universe.name;
+        this.channels = [];
+        for (let i = 0; i < 512; i++)
+        {
+            this.channels[i] = new DMXChannel(i);
+        }
+        this.rows = this.getRows();
+    }
+
+    getRows(): DMXChannel[][]
+    {
+        let result = [];
+        for (let i = 0; i < 51; i++)
+        {
+            let row = [];
+            for (let j = 0; j < 10; j++)
+            {
+                let address = i * 10 + j;
+                row[j] = this.channels[address];
             }
-            );
+            result[i] = row;
+        }
+        let finalRow = [this.channels[510], this.channels[511]];
+        result[51] = finalRow;
+        return result;
     }
 }
 

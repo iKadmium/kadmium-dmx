@@ -112,36 +112,46 @@ export class FixtureDefinitionEditorComponent
         this.definition.colorWheel.splice(index, 1);
     }
 
-    private validateNames(): boolean
+    private getOtherChannelNames(thisEntry: DMXChannel): string[]
     {
-        let channelNameProblems = this.channelNames
-            .filter((value, index: number, array) => array.indexOf(value) != index || value == "");
-        let axisNameProblems = this.axisNames
-            .filter((value, index: number, array) => array.indexOf(value) != index || value == "");
-        let colorWheelNameProblems = this.colorWheelNames
-            .filter((value, index: number, array) => array.indexOf(value) != index || value == "");
-
-        return channelNameProblems.length == 0 && axisNameProblems.length == 0 && colorWheelNameProblems.length == 0;
+        return this.definition.channels
+            .filter(value => value != thisEntry)
+            .map((value: DMXChannel) => value.name);
     }
 
-    private get channelNames(): string[]
+    private getOtherColorWheelNames(thisEntry: ColorWheelEntry): string[]
     {
-        return this.definition.channels.map((value: DMXChannel) => value.name);
+        return this.definition.colorWheel
+            .filter(value => value != thisEntry)
+            .map((value: ColorWheelEntry) => value.name);
     }
 
-    private get colorWheelNames(): string[]
+    private getOtherAxisNames(thisEntry: Axis): string[]
     {
-        return this.definition.colorWheel.map((value: ColorWheelEntry) => value.name);
-    }
-
-    private get axisNames(): string[]
-    {
-        return this.definition.movements.map((value: Axis) => value.name);
+        return this.definition.movements
+            .filter(value => value != thisEntry)
+            .map((value: Axis) => value.name);
     }
 
     private isNewItem(): boolean
     {
         return this.originalManufacturer == null && this.originalModel == null;
+    }
+
+    private sortChannels(channels: DMXChannel[]): DMXChannel[]
+    {
+        return channels
+            .sort((a, b) => 
+            {
+                if(a.dmx != b.dmx)
+                {
+                    return a.dmx - b.dmx;
+                }
+                else
+                {
+                    return a.min - b.min;
+                }
+            });
     }
 
     private save(): void

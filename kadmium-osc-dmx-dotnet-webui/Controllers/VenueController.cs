@@ -26,6 +26,13 @@ namespace kadmium_osc_dmx_dotnet_webui.Controllers
         }
 
         [HttpGet]
+        [Route("[action]")]
+        public JObject GetActive()
+        {
+            return MasterController.Instance.Venue?.Serialize();
+        }
+
+        [HttpGet]
         [Route("[action]/{id}")]
         public async void Activate(string id)
         {

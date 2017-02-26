@@ -48,7 +48,7 @@
                         </tr>
                     </thead>
                     <tbody>
-                        <tr *ngFor="let channel of definition.channels; let i = index">
+                        <tr *ngFor="let channel of sortChannels(definition.channels); let i = index">
                             <td>
                                 <table-input>
                                     <input #input #model="ngModel" class="form-control" type="number" [(ngModel)]="channel.dmx" min="1" max="512" [name]="'channelDMX[' + i + ']'"
@@ -57,7 +57,7 @@
                             </td>
                             <td>
                                 <table-input>
-                                    <input #input #model="ngModel" required [(unique)]="channelNames" class="form-control" type="text" [(ngModel)]="channel.name"
+                                    <input #input #model="ngModel" required [unique]="getOtherChannelNames(channel)" class="form-control" type="text" [(ngModel)]="channel.name"
                                         [name]="'channelName[' + i + ']'" list="channelList" />
                                 </table-input>
                             </td>
@@ -104,7 +104,7 @@
                         <tr *ngFor="let movement of definition.movements; let i = index">
                             <td>
                                 <table-input>
-                                    <input #input #model="ngModel" required class="form-control" [unique]="colorWheelNames" type="text" [(ngModel)]="movement.name"
+                                    <input #input #model="ngModel" required class="form-control" [unique]="getOtherAxisNames(movement)" type="text" [(ngModel)]="movement.name"
                                         [name]="'axisName[' + i + ']'" list="axisList" />
                                 </table-input>
                             </td>
@@ -148,7 +148,7 @@
                         <tr *ngFor="let entry of definition.colorWheel; let i = index">
                             <td>
                                 <table-input>
-                                    <input #input #model="ngModel" [unique]="colorWheelNames" required class="form-control" type="text" [(ngModel)]="entry.name"
+                                    <input #input #model="ngModel" [unique]="getOtherColorWheelNames(entry)" required class="form-control" type="text" [(ngModel)]="entry.name"
                                         [name]="'colorWheelName[' + i + ']'" />
                                 </table-input>
                             </td>

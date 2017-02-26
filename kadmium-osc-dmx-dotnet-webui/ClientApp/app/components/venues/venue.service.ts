@@ -54,4 +54,11 @@ export class VenueService
             .toPromise()
             .then(() => { });
     }
+
+    public getActive(): Promise<Venue>
+    {
+        return this.http.get(this.venueUrl + "/GetActive")
+            .toPromise()
+            .then(value => value.json() as Venue);
+    }
 }

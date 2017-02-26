@@ -1,6 +1,7 @@
-import { Component } from '@angular/core';
+import { Component, ViewChild } from '@angular/core';
 import { PreviewService } from "../preview-2d/preview.service";
 import { FixturesLiveService, UniverseData, FixtureData, AttributeUpdateData, AttributeData } from "./fixtures-live.service";
+import { MessageBarComponent } from "../status/message-bar/message-bar.component";
 
 @Component({
     selector: 'fixtures-live',
@@ -9,6 +10,8 @@ import { FixturesLiveService, UniverseData, FixtureData, AttributeUpdateData, At
 })
 export class FixturesLiveComponent
 {
+    @ViewChild("messageBar") messageBar: MessageBarComponent;
+    
     universes: UniverseData[];
     activeUniverse: UniverseData;
 
@@ -20,8 +23,15 @@ export class FixturesLiveComponent
             .then(data => 
             {
                 this.universes = data;
-                this.activeUniverse = this.universes[0];
-                this.activeFixture = this.activeUniverse.fixtures[0];
+                if(this.universes.length == 0)
+                {
+                    this.messageBar.add("Error", "No Universes were received");
+                }
+                this.activeUniverse = this.universes[0] || null;
+                if(this.activeUniverse != null)
+                {
+                    this.activeFixture = this.activeUniverse.fixtures[0];
+                }
 
                 fixturesLiveService.subscribe(data => 
                 {
@@ -38,7 +48,7 @@ export class FixturesLiveComponent
                     }
                 });
             })
-            .catch();
+            .catch(reason => this.messageBar.add("Error", reason));
     }
 
     updateValue(universe: UniverseData, fixture: FixtureData, attribute: AttributeData, value: number): void

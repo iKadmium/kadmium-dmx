@@ -11,6 +11,7 @@ import { URLs } from "../../shared/url";
 
 import { PreviewService } from "./preview.service";
 import { Preview2DFixtureComponent } from "./preview-2d-fixture.component";
+import { DMXPreviewChannel } from "./DMXPreviewChannel";
 
 @Component({
     selector: 'preview-2d',
@@ -37,6 +38,10 @@ export class Preview2DComponent
                 {
                     this.universes.set(universe.name, universe);
                     this.universeData = [];
+                    for(let fixture of universe.fixtures)
+                    {
+                        fixture.definition.channels = this.sortChannels(fixture.definition.channels);
+                    }
                 }
                 this.activeUniverse = this.universes.get(this.universes.keys().next().value);
 
@@ -46,6 +51,22 @@ export class Preview2DComponent
                 });
             })
             .catch(reason => this.messageBar.add("Error", reason));
+    }
+
+    sortChannels(channels: DMXChannel[]): DMXChannel[]
+    {
+        return channels
+            .sort((a, b) => 
+            {
+                if(a.dmx != b.dmx)
+                {
+                    return a.dmx - b.dmx;
+                }
+                else
+                {
+                    return a.min - b.min;
+                }
+            });
     }
 
     getFixtures(universe: PreviewUniverseData, group: string): PreviewFixtureData[]

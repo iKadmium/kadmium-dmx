@@ -3,6 +3,7 @@ import { Component, Input, ViewChild, ElementRef, AfterContentInit, OnChanges, S
 import { PreviewFixtureData } from "./preview";
 import { DMXPreviewFixture } from "./DMXPreviewFixture";
 import { DMXChannel } from "../fixture-definitions/fixture-definition";
+import { DMXPreviewChannel } from "./DMXPreviewChannel";
 
 @Component({
     selector: 'preview-2d-fixture',

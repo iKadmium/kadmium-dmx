@@ -21,7 +21,7 @@
             <div class="btn-group">
                 <button class="btn" [ngClass]="{'btn-success': sacnEnabled, 'btn-danger': sacnEnabled == false, 'btn-warning': sacnEnabled == null}"
                     (click)="toggleSACN()" [disabled]="sacnEnabled == null">{{getStatusText(sacnEnabled)}}</button>
-                    <a class="btn btn-primary" routerLink="/sacnTransmitterLive">Debug</a>
+                    <button class="btn btn-primary" [disabled]="!sacnEnabled || fixtures.status.code != 'Success'" routerLink="/sacnTransmitterLive">Debug</button>
             </div>
         </status-panel>
     </div>
