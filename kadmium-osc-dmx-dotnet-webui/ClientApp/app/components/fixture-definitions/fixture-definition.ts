@@ -69,15 +69,15 @@ export class Axis
 export class ColorWheelEntry
 {
     name: string;
-    dmxStart: number;
-    dmxEnd: number;
+    min: number;
+    max: number;
     color: string;
 
     constructor(name?: string, dmxStart?: number, dmxEnd?: number, color?: string)
     {
         this.name = name ? name : "";
-        this.dmxStart = dmxStart ? dmxStart : 0;
-        this.dmxEnd = dmxEnd ? dmxEnd : 255;
+        this.min = dmxStart ? dmxStart : 0;
+        this.max = dmxEnd ? dmxEnd : 255;
         this.color = color ? color : "000000";
     }
 }

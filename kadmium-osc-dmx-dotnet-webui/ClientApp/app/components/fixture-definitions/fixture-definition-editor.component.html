@@ -160,13 +160,13 @@
                             </td>
                             <td>
                                 <table-input>
-                                    <input #input #model="ngModel" class="form-control" type="number" [(ngModel)]="entry.dmxStart" [name]="'colorWheelMin[' + i + ']'"
+                                    <input #input #model="ngModel" class="form-control" type="number" [(ngModel)]="entry.min" [name]="'colorWheelMin[' + i + ']'"
                                         min="0" max="255" />
                                 </table-input>
                             </td>
                             <td>
                                 <table-input>
-                                    <input #input #model="ngModel" class="form-control" type="number" [(ngModel)]="entry.dmxEnd" [name]="'colorWheelMax[' + i + ']'"
+                                    <input #input #model="ngModel" class="form-control" type="number" [(ngModel)]="entry.max" [name]="'colorWheelMax[' + i + ']'"
                                         min="0" max="255" />
                                 </table-input>
                             </td>

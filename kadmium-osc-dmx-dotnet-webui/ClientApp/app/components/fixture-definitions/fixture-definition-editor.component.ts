@@ -97,9 +97,9 @@ export class FixtureDefinitionEditorComponent
         let minValue = 0;
         this.definition.colorWheel.forEach((value: ColorWheelEntry) => 
         {
-            if (value.dmxEnd > minValue) 
+            if (value.max > minValue) 
             {
-                minValue = value.dmxEnd;
+                minValue = value.max;
             }
         });
         minValue = minValue < 255 ? minValue + 1 : 255;
