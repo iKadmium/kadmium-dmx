@@ -35,14 +35,17 @@
         </status-panel>
     </div>
     <div class="col-md-3">
-        <status-panel #fixtures name="Fixtures">
-            <a class="btn btn-primary" routerLink="/fixturesLive">Debug</a>
+        <status-panel #solvers name="Solvers">
+            <div class="btn-group">
+                <button class="btn" [ngClass]="{'btn-success': solversEnabled, 'btn-danger': solversEnabled == false, 'btn-warning': solversEnabled == null}"
+                    (click)="toggleSolvers()" [disabled]="solversEnabled == null || fixtures.status.code != 'Success'">{{getStatusText(solversEnabled)}}</button>
+                    <a class="btn btn-primary" routerLink="/solversLive">Debug</a>
+            </div>
         </status-panel>
     </div>
     <div class="col-md-3">
-        <status-panel #solvers name="Solvers">
-            <button class="btn" [ngClass]="{'btn-success': solversEnabled, 'btn-danger': solversEnabled == false, 'btn-warning': solversEnabled == null}"
-                (click)="toggleSolvers()" [disabled]="solversEnabled == null || fixtures.status.code != 'Success'">{{getStatusText(solversEnabled)}}</button>
+        <status-panel #fixtures name="Fixtures">
+            <a routerLink="/fixturesLive" class="btn btn-primary">Debug</a>
         </status-panel>
     </div>
 </div>

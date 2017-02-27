@@ -3,9 +3,9 @@ import { Http } from "@angular/http";
 import { URLs } from "../../shared/url";
 
 @Injectable()
-export class FixturesLiveService
+export class SolversLiveService
 {
-    private url = URLs.getAPIUrl("FixturesLive");
+    private url = URLs.getAPIUrl("SolversLive");
     private socketUrl = URLs.getSocketURL("Fixtures");
     private socket: WebSocket;
 

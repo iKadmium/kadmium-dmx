@@ -30,5 +30,12 @@ namespace kadmium_osc_dmx_dotnet_webui.Controllers
             }
             FileAccess.SaveGroups();
         }
+
+        [HttpGet]
+        [Route("[action]/{group}/{attribute}/{value}")]
+        public void Set(string group, string attribute, float value)
+        {
+            MasterController.Instance.Groups[group].Set(attribute, value);
+        }
     }
 }

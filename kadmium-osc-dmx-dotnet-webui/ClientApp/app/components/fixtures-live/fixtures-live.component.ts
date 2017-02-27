@@ -1,58 +1,100 @@
 import { Component, ViewChild } from '@angular/core';
-import { PreviewService } from "../preview-2d/preview.service";
-import { FixturesLiveService, UniverseData, FixtureData, AttributeUpdateData, AttributeData } from "./fixtures-live.service";
 import { MessageBarComponent } from "../status/message-bar/message-bar.component";
+import { GroupService } from "../groups/group.service";
 
 @Component({
     selector: 'fixtures-live',
     template: require('./fixtures-live.component.html'),
-    providers: [FixturesLiveService]
+    providers: [GroupService]
 })
 export class FixturesLiveComponent
 {
     @ViewChild("messageBar") messageBar: MessageBarComponent;
-    
-    universes: UniverseData[];
-    activeUniverse: UniverseData;
 
-    activeFixture: FixtureData;
+    groups: PreviewGroup[];
 
-    constructor(private fixturesLiveService: FixturesLiveService)
+    constructor(private groupService: GroupService)
     {
-        fixturesLiveService.get()
-            .then(data => 
+        groupService
+            .get()
+            .then(value => 
             {
-                this.universes = data;
-                if(this.universes.length == 0)
-                {
-                    this.messageBar.add("Error", "No Universes were received");
-                }
-                this.activeUniverse = this.universes[0] || null;
-                if(this.activeUniverse != null)
-                {
-                    this.activeFixture = this.activeUniverse.fixtures[0];
-                }
-
-                fixturesLiveService.subscribe(data => 
-                {
-                    for (let fixtureIndex in data.fixtures)
-                    {
-                        let remoteFixture = data.fixtures[fixtureIndex];
-                        let localFixture = this.activeUniverse.fixtures[fixtureIndex];
-                        for (let attributeIndex in remoteFixture.attributes)
-                        {
-                            let remoteAttribute = remoteFixture.attributes[attributeIndex];
-                            let localAttribute = localFixture.attributes[attributeIndex];
-                            localAttribute.value = remoteAttribute.value;
-                        }
-                    }
-                });
+                this.groups = value.map(group => new PreviewGroup(group.name));
             })
             .catch(reason => this.messageBar.add("Error", reason));
     }
 
-    updateValue(universe: UniverseData, fixture: FixtureData, attribute: AttributeData, value: number): void
+    activate(group: StateGroup, state: State): void
     {
-        this.fixturesLiveService.set(universe.universeID, fixture.channel, attribute.name, value);
+        group.activeState = state;
+        for (let attributeName in state.settings)
+        {
+            let attributeValue = state.settings[attributeName];
+            this.groupService.set(group.groupName, attributeName, attributeValue);
+        }
     }
+}
+
+class PreviewGroup
+{
+    name: string;
+    stateGroups: StateGroup[];
+
+    constructor(name: string)
+    {
+        this.name = name
+        this.stateGroups =
+            [new StateGroup(name, "Colours",
+                [
+                    new State("Black", { Hue: 0, Saturation: 0, Brightness: 0, Strobe: 0 }),
+                    new State("Red", { Hue: 0, Saturation: 1, Brightness: 1, Strobe: 0 }),
+                    new State("Green", { Hue: 0.3333, Saturation: 1, Brightness: 1, Strobe: 0 }),
+                    new State("Blue", { Hue: 0.666, Saturation: 1, Brightness: 1, Strobe: 0 }),
+                    new State("White", { Hue: 0, Saturation: 0, Brightness: 1, Strobe: 0 }),
+                    new State("Strobing", { Hue: 0, Saturation: 0, Brightness: 1, Strobe: 1 })
+                ]),
+            new StateGroup(name, "Movements",
+                [
+                    new State("Centered", { Pan: 0.5, Tilt: 0.5, RandomMove: 0 }),
+                    new State("Down", { Pan: 0.5, Tilt: 0, RandomMove: 0 }),
+                    new State("Up", { Pan: 0.5, Tilt: 1, RandomMove: 0 }),
+                    new State("Left", { Pan: 0, Tilt: 0.5, RandomMove: 0 }),
+                    new State("Right", { Pan: 1, Tilt: 0.5, RandomMove: 0 }),
+                    new State("Moving", { RandomMove: 1 })
+                ])
+            ];
+    }
+}
+
+class StateGroup
+{
+    activeState: State;
+    states: State[];
+    name: string;
+    groupName: string;
+
+    constructor(groupName: string, name: string, states: State[])
+    {
+        this.name = name;
+        this.groupName = groupName;
+        this.states = states;
+        this.activeState = null;
+    }
+}
+
+class State
+{
+    name: string;
+    settings: Settings;
+
+    constructor(name: string, settings: Settings)
+    {
+        this.name = name;
+        this.settings = settings;
+    }
+}
+
+interface Settings
+{
+    [key: string]: number;
 }

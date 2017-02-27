@@ -29,4 +29,11 @@ export class GroupService
             .toPromise()
             .then(response => { });
     }
+
+    public set(group: string, attribute: string, value: number): Promise<void>
+    {
+        return this.http.get(this.groupsUrl + `/Set/${group}/${attribute}/${value}`)
+            .toPromise()
+            .then(response => { });
+    }
 }

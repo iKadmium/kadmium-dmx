@@ -32,7 +32,7 @@ import { Preview2DComponent } from "./components/preview-2d/preview-2d.component
 import { Preview2DFixtureComponent } from "./components/preview-2d/preview-2d-fixture.component";
 import { SACNTransmitterLiveComponent } from "./components/sacn-transmitter-live/sacn-transmitter-live.component";
 import { OSCListenerLiveComponent } from "./components/osc-listener-live/osc-listener-live.component";
-import { FixturesLiveComponent } from "./components/fixtures-live/fixtures-live.component";
+import { SolversLiveComponent } from "./components/solvers-live/solvers-live.component";
 
 import { SettingsService } from "./components/settings/settings.service";
 import { VenueService } from "./components/venues/venue.service";
@@ -40,6 +40,7 @@ import { VenuePresetService } from "./components/venues/venue-preset.service";
 import { GroupService } from "./components/groups/group.service";
 import { FixtureDefinitionsService } from "./components/fixture-definitions/fixture-definitions.service";
 import { OSCListenerService } from "./components/osc-listener-live/osc-listener.service";
+import { FixturesLiveComponent } from "./components/fixtures-live/fixtures-live.component";
 
 declare var jQuery: any;
 
@@ -61,6 +62,7 @@ declare var jQuery: any;
         Preview2DFixtureComponent,
         SACNTransmitterLiveComponent,
         OSCListenerLiveComponent,
+        SolversLiveComponent,
         FixturesLiveComponent,
 
         MINMAX_DIRECTIVES,
@@ -86,6 +88,7 @@ declare var jQuery: any;
             { path: 'dashboard', component: DashboardComponent },
             { path: 'sacnTransmitterLive', component: SACNTransmitterLiveComponent },
             { path: 'oscListenerLive', component: OSCListenerLiveComponent },
+            { path: 'solversLive', component: SolversLiveComponent },
             { path: 'fixturesLive', component: FixturesLiveComponent },
             { path: 'settings', component: SettingsComponent },
             { path: 'groups', component: GroupsComponent },

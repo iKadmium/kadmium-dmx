@@ -10,7 +10,7 @@ using kadmium_osc_dmx_dotnet_core.Solvers;
 namespace kadmium_osc_dmx_dotnet_webui.Controllers
 {
     [Route("api/[controller]")]
-    public class FixturesLiveController : Controller
+    public class SolversLiveController : Controller
     {
 
         [HttpGet]
