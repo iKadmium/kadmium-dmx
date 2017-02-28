@@ -1,7 +1,3 @@
-<div class="page-header">
-    <h1>Fixture Definition Editor</h1>
-</div>
-<message-bar #messageBar></message-bar>
 <form *ngIf="definition" class="form-horizontal" #editorForm="ngForm">
     <fieldset [disabled]="saving">
         <datalist id="allManufacturers">
@@ -16,10 +12,10 @@
         </labelled-input>
         <labelled-input label="Type:">
             <select #input #model="ngModel" class="form-control" name="type" [(ngModel)]="definition.type">
-            <option>LED</option>
-            <option>Tungsten</option>
-            <option>Effect</option>
-        </select>
+                <option>LED</option>
+                <option>Tungsten</option>
+                <option>Effect</option>
+            </select>
         </labelled-input>
         <datalist id="channelList" name="channelList">
             <option>Master</option>
@@ -131,8 +127,8 @@
                 <button class="btn btn-success" (click)="addAxis()"><span class="glyphicon glyphicon-plus"></span></button>
             </div>
         </div>
-        <div class="panel panel-default">
-            <div class="panel-heading">Color Wheels</div>
+        <div class="panel panel-default" *ngIf="hasColorWheelChannel()">
+            <div class="panel-heading">Color Wheel</div>
             <div class="panel-body">
                 <table class="table table-striped">
                     <thead>
@@ -179,6 +175,19 @@
             </div>
             <div class="panel-footer">
                 <button class="btn btn-success" (click)="addColorWheelEntry()"><span class="glyphicon glyphicon-plus"></span></button>
+            </div>
+        </div>
+        <div class="panel panel-default">
+            <div class="panel-heading">Preview Options</div>
+            <div class="panel-body">
+                <labelled-input label="Beam Angle (degrees):">
+                    <input required name="beamAngle" type="number" min="0" max="360" [(ngModel)]="definition.beamAngle" class="form-control"
+                        #input #model="ngModel" />
+                </labelled-input>
+                <labelled-input label="Brightness (Lux at 1m):">
+                    <input required name="lux" type="number" min="0" [(ngModel)]="definition.lux" class="form-control" #input #model="ngModel"
+                    />
+                </labelled-input>
             </div>
         </div>
         <div class="form-group">

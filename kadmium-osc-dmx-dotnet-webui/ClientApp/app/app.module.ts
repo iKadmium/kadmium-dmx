@@ -5,12 +5,20 @@ import { UniversalModule } from 'angular2-universal';
 import { HttpModule } from "@angular/http";
 import { AppComponent } from './components/app/app.component'
 
-import { MINMAX_DIRECTIVES } from './components/minmax/index';
-import { MaxValueValidator } from './components/minmax/index';
-import { UniqueValidator } from "./components/unique/unique.directive";
-
 import { ModalModule } from 'angular2-modal';
 import { BootstrapModalModule } from 'angular2-modal/plugins/bootstrap';
+
+import { MINMAX_DIRECTIVES } from "./directives/minmax/index";
+import { UniqueValidator } from "./directives/unique/unique.directive";
+
+import { SettingsService } from "./components/settings/settings.service";
+import { VenueService } from "./components/venues/venue.service";
+import { VenuePresetService } from "./components/venues/venue-preset.service";
+import { GroupService } from "./components/groups/group.service";
+import { FixtureDefinitionsService } from "./components/fixture-definitions/fixture-definitions.service";
+import { OSCListenerService } from "./components/osc-listener-live/osc-listener.service";
+import { FixturesLiveComponent } from "./components/fixtures-live/fixtures-live.component";
+import { MessageBarService } from "./components/status/message-bar/message-bar.service";
 
 import { NavMenuComponent } from './components/navmenu/navmenu.component';
 import { StatusPanelComponent } from "./components/status/status-panel/status-panel.component";
@@ -33,14 +41,6 @@ import { Preview2DFixtureComponent } from "./components/preview-2d/preview-2d-fi
 import { SACNTransmitterLiveComponent } from "./components/sacn-transmitter-live/sacn-transmitter-live.component";
 import { OSCListenerLiveComponent } from "./components/osc-listener-live/osc-listener-live.component";
 import { SolversLiveComponent } from "./components/solvers-live/solvers-live.component";
-
-import { SettingsService } from "./components/settings/settings.service";
-import { VenueService } from "./components/venues/venue.service";
-import { VenuePresetService } from "./components/venues/venue-preset.service";
-import { GroupService } from "./components/groups/group.service";
-import { FixtureDefinitionsService } from "./components/fixture-definitions/fixture-definitions.service";
-import { OSCListenerService } from "./components/osc-listener-live/osc-listener.service";
-import { FixturesLiveComponent } from "./components/fixtures-live/fixtures-live.component";
 
 declare var jQuery: any;
 
@@ -102,7 +102,7 @@ declare var jQuery: any;
             { path: '**', redirectTo: 'sets' }
         ])
     ],
-    providers: [],
+    providers: [MessageBarService],
     entryComponents: [FixtureOptionsEditorComponent]
 })
 export class AppModule

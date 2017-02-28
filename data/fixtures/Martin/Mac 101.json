@@ -3,6 +3,8 @@
   "name": "Mac 101",
   "manufacturer": "Martin",
   "type": "LED",
+  "beamAngle": 13,
+  "lux": 59400,
   "channels": [
     {
       "name": "Strobe",

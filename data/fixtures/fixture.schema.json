@@ -24,6 +24,14 @@
 				"Tungsten"
 			]
 		},
+		"beamAngle": {
+			"description": "The angle of the beam produced",
+			"type": "number"
+		},
+		"lux": {
+			"description": "The brightness (in Lux at 1m)",
+			"type": "number"
+		},
 		"channels": {
 			"description": "The DMX channels the fixture uses",
 			"type": "array",

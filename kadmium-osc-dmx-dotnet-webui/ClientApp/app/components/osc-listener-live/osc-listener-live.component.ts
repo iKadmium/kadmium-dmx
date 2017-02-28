@@ -1,6 +1,7 @@
 import { Component } from '@angular/core';
 
 import { OSCListenerService } from "./osc-listener.service"
+import { Title } from "@angular/platform-browser";
 
 @Component({
     selector: 'osc-listener-live',
@@ -13,8 +14,9 @@ export class OSCListenerLiveComponent
     private unrecognisedData: string[];
     private recognisedData: string[];
 
-    constructor(oscListenerService: OSCListenerService)
+    constructor(oscListenerService: OSCListenerService, title: Title)
     {
+        title.setTitle("OSC Listener Live");
         this.unrecognisedData = [];
         this.recognisedData = [];
 

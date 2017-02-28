@@ -1,4 +1,4 @@
-import { Component, ViewChild } from '@angular/core';
+import { Component } from '@angular/core';
 import { Http } from '@angular/http';
 import { NgModule } from '@angular/core';
 
@@ -6,6 +6,8 @@ import { MessageBarComponent } from "../status/message-bar/message-bar.component
 
 import { SettingsService } from "./settings.service";
 import { Settings, UnicastTarget } from "./settings";
+import { Title } from "@angular/platform-browser";
+import { MessageBarService } from "../status/message-bar/message-bar.service";
 
 
 var $ = require("jquery");
@@ -17,13 +19,13 @@ var $ = require("jquery");
 })
 export class SettingsComponent
 {
-    @ViewChild("messageBar") messageBar: MessageBarComponent;
     settings: Settings;
     saving: boolean;
     testElement: string;
 
-    constructor(private settingsService: SettingsService)
+    constructor(private settingsService: SettingsService, private messageBarService: MessageBarService, title: Title)
     {
+        title.setTitle("Settings");
         this.testElement = "stuff";
         this.saving = false;
         this.settingsService.get().then(data =>
@@ -38,11 +40,11 @@ export class SettingsComponent
         try
         {
             await this.settingsService.save(this.settings);
-            this.messageBar.add("Success", "Saved Successfully");
+            this.messageBarService.add("Success", "Saved Successfully");
         }
         catch (reason)
         {
-            this.messageBar.add("Error", reason);
+            this.messageBarService.add("Error", reason);
         }
         finally
         {

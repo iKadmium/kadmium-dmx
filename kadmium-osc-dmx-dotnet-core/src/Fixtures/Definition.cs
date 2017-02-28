@@ -14,6 +14,8 @@ namespace kadmium_osc_dmx_dotnet_core.Fixtures
         public List<ColorWheelEntry> ColorWheel { get; }
         public FixtureType Type { get; set; }
         public string Manufacturer { get; set; }
+        public float Lux { get; set; }
+        public float BeamAngle { get; set; }
 
         public Definition()
         {
@@ -22,6 +24,8 @@ namespace kadmium_osc_dmx_dotnet_core.Fixtures
             ColorWheel = new List<ColorWheelEntry>();
             Model = "";
             Manufacturer = "";
+            Lux = 4000;
+            BeamAngle = 30;
         }
 
         public static Definition Load(JObject modelElement)
@@ -35,6 +39,8 @@ namespace kadmium_osc_dmx_dotnet_core.Fixtures
             definition.Type = (FixtureType)Enum.Parse(typeof(FixtureType), modelElement["type"].Value<string>());
             definition.Model = modelElement["name"].Value<string>();
             definition.Manufacturer = modelElement["manufacturer"].Value<string>();
+            definition.BeamAngle = modelElement["beamAngle"].Value<float>();
+            definition.Lux = modelElement["Lux"].Value<float>();
             if (modelElement["movements"] != null)
             {
                 foreach (JObject movementAxis in modelElement["movements"])
@@ -71,7 +77,9 @@ namespace kadmium_osc_dmx_dotnet_core.Fixtures
                             new JProperty("max", channel.Max)
                         )
                     )
-                )
+                ),
+                new JProperty("lux", Lux),
+                new JProperty("beamAngle", BeamAngle)
             );
 
             if (Axis.Count > 0)

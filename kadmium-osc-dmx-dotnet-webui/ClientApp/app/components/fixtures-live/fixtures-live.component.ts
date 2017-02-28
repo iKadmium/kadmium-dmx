@@ -1,6 +1,10 @@
-import { Component, ViewChild } from '@angular/core';
-import { MessageBarComponent } from "../status/message-bar/message-bar.component";
+import { Component } from '@angular/core';
+import { Title } from "@angular/platform-browser";
+
 import { GroupService } from "../groups/group.service";
+import { MessageBarService } from "../status/message-bar/message-bar.service";
+
+import { MessageBarComponent } from "../status/message-bar/message-bar.component";
 
 @Component({
     selector: 'fixtures-live',
@@ -9,19 +13,18 @@ import { GroupService } from "../groups/group.service";
 })
 export class FixturesLiveComponent
 {
-    @ViewChild("messageBar") messageBar: MessageBarComponent;
-
     groups: PreviewGroup[];
 
-    constructor(private groupService: GroupService)
+    constructor(private groupService: GroupService, private messageBarService: MessageBarService, title: Title)
     {
+        title.setTitle("Fixtures Live");
         groupService
             .get()
             .then(value => 
             {
                 this.groups = value.map(group => new PreviewGroup(group.name));
             })
-            .catch(reason => this.messageBar.add("Error", reason));
+            .catch(reason => this.messageBarService.add("Error", reason));
     }
 
     activate(group: StateGroup, state: State): void

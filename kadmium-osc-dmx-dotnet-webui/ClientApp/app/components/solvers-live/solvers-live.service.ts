@@ -5,7 +5,7 @@ import { URLs } from "../../shared/url";
 @Injectable()
 export class SolversLiveService
 {
-    private url = URLs.getAPIUrl("SolversLive");
+    private solversLiveURL = URLs.getAPIUrl("SolversLive");
     private socketUrl = URLs.getSocketURL("Fixtures");
     private socket: WebSocket;
 
@@ -16,7 +16,7 @@ export class SolversLiveService
 
     public get(): Promise<UniverseData[]>
     {
-        return this.http.get(this.url)
+        return this.http.get(this.solversLiveURL)
             .toPromise()
             .then(value => 
             {
@@ -44,6 +44,20 @@ export class SolversLiveService
             attributeValue: attributeValue
         };
         this.socket.send(JSON.stringify(message));
+    }
+
+    public getEnabled(): Promise<boolean>
+    {
+        return this.http.get(this.solversLiveURL + "/Enabled")
+            .toPromise()
+            .then(response => response.json() as boolean);
+    }
+
+    public setEnabled(value: boolean): Promise<void>
+    {
+        return this.http.get(this.solversLiveURL + "/Enabled/" + value)
+            .toPromise()
+            .then(response => { });
     }
 
 }

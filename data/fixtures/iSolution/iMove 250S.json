@@ -3,6 +3,8 @@
   "name": "iMove 250S",
   "manufacturer": "iSolution",
   "type": "LED",
+  "beamAngle": 13,
+  "lux": 57920,
   "channels": [
     {
       "name": "PanCoarse",

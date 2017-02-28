@@ -1,4 +1,4 @@
-import { Component, ViewChild, ViewChildren } from '@angular/core';
+import { Component } from '@angular/core';
 
 import { MessageBarComponent } from "../status/message-bar/message-bar.component";
 
@@ -12,6 +12,8 @@ import { URLs } from "../../shared/url";
 import { PreviewService } from "./preview.service";
 import { Preview2DFixtureComponent } from "./preview-2d-fixture.component";
 import { DMXPreviewChannel } from "./DMXPreviewChannel";
+import { Title } from "@angular/platform-browser";
+import { MessageBarService } from "../status/message-bar/message-bar.service";
 
 @Component({
     selector: 'preview-2d',
@@ -20,14 +22,14 @@ import { DMXPreviewChannel } from "./DMXPreviewChannel";
 })
 export class Preview2DComponent
 {
-    @ViewChild("messageBar") messageBar: MessageBarComponent;
     groups: string[];
     universes: Map<string, PreviewUniverseData>;
     universeData: number[];
     activeUniverse: PreviewUniverseData;
 
-    constructor(previewService: PreviewService)
+    constructor(previewService: PreviewService, private messageBarService: MessageBarService, title: Title)
     {
+        title.setTitle("2D Preview");
         previewService
             .get()
             .then(value => 
@@ -38,7 +40,7 @@ export class Preview2DComponent
                 {
                     this.universes.set(universe.name, universe);
                     this.universeData = [];
-                    for(let fixture of universe.fixtures)
+                    for (let fixture of universe.fixtures)
                     {
                         fixture.definition.channels = this.sortChannels(fixture.definition.channels);
                     }
@@ -50,7 +52,7 @@ export class Preview2DComponent
                     this.universeData = data.values;
                 });
             })
-            .catch(reason => this.messageBar.add("Error", reason));
+            .catch(reason => this.messageBarService.add("Error", reason));
     }
 
     sortChannels(channels: DMXChannel[]): DMXChannel[]
@@ -58,7 +60,7 @@ export class Preview2DComponent
         return channels
             .sort((a, b) => 
             {
-                if(a.dmx != b.dmx)
+                if (a.dmx != b.dmx)
                 {
                     return a.dmx - b.dmx;
                 }

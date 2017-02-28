@@ -3,6 +3,8 @@
   "name": "Moving Head",
   "manufacturer": "Venue - The New Globe",
   "type": "LED",
+  "beamAngle": 30,
+  "lux": 4000,
   "channels": [
     {
       "name": "Master",

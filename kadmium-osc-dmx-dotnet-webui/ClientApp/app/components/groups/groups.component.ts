@@ -1,8 +1,9 @@
-import { Component, ViewChild } from '@angular/core';
-
-import { MessageBarComponent } from "../status/message-bar/message-bar.component";
+import { Component } from '@angular/core';
+import { Title } from "@angular/platform-browser";
 
 import { GroupService } from "./group.service";
+import { MessageBarService } from "../status/message-bar/message-bar.service";
+
 import { Group } from "./group";
 
 @Component({
@@ -12,18 +13,17 @@ import { Group } from "./group";
 })
 export class GroupsComponent
 {
-    @ViewChild("messageBar") messageBar: MessageBarComponent;
-
     saving: boolean;
     groups: Group[];
 
-    constructor(private groupsService: GroupService)
+    constructor(private groupsService: GroupService, private messageBarService: MessageBarService, title: Title)
     {
+        title.setTitle("Groups");
         this.saving = false;
         this.groupsService
             .get()
             .then((value: Group[]) => this.groups = value)
-            .catch((reason) => this.messageBar.add("Error", reason));
+            .catch((reason) => this.messageBarService.add("Error", reason));
     }
 
     private add(): void
@@ -62,11 +62,11 @@ export class GroupsComponent
         try
         {
             await this.groupsService.put(this.groups);
-            this.messageBar.add("Success", "Saved successfully")
+            this.messageBarService.add("Success", "Saved successfully")
         }
         catch (reason)
         {
-            this.messageBar.add("Error", reason);
+            this.messageBarService.add("Error", reason);
         }
         finally
         {

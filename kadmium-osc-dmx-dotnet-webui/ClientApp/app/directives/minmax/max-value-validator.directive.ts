@@ -8,7 +8,7 @@ export const MAX_VALUE_VALIDATOR: any = {
 };
 
 @Directive({
-    selector: '[max][formControlName],[min][formControl],[min][ngModel]',
+    selector: '[max][formControlName],[max][formControl],[max][ngModel]',
     providers: [MAX_VALUE_VALIDATOR],
     host: { '[attr.max]': 'max ? max : 0' }
 })

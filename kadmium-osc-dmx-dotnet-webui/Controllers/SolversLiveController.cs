@@ -12,6 +12,19 @@ namespace kadmium_osc_dmx_dotnet_webui.Controllers
     [Route("api/[controller]")]
     public class SolversLiveController : Controller
     {
+        [HttpGet]
+        [Route("[action]")]
+        public bool Enabled()
+        {
+            return MasterController.Instance.UpdatesEnabled;
+        }
+
+        [HttpGet]
+        [Route("[action]/{value}")]
+        public void Enabled(bool value)
+        {
+            MasterController.Instance.UpdatesEnabled = value;
+        }
 
         [HttpGet]
         public JObject Get()

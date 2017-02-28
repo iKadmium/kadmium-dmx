@@ -9,6 +9,7 @@ import { InputBoxComponent } from "../input-box/input-box.component";
 import { Venue, Universe, Fixture } from "./venue";
 
 import { VenueService } from "./venue.service";
+import { MessageBarService } from "../status/message-bar/message-bar.service";
 
 @Component({
     selector: 'venue-editor',
@@ -17,7 +18,6 @@ import { VenueService } from "./venue.service";
 })
 export class VenueEditorComponent
 {
-    @ViewChild("messageBar") messageBar: MessageBarComponent;
     @ViewChild("universeEditor") universeEditor: UniverseEditorComponent;
     @ViewChild("inputBox") inputBox: InputBoxComponent;
     @ViewChild("fixtureOptionsEditor") fixtureOptionsEditor: FixtureOptionsEditorComponent;
@@ -29,7 +29,7 @@ export class VenueEditorComponent
 
     private selectedUniverse: Universe;
 
-    constructor(private route: ActivatedRoute, private venueService: VenueService)
+    constructor(private route: ActivatedRoute, private venueService: VenueService, private messageBarService: MessageBarService)
     {
         this.saving = false;
     }
@@ -55,7 +55,7 @@ export class VenueEditorComponent
                     this.venue = value;
                     this.selectedUniverse = this.venue.universes.length > 0 ? this.venue.universes[0] : null;
                 })
-                .catch((reason) => this.messageBar.add("Error", reason));
+                .catch((reason) => this.messageBarService.add("Error", reason));
         }
     }
 
@@ -95,7 +95,7 @@ export class VenueEditorComponent
         }
         catch (error)
         {
-            this.messageBar.add("Error", error);
+            this.messageBarService.add("Error", error);
         }
         finally
         {

@@ -3,6 +3,8 @@
   "name": "FadeCandy (program mode)",
   "manufacturer": "Scanlime",
   "type": "LED",
+  "beamAngle": 30,
+  "lux": 4000,
   "channels": [
     {
       "name": "Red",

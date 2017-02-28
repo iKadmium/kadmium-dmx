@@ -1,8 +1,4 @@
-<div class="page-header">
-    <h1>Settings</h1>
-</div>
 <p *ngIf="!settings">Loading...</p>
-<message-bar #messageBar></message-bar>
 <form *ngIf="settings" class="form-horizontal" #settingsForm="ngForm">
     <fieldset [disabled]="saving">
         <labelled-input label="HTTP Port:">

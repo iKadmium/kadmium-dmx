@@ -1,11 +1,13 @@
 import { Component, ViewChild, ViewContainerRef } from '@angular/core';
-
-import { MessageBarComponent } from "../status/message-bar/message-bar.component";
+import { Title } from "@angular/platform-browser";
 
 import { Overlay } from "angular2-modal";
 import { Modal } from "angular2-modal/plugins/bootstrap";
 
 import { FixtureDefinitionsService } from "./fixture-definitions.service";
+import { MessageBarService } from "../status/message-bar/message-bar.service";
+
+import { MessageBarComponent } from "../status/message-bar/message-bar.component";
 
 import { FixtureDefinitionSkeleton } from "./fixture-definition";
 
@@ -16,18 +18,19 @@ import { FixtureDefinitionSkeleton } from "./fixture-definition";
 })
 export class FixtureDefinitionsComponent
 {
-    @ViewChild("messageBar") messageBar: MessageBarComponent;
     manufacturerFilterEnabled: boolean;
     manufacturerFilter: string;
     data: FixtureDefinitionSkeleton[];
 
-    constructor(private fixtureDefinitionsService: FixtureDefinitionsService, overlay: Overlay, vcRef: ViewContainerRef, private modal: Modal)
+    constructor(private fixtureDefinitionsService: FixtureDefinitionsService, overlay: Overlay, vcRef: ViewContainerRef,
+        private messageBarService: MessageBarService, private modal: Modal, title: Title)
     {
+        title.setTitle("Fixture Definitions");
         overlay.defaultViewContainer = vcRef;
         this.fixtureDefinitionsService
             .getSkeletons()
             .then((value: FixtureDefinitionSkeleton[]) => this.data = value)
-            .catch((reason) => this.messageBar.add("Error", reason));
+            .catch((reason) => this.messageBarService.add("Error", reason));
     }
 
     private get manufacturers(): string[]
@@ -70,14 +73,14 @@ export class FixtureDefinitionsComponent
                 try
                 {
                     await this.fixtureDefinitionsService.delete(fixture);
-                    
-                    this.messageBar.add("Success", fixture.manufacturer + " " + fixture.model + " was deleted");
+
+                    this.messageBarService.add("Success", fixture.manufacturer + " " + fixture.model + " was deleted");
                     let index = this.data.indexOf(fixture);
                     this.data.splice(index, 1);
                 }
                 catch (reason)
                 {
-                    this.messageBar.add("Error", "Could not delete " + fixture.manufacturer + " " + fixture.model + ". " + reason);
+                    this.messageBarService.add("Error", "Could not delete " + fixture.manufacturer + " " + fixture.model + ". " + reason);
                 }
             }
         }

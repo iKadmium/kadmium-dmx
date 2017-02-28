@@ -13,6 +13,7 @@ import { GroupService } from "../groups/group.service";
 
 import { FixtureDefinitionSkeleton } from "../fixture-definitions/fixture-definition";
 import { Universe, Fixture, FixtureDefinitionOptions, VenuePreset } from "./venue";
+import { MessageBarService } from "../status/message-bar/message-bar.service";
 
 @Component({
     selector: 'universe-editor',
@@ -23,7 +24,6 @@ import { Universe, Fixture, FixtureDefinitionOptions, VenuePreset } from "./venu
 export class UniverseEditorComponent
 {
     @Input("universe") universe: Universe;
-    @Input("messageBar") messageBar: MessageBarComponent;
     @Input("inputBox") inputBox: InputBoxComponent;
 
     private selectedFixture: Fixture;
@@ -34,7 +34,7 @@ export class UniverseEditorComponent
     private groups: string[];
 
     constructor(private fixtureDefinitionsService: FixtureDefinitionsService, private venuePresetService: VenuePresetService, private groupService: GroupService,
-        overlay: Overlay, private vcRef: ViewContainerRef, private modal: Modal)
+        private messageBarService: MessageBarService, overlay: Overlay, private vcRef: ViewContainerRef, private modal: Modal)
     {
         overlay.defaultViewContainer = vcRef;
         this.selectedFixtures = [];
@@ -42,15 +42,15 @@ export class UniverseEditorComponent
         this.venuePresetService
             .getNames()
             .then(value => this.venuePresetNames = value)
-            .catch(reason => this.messageBar.add("Error", reason));
+            .catch(reason => this.messageBarService.add("Error", reason));
         this.fixtureDefinitionsService
             .getSkeletons()
             .then((value) => this.skeletons = value)
-            .catch(reason => this.messageBar.add("Error", reason));
+            .catch(reason => this.messageBarService.add("Error", reason));
         this.groupService
             .get()
             .then(value => this.groups = value.map(grp => grp.name))
-            .catch(reason => this.messageBar.add("Error", reason));
+            .catch(reason => this.messageBarService.add("Error", reason));
     }
 
     private async removeFixture(index: number): Promise<void>
@@ -74,7 +74,7 @@ export class UniverseEditorComponent
         {
             //errors are generated when the message box is cancelled
         }
-        
+
     }
 
     private addFixture(): void
@@ -115,10 +115,10 @@ export class UniverseEditorComponent
                 .then(() =>
                 {
                     this.selectedFixtures = [];
-                    this.messageBar.add("Success", preset.name + " saved successfully");
+                    this.messageBarService.add("Success", preset.name + " saved successfully");
                     this.venuePresetNames.push(preset.name);
                 })
-                .catch(reason => this.messageBar.add("Error", reason));
+                .catch(reason => this.messageBarService.add("Error", reason));
         }
         catch (error)
         { }
@@ -135,7 +135,7 @@ export class UniverseEditorComponent
                     this.universe.fixtures.push(fixture);
                 }
             })
-            .catch(reason => this.messageBar.add("Error", reason));
+            .catch(reason => this.messageBarService.add("Error", reason));
     }
 
     private async removePreset(name: string): Promise<void>
@@ -156,11 +156,11 @@ export class UniverseEditorComponent
                     await this.venuePresetService.delete(name);
                     let index = this.venuePresetNames.indexOf(name);
                     this.venuePresetNames.splice(index, 1);
-                    this.messageBar.add("Success", name + " successfully removed");
+                    this.messageBarService.add("Success", name + " successfully removed");
                 }
                 catch (error)
                 {
-                    this.messageBar.add("Error", error);
+                    this.messageBarService.add("Error", error);
                 }
             }
         }

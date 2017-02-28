@@ -1,7 +1,9 @@
-import { Component, ViewChild } from '@angular/core';
+import { Component } from '@angular/core';
 import { PreviewService } from "../preview-2d/preview.service";
 import { SolversLiveService, UniverseData, FixtureData, AttributeUpdateData, AttributeData } from "./solvers-live.service";
 import { MessageBarComponent } from "../status/message-bar/message-bar.component";
+import { Title } from "@angular/platform-browser";
+import { MessageBarService } from "../status/message-bar/message-bar.service";
 
 @Component({
     selector: 'solvers-live',
@@ -10,25 +12,24 @@ import { MessageBarComponent } from "../status/message-bar/message-bar.component
 })
 export class SolversLiveComponent
 {
-    @ViewChild("messageBar") messageBar: MessageBarComponent;
-    
     universes: UniverseData[];
     activeUniverse: UniverseData;
 
     activeFixture: FixtureData;
 
-    constructor(private solversLiveService: SolversLiveService)
+    constructor(private solversLiveService: SolversLiveService, private messageBarService: MessageBarService, title: Title)
     {
+        title.setTitle("Solvers Live");
         solversLiveService.get()
             .then(data => 
             {
                 this.universes = data;
-                if(this.universes.length == 0)
+                if (this.universes.length == 0)
                 {
-                    this.messageBar.add("Error", "No Universes were received");
+                    this.messageBarService.add("Error", "No Universes were received");
                 }
                 this.activeUniverse = this.universes[0] || null;
-                if(this.activeUniverse != null)
+                if (this.activeUniverse != null)
                 {
                     this.activeFixture = this.activeUniverse.fixtures[0];
                 }
@@ -48,7 +49,7 @@ export class SolversLiveComponent
                     }
                 });
             })
-            .catch(reason => this.messageBar.add("Error", reason));
+            .catch(reason => this.messageBarService.add("Error", reason));
     }
 
     updateValue(universe: UniverseData, fixture: FixtureData, attribute: AttributeData, value: number): void

@@ -1,4 +1,4 @@
-import { Component, ViewChild, ViewContainerRef } from '@angular/core';
+import { Component, ViewContainerRef } from '@angular/core';
 
 import { MessageBarComponent } from "../status/message-bar/message-bar.component";
 
@@ -6,6 +6,7 @@ import { Overlay } from "angular2-modal";
 import { Modal } from "angular2-modal/plugins/bootstrap";
 
 import { VenueService } from "./venue.service";
+import { MessageBarService } from "../status/message-bar/message-bar.service";
 
 @Component({
     selector: 'venues',
@@ -14,20 +15,20 @@ import { VenueService } from "./venue.service";
 })
 export class VenuesComponent
 {
-    @ViewChild("messageBar") messageBar: MessageBarComponent;
     venues: VenueSkeleton[];
 
-    constructor(private venueService: VenueService, overlay: Overlay, vcRef: ViewContainerRef, private modal: Modal)
+    constructor(private venueService: VenueService, private messageBarService: MessageBarService, overlay: Overlay, vcRef: ViewContainerRef, private modal: Modal)
     {
         overlay.defaultViewContainer = vcRef;
         this.venueService
             .getNames()
-            .then((value: string[]) => this.venues = value.map(value => {
+            .then((value: string[]) => this.venues = value.map(value =>
+            {
                 let skeleton = new VenueSkeleton();
                 skeleton.name = value;
                 return skeleton;
             }))
-            .catch((reason) => this.messageBar);
+            .catch((reason) => this.messageBarService);
     }
 
     private getEditUrl(entry: VenueSkeleton)
@@ -54,11 +55,11 @@ export class VenuesComponent
                 {
                     await this.venueService.delete(venue.name);
                     this.venues.splice(index, 1);
-                    this.messageBar.add("Success", venue.name + " successfully removed");
+                    this.messageBarService.add("Success", venue.name + " successfully removed");
                 }
                 catch (error)
                 {
-                    this.messageBar.add("Error", error);
+                    this.messageBarService.add("Error", error);
                 }
             }
         }

@@ -3,6 +3,8 @@
   "name": "Chinese RGBW (5ch)",
   "manufacturer": "Generic",
   "type": "LED",
+  "beamAngle": 30,
+  "lux": 4000,
   "channels": [
     {
       "name": "Red",

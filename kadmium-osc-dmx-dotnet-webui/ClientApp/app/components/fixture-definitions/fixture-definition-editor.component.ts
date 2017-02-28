@@ -1,23 +1,24 @@
-import { Component, ViewChild, ViewContainerRef } from '@angular/core';
+import { Component, ViewContainerRef, OnInit } from '@angular/core';
 import { ActivatedRoute, Params } from "@angular/router";
+import { Title } from "@angular/platform-browser";
 
-import { MessageBarComponent } from "../status/message-bar/message-bar.component";
 import { Overlay } from "angular2-modal";
 import { Modal } from "angular2-modal/plugins/bootstrap";
 
-import { FixtureDefinition, FixtureDefinitionSkeleton, DMXChannel, Axis, ColorWheelEntry } from "./fixture-definition";
-
 import { FixtureDefinitionsService } from "./fixture-definitions.service";
+import { MessageBarService } from "../status/message-bar/message-bar.service";
+
+import { MessageBarComponent } from "../status/message-bar/message-bar.component";
+
+import { FixtureDefinition, FixtureDefinitionSkeleton, DMXChannel, Axis, ColorWheelEntry } from "./fixture-definition";
 
 @Component({
     selector: 'fixture-definitions-editor',
     template: require('./fixture-definition-editor.component.html'),
     providers: [FixtureDefinitionsService]
 })
-export class FixtureDefinitionEditorComponent
+export class FixtureDefinitionEditorComponent implements OnInit
 {
-    @ViewChild("messageBar") messageBar: MessageBarComponent;
-
     private originalManufacturer: string;
     private originalModel: string;
 
@@ -27,7 +28,8 @@ export class FixtureDefinitionEditorComponent
 
     private saving: boolean;
 
-    constructor(private route: ActivatedRoute, private fixtureService: FixtureDefinitionsService, overlay: Overlay, vcRef: ViewContainerRef, private modal: Modal)
+    constructor(private route: ActivatedRoute, private fixtureService: FixtureDefinitionsService, overlay: Overlay, vcRef: ViewContainerRef,
+        private messageBarService: MessageBarService, private modal: Modal, private title: Title)
     {
         this.allManufacturers = [];
         this.saving = false;
@@ -40,14 +42,16 @@ export class FixtureDefinitionEditorComponent
 
         if (this.isNewItem())
         {
+            this.title.setTitle("Fixture Definition Editor - New Definition");
             this.definition = new FixtureDefinition();
         }
         else
         {
+            this.title.setTitle(`Fixture Definition Editor - ${this.originalManufacturer} ${this.originalModel}`);
             this.fixtureService
                 .get(this.originalManufacturer, this.originalModel)
                 .then(definition => this.definition = definition)
-                .catch(reason => this.messageBar.add("Error", reason));
+                .catch(reason => this.messageBarService.add("Error", reason));
         }
 
         this.fixtureService
@@ -133,6 +137,11 @@ export class FixtureDefinitionEditorComponent
             .map((value: Axis) => value.name);
     }
 
+    private hasColorWheelChannel(): boolean
+    {
+        return this.definition.channels.find(channel => channel.name == "ColorWheel") != null;
+    }
+
     private isNewItem(): boolean
     {
         return this.originalManufacturer == null && this.originalModel == null;
@@ -143,7 +152,7 @@ export class FixtureDefinitionEditorComponent
         return channels
             .sort((a, b) => 
             {
-                if(a.dmx != b.dmx)
+                if (a.dmx != b.dmx)
                 {
                     return a.dmx - b.dmx;
                 }
@@ -167,7 +176,7 @@ export class FixtureDefinitionEditorComponent
             })
             .catch((reason) => 
             {
-                this.messageBar.add("Error", reason);
+                this.messageBarService.add("Error", reason);
                 this.saving = false;
             });
     }

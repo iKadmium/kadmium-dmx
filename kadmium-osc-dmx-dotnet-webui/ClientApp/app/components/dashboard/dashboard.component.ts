@@ -1,26 +1,26 @@
 import { Component, ViewChild } from '@angular/core';
+import { Title } from "@angular/platform-browser";
+
+import { SolversLiveService } from "../solvers-live/solvers-live.service";
+import { OSCListenerService } from "../osc-listener-live/osc-listener.service";
+import { SACNTransmitterService } from "../sacn-transmitter-live/sacn-transmitter.service";
+import { MessageBarService } from "../status/message-bar/message-bar.service";
+import { VenueService } from "../venues/venue.service";
+import { DashboardService } from "./dashboard.service";
 
 import { StatusPanelComponent } from "../status/status-panel/status-panel.component";
 import { MessageBarComponent } from "../status/message-bar/message-bar.component";
 
-import { VenueService } from "../venues/venue.service";
-import { DashboardService } from "./dashboard.service";
-
 import { StatusCode } from "../status/status";
-
 import { URLs } from "../../shared/url";
-import { SolversService } from "../solvers/solvers.service";
-import { OSCListenerService } from "../osc-listener-live/osc-listener.service";
-import { SACNTransmitterService } from "../sacn-transmitter-live/sacn-transmitter.service";
 
 @Component({
     selector: 'dashboard',
     template: require('./dashboard.component.html'),
-    providers: [VenueService, DashboardService, SolversService, OSCListenerService, SACNTransmitterService]
+    providers: [VenueService, DashboardService, SolversLiveService, OSCListenerService, SACNTransmitterService]
 })
 export class DashboardComponent
 {
-    @ViewChild("messageBar") messageBar: MessageBarComponent;
     @ViewChild("venue") venue: StatusPanelComponent;
     @ViewChild("sacnTransmitter") sacnTransmitter: StatusPanelComponent;
     @ViewChild("oscListener") oscListener: StatusPanelComponent;
@@ -34,25 +34,27 @@ export class DashboardComponent
     private venueNames: string[];
 
     constructor(private venueService: VenueService, private dashboardService: DashboardService,
-        private solversService: SolversService, private oscService: OSCListenerService,
-        private sacnService: SACNTransmitterService)
+        private solversService: SolversLiveService, private oscService: OSCListenerService,
+        private sacnService: SACNTransmitterService, private messageBarService: MessageBarService,
+        titleService: Title)
     {
+        titleService.setTitle("Dashboard");
         this.sacnService
             .getEnabled()
             .then(value => this.sacnEnabled = value)
-            .catch(error => this.messageBar.add("Error", error));
+            .catch(error => this.messageBarService.add("Error", error));
         this.oscService
             .getEnabled()
             .then(value => this.oscEnabled = value)
-            .catch(error => this.messageBar.add("Error", error));
+            .catch(error => this.messageBarService.add("Error", error));
         this.solversService
             .getEnabled()
             .then(value => this.solversEnabled = value)
-            .catch(reason => this.messageBar.add("Error", reason));
+            .catch(reason => this.messageBarService.add("Error", reason));
 
         venueService.getNames()
             .then(names => this.venueNames = names)
-            .catch((reason: any) => this.messageBar.add("Error", reason));
+            .catch((reason: any) => this.messageBarService.add("Error", reason));
         dashboardService.subscribe(status => 
         {
             let statusPanel: StatusPanelComponent;
@@ -89,8 +91,8 @@ export class DashboardComponent
     {
         this.venueService
             .activate(venueName)
-            .then(() => this.messageBar.add("Success", venueName + " successfully loaded"))
-            .catch((reason) => this.messageBar.add("Error", reason));
+            .then(() => this.messageBarService.add("Success", venueName + " successfully loaded"))
+            .catch((reason) => this.messageBarService.add("Error", reason));
     }
 
     private getStatusText(value: boolean | null): string
@@ -120,7 +122,7 @@ export class DashboardComponent
         }
         catch (error)
         {
-            this.messageBar.add("Error", error);
+            this.messageBarService.add("Error", error);
             this.sacnEnabled = !targetValue;
         }
         this.sacnEnabled = targetValue;
@@ -137,7 +139,7 @@ export class DashboardComponent
         }
         catch (error)
         {
-            this.messageBar.add("Error", error);
+            this.messageBarService.add("Error", error);
             this.oscEnabled = !targetValue;
         }
         this.oscEnabled = targetValue;
@@ -154,17 +156,9 @@ export class DashboardComponent
         }
         catch (error)
         {
-            this.messageBar.add("Error", error);
+            this.messageBarService.add("Error", error);
             this.solversEnabled = !targetValue;
         }
 
     }
-}
-
-async function delay(milliseconds: number)
-{
-    return new Promise<void>(resolve =>
-    {
-        setTimeout(resolve, milliseconds);
-    });
 }

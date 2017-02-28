@@ -5,6 +5,8 @@ import { SACNTransmitterService } from "./sacn-transmitter.service";
 import { MessageBarComponent } from "../status/message-bar/message-bar.component";
 import { VenueService } from "../venues/venue.service";
 import { Universe } from "../venues/venue";
+import { Title } from "@angular/platform-browser";
+import { MessageBarService } from "../status/message-bar/message-bar.service";
 
 @Component({
     selector: 'sacn-transmitter-live',
@@ -13,15 +15,15 @@ import { Universe } from "../venues/venue";
 })
 export class SACNTransmitterLiveComponent
 {
-    @ViewChild("messageBar") messageBar: MessageBarComponent;
-
     editMode: boolean;
 
     activeUniverse: DMXUniverse;
     universes: DMXUniverse[];
 
-    constructor(previewService: PreviewService, venueService: VenueService, private sacnTransmitterService: SACNTransmitterService)
+    constructor(previewService: PreviewService, venueService: VenueService, private sacnTransmitterService: SACNTransmitterService,
+        private messageBarService: MessageBarService, title: Title)
     {
+        title.setTitle("sACN Transmitter Live");
         this.universes = [];
         this.activeUniverse = null;
 
@@ -53,7 +55,7 @@ export class SACNTransmitterLiveComponent
                     }
                 });
             })
-            .catch(error => this.messageBar.add("Error", error));
+            .catch(error => this.messageBarService.add("Error", error));
     }
 
     private async updateValue(channel: DMXChannel, value: number): Promise<void>
@@ -62,7 +64,7 @@ export class SACNTransmitterLiveComponent
             .set(1, channel.address, value)
             .catch(reason => 
             {
-                this.messageBar.add("Error", reason);
+                this.messageBarService.add("Error", reason);
             });
     }
 }

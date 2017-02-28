@@ -7,6 +7,8 @@ export class FixtureDefinition implements FixtureDefinitionData
     channels: DMXChannel[];
     movements: Axis[];
     colorWheel: ColorWheelEntry[];
+    beamAngle: number;
+    lux: number;
 
     constructor()
     {
@@ -16,6 +18,8 @@ export class FixtureDefinition implements FixtureDefinitionData
         this.channels = [];
         this.movements = [];
         this.colorWheel = [];
+        this.beamAngle = 30;
+        this.lux = 4000;
     }
 
     static load(data: FixtureDefinitionData): FixtureDefinition
