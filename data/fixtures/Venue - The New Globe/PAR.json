@@ -3,8 +3,8 @@
   "name": "PAR",
   "manufacturer": "Venue - The New Globe",
   "type": "LED",
-  "beamAngle": 30,
-  "lux": 4000,
+  "beamAngle": 30.0,
+  "lux": 4000.0,
   "channels": [
     {
       "name": "Master",

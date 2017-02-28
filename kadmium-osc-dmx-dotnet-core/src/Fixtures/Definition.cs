@@ -40,7 +40,7 @@ namespace kadmium_osc_dmx_dotnet_core.Fixtures
             definition.Model = modelElement["name"].Value<string>();
             definition.Manufacturer = modelElement["manufacturer"].Value<string>();
             definition.BeamAngle = modelElement["beamAngle"].Value<float>();
-            definition.Lux = modelElement["Lux"].Value<float>();
+            definition.Lux = modelElement["lux"].Value<float>();
             if (modelElement["movements"] != null)
             {
                 foreach (JObject movementAxis in modelElement["movements"])
@@ -67,6 +67,8 @@ namespace kadmium_osc_dmx_dotnet_core.Fixtures
                 new JProperty("name", Model),
                 new JProperty("manufacturer", Manufacturer),
                 new JProperty("type", Type.ToString()),
+                new JProperty("beamAngle", BeamAngle),
+                new JProperty("lux", Lux),
                 new JProperty("channels",
                     new JArray(
                         from channel in Channels
@@ -77,9 +79,7 @@ namespace kadmium_osc_dmx_dotnet_core.Fixtures
                             new JProperty("max", channel.Max)
                         )
                     )
-                ),
-                new JProperty("lux", Lux),
-                new JProperty("beamAngle", BeamAngle)
+                )
             );
 
             if (Axis.Count > 0)
