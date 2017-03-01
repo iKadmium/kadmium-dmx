@@ -2,20 +2,16 @@ import { Injectable } from '@angular/core';
 import { Headers, Http } from '@angular/http';
 import 'rxjs/add/operator/toPromise';
 
-import { PreviewData, UniverseUpdateData } from "./preview";
 import { URLs } from "../../shared/url";
+import { FixtureDefinition } from "../fixture-definitions/fixture-definition";
 
 @Injectable()
 export class PreviewService
 {
     private previewUrl = URLs.getAPIUrl("Preview");
-    private socketUrl = URLs.getSocketURL("Preview");
-    private socket: WebSocket;
 
     constructor(private http: Http)
-    {
-        this.socket = new WebSocket(this.socketUrl);
-    }
+    { }
 
     public get(): Promise<PreviewData>
     {
@@ -35,13 +31,24 @@ export class PreviewService
                 }
             });
     }
+}
 
-    public subscribe(listener: (data: UniverseUpdateData) => void): void
-    {
-        this.socket.addEventListener("message", (ev: MessageEvent) =>
-        {
-            let data = JSON.parse(ev.data) as UniverseUpdateData;
-            listener(data);
-        });
-    }
+export interface PreviewData
+{
+    groups: string[];
+    universes: PreviewUniverseData[];
+}
+
+export interface PreviewUniverseData
+{
+    name: string;
+    universeID: number;
+    fixtures: PreviewFixtureData[];
+}
+
+export interface PreviewFixtureData
+{
+    address: number;
+    definition: FixtureDefinition;
+    group: string;
 }

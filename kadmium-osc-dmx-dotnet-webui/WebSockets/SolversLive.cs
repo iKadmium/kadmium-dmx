@@ -15,9 +15,12 @@ namespace kadmium_osc_dmx_dotnet_webui.WebSockets
         public SolversLiveSocketHandler()
         {
             Sending = false;
-            foreach (Universe universe in MasterController.Instance.Venue?.Universes.Values)
+            if (MasterController.Instance.Venue != null)
             {
-                universe.Updated += Universe_Updated;
+                foreach (Universe universe in MasterController.Instance.Venue?.Universes.Values)
+                {
+                    universe.Updated += Universe_Updated;
+                }
             }
         }
 

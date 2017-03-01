@@ -1,7 +1,7 @@
 import { Component, ViewChild } from '@angular/core';
 
 import { PreviewService } from "../preview-2d/preview.service"
-import { SACNTransmitterService } from "./sacn-transmitter.service";
+import { SACNTransmitterService, UniverseUpdateData } from "./sacn-transmitter.service";
 import { MessageBarComponent } from "../status/message-bar/message-bar.component";
 import { VenueService } from "../venues/venue.service";
 import { Universe } from "../venues/venue";
@@ -11,7 +11,7 @@ import { MessageBarService } from "../status/message-bar/message-bar.service";
 @Component({
     selector: 'sacn-transmitter-live',
     template: require('./sacn-transmitter-live.component.html'),
-    providers: [PreviewService, SACNTransmitterService, VenueService]
+    providers: [SACNTransmitterService, VenueService]
 })
 export class SACNTransmitterLiveComponent
 {
@@ -20,7 +20,7 @@ export class SACNTransmitterLiveComponent
     activeUniverse: DMXUniverse;
     universes: DMXUniverse[];
 
-    constructor(previewService: PreviewService, venueService: VenueService, private sacnTransmitterService: SACNTransmitterService,
+    constructor(venueService: VenueService, private sacnTransmitterService: SACNTransmitterService,
         private messageBarService: MessageBarService, title: Title)
     {
         title.setTitle("sACN Transmitter Live");
@@ -34,28 +34,30 @@ export class SACNTransmitterLiveComponent
             {
                 for (let universe of venue.universes)
                 {
-                    this.universes.push(new DMXUniverse(universe));
+                    this.universes[universe.universeID] = new DMXUniverse(universe);
                 }
                 if (this.universes.length > 0)
                 {
-                    this.activeUniverse = this.universes[0];
+                    this.activeUniverse = this.universes[Object.keys(this.universes)[0]];
                 }
 
-                previewService.subscribe(data => 
-                {
-                    if (this.activeUniverse != null && this.activeUniverse != undefined)
-                    {
-                        for (let channel of this.activeUniverse.channels)
-                        {
-                            if (channel.value != data.values[channel.address])
-                            {
-                                channel.value = data.values[channel.address];
-                            }
-                        }
-                    }
-                });
+                sacnTransmitterService.subscribe(this);
             })
             .catch(error => this.messageBarService.add("Error", error));
+    }
+
+    private updateUniverse(data: UniverseUpdateData): void
+    {
+        if (this.activeUniverse != null && this.activeUniverse != undefined)
+        {
+            for (let channel of this.activeUniverse.channels)
+            {
+                if (channel.value != data.values[channel.address])
+                {
+                    channel.value = data.values[channel.address];
+                }
+            }
+        }
     }
 
     private async updateValue(channel: DMXChannel, value: number): Promise<void>

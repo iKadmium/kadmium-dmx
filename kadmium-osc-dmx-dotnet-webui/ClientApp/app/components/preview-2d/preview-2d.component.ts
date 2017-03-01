@@ -1,9 +1,9 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 
 import { MessageBarComponent } from "../status/message-bar/message-bar.component";
 
 import { Group } from "../groups/group";
-import { PreviewUniverseData, PreviewFixtureData, UniverseUpdateData } from "./preview";
+import { PreviewUniverse } from "./preview";
 import { DMXChannel } from "../fixture-definitions/fixture-definition";
 import { Universe } from "../venues/venue";
 
@@ -14,45 +14,52 @@ import { Preview2DFixtureComponent } from "./preview-2d-fixture.component";
 import { DMXPreviewChannel } from "./DMXPreviewChannel";
 import { Title } from "@angular/platform-browser";
 import { MessageBarService } from "../status/message-bar/message-bar.service";
+import { SACNTransmitterService, UniverseUpdateData } from "../sacn-transmitter-live/sacn-transmitter.service";
+import { DMXPreviewFixture } from "./DMXPreviewFixture";
 
 @Component({
     selector: 'preview-2d',
     template: require('./preview-2d.component.html'),
-    providers: [PreviewService]
+    providers: [PreviewService, SACNTransmitterService]
 })
-export class Preview2DComponent
+export class Preview2DComponent implements OnInit
 {
     groups: string[];
-    universes: Map<string, PreviewUniverseData>;
-    universeData: number[];
-    activeUniverse: PreviewUniverseData;
+    universes: PreviewUniverse[];
+    activeUniverse: PreviewUniverse;
 
-    constructor(previewService: PreviewService, private messageBarService: MessageBarService, title: Title)
+    constructor(private previewService: PreviewService, private sacnTransmitterService: SACNTransmitterService, private messageBarService: MessageBarService, title: Title)
     {
         title.setTitle("2D Preview");
-        previewService
+    }
+
+    ngOnInit(): void
+    {
+        this.previewService
             .get()
             .then(value => 
             {
                 this.groups = value.groups;
-                this.universes = new Map<string, PreviewUniverseData>();
-                for (let universe of value.universes)
+                this.universes = [];
+                for (let universeData of value.universes)
                 {
-                    this.universes.set(universe.name, universe);
-                    this.universeData = [];
+                    let universe = PreviewUniverse.load(universeData);
+                    this.universes[universeData.universeID] = universe;
                     for (let fixture of universe.fixtures)
                     {
                         fixture.definition.channels = this.sortChannels(fixture.definition.channels);
                     }
                 }
-                this.activeUniverse = this.universes.get(this.universes.keys().next().value);
+                this.activeUniverse = this.universes[Object.keys(this.universes)[0]];
 
-                previewService.subscribe(data =>
-                {
-                    this.universeData = data.values;
-                });
+                this.sacnTransmitterService.subscribe(this);
             })
             .catch(reason => this.messageBarService.add("Error", reason));
+    }
+
+    updateUniverse(data: UniverseUpdateData): void
+    {
+        this.universes[data.universeID].values = data.values;
     }
 
     sortChannels(channels: DMXChannel[]): DMXChannel[]
@@ -71,7 +78,7 @@ export class Preview2DComponent
             });
     }
 
-    getFixtures(universe: PreviewUniverseData, group: string): PreviewFixtureData[]
+    getFixtures(universe: PreviewUniverse, group: string): DMXPreviewFixture[]
     {
         return universe.fixtures.filter(x => x.group == group);
     }

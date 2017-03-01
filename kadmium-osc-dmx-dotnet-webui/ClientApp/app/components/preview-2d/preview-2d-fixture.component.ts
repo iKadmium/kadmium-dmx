@@ -1,9 +1,9 @@
 import { Component, Input, ViewChild, ElementRef, AfterContentInit, OnChanges, SimpleChanges } from '@angular/core';
 
-import { PreviewFixtureData } from "./preview";
 import { DMXPreviewFixture } from "./DMXPreviewFixture";
 import { DMXChannel } from "../fixture-definitions/fixture-definition";
 import { DMXPreviewChannel } from "./DMXPreviewChannel";
+import { PreviewFixtureData } from "./preview.service";
 
 @Component({
     selector: 'preview-2d-fixture',

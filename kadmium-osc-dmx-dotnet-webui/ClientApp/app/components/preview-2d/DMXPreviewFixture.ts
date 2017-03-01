@@ -1,15 +1,17 @@
 import { DMXPreviewChannel } from "./DMXPreviewChannel";
-import { PreviewFixtureData } from "./preview";
 
 import { Color, RGB } from "./Color";
 import { DMXColorWheel } from "./DMXColorWheel";
+import { PreviewFixtureData } from "./preview.service";
+import { FixtureDefinition } from "../fixture-definitions/fixture-definition";
 
-export class DMXPreviewFixture
+export class DMXPreviewFixture implements PreviewFixtureData
 {
+    definition: FixtureDefinition;
+    group: string;
+
     address: number;
     expanded: boolean;
-    manufacturer: string;
-    model: string;
 
     channels: DMXPreviewChannel[];
     channelNameMap: Map<string, DMXPreviewChannel>;
@@ -19,12 +21,12 @@ export class DMXPreviewFixture
 
     constructor(data: PreviewFixtureData)
     {
-        this.manufacturer = data.definition.manufacturer;
-        this.model = data.definition.name;
-        this.address = data.channel;
+        this.group = data.group;
+        this.address = data.address;
         this.expanded = false;
         this.channelNameMap = new Map<string, DMXPreviewChannel>();
         this.channelNumberMap = new Map<number, DMXPreviewChannel[]>();
+        this.definition = data.definition;
         this.channels = [];
 
         for (let channel of data.definition.channels)
@@ -36,12 +38,12 @@ export class DMXPreviewFixture
             if (array == null)
             {
                 array = [];
-                this.channelNumberMap.set(dmxChannel.dmx + data.channel - 2, array);
+                this.channelNumberMap.set(dmxChannel.dmx + data.address - 2, array);
             }
             array.push(dmxChannel);
         }
 
-        if(data.definition.colorWheel != null)
+        if (data.definition.colorWheel != null)
         {
             this.colorWheel = new DMXColorWheel(data.definition.colorWheel, this.channelNameMap.get("ColorWheel"));
         }
@@ -91,11 +93,11 @@ export class DMXPreviewFixture
         }
         else
         {
-            if(this.isRGB)
+            if (this.isRGB)
             {
                 return `rgb(${this.red * 255}, ${this.green * 255}, ${this.blue * 255}`;
             }
-            else if(this.isColorWheel)
+            else if (this.isColorWheel)
             {
                 let color = this.colorWheel.fillStyle;
                 let master = this.optionalGetValue("Master", 1);

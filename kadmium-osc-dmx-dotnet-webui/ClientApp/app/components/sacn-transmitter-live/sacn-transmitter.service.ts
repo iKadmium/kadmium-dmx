@@ -3,14 +3,18 @@ import { Headers, Http } from '@angular/http';
 import 'rxjs/add/operator/toPromise';
 
 import { URLs } from "../../shared/url";
+import { RPCSocket } from "../../shared/rpc";
 
 @Injectable()
 export class SACNTransmitterService
 {
     private url = URLs.getAPIUrl("SACNTransmitter");
+    private socketUrl = URLs.getSocketURL("SACN");
+    private rpc: RPCSocket;
 
     constructor(private http: Http)
     {
+        this.rpc = new RPCSocket(this.socketUrl);
     }
 
 
@@ -34,4 +38,15 @@ export class SACNTransmitterService
             .toPromise()
             .then(response => { });
     }
+
+    public subscribe(thisRef: Object): void
+    {
+        this.rpc.subscribe(thisRef);
+    }
+}
+
+export interface UniverseUpdateData
+{
+    universeID: number,
+    values: number[]
 }
