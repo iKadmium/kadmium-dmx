@@ -4,29 +4,26 @@ import 'rxjs/add/operator/toPromise';
 
 import { URLs } from "../../shared/url";
 import { StatusCode } from "../status/status";
+import { RPCSocket } from "../../shared/rpc";
 
 @Injectable()
 export class DashboardService
 {
     private socketUrl = URLs.getSocketURL("Dashboard");
-    private socket: WebSocket;
+    private rpc: RPCSocket;
 
     constructor(private http: Http)
     {
-        this.socket = new WebSocket(this.socketUrl);
+        this.rpc = new RPCSocket(this.socketUrl);
     }
 
-    public subscribe(listener: (data: StatusData) => void): void
+    public subscribe(listener: Object): void
     {
-        this.socket.addEventListener("message", (ev: MessageEvent) =>
-        {
-            let data = JSON.parse(ev.data) as StatusData;
-            listener(data);
-        });
+        this.rpc.subscribe(listener);
     }
 }
 
-interface StatusData
+export interface StatusData
 {
     code: StatusCode;
     message: string;

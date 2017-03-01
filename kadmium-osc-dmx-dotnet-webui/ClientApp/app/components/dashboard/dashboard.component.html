@@ -1,6 +1,6 @@
 <div class="row">
     <div class="col-md-3">
-        <status-panel #venue name="Venue">
+        <status-panel #venuePanel name="Venue">
             <div class="dropdown" *ngIf="venueNames">
                 <button class="btn btn-primary dropdown-toggle" type="button" data-toggle="dropdown">Load Venue
                 <span class="caret"></span></button>
@@ -13,34 +13,31 @@
         </status-panel>
     </div>
     <div class="col-md-3">
-        <status-panel #sacnTransmitter name="sACN Transmitter">
+        <status-panel #sacnTransmitterPanel name="sACN Transmitter">
             <div class="btn-group">
-                <button class="btn" [ngClass]="{'btn-success': sacnEnabled, 'btn-danger': sacnEnabled == false, 'btn-warning': sacnEnabled == null}"
-                    (click)="toggleSACN()" [disabled]="sacnEnabled == null">{{getStatusText(sacnEnabled)}}</button>
-                    <button class="btn btn-primary" [disabled]="!sacnEnabled || fixtures.status.code != 'Success'" routerLink="/sacnTransmitterLive">Debug</button>
+                <button class="btn" [ngClass]="sacn.buttonClass" (click)="toggle(sacn)" [disabled]="sacn.enabled == null">{{sacn.statusText}}</button>
+                <button class="btn btn-primary" [disabled]="!sacn.enabled || fixturesPanel.status.code != 'Success'" routerLink="/sacnTransmitterLive">Debug</button>
             </div>
         </status-panel>
     </div>
     <div class="col-md-3">
-        <status-panel #oscListener name="OSC Listener">
+        <status-panel #oscListenerPanel name="OSC Listener">
             <div class="btn-group">
-                <button class="btn" [ngClass]="{'btn-success': oscEnabled, 'btn-danger': oscEnabled == false, 'btn-warning': oscEnabled == null}"
-                    (click)="toggleOSC()" [disabled]="oscEnabled == null">{{getStatusText(oscEnabled)}}</button>
-                    <a class="btn btn-primary" routerLink="/oscListenerLive">Debug</a>
+                <button class="btn" [ngClass]="osc.buttonClass" (click)="toggle(osc)" [disabled]="osc.enabled == null">{{osc.statusText}}</button>
+                <a class="btn btn-primary" routerLink="/oscListenerLive">Debug</a>
             </div>
         </status-panel>
     </div>
     <div class="col-md-3">
-        <status-panel #solvers name="Solvers">
+        <status-panel #solversPanel name="Solvers">
             <div class="btn-group">
-                <button class="btn" [ngClass]="{'btn-success': solversEnabled, 'btn-danger': solversEnabled == false, 'btn-warning': solversEnabled == null}"
-                    (click)="toggleSolvers()" [disabled]="solversEnabled == null || fixtures.status.code != 'Success'">{{getStatusText(solversEnabled)}}</button>
-                    <a class="btn btn-primary" routerLink="/solversLive">Debug</a>
+                <button class="btn" [ngClass]="solvers.buttonClass" (click)="toggle(solvers)" [disabled]="solvers.enabled == null || fixturesPanel.status.code != 'Success'">{{solvers.statusText}}</button>
+                <a class="btn btn-primary" routerLink="/solversLive">Debug</a>
             </div>
         </status-panel>
     </div>
     <div class="col-md-3">
-        <status-panel #fixtures name="Fixtures">
+        <status-panel #fixturesPanel name="Fixtures">
             <a routerLink="/fixturesLive" class="btn btn-primary">Debug</a>
         </status-panel>
     </div>

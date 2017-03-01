@@ -25,6 +25,10 @@ namespace kadmium_osc_dmx_dotnet_core.Transmitters
                 {
                     Status.Update(StatusCode.Error, "Transmission is disabled", this);
                 }
+                else
+                {
+                    Status.Update(StatusCode.Warning, "Ready to transmit", this);
+                }
             }
         }
         public int Delay { get; set; }
@@ -48,7 +52,7 @@ namespace kadmium_osc_dmx_dotnet_core.Transmitters
             if (Enabled)
             {
                 TransmitInternal(dmx, universeID);
-                if(Status.StatusCode != StatusCode.Success)
+                if (Status.StatusCode != StatusCode.Success)
                 {
                     Status.Update(StatusCode.Success, "Transmitting", this);
                 }

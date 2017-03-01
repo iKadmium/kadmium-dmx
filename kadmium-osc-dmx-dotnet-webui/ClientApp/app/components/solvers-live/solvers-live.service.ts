@@ -1,17 +1,18 @@
 import { Injectable } from '@angular/core';
 import { Http } from "@angular/http";
 import { URLs } from "../../shared/url";
+import { RPCSocket, RPCData } from "../../shared/rpc";
 
 @Injectable()
 export class SolversLiveService
 {
     private solversLiveURL = URLs.getAPIUrl("SolversLive");
-    private socketUrl = URLs.getSocketURL("Fixtures");
-    private socket: WebSocket;
+    private socketUrl = URLs.getSocketURL("Solvers");
+    private socket: RPCSocket;
 
     constructor(private http: Http)
     {
-        this.socket = new WebSocket(this.socketUrl);
+        this.socket = new RPCSocket(this.socketUrl);
     }
 
     public get(): Promise<UniverseData[]>
@@ -25,25 +26,23 @@ export class SolversLiveService
             });
     }
 
-    public subscribe(listener: (data: UniverseUpdateMessage) => void): void
+    public subscribe(listener: Object): void
     {
-        this.socket.addEventListener("message", (ev: MessageEvent) =>
-        {
-            let data = JSON.parse(ev.data) as UniverseUpdateMessage;
-            listener(data);
-        });
+        this.socket.subscribe(listener);
     }
 
     public set(universeID: number, fixtureChannel: number, attributeName: string, attributeValue: number): void
     {
-        let message: AttributeUpdateMessage = {
-            messageType: "attributeUpdate",
-            universeID: universeID,
-            fixtureChannel: fixtureChannel,
-            attributeName: attributeName,
-            attributeValue: attributeValue
+        let message: RPCData = {
+            method: "UpdateAttribute",
+            args: {
+                universeID: universeID,
+                fixtureChannel: fixtureChannel,
+                attributeName: attributeName,
+                attributeValue: attributeValue
+            }
         };
-        this.socket.send(JSON.stringify(message));
+        this.socket.send(message);
     }
 
     public getEnabled(): Promise<boolean>
@@ -62,14 +61,8 @@ export class SolversLiveService
 
 }
 
-interface WebSocketMessage
+export interface AttributeUpdateMessage
 {
-    messageType: string;
-}
-
-interface AttributeUpdateMessage extends WebSocketMessage
-{
-    messageType: "attributeUpdate";
     universeID: number;
     fixtureChannel: number;
     attributeName: string;
@@ -86,13 +79,6 @@ export interface FixtureUpdateData
 {
     channel: number;
     attributes: AttributeUpdateData[];
-}
-
-interface UniverseUpdateMessage extends WebSocketMessage
-{
-    messageType: "universeUpdate";
-    universeID: number;
-    fixtures: FixtureUpdateData[];
 }
 
 export interface AttributeData
@@ -115,7 +101,6 @@ export interface FixtureData
 export interface UniverseData
 {
     universeID: number;
-    name: string;
     fixtures: FixtureData[];
 }
 

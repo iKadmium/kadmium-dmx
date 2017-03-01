@@ -83,7 +83,9 @@ namespace kadmium_osc_dmx_dotnet_webui.WebSockets
                                     await Socket.SendAsync(sendSegment, WebSocketMessageType.Text, true, CancellationToken.None);
                                 }
                                 catch (ObjectDisposedException)
-                                { }
+                                {
+                                    Socket.Abort();
+                                }
                                 break;
                         }
                         break;

@@ -34,22 +34,25 @@ export class SolversLiveComponent
                     this.activeFixture = this.activeUniverse.fixtures[0];
                 }
 
-                solversLiveService.subscribe(data => 
-                {
-                    for (let fixtureIndex in data.fixtures)
-                    {
-                        let remoteFixture = data.fixtures[fixtureIndex];
-                        let localFixture = this.activeUniverse.fixtures[fixtureIndex];
-                        for (let attributeIndex in remoteFixture.attributes)
-                        {
-                            let remoteAttribute = remoteFixture.attributes[attributeIndex];
-                            let localAttribute = localFixture.attributes[attributeIndex];
-                            localAttribute.value = remoteAttribute.value;
-                        }
-                    }
-                });
+                solversLiveService.subscribe(this);
             })
             .catch(reason => this.messageBarService.add("Error", reason));
+    }
+
+    updateUniverse(data: UniverseData): void
+    {
+        let universe = this.universes.find(x => x.universeID == data.universeID);
+        for (let fixtureIndex in data.fixtures)
+        {
+            let remoteFixture = data.fixtures[fixtureIndex];
+            let localFixture = universe.fixtures[fixtureIndex];
+            for (let attributeIndex in remoteFixture.attributes)
+            {
+                let remoteAttribute = remoteFixture.attributes[attributeIndex];
+                let localAttribute = localFixture.attributes[attributeIndex];
+                localAttribute.value = remoteAttribute.value;
+            }
+        }
     }
 
     updateValue(universe: UniverseData, fixture: FixtureData, attribute: AttributeData, value: number): void

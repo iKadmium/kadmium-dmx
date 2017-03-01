@@ -1,4 +1,4 @@
-import { Component, ViewChild } from '@angular/core';
+import { Component, ViewChild, OnInit } from '@angular/core';
 import { Title } from "@angular/platform-browser";
 
 import { SolversLiveService } from "../solvers-live/solvers-live.service";
@@ -6,30 +6,31 @@ import { OSCListenerService } from "../osc-listener-live/osc-listener.service";
 import { SACNTransmitterService } from "../sacn-transmitter-live/sacn-transmitter.service";
 import { MessageBarService } from "../status/message-bar/message-bar.service";
 import { VenueService } from "../venues/venue.service";
-import { DashboardService } from "./dashboard.service";
+import { DashboardService, StatusData } from "./dashboard.service";
 
 import { StatusPanelComponent } from "../status/status-panel/status-panel.component";
 import { MessageBarComponent } from "../status/message-bar/message-bar.component";
 
 import { StatusCode } from "../status/status";
 import { URLs } from "../../shared/url";
+import { TogglableService, Togglable } from "./togglable-service";
 
 @Component({
     selector: 'dashboard',
     template: require('./dashboard.component.html'),
     providers: [VenueService, DashboardService, SolversLiveService, OSCListenerService, SACNTransmitterService]
 })
-export class DashboardComponent
+export class DashboardComponent implements OnInit
 {
-    @ViewChild("venue") venue: StatusPanelComponent;
-    @ViewChild("sacnTransmitter") sacnTransmitter: StatusPanelComponent;
-    @ViewChild("oscListener") oscListener: StatusPanelComponent;
-    @ViewChild("fixtures") fixtures: StatusPanelComponent;
-    @ViewChild("solvers") solvers: StatusPanelComponent;
+    @ViewChild("venuePanel") venuePanel: StatusPanelComponent;
+    @ViewChild("sacnTransmitterPanel") sacnTransmitterPanel: StatusPanelComponent;
+    @ViewChild("oscListenerPanel") oscListenerPanel: StatusPanelComponent;
+    @ViewChild("fixturesPanel") fixturesPanel: StatusPanelComponent;
+    @ViewChild("solversPanel") solversPanel: StatusPanelComponent;
 
-    sacnEnabled: boolean;
-    oscEnabled: boolean;
-    solversEnabled: boolean;
+    sacn: TogglableService<SACNTransmitterService>;
+    osc: TogglableService<OSCListenerService>;
+    solvers: TogglableService<SolversLiveService>;
 
     private venueNames: string[];
 
@@ -39,52 +40,52 @@ export class DashboardComponent
         titleService: Title)
     {
         titleService.setTitle("Dashboard");
-        this.sacnService
-            .getEnabled()
-            .then(value => this.sacnEnabled = value)
-            .catch(error => this.messageBarService.add("Error", error));
-        this.oscService
-            .getEnabled()
-            .then(value => this.oscEnabled = value)
-            .catch(error => this.messageBarService.add("Error", error));
-        this.solversService
-            .getEnabled()
-            .then(value => this.solversEnabled = value)
-            .catch(reason => this.messageBarService.add("Error", reason));
 
-        venueService.getNames()
-            .then(names => this.venueNames = names)
-            .catch((reason: any) => this.messageBarService.add("Error", reason));
-        dashboardService.subscribe(status => 
+        this.sacn = new TogglableService(sacnService, messageBarService);
+        this.osc = new TogglableService(oscService, messageBarService);
+        this.solvers = new TogglableService(solversService, messageBarService);
+        this.venueNames = [];
+    }
+
+    ngOnInit(): void
+    {
+        this.dashboardService.subscribe(this);
+        this.venueService.getNames().then(names => this.venueNames = names).catch(reason => this.messageBarService.add("Error", reason));
+        this.sacn.init();
+        this.osc.init();
+        this.solvers.init();
+    }
+
+    updateStatus(status: StatusData): void
+    {
+        let statusPanel: StatusPanelComponent;
+        let fred = status;
+        switch (status.controller)
         {
-            let statusPanel: StatusPanelComponent;
-            switch (status.controller)
-            {
-                case "Venues":
-                    statusPanel = this.venue;
-                    break;
-                case "SACNTransmitters":
-                    statusPanel = this.sacnTransmitter;
-                    break;
-                case "OSCListeners":
-                    statusPanel = this.oscListener;
-                    break;
-                case "Fixtures":
-                    statusPanel = this.fixtures;
-                    break;
-                case "Solvers":
-                    statusPanel = this.solvers;
-                    if (status.code == "Success")
-                    {
-                        this.solversEnabled = true;
-                    }
-                    break;
-                default:
-                    return;
-            }
+            case "Venues":
+                statusPanel = this.venuePanel;
+                break;
+            case "SACNTransmitters":
+                statusPanel = this.sacnTransmitterPanel;
+                break;
+            case "OSCListeners":
+                statusPanel = this.oscListenerPanel;
+                break;
+            case "Fixtures":
+                statusPanel = this.fixturesPanel;
+                break;
+            case "Solvers":
+                statusPanel = this.solversPanel;
+                if (status.code == "Success")
+                {
+                    this.solvers.enabled = true;
+                }
+                break;
+            default:
+                return;
+        }
 
-            statusPanel.status.update(status.code, status.message);
-        });
+        statusPanel.status.update(status.code, status.message);
     }
 
     activateVenue(venueName: string): void
@@ -95,70 +96,8 @@ export class DashboardComponent
             .catch((reason) => this.messageBarService.add("Error", reason));
     }
 
-    private getStatusText(value: boolean | null): string
+    private async toggle<T extends Togglable>(service: TogglableService<T>): Promise<void>
     {
-        if (value == true)
-        {
-            return "Enabled";
-        }
-        else if (value == false)
-        {
-            return "Disabled";
-        }
-        else
-        {
-            return "Unknown";
-        }
-    }
-
-    private async toggleSACN(): Promise<void>
-    {
-        let targetValue = !this.sacnEnabled;
-        this.sacnEnabled = null;
-        try
-        {
-            await this.sacnService.setEnabled(targetValue);
-            this.sacnEnabled = targetValue;
-        }
-        catch (error)
-        {
-            this.messageBarService.add("Error", error);
-            this.sacnEnabled = !targetValue;
-        }
-        this.sacnEnabled = targetValue;
-    }
-
-    private async toggleOSC(): Promise<void>
-    {
-        let targetValue = !this.oscEnabled;
-        this.oscEnabled = null;
-        try
-        {
-            await this.oscService.setEnabled(targetValue);
-            this.oscEnabled = targetValue;
-        }
-        catch (error)
-        {
-            this.messageBarService.add("Error", error);
-            this.oscEnabled = !targetValue;
-        }
-        this.oscEnabled = targetValue;
-    }
-
-    private async toggleSolvers(): Promise<void>
-    {
-        let targetValue = !this.solversEnabled;
-        this.solversEnabled = null;
-        try
-        {
-            await this.solversService.setEnabled(targetValue);
-            this.solversEnabled = targetValue;
-        }
-        catch (error)
-        {
-            this.messageBarService.add("Error", error);
-            this.solversEnabled = !targetValue;
-        }
-
+        return service.toggle();
     }
 }
