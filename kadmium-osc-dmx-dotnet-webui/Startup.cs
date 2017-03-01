@@ -69,11 +69,6 @@ namespace kadmium_osc_dmx_dotnet_webui
             app.UseMvc(routes =>
             {
                 routes.MapRoute(
-                    name: "Fixture definitions",
-                    template: "FixtureDefinitions/{action}/{manufacturer}/{model}",
-                    defaults: new { controller = "FixtureDefinitions" }
-                );
-                routes.MapRoute(
                     name: "default",
                     template: "{controller=Home}/{action=Index}/{id?}");
                 routes.MapSpaFallbackRoute(
