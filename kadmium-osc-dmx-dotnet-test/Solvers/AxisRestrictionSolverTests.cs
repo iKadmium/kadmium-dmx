@@ -1,11 +1,7 @@
-﻿using kadmium_osc_dmx_dotnet_core;
-using kadmium_osc_dmx_dotnet_core.Fixtures;
+﻿using kadmium_osc_dmx_dotnet_core.Fixtures;
 using kadmium_osc_dmx_dotnet_core.Solvers;
 using Newtonsoft.Json.Linq;
-using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Threading.Tasks;
 using Xunit;
 
 namespace kadmium_osc_dmx_dotnet_test.Solvers
@@ -25,7 +21,7 @@ namespace kadmium_osc_dmx_dotnet_test.Solvers
         public void TestAxisRestriction(int originalMin, int originalMax, int restrictedMin, int restrictedMax, float axisValue, float expected)
         {
             string axisName = "Pan";
-            
+
             var fixture = GetRestrictedFixture(axisName, originalMin, originalMax, restrictedMin, restrictedMax);
 
             var channel = fixture.Settables[axisName] as DMXChannel;
@@ -41,7 +37,7 @@ namespace kadmium_osc_dmx_dotnet_test.Solvers
         [InlineData("Pan", -270, 270, -19, 37)]
         [InlineData("Flarb", 0, 10, -5, 4000)]
         public void TestDefaultSolverAddition(string axisName, int originalMin, int originalMax, int restrictedMin, int restrictedMax)
-        {   
+        {
             var fixture = GetRestrictedFixture(axisName, originalMin, originalMax, restrictedMin, restrictedMax);
             Assert.Contains<Solver>(fixture.Solvers, (x => x is MovementRestrictionSolver));
             var solver = fixture.Solvers.Single(x => x is MovementRestrictionSolver) as MovementRestrictionSolver;

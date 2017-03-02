@@ -1,3 +1,7 @@
 {
-  "projects": [ "../../GitHubVisualStudio" ]
+  "projects": [
+    "kadmium-osc-dmx-dotnet-core",
+    "kadmium-osc-dmx-dotnet-test",
+    "kadmium-osc-dmx-dotnet-webui"
+  ]
 }

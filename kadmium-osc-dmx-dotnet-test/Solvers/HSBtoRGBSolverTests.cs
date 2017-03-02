@@ -1,10 +1,6 @@
 ﻿using kadmium_osc_dmx_dotnet_core.Fixtures;
 using kadmium_osc_dmx_dotnet_core.Solvers;
 using Newtonsoft.Json.Linq;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 using Xunit;
 
 namespace kadmium_osc_dmx_dotnet_test.Solvers
@@ -12,7 +8,7 @@ namespace kadmium_osc_dmx_dotnet_test.Solvers
     public class HSBtoRGBSolverTests
     {
         [Theory]
-        [InlineData((0f/360f), 1f, 1f, 255, 0, 0)] //red
+        [InlineData((0f / 360f), 1f, 1f, 255, 0, 0)] //red
         [InlineData((120f / 360f), 1f, 1f, 0, 255, 0)] //green
         [InlineData((240f / 360f), 1f, 1f, 0, 0, 255)] //blue
         [InlineData((0f / 360f), 1f, 0f, 0, 0, 0)] //black

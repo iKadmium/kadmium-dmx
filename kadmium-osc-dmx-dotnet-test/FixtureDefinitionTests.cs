@@ -1,6 +1,5 @@
 ﻿using kadmium_osc_dmx_dotnet_core;
 using kadmium_osc_dmx_dotnet_core.Fixtures;
-using Newtonsoft.Json.Linq;
 using Xunit;
 
 namespace kadmium_osc_dmx_dotnet_test
@@ -10,7 +9,7 @@ namespace kadmium_osc_dmx_dotnet_test
         [Fact]
         public static async void TestSerialization()
         {
-            foreach(var fixtureDefinitionPair in FileAccess.GetAllFixtures())
+            foreach (var fixtureDefinitionPair in FileAccess.GetAllFixtures())
             {
                 var sourceDefinitionJson = await FileAccess.LoadFixtureDefinition(fixtureDefinitionPair.Item1, fixtureDefinitionPair.Item2);
                 var definition = Definition.Load(sourceDefinitionJson);
