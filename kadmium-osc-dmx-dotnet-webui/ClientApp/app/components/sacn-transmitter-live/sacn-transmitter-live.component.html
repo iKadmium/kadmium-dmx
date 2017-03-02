@@ -7,9 +7,7 @@
     </ul>
 </div>
 
-
 <div class="tab-content" *ngIf="activeUniverse">
-
     <ul class="nav nav-tabs" *ngIf="activeUniverse">
         <li [ngClass]="{'active': !editMode}"><a (click)="editMode = false">View Mode</a></li>
         <li [ngClass]="{'active': editMode}"><a (click)="editMode = true">Edit Mode</a></li>

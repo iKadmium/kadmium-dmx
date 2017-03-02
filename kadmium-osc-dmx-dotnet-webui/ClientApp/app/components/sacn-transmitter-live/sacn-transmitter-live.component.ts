@@ -1,4 +1,4 @@
-import { Component, ViewChild } from '@angular/core';
+import { Component, ViewChild, OnInit } from '@angular/core';
 
 import { PreviewService } from "../preview-2d/preview.service"
 import { SACNTransmitterService, UniverseUpdateData } from "./sacn-transmitter.service";
@@ -13,35 +13,37 @@ import { MessageBarService } from "../status/message-bar/message-bar.service";
     template: require('./sacn-transmitter-live.component.html'),
     providers: [SACNTransmitterService, VenueService]
 })
-export class SACNTransmitterLiveComponent
+export class SACNTransmitterLiveComponent implements OnInit
 {
     editMode: boolean;
 
     activeUniverse: DMXUniverse;
     universes: DMXUniverse[];
 
-    constructor(venueService: VenueService, private sacnTransmitterService: SACNTransmitterService,
+    constructor(private venueService: VenueService, private sacnTransmitterService: SACNTransmitterService,
         private messageBarService: MessageBarService, title: Title)
     {
         title.setTitle("sACN Transmitter Live");
         this.universes = [];
         this.activeUniverse = null;
-
         this.editMode = false;
+    }
 
-        venueService.getActive()
+    ngOnInit(): void
+    {
+        this.venueService.getActive()
             .then(venue => 
             {
                 for (let universe of venue.universes)
                 {
-                    this.universes[universe.universeID] = new DMXUniverse(universe);
+                    this.universes.push(new DMXUniverse(universe));
                 }
                 if (this.universes.length > 0)
                 {
-                    this.activeUniverse = this.universes[Object.keys(this.universes)[0]];
+                    this.activeUniverse = this.universes[0];
                 }
 
-                sacnTransmitterService.subscribe(this);
+                this.sacnTransmitterService.subscribe(this);
             })
             .catch(error => this.messageBarService.add("Error", error));
     }

@@ -59,10 +59,13 @@ export class FixtureDefinitionsComponent
 
     private async deleteConfirm(fixture: FixtureDefinitionSkeleton): Promise<void>
     {
-        let promise = await this.modal.confirm()
+        let promise = await this.modal
+            .confirm()
             .title("Are you sure?")
             .body("Are you sure you want to delete the definition for " + fixture.manufacturer + " " + fixture.model + "?")
             .isBlocking(true)
+            .okBtnClass("btn btn-danger")
+            .okBtn("Delete")
             .open();
 
         try

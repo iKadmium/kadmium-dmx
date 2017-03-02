@@ -7,6 +7,7 @@ import { Modal } from "angular2-modal/plugins/bootstrap";
 
 import { VenueService } from "./venue.service";
 import { MessageBarService } from "../status/message-bar/message-bar.service";
+import { Title } from "@angular/platform-browser";
 
 @Component({
     selector: 'venues',
@@ -17,8 +18,9 @@ export class VenuesComponent
 {
     venues: VenueSkeleton[];
 
-    constructor(private venueService: VenueService, private messageBarService: MessageBarService, overlay: Overlay, vcRef: ViewContainerRef, private modal: Modal)
+    constructor(private venueService: VenueService, private messageBarService: MessageBarService, overlay: Overlay, vcRef: ViewContainerRef, private modal: Modal, title: Title)
     {
+        title.setTitle("Venues");
         overlay.defaultViewContainer = vcRef;
         this.venueService
             .getNames()
@@ -44,6 +46,8 @@ export class VenuesComponent
             .title("Are you sure?")
             .body("Are you sure you want to delete " + venue.name + "?")
             .isBlocking(true)
+            .okBtnClass("btn btn-danger")
+            .okBtn("Delete")
             .open();
 
         try

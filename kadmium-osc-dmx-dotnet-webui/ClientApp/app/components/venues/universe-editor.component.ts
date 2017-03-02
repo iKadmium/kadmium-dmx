@@ -56,10 +56,13 @@ export class UniverseEditorComponent
     private async removeFixture(index: number): Promise<void>
     {
         let fixture = this.universe.fixtures[index];
-        let promise = await this.modal.confirm()
+        let promise = await this.modal
+            .confirm()
             .title("Are you sure?")
             .body("Are you sure you want to delete " + fixture.type.manufacturer + " " + fixture.type.model + "?")
             .isBlocking(true)
+            .okBtnClass("btn btn-danger")
+            .okBtn("Delete")
             .open();
 
         try
@@ -68,6 +71,11 @@ export class UniverseEditorComponent
             if (result)
             {
                 this.universe.fixtures.splice(index, 1);
+                if (this.selectedFixture == fixture)
+                {
+                    let newIndex = (index == this.universe.fixtures.length) ? this.universe.fixtures.length - 1 : index;
+                    this.selectedFixture = this.universe.fixtures[newIndex];
+                }
             }
         }
         catch (error)
@@ -140,10 +148,13 @@ export class UniverseEditorComponent
 
     private async removePreset(name: string): Promise<void>
     {
-        let promise = await this.modal.confirm()
+        let promise = await this.modal
+            .confirm()
             .title("Are you sure?")
             .body("Are you sure you want to delete " + name + "?")
             .isBlocking(true)
+            .okBtnClass("btn btn-danger")
+            .okBtn("Delete")
             .open();
 
         try
