@@ -6,9 +6,9 @@
             "type": "coreclr",
             "request": "launch",
             "preLaunchTask": "build",
-            "program": "${workspaceRoot}\\kadmium-osc-dmx-dotnet-webui\\bin\\Debug\\netcoreapp1.1\\kadmium-osc-dmx-dotnet-webui.dll",
+            "program": "${workspaceRoot}\\kadmium-osc-dmx-dotnet-webui\\bin\\Debug\\netcoreapp1.1\\win10-x64\\kadmium-osc-dmx-dotnet-webui.exe",
             "args": [],
-            "cwd": "${workspaceRoot}",
+            "cwd": "${workspaceRoot}\\kadmium-osc-dmx-dotnet-webui",
             "stopAtEntry": false,
             "internalConsoleOptions": "openOnSessionStart",
             "launchBrowser": {
@@ -36,7 +36,7 @@
             "name": ".NET Core Attach",
             "type": "coreclr",
             "request": "attach",
-            "processId": "${command.pickProcess}"
+            "processId": "${command:pickProcess}"
         }
     ]
 }

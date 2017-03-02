@@ -68,7 +68,8 @@
     "prepublish": [
       "npm install",
       "node node_modules/webpack/bin/webpack.js --config webpack.config.vendor.js --env.prod",
-      "node node_modules/webpack/bin/webpack.js --env.prod"
+      "node node_modules/webpack/bin/webpack.js --env.prod",
+      "dotnet test ../kadmium-osc-dmx-dotnet-test/project.json"
     ],
     "postpublish": [
       "dotnet razor-precompile --configuration %publish:Configuration% --framework %publish:TargetFramework% --output-path %publish:OutputPath% %publish:ProjectPath%",

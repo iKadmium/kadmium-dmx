@@ -30,13 +30,21 @@ namespace kadmium_osc_dmx_dotnet_webui.WebSockets
                 try
                 {
                     WebSocketReceiveResult received = await Socket.ReceiveAsync(receiveSegment, CancellationToken.None);
-                    string messageString = System.Text.Encoding.UTF8.GetString(receiveBuffer, 0, received.Count);
-                    JObject message = JObject.Parse(messageString);
-                    string methodName = message["method"].Value<string>();
-                    MethodInfo info = this.GetType().GetMethod(methodName, new[] { typeof(JObject) });
+                    switch (received.MessageType)
+                    {
+                        case WebSocketMessageType.Text:
+                            string messageString = System.Text.Encoding.UTF8.GetString(receiveBuffer, 0, received.Count);
+                            JObject message = JObject.Parse(messageString);
+                            string methodName = message["method"].Value<string>();
+                            MethodInfo info = this.GetType().GetMethod(methodName, new[] { typeof(JObject) });
 
-                    JObject parameters = message["args"].Value<JObject>();
-                    info.Invoke(this, new[] { parameters });
+                            JObject parameters = message["args"].Value<JObject>();
+                            info.Invoke(this, new[] { parameters });
+                            break;
+                        case WebSocketMessageType.Close:
+                            break;
+                    }
+
                 }
                 catch (IOException)
                 {

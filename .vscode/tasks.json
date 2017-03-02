@@ -2,7 +2,6 @@
     "version": "0.1.0",
     "command": "dotnet",
     "isShellCommand": true,
-    "args": [],
     "tasks": [
         {
             "taskName": "build",
@@ -19,6 +18,17 @@
             ],
             "isTestCommand": true,
             "problemMatcher": "$msCompile"
+        },
+        {
+            "taskName": "publish",
+            "args": [
+                "${workspaceRoot}\\kadmium-osc-dmx-dotnet-webui\\project.json",
+                "-c",
+                "Release",
+                "-o",
+                "${workspaceRoot}\\dist"
+            ],
+            "echoCommand": true
         }
     ]
 }
