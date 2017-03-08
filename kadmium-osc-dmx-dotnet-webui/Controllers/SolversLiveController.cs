@@ -33,9 +33,9 @@ namespace kadmium_osc_dmx_dotnet_webui.Controllers
                 new JProperty("messageType", "init"),
                 new JProperty("universes",
                     new JArray(
-                        from universe in MasterController.Instance.Venue?.Universes.Values ?? Enumerable.Empty<Universe>()
+                        from universe in MasterController.Instance.Venue?.Universes ?? Enumerable.Empty<Universe>()
                         select new JObject(
-                            new JProperty("universeID", universe.UniverseID),
+                            new JProperty("universeID", universe.UniverseNumber),
                             new JProperty("name", universe.Name),
                             new JProperty("fixtures",
                                 new JArray(
@@ -49,7 +49,7 @@ namespace kadmium_osc_dmx_dotnet_webui.Controllers
                                                 where (attribute is DMXChannel || attribute is FixtureSolverAttribute)
                                                 select new JObject(
                                                     new JProperty("name", attribute.Name),
-                                                    new JProperty("value", attribute.Value),
+                                                    new JProperty("value", attribute),
                                                     new JProperty("dmxMin", (attribute as DMXChannel)?.Min ?? 0),
                                                     new JProperty("dmxMax", (attribute as DMXChannel)?.Max ?? 0),
                                                     new JProperty("controlled", (attribute as DMXChannel)?.Controlled ?? false),

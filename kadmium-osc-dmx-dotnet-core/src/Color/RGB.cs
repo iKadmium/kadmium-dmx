@@ -5,13 +5,8 @@ namespace kadmium_osc_dmx_dotnet_core.Color
     /// <summary>
     /// Structure to define RGB.
     /// </summary>
-    public struct RGB
+    public class RGB
     {
-        /// <summary>
-        /// Gets an empty RGB structure;
-        /// </summary>
-        public static readonly RGB Empty = new RGB();
-
         #region Fields
         private int red;
         private int green;
@@ -93,6 +88,8 @@ namespace kadmium_osc_dmx_dotnet_core.Color
             green = (G > 255) ? 255 : ((G < 0) ? 0 : G);
             blue = (B > 255) ? 255 : ((B < 0) ? 0 : B);
         }
+
+        public RGB() : this(0, 0, 0) { }
 
         public override string ToString()
         {

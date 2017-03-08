@@ -41,7 +41,7 @@ namespace kadmium_osc_dmx_dotnet_test.Solvers
 
         public static Fixture GetRGBFixture(JObject options = null)
         {
-            var definition = new Definition();
+            var definition = new FixtureDefinition();
             definition.Channels.Add(new DMXChannel("Red", definition.Channels.Count + 1));
             definition.Channels.Add(new DMXChannel("Green", definition.Channels.Count + 1));
             definition.Channels.Add(new DMXChannel("Blue", definition.Channels.Count + 1));

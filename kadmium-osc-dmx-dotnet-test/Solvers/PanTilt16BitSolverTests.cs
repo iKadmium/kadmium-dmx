@@ -36,7 +36,7 @@ namespace kadmium_osc_dmx_dotnet_test.Solvers.Solvers
 
         public static Fixture Get16BitMovingFixture(params string[] axis)
         {
-            var definition = new Definition();
+            var definition = new FixtureDefinition();
             foreach (string axisName in axis)
             {
                 definition.Axis.Add(new MovementAxis(axisName, -90, 90));

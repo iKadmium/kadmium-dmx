@@ -43,7 +43,7 @@ namespace kadmium_osc_dmx_dotnet_core.Solvers
             }
         }
 
-        public static bool SuitableFor(Definition definition)
+        public static bool SuitableFor(FixtureDefinition definition)
         {
             return definition.Channels.Any(x => x.Name == "ColorWheel") &&
                 definition.ColorWheel.Count > 0 &&

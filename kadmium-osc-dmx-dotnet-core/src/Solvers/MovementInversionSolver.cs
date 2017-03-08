@@ -22,7 +22,7 @@ namespace kadmium_osc_dmx_dotnet_core.Solvers
             }
         }
 
-        private static IEnumerable<string> GetInvertedAxis(Definition definition, JObject options)
+        private static IEnumerable<string> GetInvertedAxis(FixtureDefinition definition, JObject options)
         {
             var invertOptions = from option in options["axisInversions"]?.Values<string>() ?? Enumerable.Empty<string>()
                                 select option;
@@ -34,7 +34,7 @@ namespace kadmium_osc_dmx_dotnet_core.Solvers
             return invertedAxis;
         }
 
-        public static bool SuitableFor(Definition definition, JObject options)
+        public static bool SuitableFor(FixtureDefinition definition, JObject options)
         {
             return GetInvertedAxis(definition, options).Count() > 0;
         }

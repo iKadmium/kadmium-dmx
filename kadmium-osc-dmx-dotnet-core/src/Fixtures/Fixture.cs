@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using Newtonsoft.Json.Linq;
 using System.Threading.Tasks;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace kadmium_osc_dmx_dotnet_core.Fixtures
 {
@@ -10,16 +11,20 @@ namespace kadmium_osc_dmx_dotnet_core.Fixtures
     {
         public int StartChannel { get; set; }
         public int EndChannel { get { return StartChannel + Definition.Channels.Max(x => x.RelativeAddress); } }
-
-        public Definition Definition { get; }
+        
+        public FixtureDefinition Definition { get; set; }
+        [NotMapped]
         public Dictionary<string, Solvers.Attribute> Settables { get; }
+        [NotMapped]
         public Dictionary<string, Solvers.Attribute> FrameSettables { get; }
+        [NotMapped]
         public Dictionary<string, MovementAxis> MovementAxis { get; }
+        [NotMapped]
         public List<FixtureSolver> Solvers { get; }
         public JObject Options;
         public Group Group { get; }
 
-        public Fixture(Definition definition, int startChannel, Group group, JObject options)
+        public Fixture(FixtureDefinition definition, int startChannel, Group group, JObject options)
         {
             Definition = definition;
             Solvers = new List<FixtureSolver>();
@@ -85,7 +90,7 @@ namespace kadmium_osc_dmx_dotnet_core.Fixtures
             JObject type = obj["type"].Value<JObject>();
             string model = type["model"].Value<string>();
             string manufacturer = type["manufacturer"].Value<string>();
-            Definition definition = await Definition.Load(manufacturer, model);
+            FixtureDefinition definition = await FixtureDefinition.Load(manufacturer, model);
             string groupName = obj["group"].Value<string>();
             Group group = MasterController.Instance.Groups.ContainsKey(groupName) ? MasterController.Instance.Groups[groupName] : MasterController.Instance.Groups.Values.First();
             JObject options = obj["options"].Value<JObject>();

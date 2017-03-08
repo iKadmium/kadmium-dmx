@@ -27,10 +27,10 @@ namespace kadmium_osc_dmx_dotnet_webui.Controllers
                     ),
                     new JProperty("universes",
                         new JArray(
-                            from universe in MasterController.Instance.Venue.Universes.Values
+                            from universe in MasterController.Instance.Venue.Universes
                             select new JObject(
                                 new JProperty("name", universe.Name),
-                                new JProperty("universeID", universe.UniverseID),
+                                new JProperty("universeID", universe.UniverseNumber),
                                 new JProperty("fixtures",
                                     from fixture in universe.Fixtures
                                     select new JObject(

@@ -32,7 +32,7 @@ namespace kadmium_osc_dmx_dotnet_core.Solvers
             settables["Brightness"].Value = (float)hsb.Brightness;
         }
 
-        public static bool SuitableFor(Definition definition)
+        public static bool SuitableFor(FixtureDefinition definition)
         {
             return definition.Channels.Any(x => x.Name == "Red") &&
                 definition.Channels.Any(x => x.Name == "Green") &&

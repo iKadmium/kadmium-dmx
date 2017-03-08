@@ -17,7 +17,7 @@ namespace kadmium_osc_dmx_dotnet_webui.WebSockets
             Sending = false;
             if (MasterController.Instance.Venue != null)
             {
-                foreach (Universe universe in MasterController.Instance.Venue?.Universes.Values)
+                foreach (Universe universe in MasterController.Instance.Venue?.Universes)
                 {
                     universe.Updated += Universe_Updated;
                 }
@@ -47,7 +47,7 @@ namespace kadmium_osc_dmx_dotnet_webui.WebSockets
             Universe universe = sender as Universe;
             WebSocketMessage message = new WebSocketMessage("updateUniverse", new Dictionary<string, object>
             {
-                ["universeID"] = universe.UniverseID,
+                ["universeID"] = universe.UniverseNumber,
                 ["fixtures"] = from fixture in universe.Fixtures
                                select new JObject(
                                    new JProperty("channel", fixture.StartChannel),
@@ -68,7 +68,7 @@ namespace kadmium_osc_dmx_dotnet_webui.WebSockets
 
         public override void Dispose()
         {
-            foreach (Universe universe in MasterController.Instance.Venue?.Universes.Values)
+            foreach (Universe universe in MasterController.Instance.Venue?.Universes)
             {
                 universe.Updated -= Universe_Updated;
             }

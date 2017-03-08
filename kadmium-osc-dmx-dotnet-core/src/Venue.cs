@@ -3,22 +3,25 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace kadmium_osc_dmx_dotnet_core
 {
     public class Venue
     {
+        public string Name { get; set; }
+        [NotMapped]
         public static Status Status { get; set; }
-        public string Name { get; }
-        public Dictionary<int, Universe> Universes { get; }
+
+        public List<Universe> Universes { get; set; }
 
         public Venue(string name, IEnumerable<Universe> universes)
         {
             Name = name;
-            Universes = new Dictionary<int, Universe>();
+            Universes = new List<Universe>();
             foreach (Universe universe in universes)
             {
-                Universes.Add(universe.UniverseID, universe);
+                Universes.Add(universe);
             }
             Status.Update(StatusCode.Success, Name + " running", this);
         }
@@ -34,7 +37,7 @@ namespace kadmium_osc_dmx_dotnet_core
                 new JProperty("name", Name),
                 new JProperty("universes",
                     new JArray(
-                        from universe in Universes.Values
+                        from universe in Universes
                         select universe.SerializeForVenue()
                     )
                 )
@@ -65,7 +68,7 @@ namespace kadmium_osc_dmx_dotnet_core
 
         internal void Update()
         {
-            foreach (Universe universe in Universes.Values)
+            foreach (Universe universe in Universes)
             {
                 universe.Update();
             }
@@ -73,7 +76,7 @@ namespace kadmium_osc_dmx_dotnet_core
 
         public void Render()
         {
-            foreach (Universe universe in Universes.Values)
+            foreach (Universe universe in Universes)
             {
                 universe.Render();
             }
@@ -81,7 +84,7 @@ namespace kadmium_osc_dmx_dotnet_core
 
         public void Clear()
         {
-            foreach (Universe universe in Universes.Values)
+            foreach (Universe universe in Universes)
             {
                 universe.Clear();
             }

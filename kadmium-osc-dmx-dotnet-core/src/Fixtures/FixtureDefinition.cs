@@ -6,18 +6,18 @@ using System.Threading.Tasks;
 
 namespace kadmium_osc_dmx_dotnet_core.Fixtures
 {
-    public class Definition
+    public class FixtureDefinition
     {
+        public string Manufacturer { get; set; }
         public string Model { get; set; }
         public List<DMXChannel> Channels { get; }
         public List<MovementAxis> Axis { get; }
-        public List<ColorWheelEntry> ColorWheel { get; }
+        public List<ColorWheelEntry> ColorWheel { get; set; }
         public FixtureType Type { get; set; }
-        public string Manufacturer { get; set; }
         public float Lux { get; set; }
         public float BeamAngle { get; set; }
 
-        public Definition()
+        public FixtureDefinition()
         {
             Channels = new List<DMXChannel>();
             Axis = new List<MovementAxis>();
@@ -28,9 +28,9 @@ namespace kadmium_osc_dmx_dotnet_core.Fixtures
             BeamAngle = 30;
         }
 
-        public static Definition Load(JObject modelElement)
+        public static FixtureDefinition Load(JObject modelElement)
         {
-            Definition definition = new Definition();
+            FixtureDefinition definition = new FixtureDefinition();
             foreach (JObject channelElement in modelElement["channels"])
             {
                 DMXChannel channel = DMXChannel.Load(channelElement);
@@ -117,7 +117,7 @@ namespace kadmium_osc_dmx_dotnet_core.Fixtures
             return obj;
         }
 
-        public static async Task<Definition> Load(string manufacturer, string name)
+        public static async Task<FixtureDefinition> Load(string manufacturer, string name)
         {
             return Load(await FileAccess.LoadFixtureDefinition(manufacturer, name));
         }

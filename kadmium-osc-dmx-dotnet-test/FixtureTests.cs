@@ -32,7 +32,7 @@ namespace kadmium_osc_dmx_dotnet_test
                 foreach (string fixtureName in FileAccess.GetFixtureNames(manufacturer))
                 {
                     JObject definitionJSON = await FileAccess.LoadFixtureDefinition(manufacturer, fixtureName);
-                    Definition definition = Definition.Load(definitionJSON);
+                    FixtureDefinition definition = FixtureDefinition.Load(definitionJSON);
                     Fixture fixture = new Fixture(definition, 1, new Group(), new JObject());
                 }
             }
@@ -40,7 +40,7 @@ namespace kadmium_osc_dmx_dotnet_test
 
         public static Fixture GetSharedMasterAndStrobeFixture()
         {
-            Definition definition = new Definition();
+            FixtureDefinition definition = new FixtureDefinition();
             definition.Channels.Add(new DMXChannel("Master", 1, 0, 191));
             definition.Channels.Add(new DMXChannel("Strobe", 1, 192, 255));
             Fixture fixture = new Fixture(definition, 1, GroupTests.GetGroup(), new JObject());
@@ -49,7 +49,7 @@ namespace kadmium_osc_dmx_dotnet_test
 
         public static Fixture GetMovingFixture(string axisName, int axisMin, int axisMax, JObject options = null)
         {
-            Definition definition = FixtureDefinitionTests.GetMovingFixtureDefinition(axisName, axisMin, axisMax);
+            FixtureDefinition definition = FixtureDefinitionTests.GetMovingFixtureDefinition(axisName, axisMin, axisMax);
             Group group = GroupTests.GetGroup();
             Fixture fixture = new Fixture(definition, 1, group, options ?? new JObject());
             return fixture;

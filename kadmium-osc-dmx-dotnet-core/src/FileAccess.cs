@@ -11,7 +11,7 @@ namespace kadmium_osc_dmx_dotnet_core
 {
     public static class FileAccess
     {
-        static string DataLocation = Path.Combine(AppContext.BaseDirectory, "data");
+        static string DataLocation = Path.Combine(AppContext.BaseDirectory, "..", "..", "..", "..", "data");
 
         private static string FixturesLocation = Path.Combine(DataLocation, "fixtures");
         private static string GroupsLocation = Path.Combine(DataLocation, "groups.json");
@@ -214,7 +214,7 @@ namespace kadmium_osc_dmx_dotnet_core
                 JObject venueJson = await FileAccess.LoadVenue(venueName);
                 Venue venue = await Venue.Load(venueJson);
                 bool dirty = false;
-                foreach (Universe universe in venue.Universes.Values)
+                foreach (Universe universe in venue.Universes)
                 {
                     var matches = universe.Fixtures.Where(x => x.Definition.Manufacturer == manufacturer && x.Definition.Model == model).ToList();
                     if (matches.Count > 0)
@@ -259,7 +259,7 @@ namespace kadmium_osc_dmx_dotnet_core
                 JObject venueJson = await FileAccess.LoadVenue(venueName);
                 Venue venue = await Venue.Load(venueJson);
                 bool dirty = false;
-                foreach (Universe universe in venue.Universes.Values)
+                foreach (Universe universe in venue.Universes)
                 {
                     var matches = universe.Fixtures.Where(x => x.Definition.Manufacturer == originalManufacturer && x.Definition.Model == originalModel).ToList();
                     foreach (var match in matches)

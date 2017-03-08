@@ -1,14 +1,30 @@
-﻿using kadmium_osc_dmx_dotnet_core.Color;
+﻿using System.ComponentModel.DataAnnotations.Schema;
+using kadmium_osc_dmx_dotnet_core.Color;
 using Newtonsoft.Json.Linq;
 
 namespace kadmium_osc_dmx_dotnet_core.Fixtures
 {
     public class ColorWheelEntry
     {
-        public string Name { get; }
-        public int Min { get; }
-        public int Max { get; }
-        public RGB Color { get; }
+        public string Name { get; set; }
+        public int Min { get; set; }
+        public int Max { get; set; }
+        public string ColorString
+        {
+            get
+            {
+                return Color.ToString();
+            }
+            set
+            {
+                Color.Red = int.Parse("0x" + value.Substring(1, 2));
+                Color.Green = int.Parse("0x" + value.Substring(3, 2));
+                Color.Blue = int.Parse("0x" + value.Substring(5, 2));
+            }
+        }
+
+        [NotMapped]
+        public RGB Color { get; set; }
 
         public ColorWheelEntry(string name, int min, int max, RGB color)
         {

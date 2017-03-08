@@ -185,7 +185,7 @@ namespace kadmium_osc_dmx_dotnet_core.Color
                 return new Color.RGB(Convert.ToInt32(r), Convert.ToInt32(g), Convert.ToInt32(b));
             }
 
-            return Color.RGB.Empty;
+            return new Color.RGB(0, 0, 0);
         }
 
         /// <summary>

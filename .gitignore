@@ -22,6 +22,9 @@ bld/
 [Oo]bj/
 dist/
 
+kadmium-osc-dmx-dotnet-webui/ClientApp/**/*.js
+kadmium-osc-dmx-dotnet-webui/ClientApp/**/*.js.map
+
 main-server.js
 
 # Visual Studio 2015 cache/options directory

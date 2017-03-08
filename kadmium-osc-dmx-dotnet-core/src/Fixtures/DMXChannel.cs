@@ -24,7 +24,7 @@ namespace kadmium_osc_dmx_dotnet_core.Fixtures
             Max = max;
             RelativeAddress = relativeAddress;
         }
-        
+
         public static DMXChannel Load(JObject channelElement)
         {
             string name = channelElement["name"].Value<string>();

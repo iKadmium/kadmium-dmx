@@ -48,7 +48,7 @@ namespace kadmium_osc_dmx_dotnet_test.Solvers
 
         public static Fixture GetColorWheelFixture(IEnumerable<ColorWheelEntry> colors)
         {
-            Definition definition = new Definition();
+            FixtureDefinition definition = new FixtureDefinition();
             definition.Channels.Add(new DMXChannel("ColorWheel", definition.Channels.Count + 1));
             definition.Channels.Add(new DMXChannel("Master", definition.Channels.Count + 1));
             definition.ColorWheel.AddRange(colors);

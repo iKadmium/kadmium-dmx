@@ -27,8 +27,8 @@ namespace kadmium_osc_dmx_dotnet_webui.Controllers
         [Route("[action]/{universeID}/{channel}/{value}")]
         public void Set(int universeID, int channel, byte value)
         {
-            MasterController.Instance.Venue.Universes.Values
-                .Single(x => x.UniverseID == universeID)
+            MasterController.Instance.Venue.Universes
+                .Single(x => x.UniverseNumber == universeID)
                 .DMX[channel] = value;
         }
     }

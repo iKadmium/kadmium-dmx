@@ -22,14 +22,14 @@ namespace kadmium_osc_dmx_dotnet_core.Solvers
             }
         }
 
-        private static IEnumerable<string> Get16BitAxisNames(Definition fixtureDefinition)
+        private static IEnumerable<string> Get16BitAxisNames(FixtureDefinition fixtureDefinition)
         {
             var names = from movement in fixtureDefinition.Axis
                         select movement.Name;
             return names;
         }
 
-        internal static bool SuitableFor(Definition definition)
+        internal static bool SuitableFor(FixtureDefinition definition)
         {
             return definition.Channels.Any(x => x.Name == "PanCoarse") ||
                 definition.Channels.Any(x => x.Name == "TiltCoarse");

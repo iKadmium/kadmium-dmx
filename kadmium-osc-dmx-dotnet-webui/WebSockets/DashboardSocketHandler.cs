@@ -28,7 +28,7 @@ namespace kadmium_osc_dmx_dotnet_webui.WebSockets
             await SendUpdate("Venues", e.StatusCode, e.Message);
             if (e.StatusCode == StatusCode.Success)
             {
-                int fixtureCount = (from universe in (sender as Venue).Universes.Values
+                int fixtureCount = (from universe in (sender as Venue).Universes
                                     select universe.Fixtures.Count()).Sum();
                 await SendUpdate("Fixtures", e.StatusCode, fixtureCount + " fixtures loaded");
             }
@@ -63,7 +63,7 @@ namespace kadmium_osc_dmx_dotnet_webui.WebSockets
             if (MasterController.Instance.Venue != null)
             {
                 await SendUpdate("Venues", StatusCode.Success, MasterController.Instance.Venue.Name + " running");
-                int fixtureCount = (from universe in MasterController.Instance.Venue.Universes.Values
+                int fixtureCount = (from universe in MasterController.Instance.Venue.Universes
                                     select universe.Fixtures.Count()).Sum();
                 await SendUpdate("Fixtures", StatusCode.Success, fixtureCount + " fixtures loaded");
             }

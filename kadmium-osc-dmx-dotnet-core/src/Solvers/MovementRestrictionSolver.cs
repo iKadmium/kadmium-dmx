@@ -31,7 +31,7 @@ namespace kadmium_osc_dmx_dotnet_core.Solvers
             }
         }
 
-        private static IEnumerable<string> GetRestrictedAxisNames(Definition definition, JObject options)
+        private static IEnumerable<string> GetRestrictedAxisNames(FixtureDefinition definition, JObject options)
         {
             var restrictedNames = from option in options["axisRestrictions"]?.Values<JObject>() ?? Enumerable.Empty<JObject>()
                                   select option["name"].Value<string>();
@@ -43,7 +43,7 @@ namespace kadmium_osc_dmx_dotnet_core.Solvers
             return restrictedAxis;
         }
 
-        internal static bool SuitableFor(Definition definition, JObject options)
+        internal static bool SuitableFor(FixtureDefinition definition, JObject options)
         {
             return GetRestrictedAxisNames(definition, options).Count() > 0;
         }

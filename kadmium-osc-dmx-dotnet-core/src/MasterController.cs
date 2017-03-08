@@ -28,7 +28,7 @@ namespace kadmium_osc_dmx_dotnet_core
                 updatesEnabled = value;
                 if (value)
                 {
-                    int count = (from universe in Venue.Universes.Values
+                    int count = (from universe in Venue.Universes
                                  select universe.Fixtures.Count()).Sum();
                     SolverStatus.Update(StatusCode.Success, "Solving for " + count + " fixtures", this);
                 }

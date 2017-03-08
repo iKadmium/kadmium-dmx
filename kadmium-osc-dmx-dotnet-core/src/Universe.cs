@@ -2,6 +2,7 @@
 using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -9,9 +10,11 @@ namespace kadmium_osc_dmx_dotnet_core
 {
     public class Universe
     {
+        [ForeignKey("Venue")]
+        public string VenueName { get; set; }
         public static int DMX_UNIVERSE_SIZE = 512;
         public string Name { get; set; }
-        public int UniverseID { get; set; }
+        public int UniverseNumber { get; set; }
         public List<Fixture> Fixtures { get; }
         public byte[] DMX { get; }
         public event EventHandler<DMXEventArgs> Updated;
@@ -20,7 +23,7 @@ namespace kadmium_osc_dmx_dotnet_core
         public Universe(string name, int universeID, List<Fixture> fixtures)
         {
             Name = name;
-            UniverseID = universeID;
+            UniverseNumber = universeID;
             Fixtures = fixtures;
             DMX = new byte[DMX_UNIVERSE_SIZE];
         }
@@ -29,7 +32,7 @@ namespace kadmium_osc_dmx_dotnet_core
         {
             JObject obj = new JObject(
                 new JProperty("name", Name),
-                new JProperty("universeID", UniverseID)
+                new JProperty("universeID", UniverseNumber)
             );
             return obj;
         }
@@ -80,7 +83,7 @@ namespace kadmium_osc_dmx_dotnet_core
 
         public void Render()
         {
-            MasterController.Instance.Transmitter.Transmit(DMX, UniverseID);
+            MasterController.Instance.Transmitter.Transmit(DMX, UniverseNumber);
             Rendered?.Invoke(this, new DMXEventArgs(DMX));
         }
     }

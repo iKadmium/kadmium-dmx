@@ -14,6 +14,11 @@ namespace kadmium_osc_dmx_dotnet_webui
             JObject settings = kadmium_osc_dmx_dotnet_core.FileAccess.LoadSettings().Result;
             int port = settings["webPort"].Value<int>();
 
+            //Data data = new Data();
+            //var count = data.FilchData().Result;
+            //System.Console.WriteLine("{0} changes written", count);
+
+
             var host = new WebHostBuilder()
                 .UseUrls("http://*:" + port + "/")
                 .UseKestrel()

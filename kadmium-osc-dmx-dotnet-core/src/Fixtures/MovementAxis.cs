@@ -4,16 +4,16 @@ namespace kadmium_osc_dmx_dotnet_core.Fixtures
 {
     public class MovementAxis
     {
+        public string Name { get; set; }
+        public int Min { get; set; }
+        public int Max { get; set; }
+
         public MovementAxis(string name, int min, int max)
         {
             Name = name;
             Min = min;
             Max = max;
         }
-
-        public string Name { get; set; }
-        public int Min { get; set; }
-        public int Max { get; set; }
 
         public static MovementAxis Load(JObject movementAxis)
         {

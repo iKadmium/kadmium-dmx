@@ -38,7 +38,7 @@ namespace kadmium_osc_dmx_dotnet_webui.Controllers
         [Route("{manufacturer}/{model}")]
         public async void Put(string manufacturer, string model, [FromBody]JObject definitionJson)
         {
-            Definition definition = Definition.Load(definitionJson);
+            FixtureDefinition definition = FixtureDefinition.Load(definitionJson);
             if (manufacturer != definition.Manufacturer || model != definition.Model)
             {
                 await FileAccess.RenameFixtureDefinition(manufacturer, model, definition.Manufacturer, definition.Model);
