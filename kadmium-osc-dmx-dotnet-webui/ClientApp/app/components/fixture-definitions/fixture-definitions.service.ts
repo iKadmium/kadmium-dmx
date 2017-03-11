@@ -23,9 +23,9 @@ export class FixtureDefinitionsService
             });
     }
 
-    public get(manufacturer: string, model: string): Promise<FixtureDefinition>
+    public get(id: number): Promise<FixtureDefinition>
     {
-        return this.http.get(this.fixtureDefinitionsUrl + "/" + manufacturer + "/" + model)
+        return this.http.get(this.fixtureDefinitionsUrl + "/" + id)
             .toPromise()
             .then(response =>
             {
@@ -34,16 +34,23 @@ export class FixtureDefinitionsService
             });
     }
 
-    public put(manufacturer: string, model: string, definition: FixtureDefinition): Promise<void>
+    public put(definition: FixtureDefinition): Promise<void>
     {
-        return this.http.put(this.fixtureDefinitionsUrl + "/" + manufacturer + "/" + model, definition)
+        return this.http.put(this.fixtureDefinitionsUrl + "/" + definition.id, definition)
+            .toPromise()
+            .then(response => { });
+    }
+
+    public post(definition: FixtureDefinition): Promise<void>
+    {
+        return this.http.post(this.fixtureDefinitionsUrl, definition)
             .toPromise()
             .then(response => { });
     }
 
     public delete(fixture: FixtureDefinitionSkeleton): Promise<void>
     {
-        return this.http.delete(this.fixtureDefinitionsUrl + "/" + fixture.manufacturer + "/" + fixture.model)
+        return this.http.delete(this.fixtureDefinitionsUrl + "/" + fixture.id)
             .toPromise()
             .then(response => { });
     }

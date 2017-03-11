@@ -29,6 +29,6 @@ export class DMXPreviewChannel extends DMXChannel
 
     static load(channel: DMXChannel)
     {
-        return new DMXChannel(channel.name, channel.dmx, channel.min, channel.max);
+        return new DMXChannel(channel.name, channel.address, channel.min, channel.max);
     }
 }

@@ -8,10 +8,12 @@ namespace kadmium_osc_dmx_dotnet_core.Fixtures
 {
     public class FixtureDefinition
     {
+        public int Id { get; set; }
+
         public string Manufacturer { get; set; }
         public string Model { get; set; }
         public List<DMXChannel> Channels { get; }
-        public List<MovementAxis> Axis { get; }
+        public List<MovementAxis> Movements { get; }
         public List<ColorWheelEntry> ColorWheel { get; set; }
         public FixtureType Type { get; set; }
         public float Lux { get; set; }
@@ -20,7 +22,7 @@ namespace kadmium_osc_dmx_dotnet_core.Fixtures
         public FixtureDefinition()
         {
             Channels = new List<DMXChannel>();
-            Axis = new List<MovementAxis>();
+            Movements = new List<MovementAxis>();
             ColorWheel = new List<ColorWheelEntry>();
             Model = "";
             Manufacturer = "";
@@ -37,7 +39,7 @@ namespace kadmium_osc_dmx_dotnet_core.Fixtures
                 definition.Channels.Add(channel);
             }
             definition.Type = (FixtureType)Enum.Parse(typeof(FixtureType), modelElement["type"].Value<string>());
-            definition.Model = modelElement["name"].Value<string>();
+            definition.Model = modelElement["model"].Value<string>();
             definition.Manufacturer = modelElement["manufacturer"].Value<string>();
             definition.BeamAngle = modelElement["beamAngle"].Value<float>();
             definition.Lux = modelElement["lux"].Value<float>();
@@ -46,7 +48,7 @@ namespace kadmium_osc_dmx_dotnet_core.Fixtures
                 foreach (JObject movementAxis in modelElement["movements"])
                 {
                     MovementAxis axis = MovementAxis.Load(movementAxis);
-                    definition.Axis.Add(axis);
+                    definition.Movements.Add(axis);
                 }
             }
             if (modelElement["colorWheel"] != null)
@@ -57,6 +59,10 @@ namespace kadmium_osc_dmx_dotnet_core.Fixtures
                     definition.ColorWheel.Add(entry);
                 }
             }
+            if(modelElement["id"] != null)
+            {
+                definition.Id = modelElement["id"].Value<int>();
+            }
             return definition;
         }
 
@@ -64,7 +70,7 @@ namespace kadmium_osc_dmx_dotnet_core.Fixtures
         {
             JObject obj = new JObject(
                 new JProperty("$schema", FileAccess.GetRelativePath(FileAccess.GetFixtureDefinitionPath(Manufacturer, Model), FileAccess.FixtureDefinitionSchema)),
-                new JProperty("name", Model),
+                new JProperty("model", Model),
                 new JProperty("manufacturer", Manufacturer),
                 new JProperty("type", Type.ToString()),
                 new JProperty("beamAngle", BeamAngle),
@@ -74,7 +80,7 @@ namespace kadmium_osc_dmx_dotnet_core.Fixtures
                         from channel in Channels
                         select new JObject(
                             new JProperty("name", channel.Name),
-                            new JProperty("dmx", channel.RelativeAddress),
+                            new JProperty("address", channel.Address),
                             new JProperty("min", channel.Min),
                             new JProperty("max", channel.Max)
                         )
@@ -82,12 +88,12 @@ namespace kadmium_osc_dmx_dotnet_core.Fixtures
                 )
             );
 
-            if (Axis.Count > 0)
+            if (Movements.Count > 0)
             {
                 obj.Add(
                     new JProperty("movements",
                         new JArray(
-                            from axis in Axis
+                            from axis in Movements
                             select new JObject(
                                 new JProperty("name", axis.Name),
                                 new JProperty("min", axis.Min),
@@ -116,10 +122,6 @@ namespace kadmium_osc_dmx_dotnet_core.Fixtures
 
             return obj;
         }
-
-        public static async Task<FixtureDefinition> Load(string manufacturer, string name)
-        {
-            return Load(await FileAccess.LoadFixtureDefinition(manufacturer, name));
-        }
+        
     }
 }

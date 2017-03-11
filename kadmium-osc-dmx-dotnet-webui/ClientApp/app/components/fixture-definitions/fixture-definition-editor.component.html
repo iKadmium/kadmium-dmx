@@ -8,13 +8,13 @@
                 list="allManufacturers">
         </labelled-input>
         <labelled-input label="Model:">
-            <input required #input class="form-control" type="text" name="model" [(ngModel)]="definition.name" #model="ngModel">
+            <input required #input class="form-control" type="text" name="model" [(ngModel)]="definition.model" #model="ngModel">
         </labelled-input>
         <labelled-input label="Type:">
             <select #input #model="ngModel" class="form-control" name="type" [(ngModel)]="definition.type">
-                <option>LED</option>
-                <option>Tungsten</option>
-                <option>Effect</option>
+                <option value="0">LED</option>
+                <option value="1">Tungsten</option>
+                <option value="2">Effect</option>
             </select>
         </labelled-input>
         <datalist id="channelList" name="channelList">
@@ -47,7 +47,7 @@
                         <tr *ngFor="let channel of sortChannels(definition.channels); let i = index">
                             <td>
                                 <table-input>
-                                    <input #input #model="ngModel" class="form-control" type="number" [(ngModel)]="channel.dmx" min="1" max="512" [name]="'channelDMX[' + i + ']'"
+                                    <input #input #model="ngModel" class="form-control" type="number" [(ngModel)]="channel.address" min="1" max="512" [name]="'channelAddress[' + i + ']'"
                                     />
                                 </table-input>
                             </td>

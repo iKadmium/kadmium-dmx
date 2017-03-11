@@ -10,7 +10,7 @@ namespace kadmium_osc_dmx_dotnet_core.Fixtures
     public class Fixture
     {
         public int StartChannel { get; set; }
-        public int EndChannel { get { return StartChannel + Definition.Channels.Max(x => x.RelativeAddress); } }
+        public int EndChannel { get { return StartChannel + Definition.Channels.Max(x => x.Address); } }
         
         public FixtureDefinition Definition { get; set; }
         [NotMapped]
@@ -21,8 +21,22 @@ namespace kadmium_osc_dmx_dotnet_core.Fixtures
         public Dictionary<string, MovementAxis> MovementAxis { get; }
         [NotMapped]
         public List<FixtureSolver> Solvers { get; }
-        public JObject Options;
-        public Group Group { get; }
+        [NotMapped]
+        public JObject Options { get; set; }
+        public string OptionsString
+        {
+            get
+            {
+                return Options.ToString();
+            }
+            set
+            {
+                Options = JObject.Parse(value);
+            }
+        }
+        public Group Group { get; set; }
+
+        public int Id { get; set; }
 
         public Fixture(FixtureDefinition definition, int startChannel, Group group, JObject options)
         {
@@ -36,7 +50,7 @@ namespace kadmium_osc_dmx_dotnet_core.Fixtures
                 FrameSettables.Add(attribute.Name, attribute);
             }
             MovementAxis = new Dictionary<string, MovementAxis>();
-            foreach (var axis in Definition.Axis)
+            foreach (var axis in Definition.Movements)
             {
                 MovementAxis.Add(axis.Name, axis);
             }
@@ -84,13 +98,17 @@ namespace kadmium_osc_dmx_dotnet_core.Fixtures
             Group.Fixtures.Remove(this);
         }
 
-        public async static Task<Fixture> Load(JObject obj)
+        public static Fixture Load(JObject obj)
         {
             int startChannel = obj["channel"].Value<int>();
             JObject type = obj["type"].Value<JObject>();
             string model = type["model"].Value<string>();
             string manufacturer = type["manufacturer"].Value<string>();
-            FixtureDefinition definition = await FixtureDefinition.Load(manufacturer, model);
+            FixtureDefinition definition = null;
+            using (var context = new DatabaseContext())
+            {
+                definition = context.FixtureDefinitions.Single(x => x.Manufacturer == manufacturer && x.Model == model);
+            }
             string groupName = obj["group"].Value<string>();
             Group group = MasterController.Instance.Groups.ContainsKey(groupName) ? MasterController.Instance.Groups[groupName] : MasterController.Instance.Groups.Values.First();
             JObject options = obj["options"].Value<JObject>();
@@ -101,7 +119,7 @@ namespace kadmium_osc_dmx_dotnet_core.Fixtures
         public void Render(byte[] dmx)
         {
             var channels = from channel in Definition.Channels
-                           group channel by channel.RelativeAddress into chanGroup
+                           group channel by channel.Address into chanGroup
                            select chanGroup;
 
             foreach (var channelGroup in channels)
@@ -124,7 +142,7 @@ namespace kadmium_osc_dmx_dotnet_core.Fixtures
                 {
                     channel = channelGroup.Single();
                 }
-                dmx[channel.RelativeAddress + StartChannel - 2] = channel.ByteValue;
+                dmx[channel.Address + StartChannel - 2] = channel.ByteValue;
             }
         }
 

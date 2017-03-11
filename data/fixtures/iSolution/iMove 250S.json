@@ -1,6 +1,6 @@
 {
   "$schema": "../fixture.schema.json",
-  "name": "iMove 250S",
+  "model": "iMove 250S",
   "manufacturer": "iSolution",
   "type": "LED",
   "beamAngle": 13.0,
@@ -8,85 +8,85 @@
   "channels": [
     {
       "name": "PanCoarse",
-      "dmx": 1,
+      "address": 1,
       "min": 0,
       "max": 255
     },
     {
       "name": "TiltCoarse",
-      "dmx": 2,
+      "address": 2,
       "min": 0,
       "max": 255
     },
     {
       "name": "Motor Speed",
-      "dmx": 3,
+      "address": 3,
       "min": 0,
       "max": 255
     },
     {
       "name": "Master",
-      "dmx": 4,
+      "address": 4,
       "min": 0,
       "max": 255
     },
     {
       "name": "Strobe",
-      "dmx": 5,
+      "address": 5,
       "min": 15,
       "max": 131
     },
     {
       "name": "ColorWheel",
-      "dmx": 6,
+      "address": 6,
       "min": 0,
       "max": 255
     },
     {
       "name": "Gobo",
-      "dmx": 9,
+      "address": 9,
       "min": 0,
       "max": 255
     },
     {
       "name": "Gobo Rotation",
-      "dmx": 10,
+      "address": 10,
       "min": 0,
       "max": 255
     },
     {
       "name": "Prism",
-      "dmx": 11,
+      "address": 11,
       "min": 0,
       "max": 255
     },
     {
       "name": "Prism Rotation",
-      "dmx": 12,
+      "address": 12,
       "min": 0,
       "max": 255
     },
     {
       "name": "Focus",
-      "dmx": 13,
+      "address": 13,
       "min": 0,
       "max": 255
     },
     {
       "name": "PanFine",
-      "dmx": 14,
+      "address": 14,
       "min": 0,
       "max": 255
     },
     {
       "name": "TiltFine",
-      "dmx": 15,
+      "address": 15,
       "min": 0,
       "max": 255
     },
     {
       "name": "Reset",
-      "dmx": 16,
+      "address": 16,
       "min": 0,
       "max": 255
     }

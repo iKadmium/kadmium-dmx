@@ -212,7 +212,7 @@ namespace kadmium_osc_dmx_dotnet_core
             foreach (string venueName in FileAccess.GetVenueNames())
             {
                 JObject venueJson = await FileAccess.LoadVenue(venueName);
-                Venue venue = await Venue.Load(venueJson);
+                Venue venue = Venue.Load(venueJson);
                 bool dirty = false;
                 foreach (Universe universe in venue.Universes)
                 {
@@ -231,7 +231,7 @@ namespace kadmium_osc_dmx_dotnet_core
             {
                 JObject venuePresetJson = await FileAccess.LoadVenuePreset(venuePresetName);
                 VenuePreset collection = VenuePreset.Load(venuePresetJson);
-                var matches = collection.FixtureEntries.Where(x => x.Manufacturer == manufacturer && x.Type == model).ToList();
+                var matches = collection.FixtureEntries.Where(x => x.FixtureDefinition.Manufacturer == manufacturer && x.FixtureDefinition.Model == model).ToList();
                 if (matches.Count > 0)
                 {
                     matches.ForEach(x => collection.FixtureEntries.Remove(x));
@@ -257,7 +257,7 @@ namespace kadmium_osc_dmx_dotnet_core
             foreach (string venueName in FileAccess.GetVenueNames())
             {
                 JObject venueJson = await FileAccess.LoadVenue(venueName);
-                Venue venue = await Venue.Load(venueJson);
+                Venue venue = Venue.Load(venueJson);
                 bool dirty = false;
                 foreach (Universe universe in venue.Universes)
                 {
@@ -278,13 +278,13 @@ namespace kadmium_osc_dmx_dotnet_core
             {
                 JObject venuePresetJson = await FileAccess.LoadVenuePreset(venuePresetName);
                 VenuePreset collection = VenuePreset.Load(venuePresetJson);
-                var matches = collection.FixtureEntries.Where(x => x.Manufacturer == manufacturer && x.Type == model).ToList();
+                var matches = collection.FixtureEntries.Where(x => x.FixtureDefinition.Manufacturer == manufacturer && x.FixtureDefinition.Model == model).ToList();
                 if (matches.Count > 0)
                 {
                     foreach (var match in matches)
                     {
-                        match.Manufacturer = manufacturer;
-                        match.Type = model;
+                        match.FixtureDefinition.Manufacturer = manufacturer;
+                        match.FixtureDefinition.Model = model;
                     }
                     tasks.Add(FileAccess.SaveVenuePreset(collection.Serialize()));
                 }

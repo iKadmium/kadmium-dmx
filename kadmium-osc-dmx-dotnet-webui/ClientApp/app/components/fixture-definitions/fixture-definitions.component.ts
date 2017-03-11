@@ -54,7 +54,7 @@ export class FixtureDefinitionsComponent
 
     private getEditUrl(fixture: FixtureDefinitionSkeleton): string
     {
-        return "fixture-definitions" + "/" + fixture.manufacturer + "/" + fixture.model;
+        return "fixture-definitions" + "/" + fixture.id;
     }
 
     private async deleteConfirm(fixture: FixtureDefinitionSkeleton): Promise<void>

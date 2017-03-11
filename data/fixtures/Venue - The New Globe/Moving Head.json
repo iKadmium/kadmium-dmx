@@ -1,6 +1,6 @@
 {
   "$schema": "../fixture.schema.json",
-  "name": "Moving Head",
+  "model": "Moving Head",
   "manufacturer": "Venue - The New Globe",
   "type": "LED",
   "beamAngle": 30.0,
@@ -8,49 +8,49 @@
   "channels": [
     {
       "name": "Master",
-      "dmx": 1,
+      "address": 1,
       "min": 255,
       "max": 0
     },
     {
       "name": "TiltFine",
-      "dmx": 5,
+      "address": 5,
       "min": 0,
       "max": 255
     },
     {
       "name": "TiltCoarse",
-      "dmx": 6,
+      "address": 6,
       "min": 0,
       "max": 255
     },
     {
       "name": "PanFine",
-      "dmx": 7,
+      "address": 7,
       "min": 255,
       "max": 0
     },
     {
       "name": "PanCoarse",
-      "dmx": 8,
+      "address": 8,
       "min": 255,
       "max": 0
     },
     {
       "name": "Red",
-      "dmx": 10,
+      "address": 10,
       "min": 255,
       "max": 0
     },
     {
       "name": "Green",
-      "dmx": 11,
+      "address": 11,
       "min": 255,
       "max": 0
     },
     {
       "name": "Blue",
-      "dmx": 12,
+      "address": 12,
       "min": 255,
       "max": 0
     }

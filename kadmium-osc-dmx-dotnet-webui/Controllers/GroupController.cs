@@ -26,7 +26,7 @@ namespace kadmium_osc_dmx_dotnet_webui.Controllers
             {
                 string groupName = groups[i];
                 Group group = new Group(groupName, i);
-                MasterController.Instance.Groups.TryAdd(groupName, group);
+                MasterController.Instance.Groups.Add(groupName, group);
             }
             FileAccess.SaveGroups();
         }

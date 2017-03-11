@@ -97,7 +97,7 @@ declare var jQuery: any;
             { path: 'venues/:id', component: VenueEditorComponent },
             { path: 'fixture-definitions', component: FixtureDefinitionsComponent },
             { path: 'fixture-definitions/new', component: FixtureDefinitionEditorComponent },
-            { path: 'fixture-definitions/:manufacturer/:model', component: FixtureDefinitionEditorComponent },
+            { path: 'fixture-definitions/:id', component: FixtureDefinitionEditorComponent },
             { path: 'preview2d', component: Preview2DComponent },
             { path: '**', redirectTo: 'sets' }
         ])

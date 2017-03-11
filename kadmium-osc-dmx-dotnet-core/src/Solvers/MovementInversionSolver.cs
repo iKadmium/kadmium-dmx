@@ -28,7 +28,7 @@ namespace kadmium_osc_dmx_dotnet_core.Solvers
                                 select option;
 
             var invertedAxis = from option in invertOptions
-                               where definition.Axis.Any(x => x.Name == option)
+                               where definition.Movements.Any(x => x.Name == option)
                                select option;
 
             return invertedAxis;

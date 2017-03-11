@@ -1,8 +1,9 @@
 export class FixtureDefinition implements FixtureDefinitionData
 {
+    id: number;
     manufacturer: string;
-    name: string;
-    type: "LED" | "Tungsten" | "Effect";
+    model: string;
+    type: FixtureType;
 
     channels: DMXChannel[];
     movements: Axis[];
@@ -12,9 +13,9 @@ export class FixtureDefinition implements FixtureDefinitionData
 
     constructor()
     {
-        this.name = "";
+        this.model = "";
         this.manufacturer = "";
-        this.type = "LED";
+        this.type = FixtureType.LED;
         this.channels = [];
         this.movements = [];
         this.colorWheel = [];
@@ -32,17 +33,26 @@ export class FixtureDefinition implements FixtureDefinitionData
 
 export interface FixtureDefinitionData
 {
+    id: number;
     manufacturer: string;
-    name: string;
-    type: "LED" | "Tungsten" | "Effect";
+    model: string;
+    type: FixtureType;
 
     channels: DMXChannel[];
     movements: Axis[];
     colorWheel: ColorWheelEntry[];
 }
 
+export enum FixtureType
+{
+    LED,
+    Tungsten,
+    Effect
+}
+
 export class FixtureDefinitionSkeleton
 {
+    public id: number;
     public manufacturer: string;
     public model: string;
 }
@@ -50,14 +60,14 @@ export class FixtureDefinitionSkeleton
 export class DMXChannel
 {
     name: string;
-    dmx: number;
+    address: number;
     min: number;
     max: number;
 
     constructor(name?: string, dmx?: number, min?: number, max?: number)
     {
         this.name = name ? name : "";
-        this.dmx = dmx ? dmx : 1;
+        this.address = dmx ? dmx : 1;
         this.min = min ? min : 0;
         this.max = max ? max : 255;
     }

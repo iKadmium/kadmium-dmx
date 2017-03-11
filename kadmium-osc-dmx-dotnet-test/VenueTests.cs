@@ -13,7 +13,7 @@ namespace kadmium_osc_dmx_dotnet_test
             foreach (string venueName in FileAccess.GetVenueNames())
             {
                 var venueSourceJson = await FileAccess.LoadVenue(venueName);
-                var venue = await Venue.Load(venueSourceJson);
+                var venue = Venue.Load(venueSourceJson);
                 var destinationJson = venue.Serialize();
 
                 Assert.Equal(venueSourceJson.ToString(), destinationJson.ToString());

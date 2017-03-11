@@ -92,8 +92,9 @@ export class FixtureOptionsEditorComponent implements OnChanges
         }
         if(manufacturer != null && model != null)
         {
+            let skeleton = this.skeletons.find(value => value.manufacturer == manufacturer && value.model == model);
             this.definition = await this.fixtureDefinitionsService
-                .get(manufacturer, model);
+                .get(skeleton.id);
             this.axisOptions = this.definition.movements
                 .map(value => new AxisOptions(value.name, this.fixture, this.definition));
         }

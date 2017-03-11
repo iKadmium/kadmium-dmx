@@ -37,7 +37,7 @@ namespace kadmium_osc_dmx_dotnet_core.Solvers
                                   select option["name"].Value<string>();
 
             var restrictedAxis = from name in restrictedNames
-                                 where definition.Axis.Any(x => x.Name == name)
+                                 where definition.Movements.Any(x => x.Name == name)
                                  select name;
 
             return restrictedAxis;

@@ -1,6 +1,6 @@
 {
   "$schema": "../fixture.schema.json",
-  "name": "Mac 101",
+  "model": "Mac 101",
   "manufacturer": "Martin",
   "type": "LED",
   "beamAngle": 13.0,
@@ -8,73 +8,73 @@
   "channels": [
     {
       "name": "Strobe",
-      "dmx": 1,
+      "address": 1,
       "min": 85,
       "max": 70
     },
     {
       "name": "Master",
-      "dmx": 2,
+      "address": 2,
       "min": 0,
       "max": 255
     },
     {
       "name": "PanCoarse",
-      "dmx": 3,
+      "address": 3,
       "min": 0,
       "max": 255
     },
     {
       "name": "PanFine",
-      "dmx": 4,
+      "address": 4,
       "min": 0,
       "max": 255
     },
     {
       "name": "TiltCoarse",
-      "dmx": 5,
+      "address": 5,
       "min": 0,
       "max": 255
     },
     {
       "name": "TiltFine",
-      "dmx": 6,
+      "address": 6,
       "min": 0,
       "max": 255
     },
     {
       "name": "FixtureControls",
-      "dmx": 7,
+      "address": 7,
       "min": 0,
       "max": 255
     },
     {
       "name": "ColorWheel",
-      "dmx": 8,
+      "address": 8,
       "min": 0,
       "max": 255
     },
     {
       "name": "Red",
-      "dmx": 9,
+      "address": 9,
       "min": 0,
       "max": 255
     },
     {
       "name": "Green",
-      "dmx": 10,
+      "address": 10,
       "min": 0,
       "max": 255
     },
     {
       "name": "Blue",
-      "dmx": 11,
+      "address": 11,
       "min": 0,
       "max": 255
     },
     {
       "name": "Color Temperature",
-      "dmx": 12,
+      "address": 12,
       "min": 0,
       "max": 255
     }

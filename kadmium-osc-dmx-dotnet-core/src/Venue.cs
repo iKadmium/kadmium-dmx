@@ -15,6 +15,8 @@ namespace kadmium_osc_dmx_dotnet_core
 
         public List<Universe> Universes { get; set; }
 
+        public int Id { get; set; }
+
         public Venue(string name, IEnumerable<Universe> universes)
         {
             Name = name;
@@ -46,7 +48,7 @@ namespace kadmium_osc_dmx_dotnet_core
             return obj;
         }
 
-        public static async Task<Venue> Load(JObject obj)
+        public static Venue Load(JObject obj)
         {
             try
             {
@@ -55,7 +57,7 @@ namespace kadmium_osc_dmx_dotnet_core
                 var universesQuery = from universeElement in obj["universes"].Values<JObject>()
                                      select Universe.Load(universeElement);
 
-                List<Universe> universes = (await Task.WhenAll(universesQuery)).ToList();
+                List<Universe> universes = universesQuery.ToList();
 
                 return new Venue(name, universes);
             }

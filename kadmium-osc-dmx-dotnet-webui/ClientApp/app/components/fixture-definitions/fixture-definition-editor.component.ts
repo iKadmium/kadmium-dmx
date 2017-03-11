@@ -19,9 +19,8 @@ import { FixtureDefinition, FixtureDefinitionSkeleton, DMXChannel, Axis, ColorWh
 })
 export class FixtureDefinitionEditorComponent implements OnInit
 {
-    private originalManufacturer: string;
-    private originalModel: string;
-
+    private id: number | null;
+    
     private allManufacturers: string[];
 
     private definition: FixtureDefinition;
@@ -37,20 +36,20 @@ export class FixtureDefinitionEditorComponent implements OnInit
 
     ngOnInit(): void
     {
-        this.originalManufacturer = this.route.snapshot.params['manufacturer'];
-        this.originalModel = this.route.snapshot.params['model'];
-
-        if (this.isNewItem())
-        {
+        this.id = this.route.snapshot.params['id'];
+        
+        if (this.isNewItem()) {
             this.title.setTitle("Fixture Definition Editor - New Definition");
             this.definition = new FixtureDefinition();
         }
-        else
-        {
-            this.title.setTitle(`Fixture Definition Editor - ${this.originalManufacturer} ${this.originalModel}`);
+        else {
             this.fixtureService
-                .get(this.originalManufacturer, this.originalModel)
-                .then(definition => this.definition = definition)
+                .get(this.id)
+                .then(definition =>
+                {
+                    this.definition = definition;
+                    this.title.setTitle(`Fixture Definition Editor - ${this.definition.manufacturer} ${this.definition.model}`);
+                })
                 .catch(reason => this.messageBarService.add("Error", reason));
         }
 
@@ -70,9 +69,9 @@ export class FixtureDefinitionEditorComponent implements OnInit
         let maxChannel = 0;
         this.definition.channels.forEach((value: DMXChannel) => 
         {
-            if (value.dmx > maxChannel) 
+            if (value.address > maxChannel) 
             {
-                maxChannel = value.dmx;
+                maxChannel = value.address;
             }
         });
 
@@ -144,7 +143,7 @@ export class FixtureDefinitionEditorComponent implements OnInit
 
     private isNewItem(): boolean
     {
-        return this.originalManufacturer == null && this.originalModel == null;
+        return this.id == null;
     }
 
     private sortChannels(channels: DMXChannel[]): DMXChannel[]
@@ -152,9 +151,9 @@ export class FixtureDefinitionEditorComponent implements OnInit
         return channels
             .sort((a, b) => 
             {
-                if (a.dmx != b.dmx)
+                if (a.address != b.address)
                 {
-                    return a.dmx - b.dmx;
+                    return a.address - b.address;
                 }
                 else
                 {
@@ -166,18 +165,31 @@ export class FixtureDefinitionEditorComponent implements OnInit
     private save(): void
     {
         this.saving = true;
-        let manufacturer = this.isNewItem() ? this.definition.manufacturer : this.originalManufacturer;
-        let model = this.isNewItem() ? this.definition.name : this.originalModel;
-        this.fixtureService
-            .put(manufacturer, model, this.definition)
-            .then(() =>
-            {
-                window.location.href = "/fixture-definitions";
-            })
-            .catch((reason) => 
-            {
-                this.messageBarService.add("Error", reason);
-                this.saving = false;
-            });
+        if (this.isNewItem()) 
+        {
+            this.fixtureService
+                .post(this.definition)
+                .then(() =>
+                {
+                    window.location.href = "/fixture-definitions";
+                })
+                .catch((reason) =>
+                {
+                    this.messageBarService.add("Error", reason);
+                    this.saving = false;
+                });
+        }
+        else
+        {
+            this.fixtureService
+                .put(this.definition)
+                .then(() => {
+                    window.location.href = "/fixture-definitions";
+                })
+                .catch((reason) => {
+                    this.messageBarService.add("Error", reason);
+                    this.saving = false;
+                });
+        }
     }
 }

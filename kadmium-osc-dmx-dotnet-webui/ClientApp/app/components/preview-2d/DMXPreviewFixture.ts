@@ -31,14 +31,14 @@ export class DMXPreviewFixture implements PreviewFixtureData
 
         for (let channel of data.definition.channels)
         {
-            let dmxChannel = new DMXPreviewChannel(channel.name, channel.dmx, channel.min, channel.max);
+            let dmxChannel = new DMXPreviewChannel(channel.name, channel.address, channel.min, channel.max);
             this.channels.push(dmxChannel);
             this.channelNameMap.set(dmxChannel.name, dmxChannel);
-            let array = this.channelNumberMap.get(dmxChannel.dmx);
+            let array = this.channelNumberMap.get(dmxChannel.address);
             if (array == null)
             {
                 array = [];
-                this.channelNumberMap.set(dmxChannel.dmx + data.address - 2, array);
+                this.channelNumberMap.set(dmxChannel.address + data.address - 2, array);
             }
             array.push(dmxChannel);
         }
@@ -53,7 +53,7 @@ export class DMXPreviewFixture implements PreviewFixtureData
     {
         for (let channel of this.channels)
         {
-            let address = channel.dmx + this.address - 2;
+            let address = channel.address + this.address - 2;
             channel.dmxValue = data[address];
         }
     }

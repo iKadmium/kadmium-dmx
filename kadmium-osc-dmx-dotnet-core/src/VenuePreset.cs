@@ -1,26 +1,44 @@
-﻿using Newtonsoft.Json.Linq;
+﻿using kadmium_osc_dmx_dotnet_core.Fixtures;
+using Newtonsoft.Json.Linq;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 
 namespace kadmium_osc_dmx_dotnet_core
 {
-    public class FixtureEntry
+    public class VenuePresetFixtureEntry
     {
         public int StartChannel { get; set; }
-        public string Manufacturer { get; set; }
-        public string Type { get; set; }
-        public string Group { get; set; }
+        public FixtureDefinition FixtureDefinition { get; set; }
+        public Group Group { get; set; }
+        [NotMapped]
         public JObject Options { get; set; }
+        public string OptionsString
+        {
+            get
+            {
+                return Options.ToString();
+            }
+            set
+            {
+                Options = JObject.Parse(value);
+            }
+        }
+
+        public int Id { get; set; }
     }
 
     public class VenuePreset
     {
         public string Name { get; set; }
-        public List<FixtureEntry> FixtureEntries { get; }
+        public List<VenuePresetFixtureEntry> FixtureEntries { get; set; }
 
-        public VenuePreset() : this("", new List<FixtureEntry>()) { }
+        public int Id { get; set; }
 
-        public VenuePreset(string name, List<FixtureEntry> fixtureEntries)
+        public VenuePreset() : this("", new List<VenuePresetFixtureEntry>()) { }
+
+        public VenuePreset(string name, List<VenuePresetFixtureEntry> fixtureEntries)
         {
             Name = name;
             FixtureEntries = fixtureEntries;
@@ -37,8 +55,8 @@ namespace kadmium_osc_dmx_dotnet_core
                         new JProperty("channel", entry.StartChannel),
                         new JProperty("type",
                             new JObject(
-                                new JProperty("model", entry.Type),
-                                new JProperty("manufacturer", entry.Manufacturer)
+                                new JProperty("model", entry.FixtureDefinition.Model),
+                                new JProperty("manufacturer", entry.FixtureDefinition.Manufacturer)
                             )
                         ),
                         new JProperty("group", entry.Group),
@@ -52,16 +70,21 @@ namespace kadmium_osc_dmx_dotnet_core
         public static VenuePreset Load(JObject obj)
         {
             string name = obj["name"].Value<string>();
-            var fixtureEntries = from fixture in obj["fixtures"].ToArray()
-                                 select new FixtureEntry
-                                 {
-                                     StartChannel = fixture["channel"].Value<int>(),
-                                     Type = fixture["type"].Value<JObject>()["model"].Value<string>(),
-                                     Manufacturer = fixture["type"].Value<JObject>()["manufacturer"].Value<string>(),
-                                     Group = fixture["group"].Value<string>(),
-                                     Options = fixture["options"].Value<JObject>()
-                                 };
-            return new VenuePreset(name, fixtureEntries.ToList());
+            using (var context = new DatabaseContext())
+            {
+                var fixtureEntries = from fixture in obj["fixtures"].ToArray()
+                                     select new VenuePresetFixtureEntry
+                                     {
+                                         StartChannel = fixture["channel"].Value<int>(),
+                                         FixtureDefinition = context.FixtureDefinitions.Single(x => 
+                                            x.Manufacturer == fixture["type"].Value<JObject>()["manufacturer"].Value<string>() &&
+                                            x.Model == fixture["type"].Value<JObject>()["model"].Value<string>()
+                                         ),
+                                         Group = MasterController.Instance.Groups[fixture["group"].Value<string>()],
+                                         Options = fixture["options"].Value<JObject>()
+                                     };
+                return new VenuePreset(name, fixtureEntries.ToList());
+            }
         }
 
     }

@@ -20,6 +20,8 @@ namespace kadmium_osc_dmx_dotnet_core
         public event EventHandler<DMXEventArgs> Updated;
         public event EventHandler<DMXEventArgs> Rendered;
 
+        public int Id { get; set; }
+
         public Universe(string name, int universeID, List<Fixture> fixtures)
         {
             Name = name;
@@ -57,15 +59,14 @@ namespace kadmium_osc_dmx_dotnet_core
             return obj;
         }
 
-        public static async Task<Universe> Load(JObject universeElement)
+        public static Universe Load(JObject universeElement)
         {
             string name = universeElement["name"].Value<string>();
             int universeID = universeElement["universeID"].Value<int>();
-            IEnumerable<Task<Fixture>> fixturesQuery = from fixture in universeElement["fixtures"].Values<JObject>()
+            IEnumerable<Fixture> fixturesQuery = from fixture in universeElement["fixtures"].Values<JObject>()
                                                        select Fixture.Load(fixture);
-
-
-            List<Fixture> fixtures = (await Task.WhenAll(fixturesQuery)).ToList();
+            
+            List<Fixture> fixtures = fixturesQuery.ToList();
 
             Universe universe = new Universe(name, universeID, fixtures);
             return universe;

@@ -67,9 +67,9 @@ export class Preview2DComponent implements OnInit
         return channels
             .sort((a, b) => 
             {
-                if (a.dmx != b.dmx)
+                if (a.address != b.address)
                 {
-                    return a.dmx - b.dmx;
+                    return a.address - b.address;
                 }
                 else
                 {

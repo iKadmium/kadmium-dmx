@@ -2,136 +2,136 @@
 	"$schema": "http://json-schema.org/draft-04/schema#",
 	"title": "Fixture Definition",
 	"type": "object",
-	"properties": {
-		"$schema": {
-			"description": "The schema for this file",
-			"type": "string"
-		},
-		"name": {
-			"description": "The name of the fixture. This should be the same as the filename (without .json)",
-			"type": "string"
-		},
-		"manufacturer": {
-			"description": "The manufacturer of the fixture",
-			"type": "string"
-		},
-		"type": {
-			"description": "The type of light the effect contains",
-			"type": "string",
-			"enum": [
-				"LED",
-				"Effect",
-				"Tungsten"
-			]
-		},
-		"beamAngle": {
-			"description": "The angle of the beam produced",
-			"type": "number"
-		},
-		"lux": {
-			"description": "The brightness (in Lux at 1m)",
-			"type": "number"
-		},
-		"channels": {
-			"description": "The DMX channels the fixture uses",
-			"type": "array",
-			"items": {
-				"type": "object",
-				"properties": {
-					"name": {
-						"description": "The name of the DMX Channel",
-						"type": "string"
-					},
-					"dmx": {
-						"description": "The address of the DMX Channel, starting at 1",
-						"type": "integer"
-					},
-					"min": {
-						"description": "The minimum value that should be used",
-						"type": "integer",
-						"default": 0
-					},
-					"max": {
-						"description": "The maximum value that should be used",
-						"type": "integer",
-						"default": 255
-					}
-				},
-				"required": [
-					"name",
-					"dmx",
-					"min",
-					"max"
-				],
-				"additionalProperties": false
-			}
-		},
-		"movements": {
-			"description": "The movement axis the fixture uses",
-			"type": "array",
-			"items": {
-				"type": "object",
-				"properties": {
-					"name": {
-						"description": "The name of the axis",
-						"type": "string"
-					},
-					"min": {
-						"description": "The minimum value of the axis in degrees",
-						"type": "integer"
-					},
-					"max": {
-						"description": "The maximum value of the axis in degrees",
-						"type": "integer"
-					}
-				},
-				"required": [
-					"name",
-					"min",
-					"max"
-				],
-				"additionalProperties": false
-			}
-		},
-		"colorWheel": {
-			"description": "Color wheel entries",
-			"type": "array",
-			"items": {
-				"type": "object",
-				"properties": {
-					"name": {
-						"description": "The name of the color",
-						"type": "string"
-					},
-					"min": {
-						"description": "The minimum DMX value for the color",
-						"type": "integer"
-					},
-					"max": {
-						"description": "The maximum DMX value for the color",
-						"type": "integer"
-					},
-					"color": {
-						"description": "The color itself, a hex RGB value beginning with a #",
-						"type": "string",
-						"pattern": "#[0-9A-Fa-f]{6}"
-					}
-				},
-				"required": [
-					"name",
-					"min",
-					"max",
-					"color"
-				],
-				"additionalProperties": false
-			}
-		}
-	},
-	"required": [
-		"name",
-		"manufacturer",
-		"type",
-		"channels"
-	],
+  "properties": {
+    "$schema": {
+      "description": "The schema for this file",
+      "type": "string"
+    },
+    "model": {
+      "description": "The name of the fixture. This should be the same as the filename (without .json)",
+      "type": "string"
+    },
+    "manufacturer": {
+      "description": "The manufacturer of the fixture",
+      "type": "string"
+    },
+    "type": {
+      "description": "The type of light the effect contains",
+      "type": "string",
+      "enum": [
+        "LED",
+        "Effect",
+        "Tungsten"
+      ]
+    },
+    "beamAngle": {
+      "description": "The angle of the beam produced",
+      "type": "number"
+    },
+    "lux": {
+      "description": "The brightness (in Lux at 1m)",
+      "type": "number"
+    },
+    "channels": {
+      "description": "The DMX channels the fixture uses",
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "description": "The name of the DMX Channel",
+            "type": "string"
+          },
+          "address": {
+            "description": "The address of the DMX Channel, starting at 1",
+            "type": "integer"
+          },
+          "min": {
+            "description": "The minimum value that should be used",
+            "type": "integer",
+            "default": 0
+          },
+          "max": {
+            "description": "The maximum value that should be used",
+            "type": "integer",
+            "default": 255
+          }
+        },
+        "required": [
+          "name",
+          "address",
+          "min",
+          "max"
+        ],
+        "additionalProperties": false
+      }
+    },
+    "movements": {
+      "description": "The movement axis the fixture uses",
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "description": "The name of the axis",
+            "type": "string"
+          },
+          "min": {
+            "description": "The minimum value of the axis in degrees",
+            "type": "integer"
+          },
+          "max": {
+            "description": "The maximum value of the axis in degrees",
+            "type": "integer"
+          }
+        },
+        "required": [
+          "name",
+          "min",
+          "max"
+        ],
+        "additionalProperties": false
+      }
+    },
+    "colorWheel": {
+      "description": "Color wheel entries",
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "description": "The name of the color",
+            "type": "string"
+          },
+          "min": {
+            "description": "The minimum DMX value for the color",
+            "type": "integer"
+          },
+          "max": {
+            "description": "The maximum DMX value for the color",
+            "type": "integer"
+          },
+          "color": {
+            "description": "The color itself, a hex RGB value beginning with a #",
+            "type": "string",
+            "pattern": "#[0-9A-Fa-f]{6}"
+          }
+        },
+        "required": [
+          "name",
+          "min",
+          "max",
+          "color"
+        ],
+        "additionalProperties": false
+      }
+    }
+  },
+  "required": [
+    "model",
+    "manufacturer",
+    "type",
+    "channels"
+  ],
 	"additionalProperties": false
 }

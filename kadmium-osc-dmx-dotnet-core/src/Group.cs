@@ -3,6 +3,7 @@ using kadmium_osc_dmx_dotnet_core.Solvers;
 using System.Collections.Generic;
 using System.Linq;
 using Newtonsoft.Json.Linq;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace kadmium_osc_dmx_dotnet_core
 {
@@ -10,10 +11,16 @@ namespace kadmium_osc_dmx_dotnet_core
     {
         public string Name { get; set; }
         public int Order { get; set; }
+        [NotMapped]
         public List<GroupSolver> Solvers { get; }
+        [NotMapped]
         public List<Fixture> Fixtures { get; }
+        [NotMapped]
         public Dictionary<string, Attribute> Settables { get; }
+        [NotMapped]
         public Dictionary<string, Attribute> FrameSettables { get; }
+
+        public int Id { get; set; }
 
         public Group(string name, int order)
         {

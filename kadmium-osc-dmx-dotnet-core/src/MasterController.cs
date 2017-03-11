@@ -6,6 +6,7 @@ using System.Threading;
 using Newtonsoft.Json.Linq;
 using System.Threading.Tasks;
 using System.Linq;
+using System.Collections.Generic;
 
 namespace kadmium_osc_dmx_dotnet_core
 {
@@ -14,7 +15,7 @@ namespace kadmium_osc_dmx_dotnet_core
         static int UPDATES_PER_SECOND = 40; // in hz
         static int UPDATE_TIME = 1000 / UPDATES_PER_SECOND;
 
-        public ConcurrentDictionary<string, Group> Groups { get; private set; }
+        public Dictionary<string, Group> Groups { get; private set; }
         public Transmitter Transmitter { get; private set; }
         public Listener Listener { get; private set; }
         public Venue Venue { get; private set; }
@@ -56,17 +57,18 @@ namespace kadmium_osc_dmx_dotnet_core
         {
             JObject settings = await FileAccess.LoadSettings();
 
-            instance = new MasterController();
-            Instance.Groups = new ConcurrentDictionary<string, Group>();
-            foreach (Group group in await FileAccess.LoadGroups())
+            instance = new MasterController()
             {
-                Instance.Groups.TryAdd(group.Name, group);
-            }
-            Instance.Transmitter = SACNTransmitter.Load(settings["sacnTransmitter"].Value<JObject>());
-
-            Instance.Listener = new OSCListener(settings["oscPort"].Value<int>(), "OSC Listener");
-            Instance.updateTimer = new Timer(Instance.UpdateTimer_Elapsed, null, UPDATE_TIME, UPDATE_TIME);
+                Groups = (await FileAccess.LoadGroups()).ToDictionary(x => x.Name),
+                Transmitter = SACNTransmitter.Load(settings["sacnTransmitter"].Value<JObject>()),
+                Listener = new OSCListener(settings["oscPort"].Value<int>(), "OSC Listener")
+            };
+            instance.updateTimer = new Timer(Instance.UpdateTimer_Elapsed, null, UPDATE_TIME, UPDATE_TIME);
             Venue.Status = new Status("No Venue Loaded");
+            using (var h = new DatabaseContext())
+            {
+                await h.FilchData();
+            }
             //Instance.UpdatesEnabled = true;
         }
 
@@ -81,7 +83,7 @@ namespace kadmium_osc_dmx_dotnet_core
             var venueObj = await FileAccess.LoadVenue(venue);
             UpdatesEnabled = false;
             Venue?.Clear();
-            Venue = Venue.Load(venueObj).Result;
+            Venue = Venue.Load(venueObj);
             UpdatesEnabled = true;
         }
 

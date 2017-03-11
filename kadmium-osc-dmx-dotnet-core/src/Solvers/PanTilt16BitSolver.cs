@@ -13,7 +13,7 @@ namespace kadmium_osc_dmx_dotnet_core.Solvers
 
         public PanTilt16BitSolver(Fixture fixture) : base(fixture, Get16BitAxisNames(fixture.Definition).ToArray())
         {
-            AxisNames = from axis in fixture.Definition.Axis
+            AxisNames = from axis in fixture.Definition.Movements
                         select axis.Name;
             foreach (var name in Get16BitAxisNames(fixture.Definition))
             {
@@ -24,7 +24,7 @@ namespace kadmium_osc_dmx_dotnet_core.Solvers
 
         private static IEnumerable<string> Get16BitAxisNames(FixtureDefinition fixtureDefinition)
         {
-            var names = from movement in fixtureDefinition.Axis
+            var names = from movement in fixtureDefinition.Movements
                         select movement.Name;
             return names;
         }

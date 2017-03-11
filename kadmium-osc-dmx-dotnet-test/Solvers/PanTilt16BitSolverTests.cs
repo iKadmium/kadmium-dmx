@@ -39,7 +39,7 @@ namespace kadmium_osc_dmx_dotnet_test.Solvers.Solvers
             var definition = new FixtureDefinition();
             foreach (string axisName in axis)
             {
-                definition.Axis.Add(new MovementAxis(axisName, -90, 90));
+                definition.Movements.Add(new MovementAxis(axisName, -90, 90));
                 definition.Channels.Add(new DMXChannel(axisName + "Coarse", definition.Channels.Count + 1));
                 definition.Channels.Add(new DMXChannel(axisName + "Fine", definition.Channels.Count + 1));
             }

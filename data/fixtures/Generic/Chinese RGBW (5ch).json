@@ -1,6 +1,6 @@
 ﻿{
   "$schema": "../fixture.schema.json",
-  "name": "Chinese RGBW (5ch)",
+  "model": "Chinese RGBW (5ch)",
   "manufacturer": "Generic",
   "type": "LED",
   "beamAngle": 30.0,
@@ -8,31 +8,31 @@
   "channels": [
     {
       "name": "Red",
-      "dmx": 1,
+      "address": 1,
       "min": 0,
       "max": 255
     },
     {
       "name": "Green",
-      "dmx": 2,
+      "address": 2,
       "min": 0,
       "max": 255
     },
     {
       "name": "Blue",
-      "dmx": 3,
+      "address": 3,
       "min": 0,
       "max": 255
     },
     {
       "name": "White",
-      "dmx": 4,
+      "address": 4,
       "min": 0,
       "max": 255
     },
     {
       "name": "Strobe",
-      "dmx": 5,
+      "address": 5,
       "min": 0,
       "max": 223
     }
