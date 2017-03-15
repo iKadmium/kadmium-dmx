@@ -37,12 +37,12 @@ export class GroupsComponent
         this.groups.splice(index, 1);
     }
 
-    private move(group: Group, offset: number): void
+    private swap(oldIndex: number, newIndex: number): void
     {
-        let old_index = this.groups.indexOf(group);
-        let new_index = old_index + offset;
-
-        this.groups.splice(new_index, 0, this.groups.splice(old_index, 1)[0]);
+        let oldOrder = this.groupsSorted[oldIndex].order;
+        let newOrder = this.groupsSorted[newIndex].order;
+        this.groupsSorted[oldIndex].order = newOrder;
+        this.groupsSorted[newIndex].order = oldOrder;
     }
 
     private validate(): boolean
@@ -51,9 +51,9 @@ export class GroupsComponent
         return result;
     }
 
-    private get groupNames(): string[]
+    private get groupsSorted(): Group[]
     {
-        return this.groups.map((value: Group) => value.name);
+        return this.groups.sort((a, b) => a.order - b.order);
     }
 
     private async save(): Promise<void>

@@ -9,7 +9,7 @@ using kadmium_osc_dmx_dotnet_core.Fixtures;
 namespace kadmiumoscdmxdotnetcore.Migrations
 {
     [DbContext(typeof(DatabaseContext))]
-    [Migration("20170315080339_InitialMigration")]
+    [Migration("20170315115058_InitialMigration")]
     partial class InitialMigration
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)

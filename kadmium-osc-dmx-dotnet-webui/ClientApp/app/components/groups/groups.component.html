@@ -9,10 +9,10 @@
                 </tr>
             </thead>
             <tbody>
-                <tr *ngFor="let group of groups; let i = index">
+                <tr *ngFor="let group of groupsSorted; let i = index">
                     <td>
-                        <button class="btn" (click)="move(group, -1)" [disabled]="i == 0"><span class="glyphicon glyphicon-arrow-up"></span></button>
-                        <button class="btn" (click)="move(group, 1)" [disabled]="i == groups.length - 1"><span class="glyphicon glyphicon-arrow-down"></span></button>
+                        <button class="btn" (click)="swap(i, i - 1)" [disabled]="i == 0"><span class="glyphicon glyphicon-arrow-up"></span></button>
+                        <button class="btn" (click)="swap(i, i + 1)" [disabled]="i == groups.length - 1"><span class="glyphicon glyphicon-arrow-down"></span></button>
                     </td>
                     <td>
                         <table-input>
