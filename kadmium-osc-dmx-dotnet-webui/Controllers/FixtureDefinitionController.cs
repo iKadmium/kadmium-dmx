@@ -49,6 +49,7 @@ namespace kadmium_osc_dmx_dotnet_webui.Controllers
         {
             using (var context = new DatabaseContext())
             {
+                //firstly delete the 
                 FixtureDefinition definition = await context.FixtureDefinitions.FindAsync(id);
                 context.FixtureDefinitions.Remove(definition);
                 await context.SaveChangesAsync();

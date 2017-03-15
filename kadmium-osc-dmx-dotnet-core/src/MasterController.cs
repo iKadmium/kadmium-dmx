@@ -57,18 +57,19 @@ namespace kadmium_osc_dmx_dotnet_core
         {
             JObject settings = await FileAccess.LoadSettings();
 
-            instance = new MasterController()
-            {
-                Groups = (await FileAccess.LoadGroups()).ToDictionary(x => x.Name),
-                Transmitter = SACNTransmitter.Load(settings["sacnTransmitter"].Value<JObject>()),
-                Listener = new OSCListener(settings["oscPort"].Value<int>(), "OSC Listener")
-            };
-            instance.updateTimer = new Timer(Instance.UpdateTimer_Elapsed, null, UPDATE_TIME, UPDATE_TIME);
-            Venue.Status = new Status("No Venue Loaded");
             using (var h = new DatabaseContext())
             {
                 await h.FilchData();
+
+                instance = new MasterController()
+                {
+                    Groups = h.Groups.ToDictionary(x => x.Name),
+                    Transmitter = SACNTransmitter.Load(settings["sacnTransmitter"].Value<JObject>()),
+                    Listener = new OSCListener(settings["oscPort"].Value<int>(), "OSC Listener")
+                };
             }
+            instance.updateTimer = new Timer(Instance.UpdateTimer_Elapsed, null, UPDATE_TIME, UPDATE_TIME);
+            
             //Instance.UpdatesEnabled = true;
         }
 

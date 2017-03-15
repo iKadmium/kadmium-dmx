@@ -2,6 +2,8 @@
 using Microsoft.AspNetCore.Mvc;
 using kadmium_osc_dmx_dotnet_core;
 using System.Collections.Generic;
+using Microsoft.EntityFrameworkCore;
+using System.Threading.Tasks;
 
 // For more information on enabling MVC for empty projects, visit http://go.microsoft.com/fwlink/?LinkID=397860
 
@@ -13,22 +15,24 @@ namespace kadmium_osc_dmx_dotnet_webui.Controllers
     {
         // GET: /<controller>/
         [HttpGet]
-        public IEnumerable<string> Get()
+        public async Task<IEnumerable<Group>> Get()
         {
-            return MasterController.Instance.Groups.Values.OrderBy(x => x.Order).Select(x => x.Name);
+            IEnumerable<Group> returnVal;
+            using (DatabaseContext context = new DatabaseContext())
+            {
+                returnVal = await context.Groups.OrderBy(x => x.Order).ToListAsync();
+            }
+            return returnVal;
         }
 
         [HttpPut]
-        public void Put([FromBody]string[] groups)
+        public async Task Put([FromBody]IEnumerable<Group> groups)
         {
-            MasterController.Instance.Groups.Clear();
-            for (int i = 0; i < groups.Length; i++)
+            using (DatabaseContext context = new DatabaseContext())
             {
-                string groupName = groups[i];
-                Group group = new Group(groupName, i);
-                MasterController.Instance.Groups.Add(groupName, group);
+                await context.UpdateCollection(context.Groups, groups, (x => x.Id));
+                await context.SaveChangesAsync();
             }
-            FileAccess.SaveGroups();
         }
 
         [HttpGet]

@@ -216,7 +216,7 @@ namespace kadmium_osc_dmx_dotnet_core
                 bool dirty = false;
                 foreach (Universe universe in venue.Universes)
                 {
-                    var matches = universe.Fixtures.Where(x => x.Definition.Manufacturer == manufacturer && x.Definition.Model == model).ToList();
+                    var matches = universe.Fixtures.Where(x => x.FixtureDefinition.Manufacturer == manufacturer && x.FixtureDefinition.Model == model).ToList();
                     if (matches.Count > 0)
                     {
                         matches.ForEach(x => universe.Fixtures.Remove(x));
@@ -261,11 +261,11 @@ namespace kadmium_osc_dmx_dotnet_core
                 bool dirty = false;
                 foreach (Universe universe in venue.Universes)
                 {
-                    var matches = universe.Fixtures.Where(x => x.Definition.Manufacturer == originalManufacturer && x.Definition.Model == originalModel).ToList();
+                    var matches = universe.Fixtures.Where(x => x.FixtureDefinition.Manufacturer == originalManufacturer && x.FixtureDefinition.Model == originalModel).ToList();
                     foreach (var match in matches)
                     {
-                        match.Definition.Manufacturer = manufacturer;
-                        match.Definition.Model = model;
+                        match.FixtureDefinition.Manufacturer = manufacturer;
+                        match.FixtureDefinition.Model = model;
                         dirty = true;
                     }
                 }

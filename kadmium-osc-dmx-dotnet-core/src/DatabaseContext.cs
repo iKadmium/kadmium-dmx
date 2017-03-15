@@ -37,8 +37,6 @@ namespace kadmium_osc_dmx_dotnet_core
             System.Console.WriteLine("{0} changes written", count);
             //var definition = await FixtureDefinition.Load("Generic", "Chinese Moving Wash");
             //FixtureDefinitions.Add(definition);
-
-
         }
 
         private async Task FilchGroups()
@@ -50,7 +48,7 @@ namespace kadmium_osc_dmx_dotnet_core
         private void DeleteData()
         {
             var tables = new[] { "ColorWheelEntry", "DMXChannel", "Fixture", "MovementAxis", "Universe",
-                "VenuePresetFixtureEntry", "VenuePresets", "Venues", "FixtureDefinitions", "Groups" };
+                "VenuePresets", "Venues", "FixtureDefinitions", "Groups" };
             foreach(string table in tables)
             {
                 Database.ExecuteSqlCommand("delete from " + table);
@@ -99,31 +97,74 @@ namespace kadmium_osc_dmx_dotnet_core
             original.AddRange(newItems);
         }
 
+        public async Task UpdateCollection<TObject, TKey>(DbSet<TObject> original, IEnumerable<TObject> modified, Func<TObject, TKey> getKey) 
+            where TObject : class 
+        {
+            foreach(var item in modified)
+            {
+                var key = getKey(item);
+                TObject originalItem = await original.FindAsync(key);
+                if(originalItem == null)
+                {
+                    await original.AddAsync(item);
+                }
+                else
+                {
+                    this.Entry(originalItem).CurrentValues.SetValues(item);
+                }
+            }
+
+            var toDelete = from originalItem in original
+                           where !modified.Any(x => getKey(x).Equals(getKey(originalItem)))
+                           select originalItem;
+            
+            foreach(TObject item in toDelete)
+            {
+                original.Remove(item);
+            }
+        }
+
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             modelBuilder.Entity<FixtureDefinition>()
                 .HasMany(x => x.Channels)
-                .WithOne();
+                .WithOne()
+                .OnDelete(Microsoft.EntityFrameworkCore.Metadata.DeleteBehavior.Cascade);
 
             modelBuilder.Entity<FixtureDefinition>()
                 .HasMany(x => x.ColorWheel)
-                .WithOne();
+                .WithOne()
+                .OnDelete(Microsoft.EntityFrameworkCore.Metadata.DeleteBehavior.Cascade);
 
             modelBuilder.Entity<FixtureDefinition>()
                 .HasMany(x => x.Movements)
-                .WithOne();
+                .WithOne()
+                .OnDelete(Microsoft.EntityFrameworkCore.Metadata.DeleteBehavior.Cascade);
 
+            modelBuilder.Entity<Fixture>()
+                .HasOne(x => x.FixtureDefinition)
+                .WithMany()
+                .OnDelete(Microsoft.EntityFrameworkCore.Metadata.DeleteBehavior.Cascade);
+
+            modelBuilder.Entity<Fixture>()
+                .HasOne(x => x.Group)
+                .WithMany()
+                .OnDelete(Microsoft.EntityFrameworkCore.Metadata.DeleteBehavior.Cascade);
+            
             modelBuilder.Entity<Venue>()
                 .HasMany(x => x.Universes)
-                .WithOne();
+                .WithOne()
+                .OnDelete(Microsoft.EntityFrameworkCore.Metadata.DeleteBehavior.Cascade);
 
             modelBuilder.Entity<Universe>()
                 .HasMany(x => x.Fixtures)
-                .WithOne();
+                .WithOne()
+                .OnDelete(Microsoft.EntityFrameworkCore.Metadata.DeleteBehavior.Cascade);
 
             modelBuilder.Entity<VenuePreset>()
                 .HasMany(x => x.FixtureEntries)
-                .WithOne();
+                .WithOne()
+                .OnDelete(Microsoft.EntityFrameworkCore.Metadata.DeleteBehavior.Cascade);
         }
     }
 }

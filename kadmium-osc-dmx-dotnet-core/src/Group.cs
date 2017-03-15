@@ -4,24 +4,29 @@ using System.Collections.Generic;
 using System.Linq;
 using Newtonsoft.Json.Linq;
 using System.ComponentModel.DataAnnotations.Schema;
+using Newtonsoft.Json;
 
 namespace kadmium_osc_dmx_dotnet_core
 {
+    [JsonObject(MemberSerialization.OptOut) ]
     public class Group
     {
+        public int Id { get; set; }
         public string Name { get; set; }
         public int Order { get; set; }
         [NotMapped]
+        [JsonIgnore]
         public List<GroupSolver> Solvers { get; }
         [NotMapped]
+        [JsonIgnore]
         public List<Fixture> Fixtures { get; }
         [NotMapped]
+        [JsonIgnore]
         public Dictionary<string, Attribute> Settables { get; }
         [NotMapped]
+        [JsonIgnore]
         public Dictionary<string, Attribute> FrameSettables { get; }
-
-        public int Id { get; set; }
-
+        
         public Group(string name, int order)
         {
             Name = name;
@@ -33,7 +38,7 @@ namespace kadmium_osc_dmx_dotnet_core
             Solvers.AddRange(GroupSolver.GetDefaultSolvers(this, Enumerable.Empty<string>()));
         }
 
-        public Group() : this("", MasterController.Instance.Groups.Count + 1)
+        public Group() : this("", int.MaxValue)
         {
         }
 
@@ -84,6 +89,11 @@ namespace kadmium_osc_dmx_dotnet_core
             string name = groupObject["name"].Value<string>();
             int order = groupObject["order"]?.Value<int>() ?? MasterController.Instance.Groups.Count + 1;
             return new Group(name, order);
+        }
+
+        public override string ToString()
+        {
+            return Name;
         }
     }
 }

@@ -9,16 +9,39 @@ namespace kadmium_osc_dmx_dotnet_core.Fixtures
 {
     public class Fixture
     {
+        public int Id { get; set; }
+
         public int StartChannel { get; set; }
-        public int EndChannel { get { return StartChannel + Definition.Channels.Max(x => x.Address); } }
-        
-        public FixtureDefinition Definition { get; set; }
+        public int EndChannel { get { return StartChannel + FixtureDefinition.Channels.Max(x => x.Address); } }
+
+        private FixtureDefinition fixtureDefinition;
+        public FixtureDefinition FixtureDefinition
+        {
+            get { return fixtureDefinition; }
+            set
+            {
+                fixtureDefinition = value;
+                Settables.Clear();
+                FrameSettables.Clear();
+                foreach (Solvers.Attribute attribute in FixtureDefinition.Channels)
+                {
+                    Settables.Add(attribute.Name, attribute);
+                    FrameSettables.Add(attribute.Name, attribute);
+                }
+                MovementAxis.Clear();
+                foreach (var axis in FixtureDefinition.Movements)
+                {
+                    MovementAxis.Add(axis.Name, axis);
+                }
+                Solvers.AddRange(FixtureSolver.GetDefaultSolvers(this, Options));
+            }
+        }
         [NotMapped]
         public Dictionary<string, Solvers.Attribute> Settables { get; }
         [NotMapped]
         public Dictionary<string, Solvers.Attribute> FrameSettables { get; }
         [NotMapped]
-        public Dictionary<string, MovementAxis> MovementAxis { get; }
+        public Dictionary<string, MovementAxis> MovementAxis { get; set; }
         [NotMapped]
         public List<FixtureSolver> Solvers { get; }
         [NotMapped]
@@ -34,31 +57,40 @@ namespace kadmium_osc_dmx_dotnet_core.Fixtures
                 Options = JObject.Parse(value);
             }
         }
-        public Group Group { get; set; }
+        private Group group;
+        public Group Group {
+            get { return group; }
+            set
+            {
+                if(group != null)
+                {
+                    group.Fixtures.Remove(this);
+                }
+                group = value;
+                group.Fixtures.Add(this);
+            }
+        }
 
-        public int Id { get; set; }
-
-        public Fixture(FixtureDefinition definition, int startChannel, Group group, JObject options)
+        public Fixture()
         {
-            Definition = definition;
             Solvers = new List<FixtureSolver>();
-            Settables = new Dictionary<string, Solvers.Attribute>();
-            FrameSettables = new Dictionary<string, Solvers.Attribute>();
-            foreach (Solvers.Attribute attribute in Definition.Channels)
+            Settables = new Dictionary<string, Attribute>();
+            FrameSettables = new Dictionary<string, Attribute>();
+            MovementAxis = new Dictionary<string, Fixtures.MovementAxis>();
+            StartChannel = 1;
+            Options = new JObject()
             {
-                Settables.Add(attribute.Name, attribute);
-                FrameSettables.Add(attribute.Name, attribute);
-            }
-            MovementAxis = new Dictionary<string, MovementAxis>();
-            foreach (var axis in Definition.Movements)
-            {
-                MovementAxis.Add(axis.Name, axis);
-            }
-            Solvers.AddRange(FixtureSolver.GetDefaultSolvers(this, options));
+                new JProperty("maxBrightness", 1.0f)
+            };
+        }
+
+        public Fixture(FixtureDefinition definition, int startChannel, Group group, JObject options) : this()
+        {
+            FixtureDefinition = definition;
             Options = options;
+            
             StartChannel = startChannel;
             Group = group;
-            Group.Fixtures.Add(this);
         }
 
         public void Update()
@@ -82,8 +114,8 @@ namespace kadmium_osc_dmx_dotnet_core.Fixtures
                 new JProperty("channel", StartChannel),
                 new JProperty("type",
                     new JObject(
-                        new JProperty("manufacturer", Definition.Manufacturer),
-                        new JProperty("model", Definition.Model)
+                        new JProperty("manufacturer", FixtureDefinition.Manufacturer),
+                        new JProperty("model", FixtureDefinition.Model)
                     )
                 ),
                 new JProperty("group", group.Name),
@@ -105,12 +137,14 @@ namespace kadmium_osc_dmx_dotnet_core.Fixtures
             string model = type["model"].Value<string>();
             string manufacturer = type["manufacturer"].Value<string>();
             FixtureDefinition definition = null;
+            string groupName = obj["group"].Value<string>();
+            Group group = null;
             using (var context = new DatabaseContext())
             {
                 definition = context.FixtureDefinitions.Single(x => x.Manufacturer == manufacturer && x.Model == model);
+                group = context.Groups.Single(x => x.Name == groupName);
             }
-            string groupName = obj["group"].Value<string>();
-            Group group = MasterController.Instance.Groups.ContainsKey(groupName) ? MasterController.Instance.Groups[groupName] : MasterController.Instance.Groups.Values.First();
+            
             JObject options = obj["options"].Value<JObject>();
             Fixture fixture = new Fixture(definition, startChannel, group, options);
             return fixture;
@@ -118,7 +152,7 @@ namespace kadmium_osc_dmx_dotnet_core.Fixtures
 
         public void Render(byte[] dmx)
         {
-            var channels = from channel in Definition.Channels
+            var channels = from channel in FixtureDefinition.Channels
                            group channel by channel.Address into chanGroup
                            select chanGroup;
 
@@ -148,7 +182,7 @@ namespace kadmium_osc_dmx_dotnet_core.Fixtures
 
         public override string ToString()
         {
-            return Definition.Model + " [" + StartChannel + " - " + EndChannel + "]";
+            return FixtureDefinition.Model + " [" + StartChannel + " - " + EndChannel + "]";
         }
     }
 }

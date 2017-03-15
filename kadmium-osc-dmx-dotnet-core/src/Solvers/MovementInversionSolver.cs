@@ -11,7 +11,7 @@ namespace kadmium_osc_dmx_dotnet_core.Solvers
 
         public MovementInversionSolver(Fixture fixture, JObject options) : base(fixture)
         {
-            InvertedAxis = GetInvertedAxis(fixture.Definition, options);
+            InvertedAxis = GetInvertedAxis(fixture.FixtureDefinition, options);
         }
 
         public override void Solve(Dictionary<string, Attribute> Attributes)

@@ -21,6 +21,7 @@ namespace kadmium_osc_dmx_dotnet_core
         {
             Name = name;
             Universes = new List<Universe>();
+            Status = new Status("No venue loaded");
             foreach (Universe universe in universes)
             {
                 Universes.Add(universe);

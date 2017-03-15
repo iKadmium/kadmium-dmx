@@ -68,7 +68,7 @@ namespace kadmium_osc_dmx_dotnet_webui.WebSockets
 
         public override void Dispose()
         {
-            foreach (Universe universe in MasterController.Instance.Venue?.Universes)
+            foreach (Universe universe in MasterController.Instance.Venue?.Universes ?? Enumerable.Empty<Universe>())
             {
                 universe.Updated -= Universe_Updated;
             }

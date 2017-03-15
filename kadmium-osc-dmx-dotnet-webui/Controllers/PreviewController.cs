@@ -36,7 +36,7 @@ namespace kadmium_osc_dmx_dotnet_webui.Controllers
                                     select new JObject(
                                         new JProperty("address", fixture.StartChannel),
                                         new JProperty("group", fixture.Group.Name),
-                                        new JProperty("definition", fixture.Definition.Serialize())
+                                        new JProperty("definition", fixture.FixtureDefinition.Serialize())
                                     )
                                 )
                             )

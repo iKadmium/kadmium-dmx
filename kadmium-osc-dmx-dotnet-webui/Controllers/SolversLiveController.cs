@@ -41,7 +41,7 @@ namespace kadmium_osc_dmx_dotnet_webui.Controllers
                                 new JArray(
                                     from fixture in universe.Fixtures
                                     select new JObject(
-                                        new JProperty("type", fixture.Definition.Model),
+                                        new JProperty("type", fixture.FixtureDefinition.Model),
                                         new JProperty("channel", fixture.StartChannel),
                                         new JProperty("attributes",
                                             new JArray(

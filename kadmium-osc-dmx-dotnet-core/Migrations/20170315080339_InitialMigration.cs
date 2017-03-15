@@ -72,7 +72,7 @@ namespace kadmiumoscdmxdotnetcore.Migrations
                     Id = table.Column<int>(nullable: false)
                         .Annotation("Sqlite:Autoincrement", true),
                     ColorString = table.Column<string>(nullable: true),
-                    FixtureDefinitionId = table.Column<int>(nullable: false),
+                    FixtureDefinitionId = table.Column<int>(nullable: true),
                     Max = table.Column<int>(nullable: false),
                     Min = table.Column<int>(nullable: false),
                     Name = table.Column<string>(nullable: true)
@@ -117,7 +117,7 @@ namespace kadmiumoscdmxdotnetcore.Migrations
                 {
                     Id = table.Column<int>(nullable: false)
                         .Annotation("Sqlite:Autoincrement", true),
-                    FixtureDefinitionId = table.Column<int>(nullable: false),
+                    FixtureDefinitionId = table.Column<int>(nullable: true),
                     Max = table.Column<int>(nullable: false),
                     Min = table.Column<int>(nullable: false),
                     Name = table.Column<string>(nullable: true)
@@ -152,42 +152,7 @@ namespace kadmiumoscdmxdotnetcore.Migrations
                         column: x => x.VenueId,
                         principalTable: "Venues",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.Restrict);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "VenuePresetFixtureEntry",
-                columns: table => new
-                {
-                    Id = table.Column<int>(nullable: false)
-                        .Annotation("Sqlite:Autoincrement", true),
-                    FixtureDefinitionId = table.Column<int>(nullable: true),
-                    GroupId = table.Column<int>(nullable: true),
-                    OptionsString = table.Column<string>(nullable: true),
-                    StartChannel = table.Column<int>(nullable: false),
-                    VenuePresetId = table.Column<int>(nullable: true)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_VenuePresetFixtureEntry", x => x.Id);
-                    table.ForeignKey(
-                        name: "FK_VenuePresetFixtureEntry_FixtureDefinitions_FixtureDefinitionId",
-                        column: x => x.FixtureDefinitionId,
-                        principalTable: "FixtureDefinitions",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Restrict);
-                    table.ForeignKey(
-                        name: "FK_VenuePresetFixtureEntry_Groups_GroupId",
-                        column: x => x.GroupId,
-                        principalTable: "Groups",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Restrict);
-                    table.ForeignKey(
-                        name: "FK_VenuePresetFixtureEntry_VenuePresets_VenuePresetId",
-                        column: x => x.VenuePresetId,
-                        principalTable: "VenuePresets",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Restrict);
+                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
@@ -196,33 +161,40 @@ namespace kadmiumoscdmxdotnetcore.Migrations
                 {
                     Id = table.Column<int>(nullable: false)
                         .Annotation("Sqlite:Autoincrement", true),
-                    DefinitionId = table.Column<int>(nullable: true),
+                    FixtureDefinitionId = table.Column<int>(nullable: true),
                     GroupId = table.Column<int>(nullable: true),
                     OptionsString = table.Column<string>(nullable: true),
                     StartChannel = table.Column<int>(nullable: false),
-                    UniverseId = table.Column<int>(nullable: true)
+                    UniverseId = table.Column<int>(nullable: true),
+                    VenuePresetId = table.Column<int>(nullable: true)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Fixture", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_Fixture_FixtureDefinitions_DefinitionId",
-                        column: x => x.DefinitionId,
+                        name: "FK_Fixture_FixtureDefinitions_FixtureDefinitionId",
+                        column: x => x.FixtureDefinitionId,
                         principalTable: "FixtureDefinitions",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.Restrict);
+                        onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
                         name: "FK_Fixture_Groups_GroupId",
                         column: x => x.GroupId,
                         principalTable: "Groups",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.Restrict);
+                        onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
                         name: "FK_Fixture_Universe_UniverseId",
                         column: x => x.UniverseId,
                         principalTable: "Universe",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.Restrict);
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_Fixture_VenuePresets_VenuePresetId",
+                        column: x => x.VenuePresetId,
+                        principalTable: "VenuePresets",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateIndex(
@@ -236,9 +208,9 @@ namespace kadmiumoscdmxdotnetcore.Migrations
                 column: "FixtureDefinitionId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Fixture_DefinitionId",
+                name: "IX_Fixture_FixtureDefinitionId",
                 table: "Fixture",
-                column: "DefinitionId");
+                column: "FixtureDefinitionId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Fixture_GroupId",
@@ -251,6 +223,11 @@ namespace kadmiumoscdmxdotnetcore.Migrations
                 column: "UniverseId");
 
             migrationBuilder.CreateIndex(
+                name: "IX_Fixture_VenuePresetId",
+                table: "Fixture",
+                column: "VenuePresetId");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_MovementAxis_FixtureDefinitionId",
                 table: "MovementAxis",
                 column: "FixtureDefinitionId");
@@ -259,21 +236,6 @@ namespace kadmiumoscdmxdotnetcore.Migrations
                 name: "IX_Universe_VenueId",
                 table: "Universe",
                 column: "VenueId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_VenuePresetFixtureEntry_FixtureDefinitionId",
-                table: "VenuePresetFixtureEntry",
-                column: "FixtureDefinitionId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_VenuePresetFixtureEntry_GroupId",
-                table: "VenuePresetFixtureEntry",
-                column: "GroupId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_VenuePresetFixtureEntry_VenuePresetId",
-                table: "VenuePresetFixtureEntry",
-                column: "VenuePresetId");
         }
 
         protected override void Down(MigrationBuilder migrationBuilder)
@@ -291,19 +253,16 @@ namespace kadmiumoscdmxdotnetcore.Migrations
                 name: "MovementAxis");
 
             migrationBuilder.DropTable(
-                name: "VenuePresetFixtureEntry");
+                name: "Groups");
 
             migrationBuilder.DropTable(
                 name: "Universe");
 
             migrationBuilder.DropTable(
-                name: "FixtureDefinitions");
-
-            migrationBuilder.DropTable(
-                name: "Groups");
-
-            migrationBuilder.DropTable(
                 name: "VenuePresets");
+
+            migrationBuilder.DropTable(
+                name: "FixtureDefinitions");
 
             migrationBuilder.DropTable(
                 name: "Venues");

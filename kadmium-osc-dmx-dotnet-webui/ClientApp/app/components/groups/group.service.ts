@@ -18,14 +18,14 @@ export class GroupService
             .toPromise()
             .then(response =>
             {
-                let data = (response.json() as string[]);
-                return data.map((value: string) => new Group(value));
+                let data = (response.json() as Group[]);
+                return data;
             });
     }
 
     public put(groups: Group[]): Promise<void>
     {
-        return this.http.put(this.groupsUrl, groups.map((value: Group) => value.name))
+        return this.http.put(this.groupsUrl, groups)
             .toPromise()
             .then(response => { });
     }

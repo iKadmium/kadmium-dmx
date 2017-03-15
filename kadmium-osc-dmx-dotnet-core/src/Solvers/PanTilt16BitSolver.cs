@@ -11,11 +11,11 @@ namespace kadmium_osc_dmx_dotnet_core.Solvers
 
         public bool Eased { get; set; }
 
-        public PanTilt16BitSolver(Fixture fixture) : base(fixture, Get16BitAxisNames(fixture.Definition).ToArray())
+        public PanTilt16BitSolver(Fixture fixture) : base(fixture, Get16BitAxisNames(fixture.FixtureDefinition).ToArray())
         {
-            AxisNames = from axis in fixture.Definition.Movements
+            AxisNames = from axis in fixture.FixtureDefinition.Movements
                         select axis.Name;
-            foreach (var name in Get16BitAxisNames(fixture.Definition))
+            foreach (var name in Get16BitAxisNames(fixture.FixtureDefinition))
             {
                 fixture.Settables[name + "Coarse"].Controlled = true;
                 fixture.Settables[name + "Fine"].Controlled = true;

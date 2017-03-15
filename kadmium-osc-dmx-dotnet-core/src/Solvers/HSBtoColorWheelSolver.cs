@@ -11,7 +11,7 @@ namespace kadmium_osc_dmx_dotnet_core.Solvers
 
         public HSBtoColorWheelSolver(Fixture fixture) : base(fixture, "Hue", "Saturation", "Brightness")
         {
-            ColorWheel = fixture.Definition.ColorWheel;
+            ColorWheel = fixture.FixtureDefinition.ColorWheel;
             fixture.Settables["ColorWheel"].Controlled = true;
         }
 

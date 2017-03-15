@@ -18,7 +18,7 @@ namespace kadmium_osc_dmx_dotnet_core.Fixtures
         public FixtureType Type { get; set; }
         public float Lux { get; set; }
         public float BeamAngle { get; set; }
-
+        
         public FixtureDefinition()
         {
             Channels = new List<DMXChannel>();
