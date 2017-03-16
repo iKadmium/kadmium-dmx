@@ -4,7 +4,7 @@ using Newtonsoft.Json.Linq;
 
 namespace kadmium_osc_dmx_dotnet_core.Transmitters
 {
-    public abstract class Transmitter
+    public abstract class Transmitter : IDisposable
     {
 
         protected Transmitter(string name, int delay)
@@ -69,7 +69,7 @@ namespace kadmium_osc_dmx_dotnet_core.Transmitters
             throw new ArgumentException("No such listener known as " + element["type"].Value<string>());
         }
 
-        public abstract void Close();
+        public abstract void Dispose();
         public abstract JObject Serialize();
     }
 }

@@ -7,7 +7,7 @@
       "universeID": 1,
       "fixtures": [
         {
-          "channel": 55,
+          "address": 55,
           "type": {
             "manufacturer": "Venue - The New Globe",
             "model": "Moving Head"
@@ -31,7 +31,7 @@
           }
         },
         {
-          "channel": 67,
+          "address": 67,
           "type": {
             "manufacturer": "Venue - The New Globe",
             "model": "Moving Head"
@@ -55,7 +55,7 @@
           }
         },
         {
-          "channel": 79,
+          "address": 79,
           "type": {
             "manufacturer": "Venue - The New Globe",
             "model": "Moving Head"
@@ -81,7 +81,7 @@
           }
         },
         {
-          "channel": 25,
+          "address": 25,
           "type": {
             "manufacturer": "Venue - The New Globe",
             "model": "PAR"
@@ -94,7 +94,7 @@
           }
         },
         {
-          "channel": 46,
+          "address": 46,
           "type": {
             "manufacturer": "Venue - The New Globe",
             "model": "PAR"

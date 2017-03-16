@@ -7,10 +7,11 @@ using Newtonsoft.Json.Linq;
 using System.Threading.Tasks;
 using System.Linq;
 using System.Collections.Generic;
+using System;
 
 namespace kadmium_osc_dmx_dotnet_core
 {
-    public class MasterController
+    public class MasterController : IDisposable
     {
         static int UPDATES_PER_SECOND = 40; // in hz
         static int UPDATE_TIME = 1000 / UPDATES_PER_SECOND;
@@ -67,6 +68,8 @@ namespace kadmium_osc_dmx_dotnet_core
                     Transmitter = SACNTransmitter.Load(settings["sacnTransmitter"].Value<JObject>()),
                     Listener = new OSCListener(settings["oscPort"].Value<int>(), "OSC Listener")
                 };
+
+                Venue.Status = new Status("No venue loaded");
             }
             instance.updateTimer = new Timer(Instance.UpdateTimer_Elapsed, null, UPDATE_TIME, UPDATE_TIME);
             
@@ -79,12 +82,13 @@ namespace kadmium_osc_dmx_dotnet_core
             this.SolverStatus = new Status("No Solvers Loaded");
         }
 
-        public async Task LoadVenue(string venue)
+        public void LoadVenue(Venue venue)
         {
-            var venueObj = await FileAccess.LoadVenue(venue);
             UpdatesEnabled = false;
-            Venue?.Clear();
-            Venue = Venue.Load(venueObj);
+            Venue?.Deactivate();
+            Venue?.Dispose();
+            Venue = venue;
+            venue.Activate();
             UpdatesEnabled = true;
         }
 
@@ -111,11 +115,11 @@ namespace kadmium_osc_dmx_dotnet_core
             Render();
         }
 
-        public void Close()
+        public void Dispose()
         {
             updateTimer.Dispose();
-            Transmitter?.Close();
-            Listener?.Close();
+            Transmitter?.Dispose();
+            Listener?.Dispose();
         }
     }
 }

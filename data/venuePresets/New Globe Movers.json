@@ -2,7 +2,7 @@
   "name": "New Globe Movers",
   "fixtures": [
     {
-      "channel": 55,
+      "address": 55,
       "type": {
         "model": "Moving Head",
         "manufacturer": "Venue - The New Globe"
@@ -26,7 +26,7 @@
       }
     },
     {
-      "channel": 67,
+      "address": 67,
       "type": {
         "model": "Moving Head",
         "manufacturer": "Venue - The New Globe"
@@ -50,7 +50,7 @@
       }
     },
     {
-      "channel": 79,
+      "address": 79,
       "type": {
         "model": "Moving Head",
         "manufacturer": "Venue - The New Globe"

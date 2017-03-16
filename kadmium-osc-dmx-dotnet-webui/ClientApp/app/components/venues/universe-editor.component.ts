@@ -181,4 +181,9 @@ export class UniverseEditorComponent
         }
     }
 
+    private get sortedFixtures(): Fixture[]
+    {
+        return this.universe.fixtures.slice().sort((a, b) => a.address - b.address);
+    }
+
 }

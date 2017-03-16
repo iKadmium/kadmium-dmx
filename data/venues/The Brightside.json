@@ -7,7 +7,7 @@
       "universeID": 1,
       "fixtures": [
         {
-          "channel": 400,
+          "address": 400,
           "type": {
             "manufacturer": "Generic",
             "model": "Chinese RGBW (5ch)"
@@ -20,7 +20,7 @@
           }
         },
         {
-          "channel": 405,
+          "address": 405,
           "type": {
             "manufacturer": "Generic",
             "model": "Chinese RGBW (5ch)"
@@ -33,7 +33,7 @@
           }
         },
         {
-          "channel": 410,
+          "address": 410,
           "type": {
             "manufacturer": "Generic",
             "model": "Chinese RGBW (5ch)"
@@ -46,7 +46,7 @@
           }
         },
         {
-          "channel": 415,
+          "address": 415,
           "type": {
             "manufacturer": "Generic",
             "model": "Chinese RGBW (5ch)"
@@ -59,7 +59,7 @@
           }
         },
         {
-          "channel": 101,
+          "address": 101,
           "type": {
             "manufacturer": "Martin",
             "model": "Mac 101"
@@ -83,7 +83,7 @@
           }
         },
         {
-          "channel": 113,
+          "address": 113,
           "type": {
             "manufacturer": "Martin",
             "model": "Mac 101"
@@ -107,7 +107,7 @@
           }
         },
         {
-          "channel": 125,
+          "address": 125,
           "type": {
             "manufacturer": "Martin",
             "model": "Mac 101"
@@ -131,7 +131,7 @@
           }
         },
         {
-          "channel": 137,
+          "address": 137,
           "type": {
             "manufacturer": "Martin",
             "model": "Mac 101"

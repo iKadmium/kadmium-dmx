@@ -22,7 +22,7 @@ export class VenueEditorComponent
     @ViewChild("inputBox") inputBox: InputBoxComponent;
     @ViewChild("fixtureOptionsEditor") fixtureOptionsEditor: FixtureOptionsEditorComponent;
 
-    private originalName: string;
+    private venueId: number | null;
     private saving: boolean;
 
     private venue: Venue;
@@ -36,20 +36,19 @@ export class VenueEditorComponent
 
     ngOnInit(): void
     {
-        this.originalName = this.route.snapshot.params['id'];
+        this.venueId = this.route.snapshot.params['id'];
         if (this.isNewItem())
         {
             this.venue = new Venue();
             let universe = new Universe();
             universe.name = "Default Universe";
-            universe.universeID = 1;
             this.venue.universes.push(universe);
             this.selectedUniverse = universe;
         }
         else
         {
             this.venueService
-                .get(this.originalName)
+                .get(this.venueId)
                 .then((value: Venue) =>
                 {
                     this.venue = value;
@@ -61,7 +60,7 @@ export class VenueEditorComponent
 
     private isNewItem(): boolean
     {
-        return this.originalName == null;
+        return this.venueId == null;
     }
 
     private addUniverse(): void
@@ -87,10 +86,17 @@ export class VenueEditorComponent
     private async save(): Promise<void>
     {
         this.saving = true;
-        let key = this.isNewItem() ? this.venue.name : this.originalName;
         try
         {
-            await this.venueService.put(this.originalName, this.venue);
+            if (this.isNewItem())
+            {
+                await this.venueService.post(this.venue);
+            }
+            else
+            {
+                await this.venueService.put(this.venue.id, this.venue);
+            }
+            
             window.location.href = "/venues";
         }
         catch (error)

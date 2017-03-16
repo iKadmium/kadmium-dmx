@@ -25,6 +25,7 @@ export class FixtureOptionsEditorComponent implements OnChanges
     private definition: FixtureDefinition;
     private skeletons: FixtureDefinitionSkeleton[];
     private groups: Group[];
+    private manufacturerFilter: string;
 
     constructor(private fixtureDefinitionsService: FixtureDefinitionsService, private groupService: GroupService)
     {
@@ -44,12 +45,15 @@ export class FixtureOptionsEditorComponent implements OnChanges
             if(fixtureChanges.currentValue != null)
             {
                 let fixture: Fixture = fixtureChanges.currentValue;
-                if(fixture.type.manufacturer == null || fixture.type.model == null)
+                if(fixture.type == null)
                 {
-                    fixture.type.manufacturer = this.getManufacturers()[0];
-                    fixture.type.model = this.getModels(fixture.type.manufacturer)[0];
+                    this.manufacturerFilter = this.getManufacturers()[0];
                 }
-                this.updateDefinition(fixture.type.manufacturer, fixture.type.model);
+                else
+                {
+                    this.manufacturerFilter = fixture.type.manufacturer;
+                }
+                this.updateDefinition(fixture.type);
             }
             else
             {
@@ -57,12 +61,6 @@ export class FixtureOptionsEditorComponent implements OnChanges
                 this.axisOptions = [];
             }
         }
-    }
-
-    private selectManufacturer(manufacturer: string): void
-    {
-        this.fixture.type.model = this.getModels(manufacturer)[0];
-        this.updateDefinition(manufacturer, this.fixture.type.model);
     }
 
     public get moving(): boolean
@@ -77,32 +75,18 @@ export class FixtureOptionsEditorComponent implements OnChanges
             .filter((value, index, array) => array.indexOf(value) == index);
     }
 
-    private getModels(manufacturer: string): string[]
+    private getDefinitions(manufacturer: string): FixtureDefinitionSkeleton[]
     {
         return this.skeletons
-            .filter(value => value.manufacturer == manufacturer)
-            .map(value => value.model);
+            .filter(value => value.manufacturer == manufacturer);
     }
 
-    private async updateDefinition(manufacturer: string, model: string): Promise<void>
+    private async updateDefinition(skeleton: FixtureDefinitionSkeleton): Promise<void>
     {
-        if(manufacturer != null && model == null)
-        {
-            model = this.getModels(manufacturer)[0];
-        }
-        if(manufacturer != null && model != null)
-        {
-            let skeleton = this.skeletons.find(value => value.manufacturer == manufacturer && value.model == model);
-            this.definition = await this.fixtureDefinitionsService
-                .get(skeleton.id);
-            this.axisOptions = this.definition.movements
-                .map(value => new AxisOptions(value.name, this.fixture, this.definition));
-        }
-        else
-        {
-            this.definition = null;
-            this.axisOptions = [];
-        }
+        this.definition = await this.fixtureDefinitionsService
+            .get(skeleton.id);
+        this.axisOptions = this.definition.movements
+            .map(value => new AxisOptions(value.name, this.fixture, this.definition));
     }
 }
 

@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { Headers, Http } from '@angular/http';
 import 'rxjs/add/operator/toPromise';
 
-import { Venue } from "./venue";
+import { Venue, VenueSkeleton } from "./venue";
 import { URLs } from "../../shared/url";
 
 @Injectable()
@@ -12,7 +12,7 @@ export class VenueService
 
     constructor(private http: Http) { }
 
-    public get(id: string): Promise<Venue>
+    public get(id: number): Promise<Venue>
     {
         return this.http.get(this.venueUrl + "/" + id)
             .toPromise()
@@ -23,32 +23,39 @@ export class VenueService
             });
     }
 
-    public getNames(): Promise<string[]>
+    public getSkeletons(): Promise<VenueSkeleton[]>
     {
         return this.http.get(this.venueUrl)
             .toPromise()
             .then(response =>
             {
-                let data = (response.json() as string[]);
+                let data = (response.json() as VenueSkeleton[]);
                 return data;
             });
     }
 
-    public activate(id: string): Promise<void>
+    public activate(id: number): Promise<void>
     {
         return this.http.get(this.venueUrl + "/activate/" + id)
             .toPromise()
             .then(response => { });
     }
 
-    public put(id: string, venue: Venue): Promise<void>
+    public put(id: number, venue: Venue): Promise<void>
     {
         return this.http.put(this.venueUrl + "/" + id, venue)
             .toPromise()
             .then(() => { });
     }
 
-    public delete(id: string): Promise<void>
+    public post(venue: Venue): Promise<void>
+    {
+        return this.http.post(this.venueUrl, venue)
+            .toPromise()
+            .then(() => { });
+    }
+
+    public delete(id: number): Promise<void>
     {
         return this.http.delete(this.venueUrl + "/" + id)
             .toPromise()

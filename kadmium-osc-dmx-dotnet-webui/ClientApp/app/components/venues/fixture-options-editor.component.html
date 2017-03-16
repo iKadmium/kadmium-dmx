@@ -2,20 +2,20 @@
     <div class="panel-body">
         <form class="form-horizontal" #editorForm="ngForm">
             <fieldset name="commonFields">
-                <labelled-input label="Manufacturer">
-                    <select #input #model="ngModel" name="manufacturer" class="form-control" [(ngModel)]="fixture.type.manufacturer" (ngModelChange)="selectManufacturer($event)">
+                <labelled-input label="Manufacturer:">
+                    <select #input #model="ngModel" name="manufacturer" class="form-control" [(ngModel)]="manufacturerFilter">
                         <option *ngFor="let manufacturer of getManufacturers()">{{manufacturer}}</option>
                     </select>
                 </labelled-input>
-                <labelled-input label="Model">
-                    <select #input #model="ngModel" name="model" class="form-control" [(ngModel)]="fixture.type.model" (ngModelChange)="updateDefinition(fixture.type.manufacturer, $event)" >
-                        <option *ngFor="let model of getModels(fixture.type.manufacturer)">{{model}}</option>
+                <labelled-input label="Model:">
+                    <select #input #model="ngModel" name="model" class="form-control" [(ngModel)]="fixture.type" (ngModelChange)="updateDefinition($event)" >
+                        <option *ngFor="let definition of getDefinitions(manufacturerFilter)" [ngValue]="definition">{{definition.model}}</option>
                     </select>
                 </labelled-input>
-                <labelled-input label="Channel">
-                    <input #input #model="ngModel" name="channel" class="form-control" min="1" max="512" type="number" [(ngModel)]="fixture.channel" />
+                <labelled-input label="Address:">
+                    <input #input #model="ngModel" name="address" class="form-control" min="1" max="512" type="number" [(ngModel)]="fixture.address" />
                 </labelled-input>
-                <labelled-input label="Group">
+                <labelled-input label="Group:">
                     <select #input #model="ngModel" name="group" class="form-control" [(ngModel)]="fixture.group" >
                         <option *ngFor="let group of groups">{{group.name}}</option>
                     </select>

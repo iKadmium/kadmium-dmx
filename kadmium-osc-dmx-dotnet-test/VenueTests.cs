@@ -24,10 +24,14 @@ namespace kadmium_osc_dmx_dotnet_test
         public async void LoadAllIncludedVenues()
         {
             await MasterController.Initialise();
-            foreach (string venueName in FileAccess.GetVenueNames())
+            using (var context = new DatabaseContext())
             {
-                await MasterController.Instance.LoadVenue(venueName);
+                foreach(var venue in context.Venues)
+                {
+
+                }
             }
+                
         }
     }
 }

@@ -155,8 +155,6 @@ namespace kadmiumoscdmxdotnetcore.Migrations
 
                     b.Property<int?>("VenueId");
 
-                    b.Property<string>("VenueName");
-
                     b.HasKey("Id");
 
                     b.HasIndex("VenueId");

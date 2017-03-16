@@ -14,6 +14,7 @@ import { MessageBarComponent } from "../status/message-bar/message-bar.component
 import { StatusCode } from "../status/status";
 import { URLs } from "../../shared/url";
 import { TogglableService, Togglable } from "./togglable-service";
+import { VenueSkeleton } from "../venues/venue";
 
 @Component({
     selector: 'dashboard',
@@ -32,7 +33,7 @@ export class DashboardComponent implements OnInit
     osc: TogglableService<OSCListenerService>;
     solvers: TogglableService<SolversLiveService>;
 
-    private venueNames: string[];
+    private venueSkeletons: VenueSkeleton[];
 
     constructor(private venueService: VenueService, private dashboardService: DashboardService,
         private solversService: SolversLiveService, private oscService: OSCListenerService,
@@ -44,13 +45,13 @@ export class DashboardComponent implements OnInit
         this.sacn = new TogglableService(sacnService, messageBarService);
         this.osc = new TogglableService(oscService, messageBarService);
         this.solvers = new TogglableService(solversService, messageBarService);
-        this.venueNames = [];
+        this.venueSkeletons = [];
     }
 
     ngOnInit(): void
     {
         this.dashboardService.subscribe(this);
-        this.venueService.getNames().then(names => this.venueNames = names).catch(reason => this.messageBarService.add("Error", reason));
+        this.venueService.getSkeletons().then(skeletons => this.venueSkeletons = skeletons).catch(reason => this.messageBarService.add("Error", reason));
         this.sacn.init();
         this.osc.init();
         this.solvers.init();
@@ -88,11 +89,11 @@ export class DashboardComponent implements OnInit
         statusPanel.status.update(status.code, status.message);
     }
 
-    activateVenue(venueName: string): void
+    activateVenue(venueSkeleton: VenueSkeleton): void
     {
         this.venueService
-            .activate(venueName)
-            .then(() => this.messageBarService.add("Success", venueName + " successfully loaded"))
+            .activate(venueSkeleton.id)
+            .then(() => this.messageBarService.add("Success", venueSkeleton.name + " successfully loaded"))
             .catch((reason) => this.messageBarService.add("Error", reason));
     }
 

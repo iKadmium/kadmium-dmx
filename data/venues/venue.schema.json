@@ -10,7 +10,7 @@
 			"items": {
 				"type": "object",
 				"properties": {
-					"channel": {
+					"address": {
 						"description": "The channel assigned to the fixture",
 						"type": "number"
 					},
@@ -80,7 +80,7 @@
 					}
 				},
 				"required": [
-					"channel",
+					"address",
 					"group",
 					"options",
 					"type"

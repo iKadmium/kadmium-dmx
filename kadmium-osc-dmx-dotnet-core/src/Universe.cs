@@ -1,4 +1,5 @@
 ﻿using kadmium_osc_dmx_dotnet_core.Fixtures;
+using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
@@ -8,26 +9,34 @@ using System.Threading.Tasks;
 
 namespace kadmium_osc_dmx_dotnet_core
 {
-    public class Universe
+    public class Universe : IDisposable
     {
-        [ForeignKey("Venue")]
-        public string VenueName { get; set; }
         public static int DMX_UNIVERSE_SIZE = 512;
+
+        public int Id { get; set; }
         public string Name { get; set; }
+        [JsonProperty(PropertyName ="universeID")]
         public int UniverseNumber { get; set; }
         public List<Fixture> Fixtures { get; }
+        [NotMapped]
+        [JsonIgnore]
         public byte[] DMX { get; }
         public event EventHandler<DMXEventArgs> Updated;
         public event EventHandler<DMXEventArgs> Rendered;
 
-        public int Id { get; set; }
+        public Universe()
+        {
+            Name = "";
+            UniverseNumber = 1;
+            Fixtures = new List<Fixture>();
+            DMX = new byte[DMX_UNIVERSE_SIZE];
+        }
 
-        public Universe(string name, int universeID, List<Fixture> fixtures)
+        public Universe(string name, int universeID, List<Fixture> fixtures) : this()
         {
             Name = name;
             UniverseNumber = universeID;
-            Fixtures = fixtures;
-            DMX = new byte[DMX_UNIVERSE_SIZE];
+            Fixtures.AddRange(fixtures);
         }
 
         public JObject Serialize()
@@ -39,7 +48,7 @@ namespace kadmium_osc_dmx_dotnet_core
             return obj;
         }
 
-        public void Clear()
+        public void Dispose()
         {
             foreach (Fixture fixture in Fixtures)
             {
@@ -86,6 +95,16 @@ namespace kadmium_osc_dmx_dotnet_core
         {
             MasterController.Instance.Transmitter.Transmit(DMX, UniverseNumber);
             Rendered?.Invoke(this, new DMXEventArgs(DMX));
+        }
+
+        public void Activate()
+        {
+            Fixtures.ForEach(x => x.Activate());
+        }
+
+        public void Deactivate()
+        {
+            Fixtures.ForEach(x => x.Deactivate());
         }
     }
 

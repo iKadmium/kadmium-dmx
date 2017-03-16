@@ -30,6 +30,15 @@ namespace kadmium_osc_dmx_dotnet_core.Fixtures
             BeamAngle = 30;
         }
 
+        public FixtureDefinitionSkeleton GetSkeleton()
+        {
+            FixtureDefinitionSkeleton skeleton = new FixtureDefinitionSkeleton();
+            skeleton.Id = Id;
+            skeleton.Manufacturer = Manufacturer;
+            skeleton.Model = Model;
+            return skeleton;
+        }
+
         public static FixtureDefinition Load(JObject modelElement)
         {
             FixtureDefinition definition = new FixtureDefinition();
@@ -121,7 +130,13 @@ namespace kadmium_osc_dmx_dotnet_core.Fixtures
             }
 
             return obj;
-        }
-        
+        }   
+    }
+
+    public class FixtureDefinitionSkeleton
+    {
+        public int Id { get; set; }
+        public string Manufacturer { get; set; }
+        public string Model { get; set; }
     }
 }

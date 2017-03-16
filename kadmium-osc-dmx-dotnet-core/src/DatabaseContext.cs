@@ -39,6 +39,18 @@ namespace kadmium_osc_dmx_dotnet_core
             //FixtureDefinitions.Add(definition);
         }
 
+        public async Task RecursiveLoadAsync<T>(T item) where T : class
+        {
+            foreach(var collection in Entry(item).Collections)
+            {
+                await collection.LoadAsync();
+                foreach(var thing in collection.CurrentValue)
+                {
+                    await RecursiveLoadAsync(thing);
+                }
+            }
+        }
+        
         private async Task FilchGroups()
         {
             var groups = await FileAccess.LoadGroups();
@@ -84,7 +96,7 @@ namespace kadmium_osc_dmx_dotnet_core
                 VenuePresets.Add(venuePreset);
             }
         }
-
+        
         public void UpdateCollection<T>(List<T> original, List<T> modified)
         {
             var common = original.Intersect(modified).ToList();
@@ -165,6 +177,55 @@ namespace kadmium_osc_dmx_dotnet_core
                 .HasMany(x => x.FixtureEntries)
                 .WithOne()
                 .OnDelete(Microsoft.EntityFrameworkCore.Metadata.DeleteBehavior.Cascade);
+        }
+
+        public async Task<Venue> LoadVenue(int id)
+        {
+            var venue = await Venues.FindAsync(id);
+
+            await Entry(venue).Collection(x => x.Universes).LoadAsync();
+            foreach(var universe in venue.Universes)
+            {
+                await Entry(universe).Collection(x => x.Fixtures).LoadAsync();
+                foreach(var fixture in universe.Fixtures)
+                {
+                    await Entry(fixture).Reference(x => x.Group).LoadAsync();
+                    await Entry(fixture).Reference(x => x.FixtureDefinition).LoadAsync();
+                    foreach(var collection in Entry(fixture.FixtureDefinition).Collections)
+                    {
+                        await collection.LoadAsync();
+                    }
+                    fixture.Initialize();
+                }
+            }
+
+            return venue;
+        }
+
+        public async Task<Group> LoadGroup(string groupName)
+        {
+            var grp = await Groups.SingleAsync(x => x.Name == groupName);
+            return grp;
+        }
+
+        public async Task<FixtureDefinition> LoadFixtureDefinition(string manufacturer, string model)
+        {
+            var definition = await FixtureDefinitions.SingleAsync(x => x.Manufacturer == manufacturer && x.Model == model);
+            foreach(var collection in Entry(definition).Collections)
+            {
+                await collection.LoadAsync();
+            }
+            return definition;
+        }
+
+        public async Task<FixtureDefinition> LoadFixtureDefinition(int id)
+        {
+            var definition = await FixtureDefinitions.FindAsync(id);
+            foreach (var collection in Entry(definition).Collections)
+            {
+                await collection.LoadAsync();
+            }
+            return definition;
         }
     }
 }

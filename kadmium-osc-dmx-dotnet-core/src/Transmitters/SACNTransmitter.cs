@@ -73,7 +73,7 @@ namespace kadmium_osc_dmx_dotnet_core.Transmitters
             return transmitter;
         }
 
-        public override void Close()
+        public override void Dispose()
         {
             SACNClient.Close();
         }

@@ -1,12 +1,20 @@
 import { FixtureDefinitionSkeleton } from "../fixture-definitions/fixture-definition";
 
-export class Venue
+export interface VenueSkeleton
 {
+    id: number;
+    name: string;
+}
+
+export class Venue implements VenueSkeleton
+{
+    id: number;
     name: string;
     universes: Universe[];
 
     constructor()
     {
+        this.id = 0;
         this.name = "";
         this.universes = [];
     }
@@ -14,12 +22,14 @@ export class Venue
 
 export class Universe
 {
+    id: number;
     name: string;
     universeID: number;
     fixtures: Fixture[];
 
     constructor()
     {
+        this.id = 0;
         this.name = "";
         this.universeID = 1;
         this.fixtures = [];
@@ -28,14 +38,14 @@ export class Universe
 
 export class Fixture
 {
-    channel: number;
+    address: number;
     group: string;
     type: FixtureDefinitionSkeleton;
     options: FixtureDefinitionOptions;
 
     constructor()
     {
-        this.channel = 1;
+        this.address = 1;
         this.group = "";
         this.type = new FixtureDefinitionSkeleton();
         this.options = new FixtureDefinitionOptions();

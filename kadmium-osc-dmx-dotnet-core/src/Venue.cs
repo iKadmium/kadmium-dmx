@@ -4,29 +4,28 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using System.ComponentModel.DataAnnotations.Schema;
+using Newtonsoft.Json;
 
 namespace kadmium_osc_dmx_dotnet_core
 {
-    public class Venue
+    public class Venue : IDisposable
     {
+        public int Id { get; set; }
         public string Name { get; set; }
+        [JsonIgnore]
         [NotMapped]
         public static Status Status { get; set; }
 
         public List<Universe> Universes { get; set; }
-
-        public int Id { get; set; }
-
+        
         public Venue(string name, IEnumerable<Universe> universes)
         {
             Name = name;
             Universes = new List<Universe>();
-            Status = new Status("No venue loaded");
             foreach (Universe universe in universes)
             {
                 Universes.Add(universe);
             }
-            Status.Update(StatusCode.Success, Name + " running", this);
         }
 
         public Venue() : this("", Enumerable.Empty<Universe>())
@@ -85,12 +84,23 @@ namespace kadmium_osc_dmx_dotnet_core
             }
         }
 
-        public void Clear()
+        public void Dispose()
         {
             foreach (Universe universe in Universes)
             {
-                universe.Clear();
+                universe.Dispose();
             }
+        }
+
+        public void Activate()
+        {
+            Universes.ForEach(x => x.Activate());
+            Status.Update(StatusCode.Success, Name + " running", this);
+        }
+
+        public void Deactivate()
+        {
+            Universes.ForEach(x => x.Deactivate());
         }
     }
 }

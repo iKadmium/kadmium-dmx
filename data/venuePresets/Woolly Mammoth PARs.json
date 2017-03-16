@@ -2,7 +2,7 @@
   "name": "Woolly Mammoth PARs",
   "fixtures": [
     {
-      "channel": 88,
+      "address": 88,
       "type": {
         "manufacturer": "AVE",
         "model": "Par64B"
@@ -15,7 +15,7 @@
       }
     },
     {
-      "channel": 41,
+      "address": 41,
       "type": {
         "manufacturer": "AVE",
         "model": "Par64B"
@@ -28,7 +28,7 @@
       }
     },
     {
-      "channel": 48,
+      "address": 48,
       "type": {
         "manufacturer": "AVE",
         "model": "Par64B"
@@ -41,7 +41,7 @@
       }
     },
     {
-      "channel": 67,
+      "address": 67,
       "type": {
         "manufacturer": "AVE",
         "model": "Par64B"
@@ -54,7 +54,7 @@
       }
     },
     {
-      "channel": 74,
+      "address": 74,
       "type": {
         "manufacturer": "AVE",
         "model": "Par64B"

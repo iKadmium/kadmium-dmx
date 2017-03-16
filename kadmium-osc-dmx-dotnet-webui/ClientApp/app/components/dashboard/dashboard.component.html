@@ -1,12 +1,12 @@
 <div class="row">
     <div class="col-md-3">
         <status-panel #venuePanel name="Venue">
-            <div class="dropdown" *ngIf="venueNames">
+            <div class="dropdown" *ngIf="venueSkeletons">
                 <button class="btn btn-primary dropdown-toggle" type="button" data-toggle="dropdown">Load Venue
                 <span class="caret"></span></button>
                 <ul class="dropdown-menu">
-                    <li *ngFor="let venueName of venueNames">
-                        <a (click)="activateVenue(venueName)">{{venueName}}</a>
+                    <li *ngFor="let venueSkeleton of venueSkeletons">
+                        <a (click)="activateVenue(venueSkeleton)">{{venueSkeleton.name}}</a>
                     </li>
                 </ul>
             </div>

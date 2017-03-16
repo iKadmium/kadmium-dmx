@@ -1,9 +1,11 @@
-import { Component, ViewContainerRef } from '@angular/core';
+import { Component, ViewContainerRef, OnInit } from '@angular/core';
 
 import { MessageBarComponent } from "../status/message-bar/message-bar.component";
 
 import { Overlay } from "angular2-modal";
 import { Modal } from "angular2-modal/plugins/bootstrap";
+
+import { VenueSkeleton } from "./venue";
 
 import { VenueService } from "./venue.service";
 import { MessageBarService } from "../status/message-bar/message-bar.service";
@@ -14,7 +16,7 @@ import { Title } from "@angular/platform-browser";
     template: require('./venues.component.html'),
     providers: [VenueService]
 })
-export class VenuesComponent
+export class VenuesComponent implements OnInit
 {
     venues: VenueSkeleton[];
 
@@ -22,20 +24,20 @@ export class VenuesComponent
     {
         title.setTitle("Venues");
         overlay.defaultViewContainer = vcRef;
+        this.venues = [];
+    }
+
+    ngOnInit(): void
+    {
         this.venueService
-            .getNames()
-            .then((value: string[]) => this.venues = value.map(value =>
-            {
-                let skeleton = new VenueSkeleton();
-                skeleton.name = value;
-                return skeleton;
-            }))
+            .getSkeletons()
+            .then((value: VenueSkeleton[]) => this.venues = value)
             .catch((reason) => this.messageBarService);
     }
 
     private getEditUrl(entry: VenueSkeleton)
     {
-        return "venues/" + entry.name;
+        return "venues/" + entry.id;
     }
 
     private async deleteConfirm(index: number): Promise<void>
@@ -57,7 +59,7 @@ export class VenuesComponent
             {
                 try 
                 {
-                    await this.venueService.delete(venue.name);
+                    await this.venueService.delete(venue.id);
                     this.venues.splice(index, 1);
                     this.messageBarService.add("Success", venue.name + " successfully removed");
                 }
@@ -72,9 +74,4 @@ export class VenuesComponent
             //errors are generated when the message box is cancelled
         }
     }
-}
-
-class VenueSkeleton
-{
-    name: string;
 }

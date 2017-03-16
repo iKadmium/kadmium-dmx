@@ -74,11 +74,7 @@ namespace kadmium_osc_dmx_dotnet_webui.Controllers
             using (var context = new DatabaseContext())
             {
                 FixtureDefinition definition = FixtureDefinition.Load(definitionJson);
-                FixtureDefinition originalDefinition = await context.FixtureDefinitions.FindAsync(id);
-                foreach (var collection in context.Entry(originalDefinition).Collections)
-                {
-                    await collection.LoadAsync();    
-                }
+                FixtureDefinition originalDefinition = await context.LoadFixtureDefinition(id);
                 context.UpdateCollection(originalDefinition.Channels, definition.Channels);
                 context.UpdateCollection(originalDefinition.Movements, definition.Movements);
                 context.UpdateCollection(originalDefinition.ColorWheel, definition.ColorWheel);
@@ -86,11 +82,5 @@ namespace kadmium_osc_dmx_dotnet_webui.Controllers
                 await context.SaveChangesAsync();
             }
         }
-    }
-    public class FixtureDefinitionSkeleton
-    {
-        public int Id { get; set; }
-        public string Manufacturer { get; set; }
-        public string Model { get; set; }
     }
 }

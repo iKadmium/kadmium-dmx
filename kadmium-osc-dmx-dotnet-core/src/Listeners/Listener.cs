@@ -3,7 +3,7 @@ using System;
 
 namespace kadmium_osc_dmx_dotnet_core.Listeners
 {
-    public abstract class Listener
+    public abstract class Listener : IDisposable
     {
         public Listener(string name)
         {
@@ -42,7 +42,7 @@ namespace kadmium_osc_dmx_dotnet_core.Listeners
             throw new ArgumentException("No such listener known as " + listenerElement["type"].Value<string>());
         }
 
-        public abstract void Close();
+        public abstract void Dispose();
         public abstract JObject Serialize();
     }
 }

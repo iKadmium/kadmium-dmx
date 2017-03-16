@@ -141,8 +141,7 @@ namespace kadmiumoscdmxdotnetcore.Migrations
                         .Annotation("Sqlite:Autoincrement", true),
                     Name = table.Column<string>(nullable: true),
                     UniverseNumber = table.Column<int>(nullable: false),
-                    VenueId = table.Column<int>(nullable: true),
-                    VenueName = table.Column<string>(nullable: true)
+                    VenueId = table.Column<int>(nullable: true)
                 },
                 constraints: table =>
                 {

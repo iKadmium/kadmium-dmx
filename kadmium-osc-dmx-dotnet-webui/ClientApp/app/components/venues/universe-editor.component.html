@@ -4,8 +4,8 @@
         <li [ngClass]="{'active': selectedFixture == null}">
             <a (click)="selectedFixture = null">Fixtures</a>
         </li>
-        <li *ngFor="let fixture of universe.fixtures; let i = index" [ngClass]="{'active': selectedFixture == fixture}">
-            <a (click)="selectedFixture = fixture">{{fixture.channel}} {{fixture.type.manufacturer}} {{fixture.type.model}}
+        <li *ngFor="let fixture of sortedFixtures; let i = index" [ngClass]="{'active': selectedFixture == fixture}">
+            <a (click)="selectedFixture = fixture">{{fixture.address}} {{fixture.type.manufacturer}} {{fixture.type.model}}
                 <span class="glyphicon glyphicon-remove" (click)="removeFixture(i)"></span>
             </a>
         </li>
@@ -21,14 +21,14 @@
                 <thead>
                     <tr>
                         <th>Selected</th>
-                        <th>Channel</th>
+                        <th>Address</th>
                         <th>Manufacturer</th>
                         <th>Model</th>
                         <th>Group</th>
                     </tr>
                 </thead>
                 <tbody>
-                    <tr *ngFor="let fixture of universe.fixtures; let i = index">
+                    <tr *ngFor="let fixture of sortedFixtures; let i = index">
                         <td>
                             <div class="checkbox">
                                 <label>
@@ -36,7 +36,7 @@
                                 </label>
                             </div>
                         </td>
-                        <td>{{fixture.channel}}</td>
+                        <td>{{fixture.address}}</td>
                         <td>{{fixture.type.manufacturer}}</td>
                         <td>{{fixture.type.model}}</td>
                         <td>{{fixture.group}}</td>

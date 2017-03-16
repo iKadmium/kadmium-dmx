@@ -7,7 +7,7 @@
       "universeID": 1,
       "fixtures": [
         {
-          "channel": 301,
+          "address": 301,
           "type": {
             "manufacturer": "Generic",
             "model": "Chinese Moving Wash"
@@ -31,7 +31,7 @@
           }
         },
         {
-          "channel": 315,
+          "address": 315,
           "type": {
             "manufacturer": "Generic",
             "model": "Chinese Moving Wash"
@@ -55,7 +55,7 @@
           }
         },
         {
-          "channel": 329,
+          "address": 329,
           "type": {
             "manufacturer": "Generic",
             "model": "Chinese Moving Wash"
@@ -81,7 +81,7 @@
           }
         },
         {
-          "channel": 343,
+          "address": 343,
           "type": {
             "manufacturer": "Generic",
             "model": "Chinese Moving Wash"
@@ -107,7 +107,7 @@
           }
         },
         {
-          "channel": 400,
+          "address": 400,
           "type": {
             "manufacturer": "Generic",
             "model": "Chinese RGBW (5ch)"
@@ -120,7 +120,7 @@
           }
         },
         {
-          "channel": 405,
+          "address": 405,
           "type": {
             "manufacturer": "Generic",
             "model": "Chinese RGBW (5ch)"
@@ -133,7 +133,7 @@
           }
         },
         {
-          "channel": 410,
+          "address": 410,
           "type": {
             "manufacturer": "Generic",
             "model": "Chinese RGBW (5ch)"
@@ -146,7 +146,7 @@
           }
         },
         {
-          "channel": 415,
+          "address": 415,
           "type": {
             "manufacturer": "Generic",
             "model": "Chinese RGBW (5ch)"

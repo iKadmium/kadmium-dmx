@@ -9,7 +9,7 @@ using kadmium_osc_dmx_dotnet_core.Fixtures;
 namespace kadmiumoscdmxdotnetcore.Migrations
 {
     [DbContext(typeof(DatabaseContext))]
-    [Migration("20170315115058_InitialMigration")]
+    [Migration("20170316045939_InitialMigration")]
     partial class InitialMigration
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -155,8 +155,6 @@ namespace kadmiumoscdmxdotnetcore.Migrations
                     b.Property<int>("UniverseNumber");
 
                     b.Property<int?>("VenueId");
-
-                    b.Property<string>("VenueName");
 
                     b.HasKey("Id");
 

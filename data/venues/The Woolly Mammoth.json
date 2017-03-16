@@ -7,7 +7,7 @@
       "universeID": 1,
       "fixtures": [
         {
-          "channel": 88,
+          "address": 88,
           "type": {
             "manufacturer": "AVE",
             "model": "Par64B"
@@ -20,7 +20,7 @@
           }
         },
         {
-          "channel": 41,
+          "address": 41,
           "type": {
             "manufacturer": "AVE",
             "model": "Par64B"
@@ -33,7 +33,7 @@
           }
         },
         {
-          "channel": 48,
+          "address": 48,
           "type": {
             "manufacturer": "AVE",
             "model": "Par64B"
@@ -46,7 +46,7 @@
           }
         },
         {
-          "channel": 67,
+          "address": 67,
           "type": {
             "manufacturer": "AVE",
             "model": "Par64B"
@@ -59,7 +59,7 @@
           }
         },
         {
-          "channel": 74,
+          "address": 74,
           "type": {
             "manufacturer": "AVE",
             "model": "Par64B"
@@ -72,7 +72,7 @@
           }
         },
         {
-          "channel": 101,
+          "address": 101,
           "type": {
             "manufacturer": "iSolution",
             "model": "iMove 250S"
@@ -96,7 +96,7 @@
           }
         },
         {
-          "channel": 117,
+          "address": 117,
           "type": {
             "manufacturer": "iSolution",
             "model": "iMove 250S"
@@ -109,7 +109,7 @@
           }
         },
         {
-          "channel": 133,
+          "address": 133,
           "type": {
             "manufacturer": "iSolution",
             "model": "iMove 250S"
@@ -122,7 +122,7 @@
           }
         },
         {
-          "channel": 149,
+          "address": 149,
           "type": {
             "manufacturer": "iSolution",
             "model": "iMove 250S"
@@ -135,7 +135,7 @@
           }
         },
         {
-          "channel": 165,
+          "address": 165,
           "type": {
             "manufacturer": "iSolution",
             "model": "iMove 250S"

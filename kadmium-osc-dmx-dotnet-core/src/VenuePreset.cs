@@ -53,7 +53,7 @@ namespace kadmium_osc_dmx_dotnet_core
                 var fixtureEntries = from fixture in obj["fixtures"].ToArray()
                                      select new Fixture
                                      {
-                                         StartChannel = fixture["channel"].Value<int>(),
+                                         StartChannel = fixture["address"].Value<int>(),
                                          FixtureDefinition = context.FixtureDefinitions.Single(x => 
                                             x.Manufacturer == fixture["type"].Value<JObject>()["manufacturer"].Value<string>() &&
                                             x.Model == fixture["type"].Value<JObject>()["model"].Value<string>()

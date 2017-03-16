@@ -2,7 +2,7 @@
   "name": "Chinese Still Washes",
   "fixtures": [
     {
-      "channel": 400,
+      "address": 400,
       "group": "vocalist",
       "options": {
         "maxBrightness": 1,
@@ -15,7 +15,7 @@
       }
     },
     {
-      "channel": 405,
+      "address": 405,
       "group": "guitarist",
       "options": {
         "maxBrightness": 1,
@@ -28,7 +28,7 @@
       }
     },
     {
-      "channel": 410,
+      "address": 410,
       "group": "bassist",
       "options": {
         "maxBrightness": 1,
@@ -41,7 +41,7 @@
       }
     },
     {
-      "channel": 415,
+      "address": 415,
       "group": "drummer",
       "options": {
         "maxBrightness": 1,
