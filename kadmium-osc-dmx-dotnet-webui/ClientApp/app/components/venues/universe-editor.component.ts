@@ -12,6 +12,7 @@ import { VenuePresetService } from "./venue-preset.service";
 import { GroupService } from "../groups/group.service";
 
 import { FixtureDefinitionSkeleton } from "../fixture-definitions/fixture-definition";
+import { VenuePresetSkeleton } from "./venue";
 import { Universe, Fixture, FixtureDefinitionOptions, VenuePreset } from "./venue";
 import { MessageBarService } from "../status/message-bar/message-bar.service";
 
@@ -28,9 +29,9 @@ export class UniverseEditorComponent
 
     private selectedFixture: Fixture;
     private selectedFixtures: Fixture[];
-    private selectedPresetName: string;
-    private skeletons: FixtureDefinitionSkeleton[];
-    private venuePresetNames: string[];
+    private selectedPreset: VenuePresetSkeleton;
+    private fixtureDefinitionSkeletons: FixtureDefinitionSkeleton[];
+    private venuePresetSkeletons: VenuePresetSkeleton[];
     private groups: string[];
 
     constructor(private fixtureDefinitionsService: FixtureDefinitionsService, private venuePresetService: VenuePresetService, private groupService: GroupService,
@@ -40,12 +41,12 @@ export class UniverseEditorComponent
         this.selectedFixtures = [];
         this.selectedFixture = null;
         this.venuePresetService
-            .getNames()
-            .then(value => this.venuePresetNames = value)
+            .getSkeletons()
+            .then(value => this.venuePresetSkeletons = value)
             .catch(reason => this.messageBarService.add("Error", reason));
         this.fixtureDefinitionsService
             .getSkeletons()
-            .then((value) => this.skeletons = value)
+            .then((value) => this.fixtureDefinitionSkeletons = value)
             .catch(reason => this.messageBarService.add("Error", reason));
         this.groupService
             .get()
@@ -53,9 +54,8 @@ export class UniverseEditorComponent
             .catch(reason => this.messageBarService.add("Error", reason));
     }
 
-    private async removeFixture(index: number): Promise<void>
+    private async removeFixture(fixture: Fixture): Promise<void>
     {
-        let fixture = this.universe.fixtures[index];
         let promise = await this.modal
             .confirm()
             .title("Are you sure?")
@@ -70,6 +70,7 @@ export class UniverseEditorComponent
             let result = await promise.result;
             if (result)
             {
+                let index = this.universe.fixtures.indexOf(fixture);
                 this.universe.fixtures.splice(index, 1);
                 if (this.selectedFixture == fixture)
                 {
@@ -113,18 +114,16 @@ export class UniverseEditorComponent
 
     private async savePreset(): Promise<void>
     {
-        let preset = new VenuePreset();
+        let preset = await this.venuePresetService.get(this.selectedPreset.id);
         try
         {
-            preset.name = await this.inputBox.show("Select a name", "Name:", "Save", "Cancel");
             preset.fixtures = this.selectedFixtures;
             this.venuePresetService
-                .put(preset.name, preset)
-                .then(() =>
-                {
+                .put(preset.id, preset)
+                .then(() => {
                     this.selectedFixtures = [];
                     this.messageBarService.add("Success", preset.name + " saved successfully");
-                    this.venuePresetNames.push(preset.name);
+                    this.venuePresetSkeletons.push(preset);
                 })
                 .catch(reason => this.messageBarService.add("Error", reason));
         }
@@ -132,10 +131,31 @@ export class UniverseEditorComponent
         { }
     }
 
-    private loadPreset(name: string): void
+    private async savePresetAs(): Promise<void>
+    {
+        let preset = new VenuePreset();
+        try
+        {
+            preset.name = await this.inputBox.show("Select a name", "Name:", "Save", "Cancel");
+            preset.fixtures = this.selectedFixtures;
+            this.venuePresetService
+                .post(preset)
+                .then(() =>
+                {
+                    this.selectedFixtures = [];
+                    this.messageBarService.add("Success", preset.name + " saved successfully");
+                    this.venuePresetSkeletons.push(preset);
+                })
+                .catch(reason => this.messageBarService.add("Error", reason));
+        }
+        catch (error)
+        { }
+    }
+
+    private loadPreset(preset: VenuePresetSkeleton): void
     {
         this.venuePresetService
-            .get(name)
+            .get(preset.id)
             .then((value: VenuePreset) =>
             {
                 for (let fixture of value.fixtures)
@@ -146,12 +166,12 @@ export class UniverseEditorComponent
             .catch(reason => this.messageBarService.add("Error", reason));
     }
 
-    private async removePreset(name: string): Promise<void>
+    private async removePreset(preset: VenuePresetSkeleton): Promise<void>
     {
         let promise = await this.modal
             .confirm()
             .title("Are you sure?")
-            .body("Are you sure you want to delete " + name + "?")
+            .body("Are you sure you want to delete " + preset.name + "?")
             .isBlocking(true)
             .okBtnClass("btn btn-danger")
             .okBtn("Delete")
@@ -164,10 +184,10 @@ export class UniverseEditorComponent
             {
                 try 
                 {
-                    await this.venuePresetService.delete(name);
-                    let index = this.venuePresetNames.indexOf(name);
-                    this.venuePresetNames.splice(index, 1);
-                    this.messageBarService.add("Success", name + " successfully removed");
+                    await this.venuePresetService.delete(preset.id);
+                    let index = this.venuePresetSkeletons.indexOf(preset);
+                    this.venuePresetSkeletons.splice(index, 1);
+                    this.messageBarService.add("Success", preset.name + " successfully removed");
                 }
                 catch (error)
                 {

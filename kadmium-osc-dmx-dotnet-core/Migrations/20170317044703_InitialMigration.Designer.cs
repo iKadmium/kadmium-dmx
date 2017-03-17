@@ -9,7 +9,7 @@ using kadmium_osc_dmx_dotnet_core.Fixtures;
 namespace kadmiumoscdmxdotnetcore.Migrations
 {
     [DbContext(typeof(DatabaseContext))]
-    [Migration("20170316045939_InitialMigration")]
+    [Migration("20170317044703_InitialMigration")]
     partial class InitialMigration
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -221,7 +221,7 @@ namespace kadmiumoscdmxdotnetcore.Migrations
                         .OnDelete(DeleteBehavior.Cascade);
 
                     b.HasOne("kadmium_osc_dmx_dotnet_core.VenuePreset")
-                        .WithMany("FixtureEntries")
+                        .WithMany("Fixtures")
                         .HasForeignKey("VenuePresetId")
                         .OnDelete(DeleteBehavior.Cascade);
                 });

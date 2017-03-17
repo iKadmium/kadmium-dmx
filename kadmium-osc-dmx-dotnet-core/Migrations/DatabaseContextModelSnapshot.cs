@@ -220,7 +220,7 @@ namespace kadmiumoscdmxdotnetcore.Migrations
                         .OnDelete(DeleteBehavior.Cascade);
 
                     b.HasOne("kadmium_osc_dmx_dotnet_core.VenuePreset")
-                        .WithMany("FixtureEntries")
+                        .WithMany("Fixtures")
                         .HasForeignKey("VenuePresetId")
                         .OnDelete(DeleteBehavior.Cascade);
                 });

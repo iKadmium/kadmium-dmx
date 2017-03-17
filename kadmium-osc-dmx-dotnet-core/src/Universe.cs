@@ -68,12 +68,12 @@ namespace kadmium_osc_dmx_dotnet_core
             return obj;
         }
 
-        public static Universe Load(JObject universeElement)
+        public static Universe Load(JObject universeElement, DatabaseContext context)
         {
             string name = universeElement["name"].Value<string>();
             int universeID = universeElement["universeID"].Value<int>();
             IEnumerable<Fixture> fixturesQuery = from fixture in universeElement["fixtures"].Values<JObject>()
-                                                       select Fixture.Load(fixture);
+                                                       select Fixture.Load(fixture, context);
             
             List<Fixture> fixtures = fixturesQuery.ToList();
 

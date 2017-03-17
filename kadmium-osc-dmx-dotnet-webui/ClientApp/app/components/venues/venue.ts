@@ -80,8 +80,15 @@ export class AxisRestrictionOptions
     }
 }
 
-export class VenuePreset
+export class VenuePreset implements VenuePresetSkeleton
 {
+    id: number;
     name: string;
     fixtures: Fixture[];
+}
+
+export interface VenuePresetSkeleton
+{
+    id: number;
+    name: string;
 }

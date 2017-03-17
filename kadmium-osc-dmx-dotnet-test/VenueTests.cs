@@ -10,13 +10,16 @@ namespace kadmium_osc_dmx_dotnet_test
         {
             await MasterController.Initialise();
 
-            foreach (string venueName in FileAccess.GetVenueNames())
+            using (DatabaseContext context = new DatabaseContext())
             {
-                var venueSourceJson = await FileAccess.LoadVenue(venueName);
-                var venue = Venue.Load(venueSourceJson);
-                var destinationJson = venue.Serialize();
+                foreach (string venueName in FileAccess.GetVenueNames())
+                {
+                    var venueSourceJson = await FileAccess.LoadVenue(venueName);
+                    var venue = Venue.Load(venueSourceJson, context);
+                    var destinationJson = venue.Serialize();
 
-                Assert.Equal(venueSourceJson.ToString(), destinationJson.ToString());
+                    Assert.Equal(venueSourceJson.ToString(), destinationJson.ToString());
+                }
             }
         }
 

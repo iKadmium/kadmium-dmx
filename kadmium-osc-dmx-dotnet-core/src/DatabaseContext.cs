@@ -5,6 +5,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using Microsoft.Extensions.Logging;
 
 namespace kadmium_osc_dmx_dotnet_core
 {
@@ -82,7 +83,7 @@ namespace kadmium_osc_dmx_dotnet_core
             foreach (var venueName in FileAccess.GetVenueNames())
             {
                 var venueJson = await FileAccess.LoadVenue(venueName);
-                var venue = Venue.Load(venueJson);
+                var venue = Venue.Load(venueJson, this);
                 Venues.Add(venue);
             }
         }
@@ -92,7 +93,7 @@ namespace kadmium_osc_dmx_dotnet_core
             foreach (var venuePresetName in FileAccess.GetVenuePresetNames())
             {
                 var venuePresetJson = await FileAccess.LoadVenuePreset(venuePresetName);
-                var venuePreset = VenuePreset.Load(venuePresetJson);
+                var venuePreset = VenuePreset.Load(venuePresetJson, this);
                 VenuePresets.Add(venuePreset);
             }
         }
@@ -174,7 +175,7 @@ namespace kadmium_osc_dmx_dotnet_core
                 .OnDelete(Microsoft.EntityFrameworkCore.Metadata.DeleteBehavior.Cascade);
 
             modelBuilder.Entity<VenuePreset>()
-                .HasMany(x => x.FixtureEntries)
+                .HasMany(x => x.Fixtures)
                 .WithOne()
                 .OnDelete(Microsoft.EntityFrameworkCore.Metadata.DeleteBehavior.Cascade);
         }
@@ -227,5 +228,55 @@ namespace kadmium_osc_dmx_dotnet_core
             }
             return definition;
         }
+
+        public async Task<VenuePreset> LoadVenuePreset(int id)
+        {
+            var preset = await VenuePresets.FindAsync(id);
+            foreach(var collection in Entry(preset).Collections)
+            {
+                await collection.LoadAsync();
+            }
+            foreach (var fixture in preset.Fixtures)
+            {
+                await Entry(fixture).Reference(x => x.Group).LoadAsync();
+                await Entry(fixture).Reference(x => x.FixtureDefinition).LoadAsync();
+                foreach (var collection in Entry(fixture.FixtureDefinition).Collections)
+                {
+                    await collection.LoadAsync();
+                }
+                fixture.Initialize();
+            }
+            return preset;
+        }
     }
+
+    public class DatabaseLogger : ILoggerProvider
+    {
+        public ILogger CreateLogger(string categoryName)
+        {
+            return new MyLogger();
+        }
+
+        public void Dispose()
+        { }
+
+        private class MyLogger : ILogger
+        {
+            public bool IsEnabled(LogLevel logLevel)
+            {
+                return true;
+            }
+
+            public void Log<TState>(LogLevel logLevel, EventId eventId, TState state, Exception exception, Func<TState, Exception, string> formatter)
+            {
+                Console.WriteLine(formatter(state, exception));
+            }
+
+            public IDisposable BeginScope<TState>(TState state)
+            {
+                return null;
+            }
+        }
+    }
+
 }

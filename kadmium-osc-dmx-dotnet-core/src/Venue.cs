@@ -48,14 +48,14 @@ namespace kadmium_osc_dmx_dotnet_core
             return obj;
         }
 
-        public static Venue Load(JObject obj)
+        public static Venue Load(JObject obj, DatabaseContext context)
         {
             try
             {
                 string name = obj["name"].Value<string>();
 
                 var universesQuery = from universeElement in obj["universes"].Values<JObject>()
-                                     select Universe.Load(universeElement);
+                                     select Universe.Load(universeElement, context);
 
                 List<Universe> universes = universesQuery.ToList();
 

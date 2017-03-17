@@ -205,43 +205,7 @@ namespace kadmium_osc_dmx_dotnet_core
             JObject definitionRoot = (await ValidatedLoad(path, FixtureDefinitionSchema)).Value<JObject>();
             return definitionRoot;
         }
-
-        public async static Task DeleteFixtureDefinition(string manufacturer, string model)
-        {
-            List<Task> tasks = new List<Task>();
-            foreach (string venueName in FileAccess.GetVenueNames())
-            {
-                JObject venueJson = await FileAccess.LoadVenue(venueName);
-                Venue venue = Venue.Load(venueJson);
-                bool dirty = false;
-                foreach (Universe universe in venue.Universes)
-                {
-                    var matches = universe.Fixtures.Where(x => x.FixtureDefinition.Manufacturer == manufacturer && x.FixtureDefinition.Model == model).ToList();
-                    if (matches.Count > 0)
-                    {
-                        matches.ForEach(x => universe.Fixtures.Remove(x));
-                    }
-                }
-                if (dirty)
-                {
-                    tasks.Add(FileAccess.SaveVenue(venue.Serialize()));
-                }
-            }
-            foreach (string venuePresetName in FileAccess.GetVenuePresetNames())
-            {
-                JObject venuePresetJson = await FileAccess.LoadVenuePreset(venuePresetName);
-                VenuePreset collection = VenuePreset.Load(venuePresetJson);
-                var matches = collection.FixtureEntries.Where(x => x.FixtureDefinition.Manufacturer == manufacturer && x.FixtureDefinition.Model == model).ToList();
-                if (matches.Count > 0)
-                {
-                    matches.ForEach(x => collection.FixtureEntries.Remove(x));
-                    tasks.Add(FileAccess.SaveVenuePreset(collection.Serialize()));
-                }
-            }
-            await Task.WhenAll(tasks);
-            File.Delete(GetFixtureDefinitionPath(manufacturer, model));
-        }
-
+        
         public static async Task SaveFixtureDefinition(JObject definition)
         {
             string model = definition["name"].Value<string>();
@@ -250,51 +214,7 @@ namespace kadmium_osc_dmx_dotnet_core
             FileInfo file = new FileInfo(path);
             await ValidatedSave(definition, file, FixtureDefinitionSchema);
         }
-
-        public static async Task RenameFixtureDefinition(string originalManufacturer, string originalModel, string manufacturer, string model)
-        {
-            List<Task> tasks = new List<Task>();
-            foreach (string venueName in FileAccess.GetVenueNames())
-            {
-                JObject venueJson = await FileAccess.LoadVenue(venueName);
-                Venue venue = Venue.Load(venueJson);
-                bool dirty = false;
-                foreach (Universe universe in venue.Universes)
-                {
-                    var matches = universe.Fixtures.Where(x => x.FixtureDefinition.Manufacturer == originalManufacturer && x.FixtureDefinition.Model == originalModel).ToList();
-                    foreach (var match in matches)
-                    {
-                        match.FixtureDefinition.Manufacturer = manufacturer;
-                        match.FixtureDefinition.Model = model;
-                        dirty = true;
-                    }
-                }
-                if (dirty)
-                {
-                    tasks.Add(FileAccess.SaveVenue(venue.Serialize()));
-                }
-            }
-            foreach (string venuePresetName in FileAccess.GetVenuePresetNames())
-            {
-                JObject venuePresetJson = await FileAccess.LoadVenuePreset(venuePresetName);
-                VenuePreset collection = VenuePreset.Load(venuePresetJson);
-                var matches = collection.FixtureEntries.Where(x => x.FixtureDefinition.Manufacturer == manufacturer && x.FixtureDefinition.Model == model).ToList();
-                if (matches.Count > 0)
-                {
-                    foreach (var match in matches)
-                    {
-                        match.FixtureDefinition.Manufacturer = manufacturer;
-                        match.FixtureDefinition.Model = model;
-                    }
-                    tasks.Add(FileAccess.SaveVenuePreset(collection.Serialize()));
-                }
-            }
-            await Task.WhenAll(tasks);
-            string oldPath = FileAccess.GetFixtureDefinitionPath(originalManufacturer, originalModel);
-            string newPath = FileAccess.GetFixtureDefinitionPath(manufacturer, model);
-            File.Move(oldPath, newPath);
-        }
-
+        
         public static async Task<JObject> GetFixtureDefinitionSchema()
         {
             JObject schema = await ValidatedLoad(FixtureDefinitionSchema, JsonSchemaSchema) as JObject;

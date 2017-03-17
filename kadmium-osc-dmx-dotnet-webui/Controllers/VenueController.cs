@@ -7,6 +7,9 @@ using System.Linq;
 using Microsoft.EntityFrameworkCore;
 using kadmium_osc_dmx_dotnet_core.Fixtures;
 using System;
+using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.DependencyInjection;
 
 // For more information on enabling Web API for empty projects, visit http://go.microsoft.com/fwlink/?LinkID=397860
 
@@ -17,14 +20,13 @@ namespace kadmium_osc_dmx_dotnet_webui.Controllers
     {
         // GET: api/values
         [HttpGet]
-        public IEnumerable<Venue> Get()
+        public async Task<IEnumerable<Venue>> Get()
         {
-            List<Venue> returnVal;
             using (var context = new DatabaseContext())
             {
-                returnVal = context.Venues.ToList();
+                var list = await context.Venues.ToListAsync();
+                return list;
             }
-            return returnVal;
         }
 
         [HttpGet]
@@ -78,9 +80,14 @@ namespace kadmium_osc_dmx_dotnet_webui.Controllers
         
         // DELETE api/values/5
         [HttpDelete("{id}")]
-        public void Delete(string id)
+        public async Task Delete(int id)
         {
-            FileAccess.DeleteVenue(id);
+            using (var context = new DatabaseContext())
+            {
+                Venue venue = await context.Venues.FindAsync(id);
+                context.Venues.Remove(venue);
+                await context.SaveChangesAsync();
+            }
         }
 
         [HttpPost]
@@ -88,7 +95,11 @@ namespace kadmium_osc_dmx_dotnet_webui.Controllers
         {
             using (var context = new DatabaseContext())
             {
-                Venue venue = Venue.Load(definitionJson);
+                var serviceProvider = context.GetInfrastructure<IServiceProvider>();
+                var loggerFactory = serviceProvider.GetService<ILoggerFactory>();
+                loggerFactory.AddProvider(new DatabaseLogger());
+
+                Venue venue = Venue.Load(definitionJson, context);
                 await context.Venues.AddAsync(venue);
                 await context.SaveChangesAsync();
             }
@@ -100,7 +111,7 @@ namespace kadmium_osc_dmx_dotnet_webui.Controllers
         {
             using (var context = new DatabaseContext())
             {
-                Venue definition = Venue.Load(venueJson);
+                Venue definition = Venue.Load(venueJson, context);
                 definition.Id = id;
                 Venue originalVenue = await context.LoadVenue(id);
                 context.UpdateCollection(originalVenue.Universes, definition.Universes);

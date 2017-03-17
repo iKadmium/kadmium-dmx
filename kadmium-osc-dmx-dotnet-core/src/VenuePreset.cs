@@ -10,16 +10,16 @@ namespace kadmium_osc_dmx_dotnet_core
     public class VenuePreset
     {
         public string Name { get; set; }
-        public List<Fixture> FixtureEntries { get; set; }
+        public List<Fixture> Fixtures { get; set; }
 
         public int Id { get; set; }
 
         public VenuePreset() : this("", new List<Fixture>()) { }
 
-        public VenuePreset(string name, List<Fixture> fixtureEntries)
+        public VenuePreset(string name, List<Fixture> fixtures)
         {
             Name = name;
-            FixtureEntries = fixtureEntries;
+            Fixtures = fixtures;
         }
 
         public JObject Serialize()
@@ -28,7 +28,7 @@ namespace kadmium_osc_dmx_dotnet_core
                 new JProperty("$schema", FileAccess.GetRelativePath(FileAccess.GetVenuePresetLocation(Name), FileAccess.VenuePresetsSchema)),
                 new JProperty("name", Name),
                 new JProperty("fixtures",
-                    from entry in FixtureEntries
+                    from entry in Fixtures
                     select new JObject(
                         new JProperty("channel", entry.StartChannel),
                         new JProperty("type",
@@ -45,24 +45,12 @@ namespace kadmium_osc_dmx_dotnet_core
             return obj;
         }
 
-        public static VenuePreset Load(JObject obj)
+        public static VenuePreset Load(JObject obj, DatabaseContext context)
         {
             string name = obj["name"].Value<string>();
-            using (var context = new DatabaseContext())
-            {
-                var fixtureEntries = from fixture in obj["fixtures"].ToArray()
-                                     select new Fixture
-                                     {
-                                         StartChannel = fixture["address"].Value<int>(),
-                                         FixtureDefinition = context.FixtureDefinitions.Single(x => 
-                                            x.Manufacturer == fixture["type"].Value<JObject>()["manufacturer"].Value<string>() &&
-                                            x.Model == fixture["type"].Value<JObject>()["model"].Value<string>()
-                                         ),
-                                         Group = context.Groups.Single(x => x.Name == fixture["group"].Value<string>()),
-                                         Options = fixture["options"].Value<JObject>()
-                                     };
-                return new VenuePreset(name, fixtureEntries.ToList());
-            }
+            var fixtureEntries = from fixture in obj["fixtures"].Values<JObject>()
+                                 select Fixture.Load(fixture, context);
+            return new VenuePreset(name, fixtureEntries.ToList());
         }
 
     }

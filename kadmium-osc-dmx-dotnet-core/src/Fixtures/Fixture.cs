@@ -25,14 +25,6 @@ namespace kadmium_osc_dmx_dotnet_core.Fixtures
         public FixtureDefinitionSkeleton Skeleton
         {
             get { return FixtureDefinition.GetSkeleton(); }
-            set
-            {
-                using (var context = new DatabaseContext())
-                {
-                    var definition = context.LoadFixtureDefinition(value.Id).Result;
-                    FixtureDefinition = definition;
-                }
-            }
         }
         [NotMapped]
         [JsonIgnore]
@@ -124,7 +116,7 @@ namespace kadmium_osc_dmx_dotnet_core.Fixtures
             Group.Fixtures.Remove(this);
         }
 
-        public static Fixture Load(JObject obj)
+        public static Fixture Load(JObject obj, DatabaseContext context)
         {
             int startChannel = obj["address"].Value<int>();
             JObject type = obj["type"].Value<JObject>();
@@ -133,11 +125,8 @@ namespace kadmium_osc_dmx_dotnet_core.Fixtures
             FixtureDefinition definition = null;
             string groupName = obj["group"].Value<string>();
             Group group = null;
-            using (var context = new DatabaseContext())
-            {
-                definition = context.LoadFixtureDefinition(manufacturer, model).Result;
-                group = context.LoadGroup(groupName).Result;
-            }
+            definition = context.LoadFixtureDefinition(manufacturer, model).Result;
+            group = context.LoadGroup(groupName).Result;
             
             JObject options = obj["options"].Value<JObject>();
             Fixture fixture = new Fixture(definition, startChannel, group, options);
