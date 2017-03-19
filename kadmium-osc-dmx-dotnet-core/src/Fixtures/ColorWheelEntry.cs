@@ -1,14 +1,17 @@
 ﻿using System.ComponentModel.DataAnnotations.Schema;
 using kadmium_osc_dmx_dotnet_core.Color;
 using Newtonsoft.Json.Linq;
+using Newtonsoft.Json;
 
 namespace kadmium_osc_dmx_dotnet_core.Fixtures
 {
     public class ColorWheelEntry : System.IEquatable<ColorWheelEntry>
     {
+        public int Id { get; set; }
         public string Name { get; set; }
         public int Min { get; set; }
         public int Max { get; set; }
+        [JsonProperty(PropertyName = "color")]
         public string ColorString
         {
             get
@@ -17,17 +20,14 @@ namespace kadmium_osc_dmx_dotnet_core.Fixtures
             }
             set
             {
-                Color.Red = int.Parse(value.Substring(1, 2), System.Globalization.NumberStyles.HexNumber);
-                Color.Green = int.Parse(value.Substring(3, 2), System.Globalization.NumberStyles.HexNumber);
-                Color.Blue = int.Parse(value.Substring(5, 2), System.Globalization.NumberStyles.HexNumber);
+                Color = RGB.Parse(value);
             }
         }
 
         [NotMapped]
+        [JsonIgnore]
         public RGB Color { get; set; }
-
-        public int Id { get; set; }
-
+        
         public ColorWheelEntry()
         {
             Name = "";
@@ -42,19 +42,6 @@ namespace kadmium_osc_dmx_dotnet_core.Fixtures
             Min = min;
             Max = max;
             Color = color;
-        }
-
-        public static ColorWheelEntry Load(JObject obj)
-        {
-            string name = obj["name"].Value<string>();
-            byte min = obj["min"].Value<byte>();
-            byte max = obj["max"].Value<byte>();
-            string colorString = obj["color"].Value<string>();
-            int red = int.Parse(colorString.Substring(1, 2), System.Globalization.NumberStyles.AllowHexSpecifier);
-            int green = int.Parse(colorString.Substring(3, 2), System.Globalization.NumberStyles.AllowHexSpecifier);
-            int blue = int.Parse(colorString.Substring(5, 2), System.Globalization.NumberStyles.AllowHexSpecifier);
-            RGB color = new RGB(red, green, blue);
-            return new ColorWheelEntry(name, min, max, color);
         }
 
         public override bool Equals(object obj)

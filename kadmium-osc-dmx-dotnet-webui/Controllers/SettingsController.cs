@@ -24,6 +24,4 @@ namespace kadmium_osc_dmx_dotnet_webui.Controllers
             FileAccess.SaveSettings(value);
         }
     }
-
-
 }

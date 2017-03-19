@@ -31,23 +31,7 @@ namespace kadmium_osc_dmx_dotnet_core
         public Venue() : this("", Enumerable.Empty<Universe>())
         {
         }
-
-        public JObject Serialize()
-        {
-            JObject obj = new JObject(
-                new JProperty("$schema", FileAccess.GetRelativePath(FileAccess.GetVenueLocation(Name), FileAccess.VenuesSchema)),
-                new JProperty("name", Name),
-                new JProperty("universes",
-                    new JArray(
-                        from universe in Universes
-                        select universe.SerializeForVenue()
-                    )
-                )
-            );
-
-            return obj;
-        }
-
+        
         public static Venue Load(JObject obj, DatabaseContext context)
         {
             try
@@ -92,9 +76,9 @@ namespace kadmium_osc_dmx_dotnet_core
             }
         }
 
-        public void Activate()
+        public void Activate(DatabaseContext context)
         {
-            Universes.ForEach(x => x.Activate());
+            Universes.ForEach(x => x.Activate(context));
             Status.Update(StatusCode.Success, Name + " running", this);
         }
 

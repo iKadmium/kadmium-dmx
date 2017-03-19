@@ -74,7 +74,7 @@ namespace kadmium_osc_dmx_dotnet_webui.Controllers
             using (var context = new DatabaseContext())
             {
                 var venue = await context.LoadVenue(id);
-                MasterController.Instance.LoadVenue(venue);
+                MasterController.Instance.LoadVenue(venue, context);
             }
         }
         
@@ -91,17 +91,14 @@ namespace kadmium_osc_dmx_dotnet_webui.Controllers
         }
 
         [HttpPost]
-        public async void Post([FromBody]JObject definitionJson)
+        public async Task<int> Post([FromBody]JObject definitionJson)
         {
             using (var context = new DatabaseContext())
             {
-                var serviceProvider = context.GetInfrastructure<IServiceProvider>();
-                var loggerFactory = serviceProvider.GetService<ILoggerFactory>();
-                loggerFactory.AddProvider(new DatabaseLogger());
-
                 Venue venue = Venue.Load(definitionJson, context);
                 await context.Venues.AddAsync(venue);
                 await context.SaveChangesAsync();
+                return venue.Id;
             }
         }
 

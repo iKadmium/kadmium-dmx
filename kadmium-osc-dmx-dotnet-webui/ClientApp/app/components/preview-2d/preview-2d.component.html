@@ -1,6 +1,6 @@
 <div class="panel panel-default" *ngFor="let group of groups">
     <div class="panel-heading">{{group}}</div>
-    <div class="panel-body">
+    <div class="panel-body" *ngIf="activeUniverse">
         <preview-2d-fixture *ngFor="let fixture of getFixtures(activeUniverse, group)" [data]="activeUniverse.values" [fixture]="fixture"></preview-2d-fixture>
     </div>
 </div>

@@ -66,10 +66,10 @@ export class DMXChannel
 
     constructor(name?: string, dmx?: number, min?: number, max?: number)
     {
-        this.name = name ? name : "";
-        this.address = dmx ? dmx : 1;
-        this.min = min ? min : 0;
-        this.max = max ? max : 255;
+        this.name = name != null ? name : "";
+        this.address = dmx != null ? dmx : 1;
+        this.min = min != null ? min : 0;
+        this.max = max != null ? max : 255;
     }
 }
 

@@ -4,12 +4,11 @@ namespace kadmium_osc_dmx_dotnet_core.Fixtures
 {
     public class MovementAxis : System.IEquatable<MovementAxis>
     {
+        public int Id { get; set; }
         public string Name { get; set; }
         public int Min { get; set; }
         public int Max { get; set; }
-
-        public int Id { get; set; }
-
+        
         public MovementAxis()
         {
             Name = "";
@@ -22,14 +21,6 @@ namespace kadmium_osc_dmx_dotnet_core.Fixtures
             Name = name;
             Min = min;
             Max = max;
-        }
-
-        public static MovementAxis Load(JObject movementAxis)
-        {
-            string name = movementAxis["name"].Value<string>();
-            int min = movementAxis["min"].Value<int>();
-            int max = movementAxis["max"].Value<int>();
-            return new MovementAxis(name, min, max);
         }
 
         public override int GetHashCode()

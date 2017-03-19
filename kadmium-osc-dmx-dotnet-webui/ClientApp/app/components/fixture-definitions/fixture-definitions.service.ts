@@ -41,11 +41,11 @@ export class FixtureDefinitionsService
             .then(response => { });
     }
 
-    public post(definition: FixtureDefinition): Promise<void>
+    public post(definition: FixtureDefinition): Promise<number>
     {
         return this.http.post(this.fixtureDefinitionsUrl, definition)
             .toPromise()
-            .then(response => { });
+            .then(response => parseInt(response.text()));
     }
 
     public delete(fixture: FixtureDefinitionSkeleton): Promise<void>

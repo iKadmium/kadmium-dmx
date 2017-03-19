@@ -57,6 +57,6 @@ export class SolversLiveComponent
 
     updateValue(universe: UniverseData, fixture: FixtureData, attribute: AttributeData, value: number): void
     {
-        this.solversLiveService.set(universe.universeID, fixture.channel, attribute.name, value);
+        this.solversLiveService.set(universe.universeID, fixture.address, attribute.name, value);
     }
 }

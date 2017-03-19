@@ -5,7 +5,7 @@ import { MessageBarComponent } from "../status/message-bar/message-bar.component
 import { Overlay } from "angular2-modal";
 import { Modal } from "angular2-modal/plugins/bootstrap";
 
-import { VenueSkeleton } from "./venue";
+import { VenueSkeleton, Venue } from "./venue";
 
 import { VenueService } from "./venue.service";
 import { MessageBarService } from "../status/message-bar/message-bar.service";
@@ -38,6 +38,11 @@ export class VenuesComponent implements OnInit
     private getEditUrl(entry: VenueSkeleton)
     {
         return "venues/" + entry.id;
+    }
+
+    private getDownloadUrl(entry: VenueSkeleton)
+    {
+        return "/api/Venues/" + entry.id;
     }
 
     private async deleteConfirm(index: number): Promise<void>
@@ -73,5 +78,32 @@ export class VenuesComponent implements OnInit
         {
             //errors are generated when the message box is cancelled
         }
+    }
+
+    private upload(fileInput: any): void
+    {
+        (fileInput as HTMLInputElement).click();
+    }
+
+    private fileSelected(item: File): void
+    {
+        let reader = new FileReader();
+        reader.addEventListener("load", (event) => 
+        {
+            let content = reader.result;
+            let venue = JSON.parse(content) as Venue;
+            this.venueService.post(venue)
+                .then(id =>
+                {
+                    this.messageBarService.add("Success", "Successfully added " + venue.name);
+                    venue.id = id;
+                    this.venues.push(venue);
+                })
+                .catch(reason =>
+                {
+                    this.messageBarService.add("Error", reason);
+                });
+        });
+        reader.readAsText(item);
     }
 }

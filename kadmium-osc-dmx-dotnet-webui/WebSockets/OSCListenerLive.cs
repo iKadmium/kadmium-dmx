@@ -16,15 +16,15 @@ namespace kadmium_osc_dmx_dotnet_webui.WebSockets
 
         private async void Listener_MessageReceived(object sender, OSCListenerEventArgs e)
         {
-            WebSocketMessage message = new WebSocketMessage(
+            WebSocketMessage<OSCListenerUpdateMessage> message = new WebSocketMessage<OSCListenerUpdateMessage>(
                 "addMessage",
-                new Dictionary<string, object>
+                new OSCListenerUpdateMessage
                 {
-                    ["recognised"] = e.Recognised,
-                    ["time"] = e.Time,
-                    ["source"] = e.Source,
-                    ["address"] = e.Address,
-                    ["value"] = e.Value
+                    Recognised = e.Recognised,
+                    Time = e.Time,
+                    Source = e.Source,
+                    Address = e.Address,
+                    Value = e.Value
                 }
             );
             await Send(message);
@@ -34,5 +34,14 @@ namespace kadmium_osc_dmx_dotnet_webui.WebSockets
         {
             Listener.MessageReceived -= Listener_MessageReceived;
         }
+    }
+
+    public class OSCListenerUpdateMessage
+    {
+        public bool Recognised { get; set; }
+        public System.DateTime Time { get; set; }
+        public string Source { get; set; }
+        public string Address { get; set; }
+        public float Value { get; set; }
     }
 }

@@ -20,7 +20,7 @@
     <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="1.1.0" />
     <PackageReference Include="OSCforPCL" Version="0.0.1" />
     <PackageReference Include="Newtonsoft.Json" Version="9.0.1" />
-    <PackageReference Include="Newtonsoft.Json.Schema" Version="2.0.7" />
+    <PackageReference Include="Newtonsoft.Json.Schema" Version="2.0.8" />
     <PackageReference Include="kadmium-sacn-core" Version="0.0.2" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.Sqlite" Version="1.1.1" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="1.1.1">

@@ -9,6 +9,8 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
 using Newtonsoft.Json.Linq;
+using Newtonsoft.Json;
+using Newtonsoft.Json.Serialization;
 
 namespace kadmium_osc_dmx_dotnet_webui.WebSockets
 {
@@ -53,9 +55,13 @@ namespace kadmium_osc_dmx_dotnet_webui.WebSockets
             }
         }
 
-        public async Task Send(WebSocketMessage message)
+        public async Task Send<T>(WebSocketMessage<T> message)
         {
-            byte[] messageBytes = System.Text.Encoding.UTF8.GetBytes(message.JObject.ToString());
+            string serialized = JsonConvert.SerializeObject(message, new JsonSerializerSettings
+            {
+                ContractResolver = new CamelCasePropertyNamesContractResolver()
+            });
+            byte[] messageBytes = System.Text.Encoding.UTF8.GetBytes(serialized);
             ArraySegment<byte> segment = new ArraySegment<byte>(messageBytes);
             try
             {
@@ -96,31 +102,15 @@ namespace kadmium_osc_dmx_dotnet_webui.WebSockets
         }
     }
 
-    public class WebSocketMessage
+    public class WebSocketMessage<T>
     {
-        public string MethodName { get; set; }
-        public Dictionary<string, object> Args { get; set; }
+        public string Method { get; set; }
+        public T Args { get; set; }
 
-        public WebSocketMessage(string methodName, Dictionary<string, object> args)
+        public WebSocketMessage(string methodName, T args)
         {
-            MethodName = methodName;
+            Method = methodName;
             Args = args;
-        }
-
-        public JObject JObject
-        {
-            get
-            {
-                return new JObject(
-                    new JProperty("method", MethodName),
-                    new JProperty("args",
-                        new JObject(
-                            from entry in Args
-                            select new JProperty(entry.Key, entry.Value)
-                        )
-                    )
-                );
-            }
         }
     }
 }

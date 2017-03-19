@@ -10,6 +10,7 @@
             <td>{{entry.name}}</td>
             <td>
                 <div class="btn-group">
+                    <a class="btn btn-success" [href]="getDownloadUrl(entry)" [download]="entry.name + '.json'"><span class="glyphicon glyphicon-cloud-download"></span></a>
                     <a class="btn btn-default" [href]="getEditUrl(entry)"><span class="glyphicon glyphicon-edit"></span></a>
                     <button class="btn btn-danger" (click)="deleteConfirm(i)"><span class="glyphicon glyphicon-remove"></span></button>
                 </div>
@@ -18,3 +19,5 @@
     </tbody>
 </table>
 <a class="btn btn-success" href="venues/new"><span class="glyphicon glyphicon-plus"></span></a>
+<button class="btn btn-success" (click)="upload(fileInput)"><span class="glyphicon glyphicon-cloud-upload"></span></button>
+<input #fileInput type="file" name="name" style="display: none;" (change)="fileSelected($event.target.files[0])" />

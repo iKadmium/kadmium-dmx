@@ -48,11 +48,11 @@ export class VenueService
             .then(() => { });
     }
 
-    public post(venue: Venue): Promise<void>
+    public post(venue: Venue): Promise<number>
     {
         return this.http.post(this.venueUrl, venue)
             .toPromise()
-            .then(() => { });
+            .then(request => parseInt(request.text()));
     }
 
     public delete(id: number): Promise<void>

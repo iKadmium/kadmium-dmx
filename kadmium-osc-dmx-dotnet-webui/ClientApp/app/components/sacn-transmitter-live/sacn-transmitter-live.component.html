@@ -31,10 +31,14 @@
                 </tr>
             </thead>
             <tbody>
-                <tr *ngFor="let row of activeUniverse.rows; let rowNumber = index">
+                <tr *ngFor="let rowNumber of range(0, 51)">
                     <th>{{rowNumber}}</th>
-                    <td *ngFor="let channel of row" title="{{channel.address}}" [ngStyle]="{'background-color': channel.style}">
-                        {{channel.displayValue}}</td>
+                    <td *ngFor="let columnNumber of range(0, 9)"
+                        title="{{getChannel(rowNumber, columnNumber)?.address + 1}}" 
+                        [ngStyle]="{'background-color': getChannel(rowNumber, columnNumber)?.style }"
+                    >
+                        {{getChannel(rowNumber, columnNumber)?.displayValue}}
+                    </td>
                 </tr>
             </tbody>
         </table>
@@ -59,5 +63,4 @@
             </tbody>
         </table>
     </div>
-
 </div>

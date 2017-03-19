@@ -1,10 +1,16 @@
 ﻿using kadmium_osc_dmx_dotnet_core.Solvers;
+using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 
 namespace kadmium_osc_dmx_dotnet_core.Fixtures
 {
     public class DMXChannel : Attribute, System.IEquatable<DMXChannel>
     {
+        [JsonIgnore]
+        public int Id { get; set; }
+        [JsonIgnore]
+        public int FixtureDefinitionId { get; set; }
+        [JsonIgnore]
         public byte ByteValue
         {
             get
@@ -18,10 +24,7 @@ namespace kadmium_osc_dmx_dotnet_core.Fixtures
         public byte Min { get; set; }
         public byte Max { get; set; }
         public int Address { get; set; }
-
-        public int Id { get; set; }
-        public int FixtureDefinitionId { get; set; }
-
+        
         public DMXChannel() : base("")
         {
             Name = "";
@@ -36,17 +39,7 @@ namespace kadmium_osc_dmx_dotnet_core.Fixtures
             Max = max;
             Address = relativeAddress;
         }
-
-        public static DMXChannel Load(JObject channelElement)
-        {
-            string name = channelElement["name"].Value<string>();
-            byte min = channelElement["min"] != null ? channelElement["min"].Value<byte>() : (byte)0;
-            byte max = channelElement["max"] != null ? channelElement["max"].Value<byte>() : (byte)255;
-            int relativeAddress = channelElement["address"].Value<int>();
-            DMXChannel channel = new DMXChannel(name, relativeAddress, min, max);
-            return channel;
-        }
-
+        
         public override string ToString()
         {
             return Name + " -> " + ByteValue;

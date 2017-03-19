@@ -21,7 +21,7 @@ namespace kadmium_osc_dmx_dotnet_core
         [NotMapped]
         [JsonIgnore]
         public byte[] DMX { get; }
-        public event EventHandler<DMXEventArgs> Updated;
+        public event EventHandler<UpdateEventArgs> Updated;
         public event EventHandler<DMXEventArgs> Rendered;
 
         public Universe()
@@ -56,18 +56,6 @@ namespace kadmium_osc_dmx_dotnet_core
             }
         }
 
-        public JObject SerializeForVenue()
-        {
-            JObject obj = Serialize();
-            obj.Add(
-                new JProperty("fixtures",
-                    from fixture in Fixtures
-                    select fixture.Serialize()
-                )
-            );
-            return obj;
-        }
-
         public static Universe Load(JObject universeElement, DatabaseContext context)
         {
             string name = universeElement["name"].Value<string>();
@@ -88,7 +76,7 @@ namespace kadmium_osc_dmx_dotnet_core
                 fixture.Update();
                 fixture.Render(DMX);
             }
-            Updated?.Invoke(this, new DMXEventArgs(DMX));
+            Updated?.Invoke(this, new UpdateEventArgs(UniverseNumber, Fixtures));
         }
 
         public void Render()
@@ -97,9 +85,10 @@ namespace kadmium_osc_dmx_dotnet_core
             Rendered?.Invoke(this, new DMXEventArgs(DMX));
         }
 
-        public void Activate()
+        public void Activate(DatabaseContext context)
         {
-            Fixtures.ForEach(x => x.Activate());
+            Fixtures.ForEach(x => x.Initialize());
+            Fixtures.ForEach(x => x.Activate(context));
         }
 
         public void Deactivate()
@@ -114,6 +103,18 @@ namespace kadmium_osc_dmx_dotnet_core
         public DMXEventArgs(byte[] dmx)
         {
             DMX = dmx;
+        }
+    }
+
+    public class UpdateEventArgs : EventArgs
+    {
+        public int UniverseID { get; set; }
+        public IEnumerable<Fixture> Fixtures { get; set; }
+
+        public UpdateEventArgs(int universeID, IEnumerable<Fixture> fixtures)
+        {
+            this.UniverseID = universeID;
+            this.Fixtures = fixtures;
         }
     }
 }

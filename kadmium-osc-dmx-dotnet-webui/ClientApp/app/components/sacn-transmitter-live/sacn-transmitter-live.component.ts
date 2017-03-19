@@ -71,6 +71,16 @@ export class SACNTransmitterLiveComponent implements OnInit
                 this.messageBarService.add("Error", reason);
             });
     }
+
+    private range(start: number, end: number): number[]
+    {
+        return Array<number>(end - start + 1).fill(0).map((value, index) => index + start);
+    }
+
+    private getChannel(rowNumber: number, columnNumber: number): DMXChannel
+    {
+        return this.activeUniverse.channels[rowNumber * 10 + columnNumber - 1];
+    }
 }
 
 class DMXUniverse
@@ -101,8 +111,11 @@ class DMXUniverse
             let row = [];
             for (let j = 0; j < 10; j++)
             {
-                let address = i * 10 + j;
-                row[j] = this.channels[address];
+                if (i != 0 || j != 0)
+                {
+                    let address = i * 10 + j;
+                    row[j] = this.channels[address];
+                }
             }
             result[i] = row;
         }

@@ -56,7 +56,7 @@ namespace kadmium_osc_dmx_dotnet_core.Fixtures
         public Group Group { get; set; }
         [NotMapped]
         [JsonProperty(PropertyName = "group")]
-        public string GroupString { get { return Group?.Name ?? ""; } }
+        public string GroupString { get { return Group.Name; } }
 
         public Fixture()
         {
@@ -91,26 +91,7 @@ namespace kadmium_osc_dmx_dotnet_core.Fixtures
                 solver.Solve(FrameSettables);
             }
         }
-
-        public JObject Serialize()
-        {
-            Group group = MasterController.Instance.Groups.Values.Single(x => x.Fixtures.Contains(this));
-
-            JObject obj = new JObject(
-                new JProperty("channel", StartChannel),
-                new JProperty("type",
-                    new JObject(
-                        new JProperty("manufacturer", FixtureDefinition.Manufacturer),
-                        new JProperty("model", FixtureDefinition.Model)
-                    )
-                ),
-                new JProperty("group", group.Name),
-                new JProperty("options", Options)
-            );
-
-            return obj;
-        }
-
+        
         public void Dispose()
         {
             Group.Fixtures.Remove(this);
@@ -130,7 +111,6 @@ namespace kadmium_osc_dmx_dotnet_core.Fixtures
             
             JObject options = obj["options"].Value<JObject>();
             Fixture fixture = new Fixture(definition, startChannel, group, options);
-            fixture.Initialize();
             return fixture;
         }
 
@@ -164,14 +144,16 @@ namespace kadmium_osc_dmx_dotnet_core.Fixtures
             }
         }
 
-        public void Activate()
+        public void Activate(DatabaseContext context)
         {
-            Group.Fixtures.Add(this);
+            var grp = MasterController.Instance.Groups.Values.Single(x => x.Id == Group.Id);
+            grp.Fixtures.Add(this);
         }
 
         public void Deactivate()
         {
-            Group.Fixtures.Remove(this);
+            var grp = MasterController.Instance.Groups.Values.Single(x => x.Id == Group.Id);
+            grp.Fixtures.Remove(this);
         }
 
         public override string ToString()

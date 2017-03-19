@@ -94,7 +94,7 @@ export interface AttributeData
 export interface FixtureData
 {
     type: string;
-    channel: number;
+    address: number;
     attributes: AttributeData[];
 }
 

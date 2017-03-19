@@ -19,11 +19,11 @@ namespace kadmium_osc_dmx_dotnet_webui.Controllers
         {
             using (var context = new DatabaseContext())
             {
-                List<FixtureDefinitionSkeleton> skeletons = new List<FixtureDefinitionSkeleton>();
-                context.FixtureDefinitions.ForEachAsync(definition =>
-                {
-                    skeletons.Add(new FixtureDefinitionSkeleton { Id = definition.Id, Manufacturer = definition.Manufacturer, Model = definition.Model });
-                }); 
+                List<FixtureDefinitionSkeleton> skeletons = context.FixtureDefinitions
+                    .Select(x => x.GetSkeleton())
+                    .OrderBy(x => x.Manufacturer)
+                    .ThenBy(x => x.Model)
+                    .ToList();
                 return skeletons;
             }
         }
@@ -49,7 +49,6 @@ namespace kadmium_osc_dmx_dotnet_webui.Controllers
         {
             using (var context = new DatabaseContext())
             {
-                //firstly delete the 
                 FixtureDefinition definition = await context.FixtureDefinitions.FindAsync(id);
                 context.FixtureDefinitions.Remove(definition);
                 await context.SaveChangesAsync();
@@ -57,23 +56,22 @@ namespace kadmium_osc_dmx_dotnet_webui.Controllers
         }
 
         [HttpPost]
-        public async void Post([FromBody]JObject definitionJson)
+        public async Task<int> Post([FromBody]FixtureDefinition definition)
         {
             using (var context = new DatabaseContext())
             {
-                FixtureDefinition definition = FixtureDefinition.Load(definitionJson);
                 await context.FixtureDefinitions.AddAsync(definition);
                 await context.SaveChangesAsync();
+                return definition.Id;
             }
         }
 
         [HttpPut]
         [Route("{id}")]
-        public async Task Put(int id, [FromBody]JObject definitionJson)
+        public async Task Put(int id, [FromBody]FixtureDefinition definition)
         {
             using (var context = new DatabaseContext())
             {
-                FixtureDefinition definition = FixtureDefinition.Load(definitionJson);
                 FixtureDefinition originalDefinition = await context.LoadFixtureDefinition(id);
                 context.UpdateCollection(originalDefinition.Channels, definition.Channels);
                 context.UpdateCollection(originalDefinition.Movements, definition.Movements);

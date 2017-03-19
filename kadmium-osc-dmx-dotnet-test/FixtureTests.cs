@@ -32,7 +32,7 @@ namespace kadmium_osc_dmx_dotnet_test
                 foreach (string fixtureName in FileAccess.GetFixtureNames(manufacturer))
                 {
                     JObject definitionJSON = await FileAccess.LoadFixtureDefinition(manufacturer, fixtureName);
-                    FixtureDefinition definition = FixtureDefinition.Load(definitionJSON);
+                    FixtureDefinition definition = definitionJSON.ToObject<FixtureDefinition>();
                     Fixture fixture = new Fixture(definition, 1, new Group(), new JObject());
                 }
             }

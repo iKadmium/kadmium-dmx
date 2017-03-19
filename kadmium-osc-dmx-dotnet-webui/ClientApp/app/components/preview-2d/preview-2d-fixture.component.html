@@ -1,6 +1,6 @@
 <div class="col-sm-3">
     <div class="panel panel-default">
-        <div class="panel-heading">{{fixture.address}} {{fixture.definition.manufacturer}} {{fixture.definition.name}}</div>
+        <div class="panel-heading">{{fixture.address}} {{fixture.definition.manufacturer}} {{fixture.definition.model}}</div>
         <div class="panel-body text-center">
             <canvas #canvas width="150" height="150" class="fixtureCanvas"></canvas>
         </div>
@@ -20,7 +20,7 @@
                     </thead>
                     <tbody>
                         <tr *ngFor="let channel of fixture.channels">
-                            <td>{{channel.dmx + fixture.address - 1}}</td>
+                            <td>{{channel.address + fixture.address - 1}}</td>
                             <td>{{channel.name}}</td>
                             <td>{{channel.dmxValue}}</td>
                         </tr>

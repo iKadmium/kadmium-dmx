@@ -16,9 +16,19 @@ export class DMXPreviewChannel extends DMXChannel
 
     public set dmxValue(value: number)
     {
-        if (value >= this.min && value <= this.max)
+        if (this.max >= this.min)
         {
-            this.value = (value - this.min) / this.range;
+            if (value >= this.min && value <= this.max)
+            {
+                this.value = (value - this.min) / this.range;
+            }
+        }
+        else
+        {
+            if (value <= this.min && value >= this.max)
+            {
+                this.value = (value - this.min) / this.range;
+            }
         }
     }
 

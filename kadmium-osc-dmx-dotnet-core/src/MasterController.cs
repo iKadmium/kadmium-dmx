@@ -82,13 +82,13 @@ namespace kadmium_osc_dmx_dotnet_core
             this.SolverStatus = new Status("No Solvers Loaded");
         }
 
-        public void LoadVenue(Venue venue)
+        public void LoadVenue(Venue venue, DatabaseContext context)
         {
             UpdatesEnabled = false;
             Venue?.Deactivate();
             Venue?.Dispose();
             Venue = venue;
-            venue.Activate();
+            venue.Activate(context);
             UpdatesEnabled = true;
         }
 

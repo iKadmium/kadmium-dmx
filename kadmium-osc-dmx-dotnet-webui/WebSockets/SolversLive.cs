@@ -26,7 +26,7 @@ namespace kadmium_osc_dmx_dotnet_webui.WebSockets
 
         public void UpdateAttribute(int universeID, int fixtureChannel, string attributeName, float attributeValue)
         {
-            Universe universe = MasterController.Instance.Venue.Universes[universeID];
+            Universe universe = MasterController.Instance.Venue.Universes.Single(x => x.UniverseNumber == universeID);
             if (universe != null)
             {
                 Fixture fixture = universe.Fixtures.SingleOrDefault(x => x.StartChannel == fixtureChannel);
@@ -42,26 +42,26 @@ namespace kadmium_osc_dmx_dotnet_webui.WebSockets
             UpdateAttribute(args["universeID"].Value<int>(), args["fixtureChannel"].Value<int>(), args["attributeName"].Value<string>(), args["attributeValue"].Value<float>());
         }
 
-        private async void Universe_Updated(object sender, DMXEventArgs e)
+        private async void Universe_Updated(object sender, UpdateEventArgs e)
         {
-            Universe universe = sender as Universe;
-            WebSocketMessage message = new WebSocketMessage("updateUniverse", new Dictionary<string, object>
+            WebSocketMessage<SolversLiveUpdateMessage> message = new WebSocketMessage<SolversLiveUpdateMessage>("updateUniverse", new SolversLiveUpdateMessage
             {
-                ["universeID"] = universe.UniverseNumber,
-                ["fixtures"] = from fixture in universe.Fixtures
-                               select new JObject(
-                                   new JProperty("channel", fixture.StartChannel),
-                                   new JProperty("attributes",
-                                       new JArray(
-                                           from attribute in fixture.Settables.Values
-                                           where (attribute is FixtureSolverAttribute || attribute is DMXChannel)
-                                           select new JObject(
-                                               new JProperty("name", attribute.Name),
-                                               new JProperty("value", attribute.Value)
-                                           )
-                                       )
-                                   )
-                               )
+                UniverseID = e.UniverseID,
+                Fixtures = from fixture in e.Fixtures
+                           orderby fixture.StartChannel
+                           select new SolversLiveFixtureUpdate
+                           {
+                               Address = fixture.StartChannel,
+                               Attributes = 
+                                       from attribute in fixture.Settables.Values
+                                       where !attribute.Controlled && attribute is FixtureSolverAttribute
+                                       select new SolversLiveAttributeUpdate
+                                       {
+                                           Name = attribute.Name,
+                                           Value = attribute.Value
+                                       }
+                               
+                           }
             });
             await Send(message);
         }
@@ -73,5 +73,23 @@ namespace kadmium_osc_dmx_dotnet_webui.WebSockets
                 universe.Updated -= Universe_Updated;
             }
         }
+    }
+
+    public class SolversLiveUpdateMessage
+    {
+        public int UniverseID { get; set; }
+        public IEnumerable<SolversLiveFixtureUpdate> Fixtures { get; set; }
+    }
+
+    public class SolversLiveFixtureUpdate
+    {
+        public int Address { get; set; }
+        public IEnumerable<SolversLiveAttributeUpdate> Attributes { get; set; }
+    }
+
+    public class SolversLiveAttributeUpdate
+    {
+        public string Name { get; set; }
+        public float Value { get; set; }
     }
 }

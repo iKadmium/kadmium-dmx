@@ -12,7 +12,7 @@
                 <!-- Nav tabs -->
                 <ul class="nav nav-tabs" role="tablist">
                     <li *ngFor="let fixture of activeUniverse.fixtures" role="presentation" [ngClass]="{'active': activeFixture == fixture}">
-                        <a (click)="activeFixture = fixture">{{fixture.channel}} {{fixture.type}}</a>
+                        <a (click)="activeFixture = fixture">{{fixture.address}} {{fixture.manufacturer}} {{fixture.model}}</a>
                     </li>
                 </ul>
 

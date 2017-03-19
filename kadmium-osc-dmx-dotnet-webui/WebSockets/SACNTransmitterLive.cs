@@ -16,14 +16,11 @@ namespace kadmium_osc_dmx_dotnet_webui.WebSockets
 
         private async void Transmitter_OnTransmit(object sender, TransmitterEventArgs e)
         {
-            WebSocketMessage message = new WebSocketMessage("updateUniverse",
-                new Dictionary<string, object>
+            WebSocketMessage< SACNTransmitterUpdateMessage> message = new WebSocketMessage<SACNTransmitterUpdateMessage>("updateUniverse",
+                new SACNTransmitterUpdateMessage
                 {
-                    ["universeID"] = e.UniverseID,
-                    ["values"] = new JArray(
-                                    from value in e.DMX
-                                    select new JValue(value)
-                    )
+                    UniverseID = e.UniverseID,
+                    Values = e.DMX.ToList()
                 }
             );
 
@@ -37,5 +34,11 @@ namespace kadmium_osc_dmx_dotnet_webui.WebSockets
             Transmitter.OnTransmit -= Transmitter_OnTransmit;
         }
 
+    }
+
+    public class SACNTransmitterUpdateMessage
+    {
+        public int UniverseID { get; set; }
+        public List<byte> Values { get; set; }
     }
 }

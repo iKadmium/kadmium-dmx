@@ -77,14 +77,12 @@ namespace kadmium_osc_dmx_dotnet_webui.WebSockets
 
         private async Task SendUpdate(string controller, StatusCode statusCode, string message)
         {
-            WebSocketMessage socketMessage = new WebSocketMessage("updateStatus",
-                new Dictionary<string, object>
-                {
-                    ["controller"] = controller,
-                    ["code"] = Enum.GetName(typeof(StatusCode), statusCode),
-                    ["message"] = message
-                }
-            );
+            WebSocketMessage<DashboardUpdateMessage> socketMessage = new WebSocketMessage<DashboardUpdateMessage>("updateStatus", new DashboardUpdateMessage
+            {
+                Controller = controller,
+                Code = Enum.GetName(typeof(StatusCode), statusCode),
+                Message = message
+            });
             await Send(socketMessage);
         }
 
@@ -95,5 +93,12 @@ namespace kadmium_osc_dmx_dotnet_webui.WebSockets
             Venue.Status.Updated += VenueStatusUpdated;
             MasterController.Instance.SolverStatus.Updated -= SolverStatusUpdated;
         }
+    }
+
+    public class DashboardUpdateMessage
+    {
+        public string Controller { get; set; }
+        public string Code { get; set; }
+        public string Message { get; set; }
     }
 }

@@ -1,4 +1,4 @@
-import { Component, ViewChild, ViewContainerRef } from '@angular/core';
+import { Component, ViewChild, ViewContainerRef, ViewChildDecorator, ElementRef } from '@angular/core';
 import { Title } from "@angular/platform-browser";
 
 import { Overlay } from "angular2-modal";
@@ -9,7 +9,7 @@ import { MessageBarService } from "../status/message-bar/message-bar.service";
 
 import { MessageBarComponent } from "../status/message-bar/message-bar.component";
 
-import { FixtureDefinitionSkeleton } from "./fixture-definition";
+import { FixtureDefinitionSkeleton, FixtureDefinition } from "./fixture-definition";
 
 @Component({
     selector: 'fixture-definitions',
@@ -57,6 +57,11 @@ export class FixtureDefinitionsComponent
         return "fixture-definitions" + "/" + fixture.id;
     }
 
+    private getDownloadUrl(fixture: FixtureDefinitionSkeleton): string
+    {
+        return "/api/FixtureDefinition" + "/" + fixture.id;
+    }
+
     private async deleteConfirm(fixture: FixtureDefinitionSkeleton): Promise<void>
     {
         let promise = await this.modal
@@ -92,9 +97,31 @@ export class FixtureDefinitionsComponent
             //errors are generated when the message box is cancelled
         }
     }
-
-    private add(): void
+    
+    private upload(fileInput: any): void
     {
-        window.location.href = "/fixture-definitions/new";
+        (fileInput as HTMLInputElement).click();
+    }
+
+    private fileSelected(item: File): void
+    {
+        let reader = new FileReader();
+        reader.addEventListener("load", (event) => 
+        {
+            let content = reader.result;
+            let definition = JSON.parse(content) as FixtureDefinition;
+            this.fixtureDefinitionsService.post(definition)
+                .then(id =>
+                {
+                    this.messageBarService.add("Success", "Successfully added " + definition.manufacturer + " " + definition.model);
+                    definition.id = id;
+                    this.data.push(definition);
+                })
+                .catch(reason =>
+                {
+                    this.messageBarService.add("Error", reason);
+                });
+        });
+        reader.readAsText(item);
     }
 }

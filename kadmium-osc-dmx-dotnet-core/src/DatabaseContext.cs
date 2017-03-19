@@ -73,7 +73,7 @@ namespace kadmium_osc_dmx_dotnet_core
             foreach (var fixtureKey in FileAccess.GetAllFixtures())
             {
                 var definitionJson = await FileAccess.LoadFixtureDefinition(fixtureKey.Item1, fixtureKey.Item2);
-                var definition = FixtureDefinition.Load(definitionJson);
+                var definition = definitionJson.ToObject<FixtureDefinition>();
                 FixtureDefinitions.Add(definition);
             }
         }
@@ -196,7 +196,6 @@ namespace kadmium_osc_dmx_dotnet_core
                     {
                         await collection.LoadAsync();
                     }
-                    fixture.Initialize();
                 }
             }
 
@@ -244,7 +243,6 @@ namespace kadmium_osc_dmx_dotnet_core
                 {
                     await collection.LoadAsync();
                 }
-                fixture.Initialize();
             }
             return preset;
         }

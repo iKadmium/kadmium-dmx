@@ -96,6 +96,15 @@ namespace kadmium_osc_dmx_dotnet_core.Color
             return string.Format("#{0:X2}{1:X2}{2:X2}", red, green, blue);
         }
 
+        public static RGB Parse(string rgbString)
+        {
+            string strippedString = rgbString.Replace("#", "");
+            int red = int.Parse(rgbString.Substring(0, 2), System.Globalization.NumberStyles.HexNumber);
+            int green = int.Parse(rgbString.Substring(2, 2), System.Globalization.NumberStyles.HexNumber);
+            int blue = int.Parse(rgbString.Substring(4, 2), System.Globalization.NumberStyles.HexNumber);
+            return new RGB(red, green, blue);
+        }
+
         #region Methods
         public override bool Equals(Object obj)
         {

@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Newtonsoft.Json;
+using System;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
@@ -9,6 +10,7 @@ namespace kadmium_osc_dmx_dotnet_core.Solvers
         private float value;
 
         [NotMapped]
+        [JsonIgnore]
         public float Value
         {
             get { return value; }
@@ -23,6 +25,7 @@ namespace kadmium_osc_dmx_dotnet_core.Solvers
         }
         public string Name { get; set; }
         [NotMapped]
+        [JsonIgnore]
         public bool Controlled { get; set; }
 
         public Attribute(string name, float value = 0.0f)
