@@ -4,6 +4,8 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.AspNetCore.SpaServices.Webpack;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
+using Microsoft.EntityFrameworkCore;
+using kadmium_osc_dmx_dotnet_core;
 using kadmium_osc_dmx_dotnet_webui.WebSockets;
 using Microsoft.AspNetCore.ResponseCompression;
 using System.IO.Compression;
@@ -28,14 +30,16 @@ namespace kadmium_osc_dmx_dotnet_webui
         public void ConfigureServices(IServiceCollection services)
         {
             // Add framework services.
-            services.Configure<GzipCompressionProviderOptions>
-                (options => options.Level = CompressionLevel.Fastest);
-            services.AddResponseCompression(options =>
-            {
-                options.Providers.Add<GzipCompressionProvider>();
-            });
+            services
+                .Configure<GzipCompressionProviderOptions>(options => options.Level = CompressionLevel.Fastest)
+                .AddResponseCompression(options =>
+                {
+                    options.Providers.Add<GzipCompressionProvider>();
+                });
 
             services.AddMvc();
+
+            services.AddDbContext<DatabaseContext>(options => options.UseSqlite(DatabaseContext.ConnectionString));
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

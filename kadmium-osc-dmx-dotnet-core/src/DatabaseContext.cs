@@ -6,11 +6,16 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using Microsoft.Extensions.Logging;
+using System.IO;
+using kadmiumoscdmxdotnetcore.Migrations;
 
 namespace kadmium_osc_dmx_dotnet_core
 {
     public class DatabaseContext : DbContext
     {
+        private static string DatabaseFilename { get { return "./DMX.db"; } }
+        public static string ConnectionString { get { return "Filename=" + DatabaseFilename; } }
+
         public DbSet<FixtureDefinition> FixtureDefinitions { get; set; }
         public DbSet<Venue> Venues { get; set; }
         public DbSet<VenuePreset> VenuePresets { get; set; }
@@ -18,9 +23,9 @@ namespace kadmium_osc_dmx_dotnet_core
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
-            optionsBuilder.UseSqlite("Filename=./DMX.db");
+            optionsBuilder.UseSqlite(ConnectionString);
         }
-
+        
         public async Task FilchData()
         {
             DeleteData();

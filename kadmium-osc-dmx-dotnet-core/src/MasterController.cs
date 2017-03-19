@@ -58,13 +58,11 @@ namespace kadmium_osc_dmx_dotnet_core
         {
             JObject settings = await FileAccess.LoadSettings();
 
-            using (var h = new DatabaseContext())
+            using (var context = new DatabaseContext())
             {
-                await h.FilchData();
-
                 instance = new MasterController()
                 {
-                    Groups = h.Groups.ToDictionary(x => x.Name),
+                    Groups = context.Groups.ToDictionary(x => x.Name),
                     Transmitter = SACNTransmitter.Load(settings["sacnTransmitter"].Value<JObject>()),
                     Listener = new OSCListener(settings["oscPort"].Value<int>(), "OSC Listener")
                 };

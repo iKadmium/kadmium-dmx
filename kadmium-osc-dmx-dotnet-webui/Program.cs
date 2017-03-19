@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Hosting;
 using kadmium_osc_dmx_dotnet_core;
 using Newtonsoft.Json.Linq;
+using Microsoft.EntityFrameworkCore;
 
 namespace kadmium_osc_dmx_dotnet_webui
 {
@@ -9,6 +10,11 @@ namespace kadmium_osc_dmx_dotnet_webui
     {
         public static void Main(string[] args)
         {
+            using (var context = new DatabaseContext())
+            {
+                context.Database.Migrate();
+            }
+
             MasterController.Initialise().Wait();
 
             JObject settings = kadmium_osc_dmx_dotnet_core.FileAccess.LoadSettings().Result;
