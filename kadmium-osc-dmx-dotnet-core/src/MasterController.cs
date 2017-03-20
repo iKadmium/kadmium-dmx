@@ -20,6 +20,7 @@ namespace kadmium_osc_dmx_dotnet_core
         public Transmitter Transmitter { get; private set; }
         public Listener Listener { get; private set; }
         public Venue Venue { get; private set; }
+        public Settings Settings { get; set; }
         public Strobe Strobe { get; }
         private bool updatesEnabled;
         public bool UpdatesEnabled
@@ -40,6 +41,7 @@ namespace kadmium_osc_dmx_dotnet_core
                 }
             }
         }
+        
         public bool RenderEnabled { get; set; }
         private Timer updateTimer;
         public Status SolverStatus { get; private set; }
@@ -56,15 +58,15 @@ namespace kadmium_osc_dmx_dotnet_core
 
         public static async Task Initialise()
         {
-            JObject settings = await FileAccess.LoadSettings();
-
+            var settings = await FileAccess.LoadSettings();
             using (var context = new DatabaseContext())
             {
                 instance = new MasterController()
                 {
+                    Settings = settings,
                     Groups = context.Groups.ToDictionary(x => x.Name),
-                    Transmitter = SACNTransmitter.Load(settings["sacnTransmitter"].Value<JObject>()),
-                    Listener = new OSCListener(settings["oscPort"].Value<int>(), "OSC Listener")
+                    Transmitter = SACNTransmitter.Load(settings.SacnTransmitter),
+                    Listener = new OSCListener(settings.OscPort, "OSC Listener")
                 };
 
                 Venue.Status = new Status("No venue loaded");
@@ -118,6 +120,20 @@ namespace kadmium_osc_dmx_dotnet_core
             updateTimer.Dispose();
             Transmitter?.Dispose();
             Listener?.Dispose();
+        }
+
+        public void SetGroups(IEnumerable<Group> groups, DatabaseContext context)
+        {
+            bool oldUpdatesEnabled = updatesEnabled;
+            UpdatesEnabled = false;
+            Venue?.Deactivate();
+            Groups.Clear();
+            foreach(Group grp in groups)
+            {
+                Groups.Add(grp.Name, grp);
+            }
+            Venue?.Activate(context);
+            UpdatesEnabled = oldUpdatesEnabled;
         }
     }
 }

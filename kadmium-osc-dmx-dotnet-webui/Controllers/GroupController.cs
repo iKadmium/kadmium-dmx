@@ -32,6 +32,7 @@ namespace kadmium_osc_dmx_dotnet_webui.Controllers
             {
                 await context.UpdateCollection(context.Groups, groups, (x => x.Id));
                 await context.SaveChangesAsync();
+                MasterController.Instance.SetGroups(groups, context);
             }
         }
 

@@ -21,30 +21,7 @@ namespace kadmium_osc_dmx_dotnet_core
             Name = name;
             Fixtures = fixtures;
         }
-
-        public JObject Serialize()
-        {
-            JObject obj = new JObject(
-                new JProperty("$schema", FileAccess.GetRelativePath(FileAccess.GetVenuePresetLocation(Name), FileAccess.VenuePresetsSchema)),
-                new JProperty("name", Name),
-                new JProperty("fixtures",
-                    from entry in Fixtures
-                    select new JObject(
-                        new JProperty("channel", entry.StartChannel),
-                        new JProperty("type",
-                            new JObject(
-                                new JProperty("model", entry.FixtureDefinition.Model),
-                                new JProperty("manufacturer", entry.FixtureDefinition.Manufacturer)
-                            )
-                        ),
-                        new JProperty("group", entry.Group),
-                        new JProperty("options", entry.Options)
-                    )
-                )
-            );
-            return obj;
-        }
-
+        
         public static VenuePreset Load(JObject obj, DatabaseContext context)
         {
             string name = obj["name"].Value<string>();

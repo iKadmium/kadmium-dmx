@@ -8,13 +8,13 @@ using System.Linq;
 using Microsoft.Extensions.Logging;
 using System.IO;
 using kadmiumoscdmxdotnetcore.Migrations;
+using System.Runtime.InteropServices;
 
 namespace kadmium_osc_dmx_dotnet_core
 {
     public class DatabaseContext : DbContext
     {
-        private static string DatabaseFilename { get { return "./DMX.db"; } }
-        public static string ConnectionString { get { return "Filename=" + DatabaseFilename; } }
+        public static string ConnectionString => "Filename=" + FileAccess.DatabasePath;
 
         public DbSet<FixtureDefinition> FixtureDefinitions { get; set; }
         public DbSet<Venue> Venues { get; set; }
@@ -25,44 +25,19 @@ namespace kadmium_osc_dmx_dotnet_core
         {
             optionsBuilder.UseSqlite(ConnectionString);
         }
-        
-        public async Task FilchData()
-        {
-            DeleteData();
-            await FilchGroups();
-            var count = SaveChanges();
-            System.Console.WriteLine("{0} changes written", count);
-            await FilchFixtureDefinitions();
-            count = SaveChanges();
-            System.Console.WriteLine("{0} changes written", count);
-            await FilchVenues();
-            count = SaveChanges();
-            System.Console.WriteLine("{0} changes written", count);
-            await FilchVenuePresets();
-            count = SaveChanges();
-            System.Console.WriteLine("{0} changes written", count);
-            //var definition = await FixtureDefinition.Load("Generic", "Chinese Moving Wash");
-            //FixtureDefinitions.Add(definition);
-        }
 
         public async Task RecursiveLoadAsync<T>(T item) where T : class
         {
-            foreach(var collection in Entry(item).Collections)
+            foreach (var collection in Entry(item).Collections)
             {
                 await collection.LoadAsync();
-                foreach(var thing in collection.CurrentValue)
+                foreach (var thing in collection.CurrentValue)
                 {
                     await RecursiveLoadAsync(thing);
                 }
             }
         }
         
-        private async Task FilchGroups()
-        {
-            var groups = await FileAccess.LoadGroups();
-            Groups.AddRange(groups);
-        }
-
         private void DeleteData()
         {
             var tables = new[] { "ColorWheelEntry", "DMXChannel", "Fixture", "MovementAxis", "Universe",
@@ -72,36 +47,7 @@ namespace kadmium_osc_dmx_dotnet_core
                 Database.ExecuteSqlCommand("delete from " + table);
             }
         }
-
-        private async Task FilchFixtureDefinitions()
-        {
-            foreach (var fixtureKey in FileAccess.GetAllFixtures())
-            {
-                var definitionJson = await FileAccess.LoadFixtureDefinition(fixtureKey.Item1, fixtureKey.Item2);
-                var definition = definitionJson.ToObject<FixtureDefinition>();
-                FixtureDefinitions.Add(definition);
-            }
-        }
-
-        private async Task FilchVenues()
-        {
-            foreach (var venueName in FileAccess.GetVenueNames())
-            {
-                var venueJson = await FileAccess.LoadVenue(venueName);
-                var venue = Venue.Load(venueJson, this);
-                Venues.Add(venue);
-            }
-        }
-
-        private async Task FilchVenuePresets()
-        {
-            foreach (var venuePresetName in FileAccess.GetVenuePresetNames())
-            {
-                var venuePresetJson = await FileAccess.LoadVenuePreset(venuePresetName);
-                var venuePreset = VenuePreset.Load(venuePresetJson, this);
-                VenuePresets.Add(venuePreset);
-            }
-        }
+        
         
         public void UpdateCollection<T>(List<T> original, List<T> modified)
         {

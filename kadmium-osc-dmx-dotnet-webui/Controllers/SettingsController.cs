@@ -12,15 +12,16 @@ namespace kadmium_osc_dmx_dotnet_webui.Controllers
     {
         // GET: api/values
         [HttpGet]
-        public async Task<JObject> Get()
+        public async Task<Settings> Get()
         {
             return await FileAccess.LoadSettings();
         }
 
         // POST api/values
         [HttpPost]
-        public void Post([FromBody]JObject value)
+        public void Post([FromBody]Settings value)
         {
+            MasterController.Instance.Settings = value;
             FileAccess.SaveSettings(value);
         }
     }

@@ -62,13 +62,13 @@ namespace kadmium_osc_dmx_dotnet_core.Transmitters
             }
         }
 
-        public new static SACNTransmitter Load(JObject element)
+        public static SACNTransmitter Load(SacnTransmitterSettings settings)
         {
             string id = "sACN Transmitter";
             int port = 5568;
-            int delay = element["delay"].Value<int>();
-            bool multicast = element["multicast"].Value<bool>();
-            IEnumerable<string> unicast = element["unicast"].Values<string>();
+            int delay = settings.Delay;
+            bool multicast = settings.Multicast;
+            IEnumerable<string> unicast = settings.Unicast;
             SACNTransmitter transmitter = new SACNTransmitter(Guid.NewGuid(), id, port, delay, multicast, unicast);
             return transmitter;
         }
