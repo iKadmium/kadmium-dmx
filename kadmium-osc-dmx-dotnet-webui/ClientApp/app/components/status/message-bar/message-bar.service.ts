@@ -15,4 +15,9 @@ export class MessageBarService
     {
         this.component.add(statusCode, message);
     }
+
+    public addError(reason: any): void
+    {
+        this.component.addError(reason);
+    }
 }

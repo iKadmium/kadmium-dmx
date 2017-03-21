@@ -52,8 +52,8 @@ namespace kadmium_osc_dmx_dotnet_test.Solvers
             definition.Channels.Add(new DMXChannel("ColorWheel", definition.Channels.Count + 1));
             definition.Channels.Add(new DMXChannel("Master", definition.Channels.Count + 1));
             definition.ColorWheel.AddRange(colors);
-            Fixture fixture = new Fixture(definition, 1, GroupTests.GetGroup(), new Newtonsoft.Json.Linq.JObject());
-            fixture.Initialize();
+            Fixture fixture = new Fixture(1, new Newtonsoft.Json.Linq.JObject());
+            fixture.Initialize(definition, GroupTests.GetGroup());
             return fixture;
         }
     }

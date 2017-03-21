@@ -7,8 +7,8 @@ using System.Collections.Generic;
 using System.Linq;
 using Microsoft.Extensions.Logging;
 using System.IO;
-using kadmiumoscdmxdotnetcore.Migrations;
 using System.Runtime.InteropServices;
+using System.Numerics;
 
 namespace kadmium_osc_dmx_dotnet_core
 {
@@ -49,16 +49,31 @@ namespace kadmium_osc_dmx_dotnet_core
         }
         
         
-        public void UpdateCollection<T>(List<T> original, List<T> modified)
+        public void UpdateCollection<TObject, TKey>(List<TObject> original, List<TObject> modified, Func<TObject, TKey> getKey)
+            where TObject : class
         {
-            var common = original.Intersect(modified).ToList();
-            var newItems = modified.Except(original).ToList();
-            var removingItems = original.Except(common).ToList();
-            foreach (T item in removingItems)
+            foreach (var item in modified)
+            {
+                var key = getKey(item);
+                TObject originalItem = original.Single(x => getKey(x).Equals(key));
+                if (originalItem == null)
+                {
+                    original.Add(item);
+                }
+                else
+                {
+                    this.Entry(originalItem).CurrentValues.SetValues(item);
+                }
+            }
+
+            var toDelete = from originalItem in original
+                           where !modified.Any(x => getKey(x).Equals(getKey(originalItem)))
+                           select originalItem;
+
+            foreach (TObject item in toDelete)
             {
                 original.Remove(item);
             }
-            original.AddRange(newItems);
         }
 
         public async Task UpdateCollection<TObject, TKey>(DbSet<TObject> original, IEnumerable<TObject> modified, Func<TObject, TKey> getKey) 
@@ -114,7 +129,7 @@ namespace kadmium_osc_dmx_dotnet_core
                 .HasOne(x => x.Group)
                 .WithMany()
                 .OnDelete(Microsoft.EntityFrameworkCore.Metadata.DeleteBehavior.Cascade);
-            
+
             modelBuilder.Entity<Venue>()
                 .HasMany(x => x.Universes)
                 .WithOne()
@@ -147,6 +162,8 @@ namespace kadmium_osc_dmx_dotnet_core
                     {
                         await collection.LoadAsync();
                     }
+                    fixture.Skeleton = fixture.FixtureDefinition.GetSkeleton();
+                    fixture.GroupString = fixture.Group.Name;
                 }
             }
 

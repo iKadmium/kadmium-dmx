@@ -5,6 +5,7 @@ using Newtonsoft.Json.Linq;
 using System.Threading.Tasks;
 using System.ComponentModel.DataAnnotations.Schema;
 using Newtonsoft.Json;
+using System.Numerics;
 
 namespace kadmium_osc_dmx_dotnet_core.Fixtures
 {
@@ -22,10 +23,7 @@ namespace kadmium_osc_dmx_dotnet_core.Fixtures
         public FixtureDefinition FixtureDefinition { get; set; }
         [NotMapped]
         [JsonProperty(PropertyName = "type")]
-        public FixtureDefinitionSkeleton Skeleton
-        {
-            get { return FixtureDefinition.GetSkeleton(); }
-        }
+        public FixtureDefinitionSkeleton Skeleton { get; set; }
         [NotMapped]
         [JsonIgnore]
         public Dictionary<string, Solvers.Attribute> Settables { get; }
@@ -56,7 +54,7 @@ namespace kadmium_osc_dmx_dotnet_core.Fixtures
         public Group Group { get; set; }
         [NotMapped]
         [JsonProperty(PropertyName = "group")]
-        public string GroupString { get { return Group.Name; } }
+        public string GroupString { get; set; }
 
         public Fixture()
         {
@@ -71,12 +69,10 @@ namespace kadmium_osc_dmx_dotnet_core.Fixtures
             };
         }
 
-        public Fixture(FixtureDefinition definition, int startChannel, Group group, JObject options) : this()
+        public Fixture(int startChannel, JObject options) : this()
         {
-            FixtureDefinition = definition;
             Options = options;
             StartChannel = startChannel;
-            Group = group;
         }
 
         public void Update()
@@ -96,24 +92,7 @@ namespace kadmium_osc_dmx_dotnet_core.Fixtures
         {
             Group.Fixtures.Remove(this);
         }
-
-        public static Fixture Load(JObject obj, DatabaseContext context)
-        {
-            int startChannel = obj["address"].Value<int>();
-            JObject type = obj["type"].Value<JObject>();
-            string model = type["model"].Value<string>();
-            string manufacturer = type["manufacturer"].Value<string>();
-            FixtureDefinition definition = null;
-            string groupName = obj["group"].Value<string>();
-            Group group = null;
-            definition = context.LoadFixtureDefinition(manufacturer, model).Result;
-            group = context.LoadGroup(groupName).Result;
-            
-            JObject options = obj["options"].Value<JObject>();
-            Fixture fixture = new Fixture(definition, startChannel, group, options);
-            return fixture;
-        }
-
+        
         public void Render(byte[] dmx)
         {
             var channels = from channel in FixtureDefinition.Channels
@@ -144,7 +123,7 @@ namespace kadmium_osc_dmx_dotnet_core.Fixtures
             }
         }
 
-        public void Activate(DatabaseContext context)
+        public void Activate()
         {
             var grp = MasterController.Instance.Groups.Values.Single(x => x.Id == Group.Id);
             grp.Fixtures.Add(this);
@@ -161,8 +140,21 @@ namespace kadmium_osc_dmx_dotnet_core.Fixtures
             return FixtureDefinition.Model + " [" + StartChannel + " - " + EndChannel + "]";
         }
 
-        public void Initialize()
+        public void Initialize(FixtureDefinition definition, Group group)
         {
+            InitializeFixtureDefinition(definition);
+            InitializeGroup(group);
+        }
+
+        public async Task Initialize (DatabaseContext context)
+        {
+            await InitializeFixtureDefinition(context);
+            InitializeGroup(context);
+        }
+
+        private void InitializeFixtureDefinition(FixtureDefinition definition)
+        {
+            FixtureDefinition = definition;
             Settables.Clear();
             FrameSettables.Clear();
             Solvers.Clear();
@@ -177,6 +169,31 @@ namespace kadmium_osc_dmx_dotnet_core.Fixtures
                 MovementAxis.Add(axis.Name, axis);
             }
             Solvers.AddRange(FixtureSolver.GetDefaultSolvers(this, Options));
+        }
+
+        private async Task InitializeFixtureDefinition(DatabaseContext context)
+        {
+            FixtureDefinition fixtureDefinition;
+            if(Skeleton.Id == 0)
+            {
+                fixtureDefinition = await context.LoadFixtureDefinition(Skeleton.Manufacturer, Skeleton.Model);
+            }
+            else
+            {
+                fixtureDefinition = await context.LoadFixtureDefinition(Skeleton.Id);
+            }
+            InitializeFixtureDefinition(fixtureDefinition);
+        }
+
+        private void InitializeGroup(DatabaseContext context)
+        {
+            var group = context.Groups.Single(x => x.Name == GroupString);
+            InitializeGroup(group);
+        }
+
+        private void InitializeGroup(Group group)
+        {
+            Group = group;
         }
     }
 }

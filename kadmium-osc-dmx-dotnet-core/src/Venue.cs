@@ -18,7 +18,7 @@ namespace kadmium_osc_dmx_dotnet_core
 
         public List<Universe> Universes { get; set; }
         
-        public Venue(string name, IEnumerable<Universe> universes)
+        public Venue(string name, IEnumerable<Universe> universes, float stageWidth, float stageDepth)
         {
             Name = name;
             Universes = new List<Universe>();
@@ -28,30 +28,10 @@ namespace kadmium_osc_dmx_dotnet_core
             }
         }
 
-        public Venue() : this("", Enumerable.Empty<Universe>())
+        public Venue() : this("", Enumerable.Empty<Universe>(), 3, 2)
         {
         }
         
-        public static Venue Load(JObject obj, DatabaseContext context)
-        {
-            try
-            {
-                string name = obj["name"].Value<string>();
-
-                var universesQuery = from universeElement in obj["universes"].Values<JObject>()
-                                     select Universe.Load(universeElement, context);
-
-                List<Universe> universes = universesQuery.ToList();
-
-                return new Venue(name, universes);
-            }
-            catch (Exception e)
-            {
-                Status.Update(StatusCode.Error, e.Message, null);
-                throw e;
-            }
-        }
-
         internal void Update()
         {
             foreach (Universe universe in Universes)
@@ -76,9 +56,17 @@ namespace kadmium_osc_dmx_dotnet_core
             }
         }
 
-        public void Activate(DatabaseContext context)
+        public async Task Initialize(DatabaseContext context)
         {
-            Universes.ForEach(x => x.Activate(context));
+            foreach(var universe in Universes)
+            {
+                await universe.Initialize(context);
+            }
+        }
+
+        public void Activate()
+        {
+            Universes.ForEach(x => x.Activate());
             Status.Update(StatusCode.Success, Name + " running", this);
         }
 

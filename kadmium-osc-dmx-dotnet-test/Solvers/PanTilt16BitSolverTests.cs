@@ -43,8 +43,8 @@ namespace kadmium_osc_dmx_dotnet_test.Solvers.Solvers
                 definition.Channels.Add(new DMXChannel(axisName + "Coarse", definition.Channels.Count + 1));
                 definition.Channels.Add(new DMXChannel(axisName + "Fine", definition.Channels.Count + 1));
             }
-            Fixture fixture = new Fixture(definition, 1, GroupTests.GetGroup(), new Newtonsoft.Json.Linq.JObject());
-            fixture.Initialize();
+            Fixture fixture = new Fixture(1, new Newtonsoft.Json.Linq.JObject());
+            fixture.Initialize(definition, GroupTests.GetGroup());
             return fixture;
         }
     }

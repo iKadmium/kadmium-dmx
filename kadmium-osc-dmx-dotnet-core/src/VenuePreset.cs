@@ -4,6 +4,8 @@ using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
+using System;
+using System.Threading.Tasks;
 
 namespace kadmium_osc_dmx_dotnet_core
 {
@@ -21,14 +23,13 @@ namespace kadmium_osc_dmx_dotnet_core
             Name = name;
             Fixtures = fixtures;
         }
-        
-        public static VenuePreset Load(JObject obj, DatabaseContext context)
-        {
-            string name = obj["name"].Value<string>();
-            var fixtureEntries = from fixture in obj["fixtures"].Values<JObject>()
-                                 select Fixture.Load(fixture, context);
-            return new VenuePreset(name, fixtureEntries.ToList());
-        }
 
+        public async Task Initialize(DatabaseContext context)
+        {
+            foreach(Fixture fixture in Fixtures)
+            {
+                await fixture.Initialize(context);
+            }
+        }
     }
 }

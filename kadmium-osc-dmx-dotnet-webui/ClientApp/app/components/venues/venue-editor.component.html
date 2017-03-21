@@ -3,11 +3,11 @@
         <labelled-input label="Name:">
             <input required #input class="form-control" type="text" name="name" [(ngModel)]="venue.name" #model="ngModel">
         </labelled-input>
-
+        
         <div role="tabpanel">
             <!-- Nav tabs -->
             <ul class="nav nav-tabs" role="tablist">
-                <li *ngFor="let universe of venue.universes; let i = index" [ngClass]="{'active': selectedUniverse == universe}" class="active">
+                <li *ngFor="let universe of venue.universes; let i = index" [ngClass]="{'active': selectedUniverse == universe}">
                     <a (click)="selectedUniverse = universe">{{universe.name}}
                         <span *ngIf="i > 0" class="glyphicon glyphicon-remove" (click)="removeUniverse(i)"></span>
                     </a>

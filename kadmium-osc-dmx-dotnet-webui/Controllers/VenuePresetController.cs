@@ -40,7 +40,12 @@ namespace kadmium_osc_dmx_dotnet_webui.Controllers
         {
             using (var context = new DatabaseContext())
             {
-                VenuePreset preset = VenuePreset.Load(value, context);
+                VenuePreset preset = value.ToObject<VenuePreset>();
+                foreach(var fixture in preset.Fixtures)
+                {
+                    fixture.Id = 0;
+                }
+                await preset.Initialize(context);
                 await context.VenuePresets.AddAsync(preset);
                 await context.SaveChangesAsync();
             }
@@ -52,10 +57,10 @@ namespace kadmium_osc_dmx_dotnet_webui.Controllers
         {
             using (var context = new DatabaseContext())
             {
-                VenuePreset preset = VenuePreset.Load(value, context);
+                VenuePreset preset = value.ToObject<VenuePreset>();
                 preset.Id = id;
                 VenuePreset originalPreset = await context.LoadVenuePreset(id);
-                context.UpdateCollection(originalPreset.Fixtures, preset.Fixtures);
+                context.UpdateCollection(originalPreset.Fixtures, preset.Fixtures, (x => x.Id));
                 context.Entry(originalPreset).CurrentValues.SetValues(preset);
                 await context.SaveChangesAsync();
             }

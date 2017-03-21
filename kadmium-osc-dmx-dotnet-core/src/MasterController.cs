@@ -88,7 +88,7 @@ namespace kadmium_osc_dmx_dotnet_core
             Venue?.Deactivate();
             Venue?.Dispose();
             Venue = venue;
-            venue.Activate(context);
+            venue.Activate();
             UpdatesEnabled = true;
         }
 
@@ -122,7 +122,7 @@ namespace kadmium_osc_dmx_dotnet_core
             Listener?.Dispose();
         }
 
-        public void SetGroups(IEnumerable<Group> groups, DatabaseContext context)
+        public async Task SetGroups(IEnumerable<Group> groups, DatabaseContext context)
         {
             bool oldUpdatesEnabled = updatesEnabled;
             UpdatesEnabled = false;
@@ -132,8 +132,12 @@ namespace kadmium_osc_dmx_dotnet_core
             {
                 Groups.Add(grp.Name, grp);
             }
-            Venue?.Activate(context);
-            UpdatesEnabled = oldUpdatesEnabled;
+            await (Venue?.Initialize(context) ?? Task.CompletedTask);
+            Venue?.Activate();
+            if(oldUpdatesEnabled)
+            {
+                UpdatesEnabled = true;
+            }
         }
     }
 }

@@ -55,20 +55,7 @@ namespace kadmium_osc_dmx_dotnet_core
                 fixture.Dispose();
             }
         }
-
-        public static Universe Load(JObject universeElement, DatabaseContext context)
-        {
-            string name = universeElement["name"].Value<string>();
-            int universeID = universeElement["universeID"].Value<int>();
-            IEnumerable<Fixture> fixturesQuery = from fixture in universeElement["fixtures"].Values<JObject>()
-                                                       select Fixture.Load(fixture, context);
-            
-            List<Fixture> fixtures = fixturesQuery.ToList();
-
-            Universe universe = new Universe(name, universeID, fixtures);
-            return universe;
-        }
-
+        
         public void Update()
         {
             foreach (Fixture fixture in Fixtures)
@@ -79,16 +66,23 @@ namespace kadmium_osc_dmx_dotnet_core
             Updated?.Invoke(this, new UpdateEventArgs(UniverseNumber, Fixtures));
         }
 
+        public async Task Initialize(DatabaseContext context)
+        {
+            foreach(Fixture fixture in Fixtures)
+            {
+                await fixture.Initialize(context);
+            }
+        }
+
         public void Render()
         {
             MasterController.Instance.Transmitter.Transmit(DMX, UniverseNumber);
             Rendered?.Invoke(this, new DMXEventArgs(DMX));
         }
 
-        public void Activate(DatabaseContext context)
+        public void Activate()
         {
-            Fixtures.ForEach(x => x.Initialize());
-            Fixtures.ForEach(x => x.Activate(context));
+            Fixtures.ForEach(x => x.Activate());
         }
 
         public void Deactivate()

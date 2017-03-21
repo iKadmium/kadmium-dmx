@@ -73,9 +73,9 @@ namespace kadmium_osc_dmx_dotnet_webui.Controllers
             using (var context = new DatabaseContext())
             {
                 FixtureDefinition originalDefinition = await context.LoadFixtureDefinition(id);
-                context.UpdateCollection(originalDefinition.Channels, definition.Channels);
-                context.UpdateCollection(originalDefinition.Movements, definition.Movements);
-                context.UpdateCollection(originalDefinition.ColorWheel, definition.ColorWheel);
+                context.UpdateCollection(originalDefinition.Channels, definition.Channels, (x => x.Id));
+                context.UpdateCollection(originalDefinition.Movements, definition.Movements, (x => x.Id));
+                context.UpdateCollection(originalDefinition.ColorWheel, definition.ColorWheel, (x => x.Id));
                 context.Entry(originalDefinition).CurrentValues.SetValues(definition);
                 await context.SaveChangesAsync();
             }

@@ -47,12 +47,9 @@ export class FixtureOptionsEditorComponent implements OnChanges
                 let fixture: Fixture = fixtureChanges.currentValue;
                 if(fixture.type == null)
                 {
-                    this.manufacturerFilter = this.getManufacturers()[0];
+                    fixture.type = this.skeletons[0];
                 }
-                else
-                {
-                    this.manufacturerFilter = fixture.type.manufacturer;
-                }
+                this.manufacturerFilter = fixture.type.manufacturer;
                 this.updateDefinition(fixture.type);
             }
             else
@@ -83,10 +80,13 @@ export class FixtureOptionsEditorComponent implements OnChanges
 
     private async updateDefinition(skeleton: FixtureDefinitionSkeleton): Promise<void>
     {
-        this.definition = await this.fixtureDefinitionsService
-            .get(skeleton.id);
-        this.axisOptions = this.definition.movements
-            .map(value => new AxisOptions(value.name, this.fixture, this.definition));
+        if (skeleton != null)
+        {
+            this.definition = await this.fixtureDefinitionsService
+                .get(skeleton.id);
+            this.axisOptions = this.definition.movements
+                .map(value => new AxisOptions(value.name, this.fixture, this.definition));
+        }
     }
 }
 

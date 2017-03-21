@@ -42,7 +42,7 @@ export class VenuesComponent implements OnInit
 
     private getDownloadUrl(entry: VenueSkeleton)
     {
-        return "/api/Venues/" + entry.id;
+        return "/api/Venue/Download/" + entry.id;
     }
 
     private async deleteConfirm(index: number): Promise<void>
@@ -101,7 +101,7 @@ export class VenuesComponent implements OnInit
                 })
                 .catch(reason =>
                 {
-                    this.messageBarService.add("Error", reason);
+                    this.messageBarService.addError(reason);
                 });
         });
         reader.readAsText(item);

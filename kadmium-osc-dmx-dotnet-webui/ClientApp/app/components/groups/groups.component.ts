@@ -28,7 +28,17 @@ export class GroupsComponent
 
     private add(): void
     {
-        this.groups.push(new Group(""));
+        let group = new Group("");
+        let maxOrder = 0;
+        this.groups.forEach(value => 
+        {
+            if (value.order > maxOrder)
+            {
+                maxOrder = value.order;
+            }
+        });
+        group.order = maxOrder + 1;
+        this.groups.push(group);
     }
 
     private delete(group: Group): void

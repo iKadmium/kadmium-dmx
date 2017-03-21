@@ -35,24 +35,7 @@ namespace kadmium_osc_dmx_dotnet_webui.Controllers
         {
             using (var context = new DatabaseContext())
             {
-                var venue = await context.Venues.FindAsync(id);
-
-                if(venue == null)
-                {
-                    throw new ArgumentException("No such venue Id: " + id);
-                }
-
-                await context.Entry(venue).Collection(x => x.Universes).LoadAsync();
-                foreach(Universe universe in venue.Universes)
-                {
-                    await context.Entry(universe).Collection(x => x.Fixtures).LoadAsync();
-                    foreach(Fixture fixture in universe.Fixtures)
-                    {
-                        await context.Entry(fixture).Reference(x => x.Group).LoadAsync();
-                        await context.Entry(fixture).Reference(x => x.FixtureDefinition).LoadAsync();
-                    }
-                }
-                
+                var venue = await context.LoadVenue(id);
                 return venue;
             }
         }
@@ -74,6 +57,7 @@ namespace kadmium_osc_dmx_dotnet_webui.Controllers
             using (var context = new DatabaseContext())
             {
                 var venue = await context.LoadVenue(id);
+                await venue.Initialize(context);
                 MasterController.Instance.LoadVenue(venue, context);
             }
         }
@@ -95,7 +79,8 @@ namespace kadmium_osc_dmx_dotnet_webui.Controllers
         {
             using (var context = new DatabaseContext())
             {
-                Venue venue = Venue.Load(definitionJson, context);
+                Venue venue = definitionJson.ToObject<Venue>();
+                await venue.Initialize(context);
                 await context.Venues.AddAsync(venue);
                 await context.SaveChangesAsync();
                 return venue.Id;
@@ -108,13 +93,69 @@ namespace kadmium_osc_dmx_dotnet_webui.Controllers
         {
             using (var context = new DatabaseContext())
             {
-                Venue definition = Venue.Load(venueJson, context);
-                definition.Id = id;
-                Venue originalVenue = await context.LoadVenue(id);
-                context.UpdateCollection(originalVenue.Universes, definition.Universes);
-                context.Entry(originalVenue).CurrentValues.SetValues(definition);
+                Venue venue = venueJson.ToObject<Venue>();
+                await venue.Initialize(context);
+                venue.Id = id;
+                context.Update(venue);
                 await context.SaveChangesAsync();
             }
         }
+
+        [Route("[action]/{id}")]
+        public async Task<VenueDownload> Download(int id)
+        {
+            using (var context = new DatabaseContext())
+            {
+                Venue venue = await context.LoadVenue(id);
+                VenueDownload download = new VenueDownload()
+                {
+                    Name = venue.Name,
+                    Universes = venue.Universes.Select(universe => new UniverseDownload
+                    {
+                        Name = universe.Name,
+                        UniverseID = universe.UniverseNumber,
+                        Fixtures = universe.Fixtures.Select(fixture => new FixtureDownload
+                        {
+                            Address = fixture.StartChannel,
+                            Group = fixture.Group.Name,
+                            Options = fixture.Options,
+                            Skeleton = new FixtureDefinitionDownloadSkeleton
+                            {
+                                Manufacturer = fixture.FixtureDefinition.Manufacturer,
+                                Model = fixture.FixtureDefinition.Model
+                            }
+                        })
+                    })
+                };
+                return download;
+            }
+        }
+    }
+
+    public class VenueDownload
+    {
+        public string Name { get; set; }
+        public IEnumerable<UniverseDownload> Universes { get; set; }
+    }
+
+    public class UniverseDownload
+    {
+        public string Name { get; set; }
+        public int UniverseID { get; set; }
+        public IEnumerable<FixtureDownload> Fixtures { get; set; }
+    }
+
+    public class FixtureDownload
+    {
+        public int Address { get; set; }
+        public FixtureDefinitionDownloadSkeleton Skeleton { get; set; }
+        public JObject Options { get; set; }
+        public string Group { get; set; }
+    }
+
+    public class FixtureDefinitionDownloadSkeleton
+    {
+        public string Manufacturer { get; set; }
+        public string Model { get; set; }
     }
 }

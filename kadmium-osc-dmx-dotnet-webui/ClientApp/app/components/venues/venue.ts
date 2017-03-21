@@ -47,7 +47,6 @@ export class Fixture
     {
         this.address = 1;
         this.group = "";
-        this.type = new FixtureDefinitionSkeleton();
         this.options = new FixtureDefinitionOptions();
     }
 }

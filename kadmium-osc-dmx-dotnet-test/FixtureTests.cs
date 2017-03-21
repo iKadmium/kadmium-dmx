@@ -28,8 +28,8 @@ namespace kadmium_osc_dmx_dotnet_test
             FixtureDefinition definition = new FixtureDefinition();
             definition.Channels.Add(new DMXChannel("Master", 1, 0, 191));
             definition.Channels.Add(new DMXChannel("Strobe", 1, 192, 255));
-            Fixture fixture = new Fixture(definition, 1, GroupTests.GetGroup(), new JObject());
-            fixture.Initialize();
+            Fixture fixture = new Fixture(1, new JObject());
+            fixture.Initialize(definition, GroupTests.GetGroup());
             return fixture;
         }
 
@@ -37,8 +37,8 @@ namespace kadmium_osc_dmx_dotnet_test
         {
             FixtureDefinition definition = FixtureDefinitionTests.GetMovingFixtureDefinition(axisName, axisMin, axisMax);
             Group group = GroupTests.GetGroup();
-            Fixture fixture = new Fixture(definition, 1, group, options ?? new JObject());
-            fixture.Initialize();
+            Fixture fixture = new Fixture(1, options ?? new JObject());
+            fixture.Initialize(definition, group);
             return fixture;
         }
     }

@@ -9,6 +9,7 @@ export class Status
 
     public code: StatusCode;
     public message: string;
+    public body: string;
 
     constructor(code: StatusCode, message: string)
     {
