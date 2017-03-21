@@ -11,6 +11,8 @@ import { VenueService } from "./venue.service";
 import { MessageBarService } from "../status/message-bar/message-bar.service";
 import { Title } from "@angular/platform-browser";
 
+import { AsyncFileReader } from "../../shared/async-file-reader";
+
 @Component({
     selector: 'venues',
     template: require('./venues.component.html'),
@@ -85,25 +87,26 @@ export class VenuesComponent implements OnInit
         (fileInput as HTMLInputElement).click();
     }
 
-    private fileSelected(item: File): void
+    private async uploadFiles(files: File[]): Promise<void>
     {
-        let reader = new FileReader();
-        reader.addEventListener("load", (event) => 
+        for (let file of files)
         {
-            let content = reader.result;
-            let venue = JSON.parse(content) as Venue;
-            this.venueService.post(venue)
-                .then(id =>
-                {
-                    this.messageBarService.add("Success", "Successfully added " + venue.name);
-                    venue.id = id;
-                    this.venues.push(venue);
-                })
-                .catch(reason =>
-                {
-                    this.messageBarService.addError(reason);
-                });
-        });
-        reader.readAsText(item);
+            await this.uploadFile(file);
+        }
+    }
+
+    private async uploadFile(file: File): Promise<void>
+    {
+        try
+        {
+            let venue = await AsyncFileReader.read<Venue>(file);
+            venue.id = await this.venueService.post(venue);
+            this.venues.push(venue);
+            this.messageBarService.add("Success", "Successfully added " + venue.name);
+        }
+        catch (reason)
+        {
+            this.messageBarService.add("Error", reason);
+        }
     }
 }

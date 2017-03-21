@@ -15,5 +15,18 @@ namespace kadmium_osc_dmx_dotnet_test
             definition.Manufacturer = "Generic";
             return definition;
         }
+
+        public static FixtureDefinition GetRGBFixtureDefinition()
+        {
+            var definition = new FixtureDefinition()
+            {
+                Manufacturer = "Generic",
+                Model = "RGB Fixture"
+            };
+            definition.Channels.Add(new DMXChannel("Red", definition.Channels.Count + 1));
+            definition.Channels.Add(new DMXChannel("Green", definition.Channels.Count + 1));
+            definition.Channels.Add(new DMXChannel("Blue", definition.Channels.Count + 1));
+            return definition;
+        }
     }
 }

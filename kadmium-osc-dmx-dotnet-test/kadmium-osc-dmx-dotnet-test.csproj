@@ -19,6 +19,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\kadmium-osc-dmx-dotnet-core\kadmium-osc-dmx-dotnet-core.csproj" />
+    <ProjectReference Include="..\kadmium-osc-dmx-dotnet-webui\kadmium-osc-dmx-dotnet-webui.csproj" />
   </ItemGroup>
 
   <ItemGroup>

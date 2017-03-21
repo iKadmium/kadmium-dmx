@@ -11,6 +11,8 @@ import { MessageBarComponent } from "../status/message-bar/message-bar.component
 
 import { FixtureDefinitionSkeleton, FixtureDefinition } from "./fixture-definition";
 
+import { AsyncFileReader } from "../../shared/async-file-reader";
+
 @Component({
     selector: 'fixture-definitions',
     template: require('./fixture-definitions.component.html'),
@@ -103,25 +105,26 @@ export class FixtureDefinitionsComponent
         (fileInput as HTMLInputElement).click();
     }
 
-    private fileSelected(item: File): void
+    private async filesSelected(files: File[]): Promise<void>
     {
-        let reader = new FileReader();
-        reader.addEventListener("load", (event) => 
+        for (let file of files)
         {
-            let content = reader.result;
-            let definition = JSON.parse(content) as FixtureDefinition;
-            this.fixtureDefinitionsService.post(definition)
-                .then(id =>
-                {
-                    this.messageBarService.add("Success", "Successfully added " + definition.manufacturer + " " + definition.model);
-                    definition.id = id;
-                    this.data.push(definition);
-                })
-                .catch(reason =>
-                {
-                    this.messageBarService.add("Error", reason);
-                });
-        });
-        reader.readAsText(item);
+            await this.uploadFile(file);
+        }
+    }
+
+    private async uploadFile(file: File): Promise<void>
+    {
+        try
+        {
+            let definition = await AsyncFileReader.read<FixtureDefinition>(file);
+            definition.id = await this.fixtureDefinitionsService.post(definition);
+            this.data.push(definition);
+            this.messageBarService.add("Success", "Successfully added " + definition.manufacturer + " " + definition.model);
+        }
+        catch(reason)
+        {
+            this.messageBarService.add("Error", reason);
+        }
     }
 }

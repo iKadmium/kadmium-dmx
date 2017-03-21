@@ -18,7 +18,7 @@ namespace kadmium_osc_dmx_dotnet_core
 
         public List<Universe> Universes { get; set; }
         
-        public Venue(string name, IEnumerable<Universe> universes, float stageWidth, float stageDepth)
+        public Venue(string name, IEnumerable<Universe> universes)
         {
             Name = name;
             Universes = new List<Universe>();
@@ -28,7 +28,7 @@ namespace kadmium_osc_dmx_dotnet_core
             }
         }
 
-        public Venue() : this("", Enumerable.Empty<Universe>(), 3, 2)
+        public Venue() : this("", Enumerable.Empty<Universe>())
         {
         }
         

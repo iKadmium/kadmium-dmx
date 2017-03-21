@@ -14,7 +14,7 @@ namespace kadmium_osc_dmx_dotnet_webui
 {
     public class Startup
     {
-        private bool Debug { get; set; }
+        private string EnvironmentName { get; set; }
 
         public Startup(IHostingEnvironment env)
         {
@@ -24,7 +24,14 @@ namespace kadmium_osc_dmx_dotnet_webui
                 .AddJsonFile($"appsettings.{env.EnvironmentName}.json", optional: true)
                 .AddEnvironmentVariables();
             Configuration = builder.Build();
-            Debug = env.EnvironmentName == "Development";
+
+            EnvironmentName = env.EnvironmentName;
+            var optionsBuilder = new DbContextOptionsBuilder<DatabaseContext>();
+            DatabaseContext.SetConnectionString(EnvironmentName, optionsBuilder);
+            using (var context = new DatabaseContext(optionsBuilder.Options))
+            {
+                context.Database.Migrate();
+            }
         }
 
         public IConfigurationRoot Configuration { get; }
@@ -42,8 +49,8 @@ namespace kadmium_osc_dmx_dotnet_webui
 
             services.AddMvc();
 
-            services.AddDbContext<DatabaseContext>(options => 
-                options.UseSqlite(Debug ? DatabaseContext.DebugConnectionString : DatabaseContext.ProductionConnectionString)
+            services.AddDbContext<DatabaseContext>(options =>
+                DatabaseContext.SetConnectionString(EnvironmentName, options)
             );
         }
 

@@ -11,9 +11,10 @@ namespace kadmium_osc_dmx_dotnet_test
         [InlineData(0.5f, 127)]
         public void TestByteConversion(float value, byte expected)
         {
-            DMXChannel channel = new DMXChannel("Name", 1);
-
-            channel.Value = value;
+            DMXChannel channel = new DMXChannel("Name", 1)
+            {
+                Value = value
+            };
             Assert.Equal(expected, channel.ByteValue);
         }
 
@@ -26,8 +27,10 @@ namespace kadmium_osc_dmx_dotnet_test
         [InlineData(200, 0, 0.5f, 100)]
         public void TestMinMaxConversion(byte min, byte max, float value, byte expected)
         {
-            DMXChannel channel = new DMXChannel("Name", 1, min, max);
-            channel.Value = value;
+            DMXChannel channel = new DMXChannel("Name", 1, min, max)
+            {
+                Value = value
+            };
             Assert.Equal(expected, channel.ByteValue);
         }
     }

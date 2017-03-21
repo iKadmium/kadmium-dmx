@@ -70,9 +70,8 @@ namespace kadmium_osc_dmx_dotnet_webui.Controllers
         }
 
         [HttpPost]
-        public async Task<int> Post([FromBody]JObject definitionJson)
+        public async Task<int> Post([FromBody]Venue venue)
         {
-            Venue venue = definitionJson.ToObject<Venue>();
             await venue.Initialize(_context);
             await _context.Venues.AddAsync(venue);
             await _context.SaveChangesAsync();
@@ -81,9 +80,8 @@ namespace kadmium_osc_dmx_dotnet_webui.Controllers
 
         [HttpPut]
         [Route("{id}")]
-        public async Task Put(int id, [FromBody]JObject venueJson)
+        public async Task Put(int id, [FromBody]Venue venue)
         {
-            Venue venue = venueJson.ToObject<Venue>();
             await venue.Initialize(_context);
             venue.Id = id;
             _context.Update(venue);

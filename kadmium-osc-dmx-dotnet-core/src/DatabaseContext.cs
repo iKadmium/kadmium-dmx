@@ -24,18 +24,24 @@ namespace kadmium_osc_dmx_dotnet_core
 
         public DatabaseContext(DbContextOptions<DatabaseContext> options)
             :base(options)
-        {
-            
-        }
+        {}
 
-        protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
+        public static void SetConnectionString(string environmentName, DbContextOptionsBuilder builder)
         {
-            if (!optionsBuilder.IsConfigured)
+            switch (environmentName)
             {
-                optionsBuilder.UseSqlite(ProductionConnectionString);
+                case "Development":
+                    builder.UseSqlite(DebugConnectionString);
+                    break;
+                case "Testing":
+                    builder.UseInMemoryDatabase();
+                    break; 
+                case "Production":
+                    builder.UseSqlite(ProductionConnectionString);
+                    break;
             }
         }
-
+        
         public async Task RecursiveLoadAsync<T>(T item) where T : class
         {
             foreach (var collection in Entry(item).Collections)

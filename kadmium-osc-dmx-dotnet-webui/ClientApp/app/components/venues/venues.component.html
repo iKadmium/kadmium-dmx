@@ -20,4 +20,4 @@
 </table>
 <a class="btn btn-success" href="venues/new"><span class="glyphicon glyphicon-plus"></span></a>
 <button class="btn btn-success" (click)="upload(fileInput)"><span class="glyphicon glyphicon-cloud-upload"></span></button>
-<input #fileInput type="file" name="name" style="display: none;" (change)="fileSelected($event.target.files[0])" />
+<input #fileInput type="file" name="name" style="display: none;" (change)="uploadFiles($event.target.files)" multiple>
