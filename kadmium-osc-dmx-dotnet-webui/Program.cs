@@ -11,14 +11,10 @@ namespace kadmium_osc_dmx_dotnet_webui
         public static void Main(string[] args)
         {
             kadmium_osc_dmx_dotnet_core.FileAccess.CreateDataDirectory();
-            using (var context = new DatabaseContext())
-            {
-                context.Database.Migrate();
-            }
 
-            MasterController.Initialise().Wait();
-
-            int port = MasterController.Instance.Settings.WebPort;
+            Settings settings = kadmium_osc_dmx_dotnet_core.FileAccess.LoadSettings().Result;
+            
+            int port = settings.WebPort;
             
             var host = new WebHostBuilder()
                 .UseUrls("http://*:" + port + "/")
@@ -27,6 +23,8 @@ namespace kadmium_osc_dmx_dotnet_webui
                 .UseIISIntegration()
                 .UseStartup<Startup>()
                 .Build();
+
+            MasterController.Initialise(settings);
 
             host.Run();
         }

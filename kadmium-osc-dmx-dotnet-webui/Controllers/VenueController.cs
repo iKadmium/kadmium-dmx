@@ -18,117 +18,103 @@ namespace kadmium_osc_dmx_dotnet_webui.Controllers
     [Route("api/[controller]")]
     public class VenueController : Controller
     {
+        private DatabaseContext _context;
+
+        public VenueController(DatabaseContext context)
+        {
+            _context = context;
+        }
+
         // GET: api/values
         [HttpGet]
         public async Task<IEnumerable<Venue>> Get()
         {
-            using (var context = new DatabaseContext())
-            {
-                var list = await context.Venues.ToListAsync();
-                return list;
-            }
+            var list = await _context.Venues.ToListAsync();
+            return list;
         }
 
         [HttpGet]
         [Route("{id}")]
         public async Task<Venue> Get(int id)
         {
-            using (var context = new DatabaseContext())
-            {
-                var venue = await context.LoadVenue(id);
-                return venue;
-            }
+            var venue = await _context.LoadVenue(id);
+            return venue;
         }
 
         [HttpGet]
         [Route("[action]")]
         public Venue GetActive()
         {
-            using (var context = new DatabaseContext())
-            {
-                return MasterController.Instance.Venue;
-            }
+            return MasterController.Instance.Venue;
         }
 
         [HttpGet]
         [Route("[action]/{id}")]
-        public async void Activate(int id)
+        public async Task Activate(int id)
         {
-            using (var context = new DatabaseContext())
-            {
-                var venue = await context.LoadVenue(id);
-                await venue.Initialize(context);
-                MasterController.Instance.LoadVenue(venue, context);
-            }
+            var venue = await _context.LoadVenue(id);
+            await MasterController.Instance.Initialise(_context);
+            await venue.Initialize(_context);
+            MasterController.Instance.LoadVenue(venue, _context);
+            
         }
         
         // DELETE api/values/5
         [HttpDelete("{id}")]
         public async Task Delete(int id)
         {
-            using (var context = new DatabaseContext())
-            {
-                Venue venue = await context.Venues.FindAsync(id);
-                context.Venues.Remove(venue);
-                await context.SaveChangesAsync();
-            }
+            Venue venue = await _context.Venues.FindAsync(id);
+            _context.Venues.Remove(venue);
+            await _context.SaveChangesAsync();
+            
         }
 
         [HttpPost]
         public async Task<int> Post([FromBody]JObject definitionJson)
         {
-            using (var context = new DatabaseContext())
-            {
-                Venue venue = definitionJson.ToObject<Venue>();
-                await venue.Initialize(context);
-                await context.Venues.AddAsync(venue);
-                await context.SaveChangesAsync();
-                return venue.Id;
-            }
+            Venue venue = definitionJson.ToObject<Venue>();
+            await venue.Initialize(_context);
+            await _context.Venues.AddAsync(venue);
+            await _context.SaveChangesAsync();
+            return venue.Id;
         }
 
         [HttpPut]
         [Route("{id}")]
         public async Task Put(int id, [FromBody]JObject venueJson)
         {
-            using (var context = new DatabaseContext())
-            {
-                Venue venue = venueJson.ToObject<Venue>();
-                await venue.Initialize(context);
-                venue.Id = id;
-                context.Update(venue);
-                await context.SaveChangesAsync();
-            }
+            Venue venue = venueJson.ToObject<Venue>();
+            await venue.Initialize(_context);
+            venue.Id = id;
+            _context.Update(venue);
+            await _context.SaveChangesAsync();
         }
 
         [Route("[action]/{id}")]
         public async Task<VenueDownload> Download(int id)
         {
-            using (var context = new DatabaseContext())
+            Venue venue = await _context.LoadVenue(id);
+            VenueDownload download = new VenueDownload()
             {
-                Venue venue = await context.LoadVenue(id);
-                VenueDownload download = new VenueDownload()
+                Name = venue.Name,
+                Universes = venue.Universes.Select(universe => new UniverseDownload
                 {
-                    Name = venue.Name,
-                    Universes = venue.Universes.Select(universe => new UniverseDownload
+                    Name = universe.Name,
+                    UniverseID = universe.UniverseNumber,
+                    Fixtures = universe.Fixtures.Select(fixture => new FixtureDownload
                     {
-                        Name = universe.Name,
-                        UniverseID = universe.UniverseNumber,
-                        Fixtures = universe.Fixtures.Select(fixture => new FixtureDownload
+                        Address = fixture.StartChannel,
+                        Group = fixture.Group.Name,
+                        Options = fixture.Options,
+                        Skeleton = new FixtureDefinitionDownloadSkeleton
                         {
-                            Address = fixture.StartChannel,
-                            Group = fixture.Group.Name,
-                            Options = fixture.Options,
-                            Skeleton = new FixtureDefinitionDownloadSkeleton
-                            {
-                                Manufacturer = fixture.FixtureDefinition.Manufacturer,
-                                Model = fixture.FixtureDefinition.Model
-                            }
-                        })
+                            Manufacturer = fixture.FixtureDefinition.Manufacturer,
+                            Model = fixture.FixtureDefinition.Model
+                        }
                     })
-                };
-                return download;
-            }
+                })
+            };
+            return download;
         }
     }
 

@@ -14,71 +14,60 @@ namespace kadmium_osc_dmx_dotnet_webui.Controllers
     [Route("api/[controller]")]
     public class FixtureDefinitionController : Controller
     {
+        private DatabaseContext _context;
+
+        public FixtureDefinitionController(DatabaseContext context)
+        {
+            _context = context;
+        }
+
         [HttpGet]
         public IEnumerable<FixtureDefinitionSkeleton> Get()
         {
-            using (var context = new DatabaseContext())
-            {
-                List<FixtureDefinitionSkeleton> skeletons = context.FixtureDefinitions
-                    .Select(x => x.GetSkeleton())
-                    .OrderBy(x => x.Manufacturer)
-                    .ThenBy(x => x.Model)
-                    .ToList();
-                return skeletons;
-            }
+            List<FixtureDefinitionSkeleton> skeletons = _context.FixtureDefinitions
+                .Select(x => x.GetSkeleton())
+                .OrderBy(x => x.Manufacturer)
+                .ThenBy(x => x.Model)
+                .ToList();
+            return skeletons;
         }
 
         [HttpGet]
         [Route("{id}")]
         public async Task<FixtureDefinition> Get(int id)
         {
-            using (var context = new DatabaseContext())
+            var result = await _context.FixtureDefinitions.FindAsync(id);
+            foreach(var collection in _context.Entry(result).Collections)
             {
-                var result = await context.FixtureDefinitions.FindAsync(id);
-                foreach(var collection in context.Entry(result).Collections)
-                {
-                    await collection.LoadAsync();
-                }
-                return result;
+                await collection.LoadAsync();
             }
+            return result;
         }
 
         [HttpDelete]
         [Route("{id}")]
         public async Task Delete(int id)
         {
-            using (var context = new DatabaseContext())
-            {
-                FixtureDefinition definition = await context.FixtureDefinitions.FindAsync(id);
-                context.FixtureDefinitions.Remove(definition);
-                await context.SaveChangesAsync();
-            }
+            FixtureDefinition definition = await _context.FixtureDefinitions.FindAsync(id);
+            _context.FixtureDefinitions.Remove(definition);
+            await _context.SaveChangesAsync();
         }
 
         [HttpPost]
         public async Task<int> Post([FromBody]FixtureDefinition definition)
         {
-            using (var context = new DatabaseContext())
-            {
-                await context.FixtureDefinitions.AddAsync(definition);
-                await context.SaveChangesAsync();
-                return definition.Id;
-            }
+            await _context.FixtureDefinitions.AddAsync(definition);
+            await _context.SaveChangesAsync();
+            return definition.Id;
+            
         }
 
         [HttpPut]
         [Route("{id}")]
         public async Task Put(int id, [FromBody]FixtureDefinition definition)
         {
-            using (var context = new DatabaseContext())
-            {
-                FixtureDefinition originalDefinition = await context.LoadFixtureDefinition(id);
-                context.UpdateCollection(originalDefinition.Channels, definition.Channels, (x => x.Id));
-                context.UpdateCollection(originalDefinition.Movements, definition.Movements, (x => x.Id));
-                context.UpdateCollection(originalDefinition.ColorWheel, definition.ColorWheel, (x => x.Id));
-                context.Entry(originalDefinition).CurrentValues.SetValues(definition);
-                await context.SaveChangesAsync();
-            }
+            _context.Update(definition);
+            await _context.SaveChangesAsync();            
         }
     }
 }

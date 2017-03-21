@@ -12,70 +12,61 @@ namespace kadmium_osc_dmx_dotnet_webui.Controllers
     [Route("api/[controller]")]
     public class VenuePresetController : Controller
     {
+        private DatabaseContext _context;
+
+        public VenuePresetController(DatabaseContext context)
+        {
+            _context = context;
+        }
+
         // GET: api/values
         [HttpGet]
         public IEnumerable<VenuePreset> Get()
         {
-            using (var context = new DatabaseContext())
-            {
-                var list = context.VenuePresets.ToList();
-                return list;
-            }
+            var list = _context.VenuePresets.ToList();
+            return list;
         }
 
         // GET api/values/5
         [HttpGet("{id}")]
         public async Task<VenuePreset> Get(int id)
         {
-            using (var context = new DatabaseContext())
-            {
-
-                VenuePreset preset = await context.LoadVenuePreset(id);
-                return preset;
-            }
+            VenuePreset preset = await _context.LoadVenuePreset(id);
+            return preset;
         }
 
         [HttpPost]
         public async Task Post([FromBody]JObject value)
         {
-            using (var context = new DatabaseContext())
+            VenuePreset preset = value.ToObject<VenuePreset>();
+            foreach(var fixture in preset.Fixtures)
             {
-                VenuePreset preset = value.ToObject<VenuePreset>();
-                foreach(var fixture in preset.Fixtures)
-                {
-                    fixture.Id = 0;
-                }
-                await preset.Initialize(context);
-                await context.VenuePresets.AddAsync(preset);
-                await context.SaveChangesAsync();
+                fixture.Id = 0;
             }
+            await preset.Initialize(_context);
+            await _context.VenuePresets.AddAsync(preset);
+            await _context.SaveChangesAsync();
         }
         
         // PUT api/values/5
         [HttpPut("{id}")]
-        public async void Put(int id, [FromBody]JObject value)
+        public async Task Put(int id, [FromBody]JObject value)
         {
-            using (var context = new DatabaseContext())
-            {
-                VenuePreset preset = value.ToObject<VenuePreset>();
-                preset.Id = id;
-                VenuePreset originalPreset = await context.LoadVenuePreset(id);
-                context.UpdateCollection(originalPreset.Fixtures, preset.Fixtures, (x => x.Id));
-                context.Entry(originalPreset).CurrentValues.SetValues(preset);
-                await context.SaveChangesAsync();
-            }
+            VenuePreset preset = value.ToObject<VenuePreset>();
+            preset.Id = id;
+            VenuePreset originalPreset = await _context.LoadVenuePreset(id);
+            _context.UpdateCollection(originalPreset.Fixtures, preset.Fixtures, (x => x.Id));
+            _context.Entry(originalPreset).CurrentValues.SetValues(preset);
+            await _context.SaveChangesAsync();
         }
 
         // DELETE api/values/5
         [HttpDelete("{id}")]
         public async Task Delete(int id)
         {
-            using (var context = new DatabaseContext())
-            {
-                VenuePreset preset = await context.VenuePresets.FindAsync(id);
-                context.VenuePresets.Remove(preset);
-                await context.SaveChangesAsync();
-            }
+            VenuePreset preset = await _context.VenuePresets.FindAsync(id);
+            _context.VenuePresets.Remove(preset);
+            await _context.SaveChangesAsync();
         }
     }
 }

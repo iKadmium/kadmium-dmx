@@ -14,16 +14,26 @@ namespace kadmium_osc_dmx_dotnet_core
 {
     public class DatabaseContext : DbContext
     {
-        public static string ConnectionString => "Filename=" + FileAccess.DatabasePath;
+        public static string ProductionConnectionString => "Filename=" + FileAccess.ProductionDatabasePath;
+        public static string DebugConnectionString => "Filename=" + FileAccess.DebugDatabasePath;
 
-        public DbSet<FixtureDefinition> FixtureDefinitions { get; set; }
-        public DbSet<Venue> Venues { get; set; }
-        public DbSet<VenuePreset> VenuePresets { get; set; }
-        public DbSet<Group> Groups { get; set; }
+        public virtual DbSet<FixtureDefinition> FixtureDefinitions { get; set; }
+        public virtual DbSet<Venue> Venues { get; set; }
+        public virtual DbSet<VenuePreset> VenuePresets { get; set; }
+        public virtual DbSet<Group> Groups { get; set; }
+
+        public DatabaseContext(DbContextOptions<DatabaseContext> options)
+            :base(options)
+        {
+            
+        }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
-            optionsBuilder.UseSqlite(ConnectionString);
+            if (!optionsBuilder.IsConfigured)
+            {
+                optionsBuilder.UseSqlite(ProductionConnectionString);
+            }
         }
 
         public async Task RecursiveLoadAsync<T>(T item) where T : class

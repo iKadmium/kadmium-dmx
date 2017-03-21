@@ -13,27 +13,28 @@ namespace kadmium_osc_dmx_dotnet_webui.Controllers
     [Route("api/[controller]")]
     public class GroupController : Controller
     {
+        private DatabaseContext _context;
+
+        public GroupController(DatabaseContext context)
+        {
+            _context = context;
+        }
+
         // GET: /<controller>/
         [HttpGet]
         public async Task<IEnumerable<Group>> Get()
         {
             IEnumerable<Group> returnVal;
-            using (DatabaseContext context = new DatabaseContext())
-            {
-                returnVal = await context.Groups.OrderBy(x => x.Order).ToListAsync();
-            }
+            returnVal = await _context.Groups.OrderBy(x => x.Order).ToListAsync();
             return returnVal;
         }
 
         [HttpPut]
         public async Task Put([FromBody]IEnumerable<Group> groups)
         {
-            using (DatabaseContext context = new DatabaseContext())
-            {
-                await context.UpdateCollection(context.Groups, groups, (x => x.Id));
-                await context.SaveChangesAsync();
-                await MasterController.Instance.SetGroups(groups, context);
-            }
+            await _context.UpdateCollection(_context.Groups, groups, (x => x.Id));
+            await _context.SaveChangesAsync();
+            await MasterController.Instance.SetGroups(groups, _context);
         }
 
         [HttpGet]

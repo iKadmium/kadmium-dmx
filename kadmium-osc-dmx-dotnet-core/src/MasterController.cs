@@ -8,6 +8,7 @@ using System.Threading.Tasks;
 using System.Linq;
 using System.Collections.Generic;
 using System;
+using Microsoft.EntityFrameworkCore;
 
 namespace kadmium_osc_dmx_dotnet_core
 {
@@ -56,24 +57,28 @@ namespace kadmium_osc_dmx_dotnet_core
             }
         }
 
-        public static async Task Initialise()
+        public static void Initialise(Settings settings)
         {
-            var settings = await FileAccess.LoadSettings();
-            using (var context = new DatabaseContext())
+            instance = new MasterController()
             {
-                instance = new MasterController()
-                {
-                    Settings = settings,
-                    Groups = context.Groups.ToDictionary(x => x.Name),
-                    Transmitter = SACNTransmitter.Load(settings.SacnTransmitter),
-                    Listener = new OSCListener(settings.OscPort, "OSC Listener")
-                };
+                Settings = settings,
+                Groups = new Dictionary<string, Group>(),
+                Transmitter = SACNTransmitter.Load(settings.SacnTransmitter),
+                Listener = new OSCListener(settings.OscPort, "OSC Listener")
+            };
 
-                Venue.Status = new Status("No venue loaded");
-            }
+            Venue.Status = new Status("No venue loaded");
             instance.updateTimer = new Timer(Instance.UpdateTimer_Elapsed, null, UPDATE_TIME, UPDATE_TIME);
-            
-            //Instance.UpdatesEnabled = true;
+        }
+
+        public async Task Initialise(DatabaseContext context)
+        {
+            await context.Database.MigrateAsync();
+            Groups.Clear();
+            foreach(var grp in context.Groups)
+            {
+                Groups.Add(grp.Name, grp);
+            }
         }
 
         private MasterController()
@@ -101,18 +106,18 @@ namespace kadmium_osc_dmx_dotnet_core
             Venue?.Update();
         }
 
-        public void Render()
+        public async Task Render()
         {
-            Venue?.Render();
+            await (Venue?.Render() ?? Task.CompletedTask);
         }
 
-        private void UpdateTimer_Elapsed(object state)
+        private async void UpdateTimer_Elapsed(object state)
         {
             if (UpdatesEnabled)
             {
                 Update();
             }
-            Render();
+            await Render();
         }
 
         public void Dispose()

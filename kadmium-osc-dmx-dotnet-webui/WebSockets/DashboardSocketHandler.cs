@@ -88,9 +88,9 @@ namespace kadmium_osc_dmx_dotnet_webui.WebSockets
 
         public override void Dispose()
         {
-            MasterController.Instance.Listener.Status.Updated += ListenerStatusUpdated;
-            MasterController.Instance.Transmitter.Status.Updated += TransmitterStatusUpdated;
-            Venue.Status.Updated += VenueStatusUpdated;
+            MasterController.Instance.Listener.Status.Updated -= ListenerStatusUpdated;
+            MasterController.Instance.Transmitter.Status.Updated -= TransmitterStatusUpdated;
+            Venue.Status.Updated -= VenueStatusUpdated;
             MasterController.Instance.SolverStatus.Updated -= SolverStatusUpdated;
         }
     }

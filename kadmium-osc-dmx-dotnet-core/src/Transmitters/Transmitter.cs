@@ -43,7 +43,7 @@ namespace kadmium_osc_dmx_dotnet_core.Transmitters
         }
 
         public abstract void TransmitInternal(byte[] dmx, int transmitterID);
-        public async void Transmit(byte[] dmx, int universeID)
+        public async Task Transmit(byte[] dmx, int universeID)
         {
             if (Delay < 0)
             {

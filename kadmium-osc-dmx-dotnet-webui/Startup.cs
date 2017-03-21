@@ -14,6 +14,8 @@ namespace kadmium_osc_dmx_dotnet_webui
 {
     public class Startup
     {
+        private bool Debug { get; set; }
+
         public Startup(IHostingEnvironment env)
         {
             var builder = new ConfigurationBuilder()
@@ -22,6 +24,7 @@ namespace kadmium_osc_dmx_dotnet_webui
                 .AddJsonFile($"appsettings.{env.EnvironmentName}.json", optional: true)
                 .AddEnvironmentVariables();
             Configuration = builder.Build();
+            Debug = env.EnvironmentName == "Development";
         }
 
         public IConfigurationRoot Configuration { get; }
@@ -39,7 +42,9 @@ namespace kadmium_osc_dmx_dotnet_webui
 
             services.AddMvc();
 
-            services.AddDbContext<DatabaseContext>(options => options.UseSqlite(DatabaseContext.ConnectionString));
+            services.AddDbContext<DatabaseContext>(options => 
+                options.UseSqlite(Debug ? DatabaseContext.DebugConnectionString : DatabaseContext.ProductionConnectionString)
+            );
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

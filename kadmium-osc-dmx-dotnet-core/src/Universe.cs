@@ -74,9 +74,9 @@ namespace kadmium_osc_dmx_dotnet_core
             }
         }
 
-        public void Render()
+        public async Task Render()
         {
-            MasterController.Instance.Transmitter.Transmit(DMX, UniverseNumber);
+            await MasterController.Instance.Transmitter.Transmit(DMX, UniverseNumber);
             Rendered?.Invoke(this, new DMXEventArgs(DMX));
         }
 

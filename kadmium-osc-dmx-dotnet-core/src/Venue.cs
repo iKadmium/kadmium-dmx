@@ -40,11 +40,11 @@ namespace kadmium_osc_dmx_dotnet_core
             }
         }
 
-        public void Render()
+        public async Task Render()
         {
             foreach (Universe universe in Universes)
             {
-                universe.Render();
+                await universe.Render();
             }
         }
 
