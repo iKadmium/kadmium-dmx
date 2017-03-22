@@ -19,6 +19,7 @@ namespace kadmium_osc_dmx_dotnet_core
         private static string DatabaseFilename => "DMX.db";
         public static string ProductionDatabasePath => Path.Combine(DataLocation, DatabaseFilename);
         public static string DebugDatabasePath => Path.Combine(AppContext.BaseDirectory, DatabaseFilename);
+        public static string TestingDatabasePath => Path.Combine(AppContext.BaseDirectory, "test-" + DatabaseFilename);
 
         private static string SettingsLocation = Path.Combine(DataLocation, "settings.json");
 

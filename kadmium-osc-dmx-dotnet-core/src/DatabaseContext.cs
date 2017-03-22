@@ -16,6 +16,7 @@ namespace kadmium_osc_dmx_dotnet_core
     {
         public static string ProductionConnectionString => "Filename=" + FileAccess.ProductionDatabasePath;
         public static string DebugConnectionString => "Filename=" + FileAccess.DebugDatabasePath;
+        public static string TestingConnectionString => "Filename=" + FileAccess.TestingDatabasePath;
 
         public virtual DbSet<FixtureDefinition> FixtureDefinitions { get; set; }
         public virtual DbSet<Venue> Venues { get; set; }
@@ -34,26 +35,14 @@ namespace kadmium_osc_dmx_dotnet_core
                     builder.UseSqlite(DebugConnectionString);
                     break;
                 case "Testing":
-                    builder.UseInMemoryDatabase();
+                    builder.UseSqlite(TestingConnectionString);
                     break; 
                 case "Production":
                     builder.UseSqlite(ProductionConnectionString);
                     break;
             }
         }
-        
-        public async Task RecursiveLoadAsync<T>(T item) where T : class
-        {
-            foreach (var collection in Entry(item).Collections)
-            {
-                await collection.LoadAsync();
-                foreach (var thing in collection.CurrentValue)
-                {
-                    await RecursiveLoadAsync(thing);
-                }
-            }
-        }
-        
+
         private void DeleteData()
         {
             var tables = new[] { "ColorWheelEntry", "DMXChannel", "Fixture", "MovementAxis", "Universe",
@@ -64,21 +53,20 @@ namespace kadmium_osc_dmx_dotnet_core
             }
         }
         
-        
-        public void UpdateCollection<TObject, TKey>(List<TObject> original, List<TObject> modified, Func<TObject, TKey> getKey)
+        public void UpdateCollection<TObject, TKey>(ICollection<TObject> original, IEnumerable<TObject> modified, Func<TObject, TKey> getKey)
             where TObject : class
         {
             foreach (var item in modified)
             {
                 var key = getKey(item);
-                TObject originalItem = original.Single(x => getKey(x).Equals(key));
+                TObject originalItem = original.SingleOrDefault(x => getKey(x).Equals(key));
                 if (originalItem == null)
                 {
                     original.Add(item);
                 }
                 else
                 {
-                    this.Entry(originalItem).CurrentValues.SetValues(item);
+                    Entry(originalItem).CurrentValues.SetValues(item);
                 }
             }
 
@@ -92,28 +80,28 @@ namespace kadmium_osc_dmx_dotnet_core
             }
         }
 
-        public async Task UpdateCollection<TObject, TKey>(DbSet<TObject> original, IEnumerable<TObject> modified, Func<TObject, TKey> getKey) 
-            where TObject : class 
+        public async Task UpdateCollection<TObject, TKey>(DbSet<TObject> original, IEnumerable<TObject> modified, Func<TObject, TKey> getKey)
+            where TObject : class
         {
-            foreach(var item in modified)
+            foreach (var item in modified)
             {
                 var key = getKey(item);
-                TObject originalItem = await original.FindAsync(key);
-                if(originalItem == null)
+                TObject originalItem = await original.SingleOrDefaultAsync(x => getKey(x).Equals(key));
+                if (originalItem == null)
                 {
-                    await original.AddAsync(item);
+                    original.Add(item);
                 }
                 else
                 {
-                    this.Entry(originalItem).CurrentValues.SetValues(item);
+                    Entry(originalItem).CurrentValues.SetValues(item);
                 }
             }
 
             var toDelete = from originalItem in original
                            where !modified.Any(x => getKey(x).Equals(getKey(originalItem)))
                            select originalItem;
-            
-            foreach(TObject item in toDelete)
+
+            foreach (TObject item in toDelete)
             {
                 original.Remove(item);
             }

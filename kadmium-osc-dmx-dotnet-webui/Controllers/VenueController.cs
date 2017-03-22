@@ -83,8 +83,16 @@ namespace kadmium_osc_dmx_dotnet_webui.Controllers
         public async Task Put(int id, [FromBody]Venue venue)
         {
             await venue.Initialize(_context);
+            var oldVenue = await _context.LoadVenue(id);
+            var removals = from universe in oldVenue.Universes
+                           where !venue.Universes.Any(x => x.Id == universe.Id)
+                           select universe;
+            _context.RemoveRange(removals);
+            _context.Entry(oldVenue).State = EntityState.Detached;
+
             venue.Id = id;
             _context.Update(venue);
+            
             await _context.SaveChangesAsync();
         }
 

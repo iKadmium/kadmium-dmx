@@ -1,0 +1,52 @@
+{
+  "$schema": "../fixture.schema.json",
+  "model": "Par64B",
+  "manufacturer": "AVE",
+  "type": "LED",
+  "beamAngle": 30.0,
+  "lux": 4000.0,
+  "channels": [
+    {
+      "name": "Master",
+      "address": 1,
+      "min": 0,
+      "max": 255
+    },
+    {
+      "name": "Red",
+      "address": 2,
+      "min": 0,
+      "max": 255
+    },
+    {
+      "name": "Green",
+      "address": 3,
+      "min": 0,
+      "max": 255
+    },
+    {
+      "name": "Blue",
+      "address": 4,
+      "min": 0,
+      "max": 255
+    },
+    {
+      "name": "Strobe",
+      "address": 5,
+      "min": 0,
+      "max": 255
+    },
+    {
+      "name": "Macros",
+      "address": 6,
+      "min": 0,
+      "max": 255
+    },
+    {
+      "name": "Macro Speed",
+      "address": 7,
+      "min": 0,
+      "max": 255
+    }
+  ]
+}

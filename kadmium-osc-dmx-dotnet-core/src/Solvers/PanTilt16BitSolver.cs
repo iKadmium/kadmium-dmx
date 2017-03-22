@@ -13,9 +13,8 @@ namespace kadmium_osc_dmx_dotnet_core.Solvers
 
         public PanTilt16BitSolver(Fixture fixture) : base(fixture, Get16BitAxisNames(fixture.FixtureDefinition).ToArray())
         {
-            AxisNames = from axis in fixture.FixtureDefinition.Movements
-                        select axis.Name;
-            foreach (var name in Get16BitAxisNames(fixture.FixtureDefinition))
+            AxisNames = Get16BitAxisNames(fixture.FixtureDefinition);
+            foreach (var name in AxisNames)
             {
                 fixture.Settables[name + "Coarse"].Controlled = true;
                 fixture.Settables[name + "Fine"].Controlled = true;
@@ -25,14 +24,15 @@ namespace kadmium_osc_dmx_dotnet_core.Solvers
         private static IEnumerable<string> Get16BitAxisNames(FixtureDefinition fixtureDefinition)
         {
             var names = from movement in fixtureDefinition.Movements
+                        where fixtureDefinition.Channels.Any(x => x.Name == movement.Name + "Coarse")
+                        && fixtureDefinition.Channels.Any(x => x.Name == movement.Name + "Fine")
                         select movement.Name;
             return names;
         }
 
         internal static bool SuitableFor(FixtureDefinition definition)
         {
-            return definition.Channels.Any(x => x.Name == "PanCoarse") ||
-                definition.Channels.Any(x => x.Name == "TiltCoarse");
+            return Get16BitAxisNames(definition).Any();
         }
 
         public override void Solve(Dictionary<string, Attribute> Attributes)
@@ -51,7 +51,4 @@ namespace kadmium_osc_dmx_dotnet_core.Solvers
             }
         }
     }
-
-
-
 }

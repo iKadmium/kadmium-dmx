@@ -1,0 +1,94 @@
+{
+  "$schema": "../fixture.schema.json",
+  "model": "Mac 101",
+  "manufacturer": "Martin",
+  "type": "LED",
+  "beamAngle": 13.0,
+  "lux": 59400.0,
+  "channels": [
+    {
+      "name": "Strobe",
+      "address": 1,
+      "min": 85,
+      "max": 70
+    },
+    {
+      "name": "Master",
+      "address": 2,
+      "min": 0,
+      "max": 255
+    },
+    {
+      "name": "PanCoarse",
+      "address": 3,
+      "min": 0,
+      "max": 255
+    },
+    {
+      "name": "PanFine",
+      "address": 4,
+      "min": 0,
+      "max": 255
+    },
+    {
+      "name": "TiltCoarse",
+      "address": 5,
+      "min": 0,
+      "max": 255
+    },
+    {
+      "name": "TiltFine",
+      "address": 6,
+      "min": 0,
+      "max": 255
+    },
+    {
+      "name": "FixtureControls",
+      "address": 7,
+      "min": 0,
+      "max": 255
+    },
+    {
+      "name": "ColorWheel",
+      "address": 8,
+      "min": 0,
+      "max": 255
+    },
+    {
+      "name": "Red",
+      "address": 9,
+      "min": 0,
+      "max": 255
+    },
+    {
+      "name": "Green",
+      "address": 10,
+      "min": 0,
+      "max": 255
+    },
+    {
+      "name": "Blue",
+      "address": 11,
+      "min": 0,
+      "max": 255
+    },
+    {
+      "name": "Color Temperature",
+      "address": 12,
+      "min": 0,
+      "max": 255
+    }
+  ],
+  "movements": [
+    {
+      "name": "Pan",
+      "min": -270,
+      "max": 270
+    },
+    {
+      "name": "Tilt",
+      "min": -120,
+      "max": 120
+    }
+  ]
+}
