@@ -1,0 +1,31 @@
+{
+  "name": "New Globe PARs",
+  "fixtures": [
+    {
+      "address": 25,
+      "type": {
+        "model": "PAR",
+        "manufacturer": "Venue - The New Globe"
+      },
+      "group": "guitarist",
+      "options": {
+        "axisInversions": [],
+        "axisRestrictions": [],
+        "maxBrightness": 1
+      }
+    },
+    {
+      "address": 46,
+      "type": {
+        "model": "PAR",
+        "manufacturer": "Venue - The New Globe"
+      },
+      "group": "bassist",
+      "options": {
+        "axisInversions": [],
+        "axisRestrictions": [],
+        "maxBrightness": 1
+      }
+    }
+  ]
+}

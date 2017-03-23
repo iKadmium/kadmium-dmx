@@ -1,0 +1,79 @@
+{
+  "name": "New Globe Movers",
+  "fixtures": [
+    {
+      "address": 55,
+      "type": {
+        "model": "Moving Head",
+        "manufacturer": "Venue - The New Globe"
+      },
+      "group": "rearSides",
+      "options": {
+        "axisInversions": [],
+        "axisRestrictions": [
+          {
+            "name": "Pan",
+            "min": -90,
+            "max": 90
+          },
+          {
+            "name": "Tilt",
+            "min": 0,
+            "max": 90
+          }
+        ],
+        "maxBrightness": 1
+      }
+    },
+    {
+      "address": 67,
+      "type": {
+        "model": "Moving Head",
+        "manufacturer": "Venue - The New Globe"
+      },
+      "group": "drummer",
+      "options": {
+        "axisInversions": [],
+        "axisRestrictions": [
+          {
+            "name": "Pan",
+            "min": 0,
+            "max": 0
+          },
+          {
+            "name": "Tilt",
+            "min": 0,
+            "max": 0
+          }
+        ],
+        "maxBrightness": 1
+      }
+    },
+    {
+      "address": 79,
+      "type": {
+        "model": "Moving Head",
+        "manufacturer": "Venue - The New Globe"
+      },
+      "group": "rearSides",
+      "options": {
+        "axisInversions": [
+          "Pan"
+        ],
+        "axisRestrictions": [
+          {
+            "name": "Pan",
+            "min": -90,
+            "max": 90
+          },
+          {
+            "name": "Tilt",
+            "min": 0,
+            "max": 90
+          }
+        ],
+        "maxBrightness": 1
+      }
+    }
+  ]
+}

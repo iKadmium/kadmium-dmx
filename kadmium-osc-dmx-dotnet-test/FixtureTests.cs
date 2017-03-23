@@ -41,5 +41,17 @@ namespace kadmium_osc_dmx_dotnet_test
             fixture.Initialize(definition, group);
             return fixture;
         }
+
+        public static Fixture GetFixture(FixtureDefinition definition, int startChannel, Group group)
+        {
+            Fixture fixture = new Fixture()
+            {
+                StartChannel = startChannel,
+                GroupString = group.Name,
+                Skeleton = definition.GetSkeleton()
+            };
+
+            return fixture;
+        }
     }
 }

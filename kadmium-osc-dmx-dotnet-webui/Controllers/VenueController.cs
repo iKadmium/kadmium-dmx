@@ -27,9 +27,11 @@ namespace kadmium_osc_dmx_dotnet_webui.Controllers
 
         // GET: api/values
         [HttpGet]
-        public async Task<IEnumerable<Venue>> Get()
+        public async Task<IEnumerable<VenueSkeleton>> Get()
         {
-            var list = await _context.Venues.ToListAsync();
+            var skeletons = from venue in _context.Venues
+                            select venue.GetSkeleton();
+            var list = await skeletons.ToListAsync();
             return list;
         }
 

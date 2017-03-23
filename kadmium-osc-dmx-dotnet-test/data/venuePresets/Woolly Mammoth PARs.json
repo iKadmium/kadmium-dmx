@@ -1,0 +1,70 @@
+{
+  "name": "Woolly Mammoth PARs",
+  "fixtures": [
+    {
+      "address": 88,
+      "type": {
+        "manufacturer": "AVE",
+        "model": "Par64B"
+      },
+      "group": "vocalist",
+      "options": {
+        "axisInversions": [],
+        "axisRestrictions": [],
+        "maxBrightness": 1
+      }
+    },
+    {
+      "address": 41,
+      "type": {
+        "manufacturer": "AVE",
+        "model": "Par64B"
+      },
+      "group": "bassist",
+      "options": {
+        "axisInversions": [],
+        "axisRestrictions": [],
+        "maxBrightness": 1
+      }
+    },
+    {
+      "address": 48,
+      "type": {
+        "manufacturer": "AVE",
+        "model": "Par64B"
+      },
+      "group": "guitarist",
+      "options": {
+        "axisInversions": [],
+        "axisRestrictions": [],
+        "maxBrightness": 1
+      }
+    },
+    {
+      "address": 67,
+      "type": {
+        "manufacturer": "AVE",
+        "model": "Par64B"
+      },
+      "group": "drummer",
+      "options": {
+        "axisInversions": [],
+        "axisRestrictions": [],
+        "maxBrightness": 1
+      }
+    },
+    {
+      "address": 74,
+      "type": {
+        "manufacturer": "AVE",
+        "model": "Par64B"
+      },
+      "group": "drummer",
+      "options": {
+        "axisInversions": [],
+        "axisRestrictions": [],
+        "maxBrightness": 1
+      }
+    }
+  ]
+}

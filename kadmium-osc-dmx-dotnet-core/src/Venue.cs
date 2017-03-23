@@ -40,6 +40,15 @@ namespace kadmium_osc_dmx_dotnet_core
             }
         }
 
+        public VenueSkeleton GetSkeleton()
+        {
+            return new VenueSkeleton
+            {
+                Id = Id,
+                Name = Name
+            };
+        }
+
         public async Task Render()
         {
             foreach (Universe universe in Universes)
@@ -74,5 +83,11 @@ namespace kadmium_osc_dmx_dotnet_core
         {
             Universes.ForEach(x => x.Deactivate());
         }
+    }
+
+    public class VenueSkeleton
+    {
+        public int Id { get; set; }
+        public string Name { get; set; }
     }
 }

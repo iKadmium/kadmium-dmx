@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace kadmium_osc_dmx_dotnet_core.Fixtures
 {
-    public class FixtureDefinition
+    public class FixtureDefinition : IEquatable<FixtureDefinition>
     {
         public int Id { get; set; }
 
@@ -25,10 +25,6 @@ namespace kadmium_osc_dmx_dotnet_core.Fixtures
             Channels = new List<DMXChannel>();
             Movements = new List<MovementAxis>();
             ColorWheel = new List<ColorWheelEntry>();
-            Model = "";
-            Manufacturer = "";
-            Lux = 4000;
-            BeamAngle = 30;
         }
 
         public FixtureDefinitionSkeleton GetSkeleton()
@@ -40,6 +36,32 @@ namespace kadmium_osc_dmx_dotnet_core.Fixtures
                 Model = Model
             };
             return skeleton;
+        }
+
+        public bool Equals(FixtureDefinition other)
+        {
+            if (Manufacturer != other.Manufacturer) { return false; }
+            if (Model != other.Model) { return false; }
+            if (Type != other.Type) { return false; }
+            if (Lux != other.Lux) { return false; }
+            if (BeamAngle != other.BeamAngle) { return false; }
+            foreach (var channel in other.Channels)
+            {
+                if(!Channels.Any(x => x.Equals(channel))) { return false; }
+            }
+            foreach(var channel in Channels)
+            {
+                if(!other.Channels.Any(x => x.Equals(channel))) { return false; }
+            }
+            foreach (var movement in other.Movements)
+            {
+                if (!Movements.Any(x => x.Equals(movement))) { return false; }
+            }
+            foreach (var movement in Movements)
+            {
+                if (!other.Movements.Any(x => x.Equals(movement))) { return false; }
+            }
+            return true;
         }
     }
 
