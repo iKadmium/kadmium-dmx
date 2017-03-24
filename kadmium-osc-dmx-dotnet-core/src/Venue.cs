@@ -8,7 +8,7 @@ using Newtonsoft.Json;
 
 namespace kadmium_osc_dmx_dotnet_core
 {
-    public class Venue : IDisposable
+    public class Venue : IDisposable, IEquatable<Venue>
     {
         public int Id { get; set; }
         public string Name { get; set; }
@@ -82,6 +82,25 @@ namespace kadmium_osc_dmx_dotnet_core
         public void Deactivate()
         {
             Universes.ForEach(x => x.Deactivate());
+        }
+
+        public bool Equals(Venue other)
+        {
+            if(other.Name != Name) { return false; }
+            foreach(Universe universe in Universes)
+            {
+                if(!other.Universes.Any(x => x.Equals(universe))) { return false; }
+            }
+            foreach (Universe universe in other.Universes)
+            {
+                if (!Universes.Any(x => x.Equals(universe))) { return false; }
+            }
+            return true;
+        }
+
+        public override string ToString()
+        {
+            return Name;
         }
     }
 

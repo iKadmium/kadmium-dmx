@@ -9,15 +9,13 @@ using System.Numerics;
 
 namespace kadmium_osc_dmx_dotnet_core.Fixtures
 {
-    public class Fixture
+    public class Fixture : System.IEquatable<Fixture>
     {
         public int Id { get; set; }
 
         [JsonProperty(PropertyName = "address")]
         public int StartChannel { get; set; }
-        [JsonIgnore]
-        public int EndChannel { get { return StartChannel + FixtureDefinition.Channels.Max(x => x.Address); } }
-
+        
         [NotMapped]
         [JsonIgnore]
         public FixtureDefinition FixtureDefinition { get; set; }
@@ -137,7 +135,7 @@ namespace kadmium_osc_dmx_dotnet_core.Fixtures
 
         public override string ToString()
         {
-            return FixtureDefinition.Model + " [" + StartChannel + " - " + EndChannel + "]";
+            return string.Format("{0} {1} [{2}]", Skeleton.Manufacturer, Skeleton.Model, StartChannel);
         }
 
         public void Initialize(FixtureDefinition definition, Group group)
@@ -194,6 +192,21 @@ namespace kadmium_osc_dmx_dotnet_core.Fixtures
         private void InitializeGroup(Group group)
         {
             Group = group;
+        }
+
+        public bool Equals(Fixture other)
+        {
+            if (other.StartChannel != StartChannel) { return false; }
+            if (other.OptionsString != OptionsString) { return false; }
+            if (other.FixtureDefinition == null || FixtureDefinition == null)
+            {
+                if (!other.Skeleton.Equals(Skeleton)) { return false; }
+            }
+            else
+            {
+                if (!other.FixtureDefinition.Equals(FixtureDefinition)) { return false; }
+            }
+            return true;
         }
     }
 }

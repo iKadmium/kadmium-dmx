@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace kadmium_osc_dmx_dotnet_core
 {
-    public class Universe : IDisposable
+    public class Universe : IDisposable, IEquatable<Universe>
     {
         public static int DMX_UNIVERSE_SIZE = 512;
 
@@ -88,6 +88,26 @@ namespace kadmium_osc_dmx_dotnet_core
         public void Deactivate()
         {
             Fixtures.ForEach(x => x.Deactivate());
+        }
+
+        public override string ToString()
+        {
+            return Name;
+        }
+
+        public bool Equals(Universe other)
+        {
+            if (other.Name != Name) { return false; }
+            if (other.UniverseNumber != UniverseNumber) { return false; }
+            foreach(Fixture fixture in Fixtures)
+            {
+                if(!other.Fixtures.Any(x => x.Equals(fixture))) { return false; }
+            }
+            foreach(Fixture fixture in other.Fixtures)
+            {
+                if(!Fixtures.Any(x => x.Equals(fixture))) { return false; }
+            }
+            return true;
         }
     }
 

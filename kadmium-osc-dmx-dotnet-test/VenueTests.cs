@@ -22,7 +22,8 @@ namespace kadmium_osc_dmx_dotnet_test
         {
             FixtureDefinition definition;
             Group group;
-            using (var context = DatabaseTests.GetContext())
+            string testName = GetType() + nameof(TestPost);
+            using (var context = DatabaseTests.GetContext(testName))
             {
                 await DatabaseTests.ResetDatabase(context);
                 await DatabaseTests.AddFixtureDefinitions(context);
@@ -35,7 +36,7 @@ namespace kadmium_osc_dmx_dotnet_test
 
             int id;
             Venue venue;
-            using (var context = DatabaseTests.GetContext())
+            using (var context = DatabaseTests.GetContext(testName))
             {
                 venue = GetSingleFixtureVenue(definition, group);
                 var controller = new VenueController(context);
@@ -44,17 +45,21 @@ namespace kadmium_osc_dmx_dotnet_test
                 Assert.NotEqual(0, id);
             }
 
-            using (var context = DatabaseTests.GetContext())
+            using (var context = DatabaseTests.GetContext(testName))
             {
                 var retrievedVenue = await context.LoadVenue(id);
                 Assert.Equal(venue.Name, retrievedVenue.Name);
             }
         }
 
-        [Fact]
-        public async Task TestGet()
+        [InlineData("Rehearsal Room", "The New Globe", "The Brightside", "The Woolly Mammoth")]
+        [Theory]
+        public async Task TestGet(string venueName)
         {
-            using (var context = DatabaseTests.GetContext())
+            Venue deserializedVenue = await GetDeserializedJSONVenue(venueName);
+            int id;
+            string testName = GetType() + nameof(TestGet);
+            using (var context = DatabaseTests.GetContext(testName))
             {
                 await DatabaseTests.ResetDatabase(context);
                 await DatabaseTests.AddFixtureDefinitions(context);
@@ -62,31 +67,16 @@ namespace kadmium_osc_dmx_dotnet_test
                 await context.SaveChangesAsync();
                 await DatabaseTests.AddVenues(context);
                 await context.SaveChangesAsync();
+
+                await deserializedVenue.Initialize(context);
+                id = (await context.Venues.SingleAsync(x => x.Name == venueName)).Id;
             }
 
-            using (var context = DatabaseTests.GetContext())
+            using (var context = DatabaseTests.GetContext(testName))
             {
                 VenueController controller = new VenueController(context);
-                var skeletons = await controller.Get();
-                Assert.True(skeletons.Count() > 0);
-                var skeleton = skeletons.Single(x => x.Name == "Rehearsal Room");
-                Venue venue = await controller.Get(skeleton.Id);
-                Assert.Equal(skeleton.Name, venue.Name);
-                Assert.Equal(1, venue.Universes.Count);
-                var universe = venue.Universes.First();
-                Assert.NotEmpty(universe.Name);
-                Assert.NotEqual(0, universe.UniverseNumber);
-                Assert.True(universe.Fixtures.Count > 0);
-                foreach(var fixture in universe.Fixtures)
-                {
-                    Assert.True(fixture.StartChannel > 0);
-                    Assert.NotNull(fixture.FixtureDefinition);
-                    Assert.Equal(fixture.Skeleton.Manufacturer, fixture.FixtureDefinition.Manufacturer);
-                    Assert.Equal(fixture.Skeleton.Model, fixture.FixtureDefinition.Model);
-                    Assert.NotEmpty(fixture.FixtureDefinition.Channels);
-                    Assert.NotNull(fixture.Group);
-                    Assert.Equal(fixture.GroupString, fixture.Group.Name);
-                }
+                Venue venue = await controller.Get(id);
+                Assert.Equal(deserializedVenue, venue);
             }
         }
         
@@ -96,7 +86,8 @@ namespace kadmium_osc_dmx_dotnet_test
         {
             int id;
             //setup the database
-            using (var context = DatabaseTests.GetContext())
+            string testName = GetType() + nameof(TestPut_ChangedNames);
+            using (var context = DatabaseTests.GetContext(testName))
             {
                 await DatabaseTests.ResetDatabase(context);
                 await DatabaseTests.AddFixtureDefinitions(context);
@@ -108,7 +99,7 @@ namespace kadmium_osc_dmx_dotnet_test
             }
             
             //get what was posted, modify it and post it back
-            using (var context = DatabaseTests.GetContext())
+            using (var context = DatabaseTests.GetContext(testName))
             {
                 Venue venue = await context.LoadVenue(id);
                 Assert.NotEqual(changedVenueName, venue.Name);
@@ -119,7 +110,7 @@ namespace kadmium_osc_dmx_dotnet_test
             }
 
             //check that it's there
-            using (var context = DatabaseTests.GetContext())
+            using (var context = DatabaseTests.GetContext(testName))
             {
                 Venue venue = await context.LoadVenue(id);
                 Assert.Equal(changedVenueName, venue.Name);
@@ -134,8 +125,9 @@ namespace kadmium_osc_dmx_dotnet_test
             Group secondGroup;
             int id;
             int expectedUniverseCount;
+            string testName = GetType() + nameof(TestPostGetPut_ChangedUniverses);
             //setup the database
-            using (var context = DatabaseTests.GetContext())
+            using (var context = DatabaseTests.GetContext(testName))
             {
                 await DatabaseTests.ResetDatabase(context);
                 await DatabaseTests.AddFixtureDefinitions(context);
@@ -145,43 +137,41 @@ namespace kadmium_osc_dmx_dotnet_test
                 await context.SaveChangesAsync();
 
                 id = (await context.Venues.FirstAsync()).Id;
-                firstDefinition = await context.FixtureDefinitions.FirstAsync();
-                secondDefinition = await context.FixtureDefinitions.Skip(1).FirstAsync();
+                firstDefinition = await context.LoadFixtureDefinition((await context.FixtureDefinitions.FirstAsync()).Id);
+                secondDefinition = await context.LoadFixtureDefinition((await context.FixtureDefinitions.Skip(1).FirstAsync()).Id);
                 secondGroup = await context.Groups.Skip(1).FirstAsync();
             }
 
             //get what was posted, modify it and post it back
-            using (var context = DatabaseTests.GetContext())
+            using (var context = DatabaseTests.GetContext(testName))
             {
                 Venue retrievedVenue = await context.LoadVenue(id);
-                retrievedVenue.Universes.First().Name = "Changed Universe";
                 retrievedVenue.Universes.Add(UniverseTests.GetSingleFixtureUniverse(secondDefinition, secondGroup, "New Universe"));
                 expectedUniverseCount = retrievedVenue.Universes.Count;
                 await new VenueController(context).Put(id, retrievedVenue);
             }
 
             //check that it's there
-            using (var context = DatabaseTests.GetContext())
+            using (var context = DatabaseTests.GetContext(testName))
             {
                 var controller = new VenueController(context);
                 var retrievedVenue = await controller.Get(id);
 
                 Assert.Equal(expectedUniverseCount, retrievedVenue.Universes.Count);
                 var newUniverse = retrievedVenue.Universes.Single(x => x.Name == "New Universe");
-                var changedUniverse = retrievedVenue.Universes.Single(x => x.Name == "Changed Universe");
-                Assert.Contains(newUniverse.Fixtures, x => x.FixtureDefinition.Id == secondDefinition.Id);
-                Assert.Contains(changedUniverse.Fixtures, x => x.FixtureDefinition.Id == firstDefinition.Id);
+                Assert.Contains(newUniverse.Fixtures, x => x.FixtureDefinition.Equals(secondDefinition));
             }
         }
-
+        
         [Fact]
         public async Task TestPostGetPut_ChangedFixtures()
         {
             FixtureDefinition firstDefinition, secondDefinition;
             Group group;
             int id, expectedFixtureCount, expectedUniverseCount;
+            string testName = GetType() + nameof(TestPostGetPut_ChangedFixtures);
             //setup the database
-            using (var context = DatabaseTests.GetContext())
+            using (var context = DatabaseTests.GetContext(testName))
             {
                 await DatabaseTests.ResetDatabase(context);
                 await DatabaseTests.AddFixtureDefinitions(context);
@@ -197,7 +187,7 @@ namespace kadmium_osc_dmx_dotnet_test
             }
             
             //get what was posted, modify it and post it back
-            using (var context = DatabaseTests.GetContext())
+            using (var context = DatabaseTests.GetContext(testName))
             {
                 Venue retrievedVenue = await new VenueController(context).Get(id);
                 retrievedVenue.Universes.First().Fixtures.Remove(retrievedVenue.Universes.First().Fixtures.First());
@@ -209,7 +199,7 @@ namespace kadmium_osc_dmx_dotnet_test
             }
 
             //check that it's there
-            using (var context = DatabaseTests.GetContext())
+            using (var context = DatabaseTests.GetContext(testName))
             {
                 var retrievedVenue = await context.LoadVenue(id);
 
@@ -233,7 +223,19 @@ namespace kadmium_osc_dmx_dotnet_test
             return venue;
         }
 
-        public static async Task<IEnumerable<Venue>> GetVenues()
+        public static async Task<Venue> GetDeserializedJSONVenue(string name)
+        {
+            string path = Path.Combine(AppContext.BaseDirectory, "data", "venues", name + ".json");
+            Venue venue = await Task.Factory.StartNew(() =>
+            {
+                string content = File.ReadAllText(path);
+                Venue deserialized = JsonConvert.DeserializeObject<Venue>(content);
+                return deserialized;
+            });
+            return venue;
+        }
+
+        public static async Task<IEnumerable<Venue>> GetDeserializedJSONVenues()
         {
             var venues = await DatabaseTests.GetDeserializedJSONFiles<Venue>("venues");
             return venues;

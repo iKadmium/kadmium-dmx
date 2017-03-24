@@ -13,16 +13,16 @@ namespace kadmium_osc_dmx_dotnet_test
 {
     class DatabaseTests
     {
-        public static DbContextOptionsBuilder<DatabaseContext> GetBuilder()
+        public static DbContextOptionsBuilder<DatabaseContext> GetBuilder(string testName)
         {
             var builder = new DbContextOptionsBuilder<DatabaseContext>();
-            DatabaseContext.SetConnectionString("Testing", builder);
+            DatabaseContext.SetTestingConnectionString(testName, builder);
             return builder;
         }
 
-        public static DatabaseContext GetContext()
+        public static DatabaseContext GetContext(string testName)
         {
-            var builder = GetBuilder();
+            var builder = GetBuilder(testName);
             var context = new DatabaseContext(builder.Options);
             return context;
         }
@@ -47,7 +47,7 @@ namespace kadmium_osc_dmx_dotnet_test
 
         public static async Task AddVenues(DatabaseContext context)
         {
-            var venues = await VenueTests.GetVenues();
+            var venues = await VenueTests.GetDeserializedJSONVenues();
             foreach(Venue venue in venues)
             {
                 await venue.Initialize(context);

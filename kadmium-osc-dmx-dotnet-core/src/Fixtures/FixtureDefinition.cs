@@ -65,10 +65,17 @@ namespace kadmium_osc_dmx_dotnet_core.Fixtures
         }
     }
 
-    public class FixtureDefinitionSkeleton
+    public class FixtureDefinitionSkeleton : IEquatable<FixtureDefinitionSkeleton>
     {
         public int Id { get; set; }
         public string Manufacturer { get; set; }
         public string Model { get; set; }
+
+        public bool Equals(FixtureDefinitionSkeleton other)
+        {
+            if(other.Manufacturer != Manufacturer) { return false; }
+            if(other.Model != Model) { return false; }
+            return true;
+        }
     }
 }

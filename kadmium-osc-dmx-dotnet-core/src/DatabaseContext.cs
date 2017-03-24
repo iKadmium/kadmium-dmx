@@ -34,13 +34,15 @@ namespace kadmium_osc_dmx_dotnet_core
                 case "Development":
                     builder.UseSqlite(DebugConnectionString);
                     break;
-                case "Testing":
-                    builder.UseSqlite(TestingConnectionString);
-                    break; 
                 case "Production":
                     builder.UseSqlite(ProductionConnectionString);
                     break;
             }
+        }
+
+        public static void SetTestingConnectionString(string testName, DbContextOptionsBuilder builder)
+        {
+            builder.UseInMemoryDatabase(testName);
         }
 
         private void DeleteData()
