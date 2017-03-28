@@ -2,13 +2,13 @@ import { Injectable } from '@angular/core';
 import { Headers, Http } from '@angular/http';
 import 'rxjs/add/operator/toPromise';
 
-import { URLs } from "../../shared/url";
+import { URLs, Controller } from "../../shared/url";
 import { FixtureDefinition } from "../fixture-definitions/fixture-definition";
 
 @Injectable()
 export class PreviewService
 {
-    private previewUrl = URLs.getAPIUrl("Preview");
+    private previewUrl = URLs.getAPIUrl(Controller.Preview);
 
     constructor(private http: Http)
     { }

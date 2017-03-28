@@ -2,14 +2,14 @@ import { Injectable } from '@angular/core';
 import { Headers, Http } from '@angular/http';
 import 'rxjs/add/operator/toPromise';
 
-import { URLs } from "../../shared/url";
+import { Controller, URLs, SocketController } from "../../shared/url";
 import { RPCSocket } from "../../shared/rpc";
 
 @Injectable()
 export class SACNTransmitterService
 {
-    private url = URLs.getAPIUrl("SACNTransmitter");
-    private socketUrl = URLs.getSocketURL("SACN");
+    private url = URLs.getAPIUrl(Controller.SACNTransmitter);
+    private socketUrl = URLs.getSocketURL(SocketController.SACN);
     private rpc: RPCSocket;
 
     constructor(private http: Http)

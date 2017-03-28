@@ -1,4 +1,4 @@
-<div class="form-group form-inline" *ngIf="data">
+<div class="form-group form-inline">
     <div class="checkbox">
         <label>
             <input type="checkbox" [(ngModel)]="manufacturerFilterEnabled" />
@@ -9,7 +9,7 @@
         <option *ngFor="let manufacturer of manufacturers">{{manufacturer}}</option>
     </select>
 </div>
-<table class="table table-striped" *ngIf="data">
+<table class="table table-striped">
     <thead>
         <tr>
             <th>Manufacturer</th>

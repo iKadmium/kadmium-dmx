@@ -14,8 +14,6 @@ namespace kadmium_osc_dmx_dotnet_webui
 {
     public class Startup
     {
-        private string EnvironmentName { get; set; }
-
         public Startup(IHostingEnvironment env)
         {
             var builder = new ConfigurationBuilder()
@@ -25,10 +23,8 @@ namespace kadmium_osc_dmx_dotnet_webui
                 .AddEnvironmentVariables();
             Configuration = builder.Build();
 
-            EnvironmentName = env.EnvironmentName;
-            var optionsBuilder = new DbContextOptionsBuilder<DatabaseContext>();
-            DatabaseContext.SetConnectionString(EnvironmentName, optionsBuilder);
-            using (var context = new DatabaseContext(optionsBuilder.Options))
+            DatabaseContext.SetConnectionEnvironment(env.EnvironmentName);
+            using (var context = DatabaseContext.GetContext())
             {
                 context.Database.Migrate();
             }
@@ -49,8 +45,8 @@ namespace kadmium_osc_dmx_dotnet_webui
 
             services.AddMvc();
 
-            services.AddDbContext<DatabaseContext>(options =>
-                DatabaseContext.SetConnectionString(EnvironmentName, options)
+            services.AddDbContext<DatabaseContext>(builder =>
+                DatabaseContext.SetConnection(builder as DbContextOptionsBuilder<DatabaseContext>)
             );
         }
 

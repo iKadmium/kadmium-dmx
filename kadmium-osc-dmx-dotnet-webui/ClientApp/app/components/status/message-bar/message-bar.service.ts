@@ -1,4 +1,5 @@
 import { Injectable } from '@angular/core';
+import { Response } from "@angular/http";
 import { MessageBarComponent } from "./message-bar.component";
 import { StatusCode } from "../status";
 
@@ -16,7 +17,7 @@ export class MessageBarService
         this.component.add(statusCode, message);
     }
 
-    public addError(reason: any): void
+    public addError(reason: Response): void
     {
         this.component.addError(reason);
     }

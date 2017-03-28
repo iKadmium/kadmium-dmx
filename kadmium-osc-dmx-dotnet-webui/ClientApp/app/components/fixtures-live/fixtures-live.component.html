@@ -1,17 +1,31 @@
 <div class="panel panel-default" *ngFor="let group of groups">
     <div class="panel-heading">{{group.name}}</div>
     <div class="panel-body">
-
         <form class="form-horizontal" role="form">
-            <div class="form-group" *ngFor="let stateGroup of group.stateGroups">
-                <label class="control-label col-sm-2">{{stateGroup.name}}</label>
+            <div class="form-group">
+                <label class="control-label col-sm-2">Colors</label>
                 <div class="col-sm-10">
                     <ul class="nav nav-tabs">
-                        <li *ngFor="let state of stateGroup.states" [ngClass]="{'active': stateGroup.activeState == state}"><a (click)="activate(stateGroup, state)">{{state.name}}</a></li>
+                        <li *ngFor="let look of colorLooks"><a (click)="activate(group, look)">{{look.name}}</a></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="control-label col-sm-2">Attributes</label>
+                <div class="col-sm-10">
+                    <ul class="nav nav-tabs">
+                        <li *ngFor="let look of attributeLooks"><a (click)="activate(group, look)">{{look.name}}</a></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="control-label col-sm-2">Movements</label>
+                <div class="col-sm-10">
+                    <ul class="nav nav-tabs">
+                        <li *ngFor="let look of movementLooks"><a (click)="activate(group, look)">{{look.name}}</a></li>
                     </ul>
                 </div>
             </div>
         </form>
-
     </div>
 </div>

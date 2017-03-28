@@ -9,40 +9,54 @@ using Microsoft.Extensions.Logging;
 using System.IO;
 using System.Runtime.InteropServices;
 using System.Numerics;
+using kadmium_osc_dmx_dotnet_core.Looks;
 
 namespace kadmium_osc_dmx_dotnet_core
 {
     public class DatabaseContext : DbContext
     {
-        public static string ProductionConnectionString => "Filename=" + FileAccess.ProductionDatabasePath;
-        public static string DebugConnectionString => "Filename=" + FileAccess.DebugDatabasePath;
-        public static string TestingConnectionString => "Filename=" + FileAccess.TestingDatabasePath;
+        private static string ProductionConnectionString => "Filename=" + FileAccess.ProductionDatabasePath;
+        private static string DebugConnectionString => "Filename=" + FileAccess.DebugDatabasePath;
+        private static string TestingConnectionString => "Filename=" + FileAccess.TestingDatabasePath;
+
+        public static Action<DbContextOptionsBuilder<DatabaseContext>> SetConnection { get; set; }
 
         public virtual DbSet<FixtureDefinition> FixtureDefinitions { get; set; }
         public virtual DbSet<Venue> Venues { get; set; }
         public virtual DbSet<VenuePreset> VenuePresets { get; set; }
         public virtual DbSet<Group> Groups { get; set; }
+        public virtual DbSet<Look> Looks { get; set; }
+        public virtual DbSet<ColorLookSetting> ColorLookSettings { get; set; }
+        public virtual DbSet<AttributeLookSetting> AttributeLookSettings { get; set; }
 
         public DatabaseContext(DbContextOptions<DatabaseContext> options)
             :base(options)
         {}
 
-        public static void SetConnectionString(string environmentName, DbContextOptionsBuilder builder)
+        public static DatabaseContext GetContext()
+        {
+            var builder = new DbContextOptionsBuilder<DatabaseContext>();
+            SetConnection(builder);
+            var context = new DatabaseContext(builder.Options);
+            return context;
+        }
+        
+        public static void SetConnectionEnvironment(string environmentName)
         {
             switch (environmentName)
             {
                 case "Development":
-                    builder.UseSqlite(DebugConnectionString);
+                    SetConnection = (builder) => builder.UseSqlite(DebugConnectionString);
                     break;
                 case "Production":
-                    builder.UseSqlite(ProductionConnectionString);
+                    SetConnection = (builder) => builder.UseSqlite(ProductionConnectionString);
                     break;
             }
         }
 
-        public static void SetTestingConnectionString(string testName, DbContextOptionsBuilder builder)
+        public static void SetTestingConnectionString(string testName)
         {
-            builder.UseInMemoryDatabase(testName);
+            SetConnection = (builder) => builder.UseInMemoryDatabase(testName);
         }
 
         private void DeleteData()
@@ -219,6 +233,26 @@ namespace kadmium_osc_dmx_dotnet_core
                 }
             }
             return preset;
+        }
+
+        public async Task<Look> LoadLook(int id)
+        {
+            var look = await Looks.FindAsync(id);
+            foreach(var collection in Entry(look).Collections)
+            {
+                await collection.LoadAsync();
+            }
+            foreach(var lookSetting in look.AttributeLookSettings)
+            {
+                await Entry(lookSetting).Reference(x => x.Group).LoadAsync();
+                lookSetting.GroupString = lookSetting.Group.Name;
+            }
+            foreach(var lookSetting in look.ColorLookSettings)
+            {
+                await Entry(lookSetting).Reference(x => x.Group).LoadAsync();
+                lookSetting.GroupString = lookSetting.Group.Name;
+            }
+            return look;
         }
     }
 

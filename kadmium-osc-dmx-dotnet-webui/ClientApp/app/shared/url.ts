@@ -1,6 +1,6 @@
 export class URLs
 {
-    static getSocketURL(socketName: string): string
+    static getSocketURL(socketName: SocketController): string
     {
         let originalURL: string = document.URL;
         let urlParts: string[] = document.URL.split("/");
@@ -9,12 +9,12 @@ export class URLs
 
         let root: string = "ws://" + host;
 
-        let socketURL = root + "/socket/" + socketName;
+        let socketURL = root + "/socket/" + SocketController[socketName];
 
         return socketURL;
     }
 
-    static getAPIUrl(apiName: string): string
+    static getAPIUrl(apiName: Controller): string
     {
         let originalURL: string = document.URL;
         let urlParts: string[] = document.URL.split("/");
@@ -23,8 +23,29 @@ export class URLs
 
         let root: string = protocol + "//" + host;
 
-        let apiURL = root + "/api/" + apiName;
+        let apiURL = root + "/api/" + Controller[apiName];
 
         return apiURL;
     }
+}
+
+export enum Controller
+{
+    FixtureDefinition,
+    Group,
+    Look,
+    OSCListener,
+    Preview,
+    Settings,
+    SACNTransmitter,
+    SolversLive,
+    Venue,
+    VenuePreset
+}
+
+export enum SocketController
+{
+    SACN,
+    OSC,
+    Dashboard
 }

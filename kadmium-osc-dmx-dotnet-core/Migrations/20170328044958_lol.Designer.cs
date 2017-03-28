@@ -9,8 +9,8 @@ using kadmium_osc_dmx_dotnet_core.Fixtures;
 namespace kadmiumoscdmxdotnetcore.Migrations
 {
     [DbContext(typeof(DatabaseContext))]
-    [Migration("20170324020357_InitialMigration")]
-    partial class InitialMigration
+    [Migration("20170328044958_lol")]
+    partial class lol
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -145,6 +145,60 @@ namespace kadmiumoscdmxdotnetcore.Migrations
                     b.ToTable("Groups");
                 });
 
+            modelBuilder.Entity("kadmium_osc_dmx_dotnet_core.Looks.AttributeLookSetting", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd();
+
+                    b.Property<string>("AttributeName");
+
+                    b.Property<float>("AttributeValue");
+
+                    b.Property<int?>("GroupId");
+
+                    b.Property<int?>("LookId");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("GroupId");
+
+                    b.HasIndex("LookId");
+
+                    b.ToTable("AttributeLookSettings");
+                });
+
+            modelBuilder.Entity("kadmium_osc_dmx_dotnet_core.Looks.ColorLookSetting", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd();
+
+                    b.Property<string>("Color");
+
+                    b.Property<int?>("GroupId");
+
+                    b.Property<int?>("LookId");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("GroupId");
+
+                    b.HasIndex("LookId");
+
+                    b.ToTable("ColorLookSettings");
+                });
+
+            modelBuilder.Entity("kadmium_osc_dmx_dotnet_core.Looks.Look", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd();
+
+                    b.Property<string>("Name");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Looks");
+                });
+
             modelBuilder.Entity("kadmium_osc_dmx_dotnet_core.Universe", b =>
                 {
                     b.Property<int>("Id")
@@ -232,6 +286,28 @@ namespace kadmiumoscdmxdotnetcore.Migrations
                         .WithMany("Movements")
                         .HasForeignKey("FixtureDefinitionId")
                         .OnDelete(DeleteBehavior.Cascade);
+                });
+
+            modelBuilder.Entity("kadmium_osc_dmx_dotnet_core.Looks.AttributeLookSetting", b =>
+                {
+                    b.HasOne("kadmium_osc_dmx_dotnet_core.Group", "Group")
+                        .WithMany()
+                        .HasForeignKey("GroupId");
+
+                    b.HasOne("kadmium_osc_dmx_dotnet_core.Looks.Look")
+                        .WithMany("AttributeLookSettings")
+                        .HasForeignKey("LookId");
+                });
+
+            modelBuilder.Entity("kadmium_osc_dmx_dotnet_core.Looks.ColorLookSetting", b =>
+                {
+                    b.HasOne("kadmium_osc_dmx_dotnet_core.Group", "Group")
+                        .WithMany()
+                        .HasForeignKey("GroupId");
+
+                    b.HasOne("kadmium_osc_dmx_dotnet_core.Looks.Look")
+                        .WithMany("ColorLookSettings")
+                        .HasForeignKey("LookId");
                 });
 
             modelBuilder.Entity("kadmium_osc_dmx_dotnet_core.Universe", b =>

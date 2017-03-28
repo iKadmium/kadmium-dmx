@@ -2,14 +2,14 @@ import { Injectable } from '@angular/core';
 import { Headers, Http } from '@angular/http';
 import 'rxjs/add/operator/toPromise';
 
-import { URLs } from "../../shared/url";
+import { URLs, SocketController } from "../../shared/url";
 import { StatusCode } from "../status/status";
 import { RPCSocket } from "../../shared/rpc";
 
 @Injectable()
 export class DashboardService
 {
-    private socketUrl = URLs.getSocketURL("Dashboard");
+    private socketUrl = URLs.getSocketURL(SocketController.Dashboard);
     private rpc: RPCSocket;
 
     constructor(private http: Http)

@@ -36,12 +36,8 @@ namespace kadmium_osc_dmx_dotnet_webui.Controllers
         [Route("{id}")]
         public async Task<FixtureDefinition> Get(int id)
         {
-            var result = await _context.FixtureDefinitions.FindAsync(id);
-            foreach(var collection in _context.Entry(result).Collections)
-            {
-                await collection.LoadAsync();
-            }
-            return result;
+            var definition = await _context.LoadFixtureDefinition(id);
+            return definition;
         }
 
         [HttpDelete]

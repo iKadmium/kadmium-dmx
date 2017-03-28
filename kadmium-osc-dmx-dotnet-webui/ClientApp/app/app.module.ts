@@ -36,6 +36,8 @@ import { UniverseEditorComponent } from "./components/venues/universe-editor.com
 import { FixtureOptionsEditorComponent } from "./components/venues/fixture-options-editor.component";
 import { FixtureDefinitionsComponent } from './components/fixture-definitions/fixture-definitions.component';
 import { FixtureDefinitionEditorComponent } from './components/fixture-definitions/fixture-definition-editor.component';
+import { LooksComponent } from './components/look/looks.component';
+import { LookEditorComponent } from './components/look/look-editor.component';
 import { Preview2DComponent } from "./components/preview-2d/preview-2d.component";
 import { Preview2DFixtureComponent } from "./components/preview-2d/preview-2d-fixture.component";
 import { SACNTransmitterLiveComponent } from "./components/sacn-transmitter-live/sacn-transmitter-live.component";
@@ -58,6 +60,8 @@ declare var jQuery: any;
         FixtureOptionsEditorComponent,
         FixtureDefinitionsComponent,
         FixtureDefinitionEditorComponent,
+        LooksComponent,
+        LookEditorComponent,
         Preview2DComponent,
         Preview2DFixtureComponent,
         SACNTransmitterLiveComponent,
@@ -98,6 +102,9 @@ declare var jQuery: any;
             { path: 'fixture-definitions', component: FixtureDefinitionsComponent },
             { path: 'fixture-definitions/new', component: FixtureDefinitionEditorComponent },
             { path: 'fixture-definitions/:id', component: FixtureDefinitionEditorComponent },
+            { path: 'looks', component: LooksComponent },
+            { path: 'looks/new', component: LookEditorComponent },
+            { path: 'looks/:id', component: LookEditorComponent },
             { path: 'preview2d', component: Preview2DComponent },
             { path: '**', redirectTo: 'sets' }
         ])

@@ -99,9 +99,9 @@ namespace kadmium_osc_dmx_dotnet_core.Color
         public static RGB Parse(string rgbString)
         {
             string strippedString = rgbString.Replace("#", "");
-            int red = int.Parse(rgbString.Substring(0, 2), System.Globalization.NumberStyles.HexNumber);
-            int green = int.Parse(rgbString.Substring(2, 2), System.Globalization.NumberStyles.HexNumber);
-            int blue = int.Parse(rgbString.Substring(4, 2), System.Globalization.NumberStyles.HexNumber);
+            int red = int.Parse(strippedString.Substring(0, 2), System.Globalization.NumberStyles.HexNumber);
+            int green = int.Parse(strippedString.Substring(2, 2), System.Globalization.NumberStyles.HexNumber);
+            int blue = int.Parse(strippedString.Substring(4, 2), System.Globalization.NumberStyles.HexNumber);
             return new RGB(red, green, blue);
         }
 

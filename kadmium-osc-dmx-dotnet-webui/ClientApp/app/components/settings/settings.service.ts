@@ -3,12 +3,12 @@ import { Headers, Http } from '@angular/http';
 import 'rxjs/add/operator/toPromise';
 
 import { Settings, SettingsData } from "./settings";
-import { URLs } from "../../shared/url";
+import { Controller, URLs } from "../../shared/url";
 
 @Injectable()
 export class SettingsService
 {
-    private settingsUrl = URLs.getAPIUrl("Settings");
+    private settingsUrl = URLs.getAPIUrl(Controller.Settings);
 
     constructor(private http: Http) { }
 

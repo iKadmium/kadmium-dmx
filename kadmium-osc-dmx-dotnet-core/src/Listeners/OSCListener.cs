@@ -1,6 +1,9 @@
-﻿using Newtonsoft.Json.Linq;
+﻿using kadmium_osc_dmx_dotnet_core.Looks;
+using Microsoft.EntityFrameworkCore;
+using Newtonsoft.Json.Linq;
 using OSCforPCL;
 using System;
+using System.Threading.Tasks;
 
 namespace kadmium_osc_dmx_dotnet_core.Listeners
 {
@@ -34,30 +37,70 @@ namespace kadmium_osc_dmx_dotnet_core.Listeners
             }
         }
 
-        private void Listener_PacketReceived(object sender, OSCMessageReceivedArgs e)
+        private async void Listener_PacketReceived(object sender, OSCMessageReceivedArgs e)
         {
             if (Enabled)
             {
-                OSCMessage message = e.Message;
-
-                string[] parts = message.Address.Contents.Split('/');
-                string groupName = parts[2];
-                string attribute = parts[3];
                 bool recognised = false;
                 float value = 0.0f;
-                if (MasterController.Instance.Groups.ContainsKey(groupName))
+                try
                 {
-                    Group group = MasterController.Instance.Groups[groupName];
+                    OSCMessage message = e.Message;
+
+                    string[] parts = message.Address.Contents.Split('/');
                     value = (float)message.Arguments[0].GetValue();
-                    group.Set(attribute, value);
-                    if (Status.StatusCode != StatusCode.Success)
+                    switch (parts[1])
                     {
-                        Status.Update(StatusCode.Success, "Messages received", this);
+                        case "group":
+                            recognised = GroupMessageReceived(System.Net.WebUtility.UrlDecode(parts[2]), System.Net.WebUtility.UrlDecode(parts[3]), value);
+                            break;
+                        case "look":
+                            recognised = await LookMessageReceived(System.Net.WebUtility.UrlDecode(parts[2]), value);
+                            break;
                     }
-                    recognised = true;
+                    
+                }
+                catch(Exception)
+                {
+                    recognised = false;
                 }
                 MessageReceived?.Invoke(this, new OSCListenerEventArgs(recognised, DateTime.Now, sender.ToString(), e.Message.Address.Contents, value));
             }
+        }
+
+        private async Task<bool> LookMessageReceived(string lookName, float value)
+        {
+            using (var context = DatabaseContext.GetContext())
+            {
+                Look look = await context.Looks.SingleOrDefaultAsync(x => x.Name == lookName);
+                if(look != null)
+                {
+                    look = await context.LoadLook(look.Id);
+                    look.Activate(value);
+                    return true;
+                }
+                else
+                {
+                    return false;
+                }
+            }
+         
+        }
+
+        private bool GroupMessageReceived(string groupName, string attribute, float value)
+        {
+            if (MasterController.Instance.Groups.ContainsKey(groupName))
+            {
+                Group group = MasterController.Instance.Groups[groupName];
+                group.Set(attribute, value);
+                if (Status.StatusCode != StatusCode.Success)
+                {
+                    Status.Update(StatusCode.Success, "Messages received", this);
+                }
+                return true;
+            }
+            return false;
+            
         }
 
         public override JObject Serialize()

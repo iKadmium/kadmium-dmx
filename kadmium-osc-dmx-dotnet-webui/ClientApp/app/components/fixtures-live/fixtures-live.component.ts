@@ -1,103 +1,77 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { Title } from "@angular/platform-browser";
 
 import { GroupService } from "../groups/group.service";
 import { MessageBarService } from "../status/message-bar/message-bar.service";
 
 import { MessageBarComponent } from "../status/message-bar/message-bar.component";
+import { LookService } from "../look/look.service";
+import { Look, LookData } from "../look/look";
+import { ColorLooks } from "./colorLooks";
+import { AttributeLooks } from "./attributeLooks";
+import { MovementLooks } from "./movementLooks";
+import { Group } from "../groups/group";
 
 @Component({
     selector: 'fixtures-live',
     template: require('./fixtures-live.component.html'),
-    providers: [GroupService]
+    providers: [GroupService, LookService]
 })
-export class FixturesLiveComponent
+export class FixturesLiveComponent implements OnInit
 {
-    groups: PreviewGroup[];
+    groups: Group[];
+    colorLooks: Look[];
+    movementLooks: Look[];
+    attributeLooks: Look[];
 
-    constructor(private groupService: GroupService, private messageBarService: MessageBarService, title: Title)
+    constructor(private groupService: GroupService, private lookService: LookService, private messageBarService: MessageBarService, title: Title)
     {
         title.setTitle("Fixtures Live");
-        groupService
+        this.groups = [];
+        this.colorLooks = [];
+        this.movementLooks = [];
+        this.attributeLooks = [];
+    }
+
+    ngOnInit(): void
+    {
+        this.groupService
             .get()
-            .then(value => 
+            .then(groups => 
             {
-                this.groups = value.map(group => new PreviewGroup(group.name));
+                this.groups = groups;
             })
             .catch(reason => this.messageBarService.add("Error", reason));
-    }
 
-    activate(group: StateGroup, state: State): void
-    {
-        group.activeState = state;
-        for (let attributeName in state.settings)
+        for (let look of ColorLooks.getStockLooks())
         {
-            let attributeValue = state.settings[attributeName];
-            this.groupService.set(group.groupName, attributeName, attributeValue);
+            this.colorLooks.push(look);
         }
+
+        for (let look of AttributeLooks.getStockLooks())
+        {
+            this.attributeLooks.push(look);
+        }
+
+        for (let look of MovementLooks.getStockLooks())
+        {
+            this.movementLooks.push(look);
+        }
+
     }
-}
 
-class PreviewGroup
-{
-    name: string;
-    stateGroups: StateGroup[];
-
-    constructor(name: string)
+    activate(group: Group, look: Look): void
     {
-        this.name = name
-        this.stateGroups =
-            [new StateGroup(name, "Colours",
-                [
-                    new State("Black", { Hue: 0, Saturation: 0, Brightness: 0, Strobe: 0 }),
-                    new State("Red", { Hue: 0, Saturation: 1, Brightness: 1, Strobe: 0 }),
-                    new State("Green", { Hue: 0.3333, Saturation: 1, Brightness: 1, Strobe: 0 }),
-                    new State("Blue", { Hue: 0.666, Saturation: 1, Brightness: 1, Strobe: 0 }),
-                    new State("White", { Hue: 0, Saturation: 0, Brightness: 1, Strobe: 0 }),
-                    new State("Strobing", { Hue: 0, Saturation: 0, Brightness: 1, Strobe: 1 })
-                ]),
-            new StateGroup(name, "Movements",
-                [
-                    new State("Centered", { Pan: 0.5, Tilt: 0.5, RandomMove: 0 }),
-                    new State("Down", { Pan: 0.5, Tilt: 0, RandomMove: 0 }),
-                    new State("Up", { Pan: 0.5, Tilt: 1, RandomMove: 0 }),
-                    new State("Left", { Pan: 0, Tilt: 0.5, RandomMove: 0 }),
-                    new State("Right", { Pan: 1, Tilt: 0.5, RandomMove: 0 }),
-                    new State("Moving", { RandomMove: 1 })
-                ])
-            ];
+        for (let setting of look.attributeLookSettings)
+        {
+            setting.group = group.name;
+        }
+        for (let setting of look.colorLookSettings)
+        {
+            setting.group = group.name;
+        }
+        this.lookService
+            .activate(look, 1)
+            .catch(reason => this.messageBarService.addError(reason));
     }
-}
-
-class StateGroup
-{
-    activeState: State;
-    states: State[];
-    name: string;
-    groupName: string;
-
-    constructor(groupName: string, name: string, states: State[])
-    {
-        this.name = name;
-        this.groupName = groupName;
-        this.states = states;
-        this.activeState = null;
-    }
-}
-
-class State
-{
-    name: string;
-    settings: Settings;
-
-    constructor(name: string, settings: Settings)
-    {
-        this.name = name;
-        this.settings = settings;
-    }
-}
-
-interface Settings
-{
-    [key: string]: number;
 }

@@ -2,14 +2,14 @@ import { Injectable } from '@angular/core';
 import { Headers, Http } from '@angular/http';
 import 'rxjs/add/operator/toPromise';
 
-import { URLs } from "../../shared/url";
+import { URLs, Controller, SocketController } from "../../shared/url";
 import { RPCSocket } from "../../shared/rpc";
 
 @Injectable()
 export class OSCListenerService
 {
-    private socketUrl = URLs.getSocketURL("OSC");
-    private url = URLs.getAPIUrl("OSCListener");
+    private socketUrl = URLs.getSocketURL(SocketController.OSC);
+    private url = URLs.getAPIUrl(Controller.OSCListener);
     private rpc: RPCSocket;
 
     constructor(private http: Http)

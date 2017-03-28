@@ -13,17 +13,10 @@ namespace kadmium_osc_dmx_dotnet_test
 {
     class DatabaseTests
     {
-        public static DbContextOptionsBuilder<DatabaseContext> GetBuilder(string testName)
-        {
-            var builder = new DbContextOptionsBuilder<DatabaseContext>();
-            DatabaseContext.SetTestingConnectionString(testName, builder);
-            return builder;
-        }
-
         public static DatabaseContext GetContext(string testName)
         {
-            var builder = GetBuilder(testName);
-            var context = new DatabaseContext(builder.Options);
+            DatabaseContext.SetTestingConnectionString(testName);
+            var context = DatabaseContext.GetContext();
             return context;
         }
 

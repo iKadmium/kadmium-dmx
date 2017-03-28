@@ -1,4 +1,4 @@
-import { Component, ViewChild, ViewContainerRef, ViewChildDecorator, ElementRef } from '@angular/core';
+import { Component, ViewChild, ViewContainerRef, ViewChildDecorator, ElementRef, OnInit } from '@angular/core';
 import { Title } from "@angular/platform-browser";
 
 import { Overlay } from "angular2-modal";
@@ -18,26 +18,31 @@ import { AsyncFileReader } from "../../shared/async-file-reader";
     template: require('./fixture-definitions.component.html'),
     providers: [FixtureDefinitionsService]
 })
-export class FixtureDefinitionsComponent
+export class FixtureDefinitionsComponent implements OnInit
 {
     manufacturerFilterEnabled: boolean;
     manufacturerFilter: string;
-    data: FixtureDefinitionSkeleton[];
+    skeletons: FixtureDefinitionSkeleton[];
 
     constructor(private fixtureDefinitionsService: FixtureDefinitionsService, overlay: Overlay, vcRef: ViewContainerRef,
         private messageBarService: MessageBarService, private modal: Modal, title: Title)
     {
         title.setTitle("Fixture Definitions");
         overlay.defaultViewContainer = vcRef;
+        this.skeletons = [];
+    }
+
+    ngOnInit(): void
+    {
         this.fixtureDefinitionsService
             .getSkeletons()
-            .then((value: FixtureDefinitionSkeleton[]) => this.data = value)
+            .then((value: FixtureDefinitionSkeleton[]) => this.skeletons = value)
             .catch((reason) => this.messageBarService.add("Error", reason));
     }
 
     private get manufacturers(): string[]
     {
-        return this.data
+        return this.skeletons
             .map((value: FixtureDefinitionSkeleton) => value.manufacturer)
             .filter((value: string, index: number, array: string[]) => array.indexOf(value) === index);
     }
@@ -46,11 +51,11 @@ export class FixtureDefinitionsComponent
     {
         if (this.manufacturerFilterEnabled)
         {
-            return this.data.filter((value: FixtureDefinitionSkeleton) => value.manufacturer == this.manufacturerFilter);
+            return this.skeletons.filter((value: FixtureDefinitionSkeleton) => value.manufacturer == this.manufacturerFilter);
         }
         else
         {
-            return this.data;
+            return this.skeletons;
         }
     }
 
@@ -85,8 +90,8 @@ export class FixtureDefinitionsComponent
                     await this.fixtureDefinitionsService.delete(fixture);
 
                     this.messageBarService.add("Success", fixture.manufacturer + " " + fixture.model + " was deleted");
-                    let index = this.data.indexOf(fixture);
-                    this.data.splice(index, 1);
+                    let index = this.skeletons.indexOf(fixture);
+                    this.skeletons.splice(index, 1);
                 }
                 catch (reason)
                 {
@@ -119,7 +124,7 @@ export class FixtureDefinitionsComponent
         {
             let definition = await AsyncFileReader.read<FixtureDefinition>(file);
             definition.id = await this.fixtureDefinitionsService.post(definition);
-            this.data.push(definition);
+            this.skeletons.push(definition);
             this.messageBarService.add("Success", "Successfully added " + definition.manufacturer + " " + definition.model);
         }
         catch(reason)

@@ -3,12 +3,12 @@ import { Headers, Http } from '@angular/http';
 import 'rxjs/add/operator/toPromise';
 
 import { Group } from "./group";
-import { URLs } from "../../shared/url";
+import { URLs, Controller } from "../../shared/url";
 
 @Injectable()
 export class GroupService
 {
-    private groupsUrl = URLs.getAPIUrl("Group");
+    private groupsUrl = URLs.getAPIUrl(Controller.Group);
 
     constructor(private http: Http) { }
 

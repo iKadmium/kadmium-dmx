@@ -1,13 +1,13 @@
 import { Injectable } from '@angular/core';
 import { Http } from "@angular/http";
-import { URLs } from "../../shared/url";
+import { Controller, URLs, SocketController } from "../../shared/url";
 import { RPCSocket, RPCData } from "../../shared/rpc";
 
 @Injectable()
 export class SolversLiveService
 {
-    private solversLiveURL = URLs.getAPIUrl("SolversLive");
-    private socketUrl = URLs.getSocketURL("Solvers");
+    private solversLiveURL = URLs.getAPIUrl(Controller.SolversLive);
+    private socketUrl = URLs.getSocketURL(SocketController.SACN);
     private socket: RPCSocket;
 
     constructor(private http: Http)

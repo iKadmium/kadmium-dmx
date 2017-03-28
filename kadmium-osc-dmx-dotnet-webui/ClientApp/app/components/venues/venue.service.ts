@@ -3,12 +3,12 @@ import { Headers, Http } from '@angular/http';
 import 'rxjs/add/operator/toPromise';
 
 import { Venue, VenueSkeleton } from "./venue";
-import { URLs } from "../../shared/url";
+import { Controller, URLs } from "../../shared/url";
 
 @Injectable()
 export class VenueService
 {
-    private venueUrl = URLs.getAPIUrl("Venue");
+    private venueUrl = URLs.getAPIUrl(Controller.Venue);
 
     constructor(private http: Http) { }
 

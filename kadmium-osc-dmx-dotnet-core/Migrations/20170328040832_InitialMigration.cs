@@ -40,6 +40,19 @@ namespace kadmiumoscdmxdotnetcore.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "Looks",
+                columns: table => new
+                {
+                    Id = table.Column<int>(nullable: false)
+                        .Annotation("Sqlite:Autoincrement", true),
+                    Name = table.Column<string>(nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Looks", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "Venues",
                 columns: table => new
                 {
@@ -131,6 +144,61 @@ namespace kadmiumoscdmxdotnetcore.Migrations
                         principalTable: "FixtureDefinitions",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "AttributeLookSettings",
+                columns: table => new
+                {
+                    Id = table.Column<int>(nullable: false)
+                        .Annotation("Sqlite:Autoincrement", true),
+                    AttributeName = table.Column<string>(nullable: true),
+                    AttributeValue = table.Column<float>(nullable: false),
+                    GroupId = table.Column<int>(nullable: true),
+                    LookId = table.Column<int>(nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_AttributeLookSettings", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_AttributeLookSettings_Groups_GroupId",
+                        column: x => x.GroupId,
+                        principalTable: "Groups",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
+                    table.ForeignKey(
+                        name: "FK_AttributeLookSettings_Looks_LookId",
+                        column: x => x.LookId,
+                        principalTable: "Looks",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "ColorLookSettings",
+                columns: table => new
+                {
+                    Id = table.Column<int>(nullable: false)
+                        .Annotation("Sqlite:Autoincrement", true),
+                    Color = table.Column<string>(nullable: true),
+                    GroupId = table.Column<int>(nullable: true),
+                    LookId = table.Column<int>(nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_ColorLookSettings", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_ColorLookSettings_Groups_GroupId",
+                        column: x => x.GroupId,
+                        principalTable: "Groups",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
+                    table.ForeignKey(
+                        name: "FK_ColorLookSettings_Looks_LookId",
+                        column: x => x.LookId,
+                        principalTable: "Looks",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
                 });
 
             migrationBuilder.CreateTable(
@@ -232,6 +300,26 @@ namespace kadmiumoscdmxdotnetcore.Migrations
                 column: "FixtureDefinitionId");
 
             migrationBuilder.CreateIndex(
+                name: "IX_AttributeLookSettings_GroupId",
+                table: "AttributeLookSettings",
+                column: "GroupId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_AttributeLookSettings_LookId",
+                table: "AttributeLookSettings",
+                column: "LookId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_ColorLookSettings_GroupId",
+                table: "ColorLookSettings",
+                column: "GroupId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_ColorLookSettings_LookId",
+                table: "ColorLookSettings",
+                column: "LookId");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_Universe_VenueId",
                 table: "Universe",
                 column: "VenueId");
@@ -252,7 +340,10 @@ namespace kadmiumoscdmxdotnetcore.Migrations
                 name: "MovementAxis");
 
             migrationBuilder.DropTable(
-                name: "Groups");
+                name: "AttributeLookSettings");
+
+            migrationBuilder.DropTable(
+                name: "ColorLookSettings");
 
             migrationBuilder.DropTable(
                 name: "Universe");
@@ -262,6 +353,12 @@ namespace kadmiumoscdmxdotnetcore.Migrations
 
             migrationBuilder.DropTable(
                 name: "FixtureDefinitions");
+
+            migrationBuilder.DropTable(
+                name: "Groups");
+
+            migrationBuilder.DropTable(
+                name: "Looks");
 
             migrationBuilder.DropTable(
                 name: "Venues");
