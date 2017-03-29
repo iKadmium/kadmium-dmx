@@ -24,6 +24,7 @@
     <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="1.1.1">
       <PrivateAssets>All</PrivateAssets>
     </PackageReference>
+    <PackageReference Include="SerialPortStreamCore" Version="2.1.0" />
   </ItemGroup>
   <ItemGroup>
     <DotNetCliToolReference Include="Microsoft.EntityFrameworkCore.Tools.DotNet" Version="1.0.0" />

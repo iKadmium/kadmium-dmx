@@ -31,6 +31,7 @@ export class URLs
 
 export enum Controller
 {
+    EnttecProTransmitter,
     FixtureDefinition,
     Group,
     Look,

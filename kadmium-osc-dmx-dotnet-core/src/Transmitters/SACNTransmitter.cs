@@ -14,7 +14,6 @@ namespace kadmium_osc_dmx_dotnet_core.Transmitters
 
         private SACNSender SACNClient { get; set; }
         public int Port { get; set; }
-        public event EventHandler<TransmitterEventArgs> OnTransmit;
         public IEnumerable<string> UnicastTargets { get; set; }
         public bool Multicast { get; set; }
 
@@ -26,7 +25,7 @@ namespace kadmium_osc_dmx_dotnet_core.Transmitters
             }
         }
 
-        public override void TransmitInternal(byte[] dmx, int universeID)
+        public override async Task TransmitInternal(byte[] dmx, int universeID)
         {
             List<Task> tasks = new List<Task>();
             if (Multicast)
@@ -38,12 +37,7 @@ namespace kadmium_osc_dmx_dotnet_core.Transmitters
                 tasks.Add(Task.Run(() => SACNClient?.Send(target, (short)universeID, dmx)));
             }
 
-            Task.WaitAll(tasks.ToArray(), 50);
-            OnTransmit?.Invoke(this, new TransmitterEventArgs(universeID, dmx));
-            if (this.Status.StatusCode != StatusCode.Success)
-            {
-                this.Status.Update(StatusCode.Success, "Sending", this);
-            }
+            await Task.WhenAll(tasks);
         }
 
         public SACNTransmitter(Guid uuid, string name, int port, int delay, bool multicast, IEnumerable<string> unicast) : base(name, delay)
@@ -65,7 +59,7 @@ namespace kadmium_osc_dmx_dotnet_core.Transmitters
         public static SACNTransmitter Load(SacnTransmitterSettings settings)
         {
             string id = "sACN Transmitter";
-            int port = 5568;
+            int port = SACN_PORT;
             int delay = settings.Delay;
             bool multicast = settings.Multicast;
             IEnumerable<string> unicast = settings.Unicast;
@@ -77,20 +71,7 @@ namespace kadmium_osc_dmx_dotnet_core.Transmitters
         {
             SACNClient.Close();
         }
-
-        public override JObject Serialize()
-        {
-            JObject obj = new JObject(
-                new JProperty("delay", Delay),
-                new JProperty("multicast", Multicast),
-                new JProperty("unicast",
-                    new JArray(from unicastTarget in UnicastTargets
-                               select new JValue(unicastTarget))
-                )
-            );
-
-            return obj;
-        }
+        
     }
 
     public class TransmitterEventArgs : EventArgs

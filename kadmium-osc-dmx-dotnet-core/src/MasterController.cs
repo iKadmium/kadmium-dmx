@@ -18,7 +18,7 @@ namespace kadmium_osc_dmx_dotnet_core
         static int UPDATE_TIME = 1000 / UPDATES_PER_SECOND;
 
         public Dictionary<string, Group> Groups { get; private set; }
-        public Transmitter Transmitter { get; private set; }
+        public List<Transmitter> Transmitters { get; private set; }
         public Listener Listener { get; private set; }
         public Venue Venue { get; private set; }
         public Settings Settings { get; set; }
@@ -63,7 +63,10 @@ namespace kadmium_osc_dmx_dotnet_core
             {
                 Settings = settings,
                 Groups = new Dictionary<string, Group>(),
-                Transmitter = SACNTransmitter.Load(settings.SacnTransmitter),
+                Transmitters = new List<Transmitter>{
+                    SACNTransmitter.Load(settings.SacnTransmitter),
+                    EnttecProTransmitter.Load(settings.EnttecProTransmitter)
+                },
                 Listener = new OSCListener(settings.OscPort, "OSC Listener")
             };
 
@@ -123,7 +126,10 @@ namespace kadmium_osc_dmx_dotnet_core
         public void Dispose()
         {
             updateTimer.Dispose();
-            Transmitter?.Dispose();
+            foreach(var transmitter in Transmitters)
+            {
+                transmitter?.Dispose();
+            }
             Listener?.Dispose();
         }
 

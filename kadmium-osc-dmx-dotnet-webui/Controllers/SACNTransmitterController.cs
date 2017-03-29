@@ -1,6 +1,7 @@
 using Microsoft.AspNetCore.Mvc;
 using kadmium_osc_dmx_dotnet_core;
 using System.Linq;
+using kadmium_osc_dmx_dotnet_core.Transmitters;
 
 // For more information on enabling Web API for empty projects, visit http://go.microsoft.com/fwlink/?LinkID=397860
 
@@ -13,14 +14,14 @@ namespace kadmium_osc_dmx_dotnet_webui.Controllers
         [Route("[action]")]
         public bool Enabled()
         {
-            return MasterController.Instance.Transmitter.Enabled;
+            return MasterController.Instance.Transmitters.Single(x => x is SACNTransmitter).Enabled;
         }
 
         [HttpGet]
         [Route("[action]/{value}")]
         public void Enabled(bool value)
         {
-            MasterController.Instance.Transmitter.Enabled = value;
+            MasterController.Instance.Transmitters.Single(x => x is SACNTransmitter).Enabled = value;
         }
 
         [HttpGet]

@@ -10,7 +10,7 @@ namespace kadmium_osc_dmx_dotnet_webui.WebSockets
     {
         public SACNTransmitterLive()
         {
-            var Transmitter = MasterController.Instance.Transmitter as SACNTransmitter;
+            var Transmitter = MasterController.Instance.Transmitters.Single(x => x is SACNTransmitter) as SACNTransmitter;
             Transmitter.OnTransmit += Transmitter_OnTransmit;
         }
 
@@ -30,7 +30,7 @@ namespace kadmium_osc_dmx_dotnet_webui.WebSockets
 
         public override void Dispose()
         {
-            var Transmitter = MasterController.Instance.Transmitter as SACNTransmitter;
+            var Transmitter = MasterController.Instance.Transmitters.Single(x => x is SACNTransmitter) as SACNTransmitter;
             Transmitter.OnTransmit -= Transmitter_OnTransmit;
         }
 

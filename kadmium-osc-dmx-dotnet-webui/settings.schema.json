@@ -8,10 +8,28 @@
 			"description": "The port on which the web server should listen",
 			"type": "integer"
 		},
-		"oscPort": {
-			"description": "The port on which the OSC listener should listen",
-			"type": "integer"
-		},
+    "oscPort": {
+      "description": "The port on which the OSC listener should listen",
+      "type": "integer"
+    },
+    "enttecProTransmitter": {
+      "description": "Settings for the Enttec Pro Transmitter",
+      "type": "object",
+      "properties": {
+        "delay": {
+          "description": "Time to delay transmissions, in ms",
+          "type": "integer",
+          "default": 0
+        },
+        "port": {
+          "description": "The port to transmit on",
+          "type": "string",
+          "default": ""
+        }
+      },
+      "additionalProperties": false
+
+    },
 		"sacnTransmitter": {
 			"description": "Settings for the sACN transmitter",
 			"type": "object",

@@ -52,7 +52,10 @@ namespace kadmium_osc_dmx_dotnet_test
             }
         }
 
-        [InlineData("Rehearsal Room", "The New Globe", "The Brightside", "The Woolly Mammoth")]
+        [InlineData("Rehearsal Room")]
+        [InlineData("The New Globe")]
+        [InlineData("The Brightside")]
+        [InlineData("The Woolly Mammoth")]
         [Theory]
         public async Task TestGet(string venueName)
         {

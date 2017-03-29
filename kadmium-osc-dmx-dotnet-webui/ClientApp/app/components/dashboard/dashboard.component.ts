@@ -15,36 +15,40 @@ import { StatusCode } from "../status/status";
 import { URLs } from "../../shared/url";
 import { TogglableService, Togglable } from "./togglable-service";
 import { VenueSkeleton } from "../venues/venue";
+import { EnttecProTransmitterService } from "../enttec-pro-transmitter/enttec-pro-transmitter.service";
 
 @Component({
     selector: 'dashboard',
     template: require('./dashboard.component.html'),
-    providers: [VenueService, DashboardService, SolversLiveService, OSCListenerService, SACNTransmitterService]
+    providers: [VenueService, DashboardService, SolversLiveService, OSCListenerService, SACNTransmitterService, EnttecProTransmitterService]
 })
 export class DashboardComponent implements OnInit
 {
     @ViewChild("venuePanel") venuePanel: StatusPanelComponent;
     @ViewChild("sacnTransmitterPanel") sacnTransmitterPanel: StatusPanelComponent;
     @ViewChild("oscListenerPanel") oscListenerPanel: StatusPanelComponent;
+    @ViewChild("enttecProTransmitterPanel") enttecProTransmitterPanel: StatusPanelComponent;
     @ViewChild("fixturesPanel") fixturesPanel: StatusPanelComponent;
     @ViewChild("solversPanel") solversPanel: StatusPanelComponent;
 
     sacn: TogglableService<SACNTransmitterService>;
     osc: TogglableService<OSCListenerService>;
     solvers: TogglableService<SolversLiveService>;
+    enttec: TogglableService<EnttecProTransmitterService>;
 
     private venueSkeletons: VenueSkeleton[];
 
     constructor(private venueService: VenueService, private dashboardService: DashboardService,
         private solversService: SolversLiveService, private oscService: OSCListenerService,
-        private sacnService: SACNTransmitterService, private messageBarService: MessageBarService,
-        titleService: Title)
+        private sacnService: SACNTransmitterService, private enttecProTransmitterService: EnttecProTransmitterService,
+        private messageBarService: MessageBarService, titleService: Title)
     {
         titleService.setTitle("Dashboard");
 
         this.sacn = new TogglableService(sacnService, messageBarService);
         this.osc = new TogglableService(oscService, messageBarService);
         this.solvers = new TogglableService(solversService, messageBarService);
+        this.enttec = new TogglableService(enttecProTransmitterService, messageBarService);
         this.venueSkeletons = [];
     }
 
@@ -55,6 +59,7 @@ export class DashboardComponent implements OnInit
         this.sacn.init();
         this.osc.init();
         this.solvers.init();
+        this.enttec.init();
     }
 
     updateStatus(status: StatusData): void
@@ -68,6 +73,9 @@ export class DashboardComponent implements OnInit
                 break;
             case "SACNTransmitters":
                 statusPanel = this.sacnTransmitterPanel;
+                break;
+            case "EnttecProTransmitters":
+                statusPanel = this.enttecProTransmitterPanel;
                 break;
             case "OSCListeners":
                 statusPanel = this.oscListenerPanel;

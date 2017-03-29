@@ -6,7 +6,6 @@ namespace kadmium_osc_dmx_dotnet_core.Transmitters
 {
     public abstract class Transmitter : IDisposable
     {
-
         protected Transmitter(string name, int delay)
         {
             Name = name;
@@ -42,34 +41,36 @@ namespace kadmium_osc_dmx_dotnet_core.Transmitters
             }
         }
 
-        public abstract void TransmitInternal(byte[] dmx, int transmitterID);
+        public event EventHandler<TransmitterEventArgs> OnTransmit;
+
+        public abstract Task TransmitInternal(byte[] dmx, int universeID);
         public async Task Transmit(byte[] dmx, int universeID)
         {
-            if (Delay < 0)
+            if (Delay > 0)
             {
                 await Task.Delay(Delay);
             }
             if (Enabled)
             {
-                TransmitInternal(dmx, universeID);
-                if (Status.StatusCode != StatusCode.Success)
+                await TransmitInternal(dmx, universeID);
+                try
                 {
-                    Status.Update(StatusCode.Success, "Transmitting", this);
+                    OnTransmit?.Invoke(this, new TransmitterEventArgs(universeID, dmx));
+                    if (Status.StatusCode != StatusCode.Success)
+                    {
+                        Status.Update(StatusCode.Success, "Transmitting", this);
+                    }
+                }
+                catch(Exception e)
+                {
+                    if(Status.StatusCode != StatusCode.Error)
+                    {
+                        Status.Update(StatusCode.Error, e.Message, this);
+                    }
                 }
             }
         }
 
-        internal static Transmitter Load(JObject element)
-        {
-            switch (element["type"].Value<string>())
-            {
-                case "sACN":
-                    return SACNTransmitter.Load(element);
-            }
-            throw new ArgumentException("No such listener known as " + element["type"].Value<string>());
-        }
-
         public abstract void Dispose();
-        public abstract JObject Serialize();
     }
 }

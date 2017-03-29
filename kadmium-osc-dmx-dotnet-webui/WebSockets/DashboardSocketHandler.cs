@@ -13,7 +13,10 @@ namespace kadmium_osc_dmx_dotnet_webui.WebSockets
         public DashboardSocketHandler()
         {
             MasterController.Instance.Listener.Status.Updated += ListenerStatusUpdated;
-            MasterController.Instance.Transmitter.Status.Updated += TransmitterStatusUpdated;
+            foreach(var transmitter in MasterController.Instance.Transmitters)
+            {
+                transmitter.Status.Updated += TransmitterStatusUpdated;
+            }
             Venue.Status.Updated += VenueStatusUpdated;
             MasterController.Instance.SolverStatus.Updated += SolverStatusUpdated;
         }
@@ -59,7 +62,17 @@ namespace kadmium_osc_dmx_dotnet_webui.WebSockets
         {
             await SendUpdate("Solvers", MasterController.Instance.SolverStatus.StatusCode, MasterController.Instance.SolverStatus.Message);
             await SendUpdate("OSCListeners", MasterController.Instance.Listener.Status.StatusCode, MasterController.Instance.Listener.Status.Message);
-            await SendUpdate("SACNTransmitters", MasterController.Instance.Transmitter.Status.StatusCode, MasterController.Instance.Transmitter.Status.Message);
+            foreach(var transmitter in MasterController.Instance.Transmitters)
+            {
+                if(transmitter is EnttecProTransmitter)
+                {
+                    await SendUpdate("EnttecProTransmitters", transmitter.Status.StatusCode, transmitter.Status.Message);
+                }
+                else if(transmitter is SACNTransmitter)
+                {
+                    await SendUpdate("SACNTransmitters", transmitter.Status.StatusCode, transmitter.Status.Message);
+                }
+            }
             if (MasterController.Instance.Venue != null)
             {
                 await SendUpdate("Venues", StatusCode.Success, MasterController.Instance.Venue.Name + " running");
@@ -89,7 +102,10 @@ namespace kadmium_osc_dmx_dotnet_webui.WebSockets
         public override void Dispose()
         {
             MasterController.Instance.Listener.Status.Updated -= ListenerStatusUpdated;
-            MasterController.Instance.Transmitter.Status.Updated -= TransmitterStatusUpdated;
+            foreach (var transmitter in MasterController.Instance.Transmitters)
+            {
+                transmitter.Status.Updated -= TransmitterStatusUpdated;
+            }
             Venue.Status.Updated -= VenueStatusUpdated;
             MasterController.Instance.SolverStatus.Updated -= SolverStatusUpdated;
         }
