@@ -24,6 +24,8 @@ namespace kadmium_osc_dmx_dotnet_core
         public virtual DbSet<FixtureDefinition> FixtureDefinitions { get; set; }
         public virtual DbSet<Venue> Venues { get; set; }
         public virtual DbSet<VenuePreset> VenuePresets { get; set; }
+        public virtual DbSet<Universe> Universes { get; set; }
+        public virtual DbSet<Fixture> FixtureInstances { get; set; }
         public virtual DbSet<Group> Groups { get; set; }
         public virtual DbSet<Look> Looks { get; set; }
         public virtual DbSet<ColorLookSetting> ColorLookSettings { get; set; }

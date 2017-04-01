@@ -87,7 +87,7 @@ namespace kadmiumoscdmxdotnetcore.Migrations
 
                     b.HasIndex("VenuePresetId");
 
-                    b.ToTable("Fixture");
+                    b.ToTable("FixtureInstances");
                 });
 
             modelBuilder.Entity("kadmium_osc_dmx_dotnet_core.Fixtures.FixtureDefinition", b =>
@@ -213,7 +213,7 @@ namespace kadmiumoscdmxdotnetcore.Migrations
 
                     b.HasIndex("VenueId");
 
-                    b.ToTable("Universe");
+                    b.ToTable("Universes");
                 });
 
             modelBuilder.Entity("kadmium_osc_dmx_dotnet_core.Venue", b =>

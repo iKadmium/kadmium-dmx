@@ -202,7 +202,7 @@ namespace kadmiumoscdmxdotnetcore.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "Universe",
+                name: "Universes",
                 columns: table => new
                 {
                     Id = table.Column<int>(nullable: false)
@@ -213,9 +213,9 @@ namespace kadmiumoscdmxdotnetcore.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Universe", x => x.Id);
+                    table.PrimaryKey("PK_Universes", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_Universe_Venues_VenueId",
+                        name: "FK_Universes_Venues_VenueId",
                         column: x => x.VenueId,
                         principalTable: "Venues",
                         principalColumn: "Id",
@@ -223,7 +223,7 @@ namespace kadmiumoscdmxdotnetcore.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "Fixture",
+                name: "FixtureInstances",
                 columns: table => new
                 {
                     Id = table.Column<int>(nullable: false)
@@ -237,27 +237,27 @@ namespace kadmiumoscdmxdotnetcore.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Fixture", x => x.Id);
+                    table.PrimaryKey("PK_FixtureInstances", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_Fixture_FixtureDefinitions_FixtureDefinitionId",
+                        name: "FK_FixtureInstances_FixtureDefinitions_FixtureDefinitionId",
                         column: x => x.FixtureDefinitionId,
                         principalTable: "FixtureDefinitions",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
-                        name: "FK_Fixture_Groups_GroupId",
+                        name: "FK_FixtureInstances_Groups_GroupId",
                         column: x => x.GroupId,
                         principalTable: "Groups",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
-                        name: "FK_Fixture_Universe_UniverseId",
+                        name: "FK_FixtureInstances_Universes_UniverseId",
                         column: x => x.UniverseId,
-                        principalTable: "Universe",
+                        principalTable: "Universes",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
-                        name: "FK_Fixture_VenuePresets_VenuePresetId",
+                        name: "FK_FixtureInstances_VenuePresets_VenuePresetId",
                         column: x => x.VenuePresetId,
                         principalTable: "VenuePresets",
                         principalColumn: "Id",
@@ -275,23 +275,23 @@ namespace kadmiumoscdmxdotnetcore.Migrations
                 column: "FixtureDefinitionId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Fixture_FixtureDefinitionId",
-                table: "Fixture",
+                name: "IX_FixtureInstances_FixtureDefinitionId",
+                table: "FixtureInstances",
                 column: "FixtureDefinitionId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Fixture_GroupId",
-                table: "Fixture",
+                name: "IX_FixtureInstances_GroupId",
+                table: "FixtureInstances",
                 column: "GroupId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Fixture_UniverseId",
-                table: "Fixture",
+                name: "IX_FixtureInstances_UniverseId",
+                table: "FixtureInstances",
                 column: "UniverseId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Fixture_VenuePresetId",
-                table: "Fixture",
+                name: "IX_FixtureInstances_VenuePresetId",
+                table: "FixtureInstances",
                 column: "VenuePresetId");
 
             migrationBuilder.CreateIndex(
@@ -320,8 +320,8 @@ namespace kadmiumoscdmxdotnetcore.Migrations
                 column: "LookId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Universe_VenueId",
-                table: "Universe",
+                name: "IX_Universes_VenueId",
+                table: "Universes",
                 column: "VenueId");
         }
 
@@ -334,7 +334,7 @@ namespace kadmiumoscdmxdotnetcore.Migrations
                 name: "DMXChannel");
 
             migrationBuilder.DropTable(
-                name: "Fixture");
+                name: "FixtureInstances");
 
             migrationBuilder.DropTable(
                 name: "MovementAxis");
@@ -346,7 +346,7 @@ namespace kadmiumoscdmxdotnetcore.Migrations
                 name: "ColorLookSettings");
 
             migrationBuilder.DropTable(
-                name: "Universe");
+                name: "Universes");
 
             migrationBuilder.DropTable(
                 name: "VenuePresets");

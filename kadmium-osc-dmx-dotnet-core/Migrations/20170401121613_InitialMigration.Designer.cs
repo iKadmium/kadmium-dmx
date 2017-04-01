@@ -9,8 +9,8 @@ using kadmium_osc_dmx_dotnet_core.Fixtures;
 namespace kadmiumoscdmxdotnetcore.Migrations
 {
     [DbContext(typeof(DatabaseContext))]
-    [Migration("20170328044958_lol")]
-    partial class lol
+    [Migration("20170401121613_InitialMigration")]
+    partial class InitialMigration
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -88,7 +88,7 @@ namespace kadmiumoscdmxdotnetcore.Migrations
 
                     b.HasIndex("VenuePresetId");
 
-                    b.ToTable("Fixture");
+                    b.ToTable("FixtureInstances");
                 });
 
             modelBuilder.Entity("kadmium_osc_dmx_dotnet_core.Fixtures.FixtureDefinition", b =>
@@ -214,7 +214,7 @@ namespace kadmiumoscdmxdotnetcore.Migrations
 
                     b.HasIndex("VenueId");
 
-                    b.ToTable("Universe");
+                    b.ToTable("Universes");
                 });
 
             modelBuilder.Entity("kadmium_osc_dmx_dotnet_core.Venue", b =>

@@ -86,15 +86,7 @@ namespace kadmium_osc_dmx_dotnet_webui.Controllers
         {
             await venue.Initialize(_context);
             var oldVenue = await _context.LoadVenue(id);
-            var removals = from universe in oldVenue.Universes
-                           where !venue.Universes.Any(x => x.Id == universe.Id)
-                           select universe;
-            _context.RemoveRange(removals);
-            _context.Entry(oldVenue).State = EntityState.Detached;
-
-            venue.Id = id;
-            _context.Update(venue);
-            
+            await UpdateVenue(oldVenue, venue);
             await _context.SaveChangesAsync();
         }
 
@@ -123,6 +115,59 @@ namespace kadmium_osc_dmx_dotnet_webui.Controllers
                 })
             };
             return download;
+        }
+
+        private async Task UpdateVenue(Venue oldVenue, Venue newVenue)
+        {
+            var removals = from universe in oldVenue.Universes
+                           where !newVenue.Universes.Any(x => x.Id == universe.Id)
+                           select universe;
+            _context.RemoveRange(removals);
+            _context.Entry(oldVenue).CurrentValues.SetValues(newVenue);
+
+            foreach (var universe in newVenue.Universes)
+            {
+                if (universe.Id == 0)
+                {
+                    oldVenue.Universes.Add(universe);
+                }
+                else
+                {
+                    var oldUniverse = oldVenue.Universes.Single(x => x.Id == universe.Id);
+                    await UpdateUniverse(oldUniverse, universe);
+                }
+            }
+        }
+
+        private async Task UpdateUniverse(Universe oldUniverse, Universe newUniverse)
+        {
+            var removals = from fixture in oldUniverse.Fixtures
+                           where !newUniverse.Fixtures.Any(x => x.Id == fixture.Id)
+                           select fixture;
+            _context.RemoveRange(removals);
+            _context.Entry(oldUniverse).CurrentValues.SetValues(newUniverse);
+            
+            foreach(var fixture in newUniverse.Fixtures)
+            {
+                if(fixture.Id == 0)
+                {
+                    oldUniverse.Fixtures.Add(fixture);
+                }
+                else
+                {
+                    var oldFixture = oldUniverse.Fixtures.Single(x => x.Id == fixture.Id);
+                    await UpdateFixture(oldFixture, fixture);
+                    
+                }
+            }
+        }
+
+        private async Task UpdateFixture(Fixture oldFixture, Fixture newFixture)
+        {
+            _context.Entry(oldFixture).CurrentValues.SetValues(newFixture);
+            oldFixture.GroupString = newFixture.GroupString;
+            oldFixture.Skeleton = newFixture.Skeleton;
+            await oldFixture.Initialize(_context);
         }
     }
 
