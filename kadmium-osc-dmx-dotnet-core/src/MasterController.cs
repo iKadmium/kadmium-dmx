@@ -114,13 +114,19 @@ namespace kadmium_osc_dmx_dotnet_core
             await (Venue?.Render() ?? Task.CompletedTask);
         }
 
-        private async void UpdateTimer_Elapsed(object state)
+        private void UpdateTimer_Elapsed(object state)
         {
-            if (UpdatesEnabled)
+            if (Venue != null)
             {
-                Update();
+                lock (Venue)
+                {
+                    if (UpdatesEnabled)
+                    {
+                        Update();
+                    }
+                    Render().Wait();
+                }
             }
-            await Render();
         }
 
         public void Dispose()

@@ -43,15 +43,15 @@ export class UniverseEditorComponent
         this.venuePresetService
             .getSkeletons()
             .then(value => this.venuePresetSkeletons = value)
-            .catch(reason => this.messageBarService.add("Error", reason));
+            .catch(reason => this.messageBarService.addError(reason));
         this.fixtureDefinitionsService
             .getSkeletons()
             .then((value) => this.fixtureDefinitionSkeletons = value)
-            .catch(reason => this.messageBarService.add("Error", reason));
+            .catch(reason => this.messageBarService.addError(reason));
         this.groupService
             .get()
             .then(value => this.groups = value.map(grp => grp.name))
-            .catch(reason => this.messageBarService.add("Error", reason));
+            .catch(reason => this.messageBarService.addError(reason));
     }
 
     private async removeFixture(fixture: Fixture): Promise<void>
@@ -125,7 +125,7 @@ export class UniverseEditorComponent
                     this.messageBarService.add("Success", preset.name + " saved successfully");
                     this.venuePresetSkeletons.push(preset);
                 })
-                .catch(reason => this.messageBarService.add("Error", reason));
+                .catch(reason => this.messageBarService.addError(reason));
         }
         catch (error)
         { }
@@ -146,7 +146,7 @@ export class UniverseEditorComponent
                     this.messageBarService.add("Success", preset.name + " saved successfully");
                     this.venuePresetSkeletons.push(preset);
                 })
-                .catch(reason => this.messageBarService.add("Error", reason));
+                .catch(reason => this.messageBarService.addError(reason));
         }
         catch (error)
         { }
@@ -163,7 +163,7 @@ export class UniverseEditorComponent
                     this.universe.fixtures.push(fixture);
                 }
             })
-            .catch(reason => this.messageBarService.add("Error", reason));
+            .catch(reason => this.messageBarService.addError(reason));
     }
 
     private async removePreset(preset: VenuePresetSkeleton): Promise<void>
@@ -191,7 +191,7 @@ export class UniverseEditorComponent
                 }
                 catch (error)
                 {
-                    this.messageBarService.add("Error", error);
+                    this.messageBarService.addError(error);
                 }
             }
         }

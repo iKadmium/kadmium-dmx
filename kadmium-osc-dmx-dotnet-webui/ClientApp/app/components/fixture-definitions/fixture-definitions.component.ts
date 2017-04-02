@@ -37,7 +37,7 @@ export class FixtureDefinitionsComponent implements OnInit
         this.fixtureDefinitionsService
             .getSkeletons()
             .then((value: FixtureDefinitionSkeleton[]) => this.skeletons = value)
-            .catch((reason) => this.messageBarService.add("Error", reason));
+            .catch((reason) => this.messageBarService.addError(reason));
     }
 
     private get manufacturers(): string[]
@@ -95,7 +95,7 @@ export class FixtureDefinitionsComponent implements OnInit
                 }
                 catch (reason)
                 {
-                    this.messageBarService.add("Error", "Could not delete " + fixture.manufacturer + " " + fixture.model + ". " + reason);
+                    this.messageBarService.addError(reason);
                 }
             }
         }
@@ -129,7 +129,7 @@ export class FixtureDefinitionsComponent implements OnInit
         }
         catch(reason)
         {
-            this.messageBarService.add("Error", reason);
+            this.messageBarService.addError(reason);
         }
     }
 }

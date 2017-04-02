@@ -54,7 +54,7 @@ export class Preview2DComponent implements OnInit
 
                 this.sacnTransmitterService.subscribe(this);
             })
-            .catch(reason => this.messageBarService.add("Error", reason));
+            .catch(reason => this.messageBarService.addError(reason));
     }
 
     updateUniverse(data: UniverseUpdateData): void

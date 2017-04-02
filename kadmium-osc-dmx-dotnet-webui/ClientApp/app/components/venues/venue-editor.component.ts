@@ -54,7 +54,7 @@ export class VenueEditorComponent
                     this.venue = value;
                     this.selectedUniverse = this.venue.universes.length > 0 ? this.venue.universes[0] : null;
                 })
-                .catch((reason) => this.messageBarService.add("Error", reason));
+                .catch((reason) => this.messageBarService.addError(reason));
         }
     }
 
@@ -101,7 +101,7 @@ export class VenueEditorComponent
         }
         catch (error)
         {
-            this.messageBarService.add("Error", error);
+            this.messageBarService.addError(error);
         }
         finally
         {

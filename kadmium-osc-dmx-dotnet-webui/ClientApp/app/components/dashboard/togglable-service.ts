@@ -14,7 +14,7 @@ export class TogglableService<ServiceType extends Togglable>
         this.service
             .getEnabled()
             .then(value => this.enabled = value)
-            .catch(error => this.messageBarService.add("Error", error));
+            .catch(error => this.messageBarService.addError(error));
     }
 
     public async toggle(): Promise<void>
@@ -28,7 +28,7 @@ export class TogglableService<ServiceType extends Togglable>
         }
         catch (error)
         {
-            this.messageBarService.add("Error", error);
+            this.messageBarService.addError(error);
             this.enabled = !targetValue;
         }
         this.enabled = targetValue;

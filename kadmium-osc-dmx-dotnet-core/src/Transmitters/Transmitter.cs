@@ -52,9 +52,9 @@ namespace kadmium_osc_dmx_dotnet_core.Transmitters
             }
             if (Enabled)
             {
-                await TransmitInternal(dmx, universeID);
                 try
                 {
+                    await TransmitInternal(dmx, universeID);
                     OnTransmit?.Invoke(this, new TransmitterEventArgs(universeID, dmx));
                     if (Status.StatusCode != StatusCode.Success)
                     {

@@ -50,7 +50,7 @@ export class FixtureDefinitionEditorComponent implements OnInit
                     this.definition = definition;
                     this.title.setTitle(`Fixture Definition Editor - ${this.definition.manufacturer} ${this.definition.model}`);
                 })
-                .catch(reason => this.messageBarService.add("Error", reason));
+                .catch(reason => this.messageBarService.addError(reason));
         }
 
         this.fixtureService
@@ -175,7 +175,7 @@ export class FixtureDefinitionEditorComponent implements OnInit
                 })
                 .catch((reason) =>
                 {
-                    this.messageBarService.add("Error", reason);
+                    this.messageBarService.addError(reason);
                     this.saving = false;
                 });
         }
@@ -187,7 +187,7 @@ export class FixtureDefinitionEditorComponent implements OnInit
                     window.location.href = "/fixture-definitions";
                 })
                 .catch((reason) => {
-                    this.messageBarService.add("Error", reason);
+                    this.messageBarService.addError(reason);
                     this.saving = false;
                 });
         }

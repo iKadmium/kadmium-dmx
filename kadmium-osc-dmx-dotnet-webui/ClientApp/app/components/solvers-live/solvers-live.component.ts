@@ -36,7 +36,7 @@ export class SolversLiveComponent
 
                 solversLiveService.subscribe(this);
             })
-            .catch(reason => this.messageBarService.add("Error", reason));
+            .catch(reason => this.messageBarService.addError(reason));
     }
 
     updateUniverse(data: UniverseData): void

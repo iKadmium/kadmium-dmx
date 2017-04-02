@@ -72,7 +72,7 @@ export class VenuesComponent implements OnInit
                 }
                 catch (error)
                 {
-                    this.messageBarService.add("Error", error);
+                    this.messageBarService.addError(error);
                 }
             }
         }
@@ -106,7 +106,7 @@ export class VenuesComponent implements OnInit
         }
         catch (reason)
         {
-            this.messageBarService.add("Error", reason);
+            this.messageBarService.addError(reason);
         }
     }
 }

@@ -45,7 +45,7 @@ export class SACNTransmitterLiveComponent implements OnInit
 
                 this.sacnTransmitterService.subscribe(this);
             })
-            .catch(error => this.messageBarService.add("Error", error));
+            .catch(error => this.messageBarService.addError(error));
     }
 
     private updateUniverse(data: UniverseUpdateData): void
@@ -68,7 +68,7 @@ export class SACNTransmitterLiveComponent implements OnInit
             .set(1, channel.address, value)
             .catch(reason => 
             {
-                this.messageBarService.add("Error", reason);
+                this.messageBarService.addError(reason);
             });
     }
 

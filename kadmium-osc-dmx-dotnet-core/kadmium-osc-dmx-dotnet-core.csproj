@@ -10,6 +10,11 @@
     <RuntimeFrameworkVersion>1.1.1</RuntimeFrameworkVersion>
   </PropertyGroup>
   <ItemGroup>
+    <Compile Remove="Looks\**" />
+    <EmbeddedResource Remove="Looks\**" />
+    <None Remove="Looks\**" />
+  </ItemGroup>
+  <ItemGroup>
     <None Include="App.config" />
   </ItemGroup>
   <ItemGroup>
@@ -28,8 +33,5 @@
   </ItemGroup>
   <ItemGroup>
     <DotNetCliToolReference Include="Microsoft.EntityFrameworkCore.Tools.DotNet" Version="1.0.0" />
-  </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Looks\src\" />
   </ItemGroup>
 </Project>

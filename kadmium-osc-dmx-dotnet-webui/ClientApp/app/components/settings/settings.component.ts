@@ -62,7 +62,7 @@ export class SettingsComponent implements OnInit
         }
         catch (reason)
         {
-            this.messageBarService.add("Error", reason);
+            this.messageBarService.addError(reason);
         }
         finally
         {

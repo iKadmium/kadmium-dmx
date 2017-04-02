@@ -54,7 +54,7 @@ export class LookEditorComponent implements OnInit
                     this.look = look;
                     this.title.setTitle(`Look Editor - ${this.look.name}`);
                 })
-                .catch(reason => this.messageBarService.add("Error", reason));
+                .catch(reason => this.messageBarService.addError(reason));
         }
 
         this.groupService
@@ -126,7 +126,7 @@ export class LookEditorComponent implements OnInit
                 })
                 .catch((reason) =>
                 {
-                    this.messageBarService.add("Error", reason);
+                    this.messageBarService.addError(reason);
                     this.saving = false;
                 });
         }
@@ -140,7 +140,7 @@ export class LookEditorComponent implements OnInit
                 })
                 .catch((reason) =>
                 {
-                    this.messageBarService.add("Error", reason);
+                    this.messageBarService.addError(reason);
                     this.saving = false;
                 });
         }

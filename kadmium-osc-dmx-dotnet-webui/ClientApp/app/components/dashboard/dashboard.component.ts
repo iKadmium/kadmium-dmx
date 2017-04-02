@@ -55,7 +55,10 @@ export class DashboardComponent implements OnInit
     ngOnInit(): void
     {
         this.dashboardService.subscribe(this);
-        this.venueService.getSkeletons().then(skeletons => this.venueSkeletons = skeletons).catch(reason => this.messageBarService.add("Error", reason));
+        this.venueService
+            .getSkeletons()
+            .then(skeletons => this.venueSkeletons = skeletons)
+            .catch(reason => this.messageBarService.addError(reason));
         this.sacn.init();
         this.osc.init();
         this.solvers.init();
@@ -102,7 +105,7 @@ export class DashboardComponent implements OnInit
         this.venueService
             .activate(venueSkeleton.id)
             .then(() => this.messageBarService.add("Success", venueSkeleton.name + " successfully loaded"))
-            .catch((reason) => this.messageBarService.add("Error", reason));
+            .catch((reason) => this.messageBarService.addError(reason));
     }
 
     private async toggle<T extends Togglable>(service: TogglableService<T>): Promise<void>

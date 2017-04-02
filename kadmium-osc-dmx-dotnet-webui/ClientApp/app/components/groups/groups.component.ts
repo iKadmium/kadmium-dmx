@@ -23,7 +23,7 @@ export class GroupsComponent
         this.groupsService
             .get()
             .then((value: Group[]) => this.groups = value)
-            .catch((reason) => this.messageBarService.add("Error", reason));
+            .catch((reason) => this.messageBarService.addError(reason));
     }
 
     private add(): void
@@ -76,7 +76,7 @@ export class GroupsComponent
         }
         catch (reason)
         {
-            this.messageBarService.add("Error", reason);
+            this.messageBarService.addError(reason);
         }
         finally
         {

@@ -41,7 +41,7 @@ export class FixturesLiveComponent implements OnInit
             {
                 this.groups = groups;
             })
-            .catch(reason => this.messageBarService.add("Error", reason));
+            .catch(reason => this.messageBarService.addError(reason));
 
         for (let look of ColorLooks.getStockLooks())
         {

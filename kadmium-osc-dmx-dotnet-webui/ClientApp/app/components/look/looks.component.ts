@@ -70,7 +70,7 @@ export class LooksComponent implements OnInit
                 }
                 catch (reason)
                 {
-                    this.messageBarService.add("Error", "Could not delete " + lookSkeleton.name + ". " + reason);
+                    this.messageBarService.addError(reason);
                 }
             }
         }
@@ -104,7 +104,7 @@ export class LooksComponent implements OnInit
         }
         catch (reason)
         {
-            this.messageBarService.add("Error", reason);
+            this.messageBarService.addError(reason);
         }
     }
 }
