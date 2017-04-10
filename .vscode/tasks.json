@@ -6,7 +6,7 @@
         {
             "taskName": "build",
             "args": [
-                "${workspaceRoot}\\kadmium-osc-dmx-dotnet-webui\\project.json"
+                "${workspaceRoot}\\kadmium-osc-dmx-dotnet-webui"
             ],
             "isBuildCommand": true,
             "problemMatcher": "$msCompile"
@@ -14,7 +14,7 @@
         {
             "taskName": "test",
             "args": [
-                "${workspaceRoot}\\kadmium-osc-dmx-dotnet-test\\project.json"
+                "${workspaceRoot}\\kadmium-osc-dmx-dotnet-test"
             ],
             "isTestCommand": true,
             "problemMatcher": "$msCompile"
@@ -22,10 +22,12 @@
         {
             "taskName": "publish",
             "args": [
-                "${workspaceRoot}\\kadmium-osc-dmx-dotnet-webui\\project.json",
+                "${workspaceRoot}\\kadmium-osc-dmx-dotnet-webui",
                 "-c",
                 "Release",
                 "-o",
+                "-r",
+                "win10-x64",
                 "${workspaceRoot}\\dist"
             ],
             "echoCommand": true

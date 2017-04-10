@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace kadmium_osc_dmx_dotnet_core.Looks
+﻿namespace kadmium_osc_dmx_dotnet_core.Looks
 {
     public class AttributeLookSetting : LookSetting
     {

@@ -1,5 +1,4 @@
 ﻿using kadmium_osc_dmx_dotnet_core;
-using System.Collections;
 using System.Collections.Generic;
 
 namespace kadmium_osc_dmx_dotnet_test

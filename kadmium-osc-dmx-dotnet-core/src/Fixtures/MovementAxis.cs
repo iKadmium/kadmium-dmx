@@ -1,6 +1,4 @@
-﻿using Newtonsoft.Json.Linq;
-
-namespace kadmium_osc_dmx_dotnet_core.Fixtures
+﻿namespace kadmium_osc_dmx_dotnet_core.Fixtures
 {
     public class MovementAxis : System.IEquatable<MovementAxis>
     {
@@ -8,7 +6,7 @@ namespace kadmium_osc_dmx_dotnet_core.Fixtures
         public string Name { get; set; }
         public int Min { get; set; }
         public int Max { get; set; }
-        
+
         public MovementAxis()
         {
             Name = "";
@@ -31,7 +29,7 @@ namespace kadmium_osc_dmx_dotnet_core.Fixtures
         public override bool Equals(object obj)
         {
             var other = obj as MovementAxis;
-            if(other == null)
+            if (other == null)
             {
                 return false;
             }
@@ -41,7 +39,7 @@ namespace kadmium_osc_dmx_dotnet_core.Fixtures
 
         public bool Equals(MovementAxis other)
         {
-            if(other == null)
+            if (other == null)
             {
                 return false;
             }

@@ -1,9 +1,6 @@
-﻿using Newtonsoft.Json;
-using Newtonsoft.Json.Linq;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Threading.Tasks;
 
 namespace kadmium_osc_dmx_dotnet_core.Fixtures
 {
@@ -19,7 +16,7 @@ namespace kadmium_osc_dmx_dotnet_core.Fixtures
         public FixtureType Type { get; set; }
         public float Lux { get; set; }
         public float BeamAngle { get; set; }
-        
+
         public FixtureDefinition()
         {
             Channels = new List<DMXChannel>();
@@ -47,11 +44,11 @@ namespace kadmium_osc_dmx_dotnet_core.Fixtures
             if (BeamAngle != other.BeamAngle) { return false; }
             foreach (var channel in other.Channels)
             {
-                if(!Channels.Any(x => x.Equals(channel))) { return false; }
+                if (!Channels.Any(x => x.Equals(channel))) { return false; }
             }
-            foreach(var channel in Channels)
+            foreach (var channel in Channels)
             {
-                if(!other.Channels.Any(x => x.Equals(channel))) { return false; }
+                if (!other.Channels.Any(x => x.Equals(channel))) { return false; }
             }
             foreach (var movement in other.Movements)
             {
@@ -73,8 +70,8 @@ namespace kadmium_osc_dmx_dotnet_core.Fixtures
 
         public bool Equals(FixtureDefinitionSkeleton other)
         {
-            if(other.Manufacturer != Manufacturer) { return false; }
-            if(other.Model != Model) { return false; }
+            if (other.Manufacturer != Manufacturer) { return false; }
+            if (other.Model != Model) { return false; }
             return true;
         }
     }

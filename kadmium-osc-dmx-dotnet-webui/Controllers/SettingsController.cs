@@ -1,5 +1,4 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using Newtonsoft.Json.Linq;
 using kadmium_osc_dmx_dotnet_core;
 using System.Threading.Tasks;
 using kadmium_osc_dmx_dotnet_core.Transmitters;
@@ -27,7 +26,7 @@ namespace kadmium_osc_dmx_dotnet_webui.Controllers
             Transmitter[] oldTransmitters = new Transmitter[MasterController.Instance.Transmitters.Count];
             MasterController.Instance.Transmitters.CopyTo(oldTransmitters);
             MasterController.Instance.Transmitters.Clear();
-            foreach(var transmitter in oldTransmitters)
+            foreach (var transmitter in oldTransmitters)
             {
                 transmitter.Dispose();
             }

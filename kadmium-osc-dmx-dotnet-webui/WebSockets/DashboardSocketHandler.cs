@@ -3,7 +3,6 @@ using kadmium_osc_dmx_dotnet_core.Listeners;
 using kadmium_osc_dmx_dotnet_core.Transmitters;
 using System.Linq;
 using System.Threading.Tasks;
-using System.Collections.Generic;
 using System;
 
 namespace kadmium_osc_dmx_dotnet_webui.WebSockets
@@ -13,7 +12,7 @@ namespace kadmium_osc_dmx_dotnet_webui.WebSockets
         public DashboardSocketHandler()
         {
             MasterController.Instance.Listener.Status.Updated += ListenerStatusUpdated;
-            foreach(var transmitter in MasterController.Instance.Transmitters)
+            foreach (var transmitter in MasterController.Instance.Transmitters)
             {
                 transmitter.Status.Updated += TransmitterStatusUpdated;
             }
@@ -62,13 +61,13 @@ namespace kadmium_osc_dmx_dotnet_webui.WebSockets
         {
             await SendUpdate("Solvers", MasterController.Instance.SolverStatus.StatusCode, MasterController.Instance.SolverStatus.Message);
             await SendUpdate("OSCListeners", MasterController.Instance.Listener.Status.StatusCode, MasterController.Instance.Listener.Status.Message);
-            foreach(var transmitter in MasterController.Instance.Transmitters)
+            foreach (var transmitter in MasterController.Instance.Transmitters)
             {
-                if(transmitter is EnttecProTransmitter)
+                if (transmitter is EnttecProTransmitter)
                 {
                     await SendUpdate("EnttecProTransmitters", transmitter.Status.StatusCode, transmitter.Status.Message);
                 }
-                else if(transmitter is SACNTransmitter)
+                else if (transmitter is SACNTransmitter)
                 {
                     await SendUpdate("SACNTransmitters", transmitter.Status.StatusCode, transmitter.Status.Message);
                 }

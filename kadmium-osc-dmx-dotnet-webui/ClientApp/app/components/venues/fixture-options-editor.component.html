@@ -8,15 +8,17 @@
                     </select>
                 </labelled-input>
                 <labelled-input label="Model:">
-                    <select #input #model="ngModel" name="model" class="form-control" [(ngModel)]="fixture.type" (ngModelChange)="updateDefinition($event)" >
+                    <select #input #model="ngModel" [compareWith]="getComparer" name="model" class="form-control" [(ngModel)]="fixture.type"
+                        (ngModelChange)="updateDefinition($event)">
                         <option *ngFor="let definition of getDefinitions(manufacturerFilter)" [ngValue]="definition">{{definition.model}}</option>
                     </select>
                 </labelled-input>
                 <labelled-input label="Address:">
-                    <input #input #model="ngModel" name="address" class="form-control" min="1" max="512" type="number" [(ngModel)]="fixture.address" />
+                    <input #input #model="ngModel" name="address" class="form-control" min="1" max="512" type="number" [(ngModel)]="fixture.address"
+                    />
                 </labelled-input>
                 <labelled-input label="Group:">
-                    <select #input #model="ngModel" name="group" class="form-control" [(ngModel)]="fixture.group" >
+                    <select #input #model="ngModel" name="group" class="form-control" [(ngModel)]="fixture.group">
                         <option *ngFor="let group of groups">{{group.name}}</option>
                     </select>
                 </labelled-input>
@@ -61,15 +63,13 @@
                                     <td>
                                         <table-input>
                                             <input #input #model="ngModel" class="form-control" type="number" [(ngModel)]="axis.restrictionMin" [name]="'restrictionMin[' + axis.name + ']'"
-                                                [min]="axis.min" [max]="axis.max" [disabled]="!axis.restricted"
-                                            />
+                                                [min]="axis.min" [max]="axis.max" [disabled]="!axis.restricted" />
                                         </table-input>
                                     </td>
                                     <td>
                                         <table-input>
                                             <input #input #model="ngModel" class="form-control" type="number" [(ngModel)]="axis.restrictionMax" [name]="'restrictionMax[' + axis.name + ']'"
-                                                [min]="axis.min" [max]="axis.max" [disabled]="!axis.restricted"
-                                            />
+                                                [min]="axis.min" [max]="axis.max" [disabled]="!axis.restricted" />
                                         </table-input>
                                     </td>
                                 </tr>

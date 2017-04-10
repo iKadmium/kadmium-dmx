@@ -1,7 +1,7 @@
 import { NgModule } from '@angular/core';
 import { FormsModule } from "@angular/forms";
 import { RouterModule } from '@angular/router';
-import { UniversalModule } from 'angular2-universal';
+import { BrowserModule } from '@angular/platform-browser';
 import { HttpModule } from "@angular/http";
 import { AppComponent } from './components/app/app.component'
 
@@ -13,7 +13,6 @@ import { UniqueValidator } from "./directives/unique/unique.directive";
 
 import { SettingsService } from "./components/settings/settings.service";
 import { VenueService } from "./components/venues/venue.service";
-import { VenuePresetService } from "./components/venues/venue-preset.service";
 import { GroupService } from "./components/groups/group.service";
 import { FixtureDefinitionsService } from "./components/fixture-definitions/fixture-definitions.service";
 import { OSCListenerService } from "./components/osc-listener-live/osc-listener.service";
@@ -80,7 +79,7 @@ declare var jQuery: any;
         InputBoxComponent
     ],
     imports: [
-        UniversalModule, // Must be first import. This automatically imports BrowserModule, HttpModule, and JsonpModule too.
+        BrowserModule, // Must be first import. This automatically imports BrowserModule, HttpModule, and JsonpModule too.
         FormsModule,
         HttpModule,
 

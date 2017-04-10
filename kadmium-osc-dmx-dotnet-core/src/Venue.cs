@@ -1,5 +1,4 @@
-﻿using Newtonsoft.Json.Linq;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -17,7 +16,7 @@ namespace kadmium_osc_dmx_dotnet_core
         public static Status Status { get; set; }
 
         public List<Universe> Universes { get; set; }
-        
+
         public Venue(string name, IEnumerable<Universe> universes)
         {
             Name = name;
@@ -31,7 +30,7 @@ namespace kadmium_osc_dmx_dotnet_core
         public Venue() : this("", Enumerable.Empty<Universe>())
         {
         }
-        
+
         internal void Update()
         {
             foreach (Universe universe in Universes)
@@ -67,7 +66,7 @@ namespace kadmium_osc_dmx_dotnet_core
 
         public async Task Initialize(DatabaseContext context)
         {
-            foreach(var universe in Universes)
+            foreach (var universe in Universes)
             {
                 await universe.Initialize(context);
             }
@@ -86,10 +85,10 @@ namespace kadmium_osc_dmx_dotnet_core
 
         public bool Equals(Venue other)
         {
-            if(other.Name != Name) { return false; }
-            foreach(Universe universe in Universes)
+            if (other.Name != Name) { return false; }
+            foreach (Universe universe in Universes)
             {
-                if(!other.Universes.Any(x => x.Equals(universe))) { return false; }
+                if (!other.Universes.Any(x => x.Equals(universe))) { return false; }
             }
             foreach (Universe universe in other.Universes)
             {

@@ -1,9 +1,6 @@
 ﻿using kadmium_osc_dmx_dotnet_core;
 using kadmium_osc_dmx_dotnet_core.Fixtures;
-using kadmium_osc_dmx_dotnet_test.Solvers;
-using kadmium_osc_dmx_dotnet_webui;
 using kadmium_osc_dmx_dotnet_webui.Controllers;
-using Microsoft.AspNetCore.Hosting;
 using Microsoft.EntityFrameworkCore;
 using Newtonsoft.Json;
 using System;
@@ -82,7 +79,7 @@ namespace kadmium_osc_dmx_dotnet_test
                 Assert.Equal(deserializedVenue, venue);
             }
         }
-        
+
         [InlineData("ChangedVenueName", "ChangedUniverseName")]
         [Theory]
         public async Task TestPut_ChangedNames(string changedVenueName, string changedUniverseName)
@@ -100,7 +97,7 @@ namespace kadmium_osc_dmx_dotnet_test
                 await context.SaveChangesAsync();
                 id = (await context.Venues.FirstAsync()).Id;
             }
-            
+
             //get what was posted, modify it and post it back
             using (var context = DatabaseTests.GetContext(testName))
             {
@@ -165,7 +162,7 @@ namespace kadmium_osc_dmx_dotnet_test
                 Assert.Contains(newUniverse.Fixtures, x => x.FixtureDefinition.Equals(secondDefinition));
             }
         }
-        
+
         [Fact]
         public async Task TestPostGetPut_ChangedFixtures()
         {
@@ -188,7 +185,7 @@ namespace kadmium_osc_dmx_dotnet_test
                 group = await context.Groups.FirstAsync();
                 id = (await context.Venues.FirstAsync()).Id;
             }
-            
+
             //get what was posted, modify it and post it back
             using (var context = DatabaseTests.GetContext(testName))
             {

@@ -5,7 +5,6 @@ using Newtonsoft.Json.Linq;
 using System.Threading.Tasks;
 using System.ComponentModel.DataAnnotations.Schema;
 using Newtonsoft.Json;
-using System.Numerics;
 
 namespace kadmium_osc_dmx_dotnet_core.Fixtures
 {
@@ -15,7 +14,7 @@ namespace kadmium_osc_dmx_dotnet_core.Fixtures
 
         [JsonProperty(PropertyName = "address")]
         public int StartChannel { get; set; }
-        
+
         [NotMapped]
         [JsonIgnore]
         public FixtureDefinition FixtureDefinition { get; set; }
@@ -85,12 +84,12 @@ namespace kadmium_osc_dmx_dotnet_core.Fixtures
                 solver.Solve(FrameSettables);
             }
         }
-        
+
         public void Dispose()
         {
             Group.Fixtures.Remove(this);
         }
-        
+
         public void Render(byte[] dmx)
         {
             var channels = from channel in FixtureDefinition.Channels
@@ -144,7 +143,7 @@ namespace kadmium_osc_dmx_dotnet_core.Fixtures
             InitializeGroup(group);
         }
 
-        public async Task Initialize (DatabaseContext context)
+        public async Task Initialize(DatabaseContext context)
         {
             await InitializeFixtureDefinition(context);
             InitializeGroup(context);
@@ -172,7 +171,7 @@ namespace kadmium_osc_dmx_dotnet_core.Fixtures
         private async Task InitializeFixtureDefinition(DatabaseContext context)
         {
             FixtureDefinition fixtureDefinition;
-            if(Skeleton.Id == 0)
+            if (Skeleton.Id == 0)
             {
                 fixtureDefinition = await context.LoadFixtureDefinition(Skeleton.Manufacturer, Skeleton.Model);
             }

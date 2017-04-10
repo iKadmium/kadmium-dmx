@@ -1,8 +1,6 @@
 ﻿using kadmium_osc_dmx_dotnet_core;
 using kadmium_osc_dmx_dotnet_core.Fixtures;
-using System;
 using System.Collections.Generic;
-using System.Text;
 
 namespace kadmium_osc_dmx_dotnet_test
 {

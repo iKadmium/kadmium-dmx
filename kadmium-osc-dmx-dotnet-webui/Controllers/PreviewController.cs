@@ -1,9 +1,6 @@
 ﻿using System.Linq;
 using Microsoft.AspNetCore.Mvc;
-using Newtonsoft.Json.Linq;
 using kadmium_osc_dmx_dotnet_core;
-using Newtonsoft.Json;
-using Newtonsoft.Json.Serialization;
 using System.Collections.Generic;
 using kadmium_osc_dmx_dotnet_core.Fixtures;
 

@@ -38,6 +38,7 @@ export class Universe
 
 export class Fixture
 {
+    id: number;
     address: number;
     group: string;
     type: FixtureDefinitionSkeleton;
@@ -77,17 +78,4 @@ export class AxisRestrictionOptions
         this.min = 0;
         this.max = 0;
     }
-}
-
-export class VenuePreset implements VenuePresetSkeleton
-{
-    id: number;
-    name: string;
-    fixtures: Fixture[];
-}
-
-export interface VenuePresetSkeleton
-{
-    id: number;
-    name: string;
 }

@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Linq;
 using Newtonsoft.Json.Linq;
 using Newtonsoft.Json.Schema;
 using Newtonsoft.Json;
@@ -95,10 +94,10 @@ namespace kadmium_osc_dmx_dotnet_core
                 }
             }
         }
-        
+
         public static async Task<Settings> LoadSettings()
         {
-            if(!File.Exists(SettingsLocation))
+            if (!File.Exists(SettingsLocation))
             {
                 var settings = new Settings();
                 SaveSettings(settings);

@@ -6,10 +6,6 @@ using System.Threading.Tasks;
 using System.Linq;
 using Microsoft.EntityFrameworkCore;
 using kadmium_osc_dmx_dotnet_core.Fixtures;
-using System;
-using Microsoft.EntityFrameworkCore.Infrastructure;
-using Microsoft.Extensions.Logging;
-using Microsoft.Extensions.DependencyInjection;
 
 // For more information on enabling Web API for empty projects, visit http://go.microsoft.com/fwlink/?LinkID=397860
 
@@ -58,9 +54,9 @@ namespace kadmium_osc_dmx_dotnet_webui.Controllers
             await MasterController.Instance.Initialise(_context);
             await venue.Initialize(_context);
             MasterController.Instance.LoadVenue(venue, _context);
-            
+
         }
-        
+
         // DELETE api/values/5
         [HttpDelete("{id}")]
         public async Task Delete(int id)
@@ -68,7 +64,7 @@ namespace kadmium_osc_dmx_dotnet_webui.Controllers
             Venue venue = await _context.Venues.FindAsync(id);
             _context.Venues.Remove(venue);
             await _context.SaveChangesAsync();
-            
+
         }
 
         [HttpPost]
@@ -146,10 +142,10 @@ namespace kadmium_osc_dmx_dotnet_webui.Controllers
                            select fixture;
             _context.RemoveRange(removals);
             _context.Entry(oldUniverse).CurrentValues.SetValues(newUniverse);
-            
-            foreach(var fixture in newUniverse.Fixtures)
+
+            foreach (var fixture in newUniverse.Fixtures)
             {
-                if(fixture.Id == 0)
+                if (fixture.Id == 0)
                 {
                     oldUniverse.Fixtures.Add(fixture);
                 }
@@ -157,7 +153,7 @@ namespace kadmium_osc_dmx_dotnet_webui.Controllers
                 {
                     var oldFixture = oldUniverse.Fixtures.Single(x => x.Id == fixture.Id);
                     await UpdateFixture(oldFixture, fixture);
-                    
+
                 }
             }
         }

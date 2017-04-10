@@ -66,19 +66,6 @@ namespace kadmiumoscdmxdotnetcore.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "VenuePresets",
-                columns: table => new
-                {
-                    Id = table.Column<int>(nullable: false)
-                        .Annotation("Sqlite:Autoincrement", true),
-                    Name = table.Column<string>(nullable: true)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_VenuePresets", x => x.Id);
-                });
-
-            migrationBuilder.CreateTable(
                 name: "ColorWheelEntry",
                 columns: table => new
                 {
@@ -232,8 +219,7 @@ namespace kadmiumoscdmxdotnetcore.Migrations
                     GroupId = table.Column<int>(nullable: true),
                     OptionsString = table.Column<string>(nullable: true),
                     StartChannel = table.Column<int>(nullable: false),
-                    UniverseId = table.Column<int>(nullable: true),
-                    VenuePresetId = table.Column<int>(nullable: true)
+                    UniverseId = table.Column<int>(nullable: true)
                 },
                 constraints: table =>
                 {
@@ -254,12 +240,6 @@ namespace kadmiumoscdmxdotnetcore.Migrations
                         name: "FK_FixtureInstances_Universes_UniverseId",
                         column: x => x.UniverseId,
                         principalTable: "Universes",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
-                    table.ForeignKey(
-                        name: "FK_FixtureInstances_VenuePresets_VenuePresetId",
-                        column: x => x.VenuePresetId,
-                        principalTable: "VenuePresets",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                 });
@@ -288,11 +268,6 @@ namespace kadmiumoscdmxdotnetcore.Migrations
                 name: "IX_FixtureInstances_UniverseId",
                 table: "FixtureInstances",
                 column: "UniverseId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_FixtureInstances_VenuePresetId",
-                table: "FixtureInstances",
-                column: "VenuePresetId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_MovementAxis_FixtureDefinitionId",
@@ -347,9 +322,6 @@ namespace kadmiumoscdmxdotnetcore.Migrations
 
             migrationBuilder.DropTable(
                 name: "Universes");
-
-            migrationBuilder.DropTable(
-                name: "VenuePresets");
 
             migrationBuilder.DropTable(
                 name: "FixtureDefinitions");

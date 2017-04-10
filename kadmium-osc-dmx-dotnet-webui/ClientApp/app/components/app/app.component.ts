@@ -1,4 +1,4 @@
-import { Component, ViewChild, OnInit } from '@angular/core';
+import { Component, ViewChild, OnInit, OnDestroy } from '@angular/core';
 import { Title } from "@angular/platform-browser";
 
 import { MessageBarService } from "../status/message-bar/message-bar.service";
@@ -11,7 +11,7 @@ import { MessageBarComponent } from "../status/message-bar/message-bar.component
     styles: [require('./app.component.css')],
     providers: [MessageBarService]
 })
-export class AppComponent implements OnInit
+export class AppComponent implements OnInit, OnDestroy
 {
     @ViewChild("messageBar") messageBar: MessageBarComponent;
 
@@ -23,5 +23,10 @@ export class AppComponent implements OnInit
     ngOnInit(): void
     {
         this.messageBarService.component = this.messageBar;
+    }
+
+    ngOnDestroy(): void
+    {
+        document.body.appendChild(document.createElement("app"));
     }
 }

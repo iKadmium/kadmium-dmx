@@ -1,3 +1,10 @@
+export class FixtureDefinitionSkeleton
+{
+    public id: number;
+    public manufacturer: string;
+    public model: string;
+}
+
 export class FixtureDefinition implements FixtureDefinitionData
 {
     id: number;
@@ -48,13 +55,6 @@ export enum FixtureType
     LED,
     Tungsten,
     Effect
-}
-
-export class FixtureDefinitionSkeleton
-{
-    public id: number;
-    public manufacturer: string;
-    public model: string;
 }
 
 export class DMXChannel

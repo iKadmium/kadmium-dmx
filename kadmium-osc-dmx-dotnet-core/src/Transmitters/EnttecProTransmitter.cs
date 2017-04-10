@@ -1,7 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Text;
-using Newtonsoft.Json.Linq;
 using RJCP.IO.Ports;
 using System.Threading.Tasks;
 using System.Linq;
@@ -52,10 +49,10 @@ namespace kadmium_osc_dmx_dotnet_core.Transmitters
         {
             Stream.Dispose();
         }
-        
+
         public override async Task TransmitInternal(byte[] dmx, int transmitterID)
         {
-            if(Stream == null || !Stream.IsOpen || !Stream.CanWrite)
+            if (Stream == null || !Stream.IsOpen || !Stream.CanWrite)
             {
                 TryOpenStream();
             }

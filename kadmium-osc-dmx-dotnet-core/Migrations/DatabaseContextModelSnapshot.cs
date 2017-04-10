@@ -75,8 +75,6 @@ namespace kadmiumoscdmxdotnetcore.Migrations
 
                     b.Property<int?>("UniverseId");
 
-                    b.Property<int?>("VenuePresetId");
-
                     b.HasKey("Id");
 
                     b.HasIndex("FixtureDefinitionId");
@@ -84,8 +82,6 @@ namespace kadmiumoscdmxdotnetcore.Migrations
                     b.HasIndex("GroupId");
 
                     b.HasIndex("UniverseId");
-
-                    b.HasIndex("VenuePresetId");
 
                     b.ToTable("FixtureInstances");
                 });
@@ -228,18 +224,6 @@ namespace kadmiumoscdmxdotnetcore.Migrations
                     b.ToTable("Venues");
                 });
 
-            modelBuilder.Entity("kadmium_osc_dmx_dotnet_core.VenuePreset", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd();
-
-                    b.Property<string>("Name");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("VenuePresets");
-                });
-
             modelBuilder.Entity("kadmium_osc_dmx_dotnet_core.Fixtures.ColorWheelEntry", b =>
                 {
                     b.HasOne("kadmium_osc_dmx_dotnet_core.Fixtures.FixtureDefinition")
@@ -271,11 +255,6 @@ namespace kadmiumoscdmxdotnetcore.Migrations
                     b.HasOne("kadmium_osc_dmx_dotnet_core.Universe")
                         .WithMany("Fixtures")
                         .HasForeignKey("UniverseId")
-                        .OnDelete(DeleteBehavior.Cascade);
-
-                    b.HasOne("kadmium_osc_dmx_dotnet_core.VenuePreset")
-                        .WithMany("Fixtures")
-                        .HasForeignKey("VenuePresetId")
                         .OnDelete(DeleteBehavior.Cascade);
                 });
 

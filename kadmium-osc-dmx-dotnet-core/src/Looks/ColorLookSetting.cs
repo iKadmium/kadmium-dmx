@@ -1,7 +1,4 @@
 ﻿using kadmium_osc_dmx_dotnet_core.Color;
-using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace kadmium_osc_dmx_dotnet_core.Looks
 {

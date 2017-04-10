@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Threading.Tasks;
-using Newtonsoft.Json.Linq;
 
 namespace kadmium_osc_dmx_dotnet_core.Transmitters
 {
@@ -61,9 +60,9 @@ namespace kadmium_osc_dmx_dotnet_core.Transmitters
                         Status.Update(StatusCode.Success, "Transmitting", this);
                     }
                 }
-                catch(Exception e)
+                catch (Exception e)
                 {
-                    if(Status.StatusCode != StatusCode.Error)
+                    if (Status.StatusCode != StatusCode.Error)
                     {
                         Status.Update(StatusCode.Error, e.Message, this);
                     }

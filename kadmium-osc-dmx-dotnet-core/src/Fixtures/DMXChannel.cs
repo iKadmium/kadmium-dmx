@@ -1,6 +1,5 @@
 ﻿using kadmium_osc_dmx_dotnet_core.Solvers;
 using Newtonsoft.Json;
-using Newtonsoft.Json.Linq;
 
 namespace kadmium_osc_dmx_dotnet_core.Fixtures
 {
@@ -24,7 +23,7 @@ namespace kadmium_osc_dmx_dotnet_core.Fixtures
         public byte Min { get; set; }
         public byte Max { get; set; }
         public int Address { get; set; }
-        
+
         public DMXChannel() : base("")
         {
             Name = "";
@@ -39,7 +38,7 @@ namespace kadmium_osc_dmx_dotnet_core.Fixtures
             Max = max;
             Address = relativeAddress;
         }
-        
+
         public override string ToString()
         {
             return Name + " -> " + ByteValue;
@@ -54,7 +53,7 @@ namespace kadmium_osc_dmx_dotnet_core.Fixtures
         public override bool Equals(object obj)
         {
             var other = obj as DMXChannel;
-            if(other == null)
+            if (other == null)
             {
                 return false;
             }

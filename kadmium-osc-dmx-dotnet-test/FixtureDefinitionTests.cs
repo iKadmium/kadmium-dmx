@@ -1,13 +1,10 @@
-﻿using kadmium_osc_dmx_dotnet_core;
-using kadmium_osc_dmx_dotnet_core.Fixtures;
+﻿using kadmium_osc_dmx_dotnet_core.Fixtures;
 using kadmium_osc_dmx_dotnet_webui.Controllers;
 using Microsoft.EntityFrameworkCore;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.IO;
-using System.Runtime.CompilerServices;
 using System.Threading.Tasks;
 using Xunit;
 
@@ -73,7 +70,7 @@ namespace kadmium_osc_dmx_dotnet_test
             };
             definition.Channels.Add(new DMXChannel(axisName, definition.Channels.Count + 1));
             definition.Movements.Add(new MovementAxis(axisName, min, max));
-            
+
             return definition;
         }
 
@@ -105,7 +102,7 @@ namespace kadmium_osc_dmx_dotnet_test
                 }
                 return paths;
             });
-            
+
             return result;
         }
 

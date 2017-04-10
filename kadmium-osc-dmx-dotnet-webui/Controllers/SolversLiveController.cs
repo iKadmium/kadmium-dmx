@@ -2,7 +2,6 @@ using Microsoft.AspNetCore.Mvc;
 using kadmium_osc_dmx_dotnet_core;
 using System.Linq;
 using kadmium_osc_dmx_dotnet_core.Fixtures;
-using Newtonsoft.Json.Linq;
 using kadmium_osc_dmx_dotnet_core.Solvers;
 using System.Collections.Generic;
 

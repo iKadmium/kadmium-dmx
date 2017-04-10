@@ -8,19 +8,19 @@ import { Overlay, OverlayConfig } from "angular2-modal";
 import { Modal } from "angular2-modal/plugins/bootstrap";
 
 import { FixtureDefinitionsService } from "../fixture-definitions/fixture-definitions.service"
-import { VenuePresetService } from "./venue-preset.service";
 import { GroupService } from "../groups/group.service";
 
 import { FixtureDefinitionSkeleton } from "../fixture-definitions/fixture-definition";
-import { VenuePresetSkeleton } from "./venue";
-import { Universe, Fixture, FixtureDefinitionOptions, VenuePreset } from "./venue";
+import { Universe, Fixture, FixtureDefinitionOptions } from "./venue";
 import { MessageBarService } from "../status/message-bar/message-bar.service";
+import { AsyncFileReader } from "../../shared/async-file-reader";
+import { FileSaver } from "../../shared/file-saver";
 
 @Component({
     selector: 'universe-editor',
     template: require('./universe-editor.component.html'),
     styles: [require('./universe-editor.component.css')],
-    providers: [FixtureDefinitionsService, VenuePresetService, GroupService]
+    providers: [FixtureDefinitionsService, GroupService]
 })
 export class UniverseEditorComponent
 {
@@ -29,21 +29,15 @@ export class UniverseEditorComponent
 
     private selectedFixture: Fixture;
     private selectedFixtures: Fixture[];
-    private selectedPreset: VenuePresetSkeleton;
     private fixtureDefinitionSkeletons: FixtureDefinitionSkeleton[];
-    private venuePresetSkeletons: VenuePresetSkeleton[];
     private groups: string[];
 
-    constructor(private fixtureDefinitionsService: FixtureDefinitionsService, private venuePresetService: VenuePresetService, private groupService: GroupService,
+    constructor(private fixtureDefinitionsService: FixtureDefinitionsService, private groupService: GroupService,
         private messageBarService: MessageBarService, overlay: Overlay, private vcRef: ViewContainerRef, private modal: Modal)
     {
         overlay.defaultViewContainer = vcRef;
         this.selectedFixtures = [];
         this.selectedFixture = null;
-        this.venuePresetService
-            .getSkeletons()
-            .then(value => this.venuePresetSkeletons = value)
-            .catch(reason => this.messageBarService.addError(reason));
         this.fixtureDefinitionsService
             .getSkeletons()
             .then((value) => this.fixtureDefinitionSkeletons = value)
@@ -112,98 +106,53 @@ export class UniverseEditorComponent
         }
     }
 
-    private async savePreset(): Promise<void>
-    {
-        let preset = await this.venuePresetService.get(this.selectedPreset.id);
-        try
-        {
-            preset.fixtures = this.selectedFixtures;
-            this.venuePresetService
-                .put(preset.id, preset)
-                .then(() => {
-                    this.selectedFixtures = [];
-                    this.messageBarService.add("Success", preset.name + " saved successfully");
-                    this.venuePresetSkeletons.push(preset);
-                })
-                .catch(reason => this.messageBarService.addError(reason));
-        }
-        catch (error)
-        { }
-    }
-
     private async savePresetAs(): Promise<void>
     {
-        let preset = new VenuePreset();
         try
         {
-            preset.name = await this.inputBox.show("Select a name", "Name:", "Save", "Cancel");
-            preset.fixtures = this.selectedFixtures;
-            this.venuePresetService
-                .post(preset)
-                .then(() =>
-                {
-                    this.selectedFixtures = [];
-                    this.messageBarService.add("Success", preset.name + " saved successfully");
-                    this.venuePresetSkeletons.push(preset);
-                })
-                .catch(reason => this.messageBarService.addError(reason));
+            let name = await this.inputBox.show("Select a name", "Name:", "Save", "Cancel");
+            let fixtures = this.selectedFixtures;
+            FileSaver.Save(name + ".json", fixtures);
         }
         catch (error)
         { }
-    }
-
-    private loadPreset(preset: VenuePresetSkeleton): void
-    {
-        this.venuePresetService
-            .get(preset.id)
-            .then((value: VenuePreset) =>
-            {
-                for (let fixture of value.fixtures)
-                {
-                    this.universe.fixtures.push(fixture);
-                }
-            })
-            .catch(reason => this.messageBarService.addError(reason));
-    }
-
-    private async removePreset(preset: VenuePresetSkeleton): Promise<void>
-    {
-        let promise = await this.modal
-            .confirm()
-            .title("Are you sure?")
-            .body("Are you sure you want to delete " + preset.name + "?")
-            .isBlocking(true)
-            .okBtnClass("btn btn-danger")
-            .okBtn("Delete")
-            .open();
-
-        try
-        {
-            let result = await promise.result;
-            if (result)
-            {
-                try 
-                {
-                    await this.venuePresetService.delete(preset.id);
-                    let index = this.venuePresetSkeletons.indexOf(preset);
-                    this.venuePresetSkeletons.splice(index, 1);
-                    this.messageBarService.add("Success", preset.name + " successfully removed");
-                }
-                catch (error)
-                {
-                    this.messageBarService.addError(error);
-                }
-            }
-        }
-        catch (error)
-        {
-            //errors are generated when the message box is cancelled
-        }
     }
 
     private get sortedFixtures(): Fixture[]
     {
         return this.universe.fixtures.slice().sort((a, b) => a.address - b.address);
+    }
+
+    private upload(fileInput: any): void
+    {
+        (fileInput as HTMLInputElement).click();
+    }
+
+    private async uploadFiles(files: File[]): Promise<void>
+    {
+        for (let file of files)
+        {
+            await this.uploadFile(file);
+        }
+    }
+
+    private async uploadFile(file: File): Promise<void>
+    {
+        try
+        {
+            let fixtures = await AsyncFileReader.read<Fixture[]>(file);
+            for (let fixture of fixtures)
+            {
+                fixture.id = 0;
+                fixture.type = this.fixtureDefinitionSkeletons.find(x => x.manufacturer == fixture.type.manufacturer && x.model == fixture.type.model);
+                this.universe.fixtures.push(fixture);
+            }
+            this.messageBarService.add("Success", "Successfully added " + fixtures.length + " fixtures");
+        }
+        catch (reason)
+        {
+            this.messageBarService.addError(reason);
+        }
     }
 
 }

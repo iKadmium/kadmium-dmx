@@ -1,4 +1,4 @@
-import { Component, Input, ViewChild, ElementRef, OnChanges, SimpleChanges } from '@angular/core';
+import { Component, Input, ViewChild, ElementRef, OnChanges, SimpleChanges, OnInit } from '@angular/core';
 import { ActivatedRoute, Params } from "@angular/router";
 
 import { FixtureDefinitionsService } from "../fixture-definitions/fixture-definitions.service";
@@ -14,7 +14,7 @@ import { FixtureDefinition, FixtureDefinitionSkeleton } from "../fixture-definit
     styles: [require("./fixture-options-editor.component.css")],
     providers: [FixtureDefinitionsService, GroupService]
 })
-export class FixtureOptionsEditorComponent implements OnChanges
+export class FixtureOptionsEditorComponent implements OnChanges, OnInit
 {
     @Input("fixture") fixture: Fixture;
     public visible = false;
@@ -29,6 +29,12 @@ export class FixtureOptionsEditorComponent implements OnChanges
 
     constructor(private fixtureDefinitionsService: FixtureDefinitionsService, private groupService: GroupService)
     {
+        this.groups = [];
+        this.skeletons = [];
+    }
+
+    ngOnInit(): void
+    {
         this.groupService
             .get()
             .then(value => this.groups = value);
@@ -39,13 +45,13 @@ export class FixtureOptionsEditorComponent implements OnChanges
 
     ngOnChanges(changes: SimpleChanges): void
     {
-        if(changes["fixture"] != null)
+        if (changes["fixture"] != null)
         {
             let fixtureChanges = changes["fixture"];
-            if(fixtureChanges.currentValue != null)
+            if (fixtureChanges.currentValue != null)
             {
                 let fixture: Fixture = fixtureChanges.currentValue;
-                if(fixture.type == null)
+                if (fixture.type == null)
                 {
                     fixture.type = this.skeletons[0];
                 }
@@ -88,12 +94,32 @@ export class FixtureOptionsEditorComponent implements OnChanges
                 .map(value => new AxisOptions(value.name, this.fixture, this.definition));
         }
     }
+
+    private get getComparer(): (x: FixtureDefinitionSkeleton, y: FixtureDefinitionSkeleton) => boolean
+    {
+
+        return (x, y) =>
+        {
+            if (x == null && y == null)
+            {
+                return true;
+            }
+            else if ((x == null && y != null) || (x != null && y == null))
+            {
+                return false;
+            }
+            else
+            {
+                return x.id == y.id;
+            }
+        };
+    }
 }
 
 class AxisOptions
 {
     name: string;
-    
+
     fixture: Fixture;
     definition: FixtureDefinition;
 
@@ -116,7 +142,7 @@ class AxisOptions
 
     public get restrictionMin(): number
     {
-        if(this.restricted)
+        if (this.restricted)
         {
             let restriction = this.fixture.options.axisRestrictions.find(value => value.name == this.name);
             return restriction.min;
@@ -129,7 +155,7 @@ class AxisOptions
 
     public set restrictionMin(value: number)
     {
-        if(this.restricted)
+        if (this.restricted)
         {
             let restriction = this.fixture.options.axisRestrictions.find(value => value.name == this.name);
             restriction.min = value;
@@ -138,7 +164,7 @@ class AxisOptions
 
     public get restrictionMax(): number
     {
-        if(this.restricted)
+        if (this.restricted)
         {
             let restriction = this.fixture.options.axisRestrictions.find(value => value.name == this.name);
             return restriction.max;
@@ -151,7 +177,7 @@ class AxisOptions
 
     public set restrictionMax(value: number)
     {
-        if(this.restricted)
+        if (this.restricted)
         {
             let restriction = this.fixture.options.axisRestrictions.find(value => value.name == this.name);
             restriction.max = value;
@@ -166,14 +192,14 @@ class AxisOptions
 
     public set inverted(value: boolean)
     {
-        if(value)
+        if (value)
         {
             this.fixture.options.axisInversions.push(this.name);
         }
         else
         {
             let index = this.fixture.options.axisInversions.indexOf(this.name);
-            if(index != -1)
+            if (index != -1)
             {
                 this.fixture.options.axisInversions.splice(index, 1);
             }
@@ -188,7 +214,7 @@ class AxisOptions
 
     public set restricted(value: boolean)
     {
-        if(value)
+        if (value)
         {
             let options = new AxisRestrictionOptions();
             options.name = this.name;
@@ -200,11 +226,10 @@ class AxisOptions
         {
             let restriction = this.fixture.options.axisRestrictions.find(value => value.name == this.name);
             let index = this.fixture.options.axisRestrictions.indexOf(restriction);
-            if(index != -1)
+            if (index != -1)
             {
                 this.fixture.options.axisRestrictions.splice(index, 1);
             }
         }
     }
-
 }

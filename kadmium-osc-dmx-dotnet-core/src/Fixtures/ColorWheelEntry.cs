@@ -1,6 +1,5 @@
 ﻿using System.ComponentModel.DataAnnotations.Schema;
 using kadmium_osc_dmx_dotnet_core.Color;
-using Newtonsoft.Json.Linq;
 using Newtonsoft.Json;
 
 namespace kadmium_osc_dmx_dotnet_core.Fixtures
@@ -27,7 +26,7 @@ namespace kadmium_osc_dmx_dotnet_core.Fixtures
         [NotMapped]
         [JsonIgnore]
         public RGB Color { get; set; }
-        
+
         public ColorWheelEntry()
         {
             Name = "";

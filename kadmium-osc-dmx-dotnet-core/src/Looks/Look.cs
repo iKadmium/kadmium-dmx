@@ -1,5 +1,4 @@
 ﻿using Newtonsoft.Json.Linq;
-using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
@@ -20,11 +19,11 @@ namespace kadmium_osc_dmx_dotnet_core.Looks
 
         public void Activate(float amount)
         {
-            foreach(var setting in AttributeLookSettings)
+            foreach (var setting in AttributeLookSettings)
             {
                 setting.Activate(amount);
             }
-            foreach(var setting in ColorLookSettings)
+            foreach (var setting in ColorLookSettings)
             {
                 setting.Activate(amount);
             }
@@ -37,7 +36,7 @@ namespace kadmium_osc_dmx_dotnet_core.Looks
             {
                 tasks.Add(setting.Initialize(context));
             }
-            foreach(var setting in ColorLookSettings)
+            foreach (var setting in ColorLookSettings)
             {
                 tasks.Add(setting.Initialize(context));
             }
@@ -53,14 +52,14 @@ namespace kadmium_osc_dmx_dotnet_core.Looks
                 Name = obj["name"].Value<string>()
             };
 
-            foreach(var settingJson in arr.Values<JObject>())
+            foreach (var settingJson in arr.Values<JObject>())
             {
-                if(settingJson["attributeName"] != null)
+                if (settingJson["attributeName"] != null)
                 {
                     AttributeLookSetting setting = settingJson.ToObject<AttributeLookSetting>();
                     look.AttributeLookSettings.Add(setting);
                 }
-                else if(settingJson["color"] != null)
+                else if (settingJson["color"] != null)
                 {
                     ColorLookSetting setting = settingJson.ToObject<ColorLookSetting>();
                     look.ColorLookSettings.Add(setting);

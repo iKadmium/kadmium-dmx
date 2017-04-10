@@ -4,7 +4,6 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net.Sockets;
-using System.Text;
 using System.Threading.Tasks;
 using Xunit;
 
@@ -41,7 +40,7 @@ namespace kadmium_osc_dmx_dotnet_test
             short universeID = 1;
             short universeSize = 512;
 
-            SACNTransmitter transmitter = GetUnicastTransmitter(new [] { "localhost"});
+            SACNTransmitter transmitter = GetUnicastTransmitter(new[] { "localhost" });
 
             UdpClient client = new UdpClient(SACNTransmitter.SACN_PORT);
             byte[] dmx = new byte[universeSize];

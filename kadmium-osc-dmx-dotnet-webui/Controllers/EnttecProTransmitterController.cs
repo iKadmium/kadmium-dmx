@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+﻿using System.Linq;
 using Microsoft.AspNetCore.Mvc;
 using kadmium_osc_dmx_dotnet_core.Transmitters;
 using kadmium_osc_dmx_dotnet_core;

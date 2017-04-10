@@ -1,9 +1,7 @@
 ﻿using kadmium_osc_dmx_dotnet_core.Fixtures;
 using kadmium_osc_dmx_dotnet_core.Listeners;
 using kadmium_osc_dmx_dotnet_core.Transmitters;
-using System.Collections.Concurrent;
 using System.Threading;
-using Newtonsoft.Json.Linq;
 using System.Threading.Tasks;
 using System.Linq;
 using System.Collections.Generic;
@@ -42,7 +40,7 @@ namespace kadmium_osc_dmx_dotnet_core
                 }
             }
         }
-        
+
         public bool RenderEnabled { get; set; }
         private Timer updateTimer;
         public Status SolverStatus { get; private set; }
@@ -78,7 +76,7 @@ namespace kadmium_osc_dmx_dotnet_core
         {
             await context.Database.MigrateAsync();
             Groups.Clear();
-            foreach(var grp in context.Groups)
+            foreach (var grp in context.Groups)
             {
                 Groups.Add(grp.Name, grp);
             }
@@ -126,7 +124,7 @@ namespace kadmium_osc_dmx_dotnet_core
         public void Dispose()
         {
             updateTimer.Dispose();
-            foreach(var transmitter in Transmitters)
+            foreach (var transmitter in Transmitters)
             {
                 transmitter?.Dispose();
             }
@@ -139,13 +137,13 @@ namespace kadmium_osc_dmx_dotnet_core
             UpdatesEnabled = false;
             Venue?.Deactivate();
             Groups.Clear();
-            foreach(Group grp in groups)
+            foreach (Group grp in groups)
             {
                 Groups.Add(grp.Name, grp);
             }
             await (Venue?.Initialize(context) ?? Task.CompletedTask);
             Venue?.Activate();
-            if(oldUpdatesEnabled)
+            if (oldUpdatesEnabled)
             {
                 UpdatesEnabled = true;
             }

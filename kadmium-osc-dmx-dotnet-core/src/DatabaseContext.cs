@@ -2,13 +2,9 @@ using Microsoft.EntityFrameworkCore;
 using kadmium_osc_dmx_dotnet_core.Fixtures;
 using System.Threading.Tasks;
 using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using Microsoft.Extensions.Logging;
-using System.IO;
-using System.Runtime.InteropServices;
-using System.Numerics;
 using kadmium_osc_dmx_dotnet_core.Looks;
 
 namespace kadmium_osc_dmx_dotnet_core
@@ -23,7 +19,6 @@ namespace kadmium_osc_dmx_dotnet_core
 
         public virtual DbSet<FixtureDefinition> FixtureDefinitions { get; set; }
         public virtual DbSet<Venue> Venues { get; set; }
-        public virtual DbSet<VenuePreset> VenuePresets { get; set; }
         public virtual DbSet<Universe> Universes { get; set; }
         public virtual DbSet<Fixture> FixtureInstances { get; set; }
         public virtual DbSet<Group> Groups { get; set; }
@@ -32,8 +27,8 @@ namespace kadmium_osc_dmx_dotnet_core
         public virtual DbSet<AttributeLookSetting> AttributeLookSettings { get; set; }
 
         public DatabaseContext(DbContextOptions<DatabaseContext> options)
-            :base(options)
-        {}
+            : base(options)
+        { }
 
         public static DatabaseContext GetContext()
         {
@@ -42,7 +37,7 @@ namespace kadmium_osc_dmx_dotnet_core
             var context = new DatabaseContext(builder.Options);
             return context;
         }
-        
+
         public static void SetConnectionEnvironment(string environmentName)
         {
             switch (environmentName)
@@ -65,12 +60,12 @@ namespace kadmium_osc_dmx_dotnet_core
         {
             var tables = new[] { "ColorWheelEntry", "DMXChannel", "Fixture", "MovementAxis", "Universe",
                 "VenuePresets", "Venues", "FixtureDefinitions", "Groups" };
-            foreach(string table in tables)
+            foreach (string table in tables)
             {
                 Database.ExecuteSqlCommand("delete from " + table);
             }
         }
-        
+
         public void UpdateCollection<TObject, TKey>(ICollection<TObject> original, IEnumerable<TObject> modified, Func<TObject, TKey> getKey)
             where TObject : class
         {
@@ -161,11 +156,6 @@ namespace kadmium_osc_dmx_dotnet_core
                 .HasMany(x => x.Fixtures)
                 .WithOne()
                 .OnDelete(Microsoft.EntityFrameworkCore.Metadata.DeleteBehavior.Cascade);
-
-            modelBuilder.Entity<VenuePreset>()
-                .HasMany(x => x.Fixtures)
-                .WithOne()
-                .OnDelete(Microsoft.EntityFrameworkCore.Metadata.DeleteBehavior.Cascade);
         }
 
         public async Task<Venue> LoadVenue(int id)
@@ -173,14 +163,14 @@ namespace kadmium_osc_dmx_dotnet_core
             var venue = await Venues.FindAsync(id);
 
             await Entry(venue).Collection(x => x.Universes).LoadAsync();
-            foreach(var universe in venue.Universes)
+            foreach (var universe in venue.Universes)
             {
                 await Entry(universe).Collection(x => x.Fixtures).LoadAsync();
-                foreach(var fixture in universe.Fixtures)
+                foreach (var fixture in universe.Fixtures)
                 {
                     await Entry(fixture).Reference(x => x.Group).LoadAsync();
                     await Entry(fixture).Reference(x => x.FixtureDefinition).LoadAsync();
-                    foreach(var collection in Entry(fixture.FixtureDefinition).Collections)
+                    foreach (var collection in Entry(fixture.FixtureDefinition).Collections)
                     {
                         await collection.LoadAsync();
                     }
@@ -201,7 +191,7 @@ namespace kadmium_osc_dmx_dotnet_core
         public async Task<FixtureDefinition> LoadFixtureDefinition(string manufacturer, string model)
         {
             var definition = await FixtureDefinitions.SingleAsync(x => x.Manufacturer == manufacturer && x.Model == model);
-            foreach(var collection in Entry(definition).Collections)
+            foreach (var collection in Entry(definition).Collections)
             {
                 await collection.LoadAsync();
             }
@@ -217,39 +207,19 @@ namespace kadmium_osc_dmx_dotnet_core
             }
             return definition;
         }
-
-        public async Task<VenuePreset> LoadVenuePreset(int id)
-        {
-            var preset = await VenuePresets.FindAsync(id);
-            foreach(var collection in Entry(preset).Collections)
-            {
-                await collection.LoadAsync();
-            }
-            foreach (var fixture in preset.Fixtures)
-            {
-                await Entry(fixture).Reference(x => x.Group).LoadAsync();
-                await Entry(fixture).Reference(x => x.FixtureDefinition).LoadAsync();
-                foreach (var collection in Entry(fixture.FixtureDefinition).Collections)
-                {
-                    await collection.LoadAsync();
-                }
-            }
-            return preset;
-        }
-
         public async Task<Look> LoadLook(int id)
         {
             var look = await Looks.FindAsync(id);
-            foreach(var collection in Entry(look).Collections)
+            foreach (var collection in Entry(look).Collections)
             {
                 await collection.LoadAsync();
             }
-            foreach(var lookSetting in look.AttributeLookSettings)
+            foreach (var lookSetting in look.AttributeLookSettings)
             {
                 await Entry(lookSetting).Reference(x => x.Group).LoadAsync();
                 lookSetting.GroupString = lookSetting.Group.Name;
             }
-            foreach(var lookSetting in look.ColorLookSettings)
+            foreach (var lookSetting in look.ColorLookSettings)
             {
                 await Entry(lookSetting).Reference(x => x.Group).LoadAsync();
                 lookSetting.GroupString = lookSetting.Group.Name;

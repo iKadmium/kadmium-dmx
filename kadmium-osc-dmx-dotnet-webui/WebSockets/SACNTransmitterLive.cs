@@ -1,6 +1,5 @@
 ﻿using kadmium_osc_dmx_dotnet_core;
 using kadmium_osc_dmx_dotnet_core.Transmitters;
-using Newtonsoft.Json.Linq;
 using System.Linq;
 using System.Collections.Generic;
 
@@ -16,7 +15,7 @@ namespace kadmium_osc_dmx_dotnet_webui.WebSockets
 
         private async void Transmitter_OnTransmit(object sender, TransmitterEventArgs e)
         {
-            WebSocketMessage< SACNTransmitterUpdateMessage> message = new WebSocketMessage<SACNTransmitterUpdateMessage>("updateUniverse",
+            WebSocketMessage<SACNTransmitterUpdateMessage> message = new WebSocketMessage<SACNTransmitterUpdateMessage>("updateUniverse",
                 new SACNTransmitterUpdateMessage
                 {
                     UniverseID = e.UniverseID,

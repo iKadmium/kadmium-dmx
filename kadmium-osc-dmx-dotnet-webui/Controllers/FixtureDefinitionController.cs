@@ -3,9 +3,7 @@ using kadmium_osc_dmx_dotnet_core;
 using System.Collections.Generic;
 using System.Linq;
 using kadmium_osc_dmx_dotnet_core.Fixtures;
-using Newtonsoft.Json.Linq;
 using System.Threading.Tasks;
-using Microsoft.EntityFrameworkCore;
 
 // For more information on enabling MVC for empty projects, visit http://go.microsoft.com/fwlink/?LinkID=397860
 
@@ -55,7 +53,7 @@ namespace kadmium_osc_dmx_dotnet_webui.Controllers
             await _context.FixtureDefinitions.AddAsync(definition);
             await _context.SaveChangesAsync();
             return definition.Id;
-            
+
         }
 
         [HttpPut]
@@ -63,7 +61,7 @@ namespace kadmium_osc_dmx_dotnet_webui.Controllers
         public async Task Put(int id, [FromBody]FixtureDefinition definition)
         {
             _context.Update(definition);
-            await _context.SaveChangesAsync();            
+            await _context.SaveChangesAsync();
         }
     }
 }

@@ -1,12 +1,9 @@
 ﻿using kadmium_osc_dmx_dotnet_core;
-using kadmium_osc_dmx_dotnet_core.Fixtures;
-using Microsoft.EntityFrameworkCore;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace kadmium_osc_dmx_dotnet_test
@@ -41,7 +38,7 @@ namespace kadmium_osc_dmx_dotnet_test
         public static async Task AddVenues(DatabaseContext context)
         {
             var venues = await VenueTests.GetDeserializedJSONVenues();
-            foreach(Venue venue in venues)
+            foreach (Venue venue in venues)
             {
                 await venue.Initialize(context);
                 await context.Venues.AddAsync(venue);
@@ -79,6 +76,6 @@ namespace kadmium_osc_dmx_dotnet_test
             }
             return objects;
         }
-        
+
     }
 }
