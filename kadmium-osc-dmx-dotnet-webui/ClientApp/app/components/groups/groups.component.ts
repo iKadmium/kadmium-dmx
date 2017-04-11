@@ -5,6 +5,8 @@ import { GroupService } from "./group.service";
 import { MessageBarService } from "../status/message-bar/message-bar.service";
 
 import { Group } from "./group";
+import { AsyncFileReader } from "../../shared/async-file-reader";
+import { FileSaver } from "../../shared/file-saver";
 
 @Component({
     selector: 'groups',
@@ -26,9 +28,8 @@ export class GroupsComponent
             .catch((reason) => this.messageBarService.addError(reason));
     }
 
-    private add(): void
+    private getNextOrder(): number
     {
-        let group = new Group("");
         let maxOrder = 0;
         this.groups.forEach(value => 
         {
@@ -37,7 +38,13 @@ export class GroupsComponent
                 maxOrder = value.order;
             }
         });
-        group.order = maxOrder + 1;
+        return maxOrder + 1;
+    }
+
+    private add(): void
+    {
+        let group = new Group("");
+        group.order = this.getNextOrder();
         this.groups.push(group);
     }
 
@@ -81,6 +88,49 @@ export class GroupsComponent
         finally
         {
             this.saving = false;
+        }
+    }
+
+    private async download(): Promise<void>
+    {
+        try
+        {
+            FileSaver.Save("groups.json", this.groups);
+        }
+        catch (error)
+        { }
+    }
+
+    private upload(fileInput: any): void
+    {
+        (fileInput as HTMLInputElement).click();
+    }
+
+    private async filesSelected(files: File[]): Promise<void>
+    {
+        for (let file of files)
+        {
+            await this.uploadFile(file);
+        }
+    }
+
+    private async uploadFile(file: File): Promise<void>
+    {
+        try
+        {
+            let groups = await AsyncFileReader.read<Group[]>(file);
+            groups.sort((a, b) => a.order - b.order);
+            for (let group of groups)
+            {
+                group.id = 0;
+                group.order = this.getNextOrder();
+                this.groups.push(group);
+            }
+            this.messageBarService.add("Success", "Successfully added " + groups.length + " groups");
+        }
+        catch (reason)
+        {
+            this.messageBarService.addError(reason);
         }
     }
 }
