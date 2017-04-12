@@ -2,6 +2,8 @@
 using kadmium_osc_dmx_dotnet_core.Transmitters;
 using System.Linq;
 using System.Collections.Generic;
+using Newtonsoft.Json.Linq;
+using kadmium_osc_dmx_dotnet_core.Fixtures;
 
 namespace kadmium_osc_dmx_dotnet_webui.WebSockets
 {
@@ -24,8 +26,18 @@ namespace kadmium_osc_dmx_dotnet_webui.WebSockets
             );
 
             await Send(message);
-
         }
+        
+        public void UpdateAttribute(int fixtureID, string attributeName, float attributeValue)
+        {
+            var fixtures = from universe in MasterController.Instance.Venue.Universes
+                           from fixture in universe.Fixtures
+                           where fixture.Id == fixtureID
+                           select fixture;
+
+            fixtures.Single().Settables[attributeName].Value = attributeValue;
+        }
+
 
         public override void Dispose()
         {

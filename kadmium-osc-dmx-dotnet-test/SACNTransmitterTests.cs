@@ -11,49 +11,65 @@ namespace kadmium_osc_dmx_dotnet_test
 {
     public class SACNTransmitterTests
     {
+        UdpClient client = new UdpClient(SACNTransmitter.SACN_PORT);
+
         [Fact]
-        public async Task TestMulticast()
+        public void TestMulticast()
         {
             short universeID = 1;
             short universeSize = 512;
 
             SACNTransmitter transmitter = GetMulticastTransmitter();
 
-            UdpClient client = new UdpClient(SACNTransmitter.SACN_PORT);
-            client.JoinMulticastGroup(SACNCommon.GetMulticastAddress(universeID));
-            byte[] dmx = new byte[universeSize];
-            Random random = new Random();
-            random.NextBytes(dmx);
+            lock (client)
+            {
+                client.JoinMulticastGroup(SACNCommon.GetMulticastAddress(universeID));
+                byte[] dmx = new byte[universeSize];
+                Random random = new Random();
+                random.NextBytes(dmx);
 
-            var receiveTask = client.ReceiveAsync();
-            await transmitter.Transmit(dmx, universeID);
+                var receiveTask = client.ReceiveAsync();
+                transmitter.Transmit(dmx, universeID).Wait();
 
-            var result = await receiveTask;
-            SACNPacket packet = SACNPacket.Parse(result.Buffer);
+                bool resultReceived = false;
+                var task = receiveTask.ContinueWith((udpResult) =>
+                {
+                    SACNPacket packet = SACNPacket.Parse(udpResult.Result.Buffer);
 
-            Assert.Equal(dmx, packet.Data);
+                    Assert.Equal(dmx, packet.Data);
+                    resultReceived = true;
+                }).Wait(1000);
+                Assert.True(resultReceived);
+            }
         }
 
         [Fact]
-        public async Task TestUnicast()
+        public void TestUnicast()
         {
             short universeID = 1;
             short universeSize = 512;
 
             SACNTransmitter transmitter = GetUnicastTransmitter(new[] { "localhost" });
 
-            UdpClient client = new UdpClient(SACNTransmitter.SACN_PORT);
             byte[] dmx = new byte[universeSize];
             Random random = new Random();
             random.NextBytes(dmx);
 
             var receiveTask = client.ReceiveAsync();
-            await transmitter.Transmit(dmx, universeID);
+            lock (client)
+            {
+                transmitter.Transmit(dmx, universeID).Wait();
 
-            var result = await receiveTask;
-            SACNPacket packet = SACNPacket.Parse(result.Buffer);
-
-            Assert.Equal(dmx, packet.Data);
+                bool resultReceived = false;
+                var task = receiveTask.ContinueWith((udpResult) =>
+                {
+                    SACNPacket packet = SACNPacket.Parse(udpResult.Result.Buffer);
+                    Assert.Equal(dmx, packet.Data);
+                    resultReceived = true;
+                }).Wait(1000);
+                Assert.True(resultReceived);
+                
+            }
         }
 
         public static SACNTransmitter GetMulticastTransmitter()

@@ -40,6 +40,7 @@ namespace kadmium_osc_dmx_dotnet_webui.Controllers
                                            orderby fixture.StartChannel
                                            select new SolversLiveFixture
                                            {
+                                               Id = fixture.Id,
                                                Manufacturer = fixture.FixtureDefinition.Manufacturer,
                                                Model = fixture.FixtureDefinition.Model,
                                                Address = fixture.StartChannel,
@@ -75,6 +76,7 @@ namespace kadmium_osc_dmx_dotnet_webui.Controllers
 
     public class SolversLiveFixture
     {
+        public int Id { get; set; }
         public string Manufacturer { get; set; }
         public string Model { get; set; }
         public int Address { get; set; }

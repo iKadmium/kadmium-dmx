@@ -30,7 +30,18 @@ export class MovementLooks
 
         looks.push(Look.load({
             id: 0,
-            name: "Down",
+            name: "Left",
+            attributeLookSettings: [
+                { id: 0, group: "", attributeName: "Pan", attributeValue: 0.0 },
+                { id: 0, group: "", attributeName: "Tilt", attributeValue: 1 },
+                { id: 0, group: "", attributeName: "RandomMove", attributeValue: 0.0 }
+            ],
+            colorLookSettings: []
+        }));
+
+        looks.push(Look.load({
+            id: 0,
+            name: "Forward",
             attributeLookSettings: [
                 { id: 0, group: "", attributeName: "Pan", attributeValue: 0.5 },
                 { id: 0, group: "", attributeName: "Tilt", attributeValue: 1 },
@@ -41,21 +52,10 @@ export class MovementLooks
 
         looks.push(Look.load({
             id: 0,
-            name: "Left",
-            attributeLookSettings: [
-                { id: 0, group: "", attributeName: "Pan", attributeValue: 0.0 },
-                { id: 0, group: "", attributeName: "Tilt", attributeValue: 0.5 },
-                { id: 0, group: "", attributeName: "RandomMove", attributeValue: 0.0 }
-            ],
-            colorLookSettings: []
-        }));
-
-        looks.push(Look.load({
-            id: 0,
             name: "Right",
             attributeLookSettings: [
                 { id: 0, group: "", attributeName: "Pan", attributeValue: 1 },
-                { id: 0, group: "", attributeName: "Tilt", attributeValue: 0.5 },
+                { id: 0, group: "", attributeName: "Tilt", attributeValue: 1 },
                 { id: 0, group: "", attributeName: "RandomMove", attributeValue: 0.0 }
             ],
             colorLookSettings: []

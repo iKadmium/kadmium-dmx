@@ -12,6 +12,12 @@
     <MvcRazorCompileOnPublish>true</MvcRazorCompileOnPublish>
   </PropertyGroup>
   <ItemGroup>
+    <Compile Remove="ClientApp\app\components\NewFolder\**" />
+    <Content Remove="ClientApp\app\components\NewFolder\**" />
+    <EmbeddedResource Remove="ClientApp\app\components\NewFolder\**" />
+    <None Remove="ClientApp\app\components\NewFolder\**" />
+  </ItemGroup>
+  <ItemGroup>
     <None Remove="Properties\PublishProfiles\FolderProfile.pubxml" />
   </ItemGroup>
   <ItemGroup>
@@ -54,8 +60,5 @@
   </Target>
   <ItemGroup>
     <DotNetCliToolReference Include="Microsoft.DotNet.Watcher.Tools" Version="1.0.0" />
-  </ItemGroup>
-  <ItemGroup>
-    <Folder Include="ClientApp\app\components\NewFolder\" />
   </ItemGroup>
 </Project>

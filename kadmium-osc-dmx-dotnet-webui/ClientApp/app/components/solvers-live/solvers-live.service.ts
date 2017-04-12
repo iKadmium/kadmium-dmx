@@ -31,13 +31,12 @@ export class SolversLiveService
         this.socket.subscribe(listener);
     }
 
-    public set(universeID: number, fixtureChannel: number, attributeName: string, attributeValue: number): void
+    public set(fixtureID: number, attributeName: string, attributeValue: number): void
     {
         let message: RPCData = {
             method: "UpdateAttribute",
             args: {
-                universeID: universeID,
-                fixtureChannel: fixtureChannel,
+                fixtureID: fixtureID,
                 attributeName: attributeName,
                 attributeValue: attributeValue
             }
@@ -93,6 +92,7 @@ export interface AttributeData
 
 export interface FixtureData
 {
+    id: number;
     type: string;
     address: number;
     attributes: AttributeData[];

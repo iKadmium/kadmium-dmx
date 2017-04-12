@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { PreviewService } from "../preview-2d/preview.service";
 import { SolversLiveService, UniverseData, FixtureData, AttributeUpdateData, AttributeData } from "./solvers-live.service";
 import { MessageBarComponent } from "../status/message-bar/message-bar.component";
@@ -10,7 +10,7 @@ import { MessageBarService } from "../status/message-bar/message-bar.service";
     template: require('./solvers-live.component.html'),
     providers: [SolversLiveService]
 })
-export class SolversLiveComponent
+export class SolversLiveComponent implements OnInit
 {
     universes: UniverseData[];
     activeUniverse: UniverseData;
@@ -20,23 +20,28 @@ export class SolversLiveComponent
     constructor(private solversLiveService: SolversLiveService, private messageBarService: MessageBarService, title: Title)
     {
         title.setTitle("Solvers Live");
-        solversLiveService.get()
-            .then(data => 
-            {
-                this.universes = data;
-                if (this.universes.length == 0)
-                {
-                    this.messageBarService.add("Error", "No Universes were received");
-                }
-                this.activeUniverse = this.universes[0] || null;
-                if (this.activeUniverse != null)
-                {
-                    this.activeFixture = this.activeUniverse.fixtures[0];
-                }
+    }
 
-                solversLiveService.subscribe(this);
-            })
-            .catch(reason => this.messageBarService.addError(reason));
+    async ngOnInit(): Promise<void>
+    {
+        try
+        {
+            this.universes = await this.solversLiveService.get();
+            if (this.universes.length == 0)
+            {
+                this.messageBarService.add("Error", "No Universes were received");
+            }
+            else
+            {
+                this.activeUniverse = this.universes[0];
+                this.activeFixture = this.activeUniverse.fixtures[0];
+                this.solversLiveService.subscribe(this);
+            }
+        }
+        catch (reason)
+        {
+            this.messageBarService.addError(reason)
+        }
     }
 
     updateUniverse(data: UniverseData): void
@@ -55,8 +60,8 @@ export class SolversLiveComponent
         }
     }
 
-    updateValue(universe: UniverseData, fixture: FixtureData, attribute: AttributeData, value: number): void
+    updateValue(fixture: FixtureData, attribute: AttributeData, value: number | string): void
     {
-        this.solversLiveService.set(universe.universeID, fixture.address, attribute.name, value);
+        this.solversLiveService.set(fixture.id, attribute.name, parseFloat(value as string));
     }
 }

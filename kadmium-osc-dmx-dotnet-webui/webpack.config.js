@@ -26,7 +26,7 @@ var sharedConfig = {
 var clientBundleConfig = merge(sharedConfig, {
     entry: { 'main-client': './ClientApp/boot-client.ts' },
     output: { path: path.join(__dirname, './wwwroot/dist') },
-    devtool: isDevBuild ? 'inline-source-map' : null,
+    devtool: isDevBuild ? 'inline-source-map' : false,
     plugins: [
         new webpack.DllReferencePlugin({
             context: __dirname,
@@ -38,16 +38,4 @@ var clientBundleConfig = merge(sharedConfig, {
     ])
 });
 
-// Configuration for server-side (prerendering) bundle suitable for running in Node
-var serverBundleConfig = merge(sharedConfig, {
-    entry: { 'main-server': './ClientApp/boot-server.ts' },
-    output: {
-        libraryTarget: 'commonjs',
-        path: path.join(__dirname, './ClientApp/dist')
-    },
-    target: 'node',
-    devtool: 'inline-source-map',
-    externals: [nodeExternals({ whitelist: [allFilenamesExceptJavaScript] })] // Don't bundle .js files from node_modules
-});
-
-module.exports = [clientBundleConfig, serverBundleConfig];
+module.exports = [clientBundleConfig];

@@ -25,12 +25,12 @@
                             <div class="form-group" *ngFor="let attribute of activeFixture.attributes">
                                 <label class="col-sm-2 control-label">{{attribute.name}}</label>
                                 <div class="col-sm-8">
-                                    <input type="range" min="0" max="1" step="0.01" (input)="updateValue(activeUniverse, activeFixture, attribute, $event.target.value)"
+                                    <input type="range" min="0" max="1" step="0.01" (input)="updateValue(activeFixture, attribute, $event.target.value)"
                                         [name]="attribute.name" [(ngModel)]="attribute.value" [disabled]="attribute.controlled"
                                     />
                                 </div>
                                 <div class="col-sm-2">
-                                    <input type="number" min="0" max="1" step="0.01" (input)="updateValue(activeUniverse, activeFixture, attribute, $event.target.value)"
+                                    <input type="number" min="0" max="1" step="0.01" (input)="updateValue(activeFixture, attribute, $event.target.value)"
                                         class="form-control" [name]="attribute.name + '2'" [(ngModel)]="attribute.value" [disabled]="attribute.controlled"
                                     />
                                 </div>

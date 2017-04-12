@@ -9,6 +9,7 @@ using Microsoft.AspNetCore.Http;
 using Newtonsoft.Json.Linq;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Serialization;
+using System.Collections.Generic;
 
 namespace kadmium_osc_dmx_dotnet_webui.WebSockets
 {
@@ -36,10 +37,13 @@ namespace kadmium_osc_dmx_dotnet_webui.WebSockets
                             string messageString = System.Text.Encoding.UTF8.GetString(receiveBuffer, 0, received.Count);
                             JObject message = JObject.Parse(messageString);
                             string methodName = message["method"].Value<string>();
-                            MethodInfo info = this.GetType().GetMethod(methodName, new[] { typeof(JObject) });
 
-                            JObject parameters = message["args"].Value<JObject>();
-                            info.Invoke(this, new[] { parameters });
+                            JObject paramsObj = message["args"].Value<JObject>();
+
+                            MethodInfo info = this.GetType().GetMethod(methodName);
+                            object[] parameters = GetParameters(paramsObj, info.GetParameters());
+                            
+                            info.Invoke(this, parameters);
                             break;
                         case WebSocketMessageType.Close:
                             break;
@@ -50,6 +54,32 @@ namespace kadmium_osc_dmx_dotnet_webui.WebSockets
                 {
                     Socket.Abort();
                 }
+            }
+        }
+
+        private object[] GetParameters(JObject parametersObj, ParameterInfo[] paramsInfo)
+        {
+            object[] parameters = new object[parametersObj.Count];
+            foreach(var parameterInfo in paramsInfo)
+            {
+                parameters[parameterInfo.Position] = GetValue(parametersObj[parameterInfo.Name]);
+            }
+            return parameters;
+        }
+
+        private object GetValue(JToken token)
+        {
+            switch(token.Type)
+            {
+                case JTokenType.Integer:
+                    return token.Value<int>();
+                case JTokenType.Float:
+                    return token.Value<float>();
+                case JTokenType.String:
+                    return token.Value<string>();
+                default:
+                case JTokenType.Object:
+                    return token.Value<object>();
             }
         }
 

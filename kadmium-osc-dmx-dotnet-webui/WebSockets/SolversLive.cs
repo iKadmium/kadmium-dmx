@@ -23,25 +23,7 @@ namespace kadmium_osc_dmx_dotnet_webui.WebSockets
                 }
             }
         }
-
-        public void UpdateAttribute(int universeID, int fixtureChannel, string attributeName, float attributeValue)
-        {
-            Universe universe = MasterController.Instance.Venue.Universes.Single(x => x.UniverseNumber == universeID);
-            if (universe != null)
-            {
-                Fixture fixture = universe.Fixtures.SingleOrDefault(x => x.StartChannel == fixtureChannel);
-                if (fixture != null)
-                {
-                    fixture.Settables[attributeName].Value = attributeValue;
-                }
-            }
-        }
-
-        public void UpdateAttribute(JObject args)
-        {
-            UpdateAttribute(args["universeID"].Value<int>(), args["fixtureChannel"].Value<int>(), args["attributeName"].Value<string>(), args["attributeValue"].Value<float>());
-        }
-
+        
         private async void Universe_Updated(object sender, UpdateEventArgs e)
         {
             WebSocketMessage<SolversLiveUpdateMessage> message = new WebSocketMessage<SolversLiveUpdateMessage>("updateUniverse", new SolversLiveUpdateMessage
