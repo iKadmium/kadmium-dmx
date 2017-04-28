@@ -6,23 +6,9 @@ namespace kadmium_osc_dmx_dotnet_webui.Controllers
     {
         public IActionResult Index()
         {
-            return View();
+            return File("/index.html", "text/html");
         }
-
-        public IActionResult About()
-        {
-            ViewData["Message"] = "Your application description page.";
-
-            return View();
-        }
-
-        public IActionResult Contact()
-        {
-            ViewData["Message"] = "Your contact page.";
-
-            return View();
-        }
-
+        
         public IActionResult Error()
         {
             return View();

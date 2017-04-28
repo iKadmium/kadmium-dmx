@@ -59,15 +59,19 @@ namespace kadmium_osc_dmx_dotnet_webui
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
-                app.UseWebpackDevMiddleware(new WebpackDevMiddlewareOptions
-                {
-                    HotModuleReplacement = true
-                });
             }
             else
             {
-                app.UseExceptionHandler("/Home/Error");
+                //app.UseExceptionHandler("/Home/Error");
+                app.UseDeveloperExceptionPage();
             }
+
+            app.UseCors(builder =>
+            {
+                builder
+                    .AllowAnyHeader()
+                    .AllowAnyOrigin();
+            });
 
             app.UseWebSockets();
             app.UseStaticFiles();

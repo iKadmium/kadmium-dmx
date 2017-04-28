@@ -10,6 +10,7 @@
     <RuntimeFrameworkVersion>1.1.1</RuntimeFrameworkVersion>
     <PackageTargetFallback>$(PackageTargetFallback);dnxcore50</PackageTargetFallback>
     <MvcRazorCompileOnPublish>true</MvcRazorCompileOnPublish>
+    <TypeScriptCompileBlocked>true</TypeScriptCompileBlocked>
   </PropertyGroup>
   <ItemGroup>
     <Compile Remove="ClientApp\app\components\NewFolder\**" />

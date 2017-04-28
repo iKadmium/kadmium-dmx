@@ -207,6 +207,7 @@ namespace kadmium_osc_dmx_dotnet_core
             }
             return definition;
         }
+
         public async Task<Look> LoadLook(int id)
         {
             var look = await Looks.FindAsync(id);
