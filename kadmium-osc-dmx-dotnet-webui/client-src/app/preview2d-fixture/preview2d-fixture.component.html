@@ -1,0 +1,32 @@
+<div class="col-sm-3">
+    <div class="panel panel-default">
+        <div class="panel-heading">{{fixture.address}} {{fixture.definition.manufacturer}} {{fixture.definition.model}}</div>
+        <div class="panel-body text-center">
+            <canvas #canvas width="150" height="150" class="fixtureCanvas"></canvas>
+        </div>
+        <div class="panel-footer">
+            <div class="dropdown">
+                <div class="text-center">
+                    <button (click)="fixture.expanded = !fixture.expanded" class="btn btn-default text-center">DMX</button>
+                </div>
+
+                <table *ngIf="fixture.expanded" class="table table-striped">
+                    <thead>
+                        <tr>
+                            <th>Channel</th>
+                            <th>Name</th>
+                            <th>Value</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr *ngFor="let channel of fixture.channels">
+                            <td>{{channel.address + fixture.address - 1}}</td>
+                            <td>{{channel.name}}</td>
+                            <td>{{channel.dmxValue}}</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>

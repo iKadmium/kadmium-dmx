@@ -10,6 +10,7 @@ import { ToastModule } from "ng2-toastr/ng2-toastr";
 import { CollapseModule } from 'ngx-bootstrap/collapse';
 import { ModalModule } from 'ngx-bootstrap/modal';
 import { BsDropdownModule } from 'ngx-bootstrap/dropdown';
+import { TypeaheadModule } from "ngx-bootstrap/typeahead";
 
 import { AppComponent } from './app.component';
 import { DashboardComponent } from './dashboard/dashboard.component';
@@ -22,8 +23,8 @@ import { LooksComponent } from './looks/looks.component';
 import { LookEditorComponent } from './look-editor/look-editor.component';
 import { NavMenuComponent } from './nav-menu/nav-menu.component';
 import { OscListenerLiveComponent } from './osc-listener-live/osc-listener-live.component';
-import { Preview2DComponent } from './preview2-d/preview2-d.component';
-import { Preview2DFixtureComponent } from './preview2-dfixture/preview2-dfixture.component';
+import { Preview2DComponent } from './preview2d/preview2d.component';
+import { Preview2DFixtureComponent } from './preview2d-fixture/preview2d-fixture.component';
 import { SACNTransmitterLiveComponent } from './sacntransmitter-live/sacntransmitter-live.component';
 import { SettingsComponent } from './settings/settings.component';
 import { SolversLiveComponent } from './solvers-live/solvers-live.component';
@@ -34,6 +35,11 @@ import { UniverseEditorComponent } from './universe-editor/universe-editor.compo
 import { FixtureOptionsEditorComponent } from './fixture-options-editor/fixture-options-editor.component';
 import { VenueEditorComponent } from './venue-editor/venue-editor.component';
 import { NotificationsService } from "./notifications.service";
+import { TableInputComponent } from './table-input/table-input.component';
+import { MaxValueValidatorDirective } from './max-value-validator.directive';
+import { MinValueValidatorDirective } from './min-value-validator.directive';
+import { TabsModule } from "ngx-bootstrap/tabs";
+import { UniqueValueValidatorDirective } from './unique-value-validator.directive';
 
 @NgModule({
     declarations: [
@@ -58,7 +64,11 @@ import { NotificationsService } from "./notifications.service";
         VenuesComponent,
         UniverseEditorComponent,
         FixtureOptionsEditorComponent,
-        VenueEditorComponent
+        VenueEditorComponent,
+        TableInputComponent,
+        MaxValueValidatorDirective,
+        MinValueValidatorDirective,
+        UniqueValueValidatorDirective
     ],
     imports: [
         BrowserModule,
@@ -91,6 +101,8 @@ import { NotificationsService } from "./notifications.service";
         ModalModule.forRoot(),
         BsDropdownModule.forRoot(),
         ToastModule.forRoot(),
+        TabsModule.forRoot(),
+        TypeaheadModule.forRoot(),
         BrowserAnimationsModule
     ],
     providers: [NotificationsService],

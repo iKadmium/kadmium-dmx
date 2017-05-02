@@ -9,18 +9,12 @@ import { StatusCode } from "../status-code.enum";
 })
 export class StatusPanelComponent implements OnInit
 {
-    public status: Status;
     @Input("name") name: string;
+    @Input("status") status: Status;
 
     constructor()
     {
         this.status = new Status(StatusCode.Unknown, "Unknown");
-    }
-
-    updateStatus(statusCode: StatusCode, message: string): void
-    {
-        this.status.statusCode = statusCode;
-        this.status.body = message;
     }
 
     ngOnInit(): void

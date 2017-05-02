@@ -1,3 +1,70 @@
-<p>
-  universe-editor works!
-</p>
+<div role="tabpanel" *ngIf="universe && fixtureDefinitionSkeletons">
+    <!-- Nav tabs -->
+    <ul class="nav nav-tabs" role="tablist">
+        <li [ngClass]="{'active': selectedFixture == null}">
+            <a (click)="selectedFixture = null">Fixtures</a>
+        </li>
+        <li *ngFor="let fixture of sortedFixtures; let i = index" [ngClass]="{'active': selectedFixture == fixture}">
+            <a (click)="selectedFixture = fixture">{{fixture.address}} {{fixture.type.manufacturer}} {{fixture.type.model}}
+                <span class="glyphicon glyphicon-remove" (click)="removeFixture(fixture)"></span>
+            </a>
+        </li>
+        <li>
+            <a class="btn" (click)="addFixture()"><span class="glyphicon glyphicon-plus"></span></a>
+        </li>
+    </ul>
+</div>
+<div class="panel panel-default" *ngIf="universe && fixtureDefinitionSkeletons && selectedFixture == null">
+    <div class="panel-body">
+        <div class="table-responsive">
+            <table class="table table-striped">
+                <thead>
+                    <tr>
+                        <th>Selected</th>
+                        <th>Address</th>
+                        <th>Manufacturer</th>
+                        <th>Model</th>
+                        <th>Group</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr *ngFor="let fixture of sortedFixtures; let i = index">
+                        <td>
+                            <div class="checkbox">
+                                <label>
+                                    <input type="checkbox" [ngModel]="isSelected(fixture)" (ngModelChange)="selectFixture(fixture, $event)" [name]="'selected[' + i + ']'" >
+                                </label>
+                            </div>
+                        </td>
+                        <td>{{fixture.address}}</td>
+                        <td>{{fixture.type.manufacturer}}</td>
+                        <td>{{fixture.type.model}}</td>
+                        <td>{{fixture.group}}</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+    <div class="panel-footer">
+        <div class="form-group">
+            <label class="control-label col-sm-2" for="selectedPreset">Presets:</label>
+            <div class="col-sm-10">
+
+            </div>
+            <div class="col-sm-10 col-sm-offset-2 input-group">
+                <input type="text" #filename placeholder="filename" class="form-control">
+                <span class="input-group-btn">
+                    <button type="button" class="btn btn-primary" [disabled]="selectedFixtures.length == 0" (click)="savePresetAs(filename)">
+                        <span class="glyphicon glyphicon-floppy-save"></span> Save
+                </button>
+                <button type="button" class="btn btn-success" (click)="upload(fileInput)">
+                        <span class="glyphicon glyphicon-floppy-open"></span> Load
+                    </button>
+                </span>
+            </div>
+        </div>
+    </div>
+</div>
+
+<app-fixture-options-editor [fixture]="selectedFixture"></app-fixture-options-editor>
+<input #fileInput type="file" name="name" style="display: none;" (change)="uploadFiles($event.target.files)" multiple>

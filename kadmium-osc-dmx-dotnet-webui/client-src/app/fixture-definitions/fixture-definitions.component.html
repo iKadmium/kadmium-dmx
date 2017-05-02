@@ -1,3 +1,36 @@
-<p>
-  fixture-definitions works!
-</p>
+<div class="form-group form-inline">
+    <div class="checkbox">
+        <label>
+            <input type="checkbox" [(ngModel)]="manufacturerFilterEnabled" />
+            Filter by manufacturer
+        </label>
+    </div>
+    <select required class="form-control" [disabled]="!manufacturerFilterEnabled" [(ngModel)]="manufacturerFilter">
+        <option *ngFor="let manufacturer of manufacturers">{{manufacturer}}</option>
+    </select>
+</div>
+<table class="table table-striped">
+    <thead>
+        <tr>
+            <th>Manufacturer</th>
+            <th>Model</th>
+            <th>Actions</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr *ngFor="let entry of filteredData">
+            <td>{{entry.manufacturer}}</td>
+            <td>{{entry.model}}</td>
+            <td>
+                <div class="btn-group">
+                    <a class="btn btn-success" [href]="getDownloadUrl(entry)" [download]="entry.manufacturer + ' ' + entry.model + '.json'"><span class="glyphicon glyphicon-cloud-download"></span></a>
+                    <a class="btn btn-default" [href]="getEditUrl(entry)"><span class="glyphicon glyphicon-edit"></span></a>
+                    <button class="btn btn-danger" (click)="deleteConfirm(entry)"><span class="glyphicon glyphicon-remove"></span></button>
+                </div>
+            </td>
+        </tr>
+    </tbody>
+</table>
+<a href="/fixture-definitions/new" class="btn btn-success"><span class="glyphicon glyphicon-plus"></span></a>
+<button class="btn btn-success" (click)="upload(fileInput)"><span class="glyphicon glyphicon-cloud-upload"></span></button>
+<input #fileInput type="file" name="name" style="display: none;" (change)="filesSelected($event.target.files)" multiple>

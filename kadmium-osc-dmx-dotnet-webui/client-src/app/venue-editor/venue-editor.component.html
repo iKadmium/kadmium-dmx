@@ -1,3 +1,39 @@
-<p>
-  venue-editor works!
-</p>
+<form *ngIf="venue" class="form-horizontal" #editorForm="ngForm">
+    <fieldset [disabled]="saving">
+        <app-labelled-input label="Name:">
+            <input required #input class="form-control" type="text" name="name" [(ngModel)]="venue.name" #model="ngModel">
+        </app-labelled-input>
+
+        <div role="tabpanel">
+            <!-- Nav tabs -->
+            <ul class="nav nav-tabs" role="tablist">
+                <li *ngFor="let universe of venue.universes; let i = index" [ngClass]="{'active': selectedUniverse == universe}">
+                    <a (click)="selectedUniverse = universe">{{universe.name}}
+                        <span *ngIf="i > 0" class="glyphicon glyphicon-remove" (click)="removeUniverse(i)"></span>
+                    </a>
+                </li>
+                <li>
+                    <a class="btn" (click)="addUniverse()"><span class="glyphicon glyphicon-plus"></span></a>
+                </li>
+            </ul>
+        </div>
+
+        <div class="panel panel-default" *ngIf="selectedUniverse">
+            <div class="panel-body">
+                <app-labelled-input label="Name:">
+                    <input required #input #model="ngModel" [(ngModel)]="selectedUniverse.name" type="text" class="form-control" [name]="'universeName[' + i + ']'"
+                    />
+                </app-labelled-input>
+                <app-labelled-input label="Universe ID:">
+                    <input #input #model="ngModel" [(ngModel)]="selectedUniverse.universeID" type="number" class="form-control" min="1" max="65535"
+                        [name]="'universeID[' + i + ']'" />
+                </app-labelled-input>
+            </div>
+
+            <app-universe-editor [universe]="selectedUniverse" [groups]="groups"></app-universe-editor>
+        </div>
+        <div class="form-group">
+            <button class="btn btn-primary" (click)="save()" [disabled]="!editorForm.valid"><span class="glyphicon glyphicon-floppy-disk"></span> Save</button>
+        </div>
+    </fieldset>
+</form>

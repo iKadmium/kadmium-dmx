@@ -1,3 +1,76 @@
-<p>
-  look-editor works!
-</p>
+<form *ngIf="look" class="form-horizontal" #editorForm="ngForm">
+    <fieldset [disabled]="saving">
+        <app-labelled-input label="Name:">
+            <input required #input class="form-control" type="text" name="name" [(ngModel)]="look.name" #model="ngModel">
+        </app-labelled-input>
+
+        <tabset>
+            <tab *ngFor="let group of allGroups" heading="{{group.name}}">
+                <div class="panel panel-default">
+                    <div class="panel-heading">Settings</div>
+                    <div class="panel-body">
+                        <datalist name="attributeList" id="attributeList">
+                            <option>Strobe</option>
+                            <option>Pan</option>
+                            <option>Tilt</option>
+                            <option>RandomMove</option>
+                        </datalist>
+                        <table class="table table-striped">
+                            <thead>
+                                <tr>
+                                    <th>Attribute Name</th>
+                                    <th>Attribute Value</th>
+                                    <th>Remove</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr *ngFor="let setting of getColorSettings(group); let i = index">
+                                    <td><span>Color</span></td>
+                                    <td>
+                                        <app-table-input>
+                                            <input #input #model="ngModel" required class="form-control" type="color" [(ngModel)]="setting.color" [name]="'color[' + i + ']'"
+                                            />
+                                        </app-table-input>
+                                    </td>
+                                    <td>
+                                        <button class="btn btn-danger" (click)="removeColorSetting(setting)"><span class="glyphicon glyphicon-remove"></span></button>
+                                    </td>
+                                </tr>
+                                <tr *ngFor="let setting of getAttributeSettings(group); let i = index">
+                                    <td>
+                                        <app-table-input>
+                                            <input #input #model="ngModel" required class="form-control" type="text" [(ngModel)]="setting.attributeName" [name]="'attributeName[' + i + ']'"
+                                                list="attributeList" />
+                                        </app-table-input>
+                                    </td>
+                                    <td>
+                                        <app-table-input>
+                                            <input #input #model="ngModel" required class="form-control" type="number" [(ngModel)]="setting.attributeValue" min="0" max="1"
+                                                step="0.01" [name]="'attributeValue[' + i + ']'" />
+                                        </app-table-input>
+                                    </td>
+                                    <td>
+                                        <button class="btn btn-danger" (click)="removeAttributeSetting(setting)"><span class="glyphicon glyphicon-remove"></span></button>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div class="panel-footer">
+                        <button class="btn btn-success" (click)="addColorSetting(group)" [disabled]="hasColor(group)">
+                    <span class="glyphicon glyphicon-plus"></span> Add Color
+                </button>
+                        <button class="btn btn-success" (click)="addAttributeSetting(group)">
+                    <span class="glyphicon glyphicon-plus"></span> Add Attribute
+                </button>
+                    </div>
+                </div>
+            </tab>
+        </tabset>
+
+
+        <div class="form-group">
+            <button class="btn btn-primary" (click)="save()" [disabled]="!editorForm.valid"><span class="glyphicon glyphicon-floppy-disk"></span> Save</button>
+        </div>
+    </fieldset>
+</form>

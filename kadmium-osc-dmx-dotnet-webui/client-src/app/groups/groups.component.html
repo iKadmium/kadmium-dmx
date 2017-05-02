@@ -1,3 +1,41 @@
-<p>
-  groups works!
-</p>
+<form *ngIf="groups" #groupsForm="ngForm">
+    <fieldset [disabled]="saving">
+        <table class="table table-striped">
+            <thead>
+                <tr>
+                    <th>Order</th>
+                    <th>Name</th>
+                    <th>Remove</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr *ngFor="let group of groupsSorted; let i = index">
+                    <td>
+                        <button class="btn" (click)="swap(i, i - 1)" [disabled]="i == 0"><span class="glyphicon glyphicon-arrow-up"></span></button>
+                        <button class="btn" (click)="swap(i, i + 1)" [disabled]="i == groups.length - 1"><span class="glyphicon glyphicon-arrow-down"></span></button>
+                    </td>
+                    <td>
+                        <app-table-input>
+                            <input required [unique]="getOtherGroupNames(group)" #input #model="ngModel" class="form-control" type="text" [(ngModel)]="group.name"
+                                [name]="'groupName[' + i + ']'">
+                        </app-table-input>
+                    </td>
+                    <td>
+                        <div class="btn-group">
+                            <button class="btn btn-danger" (click)="delete(group)"><span class="glyphicon glyphicon-remove"></span></button>
+                        </div>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+        <div class="form-group">
+            <button class="btn btn-success" (click)="add()"><span class="glyphicon glyphicon-plus"></span> Add</button>
+        </div>
+        <div class="form-group">
+            <button class="btn btn-primary" [disabled]="!groupsForm.valid" (click)="save()"><span class="glyphicon glyphicon-floppy-disk"></span> Save</button>
+            <button class="btn btn-primary" [disabled]="!groupsForm.valid" (click)="download()"><span class="glyphicon glyphicon-cloud-download"></span> Download</button>
+            <button class="btn btn-primary" [disabled]="!groupsForm.valid" (click)="upload(fileInput)"><span class="glyphicon glyphicon-cloud-upload"></span> Upload</button>
+            <input #fileInput type="file" name="name" style="display: none;" (change)="filesSelected($event.target.files)" multiple>
+        </div>
+    </fieldset>
+</form>

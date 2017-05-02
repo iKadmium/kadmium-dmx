@@ -24,12 +24,7 @@ import { Status } from "../status";
 })
 export class DashboardComponent implements OnInit
 {
-    @ViewChild("venuePanel") venuePanel: StatusPanelComponent;
-    @ViewChild("sacnTransmitterPanel") sacnTransmitterPanel: StatusPanelComponent;
-    @ViewChild("oscListenerPanel") oscListenerPanel: StatusPanelComponent;
-    @ViewChild("enttecProTransmitterPanel") enttecProTransmitterPanel: StatusPanelComponent;
-    @ViewChild("fixturesPanel") fixturesPanel: StatusPanelComponent;
-    @ViewChild("solversPanel") solversPanel: StatusPanelComponent;
+    statuses: Map<string, Status>;
 
     sacn: TogglableService<SACNTransmitterService>;
     osc: TogglableService<OSCListenerService>;
@@ -39,8 +34,8 @@ export class DashboardComponent implements OnInit
     private venueSkeletons: VenueSkeleton[];
 
     constructor(private venueService: VenueService, private dashboardService: DashboardService,
-        private solversService: SolversLiveService, private oscService: OSCListenerService,
-        private sacnService: SACNTransmitterService, private enttecProTransmitterService: EnttecProTransmitterService,
+        solversService: SolversLiveService, oscService: OSCListenerService,
+        sacnService: SACNTransmitterService, enttecProTransmitterService: EnttecProTransmitterService,
         private notificationsService: NotificationsService, titleService: Title)
     {
         titleService.setTitle("Dashboard");
@@ -50,6 +45,15 @@ export class DashboardComponent implements OnInit
         this.solvers = new TogglableService(solversService, notificationsService);
         this.enttec = new TogglableService(enttecProTransmitterService, notificationsService);
         this.venueSkeletons = [];
+
+        this.statuses = new Map<string, Status>([
+            ["Venues", new Status()],
+            ["SACNTransmitters", new Status()],
+            ["EnttecProTransmitters", new Status()],
+            ["OSCListeners", new Status()],
+            ["Fixtures", new Status()],
+            ["Solvers", new Status()]
+        ]);
     }
 
     ngOnInit()
@@ -65,39 +69,17 @@ export class DashboardComponent implements OnInit
         this.enttec.init();
     }
 
-    updateStatus(status: StatusData): void
+    updateStatus(statusData: StatusData): void
     {
-        let statusPanel: StatusPanelComponent;
-        let statusCode = StatusCode[status.code];
-        switch (status.controller)
-        {
-            case "Venues":
-                statusPanel = this.venuePanel;
-                break;
-            case "SACNTransmitters":
-                statusPanel = this.sacnTransmitterPanel;
-                break;
-            case "EnttecProTransmitters":
-                statusPanel = this.enttecProTransmitterPanel;
-                break;
-            case "OSCListeners":
-                statusPanel = this.oscListenerPanel;
-                break;
-            case "Fixtures":
-                statusPanel = this.fixturesPanel;
-                break;
-            case "Solvers":
-                statusPanel = this.solversPanel;
-                if (statusCode == StatusCode.Success)
-                {
-                    this.solvers.enabled = true;
-                }
-                break;
-            default:
-                return;
-        }
+        let panelStatus = this.statuses.get(statusData.controller);
+        let statusCode = StatusCode[statusData.code as string]
+        panelStatus.statusCode = statusCode;
+        panelStatus.body = statusData.message;
 
-        statusPanel.status = new Status(statusCode, status.message);
+        if (statusData.controller == "Solvers" && statusCode == StatusCode.Success)
+        {
+            this.solvers.enabled = true;
+        }
     }
 
     activateVenue(venueSkeleton: VenueSkeleton): void
@@ -108,8 +90,8 @@ export class DashboardComponent implements OnInit
             .catch((reason) => this.notificationsService.add(StatusCode.Error, reason));
     }
 
-    private async toggle<T extends Togglable>(service: TogglableService<T>): Promise<void>
+    get venueLoaded(): boolean
     {
-        return service.toggle();
+        return this.statuses.get('Fixtures').statusCode == StatusCode.Success;
     }
 }

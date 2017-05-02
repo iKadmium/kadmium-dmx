@@ -69,6 +69,7 @@ namespace kadmium_osc_dmx_dotnet_webui
             app.UseCors(builder =>
             {
                 builder
+                    .AllowAnyMethod()
                     .AllowAnyHeader()
                     .AllowAnyOrigin();
             });

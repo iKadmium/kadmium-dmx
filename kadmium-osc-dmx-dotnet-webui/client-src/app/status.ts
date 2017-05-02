@@ -2,13 +2,27 @@ import { StatusCode } from "./status-code.enum";
 
 export class Status 
 {
-    constructor(public statusCode: StatusCode, public body: string, public details?: any)
+    constructor(public statusCode?: StatusCode, public body?: string, public details?: any)
     {
+        if (statusCode == null)
+        {
+            this.statusCode = StatusCode.Unknown;
+        }
     }
 
     public get alertStyle(): string
     {
-        switch (this.statusCode)
+        return Status.getAlertStyle(this.statusCode);
+    }
+
+    public get glyphIcon(): string
+    {
+        return Status.getGlyphIcon(this.statusCode);
+    }
+
+    public static getAlertStyle(code: StatusCode): string
+    {
+        switch (code)
         {
             case StatusCode.Error:
                 return "alert-danger";
@@ -24,9 +38,9 @@ export class Status
         }
     }
 
-    public get glyphIcon(): string
+    public static getGlyphIcon(code: StatusCode): string
     {
-        switch (this.statusCode)
+        switch (code)
         {
             case StatusCode.Error:
                 return "glyphicon glyphicon-remove-sign";
