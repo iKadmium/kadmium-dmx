@@ -1,9 +1,8 @@
 import { Injectable } from '@angular/core';
-import { Headers, Http } from '@angular/http';
+import { Controller, URLs, SocketController } from "./url";
+import { RPCSocket, RPCData } from "./rpcsocket";
+import { Http } from "@angular/http";
 import 'rxjs/add/operator/toPromise';
-
-import { Controller, URLs, SocketController } from "../../shared/url";
-import { RPCSocket } from "../../shared/rpc";
 
 @Injectable()
 export class SACNTransmitterService
@@ -16,7 +15,6 @@ export class SACNTransmitterService
     {
         this.rpc = new RPCSocket(this.socketUrl);
     }
-
 
     public getEnabled(): Promise<boolean>
     {
@@ -32,11 +30,17 @@ export class SACNTransmitterService
             .then(response => { });
     }
 
-    public set(universeID: number, channel: number, value: number): Promise<void>
+    public set(universeID: number, channel: number, value: number): void
     {
-        return this.http.get(this.url + `/Set/${universeID}/${channel}/${value}`)
-            .toPromise()
-            .then(response => { });
+        let data: RPCData = {
+            method: "UpdateDMX",
+            args: {
+                universeID: parseInt(universeID + ""),
+                channel: parseInt(channel + ""),
+                value: parseInt(value + "")
+            }
+        };
+        this.rpc.send(data);
     }
 
     public subscribe(thisRef: Object): void

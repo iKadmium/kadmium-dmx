@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { SACNTransmitterService, UniverseUpdateData } from "../sacntransmitter.service";
+import { SACNTransmitterService, UniverseUpdateData } from "../sacn-transmitter.service";
 import { NotificationsService } from "../notifications.service";
 import { Title } from "@angular/platform-browser";
 import { DMXChannel } from "../fixture-definition";

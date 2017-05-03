@@ -42,7 +42,7 @@ namespace kadmium_osc_dmx_dotnet_webui.WebSockets
 
                             MethodInfo info = this.GetType().GetMethod(methodName);
                             object[] parameters = GetParameters(paramsObj, info.GetParameters());
-                            
+
                             info.Invoke(this, parameters);
                             break;
                         case WebSocketMessageType.Close:
@@ -60,7 +60,7 @@ namespace kadmium_osc_dmx_dotnet_webui.WebSockets
         private object[] GetParameters(JObject parametersObj, ParameterInfo[] paramsInfo)
         {
             object[] parameters = new object[parametersObj.Count];
-            foreach(var parameterInfo in paramsInfo)
+            foreach (var parameterInfo in paramsInfo)
             {
                 parameters[parameterInfo.Position] = GetValue(parametersObj[parameterInfo.Name]);
             }
@@ -69,7 +69,7 @@ namespace kadmium_osc_dmx_dotnet_webui.WebSockets
 
         private object GetValue(JToken token)
         {
-            switch(token.Type)
+            switch (token.Type)
             {
                 case JTokenType.Integer:
                     return token.Value<int>();

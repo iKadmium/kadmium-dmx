@@ -25,7 +25,7 @@ import { NavMenuComponent } from './nav-menu/nav-menu.component';
 import { OscListenerLiveComponent } from './osc-listener-live/osc-listener-live.component';
 import { Preview2DComponent } from './preview2d/preview2d.component';
 import { Preview2DFixtureComponent } from './preview2d-fixture/preview2d-fixture.component';
-import { SACNTransmitterLiveComponent } from './sacntransmitter-live/sacntransmitter-live.component';
+import { SACNTransmitterLiveComponent } from './sacn-transmitter-live/sacn-transmitter-live.component';
 import { SettingsComponent } from './settings/settings.component';
 import { SolversLiveComponent } from './solvers-live/solvers-live.component';
 import { StatusPanelComponent } from './status-panel/status-panel.component';

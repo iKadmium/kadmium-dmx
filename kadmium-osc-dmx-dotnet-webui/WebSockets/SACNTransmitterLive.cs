@@ -27,7 +27,7 @@ namespace kadmium_osc_dmx_dotnet_webui.WebSockets
 
             await Send(message);
         }
-        
+
         public void UpdateAttribute(int fixtureID, string attributeName, float attributeValue)
         {
             var fixtures = from universe in MasterController.Instance.Venue.Universes
@@ -38,6 +38,11 @@ namespace kadmium_osc_dmx_dotnet_webui.WebSockets
             fixtures.Single().Settables[attributeName].Value = attributeValue;
         }
 
+        public void UpdateDMX(int universeID, int channel, int value)
+        {
+            Universe universe = MasterController.Instance.Venue.Universes.Single(x => x.UniverseNumber == universeID);
+            universe.DMX[channel] = (byte)value;
+        }
 
         public override void Dispose()
         {

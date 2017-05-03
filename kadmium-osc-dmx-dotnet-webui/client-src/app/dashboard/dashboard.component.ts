@@ -2,7 +2,7 @@ import { Component, OnInit, ViewChild } from '@angular/core';
 import { Title } from "@angular/platform-browser";
 
 import { TogglableService, Togglable } from "../togglable-service";
-import { SACNTransmitterService } from "../sacntransmitter.service";
+import { SACNTransmitterService } from "../sacn-transmitter.service";
 import { SolversLiveService } from "../solvers-live.service";
 import { EnttecProTransmitterService } from "../enttec-pro-transmitter.service";
 import { OSCListenerService } from "../osclistener.service";
