@@ -9,10 +9,13 @@ import { StatusCode } from "../status-code.enum";
 })
 export class NavMenuComponent implements OnInit
 {
+    private collapsed: boolean;
+
     constructor(private notificationsService: NotificationsService) { }
 
     ngOnInit()
     {
+        this.collapsed = true;
     }
 
 }
