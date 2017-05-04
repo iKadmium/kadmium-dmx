@@ -56,13 +56,17 @@ export class DashboardComponent implements OnInit
         ]);
     }
 
-    ngOnInit()
+    async ngOnInit(): Promise<void>
     {
+        try
+        {
+            this.venueSkeletons = await this.venueService.getSkeletons();
+        }
+        catch (error)
+        {
+            this.notificationsService.add(StatusCode.Error, error);
+        }
         this.dashboardService.subscribe(this);
-        this.venueService
-            .getSkeletons()
-            .then(skeletons => this.venueSkeletons = skeletons)
-            .catch(reason => this.notificationsService.add(StatusCode.Error, reason));
         this.sacn.init();
         this.osc.init();
         this.solvers.init();

@@ -1,6 +1,5 @@
 import { Injectable } from '@angular/core';
 import { Headers, Http } from '@angular/http';
-import 'rxjs/add/operator/toPromise';
 import { URLs, Controller } from "./url";
 
 @Injectable()
@@ -32,5 +31,51 @@ export class EnttecProTransmitterService
             {
                 return response.json() as string[];
             });
+    }
+}
+
+export class MockEnttecProTransmitterService
+{
+    private enabled: boolean;
+    private ports: string[];
+
+    constructor()
+    {
+        this.enabled = true;
+        this.ports = ["COM1"];
+    }
+
+    public getEnabled(): Promise<boolean>
+    {
+        let promise = new Promise<boolean>(
+            (resolve, reject) =>
+            {
+                resolve(this.enabled);
+            }
+        );
+        return promise;
+    }
+
+    public setEnabled(value: boolean): Promise<void>
+    {
+        let promise = new Promise<void>(
+            (resolve, reject) =>
+            {
+                this.enabled = value;
+                resolve();
+            }
+        );
+        return promise;
+    }
+
+    public getPorts(): Promise<string[]>
+    {
+        let promise = new Promise<string[]>(
+            (resolve, reject) =>
+            {
+                resolve(this.ports);
+            }
+        );
+        return promise;
     }
 }

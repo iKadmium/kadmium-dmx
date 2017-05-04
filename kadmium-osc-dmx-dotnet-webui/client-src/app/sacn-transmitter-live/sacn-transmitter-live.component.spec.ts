@@ -1,25 +1,29 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { SACNTransmitterLiveComponent } from './sacntransmitter-live.component';
+import { SACNTransmitterLiveComponent } from './sacn-transmitter-live.component';
 
-describe('SACNTransmitterLiveComponent', () => {
+describe('SACNTransmitterLiveComponent', () =>
+{
   let component: SACNTransmitterLiveComponent;
   let fixture: ComponentFixture<SACNTransmitterLiveComponent>;
 
-  beforeEach(async(() => {
+  beforeEach(async(() =>
+  {
     TestBed.configureTestingModule({
-      declarations: [ SACNTransmitterLiveComponent ]
+      declarations: [SACNTransmitterLiveComponent]
     })
-    .compileComponents();
+      .compileComponents();
   }));
 
-  beforeEach(() => {
+  beforeEach(() =>
+  {
     fixture = TestBed.createComponent(SACNTransmitterLiveComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });
 
-  it('should create', () => {
+  it('should create', () =>
+  {
     expect(component).toBeTruthy();
   });
 });

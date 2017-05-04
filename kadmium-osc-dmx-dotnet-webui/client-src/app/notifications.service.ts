@@ -39,7 +39,10 @@ export class NotificationsService
         {
             this.messages.push(new Status(statusCode, message));
         }
-        this.toast(statusCode, message);
+        if (this.component != null)
+        {
+            this.toast(statusCode, message);
+        }
     }
 
     private addHttpError(reason: Response): void

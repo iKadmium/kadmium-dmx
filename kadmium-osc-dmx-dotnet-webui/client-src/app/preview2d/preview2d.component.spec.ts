@@ -1,25 +1,29 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { Preview2DComponent } from './preview2-d.component';
+import { Preview2DComponent } from './preview2d.component';
 
-describe('Preview2DComponent', () => {
+describe('Preview2DComponent', () =>
+{
   let component: Preview2DComponent;
   let fixture: ComponentFixture<Preview2DComponent>;
 
-  beforeEach(async(() => {
+  beforeEach(async(() =>
+  {
     TestBed.configureTestingModule({
-      declarations: [ Preview2DComponent ]
+      declarations: [Preview2DComponent]
     })
-    .compileComponents();
+      .compileComponents();
   }));
 
-  beforeEach(() => {
+  beforeEach(() =>
+  {
     fixture = TestBed.createComponent(Preview2DComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });
 
-  it('should create', () => {
+  it('should create', () =>
+  {
     expect(component).toBeTruthy();
   });
 });

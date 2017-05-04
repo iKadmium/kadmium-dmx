@@ -44,3 +44,41 @@ export interface OSCListenerData
     time: Date;
     value: number;
 }
+
+export class MockOSCListenerService
+{
+    private enabled: boolean;
+
+    constructor()
+    {
+        this.enabled = true;
+    }
+
+    public getEnabled(): Promise<boolean>
+    {
+        let promise = new Promise<boolean>(
+            (resolve, reject) =>
+            {
+                resolve(this.enabled);
+            }
+        );
+        return promise;
+    }
+
+    public setEnabled(value: boolean): Promise<void>
+    {
+        let promise = new Promise<void>(
+            (resolve, reject) =>
+            {
+                this.enabled = value;
+                resolve();
+            }
+        );
+        return promise;
+    }
+
+    public subscribe(thisRef: Object): void
+    {
+
+    }
+}

@@ -54,3 +54,49 @@ export interface UniverseUpdateData
     universeID: number,
     values: number[]
 }
+
+export class MockSACNTransmitterService
+{
+    private enabled: boolean;
+    private values: number[];
+
+    constructor()
+    {
+        this.enabled = true;
+        this.values = [].fill(0, 0, 512);
+    }
+
+    public getEnabled(): Promise<boolean>
+    {
+        let promise = new Promise<boolean>(
+            (resolve, reject) =>
+            {
+                resolve(this.enabled);
+            }
+        );
+        return promise;
+    }
+
+    public setEnabled(value: boolean): Promise<void>
+    {
+        let promise = new Promise<void>(
+            (resolve, reject) =>
+            {
+                this.enabled = value;
+                resolve();
+            }
+        );
+        return promise;
+    }
+
+    public set(universeID: number, channel: number, value: number): void
+    {
+        this.values[channel] = value;
+    }
+
+    public subscribe(thisRef: Object): void
+    {
+
+    }
+
+}

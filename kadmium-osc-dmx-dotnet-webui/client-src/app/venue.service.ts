@@ -68,3 +68,8 @@ export class VenueService
     }
 
 }
+
+export class MockVenueService
+{
+
+}

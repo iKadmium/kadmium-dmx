@@ -1,15 +1,18 @@
 import { TestBed, inject } from '@angular/core/testing';
 
-import { PreviewServiceService } from './preview-service.service';
+import { PreviewService } from './preview.service';
 
-describe('PreviewServiceService', () => {
-  beforeEach(() => {
+describe('PreviewService', () =>
+{
+  beforeEach(() =>
+  {
     TestBed.configureTestingModule({
-      providers: [PreviewServiceService]
+      providers: [PreviewService]
     });
   });
 
-  it('should ...', inject([PreviewServiceService], (service: PreviewServiceService) => {
+  it('should ...', inject([PreviewService], (service: PreviewService) =>
+  {
     expect(service).toBeTruthy();
   }));
 });

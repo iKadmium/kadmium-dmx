@@ -26,3 +26,14 @@ export interface StatusData
     message: string;
     controller: string;
 }
+
+export class MockDashboardService
+{
+    constructor()
+    { }
+
+    public subscribe(listener: Object): void
+    {
+
+    }
+}
