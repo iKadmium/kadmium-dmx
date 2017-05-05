@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { URLs, SocketController } from "./url";
-import { RPCSocket } from "./rpcsocket";
+import { RPCSocket, RPCData } from "./rpcsocket";
 import { StatusCode } from "./status-code.enum";
 
 @Injectable()
@@ -17,6 +17,15 @@ export class DashboardService
     public subscribe(listener: Object): void
     {
         this.rpc.subscribe(listener);
+    }
+
+    public init(): void
+    {
+        let data: RPCData = {
+            method: "UpdateAll",
+            args: {}
+        };
+        this.rpc.send(data);
     }
 }
 

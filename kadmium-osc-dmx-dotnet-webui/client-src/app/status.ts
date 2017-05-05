@@ -7,6 +7,7 @@ export class Status
         if (statusCode == null)
         {
             this.statusCode = StatusCode.Unknown;
+            this.body = "Unknown";
         }
     }
 

@@ -92,8 +92,9 @@ namespace kadmium_osc_dmx_dotnet_core.Fixtures
 
         public void Render(byte[] dmx)
         {
-            var channels = from channel in FixtureDefinition.Channels
-                           group channel by channel.Address into chanGroup
+            var channels = from channel in FrameSettables.Values
+                           where channel is DMXChannel
+                           group (channel as DMXChannel) by (channel as DMXChannel).Address into chanGroup
                            select chanGroup;
 
             foreach (var channelGroup in channels)
@@ -157,13 +158,13 @@ namespace kadmium_osc_dmx_dotnet_core.Fixtures
             Solvers.Clear();
             foreach (Solvers.Attribute attribute in FixtureDefinition.Channels)
             {
-                Settables.Add(attribute.Name, attribute);
-                FrameSettables.Add(attribute.Name, attribute);
+                Settables.Add(attribute.Name, attribute.Clone());
+                FrameSettables.Add(attribute.Name, attribute.Clone());
             }
             MovementAxis.Clear();
             foreach (var axis in FixtureDefinition.Movements)
             {
-                MovementAxis.Add(axis.Name, axis);
+                MovementAxis.Add(axis.Name, axis.Clone());
             }
             Solvers.AddRange(FixtureSolver.GetDefaultSolvers(this, Options));
         }

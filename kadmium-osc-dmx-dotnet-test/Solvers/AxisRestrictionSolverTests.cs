@@ -28,7 +28,7 @@ namespace kadmium_osc_dmx_dotnet_test.Solvers
             channel.Value = axisValue;
             fixture.Update();
 
-            float value = channel.Value;
+            float value = fixture.FrameSettables[axisName].Value;
 
             Assert.Equal(expected, value);
         }

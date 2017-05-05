@@ -23,9 +23,9 @@ namespace kadmium_osc_dmx_dotnet_test.Solvers
 
             fixture.Update();
 
-            var redChannel = fixture.Settables["Red"] as DMXChannel;
-            var greenChannel = fixture.Settables["Green"] as DMXChannel;
-            var blueChannel = fixture.Settables["Blue"] as DMXChannel;
+            var redChannel = fixture.FrameSettables["Red"] as DMXChannel;
+            var greenChannel = fixture.FrameSettables["Green"] as DMXChannel;
+            var blueChannel = fixture.FrameSettables["Blue"] as DMXChannel;
 
             Assert.Equal(expectedRed, redChannel.ByteValue);
             Assert.Equal(expectedGreen, greenChannel.ByteValue);

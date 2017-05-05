@@ -23,9 +23,9 @@ namespace kadmium_osc_dmx_dotnet_test.Solvers
             var fixture = HSBtoRGBSolverTests.GetRGBFixture(options);
             fixture.Settables["Brightness"].Value = 1f;
             fixture.Update();
-            Assert.Equal(limit, fixture.Settables["Red"].Value);
-            Assert.Equal(limit, fixture.Settables["Green"].Value);
-            Assert.Equal(limit, fixture.Settables["Blue"].Value);
+            Assert.Equal(limit, fixture.FrameSettables["Red"].Value);
+            Assert.Equal(limit, fixture.FrameSettables["Green"].Value);
+            Assert.Equal(limit, fixture.FrameSettables["Blue"].Value);
         }
 
         static JObject GetLimitedOptions(float limit)

@@ -27,8 +27,8 @@ namespace kadmium_osc_dmx_dotnet_test.Solvers.Solvers
             Fixture fixture = Get16BitMovingFixture("Pan");
             fixture.Settables["Pan"].Value = value;
             fixture.Update();
-            var panCoarse = fixture.Settables["PanCoarse"] as DMXChannel;
-            var panFine = fixture.Settables["PanFine"] as DMXChannel;
+            var panCoarse = fixture.FrameSettables["PanCoarse"] as DMXChannel;
+            var panFine = fixture.FrameSettables["PanFine"] as DMXChannel;
 
             Assert.Equal(expectedMSB, panCoarse.ByteValue);
             Assert.InRange(panFine.ByteValue, expectedLSB - 1, expectedLSB + 1);

@@ -1,4 +1,6 @@
-﻿namespace kadmium_osc_dmx_dotnet_core.Fixtures
+﻿using System;
+
+namespace kadmium_osc_dmx_dotnet_core.Fixtures
 {
     public class MovementAxis : System.IEquatable<MovementAxis>
     {
@@ -45,6 +47,13 @@
             }
 
             return (other.Min == Min && other.Max == Max && other.Name == Name);
+        }
+
+        public MovementAxis Clone()
+        {
+            MovementAxis cloned = new MovementAxis(Name, Min, Max);
+            cloned.Id = Id;
+            return cloned;
         }
     }
 }

@@ -45,5 +45,10 @@ export class RPCSocket
 export interface RPCData
 {
     method: string;
-    args: Object;
+    args: RPCArgs;
+}
+
+export interface RPCArgs
+{
+    [key: string]: any;
 }

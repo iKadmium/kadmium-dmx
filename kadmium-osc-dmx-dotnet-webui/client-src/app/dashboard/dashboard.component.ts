@@ -67,6 +67,7 @@ export class DashboardComponent implements OnInit
             this.notificationsService.add(StatusCode.Error, error);
         }
         this.dashboardService.subscribe(this);
+        this.dashboardService.init();
         this.sacn.init();
         this.osc.init();
         this.solvers.init();

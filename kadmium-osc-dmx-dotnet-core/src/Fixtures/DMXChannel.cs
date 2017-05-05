@@ -50,21 +50,6 @@ namespace kadmium_osc_dmx_dotnet_core.Fixtures
             return other;
         }
 
-        public override bool Equals(object obj)
-        {
-            var other = obj as DMXChannel;
-            if (other == null)
-            {
-                return false;
-            }
-            return Equals(other);
-        }
-
-        public override int GetHashCode()
-        {
-            return Name.GetHashCode() ^ Min ^ Max ^ Address;
-        }
-
         public bool Equals(DMXChannel other)
         {
             return (other.Min == Min

@@ -113,6 +113,13 @@ namespace kadmium_osc_dmx_dotnet_webui.Controllers
             return download;
         }
 
+        [Route("[action]/{name}")]
+        public async Task ActivateByName(string name)
+        {
+            int id = (await _context.Venues.FirstAsync(x => x.Name.Contains(name))).Id;
+            await this.Activate(id);
+        }
+
         private async Task UpdateVenue(Venue oldVenue, Venue newVenue)
         {
             var removals = from universe in oldVenue.Universes

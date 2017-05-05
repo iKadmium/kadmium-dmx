@@ -1,4 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations.Schema;
+﻿using System;
+using System.ComponentModel.DataAnnotations.Schema;
 using kadmium_osc_dmx_dotnet_core.Color;
 using Newtonsoft.Json;
 
@@ -63,6 +64,13 @@ namespace kadmium_osc_dmx_dotnet_core.Fixtures
             }
 
             return (other.Name == Name && other.Min == Min && other.Max == Max && other.ColorString == ColorString);
+        }
+
+        public ColorWheelEntry Clone()
+        {
+            ColorWheelEntry cloned = new ColorWheelEntry(Name, Min, Max, Color);
+            cloned.Id = Id;
+            return cloned;
         }
     }
 }

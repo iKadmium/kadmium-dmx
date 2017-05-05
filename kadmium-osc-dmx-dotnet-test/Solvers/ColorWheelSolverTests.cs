@@ -30,9 +30,9 @@ namespace kadmium_osc_dmx_dotnet_test.Solvers
             fixture.Settables["Saturation"].Value = saturation;
             fixture.Settables["Brightness"].Value = brightness;
             fixture.Update();
-            var colorWheelChannel = fixture.Settables["ColorWheel"] as DMXChannel;
+            var colorWheelChannel = fixture.FrameSettables["ColorWheel"] as DMXChannel;
             Assert.InRange(colorWheelChannel.ByteValue, expectedColorWheelStart, expectedColorWheelEnd);
-            var masterChannel = fixture.Settables["Master"] as DMXChannel;
+            var masterChannel = fixture.FrameSettables["Master"] as DMXChannel;
             Assert.Equal(masterChannel.ByteValue, expectedMaster);
         }
 

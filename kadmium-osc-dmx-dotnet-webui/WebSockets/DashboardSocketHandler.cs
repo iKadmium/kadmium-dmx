@@ -22,7 +22,7 @@ namespace kadmium_osc_dmx_dotnet_webui.WebSockets
 
         public override async Task OnOpen()
         {
-            await UpdateAll();
+            //await UpdateAll();
         }
 
         private async void VenueStatusUpdated(object sender, StatusUpdateEventArgs e)
@@ -57,7 +57,7 @@ namespace kadmium_osc_dmx_dotnet_webui.WebSockets
             await SendUpdate(controller, e.StatusCode, e.Message);
         }
 
-        private async Task UpdateAll()
+        public async Task UpdateAll()
         {
             await SendUpdate("Solvers", MasterController.Instance.SolverStatus.StatusCode, MasterController.Instance.SolverStatus.Message);
             await SendUpdate("OSCListeners", MasterController.Instance.Listener.Status.StatusCode, MasterController.Instance.Listener.Status.Message);

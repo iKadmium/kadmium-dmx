@@ -60,6 +60,21 @@ namespace kadmium_osc_dmx_dotnet_core.Fixtures
             }
             return true;
         }
+
+        public FixtureDefinition Clone()
+        {
+            FixtureDefinition cloned = new FixtureDefinition();
+            cloned.Id = Id;
+            cloned.Manufacturer = Manufacturer;
+            cloned.Model = Model;
+            cloned.Channels.AddRange(from channel in Channels select channel.Clone() as DMXChannel);
+            cloned.Movements.AddRange(from movement in Movements select movement.Clone());
+            cloned.ColorWheel.AddRange(from color in ColorWheel select color.Clone());
+            cloned.Type = Type;
+            cloned.Lux = Lux;
+            cloned.BeamAngle = BeamAngle;
+            return cloned;
+        }
     }
 
     public class FixtureDefinitionSkeleton : IEquatable<FixtureDefinitionSkeleton>
