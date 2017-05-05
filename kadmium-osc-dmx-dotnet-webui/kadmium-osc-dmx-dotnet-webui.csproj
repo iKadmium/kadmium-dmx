@@ -13,22 +13,14 @@
     <TypeScriptCompileBlocked>true</TypeScriptCompileBlocked>
   </PropertyGroup>
   <ItemGroup>
-    <Compile Remove="ClientApp\app\components\NewFolder\**" />
-    <Content Remove="ClientApp\app\components\NewFolder\**" />
-    <EmbeddedResource Remove="ClientApp\app\components\NewFolder\**" />
-    <None Remove="ClientApp\app\components\NewFolder\**" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Remove="Properties\PublishProfiles\FolderProfile.pubxml" />
-  </ItemGroup>
-  <ItemGroup>
+    <Content Include="wwwroot\**\*">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      <CopyToPublishDirector>Always</CopyToPublishDirector>
+    </Content>
     <Content Update="settings.schema.json">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
       <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
     </Content>
-    <None Update="ClientApp\dist\**\*;Views\**\*;wwwroot\**\*">
-      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
-    </None>
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\kadmium-osc-dmx-dotnet-core\kadmium-osc-dmx-dotnet-core.csproj" />
@@ -54,9 +46,14 @@
     <PackageReference Include="Microsoft.AspNetCore.ResponseCompression" Version="1.0.1" />
     <PackageReference Include="Microsoft.AspNetCore.Mvc.Razor.ViewCompilation" Version="1.1.0" />
   </ItemGroup>
-  <Target Name="PrepublishScript" BeforeTargets="PrepareForPublish">
-    <Exec Command="npm install" />
+  <Target Name="PrepublishScript" BeforeTargets="BeforePublish">
+    <!--<Exec Command="npm install" />-->
     <Exec Command="ng build --prod --aot=false" />
+    <ItemGroup>
+      <DistFiles Include="wwwroot\**\*" />
+      <Content Include="@(DistFiles)" CopytoPublishDirectory="Always" />
+      <ContentWithTargetPath Include="@(DistFiles)" TargetPath="%(Identity)" CopyToPublishDirectory="Always" />
+    </ItemGroup>
   </Target>
   <ItemGroup>
     <DotNetCliToolReference Include="Microsoft.DotNet.Watcher.Tools" Version="1.0.0" />
