@@ -10,12 +10,9 @@ export class TogglableService<ServiceType extends Togglable>
         this.enabled = null;
     }
 
-    init(): void
+    async init(): Promise<void>
     {
-        this.service
-            .getEnabled()
-            .then(value => this.enabled = value)
-            .catch(error => this.notificationsService.add(StatusCode.Error, error));
+        this.enabled = await this.service.getEnabled();
     }
 
     public async toggle(): Promise<void>

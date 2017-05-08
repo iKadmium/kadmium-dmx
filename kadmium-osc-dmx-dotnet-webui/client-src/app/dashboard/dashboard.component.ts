@@ -61,17 +61,17 @@ export class DashboardComponent implements OnInit
         try
         {
             this.venueSkeletons = await this.venueService.getSkeletons();
+            this.dashboardService.subscribe(this);
+            this.dashboardService.init();
+            this.sacn.init();
+            this.osc.init();
+            this.solvers.init();
+            this.enttec.init();
         }
         catch (error)
         {
             this.notificationsService.add(StatusCode.Error, error);
         }
-        this.dashboardService.subscribe(this);
-        this.dashboardService.init();
-        this.sacn.init();
-        this.osc.init();
-        this.solvers.init();
-        this.enttec.init();
     }
 
     updateStatus(statusData: StatusData): void

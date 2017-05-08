@@ -6,7 +6,6 @@ import { Look, LookSkeleton } from "./look";
 @Injectable()
 export class LookService
 {
-
     private looksUrl = URLs.getAPIUrl(Controller.Look);
 
     constructor(private http: Http) { }
@@ -60,5 +59,98 @@ export class LookService
             .toPromise()
             .then(response => { });
     }
-
 }
+
+@Injectable()
+export class MockLookService extends LookService
+{
+    looks: Look[];
+
+    constructor()
+    {
+        super(null);
+        this.looks = [
+            {
+                attributeLookSettings: [],
+                colorLookSettings: [
+                    {
+                        color: "#FF0000",
+                        group: "vocalist",
+                        id: 1
+                    }
+                ],
+                id: 1,
+                name: "Mock Look 1"
+            }
+        ];
+    }
+
+    public getSkeletons(): Promise<LookSkeleton[]>
+    {
+        return new Promise<LookSkeleton[]>(
+            (resolve, reject) =>
+            {
+                let skeletons: LookSkeleton[] = this.looks.map(x => { return { id: x.id, name: x.name } });
+                resolve(skeletons);
+            }
+        )
+    }
+
+    public get(id: number): Promise<Look>
+    {
+        return new Promise<Look>(
+            (resolve, reject) => 
+            {
+                resolve(this.looks.find(x => x.id == id));
+            }
+        );
+    }
+
+    public put(look: Look): Promise<void>
+    {
+        return new Promise<void>(
+            (resolve, reject) => 
+            {
+                let index = this.looks.findIndex(x => x.id == look.id);
+                this.looks.splice(index, 1);
+                this.looks.push(look);
+                resolve();
+            }
+        );
+    }
+
+    public post(look: Look): Promise<number>
+    {
+        return new Promise<number>(
+            (resolve, reject) => 
+            {
+                look.id = this.looks.length;
+                this.looks.push(look);
+                resolve();
+            }
+        );
+    }
+
+    public delete(look: LookSkeleton): Promise<void>
+    {
+        return new Promise<void>(
+            (resolve, reject) => 
+            {
+                let index = this.looks.findIndex(x => x.id == look.id);
+                this.looks.splice(index, 1);
+                resolve();
+            }
+        );
+    }
+
+    public activate(look: LookSkeleton, amount: number): Promise<void>
+    {
+        return new Promise<void>(
+            (resolve, reject) => 
+            {
+                resolve();
+            }
+        );
+    }
+}
+

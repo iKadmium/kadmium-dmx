@@ -1,5 +1,3 @@
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
-
 import { FixtureDefinitionEditorComponent } from './fixture-definition-editor.component';
 import { FormsModule } from "@angular/forms";
 import { TypeaheadModule } from "ngx-bootstrap/typeahead";
@@ -10,6 +8,7 @@ import { FixtureDefinitionService, MockFixtureDefinitionService } from "app/fixt
 import { HttpModule } from "@angular/http";
 import { RouterTestingModule } from "@angular/router/testing";
 import { NotificationsService } from "app/notifications.service";
+import { async, ComponentFixture, TestBed, fakeAsync } from "@angular/core/testing";
 
 describe('FixtureDefinitionEditorComponent', () =>
 {
@@ -30,13 +29,15 @@ describe('FixtureDefinitionEditorComponent', () =>
                 HttpModule,
                 FormsModule,
                 TypeaheadModule.forRoot()
-            ],
-            providers: [
-                NotificationsService,
-                { provide: FixtureDefinitionService, useClass: MockFixtureDefinitionService }
             ]
-        })
-            .compileComponents();
+        }).overrideComponent(FixtureDefinitionEditorComponent, {
+            set: {
+                providers: [
+                    NotificationsService,
+                    { provide: FixtureDefinitionService, useClass: MockFixtureDefinitionService }
+                ]
+            }
+        }).compileComponents();
     }));
 
     beforeEach(() =>
@@ -46,8 +47,8 @@ describe('FixtureDefinitionEditorComponent', () =>
         fixture.detectChanges();
     });
 
-    it('should create', () =>
+    it('should create', fakeAsync(() =>
     {
         expect(component).toBeTruthy();
-    });
+    }));
 });

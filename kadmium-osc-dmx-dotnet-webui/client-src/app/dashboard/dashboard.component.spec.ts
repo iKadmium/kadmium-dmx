@@ -1,5 +1,3 @@
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
-
 import { DashboardComponent } from './dashboard.component';
 import { StatusPanelComponent } from "app/status-panel/status-panel.component";
 import { DashboardService, MockDashboardService } from "app/dashboard.service";
@@ -9,6 +7,8 @@ import { OSCListenerService, MockOSCListenerService } from "app/osclistener.serv
 import { VenueService, MockVenueService } from "app/venue.service";
 import { SolversLiveService, MockSolversLiveService } from "app/solvers-live.service";
 import { NotificationsService } from "app/notifications.service";
+import { ComponentFixture, TestBed, fakeAsync } from "@angular/core/testing";
+import { async } from "@angular/core/testing";
 
 describe('DashboardComponent', () =>
 {
@@ -46,8 +46,8 @@ describe('DashboardComponent', () =>
         fixture.detectChanges();
     });
 
-    it('should create', () =>
+    it('should create', fakeAsync(() =>
     {
         expect(component).toBeTruthy();
-    });
+    }));
 });

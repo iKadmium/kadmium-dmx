@@ -34,6 +34,7 @@ export class EnttecProTransmitterService
     }
 }
 
+@Injectable()
 export class MockEnttecProTransmitterService
 {
     private enabled: boolean;

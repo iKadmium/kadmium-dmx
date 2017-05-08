@@ -36,12 +36,19 @@ export interface StatusData
     controller: string;
 }
 
-export class MockDashboardService
+@Injectable()
+export class MockDashboardService extends DashboardService
 {
     constructor()
-    { }
+    {
+        super();
+    }
 
     public subscribe(listener: Object): void
+    {
+    }
+
+    public init(): void
     {
 
     }

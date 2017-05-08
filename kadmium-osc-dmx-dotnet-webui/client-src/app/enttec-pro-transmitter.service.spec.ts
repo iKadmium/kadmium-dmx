@@ -6,6 +6,7 @@ import { async, fakeAsync, tick } from "@angular/core/testing";
 import { MockConnection } from "@angular/http/testing";
 import { ToastModule } from "ng2-toastr/ng2-toastr";
 import { NotificationsService } from "app/notifications.service";
+import { DashboardService, MockDashboardService } from "app/dashboard.service";
 
 describe('EnttecProTransmitterService', () =>
 {
@@ -14,7 +15,8 @@ describe('EnttecProTransmitterService', () =>
         TestBed.configureTestingModule({
             providers: [
                 EnttecProTransmitterService,
-                { provide: XHRBackend, useClass: MockBackend }
+                { provide: XHRBackend, useClass: MockBackend },
+                { provide: DashboardService, useClass: MockDashboardService }
             ],
             imports: [
                 HttpModule
