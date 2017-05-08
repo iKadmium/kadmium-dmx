@@ -11,7 +11,7 @@ namespace kadmium_osc_dmx_dotnet_test
 {
     public class SACNTransmitterTests
     {
-        UdpClient client = new UdpClient(SACNTransmitter.SACN_PORT);
+        static UdpClient client = new UdpClient(SACNTransmitter.SACN_PORT);
 
         [Fact]
         public void TestMulticast()

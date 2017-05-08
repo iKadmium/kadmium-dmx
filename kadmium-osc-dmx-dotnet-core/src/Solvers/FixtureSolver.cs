@@ -29,6 +29,10 @@ namespace kadmium_osc_dmx_dotnet_core.Solvers
             {
                 solvers.Add(new ApeshitFixtureSolver(fixture));
             }
+            if (HSBtoRGBWSolver.SuitableFor(fixture.FixtureDefinition))
+            {
+                solvers.Add(new HSBtoRGBWSolver(fixture));
+            }
             if (HSBtoRGBSolver.SuitableFor(fixture.FixtureDefinition))
             {
                 solvers.Add(new HSBtoRGBSolver(fixture));
