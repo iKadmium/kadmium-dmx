@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { Group } from "../group";
 import { Look, AttributeLookSetting, ColorLookSetting } from "../look";
-import { ActivatedRoute } from "@angular/router";
+import { ActivatedRoute, Router } from "@angular/router";
 import { LookService } from "../look.service";
 import { GroupService } from "../group.service";
 import { NotificationsService } from "../notifications.service";
@@ -24,7 +24,7 @@ export class LookEditorComponent implements OnInit
     private activeGroup: Group;
 
     constructor(private route: ActivatedRoute, private lookService: LookService, private groupService: GroupService,
-        private notificationsService: NotificationsService, private title: Title)
+        private notificationsService: NotificationsService, private title: Title, private router: Router)
     {
         this.allGroups = [];
         this.saving = false;
@@ -123,7 +123,7 @@ export class LookEditorComponent implements OnInit
                 await this.lookService.put(this.look);
                 this.notificationsService.add(StatusCode.Success, "Successfully updated " + this.look.name);
             }
-            window.location.href = "/looks";
+            this.router.navigate(["../", { relativeTo: this.route }]);
         }
         catch (reason)
         {

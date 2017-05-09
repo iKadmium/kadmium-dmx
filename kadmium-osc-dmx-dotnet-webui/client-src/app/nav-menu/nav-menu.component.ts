@@ -1,6 +1,9 @@
 import { Component, OnInit } from '@angular/core';
 import { NotificationsService } from "../notifications.service";
 import { StatusCode } from "../status-code.enum";
+import { Status } from "app/status";
+import { SafeHtml, DomSanitizer } from "@angular/platform-browser";
+import { Response, ResponseOptions } from "@angular/http";
 
 @Component({
     selector: 'app-nav-menu',
@@ -11,11 +14,10 @@ export class NavMenuComponent implements OnInit
 {
     private collapsed: boolean;
 
-    constructor(private notificationsService: NotificationsService) { }
+    constructor() { }
 
-    ngOnInit()
+    ngOnInit(): void
     {
         this.collapsed = true;
     }
-
 }

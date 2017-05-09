@@ -1,6 +1,6 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { VenueService } from "../venue.service";
-import { ActivatedRoute } from "@angular/router";
+import { ActivatedRoute, Router } from "@angular/router";
 import { Universe, Venue } from "../venue";
 import { UniverseEditorComponent } from "../universe-editor/universe-editor.component";
 import { FixtureOptionsEditorComponent } from "../fixture-options-editor/fixture-options-editor.component";
@@ -28,7 +28,8 @@ export class VenueEditorComponent implements OnInit
 
     private selectedUniverse: Universe;
 
-    constructor(private route: ActivatedRoute, private venueService: VenueService, private notificationsService: NotificationsService, private groupService: GroupService)
+    constructor(private route: ActivatedRoute, private venueService: VenueService, private notificationsService: NotificationsService,
+        private groupService: GroupService, private router: Router)
     {
         this.saving = false;
     }
@@ -92,13 +93,14 @@ export class VenueEditorComponent implements OnInit
             if (this.isNewItem())
             {
                 await this.venueService.post(this.venue);
+                this.notificationsService.add(StatusCode.Success, "Successfully added " + this.venue.name);
             }
             else
             {
                 await this.venueService.put(this.venue.id, this.venue);
+                this.notificationsService.add(StatusCode.Success, "Successfully edited " + this.venue.name);
             }
-
-            window.location.href = "/venues";
+            this.router.navigate(["../", { relativeTo: this.route }]);
         }
         catch (error)
         {

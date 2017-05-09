@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { FixtureDefinitionService } from "../fixture-definition.service";
 import { FixtureDefinition, FixtureDefinitionSkeleton, DMXChannel, Axis, ColorWheelEntry } from "../fixture-definition";
-import { ActivatedRoute } from "@angular/router";
+import { ActivatedRoute, Router } from "@angular/router";
 import { Title } from "@angular/platform-browser";
 import { NotificationsService } from "../notifications.service";
 import { StatusCode } from "../status-code.enum";
@@ -20,7 +20,7 @@ export class FixtureDefinitionEditorComponent implements OnInit
     private saving: boolean;
 
     constructor(private route: ActivatedRoute, private fixtureDefinitionService: FixtureDefinitionService,
-        private notificationsService: NotificationsService, private title: Title)
+        private notificationsService: NotificationsService, private title: Title, private router: Router)
     {
         this.saving = false;
     }
@@ -164,7 +164,7 @@ export class FixtureDefinitionEditorComponent implements OnInit
                 this.fixtureDefinitionService.put(this.definition);
                 this.notificationsService.add(StatusCode.Success, "Successfully edited " + this.definition.manufacturer + " " + this.definition.model);
             }
-            window.location.href = "/fixture-definitions";
+            this.router.navigate(["../", { relativeTo: this.route }]);
         }
         catch (reason)
         {

@@ -1,20 +1,20 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { MessageBarComponent } from './message-bar.component';
+import { NotificationMenuComponent } from './notification-menu.component';
 
-describe('MessageBarComponent', () => {
-  let component: MessageBarComponent;
-  let fixture: ComponentFixture<MessageBarComponent>;
+describe('NotificationMenuComponent', () => {
+  let component: NotificationMenuComponent;
+  let fixture: ComponentFixture<NotificationMenuComponent>;
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ MessageBarComponent ]
+      declarations: [ NotificationMenuComponent ]
     })
     .compileComponents();
   }));
 
   beforeEach(() => {
-    fixture = TestBed.createComponent(MessageBarComponent);
+    fixture = TestBed.createComponent(NotificationMenuComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

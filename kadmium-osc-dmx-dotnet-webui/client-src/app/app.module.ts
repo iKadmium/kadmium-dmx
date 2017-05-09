@@ -29,7 +29,6 @@ import { SACNTransmitterLiveComponent } from './sacn-transmitter-live/sacn-trans
 import { SettingsComponent } from './settings/settings.component';
 import { SolversLiveComponent } from './solvers-live/solvers-live.component';
 import { StatusPanelComponent } from './status-panel/status-panel.component';
-import { MessageBarComponent } from './message-bar/message-bar.component';
 import { VenuesComponent } from './venues/venues.component';
 import { UniverseEditorComponent } from './universe-editor/universe-editor.component';
 import { FixtureOptionsEditorComponent } from './fixture-options-editor/fixture-options-editor.component';
@@ -40,6 +39,7 @@ import { MaxValueValidatorDirective } from './max-value-validator.directive';
 import { MinValueValidatorDirective } from './min-value-validator.directive';
 import { TabsModule } from "ngx-bootstrap/tabs";
 import { UniqueValueValidatorDirective } from './unique-value-validator.directive';
+import { NotificationMenuComponent } from './notification-menu/notification-menu.component';
 
 @NgModule({
     declarations: [
@@ -60,7 +60,6 @@ import { UniqueValueValidatorDirective } from './unique-value-validator.directiv
         SettingsComponent,
         SolversLiveComponent,
         StatusPanelComponent,
-        MessageBarComponent,
         VenuesComponent,
         UniverseEditorComponent,
         FixtureOptionsEditorComponent,
@@ -68,7 +67,8 @@ import { UniqueValueValidatorDirective } from './unique-value-validator.directiv
         TableInputComponent,
         MaxValueValidatorDirective,
         MinValueValidatorDirective,
-        UniqueValueValidatorDirective
+        UniqueValueValidatorDirective,
+        NotificationMenuComponent
     ],
     imports: [
         BrowserModule,
