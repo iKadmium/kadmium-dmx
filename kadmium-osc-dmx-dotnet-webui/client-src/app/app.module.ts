@@ -84,15 +84,33 @@ import { NotificationMenuComponent } from './notification-menu/notification-menu
             { path: 'fixturesLive', component: FixturesLiveComponent },
             { path: 'settings', component: SettingsComponent },
             { path: 'groups', component: GroupsComponent },
-            { path: 'venues', component: VenuesComponent },
-            { path: 'venues/new', component: VenueEditorComponent },
-            { path: 'venues/:id', component: VenueEditorComponent },
-            { path: 'fixture-definitions', component: FixtureDefinitionsComponent },
-            { path: 'fixture-definitions/new', component: FixtureDefinitionEditorComponent },
-            { path: 'fixture-definitions/:id', component: FixtureDefinitionEditorComponent },
-            { path: 'looks', component: LooksComponent },
-            { path: 'looks/new', component: LookEditorComponent },
-            { path: 'looks/:id', component: LookEditorComponent },
+            {
+                path: 'venues',
+                children:
+                [
+                    { path: '', component: VenuesComponent },
+                    { path: 'new', component: VenueEditorComponent },
+                    { path: ':id', component: VenueEditorComponent },
+                ]
+            },
+            {
+                path: 'fixture-definitions',
+                children:
+                [
+                    { path: '', component: FixtureDefinitionsComponent },
+                    { path: 'new', component: FixtureDefinitionEditorComponent },
+                    { path: ':id', component: FixtureDefinitionEditorComponent },
+                ]
+            },
+            {
+                path: 'looks',
+                children:
+                [
+                    { path: '', component: LooksComponent },
+                    { path: 'new', component: LookEditorComponent },
+                    { path: ':id', component: LookEditorComponent },
+                ]
+            },
             { path: 'preview2d', component: Preview2DComponent },
             { path: '**', redirectTo: 'sets' }
         ]),
