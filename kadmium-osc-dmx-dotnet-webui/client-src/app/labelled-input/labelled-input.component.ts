@@ -1,4 +1,5 @@
 import { Component, OnInit, Input, ContentChild, ElementRef } from '@angular/core';
+import { FormControl } from "@angular/forms";
 
 @Component({
     selector: 'app-labelled-input',
@@ -7,8 +8,8 @@ import { Component, OnInit, Input, ContentChild, ElementRef } from '@angular/cor
 })
 export class LabelledInputComponent implements OnInit
 {
-    @Input() private label: string;
-    @ContentChild("model") public model: ElementRef;
+    @Input() public label: string;
+    @ContentChild("model") public model: FormControl;
     @ContentChild("input") public input: ElementRef;
     inputName: string;
 

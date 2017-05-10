@@ -64,12 +64,12 @@ export class LooksComponent implements OnInit
 
     }
 
-    private upload(fileInput: any): void
+    public upload(fileInput: any): void
     {
         (fileInput as HTMLInputElement).click();
     }
 
-    private async filesSelected(files: File[]): Promise<void>
+    public async filesSelected(files: File[]): Promise<void>
     {
         for (let file of files)
         {

@@ -1,8 +1,5 @@
 <form *ngIf="definition && allManufacturers" class="form-horizontal" #editorForm="ngForm">
     <fieldset [disabled]="saving">
-        <datalist id="allManufacturers">
-            <option *ngFor="let manufacturer of allManufacturers">{{manufacturer}}</option>
-        </datalist>
         <app-labelled-input label="Manufacturer:">
             <input required #input class="form-control" type="text" name="manufacturer" [(ngModel)]="definition.manufacturer" #model="ngModel"
                 [typeahead]="allManufacturers">

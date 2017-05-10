@@ -24,14 +24,13 @@ import { Status } from "../status";
 })
 export class DashboardComponent implements OnInit
 {
-    statuses: Map<string, Status>;
+    public statuses: Map<string, Status>;
+    public venueSkeletons: VenueSkeleton[];
 
-    sacn: TogglableService<SACNTransmitterService>;
-    osc: TogglableService<OSCListenerService>;
-    solvers: TogglableService<SolversLiveService>;
-    enttec: TogglableService<EnttecProTransmitterService>;
-
-    private venueSkeletons: VenueSkeleton[];
+    public sacn: TogglableService<SACNTransmitterService>;
+    public osc: TogglableService<OSCListenerService>;
+    public solvers: TogglableService<SolversLiveService>;
+    public enttec: TogglableService<EnttecProTransmitterService>;
 
     constructor(private venueService: VenueService, private dashboardService: DashboardService,
         solversService: SolversLiveService, oscService: OSCListenerService,
@@ -74,7 +73,7 @@ export class DashboardComponent implements OnInit
         }
     }
 
-    updateStatus(statusData: StatusData): void
+    public updateStatus(statusData: StatusData): void
     {
         let panelStatus = this.statuses.get(statusData.controller);
         let statusCode = StatusCode[statusData.code as string]
@@ -87,7 +86,7 @@ export class DashboardComponent implements OnInit
         }
     }
 
-    activateVenue(venueSkeleton: VenueSkeleton): void
+    public activateVenue(venueSkeleton: VenueSkeleton): void
     {
         this.venueService
             .activate(venueSkeleton.id)
@@ -95,7 +94,7 @@ export class DashboardComponent implements OnInit
             .catch((reason) => this.notificationsService.add(StatusCode.Error, reason));
     }
 
-    get venueLoaded(): boolean
+    public get venueLoaded(): boolean
     {
         return this.statuses.get('Fixtures').statusCode == StatusCode.Success;
     }

@@ -1,3 +1,5 @@
+import { Group } from "app/group";
+
 export interface LookSkeleton
 {
     id: number;
@@ -36,6 +38,32 @@ export class Look implements LookSkeleton, LookData
             Object.assign(setting, settingData);
             look.colorLookSettings.push(setting);
         }
+        return look;
+    }
+
+    public static getColorLook(group: Group, color: string): ColorLookSetting
+    {
+        let setting = new ColorLookSetting();
+        setting.color = color;
+        setting.group = group.name;
+        return setting;
+    }
+
+    public static getAttribute(group: Group, attribute: string, value: number): AttributeLookSetting
+    {
+        let setting = new AttributeLookSetting();
+        setting.attributeName = attribute;
+        setting.attributeValue = value;
+        setting.group = group.name;
+        return setting;
+    }
+
+    public static getLook(name: string, color: ColorLookSetting, attribute: AttributeLookSetting): Look
+    {
+        let look = new Look();
+        look.colorLookSettings.push(color);
+        look.attributeLookSettings.push(attribute);
+        look.name = name;
         return look;
     }
 }

@@ -20,9 +20,9 @@ export class UniverseEditorComponent implements OnInit
     @Input("universe") universe: Universe;
     @Input("groups") groups: Group[];
 
-    private selectedFixture: Fixture;
+    public selectedFixture: Fixture;
     private selectedFixtures: Fixture[];
-    private fixtureDefinitionSkeletons: FixtureDefinitionSkeleton[];
+    public fixtureDefinitionSkeletons: FixtureDefinitionSkeleton[];
 
     constructor(private fixtureDefinitionService: FixtureDefinitionService, private notificationsService: NotificationsService)
     {
@@ -104,7 +104,7 @@ export class UniverseEditorComponent implements OnInit
         (fileInput as HTMLInputElement).click();
     }
 
-    private async uploadFiles(files: File[]): Promise<void>
+    public async uploadFiles(files: File[]): Promise<void>
     {
         for (let file of files)
         {

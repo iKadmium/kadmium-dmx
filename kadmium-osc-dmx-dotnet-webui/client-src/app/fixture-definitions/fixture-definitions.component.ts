@@ -41,14 +41,14 @@ export class FixtureDefinitionsComponent implements OnInit
         }
     }
 
-    private get manufacturers(): string[]
+    public get manufacturers(): string[]
     {
         return this.skeletons
             .map((value: FixtureDefinitionSkeleton) => value.manufacturer)
             .filter((value: string, index: number, array: string[]) => array.indexOf(value) === index);
     }
 
-    private get filteredData(): FixtureDefinitionSkeleton[]
+    public get filteredData(): FixtureDefinitionSkeleton[]
     {
         if (this.manufacturerFilterEnabled)
         {
@@ -89,12 +89,12 @@ export class FixtureDefinitionsComponent implements OnInit
         }
     }
 
-    private upload(fileInput: any): void
+    public upload(fileInput: any): void
     {
         (fileInput as HTMLInputElement).click();
     }
 
-    private async filesSelected(files: File[]): Promise<void>
+    public async filesSelected(files: File[]): Promise<void>
     {
         for (let file of files)
         {

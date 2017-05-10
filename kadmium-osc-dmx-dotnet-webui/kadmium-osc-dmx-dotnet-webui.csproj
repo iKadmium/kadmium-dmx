@@ -48,7 +48,7 @@
   </ItemGroup>
   <Target Name="PrepublishScript" BeforeTargets="BeforePublish">
     <!--<Exec Command="npm install" />-->
-    <Exec Command="ng build --prod --aot=false" />
+    <Exec Command="ng build --prod" />
     <ItemGroup>
       <DistFiles Include="wwwroot\**\*" />
       <Content Include="@(DistFiles)" CopytoPublishDirectory="Always" />

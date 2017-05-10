@@ -12,7 +12,7 @@ import { Response, ResponseOptions } from "@angular/http";
 })
 export class NavMenuComponent implements OnInit
 {
-    private collapsed: boolean;
+    public collapsed: boolean;
 
     constructor() { }
 

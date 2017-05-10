@@ -9,7 +9,7 @@ import { Title } from "@angular/platform-browser";
 })
 export class AppComponent implements OnInit
 {
-    constructor(private titleService: Title)
+    constructor(public titleService: Title)
     {
     }
 

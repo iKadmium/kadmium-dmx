@@ -26,7 +26,7 @@ namespace kadmium_osc_dmx_dotnet_core.Solvers
             Attributes["Red"].Value = (rgb.Red - minimum) / 255f;
             Attributes["Green"].Value = (rgb.Green - minimum) / 255f;
             Attributes["Blue"].Value = (rgb.Blue - minimum) / 255f;
-            Attributes["White"].Value = (1 - saturation) / 255f;
+            Attributes["White"].Value = (1 - saturation) * Attributes["Brightness"].Value;
         }
 
         public static bool SuitableFor(FixtureDefinition definition)

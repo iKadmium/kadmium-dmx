@@ -15,8 +15,8 @@ import { StatusCode } from "../status-code.enum";
 export class FixtureDefinitionEditorComponent implements OnInit
 {
     private id: number | null;
-    private allManufacturers: string[];
-    private definition: FixtureDefinition;
+    public allManufacturers: string[];
+    public definition: FixtureDefinition;
     private saving: boolean;
 
     constructor(private route: ActivatedRoute, private fixtureDefinitionService: FixtureDefinitionService,
@@ -51,7 +51,7 @@ export class FixtureDefinitionEditorComponent implements OnInit
         }
     }
 
-    private addChannel(): void
+    public addChannel(): void
     {
         let maxChannel = 0;
         this.definition.channels.forEach((value: DMXChannel) => 
@@ -65,24 +65,24 @@ export class FixtureDefinitionEditorComponent implements OnInit
         this.definition.channels.push(new DMXChannel("", maxChannel + 1));
     }
 
-    private removeChannel(channel: DMXChannel): void
+    public removeChannel(channel: DMXChannel): void
     {
         let index = this.definition.channels.indexOf(channel);
         this.definition.channels.splice(index, 1);
     }
 
-    private addAxis(): void
+    public addAxis(): void
     {
         this.definition.movements.push(new Axis());
     }
 
-    private removeAxis(axis: Axis): void
+    public removeAxis(axis: Axis): void
     {
         let index = this.definition.movements.indexOf(axis);
         this.definition.movements.splice(index, 1);
     }
 
-    private addColorWheelEntry(): void
+    public addColorWheelEntry(): void
     {
         let minValue = 0;
         this.definition.colorWheel.forEach((value: ColorWheelEntry) => 
@@ -96,34 +96,34 @@ export class FixtureDefinitionEditorComponent implements OnInit
         this.definition.colorWheel.push(new ColorWheelEntry("", minValue));
     }
 
-    private removeColorWheelEntry(colorWheelEntry: ColorWheelEntry): void
+    public removeColorWheelEntry(colorWheelEntry: ColorWheelEntry): void
     {
         let index = this.definition.colorWheel.indexOf(colorWheelEntry);
         this.definition.colorWheel.splice(index, 1);
     }
 
-    private getOtherChannelNames(thisEntry: DMXChannel): string[]
+    public getOtherChannelNames(thisEntry: DMXChannel): string[]
     {
         return this.definition.channels
             .filter(value => value != thisEntry)
             .map((value: DMXChannel) => value.name);
     }
 
-    private getOtherColorWheelNames(thisEntry: ColorWheelEntry): string[]
+    public getOtherColorWheelNames(thisEntry: ColorWheelEntry): string[]
     {
         return this.definition.colorWheel
             .filter(value => value != thisEntry)
             .map((value: ColorWheelEntry) => value.name);
     }
 
-    private getOtherAxisNames(thisEntry: Axis): string[]
+    public getOtherAxisNames(thisEntry: Axis): string[]
     {
         return this.definition.movements
             .filter(value => value != thisEntry)
             .map((value: Axis) => value.name);
     }
 
-    private hasColorWheelChannel(): boolean
+    public hasColorWheelChannel(): boolean
     {
         return this.definition.channels.find(channel => channel.name == "ColorWheel") != null;
     }
@@ -149,7 +149,7 @@ export class FixtureDefinitionEditorComponent implements OnInit
             });
     }
 
-    private async save(): Promise<void>
+    public async save(): Promise<void>
     {
         this.saving = true;
         try

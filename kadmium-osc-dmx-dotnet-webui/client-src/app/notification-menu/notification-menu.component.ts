@@ -13,7 +13,7 @@ export class NotificationMenuComponent implements OnInit
 {
     private activeMessage: Status;
 
-    constructor(private notificationsService: NotificationsService, private sanitizer: DomSanitizer, public toastr: ToastsManager, vcr: ViewContainerRef)
+    constructor(public notificationsService: NotificationsService, private sanitizer: DomSanitizer, public toastr: ToastsManager, vcr: ViewContainerRef)
     {
         this.toastr.setRootViewContainerRef(vcr);
     }
@@ -30,7 +30,7 @@ export class NotificationMenuComponent implements OnInit
         return safeHTML;
     }
 
-    private getActiveMessageBody(): SafeHtml
+    public getActiveMessageBody(): SafeHtml
     {
         if (this.activeMessage != null)
         {

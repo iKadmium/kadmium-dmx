@@ -38,12 +38,12 @@ export class OscListenerLiveComponent implements OnInit
         }
     }
 
-    private getRecognised(): string
+    public getRecognised(): string
     {
         return this.recognisedData.join("\r\n");
     }
 
-    private getUnrecognised(): string
+    public getUnrecognised(): string
     {
         return this.unrecognisedData.join("\r\n");
     }

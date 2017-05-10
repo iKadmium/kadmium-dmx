@@ -11,6 +11,7 @@ import { CollapseModule } from 'ngx-bootstrap/collapse';
 import { ModalModule } from 'ngx-bootstrap/modal';
 import { BsDropdownModule } from 'ngx-bootstrap/dropdown';
 import { TypeaheadModule } from "ngx-bootstrap/typeahead";
+import { ProgressbarModule } from "ngx-bootstrap/progressbar";
 
 import { AppComponent } from './app.component';
 import { DashboardComponent } from './dashboard/dashboard.component';
@@ -40,6 +41,7 @@ import { MinValueValidatorDirective } from './min-value-validator.directive';
 import { TabsModule } from "ngx-bootstrap/tabs";
 import { UniqueValueValidatorDirective } from './unique-value-validator.directive';
 import { NotificationMenuComponent } from './notification-menu/notification-menu.component';
+import { VenueTesterComponent } from './venue-tester/venue-tester.component';
 
 @NgModule({
     declarations: [
@@ -68,7 +70,8 @@ import { NotificationMenuComponent } from './notification-menu/notification-menu
         MaxValueValidatorDirective,
         MinValueValidatorDirective,
         UniqueValueValidatorDirective,
-        NotificationMenuComponent
+        NotificationMenuComponent,
+        VenueTesterComponent
     ],
     imports: [
         BrowserModule,
@@ -78,11 +81,17 @@ import { NotificationMenuComponent } from './notification-menu/notification-menu
         RouterModule.forRoot([
             { path: '', redirectTo: 'dashboard', pathMatch: 'full' },
             { path: 'dashboard', component: DashboardComponent },
-            { path: 'sacnTransmitterLive', component: SACNTransmitterLiveComponent },
-            { path: 'oscListenerLive', component: OscListenerLiveComponent },
-            { path: 'solversLive', component: SolversLiveComponent },
-            { path: 'fixturesLive', component: FixturesLiveComponent },
+            {
+                path: 'debug',
+                children: [
+                    { path: 'sacnTransmitter', component: SACNTransmitterLiveComponent },
+                    { path: 'oscListener', component: OscListenerLiveComponent },
+                    { path: 'solvers', component: SolversLiveComponent },
+                    { path: 'fixtures', component: FixturesLiveComponent },
+                ]
+            },
             { path: 'settings', component: SettingsComponent },
+            { path: 'venue-tester', component: VenueTesterComponent },
             { path: 'groups', component: GroupsComponent },
             {
                 path: 'venues',
@@ -121,6 +130,7 @@ import { NotificationMenuComponent } from './notification-menu/notification-menu
         ToastModule.forRoot(),
         TabsModule.forRoot(),
         TypeaheadModule.forRoot(),
+        ProgressbarModule.forRoot(),
         BrowserAnimationsModule
     ],
     providers: [NotificationsService],

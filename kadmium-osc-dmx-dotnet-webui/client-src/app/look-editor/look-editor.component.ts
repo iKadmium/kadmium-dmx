@@ -19,7 +19,7 @@ export class LookEditorComponent implements OnInit
     private id: number | null;
 
     private allGroups: Group[];
-    private look: Look;
+    public look: Look;
     private saving: boolean;
     private activeGroup: Group;
 

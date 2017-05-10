@@ -1,4 +1,5 @@
 import { Component, OnInit, Input, ContentChild, ElementRef } from '@angular/core';
+import { FormControl } from "@angular/forms";
 
 @Component({
     selector: 'app-table-input',
@@ -8,11 +9,10 @@ import { Component, OnInit, Input, ContentChild, ElementRef } from '@angular/cor
 export class TableInputComponent
 {
     @Input() private label: string;
-    @ContentChild("model") public model: ElementRef;
+    @ContentChild("model") public model: FormControl;
 
     constructor()
     {
-
     }
 
 }

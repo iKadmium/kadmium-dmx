@@ -24,7 +24,7 @@ export class VenueEditorComponent implements OnInit
     private saving: boolean;
     private groups: Group[];
 
-    private venue: Venue;
+    public venue: Venue;
 
     private selectedUniverse: Universe;
 

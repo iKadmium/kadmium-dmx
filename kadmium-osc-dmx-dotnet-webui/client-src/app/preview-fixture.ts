@@ -58,6 +58,11 @@ export class PreviewFixture implements PreviewFixtureData
         }
     }
 
+    private get white(): number
+    {
+        return this.optionalGetValue("White") * this.optionalGetValue("Master", 1);
+    }
+
     private get red(): number
     {
         return this.optionalGetValue("Red") * this.optionalGetValue("Master", 1);
@@ -78,6 +83,11 @@ export class PreviewFixture implements PreviewFixtureData
         return this.channelNameMap.get("Red") != null && this.channelNameMap.get("Green") != null && this.channelNameMap.get("Blue") != null;
     }
 
+    private get isRGBW(): boolean
+    {
+        return this.isRGB && this.channelNameMap.get("White") != null;
+    }
+
     private get isColorWheel(): boolean
     {
         return this.channelNameMap.get("ColorWheel") != null;
@@ -93,7 +103,11 @@ export class PreviewFixture implements PreviewFixtureData
         }
         else
         {
-            if (this.isRGB)
+            if (this.isRGBW)
+            {
+                return `rgb(${this.red * 255 + this.white * 255}, ${this.green * 255 + this.white * 255}, ${this.blue * 255 + this.white * 255}`;
+            }
+            else if (this.isRGB)
             {
                 return `rgb(${this.red * 255}, ${this.green * 255}, ${this.blue * 255}`;
             }

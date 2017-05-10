@@ -52,12 +52,12 @@ export class VenuesComponent implements OnInit
         }
     }
 
-    private upload(fileInput: any): void
+    public upload(fileInput: any): void
     {
         (fileInput as HTMLInputElement).click();
     }
 
-    private async uploadFiles(files: File[]): Promise<void>
+    public async uploadFiles(files: File[]): Promise<void>
     {
         for (let file of files)
         {
