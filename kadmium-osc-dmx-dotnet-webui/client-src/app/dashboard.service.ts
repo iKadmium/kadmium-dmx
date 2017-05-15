@@ -14,9 +14,21 @@ export class DashboardService
         this.rpc = new RPCSocket(this.socketUrl);
     }
 
-    public subscribe(listener: Object): void
+    public async subscribe(listener: Object): Promise<void>
     {
-        this.rpc.subscribe(listener);
+        return new Promise<void>(async (resolve, reject) =>
+        {
+            try
+            {
+                await this.rpc.connect();
+                this.rpc.subscribe(listener);
+                resolve();
+            }
+            catch (error)
+            {
+                reject(error);
+            }
+        });
     }
 
     public init(): void
@@ -44,8 +56,12 @@ export class MockDashboardService extends DashboardService
         super();
     }
 
-    public subscribe(listener: Object): void
+    public subscribe(listener: Object): Promise<void>
     {
+        return new Promise<void>((resolve, reject) =>
+        {
+            resolve();
+        });
     }
 
     public init(): void

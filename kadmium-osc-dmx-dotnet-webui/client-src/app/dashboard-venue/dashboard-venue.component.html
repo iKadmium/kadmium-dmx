@@ -1,0 +1,33 @@
+<div class="panel panel-default">
+    <div class="panel-heading">Venue</div>
+    <div class="panel-body">
+        <h2 *ngIf="!venue">No Venue Loaded</h2>
+        <h2 *ngIf="venue">{{venue?.name}}</h2>
+        <div class="row">
+            <div class="col-md-3">
+                <app-dashboard-nav-menu-item name="Universes" text="{{universeCount}}" (click)="handleClick()">
+                </app-dashboard-nav-menu-item>
+            </div>
+            <div class="col-md-3">
+                <app-dashboard-nav-menu-item name="Fixtures" text="{{fixtureCount}}" (click)="handleClick()">
+                </app-dashboard-nav-menu-item>
+            </div>
+            <div class="col-md-3">
+                <app-dashboard-nav-menu-item name="DMX Channels" text="{{dmxChannelCount}}" (click)="handleClick()">
+                </app-dashboard-nav-menu-item>
+            </div>
+            <div class="col-md-3">
+                <app-dashboard-nav-menu-item name="Solver Attributes" text="{{solverAttributeCount}}" (click)="handleClick()">
+                </app-dashboard-nav-menu-item>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="panel panel-default">
+    <div class="panel-heading">Venue List</div>
+    <div class="panel-body">
+        <app-dashboard-venue-list (venueLoaded)="updateVenue()">
+        </app-dashboard-venue-list>
+    </div>
+</div>

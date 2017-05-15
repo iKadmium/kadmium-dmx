@@ -1,4 +1,4 @@
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using kadmium_osc_dmx_dotnet_core;
 using System.Linq;
 using kadmium_osc_dmx_dotnet_core.Fixtures;
@@ -45,7 +45,7 @@ namespace kadmium_osc_dmx_dotnet_webui.Controllers
                                                Model = fixture.FixtureDefinition.Model,
                                                Address = fixture.StartChannel,
                                                Attributes = from attribute in fixture.Settables.Values
-                                                            where !attribute.Controlled && attribute is FixtureSolverAttribute
+                                                            //where !attribute.Controlled && attribute is FixtureSolverAttribute
                                                             select new SolversLiveAttribute
                                                             {
                                                                 Name = attribute.Name,

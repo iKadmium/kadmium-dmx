@@ -47,7 +47,7 @@ export class SACNTransmitterLiveComponent implements OnInit
                 this.activeUniverse = this.universes[0];
             }
 
-            this.sacnTransmitterService.subscribe(this);
+            await this.sacnTransmitterService.subscribe(this);
         }
         catch (error)
         {

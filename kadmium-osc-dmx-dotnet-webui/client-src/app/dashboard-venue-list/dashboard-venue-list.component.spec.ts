@@ -1,20 +1,20 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { StatusPanelComponent } from './status-panel.component';
+import { DashboardVenueListComponent } from './dashboard-venue-list.component';
 
-describe('StatusPanelComponent', () => {
-  let component: StatusPanelComponent;
-  let fixture: ComponentFixture<StatusPanelComponent>;
+describe('DashboardVenueListComponent', () => {
+  let component: DashboardVenueListComponent;
+  let fixture: ComponentFixture<DashboardVenueListComponent>;
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ StatusPanelComponent ]
+      declarations: [ DashboardVenueListComponent ]
     })
     .compileComponents();
   }));
 
   beforeEach(() => {
-    fixture = TestBed.createComponent(StatusPanelComponent);
+    fixture = TestBed.createComponent(DashboardVenueListComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

@@ -1,0 +1,4 @@
+<ul class="list-group">
+  <li *ngFor="let venue of venues" class="list-group-item" (click)="selectedVenue = venue" [ngClass]="{'active': venue == selectedVenue}">{{venue.name}}</li>
+</ul>
+<button class="btn btn-primary btn-lg" (click)="loadVenue(selectedVenue)">Load Venue</button>

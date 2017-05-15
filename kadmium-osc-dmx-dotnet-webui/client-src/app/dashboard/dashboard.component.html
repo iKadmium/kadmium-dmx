@@ -1,53 +1,23 @@
 <div class="row">
     <div class="col-md-3">
-        <app-status-panel [status]="statuses.get('Venues')" name="Venue">
-            <div dropdown class="btn-group" *ngIf="venueSkeletons">
-                <button dropdownToggle class="btn btn-primary dropdown-toggle" type="button">Load Venue
-                    <span class="caret"></span>
-                </button>
-                <ul *dropdownMenu class="dropdown-menu">
-                    <li *ngFor="let venueSkeleton of venueSkeletons" role="menuitem">
-                        <a class="dropdown-item" (click)="activateVenue(venueSkeleton)">{{venueSkeleton.name}}</a>
-                    </li>
-                </ul>
-            </div>
-        </app-status-panel>
+        <app-dashboard-nav-menu-item [status]="statuses.get('Venues')" name="Venue" icon="glyphicon-home" (click)="handleClick()">
+        </app-dashboard-nav-menu-item>
+
+        <app-dashboard-nav-menu-item [status]="statuses.get('SACNTransmitters')" name="SACN Transmitter" icon="glyphicon-upload">
+        </app-dashboard-nav-menu-item>
+
+        <app-dashboard-nav-menu-item [status]="statuses.get('EnttecProTransmitters')" name="Enttec Pro Transmitter" icon="glyphicon-upload">
+        </app-dashboard-nav-menu-item>
+
+        <app-dashboard-nav-menu-item [status]="statuses.get('OSCListeners')" name="OSC Listener" icon="glyphicon-download">
+        </app-dashboard-nav-menu-item>
     </div>
-    <div class="col-md-3">
-        <app-status-panel [status]="statuses.get('SACNTransmitters')" #sacnTransmitterPanel name="sACN Transmitter">
-            <div class="btn-group">
-                <button class="btn" [ngClass]="sacn.buttonClass" (click)="sacn.toggle()" [disabled]="sacn.enabled == null">{{sacn.statusText}}</button>
-                <button class="btn btn-primary" [disabled]="!sacn.enabled || !venueLoaded" routerLink="/debug/sacnTransmitter">Debug</button>
-            </div>
-        </app-status-panel>
-    </div>
-    <div class="col-md-3">
-        <app-status-panel [status]="statuses.get('EnttecProTransmitters')" name="Enttec Pro Transmitter">
-            <div class="btn-group">
-                <button class="btn" [ngClass]="enttec.buttonClass" (click)="enttec.toggle()" [disabled]="enttec.enabled == null">{{enttec.statusText}}</button>
-                <button class="btn btn-primary" [disabled]="!enttec.enabled || !venueLoaded" routerLink="/debug/sacnTransmitter">Debug</button>
-            </div>
-        </app-status-panel>
-    </div>
-    <div class="col-md-3">
-        <app-status-panel [status]="statuses.get('OSCListeners')" name="OSC Listener">
-            <div class="btn-group">
-                <button class="btn" [ngClass]="osc.buttonClass" (click)="osc.toggle()" [disabled]="osc.enabled == null">{{osc.statusText}}</button>
-                <a class="btn btn-primary" routerLink="/debug/oscListener">Debug</a>
-            </div>
-        </app-status-panel>
-    </div>
-    <div class="col-md-3">
-        <app-status-panel [status]="statuses.get('Solvers')" name="Solvers">
-            <div class="btn-group">
-                <button class="btn" [ngClass]="solvers.buttonClass" (click)="solvers.toggle()" [disabled]="solvers.enabled == null || !venueLoaded">{{solvers.statusText}}</button>
-                <a class="btn btn-primary" routerLink="/debug/solvers">Debug</a>
-            </div>
-        </app-status-panel>
-    </div>
-    <div class="col-md-3">
-        <app-status-panel [status]="statuses.get('Fixtures')" name="Fixtures">
-            <a routerLink="/debug/fixtures" class="btn btn-primary">Debug</a>
-        </app-status-panel>
+    <div class="col-md-9">
+
+        <app-dashboard-venue [status]="statuses.get('Venues')">
+        </app-dashboard-venue>
+
+        <app-dashboard-universe></app-dashboard-universe>
+
     </div>
 </div>

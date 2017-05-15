@@ -1,0 +1,3 @@
+<ul class="list-group">
+    <li *ngFor="let universe of universes" class="list-group-item" (click)="selectUniverse(universe)" [ngClass]="{'active': universe == selectedUniverse}">{{universe.name}}</li>
+</ul>

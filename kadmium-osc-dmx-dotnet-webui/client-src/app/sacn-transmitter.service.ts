@@ -43,9 +43,22 @@ export class SACNTransmitterService
         this.rpc.send(data);
     }
 
-    public subscribe(thisRef: Object): void
+    public async subscribe(thisRef: Object): Promise<void>
     {
-        this.rpc.subscribe(thisRef);
+        return new Promise<void>(async (resolve, reject) =>
+        {
+            try
+            {
+                await this.rpc.connect();
+                this.rpc.subscribe(thisRef);
+                resolve();
+            }
+            catch (error)
+            {
+                reject(error);
+            }
+        });
+
     }
 }
 

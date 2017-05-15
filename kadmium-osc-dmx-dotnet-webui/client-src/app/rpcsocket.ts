@@ -2,11 +2,30 @@ export class RPCSocket
 {
     private clients: Object[];
     private socket: WebSocket;
+    private address: string;
 
     constructor(address: string)
     {
-        this.socket = new WebSocket(address);
+        this.address = address;
         this.clients = [];
+    }
+
+    public connect(): Promise<void>
+    {
+        return new Promise<void>((resolve, reject) =>
+        {
+            this.socket = new WebSocket(this.address);
+            this.socket.addEventListener("open", () =>
+            {
+                resolve();
+            });
+
+            this.socket.addEventListener("error", (ev: Event) =>
+            {
+                let fred = ev;
+                reject("Websocket could not connect");
+            });
+        });
     }
 
     public send(data: RPCData): void
