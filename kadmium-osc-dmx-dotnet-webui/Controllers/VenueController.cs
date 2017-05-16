@@ -1,4 +1,4 @@
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json.Linq;
 using kadmium_osc_dmx_dotnet_core;
 using System.Collections.Generic;
@@ -41,9 +41,41 @@ namespace kadmium_osc_dmx_dotnet_webui.Controllers
 
         [HttpGet]
         [Route("[action]")]
-        public Venue GetActive()
+        public ActiveVenue GetActive()
         {
-            return MasterController.Instance.Venue;
+            ActiveVenue response = new ActiveVenue
+            {
+                Name = MasterController.Instance.Venue?.Name,
+                Universes = from universe in MasterController.Instance.Venue?.Universes ?? Enumerable.Empty<Universe>()
+                            select new ActiveUniverse
+                            {
+                                UniverseID = universe.UniverseNumber,
+                                Name = universe.Name,
+                                Fixtures = from fixture in universe.Fixtures
+                                           orderby fixture.StartChannel
+                                           select new ActiveFixture
+                                           {
+                                               Id = fixture.Id,
+                                               Manufacturer = fixture.FixtureDefinition.Manufacturer,
+                                               Model = fixture.FixtureDefinition.Model,
+                                               Address = fixture.StartChannel,
+                                               Group = fixture.Group.Name,
+                                               ColorWheel = fixture.FixtureDefinition.ColorWheel,
+                                               Attributes = from attribute in fixture.Settables.Values
+                                                            select new ActiveAttribute
+                                                            {
+                                                                Name = attribute.Name,
+                                                                Value = attribute.Value,
+                                                                DmxMin = (attribute as DMXChannel)?.Min ?? 0,
+                                                                DmxMax = (attribute as DMXChannel)?.Max ?? 0,
+                                                                Controlled = (attribute as DMXChannel)?.Controlled ?? false,
+                                                                Dmx = attribute is DMXChannel,
+                                                                DmxAddress = (attribute as DMXChannel)?.Address ?? 0
+                                                            }
+                                           }
+                            }
+            };
+            return response;
         }
 
         [HttpGet]
@@ -141,7 +173,7 @@ namespace kadmium_osc_dmx_dotnet_webui.Controllers
                 }
             }
         }
-
+        
         private async Task UpdateUniverse(Universe oldUniverse, Universe newUniverse)
         {
             var removals = from fixture in oldUniverse.Fixtures
@@ -199,5 +231,40 @@ namespace kadmium_osc_dmx_dotnet_webui.Controllers
     {
         public string Manufacturer { get; set; }
         public string Model { get; set; }
+    }
+
+    public class ActiveVenue
+    {
+        public string Name { get; set; }
+        public IEnumerable<ActiveUniverse> Universes { get; set; }
+    }
+
+    public class ActiveUniverse
+    {
+        public int UniverseID { get; set; }
+        public string Name { get; set; }
+        public IEnumerable<ActiveFixture> Fixtures { get; set; }
+    }
+
+    public class ActiveFixture
+    {
+        public int Id { get; set; }
+        public string Manufacturer { get; set; }
+        public string Model { get; set; }
+        public int Address { get; set; }
+        public string Group { get; set; }
+        public IEnumerable<ColorWheelEntry> ColorWheel { get; set; }
+        public IEnumerable<ActiveAttribute> Attributes { get; set; }
+    }
+
+    public class ActiveAttribute
+    {
+        public string Name { get; set; }
+        public float Value { get; set; }
+        public int DmxMin { get; set; }
+        public int DmxMax { get; set; }
+        public bool Controlled { get; set; }
+        public bool Dmx { get; set; }
+        public int DmxAddress { get; set; }
     }
 }

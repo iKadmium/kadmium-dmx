@@ -1,23 +1,38 @@
 <div class="row">
     <div class="col-md-3">
-        <app-dashboard-nav-menu-item [status]="statuses.get('Venues')" name="Venue" icon="glyphicon-home" (click)="handleClick()">
+        <app-dashboard-nav-menu-item [status]="statuses.get('Venues')" name="Venue" icon="glyphicon-home" (click)="activeSection = 'Venue'">
         </app-dashboard-nav-menu-item>
 
-        <app-dashboard-nav-menu-item [status]="statuses.get('SACNTransmitters')" name="SACN Transmitter" icon="glyphicon-upload">
+        <app-dashboard-nav-menu-item [status]="statuses.get('SACNTransmitters')" name="SACN Transmitter" icon="glyphicon-upload"
+            (click)="activeSection = 'SACN'">
         </app-dashboard-nav-menu-item>
 
-        <app-dashboard-nav-menu-item [status]="statuses.get('EnttecProTransmitters')" name="Enttec Pro Transmitter" icon="glyphicon-upload">
+        <app-dashboard-nav-menu-item [status]="statuses.get('EnttecProTransmitters')" name="Enttec Pro Transmitter" icon="glyphicon-upload"
+            (click)="activeSection = 'Enttec'">
         </app-dashboard-nav-menu-item>
 
-        <app-dashboard-nav-menu-item [status]="statuses.get('OSCListeners')" name="OSC Listener" icon="glyphicon-download">
+        <app-dashboard-nav-menu-item [status]="statuses.get('OSCListeners')" name="OSC Listener" icon="glyphicon-download" (click)="activeSection = 'OSC'">
         </app-dashboard-nav-menu-item>
     </div>
     <div class="col-md-9">
 
-        <app-dashboard-venue [status]="statuses.get('Venues')">
+        <app-dashboard-venue [venue]="venue" *ngIf="activeSection == 'Venue'">
         </app-dashboard-venue>
 
-        <app-dashboard-universe></app-dashboard-universe>
+        <app-dashboard-venue-list *ngIf="activeSection == 'Venue'">
+        </app-dashboard-venue-list>
+
+        <app-dashboard-fixture-list [venue]="venue" *ngIf="activeSection == 'Fixture'">
+        </app-dashboard-fixture-list>
+
+        <app-dashboard-fixture [venue]="venue" (update)="updateAttribute($event)" *ngIf="activeSection == 'Fixture'">
+        </app-dashboard-fixture>
+
+        <app-dashboard-universe-list [venue]="venue" *ngIf="activeSection == 'Universe'">
+        </app-dashboard-universe-list>
+
+        <app-dashboard-universe [venue]="venue" (update)="updateChannel($event)" *ngIf="activeSection == 'Universe'">
+        </app-dashboard-universe>
 
     </div>
 </div>

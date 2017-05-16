@@ -12,7 +12,6 @@ import { StatusCode } from "app/status-code.enum";
 })
 export class DashboardVenueListComponent implements OnInit
 {
-    @Output() venueLoaded: EventEmitter<void> = new EventEmitter<void>();
     public venues: VenueSkeleton[];
     public selectedVenue: VenueSkeleton;
 
@@ -29,7 +28,6 @@ export class DashboardVenueListComponent implements OnInit
         try
         {
             await this.venueService.activate(venueSkeleton.id)
-            this.venueLoaded.emit();
             this.notificationsService.add(StatusCode.Success, venueSkeleton.name + " successfully loaded")
         }
         catch (reason)

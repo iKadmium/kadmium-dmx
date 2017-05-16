@@ -1,13 +1,13 @@
 import { ColorWheelEntry } from "./fixture-definition";
-import { PreviewChannel } from "./preview-channel";
+import { PreviewAttribute } from "./preview-attribute";
 import { RGB } from "./color";
 
 export class PreviewColorWheel
 {
     entries: ColorWheelEntry[];
-    chanel: PreviewChannel;
+    chanel: PreviewAttribute;
 
-    constructor(entries: ColorWheelEntry[], channel: PreviewChannel)
+    constructor(entries: ColorWheelEntry[], channel: PreviewAttribute)
     {
         this.entries = entries;
         this.chanel = channel;

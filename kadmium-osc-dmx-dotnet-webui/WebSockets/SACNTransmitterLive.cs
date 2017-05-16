@@ -17,7 +17,7 @@ namespace kadmium_osc_dmx_dotnet_webui.WebSockets
 
         private async void Transmitter_OnTransmit(object sender, TransmitterEventArgs e)
         {
-            WebSocketMessage<SACNTransmitterUpdateMessage> message = new WebSocketMessage<SACNTransmitterUpdateMessage>("updateUniverse",
+            WebSocketMessage<SACNTransmitterUpdateMessage> message = new WebSocketMessage<SACNTransmitterUpdateMessage>("updateDMX",
                 new SACNTransmitterUpdateMessage
                 {
                     UniverseID = e.UniverseID,
@@ -27,17 +27,7 @@ namespace kadmium_osc_dmx_dotnet_webui.WebSockets
 
             await Send(message);
         }
-
-        public void UpdateAttribute(int fixtureID, string attributeName, float attributeValue)
-        {
-            var fixtures = from universe in MasterController.Instance.Venue.Universes
-                           from fixture in universe.Fixtures
-                           where fixture.Id == fixtureID
-                           select fixture;
-
-            fixtures.Single().Settables[attributeName].Value = attributeValue;
-        }
-
+        
         public void UpdateDMX(int universeID, int channel, int value)
         {
             Universe universe = MasterController.Instance.Venue.Universes.Single(x => x.UniverseNumber == universeID);

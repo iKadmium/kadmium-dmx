@@ -1,15 +1,7 @@
 <div class="panel panel-default">
-    <div class="panel-heading">Universe List</div>
-    <div class="panel-body">
-        <app-dashboard-universe-list (universeSelected)="selectUniverse($event)">
-        </app-dashboard-universe-list>
-    </div>
-</div>
-
-<div class="panel panel-default">
     <div class="panel-heading">Universe</div>
     <div class="panel-body">
-        <table class="table table-striped" *ngIf="activeUniverse != null">
+        <table class="table table-striped" *ngIf="venue != null && venue.activeUniverse != null">
             <thead>
                 <tr>
                     <th></th>
@@ -28,11 +20,14 @@
             <tbody>
                 <tr *ngFor="let rowNumber of range(0, 51)">
                     <th>{{rowNumber}}</th>
-                    <td *ngFor="let columnNumber of range(0, 9)" title="{{rowNumber * 10 + columnNumber}}" [ngStyle]="{'background-color': getStyle(getChannelValue(rowNumber, columnNumber))}">
+                    <td *ngFor="let columnNumber of range(0, 9)" #element [attr.contenteditable]="!isControlled(rowNumber, columnNumber)" title="{{rowNumber * 10 + columnNumber}}"
+                        [ngStyle]="{'background-color': getStyle(getChannelValue(rowNumber, columnNumber))}" [ngClass]="{'controlled': isControlled(rowNumber, columnNumber)}"
+                        (blur)="setChannelValue(rowNumber, columnNumber,element)">
                         {{getDisplayValue(getChannelValue(rowNumber, columnNumber))}}
                     </td>
                 </tr>
             </tbody>
         </table>
+
     </div>
 </div>

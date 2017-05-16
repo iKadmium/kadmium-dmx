@@ -53,5 +53,6 @@ export enum SocketController
 {
     SACN,
     OSC,
-    Dashboard
+    Dashboard,
+    Solvers
 }

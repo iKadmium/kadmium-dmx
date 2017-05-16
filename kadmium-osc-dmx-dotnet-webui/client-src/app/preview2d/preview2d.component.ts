@@ -42,7 +42,7 @@ export class Preview2DComponent implements OnInit
                 this.universeNumberMap.set(universe.universeID, universe);
                 for (let fixture of universe.fixtures)
                 {
-                    fixture.definition.channels = this.sortChannels(fixture.definition.channels);
+                    //fixture.definition.channels = this.sortChannels(fixture.definition.channels);
                 }
             }
             this.activeUniverse = this.universes[0];

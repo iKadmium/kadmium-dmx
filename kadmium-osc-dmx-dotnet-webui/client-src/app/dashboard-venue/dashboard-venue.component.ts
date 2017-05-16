@@ -5,6 +5,7 @@ import { NotificationsService } from "app/notifications.service";
 import { StatusCode } from "app/status-code.enum";
 import { Status } from "app/status";
 import { SolversLiveService, UniverseData } from "app/solvers-live.service";
+import { PreviewVenue } from "app/preview-venue";
 
 @Component({
     selector: 'app-dashboard-venue',
@@ -14,45 +15,29 @@ import { SolversLiveService, UniverseData } from "app/solvers-live.service";
 })
 export class DashboardVenueComponent implements OnInit
 {
+    @Input() venue: PreviewVenue;
 
-    public venue: Venue;
-    public universeData: UniverseData[];
-    @Input() status: Status;
-
-    constructor(private venueService: VenueService, private notificationsService: NotificationsService, private solversLiveService: SolversLiveService)
+    constructor(private notificationsService: NotificationsService)
     { }
 
-    async ngOnInit(): Promise<void>
+    ngOnInit(): void
     {
-        await this.updateVenue();
-    }
 
-    public async updateVenue(): Promise<void>
-    {
-        try
-        {
-            this.venue = await this.venueService.getActive();
-            this.universeData = await this.solversLiveService.get();
-        }
-        catch (reason)
-        {
-            this.notificationsService.add(StatusCode.Error, reason);
-        }
     }
 
     public get universeCount(): number
     {
-        if (this.universeData == null) { return 0 };
+        if (this.venue == null) { return 0 };
 
-        return this.universeData.length;
+        return this.venue.universes.length;
     }
 
     public get fixtureCount(): number
     {
-        if (this.universeData == null) { return 0 };
+        if (this.venue == null) { return 0 };
 
         let sum = 0;
-        for (let universe of this.universeData)
+        for (let universe of this.venue.universes)
         {
             sum += universe.fixtures.length;
         }
@@ -61,14 +46,14 @@ export class DashboardVenueComponent implements OnInit
 
     public get dmxChannelCount(): number
     {
-        if (this.universeData == null) { return 0 };
+        if (this.venue == null) { return 0 };
 
         let sum = 0;
-        for (let universe of this.universeData)
+        for (let universe of this.venue.universes)
         {
             for (let fixture of universe.fixtures)
             {
-                sum += fixture.attributes.filter(x => x.dmx).length;
+                sum += fixture.channelNumberMap.size;
             }
         }
 
@@ -77,14 +62,15 @@ export class DashboardVenueComponent implements OnInit
 
     public get solverAttributeCount(): number
     {
-        if (this.universeData == null) { return 0 };
+        if (this.venue == null) { return 0 };
 
         let sum = 0;
-        for (let universe of this.universeData)
+        for (let universe of this.venue.universes)
         {
             for (let fixture of universe.fixtures)
             {
-                sum += fixture.attributes.filter(x => !x.dmx).length;
+                let attributes = Array.from(fixture.channelNameMap.values());
+                sum += attributes.filter(x => !x.dmx).length
             }
         }
 

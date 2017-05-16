@@ -13,10 +13,9 @@ export class Preview2DFixtureComponent implements AfterContentInit, OnChanges
     static updateRate = 60; //hertz
     static updateTime = 1000 / Preview2DFixtureComponent.updateRate;
 
-    @Input("fixture") fixtureData = <PreviewFixtureData>null;
+    @Input() fixture: PreviewFixture;
     @Input("data") data: number[];
     @ViewChild("canvas") canvasRef: ElementRef;
-    fixture: PreviewFixture;
     canvas: HTMLCanvasElement;
     ctx: CanvasRenderingContext2D;
 
@@ -28,7 +27,6 @@ export class Preview2DFixtureComponent implements AfterContentInit, OnChanges
     {
         this.canvas = this.canvasRef.nativeElement;
         this.ctx = this.canvas.getContext("2d");
-        this.fixture = new PreviewFixture(this.fixtureData);
     }
 
     ngOnChanges(changes: SimpleChanges): void

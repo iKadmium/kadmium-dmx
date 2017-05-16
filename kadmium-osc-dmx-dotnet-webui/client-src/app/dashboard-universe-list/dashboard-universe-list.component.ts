@@ -1,8 +1,10 @@
-import { Component, OnInit, EventEmitter, Output, Input } from '@angular/core';
+import { Component, OnInit, EventEmitter, Output, Input, OnChanges, SimpleChanges, SimpleChange } from '@angular/core';
 import { VenueService } from "app/venue.service";
 import { NotificationsService } from "app/notifications.service";
 import { Venue, Universe } from "app/venue";
 import { StatusCode } from "app/status-code.enum";
+import { PreviewUniverse } from "app/preview-universe";
+import { PreviewVenue } from "app/preview-venue";
 
 @Component({
     selector: 'app-dashboard-universe-list',
@@ -12,36 +14,20 @@ import { StatusCode } from "app/status-code.enum";
 })
 export class DashboardUniverseListComponent implements OnInit
 {
-    @Output() universeSelected = new EventEmitter<number>();
-    universes: Universe[];
-    selectedUniverse: Universe;
+    @Input() venue: PreviewVenue;
 
-    constructor(private venueService: VenueService, private notificationsService: NotificationsService) 
+    constructor(private notificationsService: NotificationsService) 
     {
-        this.universes = [];
+
     }
 
-    async ngOnInit(): Promise<void>
-    {
-        try
-        {
-            let venue = await this.venueService.getActive();
-            this.universes = venue.universes;
-            if (this.universes.length > 0)
-            {
-                this.selectUniverse(this.universes[0]);
-            }
-        }
-        catch (error)
-        {
-            this.notificationsService.add(StatusCode.Error, error);
-        }
-    }
+    ngOnInit(): void
+    { }
 
-    selectUniverse(universe: Universe): void
+
+    selectUniverse(universe: PreviewUniverse): void
     {
-        this.selectedUniverse = universe;
-        this.universeSelected.emit(universe.universeID);
+        this.venue.activeUniverse = universe;
     }
 
 }

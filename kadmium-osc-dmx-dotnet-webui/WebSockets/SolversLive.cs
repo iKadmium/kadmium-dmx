@@ -17,26 +17,37 @@ namespace kadmium_osc_dmx_dotnet_webui.WebSockets
             Sending = false;
             if (MasterController.Instance.Venue != null)
             {
-                foreach (Universe universe in MasterController.Instance.Venue?.Universes)
-                {
-                    universe.Updated += Universe_Updated;
-                }
+                SubscribeToUpdates();
+            }
+            MasterController.Instance.VenueActivated += Instance_VenueActivated;
+        }
+
+        private void Instance_VenueActivated(object sender, System.EventArgs e)
+        {
+            
+        }
+
+        private void SubscribeToUpdates()
+        {
+            foreach (Universe universe in MasterController.Instance.Venue?.Universes)
+            {
+                universe.Updated += Universe_Updated;
             }
         }
-        
+
         private async void Universe_Updated(object sender, UpdateEventArgs e)
         {
-            WebSocketMessage<SolversLiveUpdateMessage> message = new WebSocketMessage<SolversLiveUpdateMessage>("updateUniverse", new SolversLiveUpdateMessage
+            WebSocketMessage<SolversLiveUpdateMessage> message = new WebSocketMessage<SolversLiveUpdateMessage>("updateAttributes", new SolversLiveUpdateMessage
             {
                 UniverseID = e.UniverseID,
                 Fixtures = from fixture in e.Fixtures
                            orderby fixture.StartChannel
                            select new SolversLiveFixtureUpdate
                            {
-                               Address = fixture.StartChannel,
+                               Id = fixture.Id,
                                Attributes = 
                                        from attribute in fixture.Settables.Values
-                                       where !attribute.Controlled && attribute is FixtureSolverAttribute
+                                       where attribute is FixtureSolverAttribute
                                        select new SolversLiveAttributeUpdate
                                        {
                                            Name = attribute.Name,
@@ -46,6 +57,16 @@ namespace kadmium_osc_dmx_dotnet_webui.WebSockets
                            }
             });
             await Send(message);
+        }
+
+        public void UpdateAttribute(int fixtureID, string attributeName, float attributeValue)
+        {
+            var fixtures = from universe in MasterController.Instance.Venue.Universes
+                           from fixture in universe.Fixtures
+                           where fixture.Id == fixtureID
+                           select fixture;
+
+            fixtures.Single().Settables[attributeName].Value = attributeValue;
         }
 
         public override void Dispose()
@@ -65,7 +86,7 @@ namespace kadmium_osc_dmx_dotnet_webui.WebSockets
 
     public class SolversLiveFixtureUpdate
     {
-        public int Address { get; set; }
+        public int Id { get; set; }
         public IEnumerable<SolversLiveAttributeUpdate> Attributes { get; set; }
     }
 

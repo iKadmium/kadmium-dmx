@@ -54,6 +54,14 @@ namespace kadmium_osc_dmx_dotnet_core
             {
                 fixture.Dispose();
             }
+            foreach(var client in Rendered.GetInvocationList())
+            {
+                Rendered -= (client as EventHandler<DMXEventArgs>);
+            }
+            foreach (var client in Updated.GetInvocationList())
+            {
+                Updated -= (client as EventHandler<UpdateEventArgs>);
+            }
         }
         
         public void Update()

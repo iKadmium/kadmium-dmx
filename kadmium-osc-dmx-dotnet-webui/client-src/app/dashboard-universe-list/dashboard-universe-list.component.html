@@ -1,3 +1,8 @@
-<ul class="list-group">
-    <li *ngFor="let universe of universes" class="list-group-item" (click)="selectUniverse(universe)" [ngClass]="{'active': universe == selectedUniverse}">{{universe.name}}</li>
-</ul>
+<div class="panel panel-default">
+    <div class="panel-heading">Universe List</div>
+    <div class="panel-body">
+        <ul class="list-group" *ngIf="venue">
+            <li *ngFor="let universe of venue.universes" class="list-group-item" (click)="selectUniverse(universe)" [ngClass]="{'active': universe == venue.activeUniverse}">{{universe.name}}</li>
+        </ul>
+    </div>
+</div>

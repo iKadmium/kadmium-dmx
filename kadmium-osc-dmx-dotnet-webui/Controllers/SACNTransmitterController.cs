@@ -1,4 +1,4 @@
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using kadmium_osc_dmx_dotnet_core;
 using System.Linq;
 using kadmium_osc_dmx_dotnet_core.Transmitters;
@@ -24,13 +24,6 @@ namespace kadmium_osc_dmx_dotnet_webui.Controllers
             MasterController.Instance.Transmitters.Single(x => x is SACNTransmitter).Enabled = value;
         }
 
-        [HttpGet]
-        [Route("[action]/{universeID}/{channel}/{value}")]
-        public void Set(int universeID, int channel, byte value)
-        {
-            MasterController.Instance.Venue.Universes
-                .Single(x => x.UniverseNumber == universeID)
-                .DMX[channel] = value;
-        }
+        
     }
 }

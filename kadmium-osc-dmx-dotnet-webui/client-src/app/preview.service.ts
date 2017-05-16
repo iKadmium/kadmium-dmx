@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { Http } from '@angular/http';
 import { URLs, Controller } from "./url";
-import { FixtureDefinition } from "./fixture-definition";
+import { FixtureDefinition, ColorWheelEntry } from "./fixture-definition";
 
 @Injectable()
 export class PreviewService
@@ -46,7 +46,22 @@ export interface PreviewUniverseData
 
 export interface PreviewFixtureData
 {
+    id: number;
+    manufacturer: string;
+    model: string;
     address: number;
-    definition: FixtureDefinition;
     group: string;
+    attributes: PreviewAttributeData[];
+    colorWheel: ColorWheelEntry[];
+}
+
+export interface PreviewAttributeData
+{
+    name: string;
+    value: number;
+    dmxAddress: number;
+    dmxMin: number;
+    dmxMax: number;
+    controlled: boolean;
+    dmx: boolean;
 }

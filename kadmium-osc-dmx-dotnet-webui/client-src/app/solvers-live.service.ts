@@ -7,7 +7,7 @@ import { RPCSocket, RPCData } from "./rpcsocket";
 export class SolversLiveService
 {
     private solversLiveURL = URLs.getAPIUrl(Controller.SolversLive);
-    private socketUrl = URLs.getSocketURL(SocketController.SACN);
+    private socketUrl = URLs.getSocketURL(SocketController.Solvers);
     private socket: RPCSocket;
 
     constructor(private http: Http)
@@ -15,20 +15,21 @@ export class SolversLiveService
         this.socket = new RPCSocket(this.socketUrl);
     }
 
-    public get(): Promise<UniverseData[]>
+    public async subscribe(listener: Object): Promise<void>
     {
-        return this.http.get(this.solversLiveURL)
-            .toPromise()
-            .then(value => 
+        return new Promise<void>(async (resolve, reject) =>
+        {
+            try
             {
-                let data = value.json() as InitData;
-                return data.universes;
-            });
-    }
+                await this.socket.connect();
+                this.socket.subscribe(listener);
+            }
+            catch (error)
+            {
+                reject(error);
+            }
+        });
 
-    public subscribe(listener: Object): void
-    {
-        this.socket.subscribe(listener);
     }
 
     public set(fixtureID: number, attributeName: string, attributeValue: number): void
@@ -62,8 +63,7 @@ export class SolversLiveService
 
 export interface AttributeUpdateMessage
 {
-    universeID: number;
-    fixtureChannel: number;
+    fixtureID: number;
     attributeName: string;
     attributeValue: number;
 }
@@ -102,11 +102,6 @@ export interface UniverseData
 {
     universeID: number;
     fixtures: FixtureData[];
-}
-
-interface InitData
-{
-    universes: UniverseData[];
 }
 
 export class MockSolversLiveService

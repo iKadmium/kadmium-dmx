@@ -15,6 +15,8 @@ namespace kadmium_osc_dmx_dotnet_core
         static int UPDATES_PER_SECOND = 40; // in hz
         static int UPDATE_TIME = 1000 / UPDATES_PER_SECOND;
 
+        public event EventHandler<EventArgs> VenueActivated;
+
         public Dictionary<string, Group> Groups { get; private set; }
         public List<Transmitter> Transmitters { get; private set; }
         public Listener Listener { get; private set; }
@@ -95,6 +97,7 @@ namespace kadmium_osc_dmx_dotnet_core
             Venue?.Dispose();
             Venue = venue;
             venue.Activate();
+            VenueActivated?.Invoke(this, new EventArgs());
             UpdatesEnabled = true;
         }
 

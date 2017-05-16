@@ -1,60 +1,69 @@
 
 import { FixtureDefinition } from "./fixture-definition";
 import { PreviewColorWheel } from "./preview-color-wheel";
-import { PreviewChannel } from "./preview-channel";
+import { PreviewAttribute } from "./preview-attribute";
 import { RGB } from "./color";
 import { PreviewFixtureData } from "./preview.service";
 
-export class PreviewFixture implements PreviewFixtureData
+export class PreviewFixture
 {
-    definition: FixtureDefinition;
+    id: number;
     group: string;
 
     address: number;
-    expanded: boolean;
 
-    channels: PreviewChannel[];
-    channelNameMap: Map<string, PreviewChannel>;
-    channelNumberMap: Map<number, PreviewChannel[]>;
+    channelNameMap: Map<string, PreviewAttribute>;
+    channelNumberMap: Map<number, PreviewAttribute[]>;
+
+    manufacturer: string;
+    model: string;
 
     colorWheel: PreviewColorWheel;
 
     constructor(data: PreviewFixtureData)
     {
+        this.id = data.id;
         this.group = data.group;
         this.address = data.address;
-        this.expanded = false;
-        this.channelNameMap = new Map<string, PreviewChannel>();
-        this.channelNumberMap = new Map<number, PreviewChannel[]>();
-        this.definition = data.definition;
-        this.channels = [];
+        this.manufacturer = data.manufacturer;
+        this.model = data.model;
 
-        for (let channel of data.definition.channels)
+        this.channelNameMap = new Map<string, PreviewAttribute>();
+        this.channelNumberMap = new Map<number, PreviewAttribute[]>();
+
+        for (let attributeData of data.attributes)
         {
-            let dmxChannel = new PreviewChannel(channel.name, channel.address, channel.min, channel.max);
-            this.channels.push(dmxChannel);
-            this.channelNameMap.set(dmxChannel.name, dmxChannel);
-            let array = this.channelNumberMap.get(dmxChannel.address);
-            if (array == null)
+            let attribute = new PreviewAttribute();
+            attribute.load(attributeData);
+            this.channelNameMap.set(attribute.name, attribute);
+            if (attributeData.dmx)
             {
-                array = [];
-                this.channelNumberMap.set(dmxChannel.address + data.address - 2, array);
+                let array = this.channelNumberMap.get(attribute.address);
+                if (array == null)
+                {
+                    array = [];
+                    this.channelNumberMap.set(attribute.address + data.address - 2, array);
+                }
+                array.push(attribute);
             }
-            array.push(dmxChannel);
         }
 
-        if (data.definition.colorWheel != null)
+        if (data.colorWheel != null)
         {
-            this.colorWheel = new PreviewColorWheel(data.definition.colorWheel, this.channelNameMap.get("ColorWheel"));
+            this.colorWheel = new PreviewColorWheel(data.colorWheel, this.channelNameMap.get("ColorWheel"));
         }
     }
 
     public update(data: number[]): void
     {
-        for (let channel of this.channels)
+        let addresses = Array.from(this.channelNumberMap.values());
+        for (let address of addresses)
         {
-            let address = channel.address + this.address - 2;
-            channel.dmxValue = data[address];
+            for (let channel of address)
+            {
+                let address = channel.address + this.address - 2;
+                channel.dmxValue = data[address];
+            }
         }
     }
 

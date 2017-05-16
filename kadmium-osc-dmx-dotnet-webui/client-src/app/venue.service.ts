@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import { URLs, Controller } from "./url";
 import { Http } from "@angular/http";
 import { Venue, VenueSkeleton } from "./venue";
+import { PreviewVenue, PreviewVenueData } from "app/preview-venue";
 
 @Injectable()
 export class VenueService
@@ -60,11 +61,17 @@ export class VenueService
             .then(() => { });
     }
 
-    public getActive(): Promise<Venue>
+    public getActive(): Promise<PreviewVenue>
     {
         return this.http.get(this.venueUrl + "/GetActive")
             .toPromise()
-            .then(value => value.json() as Venue);
+            .then(value =>
+            {
+                let data = value.json() as PreviewVenueData;
+                let venue = new PreviewVenue();
+                venue.load(data);
+                return venue;
+            });
     }
 
 }

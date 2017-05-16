@@ -1,20 +1,20 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { SolversLiveComponent } from './solvers-live.component';
+import { DashboardFixtureComponent } from './dashboard-fixture.component';
 
-describe('SolversLiveComponent', () => {
-  let component: SolversLiveComponent;
-  let fixture: ComponentFixture<SolversLiveComponent>;
+describe('DashboardFixtureComponent', () => {
+  let component: DashboardFixtureComponent;
+  let fixture: ComponentFixture<DashboardFixtureComponent>;
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ SolversLiveComponent ]
+      declarations: [ DashboardFixtureComponent ]
     })
     .compileComponents();
   }));
 
   beforeEach(() => {
-    fixture = TestBed.createComponent(SolversLiveComponent);
+    fixture = TestBed.createComponent(DashboardFixtureComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });
