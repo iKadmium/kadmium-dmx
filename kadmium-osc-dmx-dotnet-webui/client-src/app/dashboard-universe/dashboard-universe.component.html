@@ -1,33 +1,23 @@
 <div class="panel panel-default">
     <div class="panel-heading">Universe</div>
     <div class="panel-body">
-        <table class="table table-striped" *ngIf="venue != null && venue.activeUniverse != null">
-            <thead>
-                <tr>
-                    <th></th>
-                    <th>0</th>
-                    <th>1</th>
-                    <th>2</th>
-                    <th>3</th>
-                    <th>4</th>
-                    <th>5</th>
-                    <th>6</th>
-                    <th>7</th>
-                    <th>8</th>
-                    <th>9</th>
-                </tr>
-            </thead>
+        <div *ngIf="venue != null && venue.activeUniverse != null">
+            <div *ngFor="let row of rows" class="universe-container">
+                <div *ngFor="let cell of row.cells" class="universe-cell">
+                    <app-dashboard-universe-cell [testing]="cell.testing" [value]="data[cell.address]" [address]="cell.address" [controlled]="cell.isControlled"
+                        (click)="toggleTesting(cell)"></app-dashboard-universe-cell>
+                </div>
+            </div>
+        </div>
+        <!--<table class="table" *ngIf="venue != null && venue.activeUniverse != null">
             <tbody>
-                <tr *ngFor="let rowNumber of range(0, 51)">
-                    <th>{{rowNumber}}</th>
-                    <td *ngFor="let columnNumber of range(0, 9)" #element [attr.contenteditable]="!isControlled(rowNumber, columnNumber)" title="{{rowNumber * 10 + columnNumber}}"
-                        [ngStyle]="{'background-color': getStyle(getChannelValue(rowNumber, columnNumber))}" [ngClass]="{'controlled': isControlled(rowNumber, columnNumber)}"
-                        (blur)="setChannelValue(rowNumber, columnNumber,element)">
-                        {{getDisplayValue(getChannelValue(rowNumber, columnNumber))}}
+                <tr *ngFor="let row of rows">
+                    <td *ngFor="let cell of row.cells" class="universe-cell">
+                        <app-dashboard-universe-cell [value]="data[cell.address]" [address]="cell.address" [controlled]="cell.controlled"></app-dashboard-universe-cell>
                     </td>
                 </tr>
             </tbody>
-        </table>
+        </table>-->
 
     </div>
 </div>

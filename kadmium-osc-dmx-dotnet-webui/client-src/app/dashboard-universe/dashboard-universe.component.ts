@@ -1,4 +1,4 @@
-import { Component, OnInit, Input, EventEmitter, Output } from '@angular/core';
+import { Component, OnInit, Input, EventEmitter, Output, OnChanges, SimpleChanges, OnDestroy } from '@angular/core';
 import { UniverseUpdateData, SACNTransmitterService } from "app/sacn-transmitter.service";
 import { VenueService } from "app/venue.service";
 import { PreviewUniverse } from "app/preview-universe";
@@ -7,6 +7,7 @@ import { StatusCode } from "app/status-code.enum";
 import { FormControl } from "@angular/forms";
 import { UniverseData } from "app/solvers-live.service";
 import { PreviewVenue } from "app/preview-venue";
+import { PreviewAttribute } from "app/preview-attribute";
 
 @Component({
     selector: 'app-dashboard-universe',
@@ -14,52 +15,130 @@ import { PreviewVenue } from "app/preview-venue";
     styleUrls: ['./dashboard-universe.component.css'],
     providers: [SACNTransmitterService]
 })
-export class DashboardUniverseComponent implements OnInit
+export class DashboardUniverseComponent implements OnInit, OnChanges, OnDestroy
 {
     @Input() venue: PreviewVenue;
+    @Input() data: number[];
     @Output() update = new EventEmitter<DMXChannelUpdateData>();
+
+    rows: UniverseRow[];
+    cells: UniverseCell[];
 
     constructor(private notificationsService: NotificationsService) 
     {
+        this.rows = [];
+        this.cells = [];
+    }
 
+    ngOnChanges(changes: SimpleChanges): void
+    {
+        if (changes.venue != null)
+        {
+            if (changes.venue.currentValue != null && changes.venue.currentValue != changes.venue.previousValue)
+            {
+                for (let row of this.rows)
+                {
+                    for (let cell of row.cells)
+                    {
+                        cell.setVenue(changes.venue.currentValue);
+                    }
+                }
+            }
+        }
     }
 
     ngOnInit(): void
     {
-    }
-
-    private range(start: number, end: number): number[]
-    {
-        return Array<number>(end - start + 1).fill(0).map((value, index) => index + start);
-    }
-
-    private getChannelValue(rowNumber: number, columnNumber: number): number
-    {
-        return this.venue.activeUniverse.values[rowNumber * 10 + columnNumber - 1];
-    }
-
-    public setChannelValue(rowNumber: number, columnNumber: number, tableCell: HTMLTableDataCellElement): void
-    {
-        let value = parseInt(tableCell.innerText);
-        let channel = rowNumber * 10 + columnNumber - 1;
-        if (value >= 0 && value <= 255 && value != this.getChannelValue(rowNumber, columnNumber))
+        for (let i = 0; i < 52; i++)
         {
-            tableCell.innerText = "---";
-            this.update.emit(new DMXChannelUpdateData(this.venue.activeUniverse.universeID, channel, value));
+            let row = new UniverseRow();
+            for (let j = 0; j < 10; j++)
+            {
+                let address = i * 10 + j;
+                if (address >= 1 && address <= 512)
+                {
+                    let cell = new UniverseCell(address);
+                    if (this.venue != null)
+                    {
+                        cell.setVenue(this.venue);
+                    }
+                    row.cells.push(cell);
+                    this.cells.push(cell);
+                }
+            }
+            this.rows.push(row);
+        }
+    }
+
+    ngOnDestroy(): void
+    {
+        let testingCells = this.cells.filter(x => x.testing);
+        for (let cell of testingCells)
+        {
+            window.clearInterval(cell.testingInterval);
+        }
+    }
+
+    public toggleTesting(cell: UniverseCell): void
+    {
+        cell.testing = !cell.testing;
+        if (cell.testing)
+        {
+            cell.testingInterval = window.setInterval(() =>
+            {
+                let date = new Date();
+                let timeValue = (date.getSeconds() % 5) * 1000 + date.getMilliseconds();
+
+                let timeFraction = timeValue / 5000 * Math.PI;
+                let result = Math.round(Math.sin(timeFraction) * 255);
+                this.update.emit(new DMXChannelUpdateData(this.venue.activeUniverse.universeID, cell.address, result));
+            }, 50);
         }
         else
         {
-            tableCell.innerText = this.getDisplayValue(this.getChannelValue(rowNumber, columnNumber));
+            window.clearInterval(cell.testingInterval);
+            cell.testingInterval = null;
         }
     }
+}
 
-    public isControlled(rowNumber: number, columnNumber: number): boolean
+class UniverseRow
+{
+    public cells: UniverseCell[];
+
+    constructor()
     {
-        let address = rowNumber * 10 + columnNumber - 1;
-        let fixture = this.venue.activeUniverse.fixtures.find(x => x.channelNumberMap.has(address));
+        this.cells = [];
+    }
+}
+
+class UniverseCell
+{
+    public address: number;
+    private venue: PreviewVenue;
+    public isControlled: boolean;
+    public testing: boolean;
+    public testingInterval: number | null;
+
+    constructor(address: number)
+    {
+        this.address = address;
+        this.isControlled = false;
+        this.testingInterval = null;
+    }
+
+    public setVenue(venue: PreviewVenue): void
+    {
+        this.venue = venue;
+        this.isControlled = this.getIsControlled();
+    }
+
+    private getIsControlled(): boolean
+    {
+        let fixture = this.venue.activeUniverse.fixtures.find(x => x.channelNumberMap.has(this.address - 1));
         if (fixture != null)
         {
-            let attributes = fixture.channelNumberMap.get(address);
+            let attributes = fixture.channelNumberMap.get(this.address - 1);
             return attributes.some(x => x.controlled);
         }
         else
@@ -67,29 +146,6 @@ export class DashboardUniverseComponent implements OnInit
             return false;
         }
     }
-
-    private getDisplayValue(value: number): string
-    {
-        if (value < 10)
-        {
-            return "00" + value;
-        }
-        else if (value < 100)
-        {
-            return "0" + value;
-        }
-        else if (value < 1000)
-        {
-            return value + "";
-        }
-    }
-
-    private getStyle(value: number): string
-    {
-        let style = `rgb(255,${255 - value},${255 - value})`;
-        return style;
-    }
-
 }
 
 export class DMXChannelUpdateData

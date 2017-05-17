@@ -5,7 +5,7 @@ import { TogglableService, Togglable } from "../togglable-service";
 import { SACNTransmitterService, UniverseUpdateData } from "../sacn-transmitter.service";
 import { SolversLiveService, UniverseData, AttributeUpdateMessage } from "../solvers-live.service";
 import { EnttecProTransmitterService } from "../enttec-pro-transmitter.service";
-import { OSCListenerService } from "../osclistener.service";
+import { OSCListenerService, OSCListenerData } from "../osclistener.service";
 import { VenueService } from "../venue.service";
 import { DashboardService, StatusData } from "../dashboard.service";
 import { NotificationsService } from "../notifications.service";
@@ -16,6 +16,7 @@ import { Status } from "../status";
 import { PreviewUniverse } from "app/preview-universe";
 import { PreviewVenue } from "app/preview-venue";
 import { DMXChannelUpdateData } from "app/dashboard-universe/dashboard-universe.component";
+import { DashboardOSCListenerComponent } from "app/dashboard-osc-listener/dashboard-osc-listener.component";
 
 @Component({
     selector: 'app-dashboard',
@@ -30,8 +31,11 @@ export class DashboardComponent implements OnInit
 
     public activeSection: string;
 
+    public unrecognisedOSCMessages: string[];
+    public recognisedOSCMessages: string[];
+
     constructor(private dashboardService: DashboardService, private solversLiveService: SolversLiveService, private venueService: VenueService,
-        private sacnTransmitterService: SACNTransmitterService, private notificationsService: NotificationsService, titleService: Title)
+        private sacnTransmitterService: SACNTransmitterService, private oscListenerService: OSCListenerService, private notificationsService: NotificationsService, titleService: Title)
     {
         titleService.setTitle("Dashboard");
 
@@ -44,6 +48,8 @@ export class DashboardComponent implements OnInit
             ["Solvers", new Status()]
         ]);
         this.activeSection = "Venue";
+        this.recognisedOSCMessages = [];
+        this.unrecognisedOSCMessages = [];
     }
 
     async ngOnInit(): Promise<void>
@@ -52,13 +58,10 @@ export class DashboardComponent implements OnInit
         {
             await this.dashboardService.subscribe(this);
             this.dashboardService.init();
-            await this.sacnTransmitterService.subscribe(this);
-            await this.solversLiveService.subscribe(this);
-        }
-        catch (error)
-        {
-            this.notificationsService.add(StatusCode.Error, error);
-        }
+        } catch (error) { this.notificationsService.add(StatusCode.Error, error); }
+        try { await this.sacnTransmitterService.subscribe(this) } catch (error) { this.notificationsService.add(StatusCode.Error, error) };
+        try { await this.oscListenerService.subscribe(this) } catch (error) { this.notificationsService.add(StatusCode.Error, error) };
+        try { await this.solversLiveService.subscribe(this) } catch (error) { this.notificationsService.add(StatusCode.Error, error) };
     }
 
     public async updateStatus(statusData: StatusData): Promise<void>
@@ -76,7 +79,7 @@ export class DashboardComponent implements OnInit
 
     public updateDMX(data: UniverseUpdateData): void
     {
-        if (this.venue != null)
+        if (this.venue != null && (this.activeSection == "Universe" || this.activeSection == "Fixture"))
         {
             let universe = this.venue.universes.find(x => x.universeID == data.universeID);
             if (universe != null)
@@ -88,7 +91,7 @@ export class DashboardComponent implements OnInit
 
     public updateAttributes(data: UniverseData): void
     {
-        if (this.venue != null)
+        if (this.venue != null && this.activeSection == "Fixture")
         {
             let localUniverse = this.venue.universes.find(x => x.universeID == data.universeID);
             for (let remoteFixture of data.fixtures)
@@ -111,5 +114,20 @@ export class DashboardComponent implements OnInit
     public updateAttribute(data: AttributeUpdateMessage): void
     {
         this.solversLiveService.set(data.fixtureID, data.attributeName, data.attributeValue);
+    }
+
+    public addMessage(data: OSCListenerData): void
+    {
+        if (this.activeSection == "OSC")
+        {
+            let str = data.address + " " + data.value;
+            let array = data.recognised ? this.recognisedOSCMessages : this.unrecognisedOSCMessages;
+            array.push(str);
+            if (array.length > DashboardOSCListenerComponent.MAX_LENGTH)
+            {
+                let tooLongAmount = array.length - DashboardOSCListenerComponent.MAX_LENGTH;
+                array.splice(0, tooLongAmount);
+            }
+        }
     }
 }

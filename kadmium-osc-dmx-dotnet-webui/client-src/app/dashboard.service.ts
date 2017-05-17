@@ -31,13 +31,13 @@ export class DashboardService
         });
     }
 
-    public init(): void
+    public async init(): Promise<void>
     {
         let data: RPCData = {
             method: "UpdateAll",
             args: {}
         };
-        this.rpc.send(data);
+        await this.rpc.send(data);
     }
 }
 
@@ -64,8 +64,11 @@ export class MockDashboardService extends DashboardService
         });
     }
 
-    public init(): void
+    public init(): Promise<void>
     {
-
+        return new Promise<void>((resolve, reject) => 
+        {
+            resolve();
+        });
     }
 }

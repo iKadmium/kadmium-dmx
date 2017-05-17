@@ -24,7 +24,6 @@ import { LooksComponent } from './looks/looks.component';
 import { LookEditorComponent } from './look-editor/look-editor.component';
 import { NavMenuComponent } from './nav-menu/nav-menu.component';
 import { OscListenerLiveComponent } from './osc-listener-live/osc-listener-live.component';
-import { Preview2DComponent } from './preview2d/preview2d.component';
 import { Preview2DFixtureComponent } from './preview2d-fixture/preview2d-fixture.component';
 import { SettingsComponent } from './settings/settings.component';
 import { VenuesComponent } from './venues/venues.component';
@@ -46,6 +45,9 @@ import { DashboardUniverseListComponent } from './dashboard-universe-list/dashbo
 import { DashboardUniverseComponent } from './dashboard-universe/dashboard-universe.component';
 import { DashboardFixtureListComponent } from './dashboard-fixture-list/dashboard-fixture-list.component';
 import { DashboardFixtureComponent } from './dashboard-fixture/dashboard-fixture.component';
+import { DashboardUniverseCellComponent } from './dashboard-universe-cell/dashboard-universe-cell.component';
+import { DashboardTransmitterComponent } from './dashboard-transmitter/dashboard-transmitter.component';
+import { DashboardOSCListenerComponent } from './dashboard-osc-listener/dashboard-osc-listener.component';
 
 @NgModule({
     declarations: [
@@ -60,7 +62,6 @@ import { DashboardFixtureComponent } from './dashboard-fixture/dashboard-fixture
         LookEditorComponent,
         NavMenuComponent,
         OscListenerLiveComponent,
-        Preview2DComponent,
         Preview2DFixtureComponent,
         SettingsComponent,
         VenuesComponent,
@@ -79,7 +80,10 @@ import { DashboardFixtureComponent } from './dashboard-fixture/dashboard-fixture
         DashboardUniverseListComponent,
         DashboardUniverseComponent,
         DashboardFixtureListComponent,
-        DashboardFixtureComponent
+        DashboardFixtureComponent,
+        DashboardUniverseCellComponent,
+        DashboardTransmitterComponent,
+        DashboardOSCListenerComponent
     ],
     imports: [
         BrowserModule,
@@ -126,7 +130,6 @@ import { DashboardFixtureComponent } from './dashboard-fixture/dashboard-fixture
                     { path: ':id', component: LookEditorComponent },
                 ]
             },
-            { path: 'preview2d', component: Preview2DComponent },
             { path: '**', redirectTo: 'sets' }
         ]),
 

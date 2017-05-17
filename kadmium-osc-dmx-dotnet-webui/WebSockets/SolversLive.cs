@@ -37,26 +37,33 @@ namespace kadmium_osc_dmx_dotnet_webui.WebSockets
 
         private async void Universe_Updated(object sender, UpdateEventArgs e)
         {
-            WebSocketMessage<SolversLiveUpdateMessage> message = new WebSocketMessage<SolversLiveUpdateMessage>("updateAttributes", new SolversLiveUpdateMessage
+            try
             {
-                UniverseID = e.UniverseID,
-                Fixtures = from fixture in e.Fixtures
-                           orderby fixture.StartChannel
-                           select new SolversLiveFixtureUpdate
-                           {
-                               Id = fixture.Id,
-                               Attributes = 
-                                       from attribute in fixture.Settables.Values
-                                       where attribute is FixtureSolverAttribute
-                                       select new SolversLiveAttributeUpdate
-                                       {
-                                           Name = attribute.Name,
-                                           Value = attribute.Value
-                                       }
-                               
-                           }
-            });
-            await Send(message);
+                WebSocketMessage<SolversLiveUpdateMessage> message = new WebSocketMessage<SolversLiveUpdateMessage>("updateAttributes", new SolversLiveUpdateMessage
+                {
+                    UniverseID = e.UniverseID,
+                    Fixtures = from fixture in e.Fixtures
+                               orderby fixture.StartChannel
+                               select new SolversLiveFixtureUpdate
+                               {
+                                   Id = fixture.Id,
+                                   Attributes =
+                                           from attribute in fixture.Settables.Values
+                                           where attribute is FixtureSolverAttribute
+                                           select new SolversLiveAttributeUpdate
+                                           {
+                                               Name = attribute.Name,
+                                               Value = attribute.Value
+                                           }
+
+                               }
+                });
+                await Send(message);
+            }
+            catch(System.NullReferenceException)
+            {
+
+            }
         }
 
         public void UpdateAttribute(int fixtureID, string attributeName, float attributeValue)

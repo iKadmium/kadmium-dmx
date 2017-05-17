@@ -17,20 +17,42 @@ export class RPCSocket
             this.socket = new WebSocket(this.address);
             this.socket.addEventListener("open", () =>
             {
-                resolve();
+                if (this.socket.readyState == this.socket.OPEN)
+                {
+                    resolve();
+                }
             });
 
             this.socket.addEventListener("error", (ev: Event) =>
             {
-                let fred = ev;
                 reject("Websocket could not connect");
             });
         });
     }
 
-    public send(data: RPCData): void
+    public async send(data: RPCData): Promise<void>
     {
-        this.socket.send(JSON.stringify(data));
+        return new Promise<void>((resolve, reject) =>
+        {
+            try
+            {
+                let cutoffTime = Date.now() + 5000;
+
+                while (this.socket.readyState != WebSocket.OPEN && (Date.now() < cutoffTime))
+                { }
+
+                this.socket.send(JSON.stringify(data));
+                resolve();
+
+
+            }
+            catch (error)
+            {
+                reject(error);
+            }
+        });
+
+
     }
 
     public subscribe(thisRef: Object): void

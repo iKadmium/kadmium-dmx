@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, Input } from '@angular/core';
 import { OSCListenerService, OSCListenerData } from "../osclistener.service";
 import { Title } from "@angular/platform-browser";
 
@@ -11,14 +11,14 @@ import { Title } from "@angular/platform-browser";
 export class OscListenerLiveComponent implements OnInit
 {
     static MAX_LENGTH = 50;
-    private unrecognisedData: string[];
-    private recognisedData: string[];
+    @Input() recognised: string[];
+    @Input() unrecognised: string[];
 
     constructor(private oscListenerService: OSCListenerService, title: Title)
     {
         title.setTitle("OSC Listener Live");
-        this.unrecognisedData = [];
-        this.recognisedData = [];
+        this.unrecognised = [];
+        this.recognised = [];
     }
 
     ngOnInit(): void
@@ -29,7 +29,7 @@ export class OscListenerLiveComponent implements OnInit
     private addMessage(data: OSCListenerData): void
     {
         let str = data.address + " " + data.value;
-        let array = data.recognised ? this.recognisedData : this.unrecognisedData;
+        let array = data.recognised ? this.recognised : this.unrecognised;
         array.push(str);
         if (array.length > OscListenerLiveComponent.MAX_LENGTH)
         {
@@ -40,12 +40,12 @@ export class OscListenerLiveComponent implements OnInit
 
     public getRecognised(): string
     {
-        return this.recognisedData.join("\r\n");
+        return this.recognised.join("\r\n");
     }
 
     public getUnrecognised(): string
     {
-        return this.unrecognisedData.join("\r\n");
+        return this.unrecognised.join("\r\n");
     }
 
 }

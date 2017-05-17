@@ -16,7 +16,7 @@
     </div>
     <div class="col-md-9">
 
-        <app-dashboard-venue [venue]="venue" *ngIf="activeSection == 'Venue'">
+        <app-dashboard-venue [venue]="venue" *ngIf="activeSection == 'Venue'" (navigate)="activeSection = $event">
         </app-dashboard-venue>
 
         <app-dashboard-venue-list *ngIf="activeSection == 'Venue'">
@@ -31,8 +31,17 @@
         <app-dashboard-universe-list [venue]="venue" *ngIf="activeSection == 'Universe'">
         </app-dashboard-universe-list>
 
-        <app-dashboard-universe [venue]="venue" (update)="updateChannel($event)" *ngIf="activeSection == 'Universe'">
+        <app-dashboard-universe [venue]="venue" [data]="venue.activeUniverse.values" (update)="updateChannel($event)" *ngIf="activeSection == 'Universe'">
         </app-dashboard-universe>
+
+        <app-dashboard-transmitter [status]="statuses.get('SACNTransmitters')" name="SACN Transmitter" *ngIf="activeSection == 'SACN'">
+        </app-dashboard-transmitter>
+
+        <app-dashboard-transmitter [status]="statuses.get('EnttecProTransmitters')" name="Enttec Pro Transmitter" *ngIf="activeSection == 'Enttec'">
+        </app-dashboard-transmitter>
+
+        <app-dashboard-osc-listener [recognised]="recognisedOSCMessages" [unrecognised]="unrecognisedOSCMessages" *ngIf="activeSection == 'OSC'">
+        </app-dashboard-osc-listener>
 
     </div>
 </div>

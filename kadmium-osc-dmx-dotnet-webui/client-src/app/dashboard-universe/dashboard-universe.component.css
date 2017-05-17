@@ -1,3 +1,8 @@
 .controlled {
     font-weight: bold;
 }
+
+.universe-cell {
+    padding: 0;
+    display: inline;
+}

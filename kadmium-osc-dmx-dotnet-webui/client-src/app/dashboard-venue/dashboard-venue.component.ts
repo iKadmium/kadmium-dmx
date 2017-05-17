@@ -1,4 +1,4 @@
-import { Component, OnInit, Input } from '@angular/core';
+import { Component, OnInit, Input, EventEmitter, Output } from '@angular/core';
 import { VenueSkeleton, Venue } from "app/venue";
 import { VenueService } from "app/venue.service";
 import { NotificationsService } from "app/notifications.service";
@@ -16,6 +16,7 @@ import { PreviewVenue } from "app/preview-venue";
 export class DashboardVenueComponent implements OnInit
 {
     @Input() venue: PreviewVenue;
+    @Output() navigate = new EventEmitter<string>();
 
     constructor(private notificationsService: NotificationsService)
     { }
@@ -75,6 +76,11 @@ export class DashboardVenueComponent implements OnInit
         }
 
         return sum;
+    }
+
+    public navigateTo(area: string): void
+    {
+        this.navigate.emit(area);
     }
 
 }
