@@ -4,14 +4,14 @@ import { PreviewFixtureData } from "../preview.service";
 import { FixtureDefinition } from "../fixture-definition";
 
 @Component({
-    selector: 'app-preview2d-fixture',
-    templateUrl: './preview2d-fixture.component.html',
-    styleUrls: ['./preview2d-fixture.component.css'],
+    selector: 'app-dashboard-fixture-preview',
+    templateUrl: './dashboard-fixture-preview.component.html',
+    styleUrls: ['./dashboard-fixture-preview.component.css'],
 })
-export class Preview2DFixtureComponent implements AfterContentInit, OnChanges
+export class DashboardFixturePreviewComponent implements AfterContentInit, OnChanges
 {
     static updateRate = 60; //hertz
-    static updateTime = 1000 / Preview2DFixtureComponent.updateRate;
+    static updateTime = 1000 / DashboardFixturePreviewComponent.updateRate;
 
     @Input() fixture: PreviewFixture;
     @Input("data") data: number[];

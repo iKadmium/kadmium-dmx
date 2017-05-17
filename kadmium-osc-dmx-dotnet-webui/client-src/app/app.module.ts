@@ -17,14 +17,11 @@ import { AppComponent } from './app.component';
 import { DashboardComponent } from './dashboard/dashboard.component';
 import { FixtureDefinitionsComponent } from './fixture-definitions/fixture-definitions.component';
 import { FixtureDefinitionEditorComponent } from './fixture-definition-editor/fixture-definition-editor.component';
-import { FixturesLiveComponent } from './fixtures-live/fixtures-live.component';
 import { GroupsComponent } from './groups/groups.component';
 import { LabelledInputComponent } from './labelled-input/labelled-input.component';
 import { LooksComponent } from './looks/looks.component';
 import { LookEditorComponent } from './look-editor/look-editor.component';
 import { NavMenuComponent } from './nav-menu/nav-menu.component';
-import { OscListenerLiveComponent } from './osc-listener-live/osc-listener-live.component';
-import { Preview2DFixtureComponent } from './preview2d-fixture/preview2d-fixture.component';
 import { SettingsComponent } from './settings/settings.component';
 import { VenuesComponent } from './venues/venues.component';
 import { UniverseEditorComponent } from './universe-editor/universe-editor.component';
@@ -48,6 +45,7 @@ import { DashboardFixtureComponent } from './dashboard-fixture/dashboard-fixture
 import { DashboardUniverseCellComponent } from './dashboard-universe-cell/dashboard-universe-cell.component';
 import { DashboardTransmitterComponent } from './dashboard-transmitter/dashboard-transmitter.component';
 import { DashboardOSCListenerComponent } from './dashboard-osc-listener/dashboard-osc-listener.component';
+import { DashboardFixturePreviewComponent } from "app/dashboard-fixture-preview/dashboard-fixture-preview.component";
 
 @NgModule({
     declarations: [
@@ -55,14 +53,12 @@ import { DashboardOSCListenerComponent } from './dashboard-osc-listener/dashboar
         DashboardComponent,
         FixtureDefinitionsComponent,
         FixtureDefinitionEditorComponent,
-        FixturesLiveComponent,
         GroupsComponent,
         LabelledInputComponent,
         LooksComponent,
         LookEditorComponent,
         NavMenuComponent,
-        OscListenerLiveComponent,
-        Preview2DFixtureComponent,
+        DashboardFixturePreviewComponent,
         SettingsComponent,
         VenuesComponent,
         UniverseEditorComponent,
@@ -93,13 +89,6 @@ import { DashboardOSCListenerComponent } from './dashboard-osc-listener/dashboar
         RouterModule.forRoot([
             { path: '', redirectTo: 'dashboard', pathMatch: 'full' },
             { path: 'dashboard', component: DashboardComponent },
-            {
-                path: 'debug',
-                children: [
-                    { path: 'oscListener', component: OscListenerLiveComponent },
-                    { path: 'fixtures', component: FixturesLiveComponent },
-                ]
-            },
             { path: 'settings', component: SettingsComponent },
             { path: 'venue-tester', component: VenueTesterComponent },
             { path: 'groups', component: GroupsComponent },
