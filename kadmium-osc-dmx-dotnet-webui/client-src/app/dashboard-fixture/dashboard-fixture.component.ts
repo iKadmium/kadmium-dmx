@@ -62,7 +62,16 @@ export class DashboardFixtureComponent implements OnInit
 
     public updateValue(attribute: PreviewAttribute, value: string): void
     {
-        let trueValue = attribute.dmx ? (parseInt(value) / 255.0) : parseFloat(value);
+        let trueValue: number;
+        if (attribute.dmx)
+        {
+            attribute.dmxValue = parseInt(value);
+            trueValue = attribute.value;
+        }
+        else
+        {
+            trueValue = parseFloat(value);
+        }
 
         if (trueValue >= 0.0 && trueValue <= 1.0)
         {

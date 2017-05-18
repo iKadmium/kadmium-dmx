@@ -16,7 +16,8 @@ namespace kadmium_osc_dmx_dotnet_core.Fixtures
             {
                 int range = Max - Min;
                 float scaled = range * Value;
-                return (byte)(scaled + Min);
+                double rounded = System.Math.Round(scaled + Min);
+                return (byte)(rounded);
             }
         }
 

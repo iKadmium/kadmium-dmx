@@ -67,10 +67,11 @@ namespace kadmium_osc_dmx_dotnet_core
                     SACNTransmitter.Load(settings.SacnTransmitter),
                     EnttecProTransmitter.Load(settings.EnttecProTransmitter)
                 },
-                Listener = new OSCListener(settings.OscPort, "OSC Listener")
+                Listener = new OSCListener(settings.OscPort, "OSC Listener"),
+                Venue = new Venue("New Venue", new[] { new Universe("New Universe", 1, new List<Fixture>()) })
             };
-
-            Venue.Status = new Status("No venue loaded");
+            instance.Venue.Activate();
+            instance.updatesEnabled = true;
             instance.updateTimer = new Timer(Instance.UpdateTimer_Elapsed, null, UPDATE_TIME, UPDATE_TIME);
         }
 

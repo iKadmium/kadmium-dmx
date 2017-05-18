@@ -45,7 +45,7 @@ export class PreviewAttribute
 
     public get dmxValue(): number
     {
-        return (this.value * this.range) + this.dmxMin;
+        return Math.round((this.value * this.range) + this.dmxMin);
     }
 
     public load(data: PreviewAttributeData): void
