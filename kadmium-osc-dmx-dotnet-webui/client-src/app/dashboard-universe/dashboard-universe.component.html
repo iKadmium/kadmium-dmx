@@ -5,7 +5,7 @@
             <div *ngFor="let row of rows" class="universe-container">
                 <div *ngFor="let cell of row.cells" class="universe-cell">
                     <app-dashboard-universe-cell [testing]="cell.testing" [value]="data[cell.address]" [address]="cell.address" [controlled]="cell.isControlled"
-                        (click)="toggleTesting(cell)"></app-dashboard-universe-cell>
+                        (contextmenu)="toggleTesting(cell)" (click)="resetCell(cell)"></app-dashboard-universe-cell>
                 </div>
             </div>
         </div>

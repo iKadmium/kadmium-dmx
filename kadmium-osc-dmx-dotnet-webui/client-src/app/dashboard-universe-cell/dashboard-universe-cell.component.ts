@@ -48,7 +48,7 @@ export class DashboardUniverseCellComponent implements OnInit, OnChanges
             this.context.font = "12px Monospace";
             this.context.textAlign = "center";
             this.context.fillStyle = "black";
-            this.context.fillText(this.address + "", this.canvas.width / 2, this.canvas.height * 3 / 4);
+            this.context.fillText((this.address + 1) + "", this.canvas.width / 2, this.canvas.height * 3 / 4);
 
             if (this.testing)
             {

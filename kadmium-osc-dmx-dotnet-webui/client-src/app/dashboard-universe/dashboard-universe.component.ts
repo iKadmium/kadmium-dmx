@@ -55,7 +55,7 @@ export class DashboardUniverseComponent implements OnInit, OnChanges, OnDestroy
             for (let j = 0; j < 10; j++)
             {
                 let address = i * 10 + j;
-                if (address >= 1 && address <= 512)
+                if (address < 512)
                 {
                     let cell = new UniverseCell(address);
                     if (this.venue != null)
@@ -79,8 +79,28 @@ export class DashboardUniverseComponent implements OnInit, OnChanges, OnDestroy
         }
     }
 
+    public resetCell(cell: UniverseCell): void
+    {
+        if (cell.isControlled)
+        {
+            return;
+        }
+        if (cell.testing)
+        {
+            cell.testing = false;
+            window.clearInterval(cell.testingInterval);
+            cell.testingInterval = null;
+        }
+        let value = this.data[cell.address] == 0 ? 255 : 0;
+        this.update.emit(new DMXChannelUpdateData(this.venue.activeUniverse.universeID, cell.address, value));
+    }
+
     public toggleTesting(cell: UniverseCell): void
     {
+        if (cell.isControlled)
+        {
+            return;
+        }
         cell.testing = !cell.testing;
         if (cell.testing)
         {
