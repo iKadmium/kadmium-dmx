@@ -66,5 +66,5 @@
     </div>
 </div>
 
-<app-fixture-options-editor [fixture]="selectedFixture"></app-fixture-options-editor>
+<app-fixture-options-editor [fixture]="selectedFixture" [groups]="groups"></app-fixture-options-editor>
 <input #fileInput type="file" name="name" style="display: none;" (change)="uploadFiles($event.target.files)" multiple>

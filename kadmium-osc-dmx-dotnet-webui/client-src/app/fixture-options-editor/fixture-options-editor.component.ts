@@ -2,6 +2,7 @@ import { Component, OnInit, Input, SimpleChanges } from '@angular/core';
 import { AxisRestrictionOptions, Fixture } from "../venue";
 import { FixtureDefinition, FixtureDefinitionSkeleton } from "../fixture-definition";
 import { FixtureDefinitionService } from "../fixture-definition.service";
+import { Group } from "app/group";
 
 @Component({
     selector: 'app-fixture-options-editor',
@@ -11,6 +12,7 @@ import { FixtureDefinitionService } from "../fixture-definition.service";
 })
 export class FixtureOptionsEditorComponent implements OnInit
 {
+    @Input("groups") groups: Group[];
     @Input("fixture") fixture: Fixture;
     public visible = false;
     private visibleAnimate = false;

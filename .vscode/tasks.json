@@ -22,15 +22,35 @@
         {
             "taskName": "publish",
             "args": [
-                "${workspaceRoot}\\kadmium-osc-dmx-dotnet-webui",
+                "${workspaceRoot}\\kadmium-osc-dmx-dotnet-webui\\kadmium-osc-dmx-dotnet-webui.csproj",
                 "-c",
                 "Release",
-                "-o",
                 "-r",
                 "win10-x64",
+                "-o",
                 "${workspaceRoot}\\dist"
             ],
             "echoCommand": true
+        },
+        {
+            "taskName": "install",
+            "command": "npm",
+            "options": {
+                "cwd": "${workspaceRoot}\\kadmium-osc-dmx-dotnet-webui"
+            },
+            "args": [
+                "install"
+            ]
+        },
+        {
+            "taskName": "serve",
+            "options": {
+                "cwd": "${workspaceRoot}\\kadmium-osc-dmx-dotnet-webui"
+            },
+            "command": "ng",
+            "args": [
+                "serve"
+            ]
         }
     ]
 }
