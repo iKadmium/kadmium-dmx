@@ -9,7 +9,7 @@
                         <div class="panel text-center" [ngClass]="{'panel-default': fixture != universe.activeFixture, 'panel-primary': fixture == universe.activeFixture}"
                             (click)="selectFixture(fixture)">
                             <div class="panel-heading">
-                                {{fixture.address}}
+                                {{fixture.address}} ({{fixture.group}})
                             </div>
                             <div class="panel-body">
                                 <app-dashboard-fixture-preview [data]="venue.activeUniverse.values" [fixture]="fixture">

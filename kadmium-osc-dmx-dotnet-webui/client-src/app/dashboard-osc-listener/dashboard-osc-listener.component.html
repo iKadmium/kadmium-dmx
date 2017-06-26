@@ -1,5 +1,10 @@
 <div class="panel panel-default">
+    <div class="panel-heading">OSC Listener</div>
     <div class="panel-body">
+        <div class="checkbox">
+            <label><input type="checkbox" [ngModel]="enabled" (click)="toggleEnabled()" [disabled]="enabled == null" >Enabled</label>
+        </div>
+
         <h2>Recognised</h2>
         <textarea class="form-control" rows="20" [value]="getRecognised()"></textarea>
         <h2>Unrecognised</h2>

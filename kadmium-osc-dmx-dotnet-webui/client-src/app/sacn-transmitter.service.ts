@@ -58,7 +58,11 @@ export class SACNTransmitterService
                 reject(error);
             }
         });
+    }
 
+    public unsubscribe(thisRef: Object): void
+    {
+        this.rpc.unsubscribe(thisRef);
     }
 }
 

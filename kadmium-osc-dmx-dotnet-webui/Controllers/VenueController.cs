@@ -6,6 +6,8 @@ using System.Threading.Tasks;
 using System.Linq;
 using Microsoft.EntityFrameworkCore;
 using kadmium_osc_dmx_dotnet_core.Fixtures;
+using kadmium_osc_dmx_dotnet_core.Solvers;
+using System;
 
 // For more information on enabling Web API for empty projects, visit http://go.microsoft.com/fwlink/?LinkID=397860
 
@@ -66,8 +68,8 @@ namespace kadmium_osc_dmx_dotnet_webui.Controllers
                                                             {
                                                                 Name = attribute.Name,
                                                                 Value = attribute.Value,
-                                                                DmxMin = (attribute as DMXChannel)?.Min ?? 0,
-                                                                DmxMax = (attribute as DMXChannel)?.Max ?? 0,
+                                                                DisplayMin = GetDisplayMin(fixture, attribute),
+                                                                DisplayMax = GetDisplayMax(fixture, attribute),
                                                                 Controlled = (attribute as DMXChannel)?.Controlled ?? false,
                                                                 Dmx = attribute is DMXChannel,
                                                                 DmxAddress = (attribute as DMXChannel)?.Address ?? 0
@@ -76,6 +78,60 @@ namespace kadmium_osc_dmx_dotnet_webui.Controllers
                             }
             };
             return response;
+        }
+
+        private int GetDisplayMin(Fixture fixture, kadmium_osc_dmx_dotnet_core.Solvers.Attribute attribute)
+        {
+            if (attribute is DMXChannel channel)
+            {
+                return channel.Min;
+            }
+            else if (fixture.MovementAxis.Keys.Any(axisName => axisName == attribute.Name))
+            {
+                //find out if it's restricted
+                if (fixture.Solvers.Any(solver => solver is MovementRestrictionSolver))
+                {
+                    var solver = fixture.Solvers.Single(x => x is MovementRestrictionSolver) as MovementRestrictionSolver;
+                    return solver.Axis[attribute.Name].RestrictedMin;
+                }
+                else
+                {
+                    return fixture.MovementAxis[attribute.Name].Min;
+                }
+            }
+            else
+            {
+                return 0;
+            }
+        }
+
+        private int GetDisplayMax(Fixture fixture, kadmium_osc_dmx_dotnet_core.Solvers.Attribute attribute)
+        {
+            if (attribute is DMXChannel channel)
+            {
+                return channel.Max;
+            }
+            else if (fixture.MovementAxis.Keys.Any(axisName => axisName == attribute.Name))
+            {
+                //find out if it's restricted
+                if (fixture.Solvers.Any(solver => solver is MovementRestrictionSolver))
+                {
+                    var solver = fixture.Solvers.Single(x => x is MovementRestrictionSolver) as MovementRestrictionSolver;
+                    return solver.Axis[attribute.Name].RestrictedMax;
+                }
+                else
+                {
+                    return fixture.MovementAxis[attribute.Name].Max;
+                }
+            }
+            else if (attribute.Name == "Hue")
+            {
+                return 360;
+            }
+            else
+            {
+                return 1;
+            }
         }
 
         [HttpGet]
@@ -173,7 +229,7 @@ namespace kadmium_osc_dmx_dotnet_webui.Controllers
                 }
             }
         }
-        
+
         private async Task UpdateUniverse(Universe oldUniverse, Universe newUniverse)
         {
             var removals = from fixture in oldUniverse.Fixtures
@@ -204,6 +260,7 @@ namespace kadmium_osc_dmx_dotnet_webui.Controllers
             oldFixture.Skeleton = newFixture.Skeleton;
             await oldFixture.Initialize(_context);
         }
+
     }
 
     public class VenueDownload
@@ -254,6 +311,7 @@ namespace kadmium_osc_dmx_dotnet_webui.Controllers
         public int Address { get; set; }
         public string Group { get; set; }
         public IEnumerable<ColorWheelEntry> ColorWheel { get; set; }
+        public IEnumerable<MovementAxis> MovementAxis { get; set; }
         public IEnumerable<ActiveAttribute> Attributes { get; set; }
     }
 
@@ -261,8 +319,8 @@ namespace kadmium_osc_dmx_dotnet_webui.Controllers
     {
         public string Name { get; set; }
         public float Value { get; set; }
-        public int DmxMin { get; set; }
-        public int DmxMax { get; set; }
+        public int DisplayMin { get; set; }
+        public int DisplayMax { get; set; }
         public bool Controlled { get; set; }
         public bool Dmx { get; set; }
         public int DmxAddress { get; set; }

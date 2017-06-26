@@ -62,7 +62,7 @@ export class PreviewFixture
             for (let channel of address)
             {
                 let address = channel.address + this.address - 2;
-                channel.dmxValue = data[address];
+                channel.displayValue = data[address];
             }
         }
     }

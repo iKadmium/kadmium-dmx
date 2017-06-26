@@ -15,7 +15,7 @@ export class PreviewColorWheel
 
     public get fillStyle(): RGB
     {
-        let dmxValue = this.chanel.dmxValue;
+        let dmxValue = this.chanel.displayValue;
         let filtered = this.entries.filter(entry => entry.min <= dmxValue && entry.max >= dmxValue);
         if (filtered.length == 1)
         {

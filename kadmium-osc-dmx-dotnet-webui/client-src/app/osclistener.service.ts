@@ -32,7 +32,11 @@ export class OSCListenerService
                 reject(error);
             }
         })
+    }
 
+    public unsubscribe(thisRef: Object): void
+    {
+        this.rpc.unsubscribe(thisRef);
     }
 
     public getEnabled(): Promise<boolean>

@@ -182,6 +182,14 @@ namespace kadmium_osc_dmx_dotnet_core
             return venue;
         }
 
+        public async Task<Venue> LoadVenue(string name)
+        {
+            var venueRef = await Venues.SingleAsync(x => x.Name == name);
+            var venue = await LoadVenue(venueRef.Id);
+
+            return venue;
+        }
+
         public async Task<Group> LoadGroup(string groupName)
         {
             var grp = await Groups.SingleAsync(x => x.Name == groupName);

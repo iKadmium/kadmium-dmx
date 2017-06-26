@@ -57,10 +57,12 @@ namespace kadmium_osc_dmx_dotnet_core.Listeners
                         case "look":
                             recognised = await LookMessageReceived(System.Net.WebUtility.UrlDecode(parts[2]), value);
                             break;
+                        case "venue":
+                            recognised = await VenueMessageReceived(System.Net.WebUtility.UrlDecode(parts[2]), value);
+                            break;
                     }
-                    
                 }
-                catch(Exception)
+                catch (Exception)
                 {
                     recognised = false;
                 }
@@ -68,12 +70,31 @@ namespace kadmium_osc_dmx_dotnet_core.Listeners
             }
         }
 
+        private async Task<bool> VenueMessageReceived(string venueName, float value)
+        {
+            if (value == 1)
+            {
+                try
+                {
+                    var context = DatabaseContext.GetContext();
+                    var venue = await context.LoadVenue(venueName);
+                    MasterController.Instance.LoadVenue(venue, context);
+                    return true;
+                }
+                catch (Exception)
+                {
+                    return false;
+                }
+            }
+            return false;
+        }
+
         private async Task<bool> LookMessageReceived(string lookName, float value)
         {
             using (var context = DatabaseContext.GetContext())
             {
                 Look look = await context.Looks.SingleOrDefaultAsync(x => x.Name == lookName);
-                if(look != null)
+                if (look != null)
                 {
                     look = await context.LoadLook(look.Id);
                     look.Activate(value);
@@ -84,7 +105,7 @@ namespace kadmium_osc_dmx_dotnet_core.Listeners
                     return false;
                 }
             }
-         
+
         }
 
         private bool GroupMessageReceived(string groupName, string attribute, float value)
@@ -100,7 +121,7 @@ namespace kadmium_osc_dmx_dotnet_core.Listeners
                 return true;
             }
             return false;
-            
+
         }
 
         public override JObject Serialize()

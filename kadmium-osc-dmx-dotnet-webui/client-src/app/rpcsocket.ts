@@ -1,6 +1,6 @@
 export class RPCSocket
 {
-    private clients: Object[];
+    private clients: ClientData[];
     private socket: WebSocket;
     private address: string;
 
@@ -57,30 +57,47 @@ export class RPCSocket
 
     public subscribe(thisRef: Object): void
     {
-        this.clients.push(thisRef);
-        this.socket.addEventListener("message", (ev: MessageEvent) =>
-        {
-            let data = JSON.parse(ev.data) as RPCData;
-            if (data != null)
+        let clientData: ClientData = {
+            client: thisRef,
+            listener: (ev: MessageEvent) =>
             {
-                let method = thisRef[data.method] as Function;
-                if (method != null)
+                let data = JSON.parse(ev.data) as RPCData;
+                if (data != null)
                 {
-                    method.apply(thisRef, [data.args]);
+                    let method = thisRef[data.method] as Function;
+                    if (method != null)
+                    {
+                        method.apply(thisRef, [data.args]);
+                    }
+                    else
+                    {
+                        console.error(`Call to non-existent RPC ${data.method} on ${thisRef}`);
+                    }
                 }
                 else
                 {
-                    console.error(`Call to non-existent RPC ${data.method} on ${thisRef}`);
+                    console.error(`Malformed RPC call - ${ev.data}`);
                 }
             }
-            else
-            {
-                console.error(`Malformed RPC call - ${ev.data}`);
-            }
-
-        });
+        };
+        this.clients.push(clientData);
+        this.socket.addEventListener("message", clientData.listener);
     }
 
+    public unsubscribe(thisRef: Object): void
+    {
+        let clientData = this.clients.find(x => x.client == thisRef);
+        this.socket.removeEventListener("message", clientData.listener);
+
+        let clientIndex = this.clients.indexOf(clientData);
+        this.clients.splice(clientIndex, 1);
+    }
+}
+
+interface ClientData
+{
+    client: Object;
+    listener: (ev: MessageEvent) => void;
 }
 
 export interface RPCData

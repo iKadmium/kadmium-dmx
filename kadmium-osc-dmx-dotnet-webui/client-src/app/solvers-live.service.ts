@@ -8,11 +8,11 @@ export class SolversLiveService
 {
     private solversLiveURL = URLs.getAPIUrl(Controller.SolversLive);
     private socketUrl = URLs.getSocketURL(SocketController.Solvers);
-    private socket: RPCSocket;
+    private rpc: RPCSocket;
 
     constructor(private http: Http)
     {
-        this.socket = new RPCSocket(this.socketUrl);
+        this.rpc = new RPCSocket(this.socketUrl);
     }
 
     public async subscribe(listener: Object): Promise<void>
@@ -21,15 +21,19 @@ export class SolversLiveService
         {
             try
             {
-                await this.socket.connect();
-                this.socket.subscribe(listener);
+                await this.rpc.connect();
+                this.rpc.subscribe(listener);
             }
             catch (error)
             {
                 reject(error);
             }
         });
+    }
 
+    public unsubscribe(thisRef: Object): void
+    {
+        this.rpc.unsubscribe(thisRef);
     }
 
     public set(fixtureID: number, attributeName: string, attributeValue: number): void
@@ -42,7 +46,7 @@ export class SolversLiveService
                 attributeValue: attributeValue
             }
         };
-        this.socket.send(message);
+        this.rpc.send(message);
     }
 
     public getEnabled(): Promise<boolean>

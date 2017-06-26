@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChild } from '@angular/core';
+import { Component, OnInit, ViewChild, OnDestroy } from '@angular/core';
 import { Title } from "@angular/platform-browser";
 
 import { TogglableService, Togglable } from "../togglable-service";
@@ -24,7 +24,7 @@ import { DashboardOSCListenerComponent } from "app/dashboard-osc-listener/dashbo
     styleUrls: ['./dashboard.component.css'],
     providers: [DashboardService, OSCListenerService, SACNTransmitterService, EnttecProTransmitterService, SolversLiveService, VenueService]
 })
-export class DashboardComponent implements OnInit
+export class DashboardComponent implements OnInit, OnDestroy
 {
     public statuses: Map<string, Status>;
     private venue: PreviewVenue;
@@ -33,6 +33,9 @@ export class DashboardComponent implements OnInit
 
     public unrecognisedOSCMessages: string[];
     public recognisedOSCMessages: string[];
+
+    private attributesBusy: boolean;
+    private dmxBusy: boolean;
 
     constructor(private dashboardService: DashboardService, private solversLiveService: SolversLiveService, private venueService: VenueService,
         private sacnTransmitterService: SACNTransmitterService, private oscListenerService: OSCListenerService, private notificationsService: NotificationsService, titleService: Title)
@@ -50,6 +53,8 @@ export class DashboardComponent implements OnInit
         this.activeSection = "Venue";
         this.recognisedOSCMessages = [];
         this.unrecognisedOSCMessages = [];
+        this.attributesBusy = false;
+        this.dmxBusy = false;
     }
 
     async ngOnInit(): Promise<void>
@@ -62,6 +67,13 @@ export class DashboardComponent implements OnInit
         try { await this.sacnTransmitterService.subscribe(this) } catch (error) { this.notificationsService.add(StatusCode.Error, error) };
         try { await this.oscListenerService.subscribe(this) } catch (error) { this.notificationsService.add(StatusCode.Error, error) };
         try { await this.solversLiveService.subscribe(this) } catch (error) { this.notificationsService.add(StatusCode.Error, error) };
+    }
+
+    ngOnDestroy(): void
+    {
+        this.sacnTransmitterService.unsubscribe(this);
+        this.oscListenerService.unsubscribe(this);
+        this.solversLiveService.unsubscribe(this);
     }
 
     public async updateStatus(statusData: StatusData): Promise<void>
@@ -79,20 +91,23 @@ export class DashboardComponent implements OnInit
 
     public updateDMX(data: UniverseUpdateData): void
     {
-        if (this.venue != null && (this.activeSection == "Universe" || this.activeSection == "Fixture"))
+        if (this.venue != null && (this.activeSection == "Universe" || this.activeSection == "Fixture") && !this.dmxBusy)
         {
+            this.dmxBusy = true;
             let universe = this.venue.universes.find(x => x.universeID == data.universeID);
             if (universe != null)
             {
                 universe.values = data.values;
             }
+            this.dmxBusy = false;
         }
     }
 
     public updateAttributes(data: UniverseData): void
     {
-        if (this.venue != null && this.activeSection == "Fixture")
+        if (this.venue != null && this.activeSection == "Fixture" && !this.attributesBusy)
         {
+            this.attributesBusy = true;
             let localUniverse = this.venue.universes.find(x => x.universeID == data.universeID);
             for (let remoteFixture of data.fixtures)
             {
@@ -103,6 +118,7 @@ export class DashboardComponent implements OnInit
                     localAttribute.value = remoteAttribute.value;
                 }
             }
+            this.attributesBusy = false;
         }
     }
 

@@ -60,8 +60,8 @@ export interface PreviewAttributeData
     name: string;
     value: number;
     dmxAddress: number;
-    dmxMin: number;
-    dmxMax: number;
+    displayMin: number;
+    displayMax: number;
     controlled: boolean;
     dmx: boolean;
 }

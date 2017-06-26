@@ -22,6 +22,7 @@ namespace kadmium_osc_dmx_dotnet_webui.WebSockets
 
         public override async Task OnOpen()
         {
+            await Task.Run(() => { });
             //await UpdateAll();
         }
 

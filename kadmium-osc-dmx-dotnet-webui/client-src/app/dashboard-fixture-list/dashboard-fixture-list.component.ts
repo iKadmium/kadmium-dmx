@@ -1,6 +1,7 @@
 import { Component, OnInit, Input } from '@angular/core';
 import { PreviewVenue } from "app/preview-venue";
 import { PreviewFixture } from "app/preview-fixture";
+import { Group } from "app/group";
 
 @Component({
     selector: 'app-dashboard-fixture-list',
@@ -21,7 +22,6 @@ export class DashboardFixtureListComponent implements OnInit
     selectFixture(fixture: PreviewFixture): void
     {
         this.venue.activeUniverse.activeFixture = fixture;
-
     }
 
 }

@@ -24,54 +24,11 @@ export class DashboardFixtureComponent implements OnInit
         return Array.from(this.venue.activeUniverse.activeFixture.channelNameMap.values());
     }
 
-    public getStepSize(attribute: PreviewAttribute): number
-    {
-        if (attribute.dmx)
-        {
-            return 1;
-        }
-        else
-        {
-            return 0.01;
-        }
-    }
-
-    public getMin(attribute: PreviewAttribute): number
-    {
-        if (attribute.dmx)
-        {
-            return attribute.dmxMin;
-        }
-        else
-        {
-            return 0;
-        }
-    }
-
-    public getMax(attribute: PreviewAttribute): number
-    {
-        if (attribute.dmx)
-        {
-            return attribute.dmxMax;
-        }
-        else
-        {
-            return 1;
-        }
-    }
-
     public updateValue(attribute: PreviewAttribute, value: string): void
     {
         let trueValue: number;
-        if (attribute.dmx)
-        {
-            attribute.dmxValue = parseInt(value);
-            trueValue = attribute.value;
-        }
-        else
-        {
-            trueValue = parseFloat(value);
-        }
+        attribute.displayValue = parseFloat(value);
+        trueValue = attribute.value;
 
         if (trueValue >= 0.0 && trueValue <= 1.0)
         {
