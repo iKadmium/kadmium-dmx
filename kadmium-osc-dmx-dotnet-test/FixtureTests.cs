@@ -10,7 +10,7 @@ namespace kadmium_osc_dmx_dotnet_test
         [Theory]
         [InlineData(0f, 1f, 191)]
         [InlineData(1f, 1f, 255)]
-        [InlineData(0.5f, 1f, 223)]
+        [InlineData(0.5f, 1f, 224)]
         public void SharedMasterAndStrobeTest(float strobeValue, float masterValue, byte expected)
         {
             Fixture fixture = GetSharedMasterAndStrobeFixture();

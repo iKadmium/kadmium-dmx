@@ -156,12 +156,12 @@ export class FixtureDefinitionEditorComponent implements OnInit
         {
             if (this.isNewItem())
             {
-                this.fixtureDefinitionService.post(this.definition);
+                await this.fixtureDefinitionService.post(this.definition);
                 this.notificationsService.add(StatusCode.Success, "Successfully added " + this.definition.manufacturer + " " + this.definition.model);
             }
             else
             {
-                this.fixtureDefinitionService.put(this.definition);
+                await this.fixtureDefinitionService.put(this.definition);
                 this.notificationsService.add(StatusCode.Success, "Successfully edited " + this.definition.manufacturer + " " + this.definition.model);
             }
             this.router.navigate(["../", { relativeTo: this.route }]);

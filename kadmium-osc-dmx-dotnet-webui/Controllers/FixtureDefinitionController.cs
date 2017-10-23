@@ -60,8 +60,32 @@ namespace kadmium_osc_dmx_dotnet_webui.Controllers
         [Route("{id}")]
         public async Task Put(int id, [FromBody]FixtureDefinition definition)
         {
-            _context.Update(definition);
+            var oldDefinition = await _context.LoadFixtureDefinition(id);
+            UpdateDefinition(oldDefinition, definition);
             await _context.SaveChangesAsync();
+        }
+
+        private void UpdateDefinition(FixtureDefinition oldDefinition, FixtureDefinition newDefinition)
+        {
+            var removals = from channel in oldDefinition.Channels
+                           where !newDefinition.Channels.Any(x => x.Id == channel.Id)
+                           select channel;
+            _context.RemoveRange(removals);
+            _context.Entry(oldDefinition).CurrentValues.SetValues(newDefinition);
+
+            foreach (var channel in newDefinition.Channels)
+            {
+                if (channel.Id == 0)
+                {
+                    oldDefinition.Channels.Add(channel);
+                }
+                else
+                {
+                    var oldChannel = oldDefinition.Channels.Single(x => x.Id == channel.Id);
+                    _context.Entry(oldChannel).CurrentValues.SetValues(channel);
+
+                }
+            }
         }
     }
 }

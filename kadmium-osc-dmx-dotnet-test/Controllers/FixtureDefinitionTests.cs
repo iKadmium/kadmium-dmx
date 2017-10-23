@@ -5,6 +5,7 @@ using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Threading.Tasks;
 using Xunit;
 
@@ -58,6 +59,41 @@ namespace kadmium_osc_dmx_dotnet_test
             {
                 FixtureDefinition definition = await context.LoadFixtureDefinition(id);
                 Assert.Equal(definition, expectedDefinition);
+            }
+        }
+
+        [Theory]
+        [InlineData("Strobe", "UV")]
+        public async Task TestChannels(string channelToRemoveName, string channelToAddName)
+        {
+            string testName = GetType() + nameof(TestPost);
+            FixtureDefinition originalDefinition, updatedDefinition;
+            using (var context = DatabaseTests.GetContext(testName))
+            {
+                await DatabaseTests.ResetDatabase(context);
+                await DatabaseTests.AddGroups(context);
+                await DatabaseTests.AddFixtureDefinitions(context);
+                await context.SaveChangesAsync();
+                int originalDefinitionId = (await context.FixtureDefinitions.FirstAsync(x => x.Manufacturer == "Generic" && x.Model.Contains("RGBW"))).Id;
+                originalDefinition = await context.LoadFixtureDefinition(originalDefinitionId);
+            }
+
+            DMXChannel channelToRemove = originalDefinition.Channels.First(x => x.Name == channelToRemoveName);
+            originalDefinition.Channels.Remove(channelToRemove);
+            originalDefinition.Channels.Add(new DMXChannel(channelToAddName, channelToRemove.Address));
+
+            using (var context = DatabaseTests.GetContext(testName))
+            {
+                FixtureDefinitionController controller = new FixtureDefinitionController(context);
+                await controller.Put(originalDefinition.Id, originalDefinition);
+                updatedDefinition = await controller.Get(originalDefinition.Id);
+
+                Assert.Equal(originalDefinition.Channels.Count, updatedDefinition.Channels.Count);
+
+                foreach(DMXChannel originalChannel in originalDefinition.Channels)
+                {
+                    Assert.Contains(updatedDefinition.Channels, channel => originalChannel.Equals(channel));
+                }
             }
         }
 

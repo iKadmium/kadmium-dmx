@@ -74,6 +74,13 @@ export class FixtureOptionsEditorComponent implements OnInit
             .filter(value => value.manufacturer == manufacturer);
     }
 
+    private async updateManufacturer(manufacturer: string): Promise<void>
+    {
+        let skeleton = this.skeletons.find((value) => value.manufacturer == manufacturer);
+        this.fixture.type = skeleton;
+        return this.updateDefinition(skeleton);
+    }
+
     private async updateDefinition(skeleton: FixtureDefinitionSkeleton): Promise<void>
     {
         if (skeleton != null)

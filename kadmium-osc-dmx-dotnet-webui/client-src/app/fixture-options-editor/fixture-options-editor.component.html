@@ -3,7 +3,7 @@
         <form class="form-horizontal">
             <fieldset name="commonFields">
                 <app-labelled-input label="Manufacturer:">
-                    <select #input #model="ngModel" name="manufacturer" class="form-control" [(ngModel)]="manufacturerFilter">
+                    <select #input #model="ngModel" name="manufacturer" class="form-control" [(ngModel)]="manufacturerFilter" (ngModelChange)="updateManufacturer($event)">
                         <option *ngFor="let manufacturer of getManufacturers()">{{manufacturer}}</option>
                     </select>
                 </app-labelled-input>
@@ -47,16 +47,14 @@
                                     <td>
                                         <div class="checkbox">
                                             <label>
-                                                <input type="checkbox" [(ngModel)]="axis.inverted" [name]="'inverted[' + axis.name + ']'" >
-                                                Inverted
+                                                <input type="checkbox" [(ngModel)]="axis.inverted" [name]="'inverted[' + axis.name + ']'"> Inverted
                                             </label>
                                         </div>
                                     </td>
                                     <td>
                                         <div class="checkbox">
                                             <label>
-                                                <input type="checkbox" [(ngModel)]="axis.restricted" [name]="'restricted[' + axis.name + ']'" >
-                                                Restricted
+                                                <input type="checkbox" [(ngModel)]="axis.restricted" [name]="'restricted[' + axis.name + ']'"> Restricted
                                             </label>
                                         </div>
                                     </td>

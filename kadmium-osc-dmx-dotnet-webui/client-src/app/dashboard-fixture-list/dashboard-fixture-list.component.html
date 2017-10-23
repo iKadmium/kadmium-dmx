@@ -2,10 +2,9 @@
     <div class="panel-heading">Fixture List</div>
     <div class="panel-body">
         <tabset *ngIf="venue && venue.activeUniverse">
-            <tab *ngFor="let universe of venue.universes" [heading]="universe.name">
+            <tab *ngFor="let universe of venue.universes; trackBy: universe?.id" [heading]="universe.name">
                 <div class="row">
-                    <div class="col-md-3" *ngFor="let fixture of universe.fixtures">
-
+                    <div class="col-md-3" *ngFor="let fixture of universe.fixtures; trackBy: fixture?.id">
                         <div class="panel text-center" [ngClass]="{'panel-default': fixture != universe.activeFixture, 'panel-primary': fixture == universe.activeFixture}"
                             (click)="selectFixture(fixture)">
                             <div class="panel-heading">

@@ -8,7 +8,7 @@ namespace kadmium_osc_dmx_dotnet_test
         [Theory]
         [InlineData(0.0f, 0)]
         [InlineData(1.0f, 255)]
-        [InlineData(0.5f, 127)]
+        [InlineData(0.5f, 128)]
         public void TestByteConversion(float value, byte expected)
         {
             DMXChannel channel = new DMXChannel("Name", 1)

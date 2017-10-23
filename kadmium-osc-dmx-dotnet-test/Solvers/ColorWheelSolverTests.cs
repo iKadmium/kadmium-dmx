@@ -21,7 +21,7 @@ namespace kadmium_osc_dmx_dotnet_test.Solvers
         [InlineData(0f, 0f, 1f, 192, 255, 255)] //white
         [InlineData(120f / 360f, 0f, 1f, 192, 255, 255)] //white
         [InlineData(240f / 360f, 0f, 1f, 192, 255, 255)] //white
-        [InlineData(0f, 0f, 0.5f, 192, 255, 127)] //grey
+        [InlineData(0f, 0f, 0.5f, 192, 255, 128)] //grey
         public void TestPrimaryColors(float hue, float saturation, float brightness, byte expectedColorWheelStart,
             byte expectedColorWheelEnd, byte expectedMaster)
         {
