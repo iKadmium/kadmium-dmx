@@ -9,6 +9,8 @@ using kadmium_osc_dmx_dotnet_core;
 using kadmium_osc_dmx_dotnet_webui.WebSockets;
 using Microsoft.AspNetCore.ResponseCompression;
 using System.IO.Compression;
+using System.IO;
+using Microsoft.Extensions.PlatformAbstractions;
 
 namespace kadmium_osc_dmx_dotnet_webui
 {
@@ -42,8 +44,22 @@ namespace kadmium_osc_dmx_dotnet_webui
                 {
                     options.Providers.Add<GzipCompressionProvider>();
                 });
+            
+            services.AddMvc(options =>
+            {
+                options.Conventions.Add(new KebabCaseRoutingConvention());
+            });
 
-            services.AddMvc();
+            services.AddSwaggerGen(c =>
+            {
+                c.SwaggerDoc("v1", new Swashbuckle.AspNetCore.Swagger.Info
+                {
+                    Title = "kadmium-osc-dmx API",
+                    Version = "v1"
+                });
+                var filePath = Path.Combine(PlatformServices.Default.Application.ApplicationBasePath, "kadmium-osc-dmx-dotnet-webui.xml");
+                c.IncludeXmlComments(filePath);
+            });
 
             services.AddDbContext<DatabaseContext>(builder =>
                 DatabaseContext.SetConnection(builder as DbContextOptionsBuilder<DatabaseContext>)
@@ -77,6 +93,11 @@ namespace kadmium_osc_dmx_dotnet_webui
             app.UseWebSockets();
             app.UseStaticFiles();
             app.UseResponseCompression();
+            app.UseSwagger();
+            app.UseSwaggerUI(c =>
+            {
+                c.SwaggerEndpoint("/swagger/v1/swagger.json", "kadmium-osc-dmx API v1");
+            });
 
             app.Map("/socket/Dashboard", WebSocketHandler.Map<DashboardSocketHandler>);
             app.Map("/socket/SACN", WebSocketHandler.Map<SACNTransmitterLive>);

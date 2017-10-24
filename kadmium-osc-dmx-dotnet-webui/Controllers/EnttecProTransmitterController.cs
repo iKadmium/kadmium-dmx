@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Mvc;
 using kadmium_osc_dmx_dotnet_core.Transmitters;
 using kadmium_osc_dmx_dotnet_core;
+using Swashbuckle.AspNetCore.SwaggerGen;
 
 namespace kadmium_osc_dmx_dotnet_webui.Controllers
 {
@@ -9,20 +10,21 @@ namespace kadmium_osc_dmx_dotnet_webui.Controllers
     public class EnttecProTransmitterController : Controller
     {
         [HttpGet("[action]")]
-        public string[] GetPorts()
+        [SwaggerOperation("getEnttecPortNames")]
+        public string[] Ports()
         {
             return EnttecProTransmitter.GetPortNames();
         }
 
-        [HttpGet]
-        [Route("[action]")]
+        [HttpGet("[action]")]
+        [SwaggerOperation("getEnttecEnabled")]
         public bool Enabled()
         {
             return MasterController.Instance.Transmitters.Single(x => x is EnttecProTransmitter).Enabled;
         }
 
-        [HttpGet]
-        [Route("[action]/{value}")]
+        [HttpGet("[action]/{value}")]
+        [SwaggerOperation("setEnttecEnabled")]
         public void Enabled(bool value)
         {
             MasterController.Instance.Transmitters.Single(x => x is EnttecProTransmitter).Enabled = value;

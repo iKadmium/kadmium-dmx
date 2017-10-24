@@ -13,6 +13,8 @@ import { BsDropdownModule } from 'ngx-bootstrap/dropdown';
 import { TypeaheadModule } from "ngx-bootstrap/typeahead";
 import { ProgressbarModule } from "ngx-bootstrap/progressbar";
 
+import { ApiModule } from "api/api.module";
+
 import { AppComponent } from './app.component';
 import { DashboardComponent } from './dashboard/dashboard.component';
 import { FixtureDefinitionsComponent } from './fixture-definitions/fixture-definitions.component';
@@ -121,6 +123,8 @@ import { DashboardFixturePreviewComponent } from "app/dashboard-fixture-preview/
             },
             { path: '**', redirectTo: 'sets' }
         ]),
+
+        ApiModule,
 
         CollapseModule.forRoot(),
         ModalModule.forRoot(),

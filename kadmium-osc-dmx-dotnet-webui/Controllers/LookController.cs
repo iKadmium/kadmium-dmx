@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Mvc;
 using kadmium_osc_dmx_dotnet_core.Looks;
 using kadmium_osc_dmx_dotnet_core;
 using Microsoft.EntityFrameworkCore;
+using Swashbuckle.AspNetCore.SwaggerGen;
 
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
@@ -21,6 +22,7 @@ namespace kadmium_osc_dmx_dotnet_webui.Controllers
 
         // GET: api/values
         [HttpGet]
+        [SwaggerOperation("getLooks")]
         public async Task<IEnumerable<Look>> Get()
         {
             return await _context.Looks.ToListAsync();
@@ -28,6 +30,7 @@ namespace kadmium_osc_dmx_dotnet_webui.Controllers
 
         // GET api/values/5
         [HttpGet("{id}")]
+        [SwaggerOperation("getLookById")]
         public async Task<Look> Get(int id)
         {
             var look = await _context.LoadLook(id);
@@ -36,6 +39,7 @@ namespace kadmium_osc_dmx_dotnet_webui.Controllers
 
         // POST api/values
         [HttpPost]
+        [SwaggerOperation("postLook")]
         public async Task Post([FromBody]Look look)
         {
             await look.Initialize(_context);
@@ -45,6 +49,7 @@ namespace kadmium_osc_dmx_dotnet_webui.Controllers
 
         // PUT api/values/5
         [HttpPut("{id}")]
+        [SwaggerOperation("putLook")]
         public async Task Put(int id, [FromBody]Look look)
         {
             await look.Initialize(_context);
@@ -54,6 +59,7 @@ namespace kadmium_osc_dmx_dotnet_webui.Controllers
 
         // DELETE api/values/5
         [HttpDelete("{id}")]
+        [SwaggerOperation("deleteLook")]
         public async Task Delete(int id)
         {
             var look = await _context.LoadLook(id);
@@ -62,6 +68,7 @@ namespace kadmium_osc_dmx_dotnet_webui.Controllers
         }
 
         [HttpGet("[action]/{id}/{amount}")]
+        [SwaggerOperation("activateLookById")]
         public async Task Activate(int id, float amount)
         {
             var look = await _context.LoadLook(id);
@@ -69,6 +76,7 @@ namespace kadmium_osc_dmx_dotnet_webui.Controllers
         }
 
         [HttpPost("[action]/{amount}")]
+        [SwaggerOperation("activateLook")]
         public async Task Activate([FromBody]Look look, float amount)
         {
             await look.Initialize(_context);

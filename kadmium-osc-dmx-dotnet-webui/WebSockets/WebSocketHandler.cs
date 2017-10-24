@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.IO;
 using System.Net.WebSockets;
 using System.Reflection;
@@ -16,7 +16,7 @@ namespace kadmium_osc_dmx_dotnet_webui.WebSockets
     public abstract class WebSocketHandler : IDisposable
     {
         private static int RECEIVE_BUFFER_SIZE = 65535;
-
+        
         private WebSocket Socket { get; set; }
         public WebSocketHandler()
         { }
@@ -56,7 +56,7 @@ namespace kadmium_osc_dmx_dotnet_webui.WebSockets
                 }
             }
         }
-
+        
         private object[] GetParameters(JObject parametersObj, ParameterInfo[] paramsInfo)
         {
             object[] parameters = new object[parametersObj.Count];
@@ -123,7 +123,7 @@ namespace kadmium_osc_dmx_dotnet_webui.WebSockets
                 await h.RenderLoop();
             }
         }
-
+        
         public static void Map<Handler>(IApplicationBuilder app) where Handler : WebSocketHandler, new()
         {
             app.Use(WebSocketHandler.Acceptor<Handler>);

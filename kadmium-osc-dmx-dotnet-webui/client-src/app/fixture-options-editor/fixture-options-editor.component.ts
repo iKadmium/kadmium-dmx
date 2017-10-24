@@ -2,7 +2,7 @@ import { Component, OnInit, Input, SimpleChanges } from '@angular/core';
 import { AxisRestrictionOptions, Fixture } from "../venue";
 import { FixtureDefinition, FixtureDefinitionSkeleton } from "../fixture-definition";
 import { FixtureDefinitionService } from "../fixture-definition.service";
-import { Group } from "app/group";
+import { Group } from "api/models";
 
 @Component({
     selector: 'app-fixture-options-editor',

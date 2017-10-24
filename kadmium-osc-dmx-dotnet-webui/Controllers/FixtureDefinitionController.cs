@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using kadmium_osc_dmx_dotnet_core.Fixtures;
 using System.Threading.Tasks;
+using Swashbuckle.AspNetCore.SwaggerGen;
 
 // For more information on enabling MVC for empty projects, visit http://go.microsoft.com/fwlink/?LinkID=397860
 
@@ -30,16 +31,16 @@ namespace kadmium_osc_dmx_dotnet_webui.Controllers
             return skeletons;
         }
 
-        [HttpGet]
-        [Route("{id}")]
+        [HttpGet("{id}")]
+        [SwaggerOperation("getFixtureDefinitionById")]
         public async Task<FixtureDefinition> Get(int id)
         {
             var definition = await _context.LoadFixtureDefinition(id);
             return definition;
         }
 
-        [HttpDelete]
-        [Route("{id}")]
+        [HttpDelete("{id}")]
+        [SwaggerOperation("deleteFixtureDefinitionById")]
         public async Task Delete(int id)
         {
             FixtureDefinition definition = await _context.FixtureDefinitions.FindAsync(id);
@@ -48,6 +49,7 @@ namespace kadmium_osc_dmx_dotnet_webui.Controllers
         }
 
         [HttpPost]
+        [SwaggerOperation("postFixtureDefinitionById")]
         public async Task<int> Post([FromBody]FixtureDefinition definition)
         {
             await _context.FixtureDefinitions.AddAsync(definition);
@@ -56,8 +58,8 @@ namespace kadmium_osc_dmx_dotnet_webui.Controllers
 
         }
 
-        [HttpPut]
-        [Route("{id}")]
+        [HttpPut("{id}")]
+        [SwaggerOperation("putFixtureDefinitionById")]
         public async Task Put(int id, [FromBody]FixtureDefinition definition)
         {
             var oldDefinition = await _context.LoadFixtureDefinition(id);

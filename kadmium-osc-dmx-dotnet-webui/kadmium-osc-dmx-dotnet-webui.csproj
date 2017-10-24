@@ -12,6 +12,9 @@
     <MvcRazorCompileOnPublish>true</MvcRazorCompileOnPublish>
     <TypeScriptCompileBlocked>true</TypeScriptCompileBlocked>
   </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
+    <DocumentationFile>bin\Debug\netcoreapp1.1\kadmium-osc-dmx-dotnet-webui.xml</DocumentationFile>
+  </PropertyGroup>
   <ItemGroup>
     <Content Include="wwwroot\**\*">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
@@ -45,6 +48,7 @@
     <PackageReference Include="Microsoft.AspNetCore.WebSockets.Server" Version="0.1.0" />
     <PackageReference Include="Microsoft.AspNetCore.ResponseCompression" Version="1.0.1" />
     <PackageReference Include="Microsoft.AspNetCore.Mvc.Razor.ViewCompilation" Version="1.1.0" />
+    <PackageReference Include="Swashbuckle.AspNetCore" Version="1.0.0" />
   </ItemGroup>
   <Target Name="PrepublishScript" BeforeTargets="BeforePublish">
     <!--<Exec Command="npm install" />-->

@@ -1,9 +1,9 @@
 import { Component, OnInit } from '@angular/core';
-import { Group } from "app/group";
 import { Look, ColorLookSetting, ColorLooks, AttributeLooks, AttributeLookSetting } from "app/look";
-import { GroupService } from "app/group.service";
 import { LookService } from "app/look.service";
 import { Title } from "@angular/platform-browser";
+import { GroupService } from "api/services";
+import { Group } from "api/models";
 
 @Component({
     selector: 'app-venue-tester',
@@ -30,7 +30,7 @@ export class VenueTesterComponent implements OnInit
     async ngOnInit(): Promise<void>
     {
         this.title.setTitle("Venue Tester");
-        this.groups = await this.groupService.get();
+        this.groups = (await this.groupService.getGroups()).data;
         let group = this.groups[0];
         this.looks =
             [

@@ -2,6 +2,7 @@
 using kadmium_osc_dmx_dotnet_core;
 using System.Threading.Tasks;
 using kadmium_osc_dmx_dotnet_core.Transmitters;
+using Swashbuckle.AspNetCore.SwaggerGen;
 
 // For more information on enabling Web API for empty projects, visit http://go.microsoft.com/fwlink/?LinkID=397860
 
@@ -12,6 +13,7 @@ namespace kadmium_osc_dmx_dotnet_webui.Controllers
     {
         // GET: api/values
         [HttpGet]
+        [SwaggerOperation("getSettings")]
         public async Task<Settings> Get()
         {
             return await FileAccess.LoadSettings();
@@ -19,6 +21,7 @@ namespace kadmium_osc_dmx_dotnet_webui.Controllers
 
         // POST api/values
         [HttpPost]
+        [SwaggerOperation("postSettings")]
         public void Post([FromBody]Settings value)
         {
             MasterController.Instance.Settings = value;

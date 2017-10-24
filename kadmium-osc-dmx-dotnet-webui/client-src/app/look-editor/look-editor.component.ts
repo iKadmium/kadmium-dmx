@@ -1,12 +1,12 @@
 import { Component, OnInit } from '@angular/core';
-import { Group } from "../group";
 import { Look, AttributeLookSetting, ColorLookSetting } from "../look";
 import { ActivatedRoute, Router } from "@angular/router";
 import { LookService } from "../look.service";
-import { GroupService } from "../group.service";
 import { NotificationsService } from "../notifications.service";
 import { Title } from "@angular/platform-browser";
 import { StatusCode } from "../status-code.enum";
+import { GroupService } from "api/services";
+import { Group } from "api/models";
 
 @Component({
     selector: 'app-look-editor',
@@ -53,10 +53,10 @@ export class LookEditorComponent implements OnInit
         }
 
         this.groupService
-            .get()
+            .getGroups()
             .then(groups =>
             {
-                this.allGroups = groups;
+                this.allGroups = groups.data;
                 this.activeGroup = this.allGroups.length > 0 ? this.allGroups[0] : null;
             })
             .catch(reason => this.notificationsService.add(StatusCode.Error, reason));

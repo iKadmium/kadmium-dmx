@@ -1,13 +1,13 @@
 import { Component, OnInit, Input } from '@angular/core';
 import { Universe, Fixture } from "../venue";
-import { GroupService } from "../group.service";
 import { FixtureDefinitionService } from "../fixture-definition.service";
 import { StatusCode } from "../status-code.enum";
 import { NotificationsService } from "../notifications.service";
-import { Group } from "../group";
 import { FixtureDefinitionSkeleton } from "../fixture-definition";
 import { AsyncFileReader } from "../async-file-reader";
 import { FileSaver } from "../file-saver";
+import { GroupService } from "api/services";
+import { Group } from "api/models";
 
 @Component({
     selector: 'app-universe-editor',

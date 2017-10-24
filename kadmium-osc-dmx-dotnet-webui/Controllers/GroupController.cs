@@ -4,6 +4,7 @@ using kadmium_osc_dmx_dotnet_core;
 using System.Collections.Generic;
 using Microsoft.EntityFrameworkCore;
 using System.Threading.Tasks;
+using Swashbuckle.AspNetCore.SwaggerGen;
 
 // For more information on enabling MVC for empty projects, visit http://go.microsoft.com/fwlink/?LinkID=397860
 
@@ -22,6 +23,7 @@ namespace kadmium_osc_dmx_dotnet_webui.Controllers
 
         // GET: /<controller>/
         [HttpGet]
+        [SwaggerOperation("getGroups")]
         public async Task<IEnumerable<Group>> Get()
         {
             IEnumerable<Group> returnVal;
@@ -30,6 +32,7 @@ namespace kadmium_osc_dmx_dotnet_webui.Controllers
         }
 
         [HttpPut]
+        [SwaggerOperation("putGroup")]
         public async Task Put([FromBody]IEnumerable<Group> groups)
         {
             await _context.UpdateCollection(_context.Groups, groups, (x => x.Id));
@@ -37,8 +40,8 @@ namespace kadmium_osc_dmx_dotnet_webui.Controllers
             await MasterController.Instance.SetGroups(groups, _context);
         }
 
-        [HttpGet]
-        [Route("[action]/{group}/{attribute}/{value}")]
+        [HttpGet("[action]/{group}/{attribute}/{value}")]
+        [SwaggerOperation("setAttribute")]
         public void Set(string group, string attribute, float value)
         {
             MasterController.Instance.Groups[group].Set(attribute, value);

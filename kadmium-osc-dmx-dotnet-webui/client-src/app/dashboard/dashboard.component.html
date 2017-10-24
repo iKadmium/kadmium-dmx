@@ -22,7 +22,7 @@
         <app-dashboard-venue-list *ngIf="activeSection == 'Venue'">
         </app-dashboard-venue-list>
 
-        <app-dashboard-fixture-list [venue]="venue" *ngIf="activeSection == 'Fixture'">
+        <app-dashboard-fixture-list #fixturesComponent [venue]="venue" *ngIf="activeSection == 'Fixture'">
         </app-dashboard-fixture-list>
 
         <app-dashboard-fixture [venue]="venue" (update)="updateAttribute($event)" *ngIf="activeSection == 'Fixture'">

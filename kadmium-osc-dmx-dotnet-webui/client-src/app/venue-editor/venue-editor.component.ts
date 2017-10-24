@@ -6,8 +6,8 @@ import { UniverseEditorComponent } from "../universe-editor/universe-editor.comp
 import { FixtureOptionsEditorComponent } from "../fixture-options-editor/fixture-options-editor.component";
 import { NotificationsService } from "../notifications.service";
 import { StatusCode } from "../status-code.enum";
-import { Group } from "../group";
-import { GroupService } from "../group.service";
+import { GroupService } from "api/services";
+import { Group } from "api/models";
 
 @Component({
     selector: 'app-venue-editor',
@@ -36,7 +36,7 @@ export class VenueEditorComponent implements OnInit
 
     async ngOnInit(): Promise<void>
     {
-        this.groups = await this.groupService.get();
+        this.groups = (await this.groupService.getGroups()).data;
         this.venueId = this.route.snapshot.params['id'];
         if (this.isNewItem())
         {

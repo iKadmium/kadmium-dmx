@@ -8,6 +8,7 @@ using Microsoft.EntityFrameworkCore;
 using kadmium_osc_dmx_dotnet_core.Fixtures;
 using kadmium_osc_dmx_dotnet_core.Solvers;
 using System;
+using Swashbuckle.AspNetCore.SwaggerGen;
 
 // For more information on enabling Web API for empty projects, visit http://go.microsoft.com/fwlink/?LinkID=397860
 
@@ -24,7 +25,12 @@ namespace kadmium_osc_dmx_dotnet_webui.Controllers
         }
 
         // GET: api/values
+        /// <summary>
+        /// Get a list of the Venues in the database
+        /// </summary>
+        /// <returns></returns>
         [HttpGet]
+        [SwaggerOperation("getVenues")]
         public async Task<IEnumerable<VenueSkeleton>> Get()
         {
             var skeletons = from venue in _context.Venues
@@ -33,16 +39,21 @@ namespace kadmium_osc_dmx_dotnet_webui.Controllers
             return list;
         }
 
-        [HttpGet]
-        [Route("{id}")]
+        /// <summary>
+        /// Get a single venue by its ID
+        /// </summary>
+        /// <param name="id">The Venue ID</param>
+        /// <returns>A venue object</returns>
+        [HttpGet("{id}")]
+        [SwaggerOperation("getVenueById")]
         public async Task<Venue> Get(int id)
         {
             var venue = await _context.LoadVenue(id);
             return venue;
         }
 
-        [HttpGet]
-        [Route("[action]")]
+        [HttpGet("[action]")]
+        [SwaggerOperation("getActiveVenue")]
         public ActiveVenue GetActive()
         {
             ActiveVenue response = new ActiveVenue
@@ -134,8 +145,8 @@ namespace kadmium_osc_dmx_dotnet_webui.Controllers
             }
         }
 
-        [HttpGet]
-        [Route("[action]/{id}")]
+        [HttpGet("[action]/{id}")]
+        [SwaggerOperation("activateVenueById")]
         public async Task Activate(int id)
         {
             var venue = await _context.LoadVenue(id);
@@ -145,8 +156,17 @@ namespace kadmium_osc_dmx_dotnet_webui.Controllers
 
         }
 
+        [HttpGet("[action]/{name}")]
+        [SwaggerOperation("activateVenueByName")]
+        public async Task Activate(string name)
+        {
+            int id = (await _context.Venues.FirstAsync(x => x.Name.Contains(name))).Id;
+            await this.Activate(id);
+        }
+
         // DELETE api/values/5
         [HttpDelete("{id}")]
+        [SwaggerOperation("deleteVenue")]
         public async Task Delete(int id)
         {
             Venue venue = await _context.Venues.FindAsync(id);
@@ -156,6 +176,7 @@ namespace kadmium_osc_dmx_dotnet_webui.Controllers
         }
 
         [HttpPost]
+        [SwaggerOperation("postVenue")]
         public async Task<int> Post([FromBody]Venue venue)
         {
             await venue.Initialize(_context);
@@ -164,8 +185,8 @@ namespace kadmium_osc_dmx_dotnet_webui.Controllers
             return venue.Id;
         }
 
-        [HttpPut]
-        [Route("{id}")]
+        [HttpPut("{id}")]
+        [SwaggerOperation("putVenue")]
         public async Task Put(int id, [FromBody]Venue venue)
         {
             await venue.Initialize(_context);
@@ -174,7 +195,8 @@ namespace kadmium_osc_dmx_dotnet_webui.Controllers
             await _context.SaveChangesAsync();
         }
 
-        [Route("[action]/{id}")]
+        [HttpGet("[action]/{id}")]
+        [SwaggerOperation("downloadVenue")]
         public async Task<VenueDownload> Download(int id)
         {
             Venue venue = await _context.LoadVenue(id);
@@ -200,14 +222,7 @@ namespace kadmium_osc_dmx_dotnet_webui.Controllers
             };
             return download;
         }
-
-        [Route("[action]/{name}")]
-        public async Task ActivateByName(string name)
-        {
-            int id = (await _context.Venues.FirstAsync(x => x.Name.Contains(name))).Id;
-            await this.Activate(id);
-        }
-
+        
         private async Task UpdateVenue(Venue oldVenue, Venue newVenue)
         {
             var removals = from universe in oldVenue.Universes

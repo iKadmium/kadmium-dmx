@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChild, OnDestroy } from '@angular/core';
+import { Component, OnInit, ViewChild, OnDestroy, ContentChild } from '@angular/core';
 import { Title } from "@angular/platform-browser";
 
 import { TogglableService, Togglable } from "../togglable-service";
@@ -17,6 +17,8 @@ import { PreviewUniverse } from "app/preview-universe";
 import { PreviewVenue } from "app/preview-venue";
 import { DMXChannelUpdateData } from "app/dashboard-universe/dashboard-universe.component";
 import { DashboardOSCListenerComponent } from "app/dashboard-osc-listener/dashboard-osc-listener.component";
+import { DashboardFixtureListComponent } from "app/dashboard-fixture-list/dashboard-fixture-list.component";
+import { DashboardFixturePreviewComponent } from "app/dashboard-fixture-preview/dashboard-fixture-preview.component";
 
 @Component({
     selector: 'app-dashboard',
@@ -26,6 +28,7 @@ import { DashboardOSCListenerComponent } from "app/dashboard-osc-listener/dashbo
 })
 export class DashboardComponent implements OnInit, OnDestroy
 {
+    @ViewChild(DashboardFixtureListComponent) public fixturesComponent: DashboardFixtureListComponent;
     public statuses: Map<string, Status>;
     private venue: PreviewVenue;
 
@@ -35,7 +38,9 @@ export class DashboardComponent implements OnInit, OnDestroy
     public recognisedOSCMessages: string[];
 
     private attributesBusy: boolean;
-    private dmxBusy: boolean;
+    private renderThreadBusy: boolean;
+
+    private renderTimer: number;
 
     constructor(private dashboardService: DashboardService, private solversLiveService: SolversLiveService, private venueService: VenueService,
         private sacnTransmitterService: SACNTransmitterService, private oscListenerService: OSCListenerService, private notificationsService: NotificationsService, titleService: Title)
@@ -54,17 +59,24 @@ export class DashboardComponent implements OnInit, OnDestroy
         this.recognisedOSCMessages = [];
         this.unrecognisedOSCMessages = [];
         this.attributesBusy = false;
-        this.dmxBusy = false;
+        this.renderThreadBusy = false;
     }
 
     async ngOnInit(): Promise<void>
     {
+        var that = this;
+        this.renderTimer = window.setInterval(async t =>
+        {
+            let bob = 1;
+            bob = bob + 2;
+            await that.render();
+        }, DashboardFixturePreviewComponent.updateTime);
         try
         {
             await this.dashboardService.subscribe(this);
             this.dashboardService.init();
         } catch (error) { this.notificationsService.add(StatusCode.Error, error); }
-        try { await this.sacnTransmitterService.subscribe(this) } catch (error) { this.notificationsService.add(StatusCode.Error, error) };
+        try { await this.sacnTransmitterService.subscribe(this); } catch (error) { this.notificationsService.add(StatusCode.Error, error) };
         try { await this.oscListenerService.subscribe(this) } catch (error) { this.notificationsService.add(StatusCode.Error, error) };
         try { await this.solversLiveService.subscribe(this) } catch (error) { this.notificationsService.add(StatusCode.Error, error) };
     }
@@ -89,17 +101,25 @@ export class DashboardComponent implements OnInit, OnDestroy
         }
     }
 
-    public updateDMX(data: UniverseUpdateData): void
+    public async updateDMX(data: UniverseUpdateData): Promise<void>
     {
-        if (this.venue != null && (this.activeSection == "Universe" || this.activeSection == "Fixture") && !this.dmxBusy)
+        if (this.venue != null)
         {
-            this.dmxBusy = true;
             let universe = this.venue.universes.find(x => x.universeID == data.universeID);
             if (universe != null)
             {
                 universe.values = data.values;
             }
-            this.dmxBusy = false;
+        }
+    }
+
+    public async render(): Promise<void>
+    {
+        if (!this.renderThreadBusy && this.activeSection == "Fixture")
+        {
+            this.renderThreadBusy = true;
+            await this.fixturesComponent.render();
+            this.renderThreadBusy = false;
         }
     }
 

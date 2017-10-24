@@ -1,11 +1,11 @@
 import { Component, OnInit } from '@angular/core';
-import { GroupService } from "../group.service";
 import { NotificationsService } from "../notifications.service";
 import { Title } from "@angular/platform-browser";
-import { Group } from "../group";
 import { StatusCode } from "../status-code.enum";
 import { FileSaver } from "../file-saver";
 import { AsyncFileReader } from "../async-file-reader";
+import { GroupService } from "api/services";
+import { Group } from "api/models";
 
 @Component({
     selector: 'app-groups',
@@ -29,7 +29,8 @@ export class GroupsComponent implements OnInit
     {
         try
         {
-            this.groups = await this.groupsService.get();
+            let response = await this.groupsService.getGroups();
+            this.groups = response.data;
         }
         catch (reason)
         {
@@ -52,7 +53,7 @@ export class GroupsComponent implements OnInit
 
     private add(): void
     {
-        let group = new Group("");
+        let group = new Group();
         group.order = this.getNextOrder();
         this.groups.push(group);
     }
@@ -87,7 +88,7 @@ export class GroupsComponent implements OnInit
         this.saving = true;
         try
         {
-            await this.groupsService.put(this.groups);
+            await this.groupsService.putGroup(this.groups);
             this.notificationsService.add(StatusCode.Success, "Saved successfully")
         }
         catch (reason)

@@ -1,4 +1,5 @@
-import { Group } from "app/group";
+
+import { Group } from "api/models";
 
 export interface LookSkeleton
 {

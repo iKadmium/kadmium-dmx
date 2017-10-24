@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 using kadmium_osc_dmx_dotnet_core;
 using System.Collections.Generic;
 using kadmium_osc_dmx_dotnet_core.Fixtures;
+using Swashbuckle.AspNetCore.SwaggerGen;
 
 // For more information on enabling MVC for empty projects, visit http://go.microsoft.com/fwlink/?LinkID=397860
 
@@ -13,6 +14,7 @@ namespace kadmium_osc_dmx_dotnet_webui.Controllers
     {
         // GET: /<controller>/
         [HttpGet]
+        [SwaggerOperation("getPreview")]
         public PreviewResult Get()
         {
             PreviewResult result = new PreviewResult
