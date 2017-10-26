@@ -21,8 +21,8 @@ namespace kadmium_osc_dmx_dotnet_core
         [NotMapped]
         [JsonIgnore]
         public byte[] DMX { get; }
-        public event EventHandler<UpdateEventArgs> Updated;
-        public event EventHandler<DMXEventArgs> Rendered;
+        public event EventHandler<UpdateEventArgs> Rendered;
+        public event EventHandler<DMXEventArgs> Transmitted;
 
         public Universe()
         {
@@ -54,24 +54,24 @@ namespace kadmium_osc_dmx_dotnet_core
             {
                 fixture.Dispose();
             }
-            foreach(var client in Rendered?.GetInvocationList() ?? Enumerable.Empty<Delegate>())
+            foreach(var client in Transmitted?.GetInvocationList() ?? Enumerable.Empty<Delegate>())
             {
-                Rendered -= (client as EventHandler<DMXEventArgs>);
+                Transmitted -= (client as EventHandler<DMXEventArgs>);
             }
-            foreach (var client in Updated?.GetInvocationList() ?? Enumerable.Empty<Delegate>())
+            foreach (var client in Rendered?.GetInvocationList() ?? Enumerable.Empty<Delegate>())
             {
-                Updated -= (client as EventHandler<UpdateEventArgs>);
+                Rendered -= (client as EventHandler<UpdateEventArgs>);
             }
         }
         
-        public void Update()
+        public void Render()
         {
             foreach (Fixture fixture in Fixtures)
             {
                 fixture.Update();
                 fixture.Render(DMX);
             }
-            Updated?.Invoke(this, new UpdateEventArgs(UniverseNumber, Fixtures));
+            Rendered?.Invoke(this, new UpdateEventArgs(UniverseNumber, Fixtures));
         }
 
         public async Task Initialize(DatabaseContext context)
@@ -82,13 +82,13 @@ namespace kadmium_osc_dmx_dotnet_core
             }
         }
 
-        public async Task Render()
+        public async Task Transmit()
         {
             foreach(var transmitter in MasterController.Instance.Transmitters)
             {
                 await transmitter.Transmit(DMX, UniverseNumber);
             }
-            Rendered?.Invoke(this, new DMXEventArgs(DMX));
+            Transmitted?.Invoke(this, new DMXEventArgs(DMX));
         }
 
         public void Activate()

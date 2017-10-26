@@ -1,29 +1,42 @@
 import { Component, OnInit, Input, EventEmitter, Output } from '@angular/core';
-import { VenueSkeleton, Venue } from "app/venue";
-import { VenueService } from "app/venue.service";
 import { NotificationsService } from "app/notifications.service";
 import { StatusCode } from "app/status-code.enum";
 import { Status } from "app/status";
-import { SolversLiveService, UniverseData } from "app/solvers-live.service";
 import { PreviewVenue } from "app/preview-venue";
+import { VenueService } from "api/services";
+import { PreviewUniverse } from "app/preview-universe";
 
 @Component({
     selector: 'app-dashboard-venue',
     templateUrl: './dashboard-venue.component.html',
     styleUrls: ['./dashboard-venue.component.css'],
-    providers: [VenueService, SolversLiveService]
+    providers: [VenueService]
 })
 export class DashboardVenueComponent implements OnInit
 {
-    @Input() venue: PreviewVenue;
-    @Output() navigate = new EventEmitter<string>();
+    public venue: PreviewVenue;
 
-    constructor(private notificationsService: NotificationsService)
-    { }
+    constructor(private notificationsService: NotificationsService, private venueService: VenueService)
+    {
+
+    }
 
     ngOnInit(): void
     {
+        this.refreshVenue();
+    }
 
+    public refreshVenue(): void
+    {
+        this.venueService.getActiveVenue()
+            .then(response =>
+            {
+                this.venue = new PreviewVenue().load(response.data);
+            })
+            .catch(reason => 
+            {
+                this.notificationsService.add(StatusCode.Error, reason);
+            });
     }
 
     public get universeCount(): number
@@ -33,29 +46,19 @@ export class DashboardVenueComponent implements OnInit
         return this.venue.universes.length;
     }
 
-    public get fixtureCount(): number
+    public getFixtureCount(universe: PreviewUniverse): number
     {
-        if (this.venue == null) { return 0 };
-
-        let sum = 0;
-        for (let universe of this.venue.universes)
-        {
-            sum += universe.fixtures.length;
-        }
-        return sum;
+        return universe.fixtures.length;
     }
 
-    public get dmxChannelCount(): number
+    public getDMXChannelCount(universe: PreviewUniverse): number
     {
         if (this.venue == null) { return 0 };
 
         let sum = 0;
-        for (let universe of this.venue.universes)
+        for (let fixture of universe.fixtures)
         {
-            for (let fixture of universe.fixtures)
-            {
-                sum += fixture.channelNumberMap.size;
-            }
+            sum += fixture.channelNumberMap.size;
         }
 
         return sum;
@@ -76,11 +79,6 @@ export class DashboardVenueComponent implements OnInit
         }
 
         return sum;
-    }
-
-    public navigateTo(area: string): void
-    {
-        this.navigate.emit(area);
     }
 
 }

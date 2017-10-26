@@ -25,6 +25,12 @@ namespace kadmium_osc_dmx_dotnet_webui.Controllers
             MasterController.Instance.Transmitters.Single(x => x is SACNTransmitter).Enabled = value;
         }
 
+        [HttpGet("[action]")]
+        [SwaggerOperation("getTransmitterStatus")]
+        public Status Status()
+        {
+            return MasterController.Instance.Transmitters.Single(x => x is SACNTransmitter).Status;
+        }
         
     }
 }

@@ -1,7 +1,5 @@
 import { Component, Input, ViewChild, ElementRef, SimpleChanges, AfterContentInit, OnChanges } from '@angular/core';
 import { PreviewFixture } from "../preview-fixture";
-import { PreviewFixtureData } from "../preview.service";
-import { FixtureDefinition } from "../fixture-definition";
 
 @Component({
     selector: 'app-dashboard-fixture-preview',
@@ -14,7 +12,6 @@ export class DashboardFixturePreviewComponent implements AfterContentInit
     public static updateTime = 1000 / DashboardFixturePreviewComponent.updateRate;
 
     @Input() fixture: PreviewFixture;
-    @Input("data") data: number[];
     @ViewChild("canvas") canvasRef: ElementRef;
     canvas: HTMLCanvasElement;
     ctx: CanvasRenderingContext2D;
@@ -30,11 +27,11 @@ export class DashboardFixturePreviewComponent implements AfterContentInit
         this.ctx = this.canvas.getContext("2d");
     }
 
-    public render(): Promise<void>
+    public render(data: Uint8Array): Promise<void>
     {
         let promise = new Promise<void>((resolve) => 
         {
-            this.fixture.update(this.data);
+            this.fixture.update(data);
             this.ctx.fillStyle = this.fixture.fillStyle;
             this.ctx.fillRect(0, 0, this.canvas.width, this.canvas.height);
 

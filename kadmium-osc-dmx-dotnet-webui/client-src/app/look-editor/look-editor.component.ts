@@ -1,12 +1,10 @@
 import { Component, OnInit } from '@angular/core';
-import { Look, AttributeLookSetting, ColorLookSetting } from "../look";
 import { ActivatedRoute, Router } from "@angular/router";
-import { LookService } from "../look.service";
 import { NotificationsService } from "../notifications.service";
 import { Title } from "@angular/platform-browser";
 import { StatusCode } from "../status-code.enum";
-import { GroupService } from "api/services";
-import { Group } from "api/models";
+import { GroupService, LookService } from "api/services";
+import { Group, Look, AttributeLookSetting, ColorLookSetting } from "api/models";
 
 @Component({
     selector: 'app-look-editor',
@@ -39,14 +37,16 @@ export class LookEditorComponent implements OnInit
         {
             this.title.setTitle("Look Editor - New Look");
             this.look = new Look();
+            this.look.attributeLookSettings = [];
+            this.look.colorLookSettings = [];
         }
         else
         {
             this.lookService
-                .get(this.id)
-                .then(look =>
+                .getLookById(this.id)
+                .then(response =>
                 {
-                    this.look = look;
+                    this.look = response.data;
                     this.title.setTitle(`Look Editor - ${this.look.name}`);
                 })
                 .catch(reason => this.notificationsService.add(StatusCode.Error, reason));
@@ -115,12 +115,12 @@ export class LookEditorComponent implements OnInit
         {
             if (this.isNewItem()) 
             {
-                await this.lookService.post(this.look);
+                await this.lookService.postLook(this.look);
                 this.notificationsService.add(StatusCode.Success, "Successfully added " + this.look.name);
             }
             else
             {
-                await this.lookService.put(this.look);
+                await this.lookService.putLook({ id: this.look.id, look: this.look });
                 this.notificationsService.add(StatusCode.Success, "Successfully updated " + this.look.name);
             }
             this.router.navigate(["../", { relativeTo: this.route }]);

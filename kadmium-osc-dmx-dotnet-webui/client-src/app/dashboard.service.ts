@@ -1,43 +1,34 @@
 import { Injectable } from '@angular/core';
 import { URLs, SocketController } from "./url";
-import { RPCSocket, RPCData } from "./rpcsocket";
 import { StatusCode } from "./status-code.enum";
 
 @Injectable()
-export class DashboardService
+export class StatusStreamService
 {
-    private socketUrl = URLs.getSocketURL(SocketController.Dashboard);
-    private rpc: RPCSocket;
+    private socketUrl = URLs.getSocketURL(SocketController.Status);
+    private socket: WebSocket;
 
     constructor()
     {
-        this.rpc = new RPCSocket(this.socketUrl);
+
     }
 
-    public async subscribe(listener: Object): Promise<void>
+    public subscribe(listener: (data: StatusData) => void): void
     {
-        return new Promise<void>(async (resolve, reject) =>
+        this.socket = new WebSocket(this.socketUrl);
+        this.socket.addEventListener("message", (message) => 
         {
-            try
-            {
-                await this.rpc.connect();
-                this.rpc.subscribe(listener);
-                resolve();
-            }
-            catch (error)
-            {
-                reject(error);
-            }
+            listener(JSON.parse(message.data) as StatusData);
+        });
+        this.socket.addEventListener("open", (event) => 
+        {
+            this.socket.send("updateAll");
         });
     }
 
-    public async init(): Promise<void>
+    public unsubscribe(thisRef: Object): void
     {
-        let data: RPCData = {
-            method: "UpdateAll",
-            args: {}
-        };
-        await this.rpc.send(data);
+        this.socket.removeEventListener("message");
     }
 }
 
@@ -49,7 +40,7 @@ export interface StatusData
 }
 
 @Injectable()
-export class MockDashboardService extends DashboardService
+export class MockDashboardService extends StatusStreamService
 {
     constructor()
     {

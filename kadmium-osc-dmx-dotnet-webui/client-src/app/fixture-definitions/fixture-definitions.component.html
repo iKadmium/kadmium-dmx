@@ -1,8 +1,7 @@
 <div class="form-group form-inline">
     <div class="checkbox">
         <label>
-            <input type="checkbox" [(ngModel)]="manufacturerFilterEnabled" />
-            Filter by manufacturer
+            <input type="checkbox" [(ngModel)]="manufacturerFilterEnabled" /> Filter by manufacturer
         </label>
     </div>
     <select required class="form-control" [disabled]="!manufacturerFilterEnabled" [(ngModel)]="manufacturerFilter">
@@ -23,14 +22,24 @@
             <td>{{entry.model}}</td>
             <td>
                 <div class="btn-group">
-                    <a class="btn btn-success" [href]="getDownloadUrl(entry)" [download]="entry.manufacturer + ' ' + entry.model + '.json'"><span class="glyphicon glyphicon-cloud-download"></span></a>
-                    <a class="btn btn-default" [href]="getEditUrl(entry)"><span class="glyphicon glyphicon-edit"></span></a>
-                    <button class="btn btn-danger" (click)="deleteConfirm(entry)"><span class="glyphicon glyphicon-remove"></span></button>
+                    <a class="btn btn-success" [href]="getDownloadUrl(entry)" [download]="entry.manufacturer + ' ' + entry.model + '.json'">
+                        <span class="glyphicon glyphicon-cloud-download"></span>
+                    </a>
+                    <a class="btn btn-default" [routerLink]="entry.id">
+                        <span class="glyphicon glyphicon-edit"></span>
+                    </a>
+                    <button class="btn btn-danger" (click)="deleteConfirm(entry)">
+                        <span class="glyphicon glyphicon-remove"></span>
+                    </button>
                 </div>
             </td>
         </tr>
     </tbody>
 </table>
-<a href="/fixture-definitions/new" class="btn btn-success"><span class="glyphicon glyphicon-plus"></span></a>
-<button class="btn btn-success" (click)="upload(fileInput)"><span class="glyphicon glyphicon-cloud-upload"></span></button>
+<a href="/fixture-definitions/new" class="btn btn-success">
+    <span class="glyphicon glyphicon-plus"></span>
+</a>
+<button class="btn btn-success" (click)="upload(fileInput)">
+    <span class="glyphicon glyphicon-cloud-upload"></span>
+</button>
 <input #fileInput type="file" name="name" style="display: none;" (change)="filesSelected($event.target.files)" multiple>

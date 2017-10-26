@@ -1,13 +1,10 @@
 import { Component, OnInit, Input } from '@angular/core';
-import { Universe, Fixture } from "../venue";
-import { FixtureDefinitionService } from "../fixture-definition.service";
 import { StatusCode } from "../status-code.enum";
 import { NotificationsService } from "../notifications.service";
-import { FixtureDefinitionSkeleton } from "../fixture-definition";
 import { AsyncFileReader } from "../async-file-reader";
 import { FileSaver } from "../file-saver";
-import { GroupService } from "api/services";
-import { Group } from "api/models";
+import { GroupService, FixtureDefinitionService } from "api/services";
+import { Group, FixtureDefinitionSkeleton, Universe, Fixture } from "api/models";
 
 @Component({
     selector: 'app-universe-editor',
@@ -34,7 +31,7 @@ export class UniverseEditorComponent implements OnInit
     {
         try
         {
-            this.fixtureDefinitionSkeletons = await this.fixtureDefinitionService.getSkeletons();
+            this.fixtureDefinitionSkeletons = (await this.fixtureDefinitionService.getFixtureDefinitionSkeletons()).data;
         }
         catch (reason)
         {

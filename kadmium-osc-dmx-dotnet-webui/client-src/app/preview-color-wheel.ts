@@ -1,6 +1,6 @@
-import { ColorWheelEntry } from "./fixture-definition";
 import { PreviewAttribute } from "./preview-attribute";
 import { RGB } from "./color";
+import { ColorWheelEntry } from "api/models";
 
 export class PreviewColorWheel
 {

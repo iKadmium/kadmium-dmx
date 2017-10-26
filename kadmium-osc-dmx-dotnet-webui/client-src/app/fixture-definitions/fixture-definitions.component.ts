@@ -1,10 +1,10 @@
 import { Component, OnInit } from '@angular/core';
-import { FixtureDefinitionService } from "../fixture-definition.service";
 import { AsyncFileReader } from "../async-file-reader";
-import { FixtureDefinition, FixtureDefinitionSkeleton } from "../fixture-definition";
 import { NotificationsService } from "../notifications.service";
 import { StatusCode } from "../status-code.enum";
 import { Title } from "@angular/platform-browser";
+import { FixtureDefinitionService } from "api/services";
+import { FixtureDefinitionSkeleton, FixtureDefinition } from "api/models";
 
 @Component({
     selector: 'app-fixture-definitions',
@@ -29,7 +29,7 @@ export class FixtureDefinitionsComponent implements OnInit
     {
         try
         {
-            this.skeletons = await this.fixtureDefinitionsService.getSkeletons();
+            this.skeletons = (await this.fixtureDefinitionsService.getFixtureDefinitionSkeletons()).data;
             if (this.manufacturers.length > 0)
             {
                 this.manufacturerFilter = this.manufacturers[0];
@@ -76,7 +76,7 @@ export class FixtureDefinitionsComponent implements OnInit
         {
             try
             {
-                await this.fixtureDefinitionsService.delete(fixture);
+                await this.fixtureDefinitionsService.deleteFixtureDefinitionById(fixture.id);
 
                 this.notificationsService.add(StatusCode.Success, fixture.manufacturer + " " + fixture.model + " was deleted");
                 let index = this.skeletons.indexOf(fixture);
@@ -107,7 +107,7 @@ export class FixtureDefinitionsComponent implements OnInit
         try
         {
             let definition = await AsyncFileReader.read<FixtureDefinition>(file);
-            definition.id = await this.fixtureDefinitionsService.post(definition);
+            definition.id = (await this.fixtureDefinitionsService.postFixtureDefinitionById(definition)).data;
             this.skeletons.push(definition);
             this.notificationsService.add(StatusCode.Success, "Successfully added " + definition.manufacturer + " " + definition.model);
         }

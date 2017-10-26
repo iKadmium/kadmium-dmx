@@ -40,11 +40,12 @@ namespace kadmium_osc_dmx_dotnet_webui.Controllers
         // POST api/values
         [HttpPost]
         [SwaggerOperation("postLook")]
-        public async Task Post([FromBody]Look look)
+        public async Task<int> Post([FromBody]Look look)
         {
             await look.Initialize(_context);
             await _context.Looks.AddAsync(look);
             await _context.SaveChangesAsync();
+            return look.Id;
         }
 
         // PUT api/values/5

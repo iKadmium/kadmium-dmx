@@ -3,11 +3,11 @@ using kadmium_osc_dmx_dotnet_core.Listeners;
 
 namespace kadmium_osc_dmx_dotnet_webui.WebSockets
 {
-    public class OSCListenerLive : WebSocketHandler
+    public class OSCStreamSocketHandler : WebSocketHandler
     {
         public OSCListener Listener { get; }
 
-        public OSCListenerLive()
+        public OSCStreamSocketHandler()
         {
             Listener = MasterController.Instance.Listener as OSCListener;
             Listener.MessageReceived += Listener_MessageReceived;
@@ -15,18 +15,15 @@ namespace kadmium_osc_dmx_dotnet_webui.WebSockets
 
         private async void Listener_MessageReceived(object sender, OSCListenerEventArgs e)
         {
-            WebSocketMessage<OSCListenerUpdateMessage> message = new WebSocketMessage<OSCListenerUpdateMessage>(
-                "addMessage",
-                new OSCListenerUpdateMessage
-                {
-                    Recognised = e.Recognised,
-                    Time = e.Time,
-                    Source = e.Source,
-                    Address = e.Address,
-                    Value = e.Value
-                }
-            );
-            await Send(message);
+            var message = new OSCListenerUpdateMessage
+            {
+                Recognised = e.Recognised,
+                Time = e.Time,
+                Source = e.Source,
+                Address = e.Address,
+                Value = e.Value
+            };
+            await SendObject(message);
         }
 
         public override void Dispose()

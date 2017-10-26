@@ -34,16 +34,10 @@ namespace kadmium_osc_dmx_dotnet_webui.WebSockets
                     switch (received.MessageType)
                     {
                         case WebSocketMessageType.Text:
-                            string messageString = System.Text.Encoding.UTF8.GetString(receiveBuffer, 0, received.Count);
-                            JObject message = JObject.Parse(messageString);
-                            string methodName = message["method"].Value<string>();
+                            string message = System.Text.Encoding.UTF8.GetString(receiveSegment.Array, receiveSegment.Offset, received.Count);
+                            OnMessage(message);
 
-                            JObject paramsObj = message["args"].Value<JObject>();
 
-                            MethodInfo info = this.GetType().GetMethod(methodName);
-                            object[] parameters = GetParameters(paramsObj, info.GetParameters());
-
-                            info.Invoke(this, parameters);
                             break;
                         case WebSocketMessageType.Close:
                             break;
@@ -57,39 +51,22 @@ namespace kadmium_osc_dmx_dotnet_webui.WebSockets
             }
         }
         
-        private object[] GetParameters(JObject parametersObj, ParameterInfo[] paramsInfo)
+        public async Task SendBinary(byte[] messageBytes)
         {
-            object[] parameters = new object[parametersObj.Count];
-            foreach (var parameterInfo in paramsInfo)
+            ArraySegment<byte> segment = new ArraySegment<byte>(messageBytes);
+            try
             {
-                parameters[parameterInfo.Position] = GetValue(parametersObj[parameterInfo.Name]);
+                await Socket.SendAsync(segment, WebSocketMessageType.Binary, true, CancellationToken.None);
             }
-            return parameters;
-        }
-
-        private object GetValue(JToken token)
-        {
-            switch (token.Type)
+            catch (ObjectDisposedException)
             {
-                case JTokenType.Integer:
-                    return token.Value<int>();
-                case JTokenType.Float:
-                    return token.Value<float>();
-                case JTokenType.String:
-                    return token.Value<string>();
-                default:
-                case JTokenType.Object:
-                    return token.Value<object>();
+                Socket.Abort();
             }
         }
 
-        public async Task Send<T>(WebSocketMessage<T> message)
+        public async Task SendText(string message)
         {
-            string serialized = JsonConvert.SerializeObject(message, new JsonSerializerSettings
-            {
-                ContractResolver = new CamelCasePropertyNamesContractResolver()
-            });
-            byte[] messageBytes = System.Text.Encoding.UTF8.GetBytes(serialized);
+            byte[] messageBytes = System.Text.Encoding.UTF8.GetBytes(message);
             ArraySegment<byte> segment = new ArraySegment<byte>(messageBytes);
             try
             {
@@ -101,17 +78,31 @@ namespace kadmium_osc_dmx_dotnet_webui.WebSockets
             }
         }
 
-        public virtual Task OnOpen()
+        public async Task SendObject<T>(T message)
+        {
+            string serialized = JsonConvert.SerializeObject(message, new JsonSerializerSettings
+            {
+                ContractResolver = new CamelCasePropertyNamesContractResolver()
+            });
+            await SendText(serialized);
+        }
+
+        public virtual Task OnOpen(HttpContext httpContext)
         {
             return Task.Run(() => { });
         }
 
-        public static async Task Acceptor<Handler>(HttpContext hc, Func<Task> n) where Handler : WebSocketHandler, new()
+        public virtual void OnMessage(string message)
         {
-            if (!hc.WebSockets.IsWebSocketRequest)
+
+        }
+
+        public static async Task Acceptor<Handler>(HttpContext httpContext, Func<Task> n) where Handler : WebSocketHandler, new()
+        {
+            if (!httpContext.WebSockets.IsWebSocketRequest)
                 return;
 
-            var socket = await hc.WebSockets.AcceptWebSocketAsync();
+            var socket = await httpContext.WebSockets.AcceptWebSocketAsync();
             using (var h = new Handler())
             {
                 h.Socket = socket;
@@ -119,26 +110,14 @@ namespace kadmium_osc_dmx_dotnet_webui.WebSockets
                 {
                     await Task.Delay(100);
                 }
-                await h.OnOpen();
+                await h.OnOpen(httpContext);
                 await h.RenderLoop();
             }
         }
-        
+
         public static void Map<Handler>(IApplicationBuilder app) where Handler : WebSocketHandler, new()
         {
             app.Use(WebSocketHandler.Acceptor<Handler>);
-        }
-    }
-
-    public class WebSocketMessage<T>
-    {
-        public string Method { get; set; }
-        public T Args { get; set; }
-
-        public WebSocketMessage(string methodName, T args)
-        {
-            Method = methodName;
-            Args = args;
         }
     }
 }

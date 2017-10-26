@@ -1,9 +1,7 @@
 import { Component, OnInit } from '@angular/core';
-import { Look, ColorLookSetting, ColorLooks, AttributeLooks, AttributeLookSetting } from "app/look";
-import { LookService } from "app/look.service";
 import { Title } from "@angular/platform-browser";
-import { GroupService } from "api/services";
-import { Group } from "api/models";
+import { GroupService, LookService } from "api/services";
+import { Group, Look, AttributeLookSetting, ColorLookSetting } from "api/models";
 
 @Component({
     selector: 'app-venue-tester',
@@ -32,18 +30,70 @@ export class VenueTesterComponent implements OnInit
         this.title.setTitle("Venue Tester");
         this.groups = (await this.groupService.getGroups()).data;
         let group = this.groups[0];
-        this.looks =
-            [
-                Look.getLook("Black", Look.getColorLook(group, "#000000"), Look.getAttribute(group, "Strobe", 0)),
-                Look.getLook("Red", Look.getColorLook(group, "#FF0000"), Look.getAttribute(group, "Strobe", 0)),
-                Look.getLook("Green", Look.getColorLook(group, "#00FF00"), Look.getAttribute(group, "Strobe", 0)),
-                Look.getLook("Blue", Look.getColorLook(group, "#0000FF"), Look.getAttribute(group, "Strobe", 0)),
-                Look.getLook("White", Look.getColorLook(group, "#FFFFFF"), Look.getAttribute(group, "Strobe", 0)),
-                Look.getLook("Strobing White", Look.getColorLook(group, "#FFFFFF"), Look.getAttribute(group, "Strobe", 1)),
-                Look.getLook("Black", Look.getColorLook(group, "#000000"), Look.getAttribute(group, "Strobe", 0))
-            ];
+        this.looks = this.buildStockLooks();
         this.activateLook(this.currentLook);
+    }
 
+    private buildStockLooks(): Look[]
+    {
+        let looks = [];
+
+        let blackColor = new ColorLookSetting();
+        blackColor.color = "#000000";
+
+        let redColor = new ColorLookSetting();
+        redColor.color = "#FF0000";
+
+        let greenColor = new ColorLookSetting();
+        greenColor.color = "#00FF00";
+
+        let blueColor = new ColorLookSetting();
+        blueColor.color = "#0000FF";
+
+        let whiteColor = new ColorLookSetting();
+        whiteColor.color = "#FFFFFF";
+
+        let strobeOff = new AttributeLookSetting();
+        strobeOff.attributeName = "Strobe";
+        strobeOff.attributeValue = 0;
+
+        let strobeOn = new AttributeLookSetting();
+        strobeOn.attributeName = "Strobe";
+        strobeOn.attributeValue = 1;
+
+        let black = new Look();
+        black.attributeLookSettings = [strobeOff];
+        black.colorLookSettings = [blackColor];
+        looks.push(black);
+
+        let red = new Look();
+        red.attributeLookSettings = [strobeOff];
+        red.colorLookSettings = [redColor];
+        looks.push(red);
+
+        let green = new Look();
+        green.attributeLookSettings = [strobeOff];
+        green.colorLookSettings = [greenColor];
+        looks.push(green);
+
+        let blue = new Look();
+        blue.attributeLookSettings = [strobeOff];
+        blue.colorLookSettings = [blueColor];
+        looks.push(blue);
+
+        let white = new Look();
+        white.attributeLookSettings = [strobeOff];
+        white.colorLookSettings = [whiteColor];
+        looks.push(black);
+
+        let whiteStrobe = new Look();
+        whiteStrobe.attributeLookSettings = [strobeOn];
+        whiteStrobe.colorLookSettings = [blackColor];
+        looks.push(whiteStrobe);
+
+        looks.push(black);
+
+        return looks;
     }
 
     private activateLook(look: Look): void
@@ -56,7 +106,7 @@ export class VenueTesterComponent implements OnInit
         {
             attributeLookSetting.group = this.currentGroup.name;
         }
-        this.lookService.activate(this.currentLook, 1);
+        this.lookService.activateLook({ look: this.currentLook, amount: 1 });
     }
 
     public get currentGroup(): Group

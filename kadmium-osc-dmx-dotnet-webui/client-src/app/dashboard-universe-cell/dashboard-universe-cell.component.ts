@@ -1,16 +1,14 @@
-import { Component, OnInit, Input, OnChanges, SimpleChanges, ViewChild, ElementRef } from '@angular/core';
+import { Component, OnInit, Input, OnChanges, SimpleChanges, ViewChild, ElementRef, AfterContentInit } from '@angular/core';
+import { UniverseCell } from "app/dashboard-universe/dashboard-universe.component";
 
 @Component({
     selector: 'app-dashboard-universe-cell',
     templateUrl: './dashboard-universe-cell.component.html',
     styleUrls: ['./dashboard-universe-cell.component.css']
 })
-export class DashboardUniverseCellComponent implements OnInit, OnChanges
+export class DashboardUniverseCellComponent implements AfterContentInit
 {
-    @Input() address: number;
-    @Input() value: number;
-    @Input() controlled: boolean;
-    @Input() testing: boolean;
+    @Input() cell: UniverseCell;
     @ViewChild("canvas") canvasElement: ElementRef;
 
     private canvas: HTMLCanvasElement;
@@ -18,45 +16,33 @@ export class DashboardUniverseCellComponent implements OnInit, OnChanges
 
     constructor() { }
 
-    ngOnChanges(changes: SimpleChanges): void
-    {
-        if (changes.value != null && changes.value.currentValue != changes.value.previousValue)
-        {
-            this.render();
-        }
-        if (changes.testing != null)
-        {
-            this.render();
-        }
-    }
-
-    ngOnInit()
+    ngAfterContentInit()
     {
         this.canvas = (this.canvasElement.nativeElement as HTMLCanvasElement);
         this.context = this.canvas.getContext("2d");
         this.render();
     }
 
-    private render(): void
+    public render(): void
     {
         if (this.canvas && this.context)
         {
-            let style = `rgb(255,${255 - this.value},${255 - this.value})`;
+            let style = `rgb(255,${255 - this.cell.value},${255 - this.cell.value})`;
             this.context.fillStyle = style;
             this.context.fillRect(0, 0, this.canvas.width, this.canvas.height);
 
             this.context.font = "12px Monospace";
             this.context.textAlign = "center";
             this.context.fillStyle = "black";
-            this.context.fillText((this.address + 1) + "", this.canvas.width / 2, this.canvas.height * 3 / 4);
+            this.context.fillText((this.cell.address + 1) + "", this.canvas.width / 2, this.canvas.height * 3 / 4);
 
-            if (this.testing)
+            if (this.cell.testing)
             {
                 this.context.strokeStyle = "blue";
             }
             else
             {
-                this.context.strokeStyle = this.controlled ? "red" : "black";
+                this.context.strokeStyle = this.cell.isControlled ? "red" : "black";
             }
 
             this.context.strokeRect(0, 0, this.canvas.width, this.canvas.height);

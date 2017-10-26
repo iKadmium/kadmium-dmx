@@ -35,7 +35,7 @@ namespace kadmium_osc_dmx_dotnet_core
         {
             foreach (Universe universe in Universes)
             {
-                universe.Update();
+                universe.Render();
             }
         }
 
@@ -52,7 +52,7 @@ namespace kadmium_osc_dmx_dotnet_core
         {
             foreach (Universe universe in Universes)
             {
-                await universe.Render();
+                await universe.Transmit();
             }
         }
 

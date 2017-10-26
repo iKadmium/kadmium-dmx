@@ -10,14 +10,24 @@
             <td>{{entry.name}}</td>
             <td>
                 <div class="btn-group">
-                    <a class="btn btn-success" href="/api/Venue/Download/{{entry.id}}" [download]="entry.name + '.json'"><span class="glyphicon glyphicon-cloud-download"></span></a>
-                    <a class="btn btn-default" href="venues/{{entry.id}}"><span class="glyphicon glyphicon-edit"></span></a>
-                    <button class="btn btn-danger" (click)="deleteConfirm(i)"><span class="glyphicon glyphicon-remove"></span></button>
+                    <a class="btn btn-success" href="/api/Venue/Download/{{entry.id}}" [download]="entry.name + '.json'">
+                        <span class="glyphicon glyphicon-cloud-download"></span>
+                    </a>
+                    <a class="btn btn-default" routerLink="{{entry.id}}">
+                        <span class="glyphicon glyphicon-edit"></span>
+                    </a>
+                    <button class="btn btn-danger" (click)="deleteConfirm(i)">
+                        <span class="glyphicon glyphicon-remove"></span>
+                    </button>
                 </div>
             </td>
         </tr>
     </tbody>
 </table>
-<a class="btn btn-success" href="venues/new"><span class="glyphicon glyphicon-plus"></span></a>
-<button class="btn btn-success" (click)="upload(fileInput)"><span class="glyphicon glyphicon-cloud-upload"></span></button>
+<a class="btn btn-success" href="venues/new">
+    <span class="glyphicon glyphicon-plus"></span>
+</a>
+<button class="btn btn-success" (click)="upload(fileInput)">
+    <span class="glyphicon glyphicon-cloud-upload"></span>
+</button>
 <input #fileInput type="file" name="name" style="display: none;" (change)="uploadFiles($event.target.files)" multiple>

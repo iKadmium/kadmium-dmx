@@ -1,14 +1,12 @@
 import { DashboardComponent } from './dashboard.component';
-import { StatusPanelComponent } from "app/status-panel/status-panel.component";
-import { DashboardService, MockDashboardService } from "app/dashboard.service";
-import { EnttecProTransmitterService, MockEnttecProTransmitterService } from "app/enttec-pro-transmitter.service";
-import { SACNTransmitterService, MockSACNTransmitterService } from "app/sacn-transmitter.service";
-import { OSCListenerService, MockOSCListenerService } from "app/osclistener.service";
-import { VenueService, MockVenueService } from "app/venue.service";
-import { SolversLiveService, MockSolversLiveService } from "app/solvers-live.service";
+import { StatusStreamService, MockDashboardService } from "app/dashboard.service";
+import { OSCListenerLiveService, MockOSCListenerService } from "app/osclistener-live.service";
+import { FixtureStreamService, MockSolversLiveService } from "app/solvers-live.service";
 import { NotificationsService } from "app/notifications.service";
 import { ComponentFixture, TestBed, fakeAsync } from "@angular/core/testing";
 import { async } from "@angular/core/testing";
+import { EnttecProTransmitterService, VenueService } from "api/services";
+import { UniverseStreamService } from "app/universe-stream.service";
 
 describe('DashboardComponent', () =>
 {
@@ -19,20 +17,19 @@ describe('DashboardComponent', () =>
     {
         TestBed.configureTestingModule({
             declarations: [
-                DashboardComponent,
-                StatusPanelComponent
+                DashboardComponent
             ]
         });
         TestBed.overrideComponent(DashboardComponent, {
             set: {
                 providers: [
                     NotificationsService,
-                    { provide: VenueService, useValue: MockVenueService },
-                    { provide: DashboardService, useValue: MockDashboardService },
-                    { provide: SolversLiveService, useValue: MockSolversLiveService },
-                    { provide: OSCListenerService, useValue: MockOSCListenerService },
-                    { provide: SACNTransmitterService, useValue: MockSACNTransmitterService },
-                    { provide: EnttecProTransmitterService, useValue: MockEnttecProTransmitterService },
+                    { provide: VenueService, useValue: VenueService },
+                    { provide: StatusStreamService, useValue: MockDashboardService },
+                    { provide: FixtureStreamService, useValue: MockSolversLiveService },
+                    { provide: OSCListenerLiveService, useValue: MockOSCListenerService },
+                    { provide: UniverseStreamService, useValue: UniverseStreamService },
+                    { provide: EnttecProTransmitterService, useValue: EnttecProTransmitterService },
                 ]
             }
         });

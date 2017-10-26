@@ -21,6 +21,7 @@
     "@angular/platform-browser-dynamic": "*",
     "@angular/router": "*",
     "bootstrap": "*",
+    "angular2-bootstrap-switch": "*",
     "core-js": "*",
     "ng2-toastr": "*",
     "ngx-bootstrap": "*",
@@ -45,6 +46,6 @@
     "protractor": "*",
     "ts-node": "*",
     "tslint": "*",
-    "typescript": "*"
+    "typescript": ">=2.1.0 <2.4.0"
   }
 }

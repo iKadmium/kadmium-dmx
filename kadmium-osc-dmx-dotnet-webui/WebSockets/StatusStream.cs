@@ -1,4 +1,4 @@
-using kadmium_osc_dmx_dotnet_core;
+﻿using kadmium_osc_dmx_dotnet_core;
 using kadmium_osc_dmx_dotnet_core.Listeners;
 using kadmium_osc_dmx_dotnet_core.Transmitters;
 using System.Linq;
@@ -7,9 +7,9 @@ using System;
 
 namespace kadmium_osc_dmx_dotnet_webui.WebSockets
 {
-    public class DashboardSocketHandler : WebSocketHandler
+    public class StatusStreamSocketHandler : WebSocketHandler
     {
-        public DashboardSocketHandler()
+        public StatusStreamSocketHandler()
         {
             MasterController.Instance.Listener.Status.Updated += ListenerStatusUpdated;
             foreach (var transmitter in MasterController.Instance.Transmitters)
@@ -20,21 +20,20 @@ namespace kadmium_osc_dmx_dotnet_webui.WebSockets
             MasterController.Instance.SolverStatus.Updated += SolverStatusUpdated;
         }
 
-        public override async Task OnOpen()
+        public override void OnMessage(string message)
         {
-            await Task.Run(() => { });
-            //await UpdateAll();
+            switch(message)
+            {
+                case "updateAll":
+                    UpdateAll();
+                    break;
+            }
+
         }
 
         private async void VenueStatusUpdated(object sender, StatusUpdateEventArgs e)
         {
             await SendUpdate("Venues", e.StatusCode, e.Message);
-            if (e.StatusCode == StatusCode.Success)
-            {
-                int fixtureCount = (from universe in (sender as Venue).Universes
-                                    select universe.Fixtures.Count()).Sum();
-                await SendUpdate("Fixtures", e.StatusCode, fixtureCount + " fixtures loaded");
-            }
         }
 
         private async void TransmitterStatusUpdated(object sender, StatusUpdateEventArgs e)
@@ -76,27 +75,23 @@ namespace kadmium_osc_dmx_dotnet_webui.WebSockets
             if (MasterController.Instance.Venue != null)
             {
                 await SendUpdate("Venues", StatusCode.Success, MasterController.Instance.Venue.Name + " running");
-                int fixtureCount = (from universe in MasterController.Instance.Venue.Universes
-                                    select universe.Fixtures.Count()).Sum();
-                await SendUpdate("Fixtures", StatusCode.Success, fixtureCount + " fixtures loaded");
             }
             else
             {
                 await SendUpdate("Venues", StatusCode.Warning, "No venue loaded");
-                await SendUpdate("Fixtures", StatusCode.Warning, "No fixtures loaded");
             }
 
         }
 
         private async Task SendUpdate(string controller, StatusCode statusCode, string message)
         {
-            WebSocketMessage<DashboardUpdateMessage> socketMessage = new WebSocketMessage<DashboardUpdateMessage>("updateStatus", new DashboardUpdateMessage
+            var msg = new
             {
                 Controller = controller,
                 Code = Enum.GetName(typeof(StatusCode), statusCode),
                 Message = message
-            });
-            await Send(socketMessage);
+            };
+            await SendObject(msg);
         }
 
         public override void Dispose()

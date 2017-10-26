@@ -15,44 +15,12 @@ export class URLs
 
         return socketURL;
     }
-
-    static getAPIUrl(apiName: Controller): string
-    {
-        let root: string = window.location.protocol + "//" + window.location.hostname;
-        if (parseInt(window.location.port) == 4200)
-        {
-            root += ":" + 5000;
-        }
-        else
-        {
-            root += ":" + window.location.port;
-        }
-
-        let apiURL = root + "/api/" + Controller[apiName];
-
-        return apiURL;
-    }
-}
-
-export enum Controller
-{
-    EnttecProTransmitter,
-    FixtureDefinition,
-    Group,
-    Look,
-    OSCListener,
-    Preview,
-    Settings,
-    SACNTransmitter,
-    SolversLive,
-    Venue,
-    VenuePreset
 }
 
 export enum SocketController
 {
-    SACN,
+    Universe,
     OSC,
-    Dashboard,
-    Solvers
+    Status,
+    Fixture
 }

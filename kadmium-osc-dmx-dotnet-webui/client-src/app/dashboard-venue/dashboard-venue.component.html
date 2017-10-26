@@ -1,25 +1,23 @@
 <div class="panel panel-default">
-    <div class="panel-heading">Venue</div>
+    <div class="panel-heading">{{venue?.name}}</div>
     <div class="panel-body">
-        <h2 *ngIf="!venue">No Venue Loaded</h2>
-        <h2 *ngIf="venue">{{venue?.name}}</h2>
-        <div class="row">
-            <div class="col-md-3">
-                <app-dashboard-nav-menu-item name="Universes" text="{{universeCount}}" (click)="navigateTo('Universe')">
-                </app-dashboard-nav-menu-item>
+        <div class="panel panel-default" *ngFor="let universe of venue?.universes">
+            <div class="panel-heading">{{universe.name}}</div>
+            <div class="panel-body">
+                <div class="row">
+                    <div class="col-md-3">
+                        <app-dashboard-nav-menu-item name="DMX Channels" [text]="getDMXChannelCount(universe)" routerLink="dmx/{{universe.universeID}}">
+                        </app-dashboard-nav-menu-item>
+                    </div>
+                    <div class="col-md-3">
+                        <app-dashboard-nav-menu-item name="Fixtures" [text]="getFixtureCount(universe)" routerLink="fixtures/{{universe.universeID}}">
+                        </app-dashboard-nav-menu-item>
+                    </div>
+                </div>
             </div>
-            <div class="col-md-3">
-                <app-dashboard-nav-menu-item name="Fixtures" text="{{fixtureCount}}" (click)="navigateTo('Fixture')">
-                </app-dashboard-nav-menu-item>
-            </div>
-            <!--<div class="col-md-3">
-                <app-dashboard-nav-menu-item name="DMX Channels" text="{{dmxChannelCount}}" (click)="handleClick()">
-                </app-dashboard-nav-menu-item>
-            </div>
-            <div class="col-md-3">
-                <app-dashboard-nav-menu-item name="Solver Attributes" text="{{solverAttributeCount}}" (click)="handleClick()">
-                </app-dashboard-nav-menu-item>
-            </div>-->
         </div>
+
+        <app-dashboard-venue-list (venueLoaded)="refreshVenue()"></app-dashboard-venue-list>
+
     </div>
 </div>

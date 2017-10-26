@@ -1,11 +1,10 @@
 import { Component, OnInit } from '@angular/core';
 import { Title } from "@angular/platform-browser";
 
-import { Settings, UnicastTarget } from "../settings";
-import { SettingsService } from "../settings.service";
-import { EnttecProTransmitterService } from "../enttec-pro-transmitter.service";
 import { NotificationsService } from "../notifications.service";
 import { StatusCode } from "../status-code.enum";
+import { SettingsService, EnttecProTransmitterService } from "api/services";
+import { Settings } from "api/models";
 
 @Component({
     selector: 'app-settings',
@@ -29,20 +28,20 @@ export class SettingsComponent implements OnInit
     ngOnInit(): void
     {
         this.settingsService
-            .get()
-            .then(data =>
+            .getSettings()
+            .then(response =>
             {
-                this.settings = data;
+                this.settings = response.data;
             })
             .catch(reason =>
             {
                 this.notificationsService.add(StatusCode.Error, reason);
             });
         this.enttecService
-            .getPorts()
-            .then(data =>
+            .getEnttecPortNames()
+            .then(response =>
             {
-                this.enttecPorts = data;
+                this.enttecPorts = response.data;
             })
             .catch(reason =>
             {
@@ -55,7 +54,7 @@ export class SettingsComponent implements OnInit
         this.saving = true;
         try
         {
-            await this.settingsService.save(this.settings);
+            await this.settingsService.postSettings(this.settings);
             this.notificationsService.add(StatusCode.Success, "Saved Successfully");
         }
         catch (reason)
@@ -70,7 +69,7 @@ export class SettingsComponent implements OnInit
 
     public addTarget(): void
     {
-        this.settings.sacnTransmitter.unicast.push(new UnicastTarget(""));
+        this.settings.sacnTransmitter.unicast.push("");
     }
 
     public removeTarget(index: number): void

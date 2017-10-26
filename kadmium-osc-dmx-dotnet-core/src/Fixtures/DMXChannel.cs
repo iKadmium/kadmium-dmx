@@ -5,7 +5,6 @@ namespace kadmium_osc_dmx_dotnet_core.Fixtures
 {
     public class DMXChannel : Attribute, System.IEquatable<DMXChannel>
     {
-        [JsonIgnore]
         public int Id { get; set; }
         [JsonIgnore]
         public int FixtureDefinitionId { get; set; }

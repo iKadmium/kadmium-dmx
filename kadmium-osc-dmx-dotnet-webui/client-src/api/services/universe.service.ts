@@ -7,6 +7,7 @@ import 'rxjs/add/operator/toPromise';
 import { ApiConfiguration } from '../api-configuration';
 import { ApiResponse as _ApiResponse_ } from '../api-response';
 
+import { ActiveUniverse } from '../models/active-universe';
 
 
 @Injectable()
@@ -89,6 +90,32 @@ export class UniverseService {
           throw response;
         }
         return new _ApiResponse_(response, null);
+      })
+      .catch(e => {
+        ApiConfiguration.handleError(e);
+        throw e;
+      });
+  }
+
+  /**
+   * @param universeID - undefined
+   */
+  getActiveUniverseByID(universeID: number): Promise<_ApiResponse_<ActiveUniverse>> {
+    let options = new RequestOptions({
+      method: "get",
+      url: ApiConfiguration.rootUrl + `/api/Universe/getActive/${universeID}`,
+      search: new URLSearchParams(),
+      headers: new Headers()
+    });
+    
+    ApiConfiguration.prepareRequestOptions(options);
+    return this.http.request(options.url, options)
+      .toPromise()
+      .then(response => {
+        if (response.status < 200 || response.status > 299) {
+          throw response;
+        }
+        return new _ApiResponse_(response, response.json() as ActiveUniverse);
       })
       .catch(e => {
         ApiConfiguration.handleError(e);

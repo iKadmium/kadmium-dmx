@@ -1,7 +1,6 @@
 import { TestBed, inject } from '@angular/core/testing';
 
-import { DashboardService } from './dashboard.service';
-import { StatusPanelComponent } from "app/status-panel/status-panel.component";
+import { StatusStreamService } from './dashboard.service';
 import { AppModule } from "app/app.module";
 
 describe('DashboardService', () =>
@@ -9,11 +8,11 @@ describe('DashboardService', () =>
     beforeEach(() =>
     {
         TestBed.configureTestingModule({
-            providers: [DashboardService]
+            providers: [StatusStreamService]
         });
     });
 
-    it('should ...', inject([DashboardService], (service: DashboardService) =>
+    it('should ...', inject([StatusStreamService], (service: StatusStreamService) =>
     {
         expect(service).toBeTruthy();
     }));

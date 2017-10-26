@@ -49,6 +49,12 @@ namespace kadmium_osc_dmx_dotnet_webui
             {
                 options.Conventions.Add(new KebabCaseRoutingConvention());
             });
+            services.AddCors(options =>
+            {
+                options.AddPolicy("AllowAll", p => p.AllowAnyOrigin()
+                    .AllowAnyMethod()
+                    .AllowAnyHeader());
+            });
 
             services.AddSwaggerGen(c =>
             {
@@ -99,10 +105,10 @@ namespace kadmium_osc_dmx_dotnet_webui
                 c.SwaggerEndpoint("/swagger/v1/swagger.json", "kadmium-osc-dmx API v1");
             });
 
-            app.Map("/socket/Dashboard", WebSocketHandler.Map<DashboardSocketHandler>);
-            app.Map("/socket/SACN", WebSocketHandler.Map<SACNTransmitterLive>);
-            app.Map("/socket/OSC", WebSocketHandler.Map<OSCListenerLive>);
-            app.Map("/socket/Solvers", WebSocketHandler.Map<SolversLiveSocketHandler>);
+            app.Map("/socket/Status", WebSocketHandler.Map<StatusStreamSocketHandler>);
+            app.Map("/socket/OSC", WebSocketHandler.Map<OSCStreamSocketHandler>);
+            app.MapWhen(x => x.Request.Path.Value.StartsWith("/socket/Universe"), WebSocketHandler.Map<UniverseStreamSocketHandler>);
+            app.MapWhen(x => x.Request.Path.Value.StartsWith("/socket/Fixture"), WebSocketHandler.Map<FixtureStreamSocketHandler>);
 
             app.UseMvc(routes =>
             {

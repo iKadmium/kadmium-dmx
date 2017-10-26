@@ -1,47 +1,20 @@
 <div class="row">
     <div class="col-md-3">
-        <app-dashboard-nav-menu-item [status]="statuses.get('Venues')" name="Venue" icon="glyphicon-home" (click)="activeSection = 'Venue'">
+        <app-dashboard-nav-menu-item [status]="statuses.get('Venues')" name="Venue" icon="glyphicon-home" routerLink="venue">
         </app-dashboard-nav-menu-item>
 
         <app-dashboard-nav-menu-item [status]="statuses.get('SACNTransmitters')" name="SACN Transmitter" icon="glyphicon-upload"
-            (click)="activeSection = 'SACN'">
+            routerLink="sacnTransmitter">
         </app-dashboard-nav-menu-item>
 
         <app-dashboard-nav-menu-item [status]="statuses.get('EnttecProTransmitters')" name="Enttec Pro Transmitter" icon="glyphicon-upload"
-            (click)="activeSection = 'Enttec'">
+            routerLink="enttecTransmitter">
         </app-dashboard-nav-menu-item>
 
-        <app-dashboard-nav-menu-item [status]="statuses.get('OSCListeners')" name="OSC Listener" icon="glyphicon-download" (click)="activeSection = 'OSC'">
+        <app-dashboard-nav-menu-item [status]="statuses.get('OSCListeners')" name="OSC Listener" icon="glyphicon-download" routerLink="oscListener">
         </app-dashboard-nav-menu-item>
     </div>
     <div class="col-md-9">
-
-        <app-dashboard-venue [venue]="venue" *ngIf="activeSection == 'Venue'" (navigate)="activeSection = $event">
-        </app-dashboard-venue>
-
-        <app-dashboard-venue-list *ngIf="activeSection == 'Venue'">
-        </app-dashboard-venue-list>
-
-        <app-dashboard-fixture-list #fixturesComponent [venue]="venue" *ngIf="activeSection == 'Fixture'">
-        </app-dashboard-fixture-list>
-
-        <app-dashboard-fixture [venue]="venue" (update)="updateAttribute($event)" *ngIf="activeSection == 'Fixture'">
-        </app-dashboard-fixture>
-
-        <app-dashboard-universe-list [venue]="venue" *ngIf="activeSection == 'Universe'">
-        </app-dashboard-universe-list>
-
-        <app-dashboard-universe [venue]="venue" [data]="venue.activeUniverse.values" (update)="updateChannel($event)" *ngIf="activeSection == 'Universe'">
-        </app-dashboard-universe>
-
-        <app-dashboard-transmitter [status]="statuses.get('SACNTransmitters')" name="SACN Transmitter" *ngIf="activeSection == 'SACN'">
-        </app-dashboard-transmitter>
-
-        <app-dashboard-transmitter [status]="statuses.get('EnttecProTransmitters')" name="Enttec Pro Transmitter" *ngIf="activeSection == 'Enttec'">
-        </app-dashboard-transmitter>
-
-        <app-dashboard-osc-listener [recognised]="recognisedOSCMessages" [unrecognised]="unrecognisedOSCMessages" *ngIf="activeSection == 'OSC'">
-        </app-dashboard-osc-listener>
-
+        <router-outlet></router-outlet>
     </div>
 </div>

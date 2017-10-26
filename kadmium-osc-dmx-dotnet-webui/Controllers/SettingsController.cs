@@ -22,19 +22,24 @@ namespace kadmium_osc_dmx_dotnet_webui.Controllers
         // POST api/values
         [HttpPost]
         [SwaggerOperation("postSettings")]
-        public void Post([FromBody]Settings value)
+        public async Task Post([FromBody]Settings value)
         {
             MasterController.Instance.Settings = value;
             FileAccess.SaveSettings(value);
-            Transmitter[] oldTransmitters = new Transmitter[MasterController.Instance.Transmitters.Count];
-            MasterController.Instance.Transmitters.CopyTo(oldTransmitters);
-            MasterController.Instance.Transmitters.Clear();
-            foreach (var transmitter in oldTransmitters)
+            MasterController.Instance.RenderEnabled = false;
+            while(MasterController.Instance.Rendering)
+            {
+                await Task.Delay(10);
+            }
+            foreach (var transmitter in MasterController.Instance.Transmitters)
             {
                 transmitter.Dispose();
             }
+            MasterController.Instance.Transmitters.Clear();
+
             MasterController.Instance.Transmitters.Add(SACNTransmitter.Load(value.SacnTransmitter));
             MasterController.Instance.Transmitters.Add(EnttecProTransmitter.Load(value.EnttecProTransmitter));
+            MasterController.Instance.RenderEnabled = true;
         }
     }
 }

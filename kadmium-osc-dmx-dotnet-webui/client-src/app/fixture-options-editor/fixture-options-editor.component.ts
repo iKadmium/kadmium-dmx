@@ -1,8 +1,6 @@
 import { Component, OnInit, Input, SimpleChanges } from '@angular/core';
-import { AxisRestrictionOptions, Fixture } from "../venue";
-import { FixtureDefinition, FixtureDefinitionSkeleton } from "../fixture-definition";
-import { FixtureDefinitionService } from "../fixture-definition.service";
-import { Group } from "api/models";
+import { Group, FixtureDefinition, FixtureDefinitionSkeleton, Fixture } from "api/models";
+import { FixtureDefinitionService } from "api/services";
 
 @Component({
     selector: 'app-fixture-options-editor',
@@ -30,7 +28,7 @@ export class FixtureOptionsEditorComponent implements OnInit
 
     async ngOnInit(): Promise<void>
     {
-        this.skeletons = await this.fixtureDefinitionService.getSkeletons();
+        this.skeletons = (await this.fixtureDefinitionService.getFixtureDefinitionSkeletons()).data;
     }
 
     ngOnChanges(changes: SimpleChanges): void
@@ -85,8 +83,8 @@ export class FixtureOptionsEditorComponent implements OnInit
     {
         if (skeleton != null)
         {
-            this.definition = await this.fixtureDefinitionService
-                .get(skeleton.id);
+            this.definition = (await this.fixtureDefinitionService
+                .getFixtureDefinitionById(skeleton.id)).data;
             this.axisOptions = this.definition.movements
                 .map(value => new AxisOptions(value.name, this.fixture, this.definition));
         }
@@ -141,7 +139,7 @@ class AxisOptions
     {
         if (this.restricted)
         {
-            let restriction = this.fixture.options.axisRestrictions.find(value => value.name == this.name);
+            let restriction = (this.fixture.options as any).axisRestrictions.find(value => value.name == this.name);
             return restriction.min;
         }
         else
@@ -154,7 +152,7 @@ class AxisOptions
     {
         if (this.restricted)
         {
-            let restriction = this.fixture.options.axisRestrictions.find(value => value.name == this.name);
+            let restriction = (this.fixture.options as any).axisRestrictions.find(value => value.name == this.name);
             restriction.min = value;
         }
     }
@@ -163,7 +161,7 @@ class AxisOptions
     {
         if (this.restricted)
         {
-            let restriction = this.fixture.options.axisRestrictions.find(value => value.name == this.name);
+            let restriction = (this.fixture.options as any).axisRestrictions.find(value => value.name == this.name);
             return restriction.max;
         }
         else
@@ -176,14 +174,14 @@ class AxisOptions
     {
         if (this.restricted)
         {
-            let restriction = this.fixture.options.axisRestrictions.find(value => value.name == this.name);
+            let restriction = (this.fixture.options as any).axisRestrictions.find(value => value.name == this.name);
             restriction.max = value;
         }
     }
 
     public get inverted(): boolean
     {
-        let match = this.fixture.options.axisInversions.find(value => value == this.name);
+        let match = (this.fixture.options as any).axisInversions.find(value => value == this.name);
         return match != null;
     }
 
@@ -191,21 +189,21 @@ class AxisOptions
     {
         if (value)
         {
-            this.fixture.options.axisInversions.push(this.name);
+            (this.fixture.options as any).axisInversions.push(this.name);
         }
         else
         {
-            let index = this.fixture.options.axisInversions.indexOf(this.name);
+            let index = (this.fixture.options as any).axisInversions.indexOf(this.name);
             if (index != -1)
             {
-                this.fixture.options.axisInversions.splice(index, 1);
+                (this.fixture.options as any).axisInversions.splice(index, 1);
             }
         }
     }
 
     public get restricted(): boolean
     {
-        let match = this.fixture.options.axisRestrictions.find(value => value.name == this.name);
+        let match = (this.fixture.options as any).axisRestrictions.find(value => value.name == this.name);
         return match != null;
     }
 
@@ -217,17 +215,24 @@ class AxisOptions
             options.name = this.name;
             options.min = this.min;
             options.max = this.max;
-            this.fixture.options.axisRestrictions.push(options);
+            (this.fixture.options as any).axisRestrictions.push(options);
         }
         else
         {
-            let restriction = this.fixture.options.axisRestrictions.find(value => value.name == this.name);
-            let index = this.fixture.options.axisRestrictions.indexOf(restriction);
+            let restriction = (this.fixture.options as any).axisRestrictions.find(value => value.name == this.name);
+            let index = (this.fixture.options as any).axisRestrictions.indexOf(restriction);
             if (index != -1)
             {
-                this.fixture.options.axisRestrictions.splice(index, 1);
+                (this.fixture.options as any).axisRestrictions.splice(index, 1);
             }
         }
     }
 
+}
+
+export class AxisRestrictionOptions
+{
+    name: string;
+    min: number;
+    max: number;
 }

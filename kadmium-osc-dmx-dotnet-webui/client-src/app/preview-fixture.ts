@@ -1,9 +1,9 @@
 
-import { FixtureDefinition } from "./fixture-definition";
 import { PreviewColorWheel } from "./preview-color-wheel";
 import { PreviewAttribute } from "./preview-attribute";
 import { RGB } from "./color";
 import { PreviewFixtureData } from "./preview.service";
+import { ActiveFixture } from "api/models";
 
 export class PreviewFixture
 {
@@ -20,7 +20,7 @@ export class PreviewFixture
 
     colorWheel: PreviewColorWheel;
 
-    constructor(data: PreviewFixtureData)
+    constructor(data: ActiveFixture)
     {
         this.id = data.id;
         this.group = data.group;
@@ -54,7 +54,7 @@ export class PreviewFixture
         }
     }
 
-    public update(data: number[]): void
+    public update(data: Uint8Array): void
     {
         let addresses = Array.from(this.channelNumberMap.values());
         for (let address of addresses)

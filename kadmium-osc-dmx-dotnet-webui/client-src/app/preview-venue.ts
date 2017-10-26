@@ -1,20 +1,19 @@
 import { PreviewUniverse } from "app/preview-universe";
 import { PreviewUniverseData } from "app/preview.service";
+import { ActiveVenue } from "api/models";
 
 export class PreviewVenue
 {
     public name: string;
     public universes: PreviewUniverse[];
-    public activeUniverse: PreviewUniverse;
-
+    
     constructor()
     {
         this.name = "";
         this.universes = [];
-        this.activeUniverse = null;
     }
 
-    public load(data: PreviewVenueData): void
+    public load(data: ActiveVenue): PreviewVenue
     {
         this.name = data.name;
         this.universes = [];
@@ -22,10 +21,7 @@ export class PreviewVenue
         {
             this.universes.push(PreviewUniverse.load(universeData));
         }
-        if (this.universes.length > 0)
-        {
-            this.activeUniverse = this.universes[0];
-        }
+        return this;
     }
 }
 

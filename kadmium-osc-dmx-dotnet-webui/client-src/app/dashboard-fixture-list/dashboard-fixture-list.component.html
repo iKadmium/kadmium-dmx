@@ -1,26 +1,17 @@
-<div class="panel panel-default">
-    <div class="panel-heading">Fixture List</div>
-    <div class="panel-body">
-        <tabset *ngIf="venue && venue.activeUniverse">
-            <tab *ngFor="let universe of venue.universes; trackBy: universe?.id" [heading]="universe.name">
-                <div class="row">
-                    <div class="col-md-3" *ngFor="let fixture of universe.fixtures; trackBy: fixture?.id">
-                        <div class="panel text-center" [ngClass]="{'panel-default': fixture != universe.activeFixture, 'panel-primary': fixture == universe.activeFixture}"
-                            (click)="selectFixture(fixture)">
-                            <div class="panel-heading">
-                                {{fixture.address}} ({{fixture.group}})
-                            </div>
-                            <div class="panel-body">
-                                <app-dashboard-fixture-preview [data]="venue.activeUniverse.values" [fixture]="fixture">
-                                </app-dashboard-fixture-preview>
-                            </div>
-                            <div class="panel-footer">
-                                {{fixture.manufacturer}} {{fixture.model}}
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </tab>
-        </tabset>
+<div class="row">
+    <div class="col-md-3" *ngFor="let fixture of universe.fixtures; trackBy: fixture?.id">
+        <div class="panel text-center" [ngClass]="{'panel-default': fixture != activeFixture, 'panel-primary': fixture == activeFixture}"
+            (click)="selectFixture(fixture)">
+            <div class="panel-heading">
+                {{fixture.address}} ({{fixture.group}})
+            </div>
+            <div class="panel-body">
+                <app-dashboard-fixture-preview [fixture]="fixture">
+                </app-dashboard-fixture-preview>
+            </div>
+            <div class="panel-footer">
+                {{fixture.manufacturer}} {{fixture.model}}
+            </div>
+        </div>
     </div>
 </div>

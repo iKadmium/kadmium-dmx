@@ -23,13 +23,19 @@ namespace kadmium_osc_dmx_dotnet_core
         public Venue Venue { get; private set; }
         public Settings Settings { get; set; }
         public Strobe Strobe { get; }
-        private bool updatesEnabled;
-        public bool UpdatesEnabled
+
+        public bool Rendering { get; set; }
+        public bool Solving { get; set; }
+
+        public event EventHandler OnUpdate;
+
+        private bool solversEnabled;
+        public bool SolversEnabled
         {
-            get { return updatesEnabled; }
+            get { return solversEnabled; }
             set
             {
-                updatesEnabled = value;
+                solversEnabled = value;
                 if (value)
                 {
                     int count = (from universe in Venue.Universes
@@ -71,7 +77,10 @@ namespace kadmium_osc_dmx_dotnet_core
                 Venue = new Venue("New Venue", new[] { new Universe("New Universe", 1, new List<Fixture>()) })
             };
             instance.Venue.Activate();
-            instance.updatesEnabled = true;
+            instance.solversEnabled = true;
+            instance.RenderEnabled = true;
+            instance.Rendering = false;
+            instance.Solving = false;
             instance.updateTimer = new Timer(Instance.UpdateTimer_Elapsed, null, UPDATE_TIME, UPDATE_TIME);
         }
 
@@ -93,13 +102,13 @@ namespace kadmium_osc_dmx_dotnet_core
 
         public void LoadVenue(Venue venue, DatabaseContext context)
         {
-            UpdatesEnabled = false;
+            SolversEnabled = false;
             Venue?.Deactivate();
             Venue?.Dispose();
             Venue = venue;
             venue.Activate();
             VenueActivated?.Invoke(this, new EventArgs());
-            UpdatesEnabled = true;
+            SolversEnabled = true;
         }
 
         public void Update()
@@ -109,6 +118,7 @@ namespace kadmium_osc_dmx_dotnet_core
                 group.Update();
             }
             Venue?.Update();
+            OnUpdate?.Invoke(this, new EventArgs());
         }
 
         public async Task Render()
@@ -118,11 +128,18 @@ namespace kadmium_osc_dmx_dotnet_core
 
         private async void UpdateTimer_Elapsed(object state)
         {
-            if (UpdatesEnabled)
+            if (SolversEnabled)
             {
+                Solving = true;
                 Update();
+                Solving = false;
             }
-            await Render();
+            if (RenderEnabled)
+            {
+                Rendering = true;
+                await Render();
+                Rendering = false;
+            }
         }
 
         public void Dispose()
@@ -137,8 +154,8 @@ namespace kadmium_osc_dmx_dotnet_core
 
         public async Task SetGroups(IEnumerable<Group> groups, DatabaseContext context)
         {
-            bool oldUpdatesEnabled = updatesEnabled;
-            UpdatesEnabled = false;
+            bool oldUpdatesEnabled = solversEnabled;
+            SolversEnabled = false;
             Venue?.Deactivate();
             Groups.Clear();
             foreach (Group grp in groups)
@@ -149,7 +166,7 @@ namespace kadmium_osc_dmx_dotnet_core
             Venue?.Activate();
             if (oldUpdatesEnabled)
             {
-                UpdatesEnabled = true;
+                SolversEnabled = true;
             }
         }
     }

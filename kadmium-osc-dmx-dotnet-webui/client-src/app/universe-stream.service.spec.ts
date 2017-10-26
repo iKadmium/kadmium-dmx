@@ -1,17 +1,17 @@
 import { TestBed, inject } from '@angular/core/testing';
 
-import { SACNTransmitterService } from './sacn-transmitter.service';
+import { UniverseStreamService } from './universe-stream.service';
 
 describe('SACNTransmitterService', () =>
 {
   beforeEach(() =>
   {
     TestBed.configureTestingModule({
-      providers: [SACNTransmitterService]
+      providers: [UniverseStreamService]
     });
   });
 
-  it('should ...', inject([SACNTransmitterService], (service: SACNTransmitterService) =>
+  it('should ...', inject([UniverseStreamService], (service: UniverseStreamService) =>
   {
     expect(service).toBeTruthy();
   }));

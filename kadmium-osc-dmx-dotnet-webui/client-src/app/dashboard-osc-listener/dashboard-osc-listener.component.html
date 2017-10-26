@@ -2,7 +2,7 @@
     <div class="panel-heading">OSC Listener</div>
     <div class="panel-body">
         <div class="checkbox">
-            <label><input type="checkbox" [ngModel]="enabled" (click)="toggleEnabled()" [disabled]="enabled == null" >Enabled</label>
+            <switch [status]="enabled" onText="Enabled" offText="Disabled" offColor="red" (click)="toggleEnabled()" [disabled]="enabled == null"></switch>
         </div>
 
         <h2>Recognised</h2>

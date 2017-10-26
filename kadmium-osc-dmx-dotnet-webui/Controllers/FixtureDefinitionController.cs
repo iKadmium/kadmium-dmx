@@ -21,6 +21,7 @@ namespace kadmium_osc_dmx_dotnet_webui.Controllers
         }
 
         [HttpGet]
+        [SwaggerOperation("getFixtureDefinitionSkeletons")]
         public IEnumerable<FixtureDefinitionSkeleton> Get()
         {
             List<FixtureDefinitionSkeleton> skeletons = _context.FixtureDefinitions
@@ -84,6 +85,7 @@ namespace kadmium_osc_dmx_dotnet_webui.Controllers
                 else
                 {
                     var oldChannel = oldDefinition.Channels.Single(x => x.Id == channel.Id);
+                    channel.FixtureDefinitionId = newDefinition.Id;
                     _context.Entry(oldChannel).CurrentValues.SetValues(channel);
 
                 }

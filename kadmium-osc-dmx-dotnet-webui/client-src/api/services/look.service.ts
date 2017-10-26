@@ -44,7 +44,7 @@ export class LookService {
   /**
    * @param look - undefined
    */
-  postLook(look?: Look): Promise<_ApiResponse_<void>> {
+  postLook(look?: Look): Promise<_ApiResponse_<number>> {
     let options = new RequestOptions({
       method: "post",
       url: ApiConfiguration.rootUrl + `/api/Look`,
@@ -59,7 +59,7 @@ export class LookService {
         if (response.status < 200 || response.status > 299) {
           throw response;
         }
-        return new _ApiResponse_(response, null);
+        return new _ApiResponse_(response, parseFloat(response.text()));
       })
       .catch(e => {
         ApiConfiguration.handleError(e);

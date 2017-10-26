@@ -13,6 +13,8 @@ import { BsDropdownModule } from 'ngx-bootstrap/dropdown';
 import { TypeaheadModule } from "ngx-bootstrap/typeahead";
 import { ProgressbarModule } from "ngx-bootstrap/progressbar";
 
+import { BootstrapSwitchModule } from 'angular2-bootstrap-switch';
+
 import { ApiModule } from "api/api.module";
 
 import { AppComponent } from './app.component';
@@ -40,14 +42,15 @@ import { VenueTesterComponent } from './venue-tester/venue-tester.component';
 import { DashboardNavMenuItemComponent } from './dashboard-nav-menu-item/dashboard-nav-menu-item.component';
 import { DashboardVenueComponent } from './dashboard-venue/dashboard-venue.component';
 import { DashboardVenueListComponent } from './dashboard-venue-list/dashboard-venue-list.component';
-import { DashboardUniverseListComponent } from './dashboard-universe-list/dashboard-universe-list.component';
 import { DashboardUniverseComponent } from './dashboard-universe/dashboard-universe.component';
 import { DashboardFixtureListComponent } from './dashboard-fixture-list/dashboard-fixture-list.component';
-import { DashboardFixtureComponent } from './dashboard-fixture/dashboard-fixture.component';
+import { DashboardFixtureAttributesComponent } from './dashboard-fixture-attributes/dashboard-fixture-attributes.component';
 import { DashboardUniverseCellComponent } from './dashboard-universe-cell/dashboard-universe-cell.component';
 import { DashboardTransmitterComponent } from './dashboard-transmitter/dashboard-transmitter.component';
 import { DashboardOSCListenerComponent } from './dashboard-osc-listener/dashboard-osc-listener.component';
 import { DashboardFixturePreviewComponent } from "app/dashboard-fixture-preview/dashboard-fixture-preview.component";
+import { OSCListenerLiveService } from "app/osclistener-live.service";
+import { DashboardFixturesComponent } from './dashboard-fixtures/dashboard-fixtures.component';
 
 @NgModule({
     declarations: [
@@ -75,13 +78,13 @@ import { DashboardFixturePreviewComponent } from "app/dashboard-fixture-preview/
         DashboardNavMenuItemComponent,
         DashboardVenueComponent,
         DashboardVenueListComponent,
-        DashboardUniverseListComponent,
         DashboardUniverseComponent,
         DashboardFixtureListComponent,
-        DashboardFixtureComponent,
+        DashboardFixtureAttributesComponent,
         DashboardUniverseCellComponent,
         DashboardTransmitterComponent,
-        DashboardOSCListenerComponent
+        DashboardOSCListenerComponent,
+        DashboardFixturesComponent
     ],
     imports: [
         BrowserModule,
@@ -90,7 +93,21 @@ import { DashboardFixturePreviewComponent } from "app/dashboard-fixture-preview/
 
         RouterModule.forRoot([
             { path: '', redirectTo: 'dashboard', pathMatch: 'full' },
-            { path: 'dashboard', component: DashboardComponent },
+            {
+                path: 'dashboard', component: DashboardComponent, children: [
+                    {
+                        path: 'venue', children:
+                        [
+                            { path: '', component: DashboardVenueComponent },
+                            { path: 'dmx/:universeID', component: DashboardUniverseComponent },
+                            { path: 'fixtures/:universeID', component: DashboardFixturesComponent },
+                        ]
+                    },
+                    { path: 'sacnTransmitter', component: DashboardTransmitterComponent },
+                    { path: 'enttecTransmitter', component: DashboardTransmitterComponent },
+                    { path: 'oscListener', component: DashboardOSCListenerComponent }
+                ]
+            },
             { path: 'settings', component: SettingsComponent },
             { path: 'venue-tester', component: VenueTesterComponent },
             { path: 'groups', component: GroupsComponent },
@@ -133,9 +150,10 @@ import { DashboardFixturePreviewComponent } from "app/dashboard-fixture-preview/
         TabsModule.forRoot(),
         TypeaheadModule.forRoot(),
         ProgressbarModule.forRoot(),
+        BootstrapSwitchModule.forRoot(),
         BrowserAnimationsModule
     ],
-    providers: [NotificationsService],
+    providers: [NotificationsService, OSCListenerLiveService],
     bootstrap: [AppComponent]
 })
 export class AppModule { }

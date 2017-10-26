@@ -20,7 +20,7 @@ export class FixtureDefinitionService {
 
   /**
    */
-  ApiFixtureDefinitionGet(): Promise<_ApiResponse_<FixtureDefinitionSkeleton[]>> {
+  getFixtureDefinitionSkeletons(): Promise<_ApiResponse_<FixtureDefinitionSkeleton[]>> {
     let options = new RequestOptions({
       method: "get",
       url: ApiConfiguration.rootUrl + `/api/FixtureDefinition`,

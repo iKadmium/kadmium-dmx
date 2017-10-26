@@ -1,4 +1,5 @@
 import { PreviewAttributeData } from "app/preview.service";
+import { ActiveAttribute } from "api/models";
 
 export class PreviewAttribute
 {
@@ -49,7 +50,7 @@ export class PreviewAttribute
         return (this.dmx || this.range > 5) ? Math.round(value) : value;
     }
 
-    public load(data: PreviewAttributeData): void
+    public load(data: ActiveAttribute): void
     {
         this.name = data.name;
         this.value = data.value;

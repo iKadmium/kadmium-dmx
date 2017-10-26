@@ -1,10 +1,10 @@
 import { Component, OnInit, ViewContainerRef } from '@angular/core';
-import { LookService } from "../look.service";
 import { Title } from "@angular/platform-browser";
 import { NotificationsService } from "../notifications.service";
 import { StatusCode } from "../status-code.enum";
-import { LookSkeleton, Look } from "../look";
 import { AsyncFileReader } from "../async-file-reader";
+import { LookService } from "api/services";
+import { Look } from "api/models";
 
 @Component({
     selector: 'app-looks',
@@ -14,7 +14,7 @@ import { AsyncFileReader } from "../async-file-reader";
 })
 export class LooksComponent implements OnInit
 {
-    skeletons: LookSkeleton[];
+    skeletons: Look[];
 
     constructor(private lookService: LookService, vcRef: ViewContainerRef,
         private notificationsService: NotificationsService, title: Title)
@@ -26,7 +26,7 @@ export class LooksComponent implements OnInit
     {
         try
         {
-            this.skeletons = await this.lookService.getSkeletons();
+            this.skeletons = (await this.lookService.getLooks()).data;
         }
         catch (reason)
         {
@@ -34,23 +34,23 @@ export class LooksComponent implements OnInit
         }
     }
 
-    private getEditUrl(look: LookSkeleton): string
+    private getEditUrl(look: Look): string
     {
         return "looks" + "/" + look.id;
     }
 
-    private getDownloadUrl(look: LookSkeleton): string
+    private getDownloadUrl(look: Look): string
     {
         return "/api/Look" + "/" + look.id;
     }
 
-    private async deleteConfirm(lookSkeleton: LookSkeleton): Promise<void>
+    private async deleteConfirm(lookSkeleton: Look): Promise<void>
     {
         if (window.confirm("Are you sure you want to delete the definition for " + lookSkeleton.name + "?"))
         {
             try
             {
-                await this.lookService.delete(lookSkeleton);
+                await this.lookService.deleteLook(lookSkeleton.id);
 
                 this.notificationsService.add(StatusCode.Success, lookSkeleton.name + " was deleted");
                 let index = this.skeletons.indexOf(lookSkeleton);
@@ -82,7 +82,7 @@ export class LooksComponent implements OnInit
         try
         {
             let definition = await AsyncFileReader.read<Look>(file);
-            definition.id = await this.lookService.post(definition);
+            definition.id = (await this.lookService.postLook(definition)).data;
             this.skeletons.push(definition);
             this.notificationsService.add(StatusCode.Success, "Successfully added " + definition.name);
         }

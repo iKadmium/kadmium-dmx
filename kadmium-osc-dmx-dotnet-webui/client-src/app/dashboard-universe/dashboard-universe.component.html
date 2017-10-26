@@ -1,11 +1,10 @@
 <div class="panel panel-default">
-    <div class="panel-heading">Universe</div>
+    <div class="panel-heading">{{universe?.name}}</div>
     <div class="panel-body">
-        <div *ngIf="venue != null && venue.activeUniverse != null">
+        <div *ngIf="universe != null">
             <div *ngFor="let row of rows" class="universe-container">
                 <div *ngFor="let cell of row.cells" class="universe-cell">
-                    <app-dashboard-universe-cell [testing]="cell.testing" [value]="data[cell.address]" [address]="cell.address" [controlled]="cell.isControlled"
-                        (contextmenu)="toggleTesting(cell)" (click)="resetCell(cell)"></app-dashboard-universe-cell>
+                    <app-dashboard-universe-cell [cell]="cell"></app-dashboard-universe-cell>
                 </div>
             </div>
         </div>

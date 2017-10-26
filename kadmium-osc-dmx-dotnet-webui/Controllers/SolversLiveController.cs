@@ -17,14 +17,14 @@ namespace kadmium_osc_dmx_dotnet_webui.Controllers
         [SwaggerOperation("getSolversEnabled")]
         public bool Enabled()
         {
-            return MasterController.Instance.UpdatesEnabled;
+            return MasterController.Instance.SolversEnabled;
         }
 
         [HttpGet("[action]/{value}")]
         [SwaggerOperation("setSolversEnabled")]
         public void Enabled(bool value)
         {
-            MasterController.Instance.UpdatesEnabled = value;
+            MasterController.Instance.SolversEnabled = value;
         }
         
     }

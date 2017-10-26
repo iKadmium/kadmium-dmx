@@ -1,68 +1,51 @@
 import { Injectable } from '@angular/core';
 import { Http } from "@angular/http";
-import { URLs, SocketController, Controller } from "./url";
-import { RPCSocket, RPCData } from "./rpcsocket";
+import { URLs, SocketController } from "./url";
 
 @Injectable()
-export class SolversLiveService
+export class FixtureStreamService
 {
-    private solversLiveURL = URLs.getAPIUrl(Controller.SolversLive);
-    private socketUrl = URLs.getSocketURL(SocketController.Solvers);
-    private rpc: RPCSocket;
+    private socketUrl = URLs.getSocketURL(SocketController.Fixture);
+    private socket: WebSocket;
+    private listener: (message: any) => void;
 
     constructor(private http: Http)
     {
-        this.rpc = new RPCSocket(this.socketUrl);
+
     }
 
-    public async subscribe(listener: Object): Promise<void>
+    public subscribe(fixtureID: number, listener: (data: AttributeUpdateData[]) => void): void
     {
-        return new Promise<void>(async (resolve, reject) =>
+        this.socket = new WebSocket(this.socketUrl + "/" + fixtureID);
+        if (this.listener != null)
         {
-            try
-            {
-                await this.rpc.connect();
-                this.rpc.subscribe(listener);
-            }
-            catch (error)
-            {
-                reject(error);
-            }
-        });
+            this.unsubscribe();
+        }
+        this.listener = (message) =>
+        {
+            let updates = JSON.parse(message.data) as AttributeUpdateData[];
+            listener(updates);
+        };
+        this.socket.addEventListener("message", this.listener);
     }
 
-    public unsubscribe(thisRef: Object): void
+    public unsubscribe(): void
     {
-        this.rpc.unsubscribe(thisRef);
+        if (this.socket != null)
+        {
+            this.socket.removeEventListener("message", this.listener);
+        }
     }
 
     public set(fixtureID: number, attributeName: string, attributeValue: number): void
     {
-        let message: RPCData = {
-            method: "UpdateAttribute",
-            args: {
-                fixtureID: fixtureID,
-                attributeName: attributeName,
-                attributeValue: attributeValue
-            }
+        let message: AttributeUpdateMessage = {
+            fixtureID: fixtureID,
+            attributeName: attributeName,
+            attributeValue: attributeValue
         };
-        this.rpc.send(message);
+        this.socket.send(JSON.stringify(message));
     }
-
-    public getEnabled(): Promise<boolean>
-    {
-        return this.http.get(this.solversLiveURL + "/Enabled")
-            .toPromise()
-            .then(response => response.json() as boolean);
-    }
-
-    public setEnabled(value: boolean): Promise<void>
-    {
-        return this.http.get(this.solversLiveURL + "/Enabled/" + value)
-            .toPromise()
-            .then(response => { });
-    }
-
 }
 
 export interface AttributeUpdateMessage

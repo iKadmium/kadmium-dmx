@@ -1,13 +1,11 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
-import { VenueService } from "../venue.service";
 import { ActivatedRoute, Router } from "@angular/router";
-import { Universe, Venue } from "../venue";
 import { UniverseEditorComponent } from "../universe-editor/universe-editor.component";
 import { FixtureOptionsEditorComponent } from "../fixture-options-editor/fixture-options-editor.component";
 import { NotificationsService } from "../notifications.service";
 import { StatusCode } from "../status-code.enum";
-import { GroupService } from "api/services";
-import { Group } from "api/models";
+import { GroupService, VenueService } from "api/services";
+import { Group, Venue, Universe } from "api/models";
 
 @Component({
     selector: 'app-venue-editor',
@@ -50,7 +48,7 @@ export class VenueEditorComponent implements OnInit
         {
             try
             {
-                this.venue = await this.venueService.get(this.venueId);
+                this.venue = (await this.venueService.getVenueById(this.venueId)).data;
                 this.selectedUniverse = this.venue.universes.length > 0 ? this.venue.universes[0] : null;
             }
             catch (reason)
@@ -92,12 +90,12 @@ export class VenueEditorComponent implements OnInit
         {
             if (this.isNewItem())
             {
-                await this.venueService.post(this.venue);
+                await this.venueService.postVenue(this.venue);
                 this.notificationsService.add(StatusCode.Success, "Successfully added " + this.venue.name);
             }
             else
             {
-                await this.venueService.put(this.venue.id, this.venue);
+                await this.venueService.putVenue({ id: this.venue.id, venue: this.venue });
                 this.notificationsService.add(StatusCode.Success, "Successfully edited " + this.venue.name);
             }
             this.router.navigate(["../", { relativeTo: this.route }]);

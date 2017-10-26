@@ -1,54 +1,46 @@
-import { Component, OnInit, Input, EventEmitter, Output, OnChanges, SimpleChanges, OnDestroy } from '@angular/core';
-import { UniverseUpdateData, SACNTransmitterService } from "app/sacn-transmitter.service";
-import { VenueService } from "app/venue.service";
-import { PreviewUniverse } from "app/preview-universe";
+import { Component, OnInit, Input, EventEmitter, Output, OnChanges, SimpleChanges, OnDestroy, ViewChildren, QueryList } from '@angular/core';
+import { UniverseUpdateData, UniverseStreamService } from "app/universe-stream.service";
 import { NotificationsService } from "app/notifications.service";
 import { StatusCode } from "app/status-code.enum";
 import { FormControl } from "@angular/forms";
-import { UniverseData } from "app/solvers-live.service";
 import { PreviewVenue } from "app/preview-venue";
 import { PreviewAttribute } from "app/preview-attribute";
+import { PreviewUniverse } from "app/preview-universe";
+import { UniverseService } from "api/services";
+import { ActivatedRoute } from "@angular/router";
+import { DashboardUniverseCellComponent } from "app/dashboard-universe-cell/dashboard-universe-cell.component";
 
 @Component({
     selector: 'app-dashboard-universe',
     templateUrl: './dashboard-universe.component.html',
     styleUrls: ['./dashboard-universe.component.css'],
-    providers: [SACNTransmitterService]
+    providers: [UniverseStreamService, UniverseService]
 })
-export class DashboardUniverseComponent implements OnInit, OnChanges, OnDestroy
+export class DashboardUniverseComponent implements OnInit
 {
-    @Input() venue: PreviewVenue;
-    @Input() data: number[];
-    @Output() update = new EventEmitter<DMXChannelUpdateData>();
+    @ViewChildren(DashboardUniverseCellComponent) cellComponents: QueryList<DashboardUniverseCellComponent>;
+    public universe: PreviewUniverse;
+    public data: Uint8Array;
 
     rows: UniverseRow[];
     cells: UniverseCell[];
 
-    constructor(private notificationsService: NotificationsService) 
+    renderInterval: number;
+
+    constructor(private notificationsService: NotificationsService, private universeService: UniverseService,
+        private universeStreamService: UniverseStreamService, private route: ActivatedRoute) 
     {
         this.rows = [];
         this.cells = [];
     }
 
-    ngOnChanges(changes: SimpleChanges): void
-    {
-        if (changes.venue != null)
-        {
-            if (changes.venue.currentValue != null && changes.venue.currentValue != changes.venue.previousValue)
-            {
-                for (let row of this.rows)
-                {
-                    for (let cell of row.cells)
-                    {
-                        cell.setVenue(changes.venue.currentValue);
-                    }
-                }
-            }
-        }
-    }
-
     ngOnInit(): void
     {
+        let universeID = parseInt(this.route.snapshot.paramMap.get('universeID'));
+        this.universeService.getActiveUniverseByID(universeID)
+            .then(response => this.universe = PreviewUniverse.load(response.data))
+            .catch(reason => this.notificationsService.add(StatusCode.Error, reason));
+
         for (let i = 0; i < 52; i++)
         {
             let row = new UniverseRow();
@@ -58,9 +50,9 @@ export class DashboardUniverseComponent implements OnInit, OnChanges, OnDestroy
                 if (address < 512)
                 {
                     let cell = new UniverseCell(address);
-                    if (this.venue != null)
+                    if (this.universe != null)
                     {
-                        cell.setVenue(this.venue);
+                        cell.setUniverse(this.universe);
                     }
                     row.cells.push(cell);
                     this.cells.push(cell);
@@ -68,56 +60,30 @@ export class DashboardUniverseComponent implements OnInit, OnChanges, OnDestroy
             }
             this.rows.push(row);
         }
+
+        this.universeStreamService.subscribe(universeID, data =>
+        {
+            this.updateData(data);
+        });
+
+        this.renderInterval = window.setInterval(() => this.render(), 100);
     }
 
-    ngOnDestroy(): void
+    private render(): void
     {
-        let testingCells = this.cells.filter(x => x.testing);
-        for (let cell of testingCells)
+        this.cellComponents.forEach(item =>
         {
-            window.clearInterval(cell.testingInterval);
-        }
+            item.render();
+        });
     }
 
-    public resetCell(cell: UniverseCell): void
+    private updateData(data: Uint8Array): void
     {
-        if (cell.isControlled)
+        this.data = data;
+        for (let i = 0; i < data.length; i++)
         {
-            return;
-        }
-        if (cell.testing)
-        {
-            cell.testing = false;
-            window.clearInterval(cell.testingInterval);
-            cell.testingInterval = null;
-        }
-        let value = this.data[cell.address] == 0 ? 255 : 0;
-        this.update.emit(new DMXChannelUpdateData(this.venue.activeUniverse.universeID, cell.address, value));
-    }
-
-    public toggleTesting(cell: UniverseCell): void
-    {
-        if (cell.isControlled)
-        {
-            return;
-        }
-        cell.testing = !cell.testing;
-        if (cell.testing)
-        {
-            cell.testingInterval = window.setInterval(() =>
-            {
-                let date = new Date();
-                let timeValue = (date.getSeconds() % 5) * 1000 + date.getMilliseconds();
-
-                let timeFraction = timeValue / 5000 * Math.PI;
-                let result = Math.round(Math.sin(timeFraction) * 255);
-                this.update.emit(new DMXChannelUpdateData(this.venue.activeUniverse.universeID, cell.address, result));
-            }, 50);
-        }
-        else
-        {
-            window.clearInterval(cell.testingInterval);
-            cell.testingInterval = null;
+            let cell = this.cells[i];
+            cell.value = data[i];
         }
     }
 }
@@ -132,13 +98,14 @@ class UniverseRow
     }
 }
 
-class UniverseCell
+export class UniverseCell
 {
     public address: number;
-    private venue: PreviewVenue;
+    private universe: PreviewUniverse;
     public isControlled: boolean;
     public testing: boolean;
     public testingInterval: number | null;
+    public value: number;
 
     constructor(address: number)
     {
@@ -147,15 +114,15 @@ class UniverseCell
         this.testingInterval = null;
     }
 
-    public setVenue(venue: PreviewVenue): void
+    public setUniverse(universe: PreviewUniverse): void
     {
-        this.venue = venue;
+        this.universe = universe;
         this.isControlled = this.getIsControlled();
     }
 
     private getIsControlled(): boolean
     {
-        let fixture = this.venue.activeUniverse.fixtures.find(x => x.channelNumberMap.has(this.address - 1));
+        let fixture = this.universe.fixtures.find(x => x.channelNumberMap.has(this.address - 1));
         if (fixture != null)
         {
             let attributes = fixture.channelNumberMap.get(this.address - 1);

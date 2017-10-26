@@ -29,5 +29,12 @@ namespace kadmium_osc_dmx_dotnet_webui.Controllers
         {
             MasterController.Instance.Transmitters.Single(x => x is EnttecProTransmitter).Enabled = value;
         }
+
+        [HttpGet("[action]")]
+        [SwaggerOperation("getEnttecStatus")]
+        public Status Status()
+        {
+            return MasterController.Instance.Transmitters.Single(x => x is EnttecProTransmitter).Status;
+        }
     }
 }

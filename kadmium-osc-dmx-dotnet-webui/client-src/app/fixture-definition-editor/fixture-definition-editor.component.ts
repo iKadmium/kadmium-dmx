@@ -1,10 +1,10 @@
 import { Component, OnInit } from '@angular/core';
-import { FixtureDefinitionService } from "../fixture-definition.service";
-import { FixtureDefinition, FixtureDefinitionSkeleton, DMXChannel, Axis, ColorWheelEntry } from "../fixture-definition";
 import { ActivatedRoute, Router } from "@angular/router";
 import { Title } from "@angular/platform-browser";
 import { NotificationsService } from "../notifications.service";
 import { StatusCode } from "../status-code.enum";
+import { FixtureDefinitionService } from "api/services";
+import { FixtureDefinition, FixtureDefinitionSkeleton, DMXChannel, MovementAxis, ColorWheelEntry } from "api/models";
 
 @Component({
     selector: 'app-fixture-definition-editor',
@@ -38,10 +38,10 @@ export class FixtureDefinitionEditorComponent implements OnInit
             }
             else
             {
-                this.definition = await this.fixtureDefinitionService.get(this.id);
+                this.definition = (await this.fixtureDefinitionService.getFixtureDefinitionById(this.id)).data;
                 this.title.setTitle(`Fixture Definition Editor - ${this.definition.manufacturer} ${this.definition.model}`);
             }
-            this.allManufacturers = (await this.fixtureDefinitionService.getSkeletons())
+            this.allManufacturers = (await this.fixtureDefinitionService.getFixtureDefinitionSkeletons()).data
                 .map((skeleton: FixtureDefinitionSkeleton) => skeleton.manufacturer)
                 .filter((value: string, index: number, array: string[]) => array.indexOf(value) == index);
         }
@@ -62,7 +62,9 @@ export class FixtureDefinitionEditorComponent implements OnInit
             }
         });
 
-        this.definition.channels.push(new DMXChannel("", maxChannel + 1));
+        let channel = new DMXChannel();
+        channel.address = maxChannel + 1;
+        this.definition.channels.push(channel);
     }
 
     public removeChannel(channel: DMXChannel): void
@@ -73,10 +75,10 @@ export class FixtureDefinitionEditorComponent implements OnInit
 
     public addAxis(): void
     {
-        this.definition.movements.push(new Axis());
+        this.definition.movements.push(new MovementAxis());
     }
 
-    public removeAxis(axis: Axis): void
+    public removeAxis(axis: MovementAxis): void
     {
         let index = this.definition.movements.indexOf(axis);
         this.definition.movements.splice(index, 1);
@@ -93,7 +95,9 @@ export class FixtureDefinitionEditorComponent implements OnInit
             }
         });
         minValue = minValue < 255 ? minValue + 1 : 255;
-        this.definition.colorWheel.push(new ColorWheelEntry("", minValue));
+        let entry = new ColorWheelEntry();
+        entry.min = minValue;
+        this.definition.colorWheel.push(entry);
     }
 
     public removeColorWheelEntry(colorWheelEntry: ColorWheelEntry): void
@@ -116,11 +120,11 @@ export class FixtureDefinitionEditorComponent implements OnInit
             .map((value: ColorWheelEntry) => value.name);
     }
 
-    public getOtherAxisNames(thisEntry: Axis): string[]
+    public getOtherAxisNames(thisEntry: MovementAxis): string[]
     {
         return this.definition.movements
             .filter(value => value != thisEntry)
-            .map((value: Axis) => value.name);
+            .map((value: MovementAxis) => value.name);
     }
 
     public hasColorWheelChannel(): boolean
@@ -144,7 +148,7 @@ export class FixtureDefinitionEditorComponent implements OnInit
                 }
                 else
                 {
-                    return a.min - b.min;
+                    return parseInt(a.min) - parseInt(b.min);
                 }
             });
     }
@@ -156,12 +160,12 @@ export class FixtureDefinitionEditorComponent implements OnInit
         {
             if (this.isNewItem())
             {
-                await this.fixtureDefinitionService.post(this.definition);
+                await this.fixtureDefinitionService.postFixtureDefinitionById(this.definition);
                 this.notificationsService.add(StatusCode.Success, "Successfully added " + this.definition.manufacturer + " " + this.definition.model);
             }
             else
             {
-                await this.fixtureDefinitionService.put(this.definition);
+                await this.fixtureDefinitionService.putFixtureDefinitionById({ id: this.definition.id, definition: this.definition });
                 this.notificationsService.add(StatusCode.Success, "Successfully edited " + this.definition.manufacturer + " " + this.definition.model);
             }
             this.router.navigate(["../", { relativeTo: this.route }]);

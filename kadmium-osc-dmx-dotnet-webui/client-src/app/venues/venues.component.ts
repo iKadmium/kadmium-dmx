@@ -1,10 +1,10 @@
 import { Component, OnInit } from '@angular/core';
-import { VenueSkeleton, Venue } from "../venue";
-import { VenueService } from "../venue.service";
 import { Title } from "@angular/platform-browser";
 import { NotificationsService } from "../notifications.service";
 import { StatusCode } from "../status-code.enum";
 import { AsyncFileReader } from "../async-file-reader";
+import { VenueService } from "api/services";
+import { VenueSkeleton, Venue } from "api/models";
 
 @Component({
     selector: 'app-venues',
@@ -26,7 +26,7 @@ export class VenuesComponent implements OnInit
     {
         try
         {
-            this.venues = await this.venueService.getSkeletons();
+            this.venues = (await this.venueService.getVenues()).data;
         }
         catch (reason)
         {
@@ -41,7 +41,7 @@ export class VenuesComponent implements OnInit
         {
             try 
             {
-                await this.venueService.delete(venue.id);
+                await this.venueService.deleteVenue(venue.id);
                 this.venues.splice(index, 1);
                 this.notificationsService.add(StatusCode.Success, venue.name + " successfully removed");
             }
@@ -70,7 +70,7 @@ export class VenuesComponent implements OnInit
         try
         {
             let venue = await AsyncFileReader.read<Venue>(file);
-            venue.id = await this.venueService.post(venue);
+            venue.id = (await this.venueService.postVenue(venue)).data;
             this.venues.push(venue);
             this.notificationsService.add(StatusCode.Success, "Successfully added " + venue.name);
         }
