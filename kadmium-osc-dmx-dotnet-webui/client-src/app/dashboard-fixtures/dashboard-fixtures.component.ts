@@ -25,7 +25,11 @@ export class DashboardFixturesComponent implements OnInit
     public selectedFixture: PreviewFixture;
 
     constructor(private route: ActivatedRoute, private universeService: UniverseService, private universeStreamService: UniverseStreamService,
-        private notificationsService: NotificationsService) { }
+        private notificationsService: NotificationsService)
+    {
+        this.data = new Uint8Array(512);
+
+    }
 
     ngOnInit() 
     {
@@ -36,7 +40,10 @@ export class DashboardFixturesComponent implements OnInit
 
         this.universeStreamService.subscribe(universeID, data => 
         {
-            this.data = data;
+            for (let i = 0; i < data.length; i++)
+            {
+                this.data[i] = data[i];
+            }
         });
 
         this.renderTimer = window.setInterval(async () => await this.render(), 100);

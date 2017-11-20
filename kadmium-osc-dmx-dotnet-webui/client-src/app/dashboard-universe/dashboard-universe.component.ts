@@ -1,4 +1,4 @@
-import { Component, OnInit, Input, EventEmitter, Output, OnChanges, SimpleChanges, OnDestroy, ViewChildren, QueryList } from '@angular/core';
+import { Component, OnInit, Input, EventEmitter, Output, OnChanges, SimpleChanges, OnDestroy, ViewChildren, QueryList, ViewChild, ElementRef, AfterViewInit } from '@angular/core';
 import { UniverseUpdateData, UniverseStreamService } from "app/universe-stream.service";
 import { NotificationsService } from "app/notifications.service";
 import { StatusCode } from "app/status-code.enum";
@@ -8,7 +8,7 @@ import { PreviewAttribute } from "app/preview-attribute";
 import { PreviewUniverse } from "app/preview-universe";
 import { UniverseService } from "api/services";
 import { ActivatedRoute } from "@angular/router";
-import { DashboardUniverseCellComponent } from "app/dashboard-universe-cell/dashboard-universe-cell.component";
+import { PreviewUniverseCell } from "app/preview-universe-cell";
 
 @Component({
     selector: 'app-dashboard-universe',
@@ -16,129 +16,104 @@ import { DashboardUniverseCellComponent } from "app/dashboard-universe-cell/dash
     styleUrls: ['./dashboard-universe.component.css'],
     providers: [UniverseStreamService, UniverseService]
 })
-export class DashboardUniverseComponent implements OnInit
+export class DashboardUniverseComponent implements OnInit, AfterViewInit
 {
-    @ViewChildren(DashboardUniverseCellComponent) cellComponents: QueryList<DashboardUniverseCellComponent>;
+
     public universe: PreviewUniverse;
     public data: Uint8Array;
 
-    rows: UniverseRow[];
-    cells: UniverseCell[];
+    cells: PreviewUniverseCell[];
 
     renderInterval: number;
+
+    public canvasWidth: number;
+    public canvasHeight: number;
+    private cellWidth: number;
+    private cellHeight: number;
+    private cellPaddingX: number;
+    private cellPaddingY: number;
+
+    @ViewChild("canvas") canvasElement: ElementRef;
+
+    private canvas: HTMLCanvasElement;
+    private context: CanvasRenderingContext2D;
 
     constructor(private notificationsService: NotificationsService, private universeService: UniverseService,
         private universeStreamService: UniverseStreamService, private route: ActivatedRoute) 
     {
-        this.rows = [];
         this.cells = [];
+        this.data = new Uint8Array(512);
+
+        this.cellPaddingX = 4;
+        this.cellPaddingY = 4;
+        this.cellWidth = 50;
+        this.canvasWidth = 10 * this.cellWidth + 11 * this.cellPaddingX;
+        this.cellHeight = 20;
+        this.canvasHeight = 52 * this.cellHeight + 53 * this.cellPaddingY;
     }
 
     ngOnInit(): void
     {
         let universeID = parseInt(this.route.snapshot.paramMap.get('universeID'));
         this.universeService.getActiveUniverseByID(universeID)
-            .then(response => this.universe = PreviewUniverse.load(response.data))
-            .catch(reason => this.notificationsService.add(StatusCode.Error, reason));
-
-        for (let i = 0; i < 52; i++)
-        {
-            let row = new UniverseRow();
-            for (let j = 0; j < 10; j++)
+            .then(response =>
             {
-                let address = i * 10 + j;
-                if (address < 512)
+                this.universe = PreviewUniverse.load(response.data);
+
+                let x = 2 * this.cellPaddingX + this.cellWidth;
+                let y = this.cellPaddingY;
+                for (let address = 0; address < this.data.length; address++)
                 {
-                    let cell = new UniverseCell(address);
-                    if (this.universe != null)
+                    let controlled = false;
+                    let fixture = this.universe.fixtures
+                        .find(x => x.channelNumberMap.has(address));
+                    if (fixture != null)
                     {
-                        cell.setUniverse(this.universe);
+                        controlled = fixture
+                            .channelNumberMap.get(address)
+                            .some(x => x.controlled);
                     }
-                    row.cells.push(cell);
+
+                    let cell = new PreviewUniverseCell(this.cellWidth, this.cellHeight, x, y, address, controlled);
                     this.cells.push(cell);
+                    x += this.cellWidth + this.cellPaddingX;
+
+                    if (x >= this.canvasWidth)
+                    {
+                        y += this.cellHeight + this.cellPaddingY;
+                        x = this.cellPaddingX;
+                    }
+
                 }
-            }
-            this.rows.push(row);
-        }
+            })
+            .catch(reason => this.notificationsService.add(StatusCode.Error, reason));
 
         this.universeStreamService.subscribe(universeID, data =>
         {
             this.updateData(data);
         });
+    }
 
+    ngAfterViewInit(): void
+    {
+        this.canvas = (this.canvasElement.nativeElement as HTMLCanvasElement);
+        this.context = this.canvas.getContext("2d");
         this.renderInterval = window.setInterval(() => this.render(), 100);
     }
 
     private render(): void
     {
-        this.cellComponents.forEach(item =>
+        for (let i = 0; i < this.data.length; i++)
         {
-            item.render();
-        });
+            this.cells[i].render(this.context, this.data[i]);
+        }
     }
 
     private updateData(data: Uint8Array): void
     {
-        this.data = data;
         for (let i = 0; i < data.length; i++)
         {
-            let cell = this.cells[i];
-            cell.value = data[i];
+            this.data[i] = data[i];
         }
-    }
-}
-
-class UniverseRow
-{
-    public cells: UniverseCell[];
-
-    constructor()
-    {
-        this.cells = [];
-    }
-}
-
-export class UniverseCell
-{
-    public address: number;
-    private universe: PreviewUniverse;
-    public isControlled: boolean;
-    public testing: boolean;
-    public testingInterval: number | null;
-    public value: number;
-
-    constructor(address: number)
-    {
-        this.address = address;
-        this.isControlled = false;
-        this.testingInterval = null;
-    }
-
-    public setUniverse(universe: PreviewUniverse): void
-    {
-        this.universe = universe;
-        this.isControlled = this.getIsControlled();
-    }
-
-    private getIsControlled(): boolean
-    {
-        let fixture = this.universe.fixtures.find(x => x.channelNumberMap.has(this.address - 1));
-        if (fixture != null)
-        {
-            let attributes = fixture.channelNumberMap.get(this.address - 1);
-            return attributes.some(x => x.controlled);
-        }
-        else
-        {
-            return false;
-        }
-    }
-}
-
-export class DMXChannelUpdateData
-{
-    constructor(public universeID: number, public address: number, public value: number)
-    {
-
     }
 }

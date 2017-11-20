@@ -1,22 +1,7 @@
 <div class="panel panel-default">
     <div class="panel-heading">{{universe?.name}}</div>
     <div class="panel-body">
-        <div *ngIf="universe != null">
-            <div *ngFor="let row of rows" class="universe-container">
-                <div *ngFor="let cell of row.cells" class="universe-cell">
-                    <app-dashboard-universe-cell [cell]="cell"></app-dashboard-universe-cell>
-                </div>
-            </div>
-        </div>
-        <!--<table class="table" *ngIf="venue != null && venue.activeUniverse != null">
-            <tbody>
-                <tr *ngFor="let row of rows">
-                    <td *ngFor="let cell of row.cells" class="universe-cell">
-                        <app-dashboard-universe-cell [value]="data[cell.address]" [address]="cell.address" [controlled]="cell.controlled"></app-dashboard-universe-cell>
-                    </td>
-                </tr>
-            </tbody>
-        </table>-->
+        <canvas #canvas width="{{canvasWidth}}" height="{{canvasHeight}}"></canvas>
 
     </div>
 </div>

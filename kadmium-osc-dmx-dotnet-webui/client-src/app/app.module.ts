@@ -45,7 +45,6 @@ import { DashboardVenueListComponent } from './dashboard-venue-list/dashboard-ve
 import { DashboardUniverseComponent } from './dashboard-universe/dashboard-universe.component';
 import { DashboardFixtureListComponent } from './dashboard-fixture-list/dashboard-fixture-list.component';
 import { DashboardFixtureAttributesComponent } from './dashboard-fixture-attributes/dashboard-fixture-attributes.component';
-import { DashboardUniverseCellComponent } from './dashboard-universe-cell/dashboard-universe-cell.component';
 import { DashboardTransmitterComponent } from './dashboard-transmitter/dashboard-transmitter.component';
 import { DashboardOSCListenerComponent } from './dashboard-osc-listener/dashboard-osc-listener.component';
 import { DashboardFixturePreviewComponent } from "app/dashboard-fixture-preview/dashboard-fixture-preview.component";
@@ -81,7 +80,6 @@ import { DashboardFixturesComponent } from './dashboard-fixtures/dashboard-fixtu
         DashboardUniverseComponent,
         DashboardFixtureListComponent,
         DashboardFixtureAttributesComponent,
-        DashboardUniverseCellComponent,
         DashboardTransmitterComponent,
         DashboardOSCListenerComponent,
         DashboardFixturesComponent
