@@ -16,6 +16,8 @@ export class DashboardNavMenuItemComponent implements OnInit
 
     @Output() click: EventEmitter<null> = new EventEmitter();
 
+    @Input("selected") selected: boolean;
+
     constructor()
     {
         this.status = new Status(StatusCode.Unknown);
@@ -29,11 +31,6 @@ export class DashboardNavMenuItemComponent implements OnInit
     public get hasListeners(): boolean
     {
         return this.click.observers.length > 0;
-    }
-
-    handleClick()
-    {
-        this.click.emit(null);
     }
 
 }

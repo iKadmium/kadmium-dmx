@@ -33,11 +33,6 @@ export class UniverseStreamService
                 let arr = new Uint8Array(message.data);
                 listener(arr);
             }
-            else if (message.data instanceof Blob)
-            {
-                let bob = "lol";
-                let evil = "lol";
-            }
         });
     }
 

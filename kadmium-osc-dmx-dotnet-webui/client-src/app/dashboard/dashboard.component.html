@@ -1,17 +1,19 @@
 <div class="row">
     <div class="col-md-3">
-        <app-dashboard-nav-menu-item [status]="statuses.get('Venues')" name="Venue" icon="glyphicon-home" routerLink="venue">
+        <app-dashboard-nav-menu-item [status]="statuses.get('Venues')" name="Venue" icon="glyphicon-home" routerLink="venue" routerLinkActive
+            #venueActive="routerLinkActive" [selected]="venueActive.isActive">
         </app-dashboard-nav-menu-item>
 
         <app-dashboard-nav-menu-item [status]="statuses.get('SACNTransmitters')" name="SACN Transmitter" icon="glyphicon-upload"
-            routerLink="sacnTransmitter">
+            routerLink="sacnTransmitter" routerLinkActive #sacnActive="routerLinkActive" [selected]="sacnActive.isActive">
         </app-dashboard-nav-menu-item>
 
         <app-dashboard-nav-menu-item [status]="statuses.get('EnttecProTransmitters')" name="Enttec Pro Transmitter" icon="glyphicon-upload"
-            routerLink="enttecTransmitter">
+            routerLink="enttecTransmitter" routerLinkActive #enttecActive="routerLinkActive" [selected]="enttecActive.isActive">
         </app-dashboard-nav-menu-item>
 
-        <app-dashboard-nav-menu-item [status]="statuses.get('OSCListeners')" name="OSC Listener" icon="glyphicon-download" routerLink="oscListener">
+        <app-dashboard-nav-menu-item [status]="statuses.get('OSCListeners')" name="OSC Listener" icon="glyphicon-download" routerLink="oscListener"
+            routerLinkActive #oscActive="routerLinkActive" [selected]="oscActive.isActive">
         </app-dashboard-nav-menu-item>
     </div>
     <div class="col-md-9">

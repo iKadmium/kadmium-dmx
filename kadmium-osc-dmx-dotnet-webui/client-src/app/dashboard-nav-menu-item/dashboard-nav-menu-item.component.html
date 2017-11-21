@@ -1,7 +1,8 @@
-<div class="panel panel-default text-center" [ngClass]="{'dashboard-panel-clickable': hasListeners}" (click)="handleClick()">
+<div class="panel text-center" [ngClass]="{'dashboard-panel-clickable': hasListeners, 'panel-default': !selected, 'panel-primary': selected}">
+    <div class="panel-heading">{{name}}</div>
     <div class="panel-body" [ngClass]="status.alertStyle">
         <span *ngIf="icon" class="glyphicon status-glyph" [ngClass]="icon"></span>
         <span *ngIf="text != null" class="status-glyph">{{text}}</span>
     </div>
-    <div class="panel-footer">{{name}}</div>
+    <div class="panel-footer" *ngIf="status.body">{{status.body}}</div>
 </div>
