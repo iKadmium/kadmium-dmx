@@ -12,16 +12,18 @@
   "private": true,
   "dependencies": {
     "@angular/animations": "*",
+    "@angular/cdk": "*",
     "@angular/common": "*",
     "@angular/compiler": "*",
     "@angular/core": "*",
     "@angular/forms": "*",
     "@angular/http": "*",
+    "@angular/material": "*",
     "@angular/platform-browser": "*",
     "@angular/platform-browser-dynamic": "*",
     "@angular/router": "*",
-    "bootstrap": "*",
     "angular2-bootstrap-switch": "*",
+    "bootstrap": "*",
     "core-js": "*",
     "ng2-toastr": "*",
     "ngx-bootstrap": "*",
@@ -33,7 +35,6 @@
     "@angular/compiler-cli": "*",
     "@types/jasmine": "*",
     "@types/node": "*",
-    "ng-swagger-gen": "*",
     "codelyzer": "*",
     "jasmine-core": "*",
     "jasmine-spec-reporter": "*",
@@ -43,9 +44,10 @@
     "karma-coverage-istanbul-reporter": "*",
     "karma-jasmine": "*",
     "karma-jasmine-html-reporter": "*",
+    "ng-swagger-gen": "*",
     "protractor": "*",
     "ts-node": "*",
     "tslint": "*",
-    "typescript": ">=2.1.0 <2.4.0"
+    "typescript": ">=2.4.2 <2.5.0"
   }
 }

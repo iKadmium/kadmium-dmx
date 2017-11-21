@@ -7,6 +7,9 @@ export class StatusStreamService
 {
     private socketUrl = URLs.getSocketURL(SocketController.Status);
     private socket: WebSocket;
+    private messageListener: (message: any) => void;
+    private openListener: (event: any) => void;
+
 
     constructor()
     {
@@ -16,19 +19,29 @@ export class StatusStreamService
     public subscribe(listener: (data: StatusData) => void): void
     {
         this.socket = new WebSocket(this.socketUrl);
-        this.socket.addEventListener("message", (message) => 
+        if (this.messageListener != null)
+        {
+            this.unsubscribe();
+        }
+        this.messageListener = (message) =>
         {
             listener(JSON.parse(message.data) as StatusData);
-        });
-        this.socket.addEventListener("open", (event) => 
+        };
+        this.openListener = (event) => 
         {
             this.socket.send("updateAll");
-        });
+        };
+        this.socket.addEventListener("message", this.messageListener);
+        this.socket.addEventListener("open", this.openListener);
     }
 
-    public unsubscribe(thisRef: Object): void
+    public unsubscribe(): void
     {
-        this.socket.removeEventListener("message");
+        if (this.socket != null)
+        {
+            this.socket.removeEventListener("message", this.messageListener);
+            this.socket.removeEventListener("open", this.openListener);
+        }
     }
 }
 

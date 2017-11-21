@@ -1,6 +1,5 @@
 import { FixtureDefinitionEditorComponent } from './fixture-definition-editor.component';
 import { FormsModule } from "@angular/forms";
-import { TypeaheadModule } from "ngx-bootstrap/typeahead";
 import { TableInputComponent } from "app/table-input/table-input.component";
 import { LabelledInputComponent } from "app/labelled-input/labelled-input.component";
 import { UniqueValueValidatorDirective } from "app/unique-value-validator.directive";
@@ -27,8 +26,7 @@ describe('FixtureDefinitionEditorComponent', () =>
             imports: [
                 RouterTestingModule,
                 HttpModule,
-                FormsModule,
-                TypeaheadModule.forRoot()
+                FormsModule
             ]
         }).overrideComponent(FixtureDefinitionEditorComponent, {
             set: {

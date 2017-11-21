@@ -8,24 +8,34 @@ export class OSCListenerLiveService
 {
     private socketUrl = URLs.getSocketURL(SocketController.OSC);
     private socket: WebSocket;
+    private listener: (message: any) => void;
 
     constructor()
     {
-        this.socket = new WebSocket(this.socketUrl);
+
     }
 
     public subscribe(listener: (data: OSCListenerData) => void): void
     {
-        this.socket.addEventListener("message", (message) => 
+        this.socket = new WebSocket(this.socketUrl);
+        if (this.listener != null)
+        {
+            this.unsubscribe();
+        }
+        this.listener = (message) =>
         {
             let msg = JSON.parse(message.data) as OSCListenerData;
             listener(msg);
-        });
+        };
+        this.socket.addEventListener("message", this.listener);
     }
 
-    public unsubscribe(thisRef: Object): void
+    public unsubscribe(): void
     {
-        this.socket.removeEventListener("message");
+        if (this.socket != null)
+        {
+            this.socket.removeEventListener("message", this.listener);
+        }
     }
 }
 

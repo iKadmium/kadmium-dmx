@@ -38,7 +38,7 @@ export class DashboardComponent implements OnInit, OnDestroy
 
     ngOnDestroy(): void
     {
-        this.dashboardService.unsubscribe(this);
+        this.dashboardService.unsubscribe();
     }
 
     public async updateStatus(statusData: StatusData): Promise<void>

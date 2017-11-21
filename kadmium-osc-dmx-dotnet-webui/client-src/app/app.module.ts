@@ -5,12 +5,13 @@ import { HttpModule } from '@angular/http';
 import { RouterModule } from '@angular/router';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 
+import { MatButtonModule, MatCheckboxModule, MatInputModule, MatSelectModule, MatCardModule, MatIconModule, MatTableModule } from "@angular/material";
+
 import { ToastModule } from "ng2-toastr/ng2-toastr";
 
 import { CollapseModule } from 'ngx-bootstrap/collapse';
 import { ModalModule } from 'ngx-bootstrap/modal';
 import { BsDropdownModule } from 'ngx-bootstrap/dropdown';
-import { TypeaheadModule } from "ngx-bootstrap/typeahead";
 import { ProgressbarModule } from "ngx-bootstrap/progressbar";
 
 import { BootstrapSwitchModule } from 'angular2-bootstrap-switch';
@@ -93,6 +94,7 @@ import { DashboardFixturesComponent } from './dashboard-fixtures/dashboard-fixtu
             { path: '', redirectTo: 'dashboard', pathMatch: 'full' },
             {
                 path: 'dashboard', component: DashboardComponent, children: [
+                    { path: '', redirectTo: 'venue', pathMatch: 'full' },
                     {
                         path: 'venue', children:
                         [
@@ -141,12 +143,19 @@ import { DashboardFixturesComponent } from './dashboard-fixtures/dashboard-fixtu
 
         ApiModule,
 
+        MatButtonModule,
+        MatCheckboxModule,
+        MatInputModule,
+        MatSelectModule,
+        MatCardModule,
+        MatIconModule,
+        MatTableModule,
+
         CollapseModule.forRoot(),
         ModalModule.forRoot(),
         BsDropdownModule.forRoot(),
         ToastModule.forRoot(),
         TabsModule.forRoot(),
-        TypeaheadModule.forRoot(),
         ProgressbarModule.forRoot(),
         BootstrapSwitchModule.forRoot(),
         BrowserAnimationsModule

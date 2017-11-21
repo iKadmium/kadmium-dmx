@@ -6,6 +6,7 @@ export class UniverseStreamService
 {
     private socketUrl = URLs.getSocketURL(SocketController.Universe);
     private socket: WebSocket;
+    private listener: (message: any) => void;
 
     constructor()
     {
@@ -26,19 +27,27 @@ export class UniverseStreamService
     {
         this.socket = new WebSocket(this.socketUrl + "/" + universeID);
         this.socket.binaryType = "arraybuffer";
-        this.socket.addEventListener("message", (message) => 
+        if (this.listener != null)
+        {
+            this.unsubscribe();
+        }
+        this.listener = (message) =>
         {
             if (message.data instanceof ArrayBuffer)
             {
                 let arr = new Uint8Array(message.data);
                 listener(arr);
             }
-        });
+        };
+        this.socket.addEventListener("message", this.listener);
     }
 
-    public unsubscribe(thisRef: Object): void
+    public unsubscribe(): void
     {
-        this.socket.removeEventListener("message");
+        if (this.socket != null)
+        {
+            this.socket.removeEventListener("message", this.listener);
+        }
     }
 }
 

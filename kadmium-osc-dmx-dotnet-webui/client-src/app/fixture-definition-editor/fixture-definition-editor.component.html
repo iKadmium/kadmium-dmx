@@ -1,86 +1,76 @@
 <form *ngIf="definition && allManufacturers" class="form-horizontal" #editorForm="ngForm">
     <fieldset [disabled]="saving">
-        <app-labelled-input label="Manufacturer:">
-            <input required #input class="form-control" type="text" name="manufacturer" [(ngModel)]="definition.manufacturer" #model="ngModel"
-                [typeahead]="allManufacturers">
-        </app-labelled-input>
-        <app-labelled-input label="Model:">
-            <input required #input class="form-control" type="text" name="model" [(ngModel)]="definition.model" #model="ngModel">
-        </app-labelled-input>
-        <app-labelled-input label="Type:">
-            <select #input #model="ngModel" class="form-control" name="type" [(ngModel)]="definition.type">
-                <option value="0">LED</option>
-                <option value="1">Tungsten</option>
-                <option value="2">Effect</option>
-            </select>
-        </app-labelled-input>
-        <datalist id="channelList" name="channelList">
-            <option>Master</option>
-            <option>Strobe</option>
-            <option>Red</option>
-            <option>Green</option>
-            <option>Blue</option>
-            <option>UV</option>
-            <option>ColorWheel</option>
-            <option>PanCoarse</option>
-            <option>PanFine</option>
-            <option>TiltCoarse</option>
-            <option>TiltFine</option>
-        </datalist>
-        <div class="panel panel-default">
-            <div class="panel-heading">Channels</div>
-            <div class="panel-body">
+        <mat-form-field>
+            <input required type="text" matInput [(ngModel)]="definition.manufacturer" name="manufacturer" placeholder="Manufacturer"
+                list="manufacturersList">
+        </mat-form-field>
+        <mat-form-field>
+            <input required type="text" matInput [(ngModel)]="definition.model" name="model" placeholder="Model">
+        </mat-form-field>
+        <mat-form-field>
+            <mat-select placeholder="Type" [(ngModel)]="definition.type" name="type">
+                <mat-option [value]="0">LED</mat-option>
+                <mat-option [value]="1">Tungsten</mat-option>
+                <mat-option [value]="2">Effect</mat-option>
+            </mat-select>
+        </mat-form-field>
+
+        <mat-card>
+            <mat-card-title>Channels</mat-card-title>
+            <mat-card-content>
                 <table class="table table-striped">
-                    <thead>
-                        <tr>
-                            <th>DMX</th>
-                            <th>Name</th>
-                            <th>Min</th>
-                            <th>Max</th>
-                            <th>Remove</th>
-                        </tr>
-                    </thead>
                     <tbody>
                         <tr *ngFor="let channel of sortChannels(definition.channels); let i = index">
                             <td>
-                                <app-table-input>
-                                    <input #input #model="ngModel" class="form-control" type="number" [(ngModel)]="channel.address" min="1" max="512" [name]="'channelAddress[' + i + ']'"
-                                    />
-                                </app-table-input>
+                                <mat-form-field>
+                                    <input required type="number" matInput [(ngModel)]="channel.address" min="1" max="512" [name]="'channelAddress[' + i + ']'"
+                                        placeholder="DMX">
+                                </mat-form-field>
                             </td>
                             <td>
-                                <app-table-input>
-                                    <input #input #model="ngModel" required [unique]="getOtherChannelNames(channel)" class="form-control" type="text" [(ngModel)]="channel.name"
-                                        [name]="'channelName[' + i + ']'" list="channelList" />
-                                </app-table-input>
+                                <mat-form-field>
+                                    <input required type="text" [unique]="getOtherChannelNames(channel)" matInput [(ngModel)]="channel.name" [name]="'channelName[' + i + ']'"
+                                        placeholder="Name" list="channelList">
+                                </mat-form-field>
                             </td>
                             <td>
-                                <app-table-input>
-                                    <input #input #model="ngModel" class="form-control" type="number" [(ngModel)]="channel.min" min="0" max="255" [name]="'channelMin[' + i + ']'"
-                                    />
-                                </app-table-input>
+                                <mat-form-field>
+                                    <input required type="number" matInput [(ngModel)]="channel.min" min="0" max="255" [name]="'channelMin[' + i + ']'" placeholder="Min">
+                                </mat-form-field>
                             </td>
                             <td>
-                                <app-table-input>
-                                    <input #input #model="ngModel" class="form-control" type="number" [(ngModel)]="channel.max" min="0" max="255" [name]="'channelMax[' + i + ']'"
-                                    />
-                                </app-table-input>
+                                <mat-form-field>
+                                    <input required type="number" matInput [(ngModel)]="channel.max" [min]="channel.min" max="255" [name]="'channelMax[' + i + ']'"
+                                        placeholder="Max">
+                                </mat-form-field>
                             </td>
                             <td>
-                                <button class="btn btn-danger" (click)="removeChannel(channel)"><span class="glyphicon glyphicon-remove"></span></button>
+                                <button mat-raised-button color="warn" (click)="removeChannel(channel)">
+                                    <mat-icon aria-label="Remove">clear</mat-icon>
+                                </button>
                             </td>
                         </tr>
                     </tbody>
                 </table>
-            </div>
-            <div class="panel-footer">
-                <button class="btn btn-success" (click)="addChannel()"><span class="glyphicon glyphicon-plus"></span></button>
-            </div>
-        </div>
-        <datalist id="axisList" name="axisList">
-            <option>Pan</option>
-            <option>Tilt</option>
-        </datalist>
+            </mat-card-content>
+            <mat-card-footer>
+                <button mat-raised-button color="primary" (click)="addChannel()">
+                    <mat-icon aria-label="Add">add</mat-icon>
+                </button>
+            </mat-card-footer>
+        </mat-card>
+
+        <mat-card>
+            <mat-card-title>Movement Axis</mat-card-title>
+            <mat-card-content>
+
+            </mat-card-content>
+            <mat-card-footer>
+                <button mat-raised-button color="primary" (click)="addAxis()">
+                    <mat-icon aria-label="Add">add</mat-icon>
+                </button>
+            </mat-card-footer>
+        </mat-card>
         <div class="panel panel-default">
             <div class="panel-heading">Movement Axis</div>
             <div class="panel-body">
@@ -96,6 +86,7 @@
                     <tbody>
                         <tr *ngFor="let movement of definition.movements; let i = index">
                             <td>
+
                                 <app-table-input>
                                     <input #input #model="ngModel" required class="form-control" [unique]="getOtherAxisNames(movement)" type="text" [(ngModel)]="movement.name"
                                         [name]="'axisName[' + i + ']'" list="axisList" />
@@ -114,15 +105,15 @@
                                 </app-table-input>
                             </td>
                             <td>
-                                <button class="btn btn-danger" (click)="removeAxis(movement)"><span class="glyphicon glyphicon-remove"></span></button>
+                                <button class="btn btn-danger" (click)="removeAxis(movement)">
+                                    <span class="glyphicon glyphicon-remove"></span>
+                                </button>
                             </td>
                         </tr>
                     </tbody>
                 </table>
             </div>
-            <div class="panel-footer">
-                <button class="btn btn-success" (click)="addAxis()"><span class="glyphicon glyphicon-plus"></span></button>
-            </div>
+
         </div>
         <div class="panel panel-default" *ngIf="hasColorWheelChannel()">
             <div class="panel-heading">Color Wheel</div>
@@ -164,14 +155,18 @@
                                 </app-table-input>
                             </td>
                             <td>
-                                <button class="btn btn-danger" (click)="removeColorWheelEntry(entry)"><span class="glyphicon glyphicon-remove"></span></button>
+                                <button class="btn btn-danger" (click)="removeColorWheelEntry(entry)">
+                                    <span class="glyphicon glyphicon-remove"></span>
+                                </button>
                             </td>
                         </tr>
                     </tbody>
                 </table>
             </div>
             <div class="panel-footer">
-                <button class="btn btn-success" (click)="addColorWheelEntry()"><span class="glyphicon glyphicon-plus"></span></button>
+                <button class="btn btn-success" (click)="addColorWheelEntry()">
+                    <span class="glyphicon glyphicon-plus"></span>
+                </button>
             </div>
         </div>
         <div class="panel panel-default">
@@ -188,7 +183,29 @@
             </div>
         </div>
         <div class="form-group">
-            <button class="btn btn-primary" (click)="save()" [disabled]="!editorForm.valid"><span class="glyphicon glyphicon-floppy-disk"></span> Save</button>
+            <button class="btn btn-primary" (click)="save()" [disabled]="!editorForm.valid">
+                <span class="glyphicon glyphicon-floppy-disk"></span> Save</button>
         </div>
     </fieldset>
 </form>
+
+<datalist id="axisList" name="axisList">
+    <option>Pan</option>
+    <option>Tilt</option>
+</datalist>
+<datalist id="manufacturersList" name="manufacturersList">
+    <option *ngFor="let manufacturer of allManufacturers">{{manufacturer}}</option>
+</datalist>
+<datalist id="channelList" name="channelList">
+    <option>Master</option>
+    <option>Strobe</option>
+    <option>Red</option>
+    <option>Green</option>
+    <option>Blue</option>
+    <option>UV</option>
+    <option>ColorWheel</option>
+    <option>PanCoarse</option>
+    <option>PanFine</option>
+    <option>TiltCoarse</option>
+    <option>TiltFine</option>
+</datalist>
