@@ -5,7 +5,7 @@ import { HttpModule } from '@angular/http';
 import { RouterModule } from '@angular/router';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 
-import { MatButtonModule, MatCheckboxModule, MatInputModule, MatSelectModule, MatCardModule, MatIconModule, MatTableModule } from "@angular/material";
+import { MatButtonModule, MatCheckboxModule, MatInputModule, MatSelectModule, MatCardModule, MatIconModule, MatTableModule, MatTooltipModule, MatSortModule, MatPaginatorModule, MatTabsModule, MatSliderModule, MatDialogModule } from "@angular/material";
 
 import { ToastModule } from "ng2-toastr/ng2-toastr";
 
@@ -51,6 +51,10 @@ import { DashboardOSCListenerComponent } from './dashboard-osc-listener/dashboar
 import { DashboardFixturePreviewComponent } from "app/dashboard-fixture-preview/dashboard-fixture-preview.component";
 import { OSCListenerLiveService } from "app/osclistener-live.service";
 import { DashboardFixturesComponent } from './dashboard-fixtures/dashboard-fixtures.component';
+import { FixtureDefinitionEditorChannelsComponent } from './fixture-definition-editor-channels/fixture-definition-editor-channels.component';
+import { FixtureDefinitionEditorMovementsComponent } from './fixture-definition-editor-movements/fixture-definition-editor-movements.component';
+import { FixtureDefinitionEditorColorWheelComponent } from './fixture-definition-editor-color-wheel/fixture-definition-editor-color-wheel.component';
+import { UniverseEditorPresetSaveDialogComponent } from './universe-editor-preset-save-dialog/universe-editor-preset-save-dialog.component';
 
 @NgModule({
     declarations: [
@@ -83,7 +87,11 @@ import { DashboardFixturesComponent } from './dashboard-fixtures/dashboard-fixtu
         DashboardFixtureAttributesComponent,
         DashboardTransmitterComponent,
         DashboardOSCListenerComponent,
-        DashboardFixturesComponent
+        DashboardFixturesComponent,
+        FixtureDefinitionEditorChannelsComponent,
+        FixtureDefinitionEditorMovementsComponent,
+        FixtureDefinitionEditorColorWheelComponent,
+        UniverseEditorPresetSaveDialogComponent
     ],
     imports: [
         BrowserModule,
@@ -150,6 +158,12 @@ import { DashboardFixturesComponent } from './dashboard-fixtures/dashboard-fixtu
         MatCardModule,
         MatIconModule,
         MatTableModule,
+        MatTooltipModule,
+        MatSortModule,
+        MatPaginatorModule,
+        MatTabsModule,
+        MatSliderModule,
+        MatDialogModule,
 
         CollapseModule.forRoot(),
         ModalModule.forRoot(),
@@ -161,6 +175,7 @@ import { DashboardFixturesComponent } from './dashboard-fixtures/dashboard-fixtu
         BrowserAnimationsModule
     ],
     providers: [NotificationsService, OSCListenerLiveService],
-    bootstrap: [AppComponent]
+    bootstrap: [AppComponent],
+    entryComponents: [UniverseEditorPresetSaveDialogComponent]
 })
 export class AppModule { }

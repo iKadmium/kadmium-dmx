@@ -1,81 +1,51 @@
-<div class="panel panel-default" *ngIf="fixture">
-    <div class="panel-body">
-        <form class="form-horizontal">
-            <fieldset name="commonFields">
-                <app-labelled-input label="Manufacturer:">
-                    <select #input #model="ngModel" name="manufacturer" class="form-control" [(ngModel)]="manufacturerFilter" (ngModelChange)="updateManufacturer($event)">
-                        <option *ngFor="let manufacturer of getManufacturers()">{{manufacturer}}</option>
-                    </select>
-                </app-labelled-input>
-                <app-labelled-input label="Model:">
-                    <select #input #model="ngModel" [compareWith]="getComparer" name="model" class="form-control" [(ngModel)]="fixture.type"
-                        (ngModelChange)="updateDefinition($event)">
-                        <option *ngFor="let definition of getDefinitions(manufacturerFilter)" [ngValue]="definition">{{definition.model}}</option>
-                    </select>
-                </app-labelled-input>
-                <app-labelled-input label="Address:">
-                    <input #input #model="ngModel" name="address" class="form-control" min="1" max="512" type="number" [(ngModel)]="fixture.address"
-                    />
-                </app-labelled-input>
-                <app-labelled-input label="Group:">
-                    <select #input #model="ngModel" name="group" class="form-control" [(ngModel)]="fixture.group">
-                        <option *ngFor="let group of groups">{{group.name}}</option>
-                    </select>
-                </app-labelled-input>
-            </fieldset>
-            <fieldset name="options" *ngIf="definition">
-                <app-labelled-input label="Max Brightness:">
-                    <input #input #model="ngModel" class="form-control" [(ngModel)]="fixture.options.maxBrightness" type="number" min="0" max="1"
-                        step="0.01" name="maxBrightness" />
-                </app-labelled-input>
-                <div *ngIf="moving" class="panel panel-default">
-                    <div class="panel-heading">Axis Options</div>
-                    <div class="panel-body">
-                        <table class="table table-striped">
-                            <thead>
-                                <tr>
-                                    <th>Name</th>
-                                    <th>Inverted</th>
-                                    <th>Restricted</th>
-                                    <th>Min (degrees)</th>
-                                    <th>Max (degrees)</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <tr *ngFor="let axis of axisOptions">
-                                    <td>{{axis.name}}</td>
-                                    <td>
-                                        <div class="checkbox">
-                                            <label>
-                                                <input type="checkbox" [(ngModel)]="axis.inverted" [name]="'inverted[' + axis.name + ']'"> Inverted
-                                            </label>
-                                        </div>
-                                    </td>
-                                    <td>
-                                        <div class="checkbox">
-                                            <label>
-                                                <input type="checkbox" [(ngModel)]="axis.restricted" [name]="'restricted[' + axis.name + ']'"> Restricted
-                                            </label>
-                                        </div>
-                                    </td>
-                                    <td>
-                                        <app-table-input>
-                                            <input #input #model="ngModel" class="form-control" type="number" [(ngModel)]="axis.restrictionMin" [name]="'restrictionMin[' + axis.name + ']'"
-                                                [min]="axis.min" [max]="axis.max" [disabled]="!axis.restricted" />
-                                        </app-table-input>
-                                    </td>
-                                    <td>
-                                        <app-table-input>
-                                            <input #input #model="ngModel" class="form-control" type="number" [(ngModel)]="axis.restrictionMax" [name]="'restrictionMax[' + axis.name + ']'"
-                                                [min]="axis.min" [max]="axis.max" [disabled]="!axis.restricted" />
-                                        </app-table-input>
-                                    </td>
-                                </tr>
-                            </tbody>
-                        </table>
-                    </div>
-                </div>
-            </fieldset>
-        </form>
-    </div>
-</div>
+<mat-card *ngIf="groups && fixture && definition">
+    <mat-card-content>
+        <fieldset name="options">
+            <legend>General Options</legend>
+            <mat-form-field>
+                <input matInput [(ngModel)]="fixture.options.maxBrightness" type="number" min="0" max="1" step="0.01" name="maxBrightness"
+                    placeholder="Max Brightness" />
+            </mat-form-field>
+            <mat-slider [(ngModel)]="fixture.options.maxBrightness" min="0" max="1" step="0.01" placeholder="Max Brightness"></mat-slider>
+        </fieldset>
+
+        <fieldset *ngIf="definition && moving">
+            <legend>Axis Options</legend>
+            <table class="table table-striped">
+                <thead>
+                    <tr>
+                        <th>Name</th>
+                        <th>Inverted</th>
+                        <th>Restricted</th>
+                        <th>Min (degrees)</th>
+                        <th>Max (degrees)</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr *ngFor="let axis of axisOptions">
+                        <td>{{axis.name}}</td>
+                        <td>
+                            <mat-checkbox [(ngModel)]="axis.inverted" [name]="'inverted[' + axis.name + ']'">Inverted</mat-checkbox>
+                        </td>
+                        <td>
+                            <mat-checkbox [(ngModel)]="axis.restricted" [name]="'restricted[' + axis.name + ']'">Restricted</mat-checkbox>
+                        </td>
+                        <td>
+                            <mat-form-field>
+                                <input matInput type="number" [(ngModel)]="axis.restrictionMin" [name]="'restrictionMin[' + axis.name + ']'" [min]="axis.min"
+                                    [max]="axis.max" [disabled]="!axis.restricted" placeholder="Min">
+                            </mat-form-field>
+                        </td>
+                        <td>
+                            <mat-form-field>
+                                <input matInput type="number" [(ngModel)]="axis.restrictionMax" [name]="'restrictionMax[' + axis.name + ']'" [min]="axis.min"
+                                    [max]="axis.max" [disabled]="!axis.restricted" placeholder="Max" />
+
+                            </mat-form-field>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </fieldset>
+    </mat-card-content>
+</mat-card>

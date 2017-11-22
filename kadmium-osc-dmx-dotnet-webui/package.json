@@ -25,6 +25,7 @@
     "angular2-bootstrap-switch": "*",
     "bootstrap": "*",
     "core-js": "*",
+    "hammerjs": "^2.0.8",
     "ng2-toastr": "*",
     "ngx-bootstrap": "*",
     "rxjs": "*",

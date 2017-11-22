@@ -1,0 +1,11 @@
+<h1 mat-dialog-title>Save Preset</h1>
+<div mat-dialog-content>
+    <p>Please enter a filename</p>
+    <mat-form-field>
+        <input matInput tabindex="1" [(ngModel)]="data.filename" placeholder="Filename">
+    </mat-form-field>
+</div>
+<div mat-dialog-actions>
+    <button mat-button [mat-dialog-close]="data.filename" tabindex="2">Save</button>
+    <button mat-button (click)="onNoClick()" tabindex="-1">Cancel</button>
+</div>

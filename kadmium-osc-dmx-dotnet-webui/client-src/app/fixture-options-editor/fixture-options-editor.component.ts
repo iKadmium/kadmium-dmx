@@ -20,15 +20,28 @@ export class FixtureOptionsEditorComponent implements OnInit
     private definition: FixtureDefinition;
     private skeletons: FixtureDefinitionSkeleton[];
     private manufacturerFilter: string;
+    private manufacturers: string[];
 
     constructor(private fixtureDefinitionService: FixtureDefinitionService)
     {
         this.skeletons = [];
+        this.manufacturers = [];
     }
 
-    async ngOnInit(): Promise<void>
+    public log(thing: any): void
     {
-        this.skeletons = (await this.fixtureDefinitionService.getFixtureDefinitionSkeletons()).data;
+        console.log(thing);
+    }
+
+    ngOnInit(): void
+    {
+        this.fixtureDefinitionService.getFixtureDefinitionSkeletons().then(response =>
+        {
+            this.skeletons = response.data;
+            this.manufacturers = this.skeletons
+                .map((value: FixtureDefinitionSkeleton) => value.manufacturer)
+                .filter((value, index, array) => array.indexOf(value) == index);
+        });
     }
 
     ngOnChanges(changes: SimpleChanges): void
@@ -45,6 +58,7 @@ export class FixtureOptionsEditorComponent implements OnInit
                 }
                 this.manufacturerFilter = fixture.type.manufacturer;
                 this.updateDefinition(fixture.type);
+
             }
             else
             {
@@ -59,35 +73,27 @@ export class FixtureOptionsEditorComponent implements OnInit
         return this.definition.movements.length > 0;
     }
 
-    private getManufacturers(): string[]
-    {
-        return this.skeletons
-            .map((value: FixtureDefinitionSkeleton) => value.manufacturer)
-            .filter((value, index, array) => array.indexOf(value) == index);
-    }
-
     private getDefinitions(manufacturer: string): FixtureDefinitionSkeleton[]
     {
         return this.skeletons
             .filter(value => value.manufacturer == manufacturer);
     }
 
-    private async updateManufacturer(manufacturer: string): Promise<void>
+    private updateManufacturer(manufacturer: string): void
     {
         let skeleton = this.skeletons.find((value) => value.manufacturer == manufacturer);
         this.fixture.type = skeleton;
-        return this.updateDefinition(skeleton);
+        this.updateDefinition(skeleton);
     }
 
-    private async updateDefinition(skeleton: FixtureDefinitionSkeleton): Promise<void>
+    private updateDefinition(skeleton: FixtureDefinitionSkeleton): void
     {
-        if (skeleton != null)
+        this.fixtureDefinitionService.getFixtureDefinitionById(skeleton.id).then(response =>
         {
-            this.definition = (await this.fixtureDefinitionService
-                .getFixtureDefinitionById(skeleton.id)).data;
+            this.definition = response.data;
             this.axisOptions = this.definition.movements
                 .map(value => new AxisOptions(value.name, this.fixture, this.definition));
-        }
+        });
     }
 
     private get getComparer(): (x: FixtureDefinitionSkeleton, y: FixtureDefinitionSkeleton) => boolean

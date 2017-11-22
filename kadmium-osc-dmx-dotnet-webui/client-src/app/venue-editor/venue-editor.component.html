@@ -1,39 +1,34 @@
 <form *ngIf="venue" class="form-horizontal" #editorForm="ngForm">
     <fieldset [disabled]="saving">
-        <app-labelled-input label="Name:">
-            <input required #input class="form-control" type="text" name="name" [(ngModel)]="venue.name" #model="ngModel">
-        </app-labelled-input>
+        <mat-form-field>
+            <input required matInput type="text" name="name" [(ngModel)]="venue.name" placeholder="Name">
+        </mat-form-field>
 
-        <div role="tabpanel">
-            <!-- Nav tabs -->
-            <ul class="nav nav-tabs" role="tablist">
-                <li *ngFor="let universe of venue.universes; let i = index" [ngClass]="{'active': selectedUniverse == universe}">
-                    <a (click)="selectedUniverse = universe">{{universe.name}}
-                        <span *ngIf="i > 0" class="glyphicon glyphicon-remove" (click)="removeUniverse(i)"></span>
-                    </a>
-                </li>
-                <li>
-                    <a class="btn" (click)="addUniverse()"><span class="glyphicon glyphicon-plus"></span></a>
-                </li>
-            </ul>
-        </div>
+        <br>
+        <button mat-raised-button color="primary" (click)="addUniverse()">
+            <mat-icon>add</mat-icon> Add Universe
+        </button>
+        <mat-tab-group>
+            <mat-tab *ngFor="let universe of venue.universes; let i = index" [label]="universe.name">
+                <mat-card>
+                    <mat-card-title>{{universe.name}}</mat-card-title>
+                    <mat-card-content>
+                        <mat-form-field>
+                            <input required matInput [(ngModel)]="universe.name" type="text" [name]="'universeName[' + i + ']'" placeholder="Name" />
+                        </mat-form-field>
+                        <mat-form-field>
+                            <input required matInput [(ngModel)]="universe.universeID" type="number" min="1" max="65535" [name]="'universeID[' + i + ']'"
+                                placeholder="Universe ID" />
+                        </mat-form-field>
 
-        <div class="panel panel-default" *ngIf="selectedUniverse">
-            <div class="panel-body">
-                <app-labelled-input label="Name:">
-                    <input required #input #model="ngModel" [(ngModel)]="selectedUniverse.name" type="text" class="form-control" [name]="'universeName[' + i + ']'"
-                    />
-                </app-labelled-input>
-                <app-labelled-input label="Universe ID:">
-                    <input #input #model="ngModel" [(ngModel)]="selectedUniverse.universeID" type="number" class="form-control" min="1" max="65535"
-                        [name]="'universeID[' + i + ']'" />
-                </app-labelled-input>
-            </div>
-
-            <app-universe-editor [universe]="selectedUniverse" [groups]="groups"></app-universe-editor>
-        </div>
-        <div class="form-group">
-            <button class="btn btn-primary" (click)="save()" [disabled]="!editorForm.valid"><span class="glyphicon glyphicon-floppy-disk"></span> Save</button>
-        </div>
+                        <br>
+                        <app-universe-editor [universe]="universe" [groups]="groups"></app-universe-editor>
+                    </mat-card-content>
+                </mat-card>
+            </mat-tab>
+        </mat-tab-group>
+        <button mat-raised-button color="primary" (click)="save()" [disabled]="!editorForm.valid">
+            <mat-icon aria-label="Save">save</mat-icon> Save
+        </button>
     </fieldset>
 </form>

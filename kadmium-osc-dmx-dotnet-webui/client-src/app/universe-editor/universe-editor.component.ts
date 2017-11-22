@@ -5,6 +5,8 @@ import { AsyncFileReader } from "../async-file-reader";
 import { FileSaver } from "../file-saver";
 import { GroupService, FixtureDefinitionService } from "api/services";
 import { Group, FixtureDefinitionSkeleton, Universe, Fixture } from "api/models";
+import { MatDialog } from "@angular/material/dialog";
+import { UniverseEditorPresetSaveDialogComponent } from "app/universe-editor-preset-save-dialog/universe-editor-preset-save-dialog.component";
 
 @Component({
     selector: 'app-universe-editor',
@@ -21,7 +23,7 @@ export class UniverseEditorComponent implements OnInit
     private selectedFixtures: Fixture[];
     public fixtureDefinitionSkeletons: FixtureDefinitionSkeleton[];
 
-    constructor(private fixtureDefinitionService: FixtureDefinitionService, private notificationsService: NotificationsService)
+    constructor(private fixtureDefinitionService: FixtureDefinitionService, private notificationsService: NotificationsService, private dialog: MatDialog)
     {
         this.selectedFixtures = [];
         this.selectedFixture = null;
@@ -57,6 +59,9 @@ export class UniverseEditorComponent implements OnInit
     {
         let fixture = new Fixture();
         fixture.group = this.groups[0].name;
+        fixture.address = 1;
+        fixture.type = this.fixtureDefinitionSkeletons[0];
+        fixture.options = {};
         this.universe.fixtures.push(fixture);
         this.selectedFixture = fixture;
     }
@@ -86,11 +91,20 @@ export class UniverseEditorComponent implements OnInit
 
     private async savePresetAs(filenameForm: HTMLInputElement): Promise<void>
     {
-        try
+        let ref = this.dialog.open(UniverseEditorPresetSaveDialogComponent, {
+            width: '250px',
+            data: { filename: "" }
+        });
+        ref.afterClosed().subscribe(result =>
         {
-            let name = filenameForm.value; // await this.inputBox.show("Select a name", "Name:", "Save", "Cancel");
+            let name = result;
             let fixtures = this.selectedFixtures;
             FileSaver.Save(name + ".json", fixtures);
+        })
+        try
+        {
+
+
         }
         catch (error)
         { }

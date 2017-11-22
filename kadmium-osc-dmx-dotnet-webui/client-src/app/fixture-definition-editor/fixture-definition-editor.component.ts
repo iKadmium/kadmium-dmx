@@ -5,6 +5,7 @@ import { NotificationsService } from "../notifications.service";
 import { StatusCode } from "../status-code.enum";
 import { FixtureDefinitionService } from "api/services";
 import { FixtureDefinition, FixtureDefinitionSkeleton, DMXChannel, MovementAxis, ColorWheelEntry } from "api/models";
+import { MatTableDataSource } from "@angular/material/table";
 
 @Component({
     selector: 'app-fixture-definition-editor',
@@ -35,6 +36,9 @@ export class FixtureDefinitionEditorComponent implements OnInit
             {
                 this.title.setTitle("Fixture Definition Editor - New Definition");
                 this.definition = new FixtureDefinition();
+                this.definition.channels = [];
+                this.definition.colorWheel = [];
+                this.definition.movements = [];
             }
             else
             {
@@ -51,42 +55,9 @@ export class FixtureDefinitionEditorComponent implements OnInit
         }
     }
 
-    public addChannel(): void
-    {
-        let maxChannel = 0;
-        this.definition.channels.forEach((value: DMXChannel) => 
-        {
-            if (value.address > maxChannel) 
-            {
-                maxChannel = value.address;
-            }
-        });
-
-        let channel = new DMXChannel();
-        channel.address = maxChannel + 1;
-        this.definition.channels.push(channel);
-    }
-
-    public removeChannel(channel: DMXChannel): void
-    {
-        let index = this.definition.channels.indexOf(channel);
-        this.definition.channels.splice(index, 1);
-    }
-
-    public addAxis(): void
-    {
-        this.definition.movements.push(new MovementAxis());
-    }
-
-    public removeAxis(axis: MovementAxis): void
-    {
-        let index = this.definition.movements.indexOf(axis);
-        this.definition.movements.splice(index, 1);
-    }
-
     public addColorWheelEntry(): void
     {
-        let minValue = 0;
+        let minValue = -1;
         this.definition.colorWheel.forEach((value: ColorWheelEntry) => 
         {
             if (value.max > minValue) 
@@ -97,6 +68,7 @@ export class FixtureDefinitionEditorComponent implements OnInit
         minValue = minValue < 255 ? minValue + 1 : 255;
         let entry = new ColorWheelEntry();
         entry.min = minValue;
+        entry.max = 255;
         this.definition.colorWheel.push(entry);
     }
 
@@ -106,25 +78,11 @@ export class FixtureDefinitionEditorComponent implements OnInit
         this.definition.colorWheel.splice(index, 1);
     }
 
-    public getOtherChannelNames(thisEntry: DMXChannel): string[]
-    {
-        return this.definition.channels
-            .filter(value => value != thisEntry)
-            .map((value: DMXChannel) => value.name);
-    }
-
     public getOtherColorWheelNames(thisEntry: ColorWheelEntry): string[]
     {
         return this.definition.colorWheel
             .filter(value => value != thisEntry)
             .map((value: ColorWheelEntry) => value.name);
-    }
-
-    public getOtherAxisNames(thisEntry: MovementAxis): string[]
-    {
-        return this.definition.movements
-            .filter(value => value != thisEntry)
-            .map((value: MovementAxis) => value.name);
     }
 
     public hasColorWheelChannel(): boolean
@@ -168,7 +126,7 @@ export class FixtureDefinitionEditorComponent implements OnInit
                 await this.fixtureDefinitionService.putFixtureDefinitionById({ id: this.definition.id, definition: this.definition });
                 this.notificationsService.add(StatusCode.Success, "Successfully edited " + this.definition.manufacturer + " " + this.definition.model);
             }
-            this.router.navigate(["../", { relativeTo: this.route }]);
+            this.router.navigate(["../"], { relativeTo: this.route });
         }
         catch (reason)
         {

@@ -1,10 +1,13 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, AfterViewInit, ViewChild } from '@angular/core';
 import { AsyncFileReader } from "../async-file-reader";
 import { NotificationsService } from "../notifications.service";
 import { StatusCode } from "../status-code.enum";
 import { Title } from "@angular/platform-browser";
 import { FixtureDefinitionService } from "api/services";
 import { FixtureDefinitionSkeleton, FixtureDefinition } from "api/models";
+import { MatTableDataSource } from "@angular/material/table";
+import { MatSort } from "@angular/material/sort";
+import { MatPaginator } from "@angular/material/paginator";
 
 @Component({
     selector: 'app-fixture-definitions',
@@ -12,33 +15,56 @@ import { FixtureDefinitionSkeleton, FixtureDefinition } from "api/models";
     styleUrls: ['./fixture-definitions.component.css'],
     providers: [FixtureDefinitionService]
 })
-export class FixtureDefinitionsComponent implements OnInit
+export class FixtureDefinitionsComponent implements OnInit, AfterViewInit
 {
     manufacturerFilterEnabled: boolean;
     manufacturerFilter: string;
     skeletons: FixtureDefinitionSkeleton[];
+
+    displayedColumns = ['manufacturer', 'model', 'actions'];
+    dataSource: MatTableDataSource<FixtureDefinitionSkeleton>;
+
+    @ViewChild(MatSort) sort: MatSort;
+    @ViewChild(MatPaginator) paginator: MatPaginator;
 
     constructor(private fixtureDefinitionsService: FixtureDefinitionService,
         private notificationsService: NotificationsService, title: Title)
     {
         title.setTitle("Fixture Definitions");
         this.skeletons = [];
+        this.dataSource = new MatTableDataSource<FixtureDefinitionSkeleton>(this.skeletons);
     }
 
-    async ngOnInit(): Promise<void>
+    ngOnInit(): void
     {
-        try
+        this.fixtureDefinitionsService.getFixtureDefinitionSkeletons().then(response => 
         {
-            this.skeletons = (await this.fixtureDefinitionsService.getFixtureDefinitionSkeletons()).data;
+            response.data.forEach(skeleton => this.skeletons.push(skeleton));
             if (this.manufacturers.length > 0)
             {
                 this.manufacturerFilter = this.manufacturers[0];
             }
-        }
-        catch (reason)
-        {
-            this.notificationsService.add(StatusCode.Error, reason);
-        }
+            this.updateDataSource();
+
+        }).catch(reason => this.notificationsService.add(StatusCode.Error, reason));
+    }
+
+    ngAfterViewInit(): void
+    {
+        this.dataSource.sort = this.sort;
+        this.dataSource.paginator = this.paginator;
+    }
+
+    applyFilter(filterValue: string)
+    {
+        filterValue = filterValue.trim(); // Remove whitespace
+        filterValue = filterValue.toLowerCase(); // MatTableDataSource defaults to lowercase matches
+        this.dataSource.filter = filterValue;
+    }
+
+    private updateDataSource(): void
+    {
+        this.dataSource._updateChangeSubscription();
     }
 
     public get manufacturers(): string[]
@@ -81,6 +107,7 @@ export class FixtureDefinitionsComponent implements OnInit
                 this.notificationsService.add(StatusCode.Success, fixture.manufacturer + " " + fixture.model + " was deleted");
                 let index = this.skeletons.indexOf(fixture);
                 this.skeletons.splice(index, 1);
+                this.updateDataSource();
             }
             catch (reason)
             {

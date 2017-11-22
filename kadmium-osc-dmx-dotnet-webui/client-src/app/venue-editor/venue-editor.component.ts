@@ -24,38 +24,40 @@ export class VenueEditorComponent implements OnInit
 
     public venue: Venue;
 
-    private selectedUniverse: Universe;
-
     constructor(private route: ActivatedRoute, private venueService: VenueService, private notificationsService: NotificationsService,
         private groupService: GroupService, private router: Router)
     {
         this.saving = false;
     }
 
-    async ngOnInit(): Promise<void>
+    ngOnInit(): void
     {
-        this.groups = (await this.groupService.getGroups()).data;
         this.venueId = this.route.snapshot.params['id'];
-        if (this.isNewItem())
+
+        this.groupService.getGroups().then(response =>
         {
-            this.venue = new Venue();
-            let universe = new Universe();
-            universe.name = "Default Universe";
-            this.venue.universes.push(universe);
-            this.selectedUniverse = universe;
-        }
-        else
-        {
-            try
+            this.groups = response.data;
+
+            if (this.isNewItem())
             {
-                this.venue = (await this.venueService.getVenueById(this.venueId)).data;
-                this.selectedUniverse = this.venue.universes.length > 0 ? this.venue.universes[0] : null;
+                this.venue = new Venue();
+                let universe = new Universe();
+                universe.name = "Default Universe";
+                universe.fixtures = [];
+                universe.universeID = 1;
+                this.venue.universes = [];
+                this.venue.universes.push(universe);
             }
-            catch (reason)
+            else
             {
-                this.notificationsService.add(StatusCode.Error, reason);
+                this.venueService.getVenueById(this.venueId).then(response => 
+                {
+                    this.venue = response.data;
+                }).catch(reason => this.notificationsService.add(StatusCode.Error, reason));
             }
-        }
+        });
+
+
     }
 
     private isNewItem(): boolean
@@ -77,10 +79,6 @@ export class VenueEditorComponent implements OnInit
     {
         let universe = this.venue.universes[index];
         this.venue.universes.splice(index, 1);
-        if (this.selectedUniverse == universe)
-        {
-            this.selectedUniverse = this.venue.universes[index - 1];
-        }
     }
 
     private async save(): Promise<void>

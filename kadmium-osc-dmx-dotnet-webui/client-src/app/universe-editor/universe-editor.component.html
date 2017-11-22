@@ -1,21 +1,5 @@
-<div role="tabpanel" *ngIf="universe && fixtureDefinitionSkeletons">
-    <!-- Nav tabs -->
-    <ul class="nav nav-tabs" role="tablist">
-        <li [ngClass]="{'active': selectedFixture == null}">
-            <a (click)="selectedFixture = null">Fixtures</a>
-        </li>
-        <li *ngFor="let fixture of sortedFixtures; let i = index" [ngClass]="{'active': selectedFixture == fixture}">
-            <a (click)="selectedFixture = fixture">{{fixture.address}} {{fixture.type.manufacturer}} {{fixture.type.model}}
-                <span class="glyphicon glyphicon-remove" (click)="removeFixture(fixture)"></span>
-            </a>
-        </li>
-        <li>
-            <a class="btn" (click)="addFixture()"><span class="glyphicon glyphicon-plus"></span></a>
-        </li>
-    </ul>
-</div>
-<div class="panel panel-default" *ngIf="universe && fixtureDefinitionSkeletons && selectedFixture == null">
-    <div class="panel-body">
+<mat-tab-group>
+    <mat-tab label="Fixtures">
         <div class="table-responsive">
             <table class="table table-striped">
                 <thead>
@@ -32,7 +16,7 @@
                         <td>
                             <div class="checkbox">
                                 <label>
-                                    <input type="checkbox" [ngModel]="isSelected(fixture)" (ngModelChange)="selectFixture(fixture, $event)" [name]="'selected[' + i + ']'" >
+                                    <input type="checkbox" [ngModel]="isSelected(fixture)" (ngModelChange)="selectFixture(fixture, $event)" [name]="'selected[' + i + ']'">
                                 </label>
                             </div>
                         </td>
@@ -44,27 +28,20 @@
                 </tbody>
             </table>
         </div>
-    </div>
-    <div class="panel-footer">
-        <div class="form-group">
-            <label class="control-label col-sm-2" for="selectedPreset">Presets:</label>
-            <div class="col-sm-10">
+        <button mat-raised-button color="primary" (click)="addFixture()">
+            <mat-icon>add</mat-icon> Add Fixture
+        </button>
+        <button mat-raised-button color="primary" [disabled]="selectedFixtures.length == 0" (click)="savePresetAs(filename)">
+            <mat-icon>cloud_download</mat-icon> Save Preset
+        </button>
+        <button mat-raised-button color="primary" (click)="upload(fileInput)">
+            <mat-icon>cloud_upload</mat-icon> Load Preset
+        </button>
 
-            </div>
-            <div class="col-sm-10 col-sm-offset-2 input-group">
-                <input type="text" #filename placeholder="filename" class="form-control">
-                <span class="input-group-btn">
-                    <button type="button" class="btn btn-primary" [disabled]="selectedFixtures.length == 0" (click)="savePresetAs(filename)">
-                        <span class="glyphicon glyphicon-floppy-save"></span> Save
-                </button>
-                <button type="button" class="btn btn-success" (click)="upload(fileInput)">
-                        <span class="glyphicon glyphicon-floppy-open"></span> Load
-                    </button>
-                </span>
-            </div>
-        </div>
-    </div>
-</div>
+    </mat-tab>
+    <mat-tab *ngFor="let fixture of sortedFixtures; let i = index" label="{{fixture.address}} {{fixture.type.manufacturer}} {{fixture.type.model}}">
+        <app-fixture-options-editor [fixture]="fixture" [groups]="groups"></app-fixture-options-editor>
+    </mat-tab>
+</mat-tab-group>
 
-<app-fixture-options-editor [fixture]="selectedFixture" [groups]="groups"></app-fixture-options-editor>
 <input #fileInput type="file" name="name" style="display: none;" (change)="uploadFiles($event.target.files)" multiple>

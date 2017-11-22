@@ -5,6 +5,7 @@ import { StatusCode } from "../status-code.enum";
 import { AsyncFileReader } from "../async-file-reader";
 import { VenueService } from "api/services";
 import { VenueSkeleton, Venue } from "api/models";
+import { MatTableDataSource } from "@angular/material/table";
 
 @Component({
     selector: 'app-venues',
@@ -15,23 +16,28 @@ import { VenueSkeleton, Venue } from "api/models";
 export class VenuesComponent implements OnInit
 {
     venues: VenueSkeleton[];
+    public displayedColumns = ['name', 'actions'];
+    public dataSource: MatTableDataSource<VenueSkeleton>;
 
     constructor(private venueService: VenueService, private notificationsService: NotificationsService, title: Title)
     {
         title.setTitle("Venues");
         this.venues = [];
+        this.dataSource = new MatTableDataSource(this.venues);
     }
 
-    async ngOnInit(): Promise<void>
+    ngOnInit(): void
     {
-        try
+        this.venueService.getVenues().then(response => 
         {
-            this.venues = (await this.venueService.getVenues()).data;
-        }
-        catch (reason)
-        {
-            this.notificationsService.add(StatusCode.Error, reason);
-        }
+            response.data.forEach(venue => this.venues.push(venue));
+            this.updateDataSource();
+        }).catch(reason => this.notificationsService.add(StatusCode.Error, reason));
+    }
+
+    public updateDataSource(): void
+    {
+        this.dataSource._updateChangeSubscription();
     }
 
     private async deleteConfirm(index: number): Promise<void>
