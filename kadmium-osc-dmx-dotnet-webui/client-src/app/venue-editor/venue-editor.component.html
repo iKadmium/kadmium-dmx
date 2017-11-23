@@ -1,34 +1,32 @@
 <form *ngIf="venue" class="form-horizontal" #editorForm="ngForm">
     <fieldset [disabled]="saving">
+        <legend>Venue Options</legend>
         <mat-form-field>
             <input required matInput type="text" name="name" [(ngModel)]="venue.name" placeholder="Name">
         </mat-form-field>
-
-        <br>
-        <button mat-raised-button color="primary" (click)="addUniverse()">
-            <mat-icon>add</mat-icon> Add Universe
-        </button>
-        <mat-tab-group>
-            <mat-tab *ngFor="let universe of venue.universes; let i = index" [label]="universe.name">
-                <mat-card>
-                    <mat-card-title>{{universe.name}}</mat-card-title>
-                    <mat-card-content>
-                        <mat-form-field>
-                            <input required matInput [(ngModel)]="universe.name" type="text" [name]="'universeName[' + i + ']'" placeholder="Name" />
-                        </mat-form-field>
-                        <mat-form-field>
-                            <input required matInput [(ngModel)]="universe.universeID" type="number" min="1" max="65535" [name]="'universeID[' + i + ']'"
-                                placeholder="Universe ID" />
-                        </mat-form-field>
-
-                        <br>
-                        <app-universe-editor [universe]="universe" [groups]="groups"></app-universe-editor>
-                    </mat-card-content>
-                </mat-card>
-            </mat-tab>
-        </mat-tab-group>
-        <button mat-raised-button color="primary" (click)="save()" [disabled]="!editorForm.valid">
-            <mat-icon aria-label="Save">save</mat-icon> Save
-        </button>
     </fieldset>
+
+    <mat-toolbar>
+        <mat-toolbar-row>
+            <span>Universes</span>
+            <button mat-icon-button color="primary" (click)="addUniverse()">
+                <mat-icon>add</mat-icon>
+            </button>
+        </mat-toolbar-row>
+    </mat-toolbar>
+    <mat-tab-group #universeTabs>
+        <mat-tab *ngFor="let universe of venue.universes; let i = index">
+            <ng-template mat-tab-label>
+                {{universe.name}}
+                <button mat-icon-button (click)="removeUniverse(i)">
+                    <mat-icon aria-label="Remove">clear</mat-icon>
+                </button>
+            </ng-template>
+            <app-universe-editor [universe]="universe" [groups]="groups"></app-universe-editor>
+        </mat-tab>
+    </mat-tab-group>
+
+    <button mat-raised-button color="primary" (click)="save()" [disabled]="!editorForm.valid">
+        <mat-icon aria-label="Save">save</mat-icon> Save
+    </button>
 </form>

@@ -1,13 +1,42 @@
-<div class="panel panel-default">
-    <div class="panel-heading">OSC Listener</div>
-    <div class="panel-body">
-        <div class="checkbox">
-            <switch [status]="enabled" onText="Enabled" offText="Disabled" offColor="red" (click)="toggleEnabled()" [disabled]="enabled == null"></switch>
-        </div>
+<mat-toolbar>
+    <mat-toolbar-row>
+        <span>OSC Listener</span>
+        <span class="example-spacer"></span>
+        <mat-slide-toggle [checked]="enabled" color="primary" [disabled]="!enabledDetermined" (change)="toggleEnabled()">{{enabled ? "Enabled" : "Disabled"}}</mat-slide-toggle>
+    </mat-toolbar-row>
+</mat-toolbar>
 
-        <h2>Recognised</h2>
-        <textarea class="form-control" rows="20" [value]="getRecognised()"></textarea>
-        <h2>Unrecognised</h2>
-        <textarea class="form-control" rows="20" [value]="getUnrecognised()"></textarea>
-    </div>
-</div>
+<mat-table #table [dataSource]="dataSource" matSort>
+    <ng-container matColumnDef="time">
+        <mat-header-cell *matHeaderCellDef mat-sort-header> Time </mat-header-cell>
+        <mat-cell *matCellDef="let element">
+            {{element.time | amDateFormat:'hh:mm:ss A'}}
+        </mat-cell>
+    </ng-container>
+
+    <ng-container matColumnDef="recognised">
+        <mat-header-cell *matHeaderCellDef mat-sort-header> Recognised </mat-header-cell>
+        <mat-cell *matCellDef="let element">
+            {{element.recognised ? 'Yes' : 'No'}}
+        </mat-cell>
+    </ng-container>
+
+    <ng-container matColumnDef="address">
+        <mat-header-cell *matHeaderCellDef mat-sort-header> Address </mat-header-cell>
+        <mat-cell *matCellDef="let element">
+            {{element.address}}
+        </mat-cell>
+    </ng-container>
+
+    <ng-container matColumnDef="value">
+        <mat-header-cell *matHeaderCellDef mat-sort-header> Value </mat-header-cell>
+        <mat-cell *matCellDef="let element">
+            <span [style]="getColor(element.value)">
+                {{element.value}}
+            </span>
+        </mat-cell>
+    </ng-container>
+
+    <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
+    <mat-row *matRowDef="let row; columns: displayedColumns;"></mat-row>
+</mat-table>

@@ -1,4 +1,21 @@
-<nav class="navbar navbar-inverse navbar-static-top">
+<nav mat-tab-nav-bar>
+    <a mat-tab-link routerLink="/dashboard" routerLinkActive #rlaDashboard="routerLinkActive" [active]="rlaDashboard.isActive">
+        Dashboard
+    </a>
+    <a mat-tab-link routerLink="/settings" routerLinkActive #rlaSettings="routerLinkActive" [active]="rlaSettings.isActive">
+        Settings
+    </a>
+    <a mat-tab-link routerLink="/groups" routerLinkActive #rlaGroups="routerLinkActive" [active]="rlaGroups.isActive">
+        Groups
+    </a>
+    <a mat-tab-link routerLink="/fixture-definitions" routerLinkActive #rlaFixtureDefinitions="routerLinkActive" [active]="rlaFixtureDefinitions.isActive">
+        Fixture Definitions
+    </a>
+    <a mat-tab-link routerLink="/venues" routerLinkActive #rlaVenues="routerLinkActive" [active]="rlaVenues.isActive">
+        Venues
+    </a>
+</nav>
+<!-- <nav class="navbar navbar-inverse navbar-static-top">
     <div class="container-fluid">
         <div class="navbar-header">
             <button (click)="collapsed = !collapsed" type="button" class="navbar-toggle">
@@ -41,4 +58,4 @@
             </ul>
         </div>
     </div>
-</nav>
+</nav> -->

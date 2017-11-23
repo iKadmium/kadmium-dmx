@@ -1,7 +1,9 @@
-<app-nav-menu></app-nav-menu>
-<div class="container body-content">
-    <div class="page-header">
-        <h1>{{titleService.getTitle()}}</h1>
+<mat-sidenav-container class="mat-typography">
+    <app-nav-menu></app-nav-menu>
+    <div class="container body-content">
+        <mat-toolbar>
+            <span>{{titleService.getTitle()}}</span>
+        </mat-toolbar>
+        <router-outlet></router-outlet>
     </div>
-    <router-outlet></router-outlet>
-</div>
+</mat-sidenav-container>

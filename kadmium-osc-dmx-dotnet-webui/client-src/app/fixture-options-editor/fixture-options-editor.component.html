@@ -1,5 +1,6 @@
-<mat-card *ngIf="groups && fixture && definition">
-    <mat-card-content>
+<div class="mat-typography">
+    <h1 mat-dialog-title>{{fixture.address}} - {{fixture.type.manufacturer}} {{fixture.type.model}}</h1>
+    <div mat-dialog-content *ngIf="fixture && definition">
         <fieldset name="options">
             <legend>General Options</legend>
             <mat-form-field>
@@ -47,5 +48,8 @@
                 </tbody>
             </table>
         </fieldset>
-    </mat-card-content>
-</mat-card>
+    </div>
+    <div mat-dialog-actions>
+        <button mat-button [mat-dialog-close]="data.filename" tabindex="2">OK</button>
+    </div>
+</div>

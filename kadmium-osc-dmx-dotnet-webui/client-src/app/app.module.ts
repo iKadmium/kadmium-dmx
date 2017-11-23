@@ -1,11 +1,13 @@
 import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
-import { FormsModule } from '@angular/forms';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { HttpModule } from '@angular/http';
 import { RouterModule } from '@angular/router';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 
-import { MatButtonModule, MatCheckboxModule, MatInputModule, MatSelectModule, MatCardModule, MatIconModule, MatTableModule, MatTooltipModule, MatSortModule, MatPaginatorModule, MatTabsModule, MatSliderModule, MatDialogModule } from "@angular/material";
+import { MatButtonModule, MatCheckboxModule, MatInputModule, MatSelectModule, MatCardModule, MatIconModule, MatTableModule, MatTooltipModule, MatSortModule, MatPaginatorModule, MatTabsModule, MatSliderModule, MatDialogModule, MatAutocompleteModule, MatSidenavModule, MatToolbarModule, MatExpansionModule, MatSlideToggleModule, MatListModule } from "@angular/material";
+
+import {MomentModule} from 'angular2-moment';
 
 import { ToastModule } from "ng2-toastr/ng2-toastr";
 
@@ -164,6 +166,14 @@ import { UniverseEditorPresetSaveDialogComponent } from './universe-editor-prese
         MatTabsModule,
         MatSliderModule,
         MatDialogModule,
+        MatAutocompleteModule,
+        MatSidenavModule,
+        MatToolbarModule,
+        MatExpansionModule,
+        MatSlideToggleModule,
+        MatListModule,
+
+        MomentModule,
 
         CollapseModule.forRoot(),
         ModalModule.forRoot(),
@@ -172,10 +182,11 @@ import { UniverseEditorPresetSaveDialogComponent } from './universe-editor-prese
         TabsModule.forRoot(),
         ProgressbarModule.forRoot(),
         BootstrapSwitchModule.forRoot(),
-        BrowserAnimationsModule
+        BrowserAnimationsModule,
+        ReactiveFormsModule
     ],
     providers: [NotificationsService, OSCListenerLiveService],
     bootstrap: [AppComponent],
-    entryComponents: [UniverseEditorPresetSaveDialogComponent]
+    entryComponents: [UniverseEditorPresetSaveDialogComponent, FixtureOptionsEditorComponent]
 })
 export class AppModule { }

@@ -5,6 +5,7 @@ import { NotificationsService } from "../notifications.service";
 import { StatusCode } from "../status-code.enum";
 import { SettingsService, EnttecProTransmitterService } from "api/services";
 import { Settings } from "api/models";
+import { MatTableDataSource } from "@angular/material/table";
 
 @Component({
     selector: 'app-settings',
@@ -19,10 +20,16 @@ export class SettingsComponent implements OnInit
     enttecPorts: string[];
     activeTab: string;
 
+    public fakeTargets: UnicastTarget[];
+
+    public dataSource: MatTableDataSource<UnicastTarget>;
+    public displayedColumns = ['address', 'actions'];
+
     constructor(private settingsService: SettingsService, private enttecService: EnttecProTransmitterService, private notificationsService: NotificationsService, title: Title)
     {
         title.setTitle("Settings");
         this.saving = false;
+        this.fakeTargets = [];
     }
 
     ngOnInit(): void
@@ -32,6 +39,8 @@ export class SettingsComponent implements OnInit
             .then(response =>
             {
                 this.settings = response.data;
+                this.fakeTargets = this.settings.sacnTransmitter.unicast.map(x => { return { target: x } });
+                this.dataSource = new MatTableDataSource<UnicastTarget>(this.fakeTargets);
             })
             .catch(reason =>
             {
@@ -54,6 +63,7 @@ export class SettingsComponent implements OnInit
         this.saving = true;
         try
         {
+            this.settings.sacnTransmitter.unicast = this.fakeTargets.map(x => x.target);
             await this.settingsService.postSettings(this.settings);
             this.notificationsService.add(StatusCode.Success, "Saved Successfully");
         }
@@ -67,14 +77,27 @@ export class SettingsComponent implements OnInit
         }
     }
 
-    public addTarget(): void
+    public addElement(): void
     {
-        this.settings.sacnTransmitter.unicast.push("");
+        this.fakeTargets.push({ target: "" });
+        this.dataSource._updateChangeSubscription();
     }
 
-    public removeTarget(index: number): void
+    public getElementIndex(element: UnicastTarget): number
     {
-        this.settings.sacnTransmitter.unicast.splice(index, 1);
+        return this.fakeTargets.indexOf(element);
     }
 
+    public removeElement(element: UnicastTarget): void
+    {
+        let index = this.getElementIndex(element);
+        this.fakeTargets.splice(index, 1);
+        this.dataSource._updateChangeSubscription();
+    }
+
+}
+
+interface UnicastTarget
+{
+    target: string;
 }

@@ -6,6 +6,7 @@ import { FileSaver } from "../file-saver";
 import { AsyncFileReader } from "../async-file-reader";
 import { GroupService } from "api/services";
 import { Group } from "api/models";
+import { MatTableDataSource } from "@angular/material/table";
 
 @Component({
     selector: 'app-groups',
@@ -18,11 +19,15 @@ export class GroupsComponent implements OnInit
     saving: boolean;
     groups: Group[];
 
+    displayedColumns = ['order', 'name', 'actions'];
+    dataSource: MatTableDataSource<Group>;
+
     constructor(private groupsService: GroupService, private notificationsService: NotificationsService, title: Title)
     {
         title.setTitle("Groups");
         this.saving = false;
         this.groups = [];
+        this.dataSource = new MatTableDataSource<Group>(this.groupsSorted);
     }
 
     async ngOnInit(): Promise<void>
@@ -31,6 +36,7 @@ export class GroupsComponent implements OnInit
         {
             let response = await this.groupsService.getGroups();
             this.groups = response.data;
+            this.dataSource.data = this.groupsSorted;
         }
         catch (reason)
         {
@@ -56,12 +62,14 @@ export class GroupsComponent implements OnInit
         let group = new Group();
         group.order = this.getNextOrder();
         this.groups.push(group);
+        this.dataSource.data = this.groupsSorted;
     }
 
     private delete(group: Group): void
     {
         let index = this.groups.indexOf(group);
         this.groups.splice(index, 1);
+        this.dataSource.data = this.groupsSorted;
     }
 
     private swap(oldIndex: number, newIndex: number): void
@@ -70,12 +78,18 @@ export class GroupsComponent implements OnInit
         let newOrder = this.groupsSorted[newIndex].order;
         this.groupsSorted[oldIndex].order = newOrder;
         this.groupsSorted[newIndex].order = oldOrder;
+        this.dataSource.data = this.groupsSorted;
     }
 
     private getOtherGroupNames(group: Group): string[]
     {
         let result = this.groups.filter(item => item != group).map(grp => grp.name);
         return result;
+    }
+
+    public getElementIndex(group: Group): number
+    {
+        return this.groups.indexOf(group);
     }
 
     private get groupsSorted(): Group[]

@@ -1,47 +1,76 @@
-<mat-tab-group>
-    <mat-tab label="Fixtures">
-        <div class="table-responsive">
-            <table class="table table-striped">
-                <thead>
-                    <tr>
-                        <th>Selected</th>
-                        <th>Address</th>
-                        <th>Manufacturer</th>
-                        <th>Model</th>
-                        <th>Group</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr *ngFor="let fixture of sortedFixtures; let i = index">
-                        <td>
-                            <div class="checkbox">
-                                <label>
-                                    <input type="checkbox" [ngModel]="isSelected(fixture)" (ngModelChange)="selectFixture(fixture, $event)" [name]="'selected[' + i + ']'">
-                                </label>
-                            </div>
-                        </td>
-                        <td>{{fixture.address}}</td>
-                        <td>{{fixture.type.manufacturer}}</td>
-                        <td>{{fixture.type.model}}</td>
-                        <td>{{fixture.group}}</td>
-                    </tr>
-                </tbody>
-            </table>
-        </div>
-        <button mat-raised-button color="primary" (click)="addFixture()">
-            <mat-icon>add</mat-icon> Add Fixture
-        </button>
-        <button mat-raised-button color="primary" [disabled]="selectedFixtures.length == 0" (click)="savePresetAs(filename)">
-            <mat-icon>cloud_download</mat-icon> Save Preset
-        </button>
-        <button mat-raised-button color="primary" (click)="upload(fileInput)">
-            <mat-icon>cloud_upload</mat-icon> Load Preset
-        </button>
+<fieldset>
+    <legend>Universe Options</legend>
+    <mat-form-field>
+        <input required matInput [(ngModel)]="universe.name" type="text" [name]="'universeName[' + i + ']'" placeholder="Name" />
+    </mat-form-field>
+    <mat-form-field>
+        <input required matInput [(ngModel)]="universe.universeID" type="number" min="1" max="65535" [name]="'universeID[' + i + ']'"
+            placeholder="Universe ID" />
+    </mat-form-field>
+</fieldset>
+<fieldset>
+    <legend>Fixtures</legend>
+    <mat-table #table [dataSource]="dataSource">
 
-    </mat-tab>
-    <mat-tab *ngFor="let fixture of sortedFixtures; let i = index" label="{{fixture.address}} {{fixture.type.manufacturer}} {{fixture.type.model}}">
-        <app-fixture-options-editor [fixture]="fixture" [groups]="groups"></app-fixture-options-editor>
-    </mat-tab>
-</mat-tab-group>
+        <ng-container matColumnDef="selected">
+            <mat-header-cell *matHeaderCellDef> Selected </mat-header-cell>
+            <mat-cell *matCellDef="let element">
+                <mat-checkbox (change)="selectFixture(element, $event.checked)"></mat-checkbox>
+            </mat-cell>
+        </ng-container>
+
+        <ng-container matColumnDef="address">
+            <mat-header-cell *matHeaderCellDef> Address </mat-header-cell>
+            <mat-cell *matCellDef="let element">
+                <mat-form-field floatPlaceholder="never">
+                    <input required type="text" matInput [(ngModel)]="element.address" [name]="'address[' + getElementIndex(element) + ']'" placeholder="Address">
+                </mat-form-field>
+            </mat-cell>
+        </ng-container>
+
+        <ng-container matColumnDef="model">
+            <mat-header-cell *matHeaderCellDef> Model </mat-header-cell>
+            <mat-cell *matCellDef="let element">
+                <mat-select required [(value)]="element.type" [compareWith]="skeletonCompareFn">
+                    <mat-option *ngFor="let skeleton of fixtureDefinitionSkeletons" [value]="skeleton">{{skeleton.manufacturer}} {{skeleton.model}}</mat-option>
+                </mat-select>
+            </mat-cell>
+        </ng-container>
+
+        <ng-container matColumnDef="group">
+            <mat-header-cell *matHeaderCellDef> Group </mat-header-cell>
+            <mat-cell *matCellDef="let element">
+                <mat-select [(value)]="element.group">
+                    <mat-option *ngFor="let group of groups" [value]="group.name">{{group.name}}</mat-option>
+                </mat-select>
+            </mat-cell>
+        </ng-container>
+
+        <ng-container matColumnDef="actions">
+            <mat-header-cell *matHeaderCellDef> Actions </mat-header-cell>
+            <mat-cell *matCellDef="let element">
+                <button mat-raised-button color="primary" (click)="options(element)">
+                    <mat-icon aria-label="Settings">settings</mat-icon>
+                </button>
+                <button mat-raised-button color="warn" (click)="removeElement(element)">
+                    <mat-icon aria-label="Remove">remove</mat-icon>
+                </button>
+            </mat-cell>
+        </ng-container>
+
+        <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
+        <mat-row *matRowDef="let row; columns: displayedColumns;"></mat-row>
+    </mat-table>
+    <button mat-raised-button color="primary" (click)="addElement()">
+        <mat-icon>add</mat-icon> Add Fixture
+    </button>
+    <button mat-raised-button color="primary" [disabled]="selectedFixtures.length == 0" (click)="savePresetAs(filename)">
+        <mat-icon>cloud_download</mat-icon> Save Preset
+    </button>
+    <button mat-raised-button color="primary" (click)="upload(fileInput)">
+        <mat-icon>cloud_upload</mat-icon> Load Preset
+    </button>
+
+</fieldset>
 
 <input #fileInput type="file" name="name" style="display: none;" (change)="uploadFiles($event.target.files)" multiple>

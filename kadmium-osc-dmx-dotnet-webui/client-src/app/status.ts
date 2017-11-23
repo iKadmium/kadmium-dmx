@@ -26,16 +26,16 @@ export class Status
         switch (code)
         {
             case StatusCode.Error:
-                return "alert-danger";
+                return "warn";
             case StatusCode.Info:
                 return "alert-info";
             case StatusCode.Success:
-                return "alert-success";
+                return "primary";
             default:
             case StatusCode.Unknown:
-                return "alert-info";
+                return "";
             case StatusCode.Warning:
-                return "alert-warning";
+                return "accent";
         }
     }
 
@@ -44,16 +44,16 @@ export class Status
         switch (code)
         {
             case StatusCode.Error:
-                return "glyphicon glyphicon-remove-sign";
+                return "error";
             case StatusCode.Info:
-                return "glyphicon glyphicon-info-sign";
+                return "info";
             case StatusCode.Success:
-                return "glyphicon glyphicon-ok-sign";
+                return "done";
             default:
             case StatusCode.Unknown:
-                return "glyphicon glyphicon-question-sign";
+                return "update";
             case StatusCode.Warning:
-                return "glyphicon glyphicon-info-sign";
+                return "warning";
         }
     }
 }

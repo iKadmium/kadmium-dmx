@@ -7,6 +7,13 @@ import { GroupService, FixtureDefinitionService } from "api/services";
 import { Group, FixtureDefinitionSkeleton, Universe, Fixture } from "api/models";
 import { MatDialog } from "@angular/material/dialog";
 import { UniverseEditorPresetSaveDialogComponent } from "app/universe-editor-preset-save-dialog/universe-editor-preset-save-dialog.component";
+import { MatTableDataSource } from "@angular/material/table";
+import { FormControl } from "@angular/forms";
+import { Observable } from "rxjs/Observable";
+
+import "rxjs/operator/map";
+import 'rxjs/add/operator/startWith';
+import { FixtureOptionsEditorComponent } from "app/fixture-options-editor/fixture-options-editor.component";
 
 @Component({
     selector: 'app-universe-editor',
@@ -19,43 +26,42 @@ export class UniverseEditorComponent implements OnInit
     @Input("universe") universe: Universe;
     @Input("groups") groups: Group[];
 
-    public selectedFixture: Fixture;
     private selectedFixtures: Fixture[];
     public fixtureDefinitionSkeletons: FixtureDefinitionSkeleton[];
+    public dataSource: MatTableDataSource<Fixture>;
+    public displayedColumns = ["selected", "address", "model", "group", "actions"];
 
     constructor(private fixtureDefinitionService: FixtureDefinitionService, private notificationsService: NotificationsService, private dialog: MatDialog)
     {
         this.selectedFixtures = [];
-        this.selectedFixture = null;
     }
 
-    async ngOnInit(): Promise<void>
+    ngOnInit(): void
     {
-        try
+        this.fixtureDefinitionService.getFixtureDefinitionSkeletons().then(response => 
         {
-            this.fixtureDefinitionSkeletons = (await this.fixtureDefinitionService.getFixtureDefinitionSkeletons()).data;
-        }
-        catch (reason)
-        {
-            this.notificationsService.add(StatusCode.Error, reason);
-        }
+            this.fixtureDefinitionSkeletons = response.data;
+
+            this.dataSource = new MatTableDataSource<Fixture>(this.universe.fixtures);
+        }).catch(reason => this.notificationsService.add(StatusCode.Error, reason));
     }
 
-    private async removeFixture(fixture: Fixture): Promise<void>
+    private async removeElement(fixture: Fixture): Promise<void>
     {
         if (window.confirm("Are you sure you want to delete " + fixture.type.manufacturer + " " + fixture.type.model + "?"))
         {
             let index = this.universe.fixtures.indexOf(fixture);
             this.universe.fixtures.splice(index, 1);
-            if (this.selectedFixture == fixture)
-            {
-                let newIndex = (index == this.universe.fixtures.length) ? this.universe.fixtures.length - 1 : index;
-                this.selectedFixture = this.universe.fixtures[newIndex];
-            }
+            this.dataSource._updateChangeSubscription();
         }
     }
 
-    private addFixture(): void
+    public getElementIndex(element: Fixture): number
+    {
+        return this.universe.fixtures.indexOf(element);
+    }
+
+    private addElement(): void
     {
         let fixture = new Fixture();
         fixture.group = this.groups[0].name;
@@ -63,7 +69,7 @@ export class UniverseEditorComponent implements OnInit
         fixture.type = this.fixtureDefinitionSkeletons[0];
         fixture.options = {};
         this.universe.fixtures.push(fixture);
-        this.selectedFixture = fixture;
+        this.dataSource._updateChangeSubscription();
     }
 
     private isSelected(fixture: Fixture): boolean
@@ -89,6 +95,17 @@ export class UniverseEditorComponent implements OnInit
         return this.universe.fixtures.slice().sort((a, b) => a.address - b.address);
     }
 
+    public options(fixture: Fixture): void
+    {
+        let ref = this.dialog.open(FixtureOptionsEditorComponent, {
+            data: { fixture: fixture }
+        });
+        ref.afterClosed().subscribe(result =>
+        {
+
+        })
+    }
+
     private async savePresetAs(filenameForm: HTMLInputElement): Promise<void>
     {
         let ref = this.dialog.open(UniverseEditorPresetSaveDialogComponent, {
@@ -101,13 +118,6 @@ export class UniverseEditorComponent implements OnInit
             let fixtures = this.selectedFixtures;
             FileSaver.Save(name + ".json", fixtures);
         })
-        try
-        {
-
-
-        }
-        catch (error)
-        { }
     }
 
     private upload(fileInput: any): void
@@ -120,6 +130,22 @@ export class UniverseEditorComponent implements OnInit
         for (let file of files)
         {
             await this.uploadFile(file);
+        }
+    }
+
+    public skeletonCompareFn(x: FixtureDefinitionSkeleton, y: FixtureDefinitionSkeleton): boolean
+    {
+        if (x == null && y == null)
+        {
+            return true;
+        }
+        else if ((x == null && y != null) || (x != null && y == null))
+        {
+            return false;
+        }
+        else
+        {
+            return x.id == y.id;
         }
     }
 

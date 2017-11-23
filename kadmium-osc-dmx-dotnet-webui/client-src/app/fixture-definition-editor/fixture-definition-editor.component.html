@@ -16,15 +16,10 @@
             </mat-select>
         </mat-form-field>
     </fieldset>
-    <fieldset [disabled]="saving">
-        <app-fixture-definition-editor-channels [definition]="definition"></app-fixture-definition-editor-channels>
-    </fieldset>
-    <fieldset [disabled]="saving">
-        <app-fixture-definition-editor-movements [definition]="definition"></app-fixture-definition-editor-movements>
-    </fieldset>
-    <fieldset [disabled]="saving" *ngIf="hasColorWheelChannel()">
-        <app-fixture-definition-editor-color-wheel [definition]="definition"></app-fixture-definition-editor-color-wheel>
-    </fieldset>
+    <app-fixture-definition-editor-channels [definition]="definition"></app-fixture-definition-editor-channels>
+    <app-fixture-definition-editor-movements [definition]="definition"></app-fixture-definition-editor-movements>
+    <app-fixture-definition-editor-color-wheel *ngIf="hasColorWheelChannel()" [definition]="definition"></app-fixture-definition-editor-color-wheel>
+
     <button mat-raised-button color="primary" (click)="save()" [disabled]="!editorForm.valid">
         <mat-icon aria-label="Save">save</mat-icon> Save
     </button>

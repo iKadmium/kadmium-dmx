@@ -1,42 +1,45 @@
-<mat-form-field>
-    <input matInput (keyup)="applyFilter($event.target.value)" placeholder="Filter">
-</mat-form-field>
+<div class="example-header">
+    <mat-form-field>
+        <input matInput (keyup)="applyFilter($event.target.value)" placeholder="Filter">
+    </mat-form-field>
+</div>
 
-<mat-table #table [dataSource]="dataSource" matSort>
+<div class="example-container">
+    <mat-table #table [dataSource]="dataSource" matSort>
+        <ng-container matColumnDef="manufacturer">
+            <mat-header-cell *matHeaderCellDef mat-sort-header> Manufacturer </mat-header-cell>
+            <mat-cell *matCellDef="let element"> {{element.manufacturer}} </mat-cell>
+        </ng-container>
 
-    <ng-container matColumnDef="manufacturer">
-        <mat-header-cell *matHeaderCellDef mat-sort-header> Manufacturer </mat-header-cell>
-        <mat-cell *matCellDef="let element"> {{element.manufacturer}} </mat-cell>
-    </ng-container>
+        <ng-container matColumnDef="model">
+            <mat-header-cell *matHeaderCellDef mat-sort-header> Model </mat-header-cell>
+            <mat-cell *matCellDef="let element"> {{element.model}} </mat-cell>
+        </ng-container>
 
-    <ng-container matColumnDef="model">
-        <mat-header-cell *matHeaderCellDef mat-sort-header> Model </mat-header-cell>
-        <mat-cell *matCellDef="let element"> {{element.model}} </mat-cell>
-    </ng-container>
+        <ng-container matColumnDef="actions">
+            <mat-header-cell *matHeaderCellDef> Actions </mat-header-cell>
+            <mat-cell *matCellDef="let element">
+                <a mat-icon-button matTooltip="Download" [href]="getDownloadUrl(element)" [download]="element.manufacturer + ' ' + element.model + '.json'">
+                    <mat-icon aria-label="Download">file_download</mat-icon>
+                </a>
+                <a mat-icon-button matTooltip="Edit" [routerLink]="element.id">
+                    <mat-icon aria-label="Edit">edit</mat-icon>
+                </a>
+                <button mat-icon-button matTooltip="Delete" color="warn" (click)="deleteConfirm(element)">
+                    <mat-icon aria-label="Delete">clear</mat-icon>
+                </button>
+            </mat-cell>
+        </ng-container>
 
-    <ng-container matColumnDef="actions">
-        <mat-header-cell *matHeaderCellDef> Actions </mat-header-cell>
-        <mat-cell *matCellDef="let element">
-            <a mat-icon-button matTooltip="Download" [href]="getDownloadUrl(element)" [download]="element.manufacturer + ' ' + element.model + '.json'">
-                <mat-icon aria-label="Download">file_download</mat-icon>
-            </a>
-            <a mat-icon-button matTooltip="Edit" [routerLink]="element.id">
-                <mat-icon aria-label="Edit">edit</mat-icon>
-            </a>
-            <button mat-icon-button matTooltip="Delete" color="warn" (click)="deleteConfirm(element)">
-                <mat-icon aria-label="Delete">clear</mat-icon>
-            </button>
-        </mat-cell>
-    </ng-container>
+        <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
+        <mat-row *matRowDef="let row; columns: displayedColumns;">
 
-    <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
-    <mat-row *matRowDef="let row; columns: displayedColumns;">
+        </mat-row>
+    </mat-table>
 
-    </mat-row>
-</mat-table>
-
-<mat-paginator #paginator [pageSize]="10" [pageSizeOptions]="[5, 10, 20]">
-</mat-paginator>
+    <mat-paginator #paginator [pageSize]="10" [pageSizeOptions]="[5, 10, 20]">
+    </mat-paginator>
+</div>
 
 <a mat-raised-button routerLink="new" color="primary">
     <mat-icon aria-label="Add">add</mat-icon>

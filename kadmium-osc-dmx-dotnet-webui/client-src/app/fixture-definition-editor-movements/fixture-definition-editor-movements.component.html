@@ -1,48 +1,50 @@
-<legend>Movement Axis</legend>
-<mat-table #table [dataSource]="dataSource">
+<fieldset>
+    <legend>Movement Axis</legend>
+    <mat-table #table [dataSource]="dataSource">
 
-    <ng-container matColumnDef="name">
-        <mat-header-cell *matHeaderCellDef> Name </mat-header-cell>
-        <mat-cell *matCellDef="let element">
-            <mat-form-field floatPlaceholder="never">
-                <input required type="text" [unique]="getOtherElementNames(element)" matInput [(ngModel)]="element.name" [name]="'axisName[' + getElementIndex(element) + ']'"
-                    placeholder="Name" list="axisList">
-            </mat-form-field>
-        </mat-cell>
-    </ng-container>
+        <ng-container matColumnDef="name">
+            <mat-header-cell *matHeaderCellDef> Name </mat-header-cell>
+            <mat-cell *matCellDef="let element">
+                <mat-form-field floatPlaceholder="never">
+                    <input required type="text" [unique]="getOtherElementNames(element)" matInput [(ngModel)]="element.name" [name]="'axisName[' + getElementIndex(element) + ']'"
+                        placeholder="Name" list="axisList">
+                </mat-form-field>
+            </mat-cell>
+        </ng-container>
 
-    <ng-container matColumnDef="min">
-        <mat-header-cell *matHeaderCellDef> Min </mat-header-cell>
-        <mat-cell *matCellDef="let element">
-            <mat-form-field floatPlaceholder="never">
-                <input matInput required type="number" [(ngModel)]="element.min" [max]="element.max" [name]="'axisMin[' + getElementIndex(element) + ']'"
-                    placeholder="Min" />
-            </mat-form-field>
-        </mat-cell>
-    </ng-container>
+        <ng-container matColumnDef="min">
+            <mat-header-cell *matHeaderCellDef> Min </mat-header-cell>
+            <mat-cell *matCellDef="let element">
+                <mat-form-field floatPlaceholder="never">
+                    <input matInput required type="number" [(ngModel)]="element.min" [max]="element.max" [name]="'axisMin[' + getElementIndex(element) + ']'"
+                        placeholder="Min" />
+                </mat-form-field>
+            </mat-cell>
+        </ng-container>
 
-    <ng-container matColumnDef="max">
-        <mat-header-cell *matHeaderCellDef> Max </mat-header-cell>
-        <mat-cell *matCellDef="let element">
-            <mat-form-field floatPlaceholder="never">
-                <input matInput required type="number" [(ngModel)]="element.max" [min]="element.min" [name]="'axisMax[' + getElementIndex(element) + ']'"
-                    placeholder="Max" />
-            </mat-form-field>
-        </mat-cell>
-    </ng-container>
+        <ng-container matColumnDef="max">
+            <mat-header-cell *matHeaderCellDef> Max </mat-header-cell>
+            <mat-cell *matCellDef="let element">
+                <mat-form-field floatPlaceholder="never">
+                    <input matInput required type="number" [(ngModel)]="element.max" [min]="element.min" [name]="'axisMax[' + getElementIndex(element) + ']'"
+                        placeholder="Max" />
+                </mat-form-field>
+            </mat-cell>
+        </ng-container>
 
-    <ng-container matColumnDef="actions">
-        <mat-header-cell *matHeaderCellDef> Remove </mat-header-cell>
-        <mat-cell *matCellDef="let element">
-            <button mat-raised-button color="warn" (click)="removeElement(element)">
-                <mat-icon aria-label="Remove">remove</mat-icon>
-            </button>
-        </mat-cell>
-    </ng-container>
+        <ng-container matColumnDef="actions">
+            <mat-header-cell *matHeaderCellDef> Remove </mat-header-cell>
+            <mat-cell *matCellDef="let element">
+                <button mat-raised-button color="warn" (click)="removeElement(element)">
+                    <mat-icon aria-label="Remove">remove</mat-icon>
+                </button>
+            </mat-cell>
+        </ng-container>
 
-    <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
-    <mat-row *matRowDef="let row; columns: displayedColumns;"></mat-row>
-</mat-table>
-<button mat-raised-button color="primary" (click)="addElement()">
-    <mat-icon aria-label="Add">add</mat-icon>
-</button>
+        <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
+        <mat-row *matRowDef="let row; columns: displayedColumns;"></mat-row>
+    </mat-table>
+    <button mat-raised-button color="primary" (click)="addElement()">
+        <mat-icon aria-label="Add">add</mat-icon>
+    </button>
+</fieldset>

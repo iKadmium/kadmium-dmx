@@ -1,6 +1,8 @@
-import { Component, OnInit, Input, SimpleChanges } from '@angular/core';
-import { Group, FixtureDefinition, FixtureDefinitionSkeleton, Fixture } from "api/models";
+import { Component, OnInit, Input, SimpleChanges, Inject } from '@angular/core';
+import { FixtureDefinition, FixtureDefinitionSkeleton, Fixture } from "api/models";
 import { FixtureDefinitionService } from "api/services";
+import { MatDialogRef } from "@angular/material/dialog";
+import { MAT_DIALOG_DATA } from "@angular/material/dialog";
 
 @Component({
     selector: 'app-fixture-options-editor',
@@ -10,85 +12,23 @@ import { FixtureDefinitionService } from "api/services";
 })
 export class FixtureOptionsEditorComponent implements OnInit
 {
-    @Input("groups") groups: Group[];
-    @Input("fixture") fixture: Fixture;
     public visible = false;
     private visibleAnimate = false;
 
     private axisOptions: AxisOptions[];
 
     private definition: FixtureDefinition;
-    private skeletons: FixtureDefinitionSkeleton[];
-    private manufacturerFilter: string;
-    private manufacturers: string[];
+    public fixture: Fixture;
 
-    constructor(private fixtureDefinitionService: FixtureDefinitionService)
+    constructor(public dialogRef: MatDialogRef<FixtureOptionsEditorComponent>, private fixtureDefinitionService: FixtureDefinitionService,
+        @Inject(MAT_DIALOG_DATA) public data: any)
     {
-        this.skeletons = [];
-        this.manufacturers = [];
-    }
-
-    public log(thing: any): void
-    {
-        console.log(thing);
+        this.fixture = data.fixture;
     }
 
     ngOnInit(): void
     {
-        this.fixtureDefinitionService.getFixtureDefinitionSkeletons().then(response =>
-        {
-            this.skeletons = response.data;
-            this.manufacturers = this.skeletons
-                .map((value: FixtureDefinitionSkeleton) => value.manufacturer)
-                .filter((value, index, array) => array.indexOf(value) == index);
-        });
-    }
-
-    ngOnChanges(changes: SimpleChanges): void
-    {
-        if (changes["fixture"] != null)
-        {
-            let fixtureChanges = changes["fixture"];
-            if (fixtureChanges.currentValue != null)
-            {
-                let fixture: Fixture = fixtureChanges.currentValue;
-                if (fixture.type == null)
-                {
-                    fixture.type = this.skeletons[0];
-                }
-                this.manufacturerFilter = fixture.type.manufacturer;
-                this.updateDefinition(fixture.type);
-
-            }
-            else
-            {
-                this.definition = null;
-                this.axisOptions = [];
-            }
-        }
-    }
-
-    public get moving(): boolean
-    {
-        return this.definition.movements.length > 0;
-    }
-
-    private getDefinitions(manufacturer: string): FixtureDefinitionSkeleton[]
-    {
-        return this.skeletons
-            .filter(value => value.manufacturer == manufacturer);
-    }
-
-    private updateManufacturer(manufacturer: string): void
-    {
-        let skeleton = this.skeletons.find((value) => value.manufacturer == manufacturer);
-        this.fixture.type = skeleton;
-        this.updateDefinition(skeleton);
-    }
-
-    private updateDefinition(skeleton: FixtureDefinitionSkeleton): void
-    {
-        this.fixtureDefinitionService.getFixtureDefinitionById(skeleton.id).then(response =>
+        this.fixtureDefinitionService.getFixtureDefinitionById(this.fixture.type.id).then(response =>
         {
             this.definition = response.data;
             this.axisOptions = this.definition.movements
@@ -96,24 +36,9 @@ export class FixtureOptionsEditorComponent implements OnInit
         });
     }
 
-    private get getComparer(): (x: FixtureDefinitionSkeleton, y: FixtureDefinitionSkeleton) => boolean
+    public get moving(): boolean
     {
-
-        return (x, y) =>
-        {
-            if (x == null && y == null)
-            {
-                return true;
-            }
-            else if ((x == null && y != null) || (x != null && y == null))
-            {
-                return false;
-            }
-            else
-            {
-                return x.id == y.id;
-            }
-        };
+        return this.definition.movements.length > 0;
     }
 }
 

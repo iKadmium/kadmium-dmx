@@ -6,6 +6,8 @@ import { NotificationsService } from "../notifications.service";
 import { StatusCode } from "../status-code.enum";
 import { GroupService, VenueService } from "api/services";
 import { Group, Venue, Universe } from "api/models";
+import { Title } from "@angular/platform-browser";
+import { MatTabGroup } from "@angular/material/tabs";
 
 @Component({
     selector: 'app-venue-editor',
@@ -17,6 +19,7 @@ export class VenueEditorComponent implements OnInit
 {
     @ViewChild("universeEditor") universeEditor: UniverseEditorComponent;
     @ViewChild("fixtureOptionsEditor") fixtureOptionsEditor: FixtureOptionsEditorComponent;
+    @ViewChild("universeTabs") universeTabs: MatTabGroup;
 
     private venueId: number | null;
     private saving: boolean;
@@ -24,8 +27,10 @@ export class VenueEditorComponent implements OnInit
 
     public venue: Venue;
 
+    public activeUniverse: Universe;
+
     constructor(private route: ActivatedRoute, private venueService: VenueService, private notificationsService: NotificationsService,
-        private groupService: GroupService, private router: Router)
+        private groupService: GroupService, private router: Router, private title: Title)
     {
         this.saving = false;
     }
@@ -41,23 +46,18 @@ export class VenueEditorComponent implements OnInit
             if (this.isNewItem())
             {
                 this.venue = new Venue();
-                let universe = new Universe();
-                universe.name = "Default Universe";
-                universe.fixtures = [];
-                universe.universeID = 1;
-                this.venue.universes = [];
-                this.venue.universes.push(universe);
+                this.venue.universes = [this.createUniverse("DefaultUniverse", 1)];
+                this.title.setTitle("Venue Editor - New Venue");
             }
             else
             {
                 this.venueService.getVenueById(this.venueId).then(response => 
                 {
                     this.venue = response.data;
+                    this.title.setTitle("Venue Editor - " + this.venue.name);
                 }).catch(reason => this.notificationsService.add(StatusCode.Error, reason));
             }
         });
-
-
     }
 
     private isNewItem(): boolean
@@ -65,14 +65,21 @@ export class VenueEditorComponent implements OnInit
         return this.venueId == null;
     }
 
-    private addUniverse(): void
+    private createUniverse(name: string, universeID: number): Universe
     {
         let universe = new Universe();
-        universe.name = "New Universe";
+        universe.name = name;
+        universe.fixtures = [];
+        universe.universeID = universeID;
+        return universe;
+    }
+
+    private addUniverse(): void
+    {
         let maxNumber = 0;
         this.venue.universes.forEach(value => { if (value.universeID > maxNumber) { maxNumber = value.universeID } });
-        universe.universeID = maxNumber + 1;
-        this.venue.universes.push(universe);
+        let universeID = maxNumber + 1;
+        this.venue.universes.push(this.createUniverse("New Universe", universeID));
     }
 
     private removeUniverse(index: number): void

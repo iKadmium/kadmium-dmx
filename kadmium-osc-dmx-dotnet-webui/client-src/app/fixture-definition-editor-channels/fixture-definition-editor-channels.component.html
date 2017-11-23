@@ -1,73 +1,75 @@
-<legend>Channels</legend>
-<mat-table #table [dataSource]="dataSource">
+<fieldset>
+    <legend>Channels</legend>
+    <mat-table #table [dataSource]="dataSource">
 
-    <ng-container matColumnDef="address">
-        <mat-header-cell *matHeaderCellDef> DMX </mat-header-cell>
-        <mat-cell *matCellDef="let element">
-            <mat-form-field floatPlaceholder="never">
-                <input required type="number" matInput [(ngModel)]="element.address" min="1" max="512" [name]="'channelAddress[' + getElementIndex(element) + ']'"
-                    placeholder="DMX">
-            </mat-form-field>
-        </mat-cell>
-    </ng-container>
+        <ng-container matColumnDef="address">
+            <mat-header-cell *matHeaderCellDef> DMX </mat-header-cell>
+            <mat-cell *matCellDef="let element">
+                <mat-form-field floatPlaceholder="never">
+                    <input required type="number" matInput [(ngModel)]="element.address" min="1" max="512" [name]="'channelAddress[' + getElementIndex(element) + ']'"
+                        placeholder="DMX">
+                </mat-form-field>
+            </mat-cell>
+        </ng-container>
 
-    <ng-container matColumnDef="name">
-        <mat-header-cell *matHeaderCellDef> Name </mat-header-cell>
-        <mat-cell *matCellDef="let element">
-            <mat-form-field floatPlaceholder="never">
-                <input required type="text" [unique]="getOtherElementNames(element)" matInput [(ngModel)]="element.name" [name]="'channelName[' + getElementIndex(element) + ']'"
-                    list="channelList" placeholder="Name">
-            </mat-form-field>
-        </mat-cell>
-    </ng-container>
+        <ng-container matColumnDef="name">
+            <mat-header-cell *matHeaderCellDef> Name </mat-header-cell>
+            <mat-cell *matCellDef="let element">
+                <mat-form-field floatPlaceholder="never">
+                    <input required type="text" [unique]="getOtherElementNames(element)" matInput [(ngModel)]="element.name" [name]="'channelName[' + getElementIndex(element) + ']'"
+                        list="channelList" placeholder="Name">
+                </mat-form-field>
+            </mat-cell>
+        </ng-container>
 
-    <ng-container matColumnDef="min">
-        <mat-header-cell *matHeaderCellDef> Min </mat-header-cell>
-        <mat-cell *matCellDef="let element">
-            <mat-form-field floatPlaceholder="never">
-                <input required type="number" matInput [(ngModel)]="element.min" min="0" max="255" [name]="'channelMin[' + getElementIndex(element) + ']'"
-                    placeholder="Min">
-            </mat-form-field>
-        </mat-cell>
-    </ng-container>
+        <ng-container matColumnDef="min">
+            <mat-header-cell *matHeaderCellDef> Min </mat-header-cell>
+            <mat-cell *matCellDef="let element">
+                <mat-form-field floatPlaceholder="never">
+                    <input required type="number" matInput [(ngModel)]="element.min" min="0" max="255" [name]="'channelMin[' + getElementIndex(element) + ']'"
+                        placeholder="Min">
+                </mat-form-field>
+            </mat-cell>
+        </ng-container>
 
-    <ng-container matColumnDef="max">
-        <mat-header-cell *matHeaderCellDef> Max </mat-header-cell>
-        <mat-cell *matCellDef="let element">
-            <mat-form-field floatPlaceholder="never">
-                <input required type="number" matInput [(ngModel)]="element.max" min="0" max="255" [name]="'channelMax[' + getElementIndex(element) + ']'"
-                    placeholder="Max">
-            </mat-form-field>
-        </mat-cell>
-    </ng-container>
+        <ng-container matColumnDef="max">
+            <mat-header-cell *matHeaderCellDef> Max </mat-header-cell>
+            <mat-cell *matCellDef="let element">
+                <mat-form-field floatPlaceholder="never">
+                    <input required type="number" matInput [(ngModel)]="element.max" min="0" max="255" [name]="'channelMax[' + getElementIndex(element) + ']'"
+                        placeholder="Max">
+                </mat-form-field>
+            </mat-cell>
+        </ng-container>
 
-    <ng-container matColumnDef="actions">
-        <mat-header-cell *matHeaderCellDef> Remove </mat-header-cell>
-        <mat-cell *matCellDef="let element">
-            <button mat-raised-button color="warn" (click)="removeElement(element)">
-                <mat-icon aria-label="Remove">remove</mat-icon>
-            </button>
-        </mat-cell>
-    </ng-container>
+        <ng-container matColumnDef="actions">
+            <mat-header-cell *matHeaderCellDef> Remove </mat-header-cell>
+            <mat-cell *matCellDef="let element">
+                <button mat-raised-button color="warn" (click)="removeElement(element)">
+                    <mat-icon aria-label="Remove">remove</mat-icon>
+                </button>
+            </mat-cell>
+        </ng-container>
 
-    <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
-    <mat-row *matRowDef="let row; columns: displayedColumns;"></mat-row>
-</mat-table>
+        <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
+        <mat-row *matRowDef="let row; columns: displayedColumns;"></mat-row>
+    </mat-table>
 
-<button mat-raised-button color="primary" (click)="addElement()">
-    <mat-icon aria-label="Add">add</mat-icon>
-</button>
+    <button mat-raised-button color="primary" (click)="addElement()">
+        <mat-icon aria-label="Add">add</mat-icon>
+    </button>
 
-<datalist id="channelList" name="channelList">
-    <option>Master</option>
-    <option>Strobe</option>
-    <option>Red</option>
-    <option>Green</option>
-    <option>Blue</option>
-    <option>UV</option>
-    <option>ColorWheel</option>
-    <option>PanCoarse</option>
-    <option>PanFine</option>
-    <option>TiltCoarse</option>
-    <option>TiltFine</option>
-</datalist>
+    <datalist id="channelList" name="channelList">
+        <option>Master</option>
+        <option>Strobe</option>
+        <option>Red</option>
+        <option>Green</option>
+        <option>Blue</option>
+        <option>UV</option>
+        <option>ColorWheel</option>
+        <option>PanCoarse</option>
+        <option>PanFine</option>
+        <option>TiltCoarse</option>
+        <option>TiltFine</option>
+    </datalist>
+</fieldset>
