@@ -11,31 +11,22 @@ export class FixtureDefinitionEditorMovementsComponent implements OnInit
 {
     @Input() definition: FixtureDefinition;
 
-    public displayedColumns = ['name', 'min', 'max', 'actions'];
-    public dataSource: MatTableDataSource<MovementAxis>;
     constructor() { }
 
     ngOnInit()
     {
-        this.dataSource = new MatTableDataSource<MovementAxis>(this.definition.movements);
     }
 
-    public updateElements(): void
-    {
-        this.dataSource._updateChangeSubscription();
-    }
 
     public addElement(): void
     {
         this.definition.movements.push(new MovementAxis());
-        this.updateElements();
     }
 
     public removeElement(axis: MovementAxis): void
     {
         let index = this.definition.movements.indexOf(axis);
         this.definition.movements.splice(index, 1);
-        this.updateElements();
     }
 
     public getOtherElementNames(thisEntry: MovementAxis): string[]

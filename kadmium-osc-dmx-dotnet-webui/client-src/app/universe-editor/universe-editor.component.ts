@@ -7,7 +7,6 @@ import { GroupService, FixtureDefinitionService } from "api/services";
 import { Group, FixtureDefinitionSkeleton, Universe, Fixture } from "api/models";
 import { MatDialog } from "@angular/material/dialog";
 import { UniverseEditorPresetSaveDialogComponent } from "app/universe-editor-preset-save-dialog/universe-editor-preset-save-dialog.component";
-import { MatTableDataSource } from "@angular/material/table";
 import { FormControl } from "@angular/forms";
 import { Observable } from "rxjs/Observable";
 
@@ -28,8 +27,6 @@ export class UniverseEditorComponent implements OnInit
 
     private selectedFixtures: Fixture[];
     public fixtureDefinitionSkeletons: FixtureDefinitionSkeleton[];
-    public dataSource: MatTableDataSource<Fixture>;
-    public displayedColumns = ["selected", "address", "model", "group", "actions"];
 
     constructor(private fixtureDefinitionService: FixtureDefinitionService, private notificationsService: NotificationsService, private dialog: MatDialog)
     {
@@ -41,8 +38,6 @@ export class UniverseEditorComponent implements OnInit
         this.fixtureDefinitionService.getFixtureDefinitionSkeletons().then(response => 
         {
             this.fixtureDefinitionSkeletons = response.data;
-
-            this.dataSource = new MatTableDataSource<Fixture>(this.universe.fixtures);
         }).catch(reason => this.notificationsService.add(StatusCode.Error, reason));
     }
 
@@ -52,7 +47,6 @@ export class UniverseEditorComponent implements OnInit
         {
             let index = this.universe.fixtures.indexOf(fixture);
             this.universe.fixtures.splice(index, 1);
-            this.dataSource._updateChangeSubscription();
         }
     }
 
@@ -69,7 +63,6 @@ export class UniverseEditorComponent implements OnInit
         fixture.type = this.fixtureDefinitionSkeletons[0];
         fixture.options = {};
         this.universe.fixtures.push(fixture);
-        this.dataSource._updateChangeSubscription();
     }
 
     private isSelected(fixture: Fixture): boolean

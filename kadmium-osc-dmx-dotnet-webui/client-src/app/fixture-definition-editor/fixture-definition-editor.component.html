@@ -1,27 +1,27 @@
 <form *ngIf="definition && allManufacturers" class="form-horizontal" #editorForm="ngForm">
-    <fieldset [disabled]="saving">
-        <legend>General</legend>
-        <mat-form-field>
-            <input required type="text" matInput [(ngModel)]="definition.manufacturer" name="manufacturer" placeholder="Manufacturer"
-                list="manufacturersList">
-        </mat-form-field>
-        <mat-form-field>
-            <input required type="text" matInput [(ngModel)]="definition.model" name="model" placeholder="Model">
-        </mat-form-field>
-        <mat-form-field>
-            <mat-select placeholder="Type" [(value)]="definition.type" name="type">
-                <mat-option [value]="0">LED</mat-option>
-                <mat-option [value]="1">Tungsten</mat-option>
-                <mat-option [value]="2">Effect</mat-option>
-            </mat-select>
-        </mat-form-field>
-    </fieldset>
+    <h2>General</h2>
+    <mat-form-field>
+        <input required type="text" matInput [(ngModel)]="definition.manufacturer" name="manufacturer" placeholder="Manufacturer"
+            list="manufacturersList">
+    </mat-form-field>
+    <mat-form-field>
+        <input required type="text" matInput [(ngModel)]="definition.model" name="model" placeholder="Model">
+    </mat-form-field>
+    <mat-form-field>
+        <mat-select placeholder="Type" [(value)]="definition.type" name="type">
+            <mat-option [value]="0">LED</mat-option>
+            <mat-option [value]="1">Tungsten</mat-option>
+            <mat-option [value]="2">Effect</mat-option>
+        </mat-select>
+    </mat-form-field>
+
     <app-fixture-definition-editor-channels [definition]="definition"></app-fixture-definition-editor-channels>
     <app-fixture-definition-editor-movements [definition]="definition"></app-fixture-definition-editor-movements>
     <app-fixture-definition-editor-color-wheel *ngIf="hasColorWheelChannel()" [definition]="definition"></app-fixture-definition-editor-color-wheel>
 
-    <button mat-raised-button color="primary" (click)="save()" [disabled]="!editorForm.valid">
-        <mat-icon aria-label="Save">save</mat-icon> Save
+    <br>
+    <button mat-icon-button color="primary" (click)="save()" [disabled]="!editorForm.valid" matTooltip="Save">
+        <mat-icon aria-label="Save">save</mat-icon>
     </button>
 </form>
 

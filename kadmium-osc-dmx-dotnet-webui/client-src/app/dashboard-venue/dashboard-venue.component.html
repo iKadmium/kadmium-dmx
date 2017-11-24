@@ -1,23 +1,14 @@
-<div class="panel panel-default">
-    <div class="panel-heading">{{venue?.name}}</div>
-    <div class="panel-body">
-        <div class="panel panel-default" *ngFor="let universe of venue?.universes">
-            <div class="panel-heading">{{universe.name}}</div>
-            <div class="panel-body">
-                <div class="row">
-                    <div class="col-md-3">
-                        <app-dashboard-nav-menu-item name="DMX Channels" [text]="getDMXChannelCount(universe)" routerLink="dmx/{{universe.universeID}}">
-                        </app-dashboard-nav-menu-item>
-                    </div>
-                    <div class="col-md-3">
-                        <app-dashboard-nav-menu-item name="Fixtures" [text]="getFixtureCount(universe)" routerLink="fixtures/{{universe.universeID}}">
-                        </app-dashboard-nav-menu-item>
-                    </div>
-                </div>
-            </div>
-        </div>
+<mat-toolbar>
+    <span>{{venue?.name}}</span>
+    <span class="toolbar-spacer"></span>
+    <button mat-raised-button color="primary" (click)="loadVenue()">
+        <mat-icon>folder_open</mat-icon> Load Venue</button>
+</mat-toolbar>
 
-        <app-dashboard-venue-list (venueLoaded)="refreshVenue()"></app-dashboard-venue-list>
-
-    </div>
-</div>
+<mat-list>
+    <mat-list-item *ngFor="let universe of venue?.universes">
+        <h3 matLine>{{universe.name}}</h3>
+        <a matLine mat-button routerLink="dmx/{{universe.universeID}}">DMX Channels ({{getDMXChannelCount(universe)}})</a>
+        <a matLine mat-button routerLink="fixtures/{{universe.universeID}}">Fixtures ({{getFixtureCount(universe)}})</a>
+    </mat-list-item>
+</mat-list>

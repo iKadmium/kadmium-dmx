@@ -11,19 +11,11 @@ export class FixtureDefinitionEditorChannelsComponent implements OnInit
 {
     @Input() definition: FixtureDefinition;
 
-    public displayedColumns = ['address', 'name', 'min', 'max', 'actions'];
-    public dataSource: MatTableDataSource<DMXChannel>;
-
     constructor() { }
 
     ngOnInit()
     {
-        this.dataSource = new MatTableDataSource<DMXChannel>(this.definition.channels);
-    }
 
-    public updateElements(): void
-    {
-        this.dataSource._updateChangeSubscription();
     }
 
     public addElement(): void
@@ -40,14 +32,12 @@ export class FixtureDefinitionEditorChannelsComponent implements OnInit
         let channel = new DMXChannel();
         channel.address = maxChannel + 1;
         this.definition.channels.push(channel);
-        this.updateElements();
     }
 
     public removeElement(channel: DMXChannel): void
     {
         let index = this.definition.channels.indexOf(channel);
         this.definition.channels.splice(index, 1);
-        this.updateElements();
     }
 
     public getElementIndex(channel: DMXChannel): number

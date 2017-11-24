@@ -1,69 +1,78 @@
 <p *ngIf="!settings || !enttecPorts">Loading...</p>
 <form *ngIf="settings && enttecPorts" class="form-horizontal" #settingsForm="ngForm">
-    <fieldset [disabled]="saving">
+    <mat-tab-group>
+        <mat-tab label='Ports'>
+            <mat-card>
+                <mat-card-content>
+                    <mat-form-field>
+                        <input matInput required type="number" name="webPort" min="1" max="65535" [(ngModel)]="settings.webPort" placeholder="HTTP Port"
+                        />
+                    </mat-form-field>
+                    <mat-form-field>
+                        <input matInput required type="number" name="oscPort" min="1" max="65535" [(ngModel)]="settings.oscPort" placeholder="OSC Port"
+                        />
+                    </mat-form-field>
+                </mat-card-content>
+            </mat-card>
+        </mat-tab>
+        <mat-tab label="sACN">
+            <mat-card>
+                <mat-card-content>
+                    <mat-form-field>
+                        <input matInput required type="number" name="sacnTransmitterDelay" min="0" max="10000" [(ngModel)]="settings.sacnTransmitter.delay"
+                            placeholder="Delay (ms)" />
+                    </mat-form-field>
+                    <mat-checkbox [(ngModel)]="settings.sacnTransmitter.multicast" name="sacnMulticast">Multicast</mat-checkbox>
+                    <mat-toolbar>
+                        <span>sACN Unicast Targets</span>
+                    </mat-toolbar>
+                    <mat-table #table [dataSource]="dataSource">
 
-        <mat-tab-group>
-            <mat-tab label='Ports'>
-                <mat-form-field>
-                    <input matInput required type="number" name="webPort" min="1" max="65535" [(ngModel)]="settings.webPort" placeholder="HTTP Port"
-                    />
-                </mat-form-field>
-                <mat-form-field>
-                    <input matInput required type="number" name="oscPort" min="1" max="65535" [(ngModel)]="settings.oscPort" placeholder="OSC Port"
-                    />
-                </mat-form-field>
-            </mat-tab>
-            <mat-tab label="sACN">
-                <mat-form-field>
-                    <input matInput required type="number" name="sacnTransmitterDelay" min="0" max="10000" [(ngModel)]="settings.sacnTransmitter.delay"
-                        placeholder="Delay (ms)" />
-                </mat-form-field>
-                <mat-checkbox [(ngModel)]="settings.sacnTransmitter.multicast" name="sacnMulticast">Multicast</mat-checkbox>
-                <mat-toolbar>
-                    <span>sACN Unicast Targets</span>
-                </mat-toolbar>
-                <mat-table #table [dataSource]="dataSource">
+                        <ng-container matColumnDef="address">
+                            <mat-header-cell *matHeaderCellDef> Address </mat-header-cell>
+                            <mat-cell *matCellDef="let element">
+                                <mat-form-field placeholderHover="never">
+                                    <input matInput required type="text" [(ngModel)]="element.target" [name]="'unicast[' + getElementIndex(element) + ']'" />
+                                </mat-form-field>
+                            </mat-cell>
+                        </ng-container>
 
-                    <ng-container matColumnDef="address">
-                        <mat-header-cell *matHeaderCellDef> Address </mat-header-cell>
-                        <mat-cell *matCellDef="let element">
-                            <mat-form-field placeholderHover="never">
-                                <input matInput required type="text" [(ngModel)]="element.target" [name]="'unicast[' + getElementIndex(element) + ']'" />
-                            </mat-form-field>
-                        </mat-cell>
-                    </ng-container>
+                        <ng-container matColumnDef="actions">
+                            <mat-header-cell *matHeaderCellDef> Actions </mat-header-cell>
+                            <mat-cell *matCellDef="let element">
+                                <button mat-icon-button color="warn" (click)="removeElement(element)" matTooltip="Remove">
+                                    <mat-icon aria-label="Remove">remove_circle</mat-icon>
+                                </button>
+                            </mat-cell>
+                        </ng-container>
 
-                    <ng-container matColumnDef="actions">
-                        <mat-header-cell *matHeaderCellDef> Actions </mat-header-cell>
-                        <mat-cell *matCellDef="let element">
-                            <button mat-raised-button color="warn" (click)="removeElement(element)">
-                                <mat-icon aria-label="Remove">remove</mat-icon>
-                            </button>
-                        </mat-cell>
-                    </ng-container>
+                        <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
+                        <mat-row *matRowDef="let row; columns: displayedColumns;"></mat-row>
+                    </mat-table>
+                    <button mat-icon-button (click)="addElement()" matTooltip="Add Target">
+                        <mat-icon aria-label="Add">add</mat-icon>
+                    </button>
+                </mat-card-content>
+            </mat-card>
+        </mat-tab>
+        <mat-tab label="Enttec Pro">
+            <mat-card>
+                <mat-card-content>
+                    <mat-form-field>
+                        <input matInput type="number" name="enttecProTransmitterDelay" min="0" max="10000" [(ngModel)]="settings.enttecProTransmitter.delay"
+                            placeholder="Delay (ms)" />
+                    </mat-form-field>
+                    <mat-form-field>
+                        <mat-select name="enttecProTransmitterPort" [(ngModel)]="settings.enttecProTransmitter.port" placeholder="Port">
+                            <mat-option *ngFor="let port of enttecPorts" [value]="port">{{port}}</mat-option>
+                        </mat-select>
+                    </mat-form-field>
+                </mat-card-content>
+            </mat-card>
+        </mat-tab>
+    </mat-tab-group>
 
-                    <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
-                    <mat-row *matRowDef="let row; columns: displayedColumns;"></mat-row>
-                </mat-table>
-                <button mat-raised-button color="primary" (click)="addElement()">
-                    <mat-icon aria-label="Add">add</mat-icon>
-                </button>
-            </mat-tab>
-            <mat-tab label="Enttec Pro">
-                <mat-form-field>
-                    <input matInput type="number" name="enttecProTransmitterDelay" min="0" max="10000" [(ngModel)]="settings.enttecProTransmitter.delay"
-                        placeholder="Delay (ms)" />
-                </mat-form-field>
-                <mat-form-field>
-                    <mat-select name="enttecProTransmitterPort" [(ngModel)]="settings.enttecProTransmitter.port" placeholder="Port">
-                        <mat-option *ngFor="let port of enttecPorts" [value]="port">{{port}}</mat-option>
-                    </mat-select>
-                </mat-form-field>
-            </mat-tab>
-        </mat-tab-group>
-
-        <button mat-raised-button color="primary" (click)="save()" [disabled]="!settingsForm.valid">
-            <mat-icon>save</mat-icon> Save
-        </button>
-    </fieldset>
+    <button mat-icon-button color="primary" (click)="save()" [disabled]="!settingsForm.valid" matTooltip="Save">
+        <mat-icon aria-label="Save">save</mat-icon>
+    </button>
 </form>

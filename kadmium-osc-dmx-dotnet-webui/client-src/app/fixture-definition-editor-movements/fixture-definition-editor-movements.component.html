@@ -1,50 +1,27 @@
-<fieldset>
-    <legend>Movement Axis</legend>
-    <mat-table #table [dataSource]="dataSource">
+<h2>Movement Axis</h2>
+<mat-expansion-panel *ngFor="let axis of definition?.movements; let i = index">
+    <mat-expansion-panel-header>
+        <mat-panel-title>{{axis.name}}</mat-panel-title>
+    </mat-expansion-panel-header>
+    <mat-form-field>
+        <input required type="text" [unique]="getOtherElementNames(axis)" matInput [(ngModel)]="axis.name" [name]="'axisName[' + i + ']'"
+            placeholder="Name" list="axisList">
+    </mat-form-field>
+    <mat-form-field>
+        <input matInput required type="number" [(ngModel)]="axis.min" [max]="axis.max" [name]="'axisMin[' + i + ']'" placeholder="Min"
+        />
+    </mat-form-field>
+    <mat-form-field>
+        <input matInput required type="number" [(ngModel)]="axis.max" [min]="axis.min" [name]="'axisMax[' + i + ']'" placeholder="Max"
+        />
+    </mat-form-field>
+    <mat-action-row>
+        <button mat-icon-button color="warn" (click)="removeElement(axis)" matTooltip="Remove Axis">
+            <mat-icon aria-label="Remove Axis">remove_circle</mat-icon>
+        </button>
+    </mat-action-row>
 
-        <ng-container matColumnDef="name">
-            <mat-header-cell *matHeaderCellDef> Name </mat-header-cell>
-            <mat-cell *matCellDef="let element">
-                <mat-form-field floatPlaceholder="never">
-                    <input required type="text" [unique]="getOtherElementNames(element)" matInput [(ngModel)]="element.name" [name]="'axisName[' + getElementIndex(element) + ']'"
-                        placeholder="Name" list="axisList">
-                </mat-form-field>
-            </mat-cell>
-        </ng-container>
-
-        <ng-container matColumnDef="min">
-            <mat-header-cell *matHeaderCellDef> Min </mat-header-cell>
-            <mat-cell *matCellDef="let element">
-                <mat-form-field floatPlaceholder="never">
-                    <input matInput required type="number" [(ngModel)]="element.min" [max]="element.max" [name]="'axisMin[' + getElementIndex(element) + ']'"
-                        placeholder="Min" />
-                </mat-form-field>
-            </mat-cell>
-        </ng-container>
-
-        <ng-container matColumnDef="max">
-            <mat-header-cell *matHeaderCellDef> Max </mat-header-cell>
-            <mat-cell *matCellDef="let element">
-                <mat-form-field floatPlaceholder="never">
-                    <input matInput required type="number" [(ngModel)]="element.max" [min]="element.min" [name]="'axisMax[' + getElementIndex(element) + ']'"
-                        placeholder="Max" />
-                </mat-form-field>
-            </mat-cell>
-        </ng-container>
-
-        <ng-container matColumnDef="actions">
-            <mat-header-cell *matHeaderCellDef> Remove </mat-header-cell>
-            <mat-cell *matCellDef="let element">
-                <button mat-raised-button color="warn" (click)="removeElement(element)">
-                    <mat-icon aria-label="Remove">remove</mat-icon>
-                </button>
-            </mat-cell>
-        </ng-container>
-
-        <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
-        <mat-row *matRowDef="let row; columns: displayedColumns;"></mat-row>
-    </mat-table>
-    <button mat-raised-button color="primary" (click)="addElement()">
-        <mat-icon aria-label="Add">add</mat-icon>
-    </button>
-</fieldset>
+</mat-expansion-panel>
+<button mat-icon-button (click)="addElement()" matTooltip="Add Movement Axis">
+    <mat-icon aria-label="Add Movement Axis">add</mat-icon>
+</button>

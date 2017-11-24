@@ -1,28 +1,23 @@
-<div class="panel panel-default">
-    <div class="panel-heading">Attributes</div>
-    <div class="panel-body" *ngIf="fixture">
-        <form class="form-horizontal" role="form">
-            <div class="form-group" *ngFor="let attribute of attributes; trackBy: attribute?.name">
-                <label class="col-sm-2 control-label">{{attribute.name}}
-                    <span *ngIf="attribute.dmx">(DMX {{attribute.address + fixture.address - 1}})</span>
-                </label>
-                <div class="col-sm-8">
-                    <input *ngIf="attribute.dmx" class="form-control" type="range" [min]="attribute.displayMin" [max]="attribute.displayMax"
-                        step="1" (input)="updateValue(attribute, $event.target.value)" [name]="attribute.name" [(ngModel)]="attribute.displayValue"
-                        [disabled]="attribute.controlled" />
-                    <input *ngIf="!attribute.dmx" class="form-control" type="range" [min]="attribute.displayMin" [max]="attribute.displayMax"
-                        [step]="attribute.range > 1 ? 1 : 0.01" (input)="updateValue(attribute, $event.target.value)" [name]="attribute.name"
-                        [(ngModel)]="attribute.displayValue" [disabled]="attribute.controlled" />
-                </div>
-                <div class="col-sm-2">
-                    <input *ngIf="attribute.dmx" class="form-control" type="number" [min]="attribute.displayMin" [max]="attribute.displayMax"
-                        step="1" (input)="updateValue(attribute, $event.target.value)" [name]="attribute.name + '2'" [(ngModel)]="attribute.displayValue"
-                        [disabled]="attribute.controlled" />
-                    <input *ngIf="!attribute.dmx" class="form-control" type="number" [min]="attribute.displayMin" [max]="attribute.displayMax"
-                        [step]="attribute.range > 1 ? 1 : 0.01" (input)="updateValue(attribute, $event.target.value)" [name]="attribute.name + '2'"
-                        [(ngModel)]="attribute.displayValue" [disabled]="attribute.controlled" />
-                </div>
-            </div>
-        </form>
-    </div>
-</div>
+<mat-list *ngIf="fixture">
+    <h3 mat-subheader>DMX Channels</h3>
+    <mat-list-item *ngFor="let attribute of dmxAttributes; trackBy: attribute?.name">
+        <mat-icon mat-list-icon *ngIf="attribute.controlled" color="warn" aria-label="Locked">lock</mat-icon>
+        <mat-icon mat-list-icon *ngIf="!attribute.controlled" aria-label="Unlocked">lock_open</mat-icon>
+        <span mat-line>
+            {{attribute.address + fixture.address - 1}} {{attribute.name}} </span>
+        <mat-slider mat-line thumbLabel [(ngModel)]="attribute.displayValue" [color]="attribute.controlled ? '' : 'primary'" [min]="attribute.displayMin"
+            [max]="attribute.displayMax" step="1" [disabled]="attribute.controlled" (input)="updateValue(attribute, $event.value)">
+        </mat-slider>
+    </mat-list-item>
+    <mat-divider></mat-divider>
+    <h3 mat-subheader>Non-DMX Attributes</h3>
+    <mat-list-item *ngFor="let attribute of nonDmxAttributes; trackBy: attribute?.name">
+        <mat-icon mat-list-icon *ngIf="attribute.controlled" color="warn" aria-label="Locked">lock</mat-icon>
+        <mat-icon mat-list-icon *ngIf="!attribute.controlled" aria-label="Unlocked">lock_open</mat-icon>
+        <span mat-line>
+            {{attribute.name}}</span>
+        <mat-slider mat-line thumbLabel [(ngModel)]="attribute.displayValue" [color]="attribute.controlled ? '' : 'primary'" [min]="attribute.displayMin"
+            [max]="attribute.displayMax" [step]="attribute.range > 1 ? 1 : 0.01" (input)="updateValue(attribute, $event.value)"
+            [disabled]="attribute.controlled"></mat-slider>
+    </mat-list-item>
+</mat-list>

@@ -1,37 +1,37 @@
-import { Component, OnInit, Input } from '@angular/core';
-import { SACNTransmitterService } from "api/services";
+import { Component, OnInit } from '@angular/core';
+import { EnttecProTransmitterService } from "api/services";
+import { Status } from "app/status";
 import { NotificationsService } from "app/notifications.service";
 import { StatusCode } from "app/status-code.enum";
-import { Status } from "app/status";
 
 @Component({
-    selector: 'app-dashboard-transmitter',
-    templateUrl: './dashboard-transmitter.component.html',
-    styleUrls: ['./dashboard-transmitter.component.css'],
-    providers: [SACNTransmitterService]
+    selector: 'app-dashboard-transmitter-enttec',
+    templateUrl: './dashboard-transmitter-enttec.component.html',
+    styleUrls: ['./dashboard-transmitter-enttec.component.css'],
+    providers: [EnttecProTransmitterService]
 })
-export class DashboardTransmitterComponent implements OnInit
+export class DashboardTransmitterEnttecComponent implements OnInit
 {
     public status: Status;
 
     enabledDetermined: boolean;
     enabled: boolean;
 
-    constructor(private sacnTransmitterService: SACNTransmitterService, private notificationService: NotificationsService) 
+    constructor(private enttecTransmitterService: EnttecProTransmitterService, private notificationService: NotificationsService) 
     {
         this.enabledDetermined = false;
     }
 
     ngOnInit()
     {
-        this.sacnTransmitterService.getTransmitterStatus()
+        this.enttecTransmitterService.getEnttecStatus()
             .then(response =>
             {
                 this.status = new Status(response.data.statusCode, response.data.message, response.data.message);
             })
             .catch(reason => this.notificationService.add(StatusCode.Error, reason));
 
-        this.sacnTransmitterService.getTransmitterEnabled().then((response) =>
+        this.enttecTransmitterService.getEnttecEnabled().then((response) =>
         {
             this.enabled = response.data;
             this.enabledDetermined = true;
@@ -44,7 +44,7 @@ export class DashboardTransmitterComponent implements OnInit
         this.enabledDetermined = false;
         try
         {
-            await this.sacnTransmitterService.setTransmitterEnabled(!oldValue);
+            await this.enttecTransmitterService.setEnttecEnabled(!oldValue);
             this.enabled = !oldValue;
         }
         catch (error)

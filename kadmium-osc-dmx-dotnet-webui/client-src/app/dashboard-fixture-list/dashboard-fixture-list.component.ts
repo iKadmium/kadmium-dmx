@@ -15,15 +15,30 @@ export class DashboardFixtureListComponent implements OnInit
     @Input() universe: PreviewUniverse;
     @Output() fixtureSelected: EventEmitter<PreviewFixture> = new EventEmitter();
 
+    public colCount: number;
+
     public activeFixture: PreviewFixture;
 
     constructor()
-    { }
+    {
+        this.colCount = 1;
+    }
 
     ngOnInit()
     {
+        window.addEventListener("resize", (ev) =>
+        {
+            this.colCount = this.getCols();
+        });
+        this.colCount = this.getCols();
     }
 
+    public getCols(): number
+    {
+        let width = window.innerWidth;
+        let cols = width / DashboardFixturePreviewComponent.width;
+        return Math.floor(cols);
+    }
 
     selectFixture(fixture: PreviewFixture): void
     {

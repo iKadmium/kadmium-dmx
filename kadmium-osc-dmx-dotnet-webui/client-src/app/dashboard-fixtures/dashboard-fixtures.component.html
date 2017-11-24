@@ -1,8 +1,7 @@
-<div class="panel panel-default">
-    <div class="panel-heading">{{universe?.name}}</div>
-    <div class="panel-body">
-        <app-dashboard-fixture-list *ngIf="universe != null" [universe]="universe" (fixtureSelected)="selectedFixture = $event"></app-dashboard-fixture-list>
-    </div>
-
-    <app-dashboard-fixture-attributes [fixture]="selectedFixture"></app-dashboard-fixture-attributes>
-</div>
+<mat-toolbar>
+    <button mat-icon-button routerLink="/dashboard/venue">
+        <mat-icon>arrow_back</mat-icon>
+    </button>
+    <span>{{universe?.name}} Fixtures</span>
+</mat-toolbar>
+<app-dashboard-fixture-list *ngIf="universe != null" [universe]="universe" (fixtureSelected)="selectedFixture = $event"></app-dashboard-fixture-list>

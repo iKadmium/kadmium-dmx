@@ -4,9 +4,12 @@ import { PreviewAttribute } from "./preview-attribute";
 import { RGB } from "./color";
 import { PreviewFixtureData } from "./preview.service";
 import { ActiveFixture } from "api/models";
+import { DashboardFixturePreviewComponent } from "app/dashboard-fixture-preview/dashboard-fixture-preview.component";
 
 export class PreviewFixture
 {
+    public static strobeFrames = 2;
+
     id: number;
     group: string;
 
@@ -19,6 +22,8 @@ export class PreviewFixture
     model: string;
 
     colorWheel: PreviewColorWheel;
+
+    strobeFrameCount: number;
 
     constructor(data: ActiveFixture)
     {
@@ -52,6 +57,8 @@ export class PreviewFixture
         {
             this.colorWheel = new PreviewColorWheel(data.colorWheel, this.channelNameMap.get("ColorWheel"));
         }
+
+        this.strobeFrameCount = 0;
     }
 
     public update(data: Uint8Array): void
@@ -104,10 +111,17 @@ export class PreviewFixture
 
     public get fillStyle(): string
     {
-        let ms = Date.now() % 50;
-
-        if (this.optionalGetValue("Strobe") > 0 && ms > 25)
+        if (this.optionalGetValue("Strobe") > 0)
         {
+            this.strobeFrameCount++;
+        }
+
+        if (this.strobeFrameCount > PreviewFixture.strobeFrames)
+        {
+            if (this.strobeFrameCount >= (2 * PreviewFixture.strobeFrames))
+            {
+                this.strobeFrameCount = 0;
+            }
             return "black";
         }
         else

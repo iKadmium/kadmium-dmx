@@ -13,9 +13,14 @@ import { AttributeUpdateMessage, FixtureStreamService } from "app/fixture-stream
 export class DashboardFixtureAttributesComponent implements OnInit, OnChanges, OnDestroy
 {
     @Input() fixture: PreviewFixture;
+    public attributes: PreviewAttribute[];
+    public dmxAttributes: PreviewAttribute[];
+    public nonDmxAttributes: PreviewAttribute[];
 
     constructor(private fixtureStreamService: FixtureStreamService)
-    { }
+    {
+        this.attributes = [];
+    }
 
     ngOnInit()
     {
@@ -42,6 +47,9 @@ export class DashboardFixtureAttributesComponent implements OnInit, OnChanges, O
                             attribute.value = update.value;
                         }
                     }
+                    this.attributes = Array.from(this.fixture.channelNameMap.values());
+                    this.dmxAttributes = this.attributes.filter(x => x.dmx);
+                    this.nonDmxAttributes = this.attributes.filter(x => !x.dmx);
                 });
             }
         }
@@ -50,11 +58,6 @@ export class DashboardFixtureAttributesComponent implements OnInit, OnChanges, O
     ngOnDestroy(): void
     {
         this.fixtureStreamService.unsubscribe();
-    }
-
-    public get attributes(): PreviewAttribute[]
-    {
-        return Array.from(this.fixture.channelNameMap.values());
     }
 
     public updateValue(attribute: PreviewAttribute, value: string): void

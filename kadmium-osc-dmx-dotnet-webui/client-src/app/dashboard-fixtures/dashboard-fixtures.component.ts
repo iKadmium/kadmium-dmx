@@ -28,7 +28,6 @@ export class DashboardFixturesComponent implements OnInit
         private notificationsService: NotificationsService)
     {
         this.data = new Uint8Array(512);
-
     }
 
     ngOnInit() 

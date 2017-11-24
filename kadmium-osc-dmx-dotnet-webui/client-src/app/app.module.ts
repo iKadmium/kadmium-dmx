@@ -5,9 +5,9 @@ import { HttpModule } from '@angular/http';
 import { RouterModule } from '@angular/router';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 
-import { MatButtonModule, MatCheckboxModule, MatInputModule, MatSelectModule, MatCardModule, MatIconModule, MatTableModule, MatTooltipModule, MatSortModule, MatPaginatorModule, MatTabsModule, MatSliderModule, MatDialogModule, MatAutocompleteModule, MatSidenavModule, MatToolbarModule, MatExpansionModule, MatSlideToggleModule, MatListModule } from "@angular/material";
+import { MatButtonModule, MatCheckboxModule, MatInputModule, MatSelectModule, MatCardModule, MatIconModule, MatTableModule, MatTooltipModule, MatSortModule, MatPaginatorModule, MatTabsModule, MatSliderModule, MatDialogModule, MatAutocompleteModule, MatSidenavModule, MatToolbarModule, MatExpansionModule, MatSlideToggleModule, MatListModule, MatGridListModule, MatButtonToggleModule, MatProgressSpinnerModule } from "@angular/material";
 
-import {MomentModule} from 'angular2-moment';
+import { MomentModule } from 'angular2-moment';
 
 import { ToastModule } from "ng2-toastr/ng2-toastr";
 
@@ -57,6 +57,10 @@ import { FixtureDefinitionEditorChannelsComponent } from './fixture-definition-e
 import { FixtureDefinitionEditorMovementsComponent } from './fixture-definition-editor-movements/fixture-definition-editor-movements.component';
 import { FixtureDefinitionEditorColorWheelComponent } from './fixture-definition-editor-color-wheel/fixture-definition-editor-color-wheel.component';
 import { UniverseEditorPresetSaveDialogComponent } from './universe-editor-preset-save-dialog/universe-editor-preset-save-dialog.component';
+import { DashboardTransmitterEnttecComponent } from './dashboard-transmitter-enttec/dashboard-transmitter-enttec.component';
+import { DashboardTransmitterSacnComponent } from './dashboard-transmitter-sacn/dashboard-transmitter-sacn.component';
+import { DashboardVenueVenueLoadDialogComponent } from './dashboard-venue-venue-load-dialog/dashboard-venue-venue-load-dialog.component';
+import { DashboardFixtureDetailComponent } from './dashboard-fixture-detail/dashboard-fixture-detail.component';
 
 @NgModule({
     declarations: [
@@ -93,7 +97,11 @@ import { UniverseEditorPresetSaveDialogComponent } from './universe-editor-prese
         FixtureDefinitionEditorChannelsComponent,
         FixtureDefinitionEditorMovementsComponent,
         FixtureDefinitionEditorColorWheelComponent,
-        UniverseEditorPresetSaveDialogComponent
+        UniverseEditorPresetSaveDialogComponent,
+        DashboardTransmitterEnttecComponent,
+        DashboardTransmitterSacnComponent,
+        DashboardVenueVenueLoadDialogComponent,
+        DashboardFixtureDetailComponent
     ],
     imports: [
         BrowserModule,
@@ -110,11 +118,17 @@ import { UniverseEditorPresetSaveDialogComponent } from './universe-editor-prese
                         [
                             { path: '', component: DashboardVenueComponent },
                             { path: 'dmx/:universeID', component: DashboardUniverseComponent },
-                            { path: 'fixtures/:universeID', component: DashboardFixturesComponent },
+                            {
+                                path: 'fixtures/:universeID', children:
+                                [
+                                    { path: '', component: DashboardFixturesComponent },
+                                    { path: ':fixtureID', component: DashboardFixtureDetailComponent }
+                                ]
+                            },
                         ]
                     },
-                    { path: 'sacnTransmitter', component: DashboardTransmitterComponent },
-                    { path: 'enttecTransmitter', component: DashboardTransmitterComponent },
+                    { path: 'sacnTransmitter', component: DashboardTransmitterSacnComponent },
+                    { path: 'enttecTransmitter', component: DashboardTransmitterEnttecComponent },
                     { path: 'oscListener', component: DashboardOSCListenerComponent }
                 ]
             },
@@ -172,6 +186,9 @@ import { UniverseEditorPresetSaveDialogComponent } from './universe-editor-prese
         MatExpansionModule,
         MatSlideToggleModule,
         MatListModule,
+        MatGridListModule,
+        MatButtonToggleModule,
+        MatProgressSpinnerModule,
 
         MomentModule,
 
@@ -187,6 +204,6 @@ import { UniverseEditorPresetSaveDialogComponent } from './universe-editor-prese
     ],
     providers: [NotificationsService, OSCListenerLiveService],
     bootstrap: [AppComponent],
-    entryComponents: [UniverseEditorPresetSaveDialogComponent, FixtureOptionsEditorComponent]
+    entryComponents: [UniverseEditorPresetSaveDialogComponent, FixtureOptionsEditorComponent, DashboardVenueVenueLoadDialogComponent]
 })
 export class AppModule { }

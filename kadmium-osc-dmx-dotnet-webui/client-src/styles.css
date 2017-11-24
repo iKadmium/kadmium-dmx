@@ -2,3 +2,15 @@
 @import "~@angular/material/prebuilt-themes/pink-bluegrey.css";
 @import "https://fonts.googleapis.com/icon?family=Material+Icons";
 @import "https://fonts.googleapis.com/css?family=Roboto:300,400,500";
+
+.column {
+    display: -webkit-flex;
+    display: flex;
+    -webkit-flex-direction: column;
+    flex-direction: column;
+}
+
+.toolbar-spacer 
+{
+    flex: 1 1 auto;
+}

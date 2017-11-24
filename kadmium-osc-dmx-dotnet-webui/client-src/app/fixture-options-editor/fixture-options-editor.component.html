@@ -1,52 +1,35 @@
 <div class="mat-typography">
     <h1 mat-dialog-title>{{fixture.address}} - {{fixture.type.manufacturer}} {{fixture.type.model}}</h1>
-    <div mat-dialog-content *ngIf="fixture && definition">
+    <div mat-dialog-content *ngIf="definition">
         <fieldset name="options">
             <legend>General Options</legend>
-            <mat-form-field>
-                <input matInput [(ngModel)]="fixture.options.maxBrightness" type="number" min="0" max="1" step="0.01" name="maxBrightness"
-                    placeholder="Max Brightness" />
-            </mat-form-field>
-            <mat-slider [(ngModel)]="fixture.options.maxBrightness" min="0" max="1" step="0.01" placeholder="Max Brightness"></mat-slider>
+            <div class="column">
+                <mat-form-field>
+                    <input matInput [(ngModel)]="fixture.options.maxBrightness" type="number" min="0" max="1" step="0.01" name="maxBrightness"
+                        placeholder="Max Brightness" />
+                </mat-form-field>
+            </div>
         </fieldset>
 
-        <fieldset *ngIf="definition && moving">
+        <fieldset *ngIf="moving">
             <legend>Axis Options</legend>
-            <table class="table table-striped">
-                <thead>
-                    <tr>
-                        <th>Name</th>
-                        <th>Inverted</th>
-                        <th>Restricted</th>
-                        <th>Min (degrees)</th>
-                        <th>Max (degrees)</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr *ngFor="let axis of axisOptions">
-                        <td>{{axis.name}}</td>
-                        <td>
-                            <mat-checkbox [(ngModel)]="axis.inverted" [name]="'inverted[' + axis.name + ']'">Inverted</mat-checkbox>
-                        </td>
-                        <td>
-                            <mat-checkbox [(ngModel)]="axis.restricted" [name]="'restricted[' + axis.name + ']'">Restricted</mat-checkbox>
-                        </td>
-                        <td>
-                            <mat-form-field>
-                                <input matInput type="number" [(ngModel)]="axis.restrictionMin" [name]="'restrictionMin[' + axis.name + ']'" [min]="axis.min"
-                                    [max]="axis.max" [disabled]="!axis.restricted" placeholder="Min">
-                            </mat-form-field>
-                        </td>
-                        <td>
-                            <mat-form-field>
-                                <input matInput type="number" [(ngModel)]="axis.restrictionMax" [name]="'restrictionMax[' + axis.name + ']'" [min]="axis.min"
-                                    [max]="axis.max" [disabled]="!axis.restricted" placeholder="Max" />
-
-                            </mat-form-field>
-                        </td>
-                    </tr>
-                </tbody>
-            </table>
+            <mat-expansion-panel *ngFor="let axis of axisOptions">
+                <mat-expansion-panel-header>
+                    <mat-panel-title>{{axis.name}}</mat-panel-title>
+                </mat-expansion-panel-header>
+                <div class="column">
+                    <mat-checkbox [(ngModel)]="axis.inverted" [name]="'inverted[' + axis.name + ']'">Inverted</mat-checkbox>
+                    <mat-checkbox [(ngModel)]="axis.restricted" [name]="'restricted[' + axis.name + ']'">Restricted</mat-checkbox>
+                    <mat-form-field *ngIf="axis.restricted">
+                        <input matInput type="number" [(ngModel)]="axis.restrictionMin" [name]="'restrictionMin[' + axis.name + ']'" [min]="axis.min"
+                            [max]="axis.max" [disabled]="!axis.restricted" placeholder="Min">
+                    </mat-form-field>
+                    <mat-form-field *ngIf="axis.restricted">
+                        <input matInput type="number" [(ngModel)]="axis.restrictionMax" [name]="'restrictionMax[' + axis.name + ']'" [min]="axis.min"
+                            [max]="axis.max" [disabled]="!axis.restricted" placeholder="Max" />
+                    </mat-form-field>
+                </div>
+            </mat-expansion-panel>
         </fieldset>
     </div>
     <div mat-dialog-actions>

@@ -1,10 +1,8 @@
 <form *ngIf="venue" class="form-horizontal" #editorForm="ngForm">
-    <fieldset [disabled]="saving">
-        <legend>Venue Options</legend>
-        <mat-form-field>
-            <input required matInput type="text" name="name" [(ngModel)]="venue.name" placeholder="Name">
-        </mat-form-field>
-    </fieldset>
+    <h2>Venue Options</h2>
+    <mat-form-field>
+        <input required matInput type="text" name="name" [(ngModel)]="venue.name" placeholder="Name">
+    </mat-form-field>
 
     <mat-toolbar>
         <mat-toolbar-row>
@@ -14,6 +12,7 @@
             </button>
         </mat-toolbar-row>
     </mat-toolbar>
+
     <mat-tab-group #universeTabs>
         <mat-tab *ngFor="let universe of venue.universes; let i = index">
             <ng-template mat-tab-label>
@@ -26,7 +25,7 @@
         </mat-tab>
     </mat-tab-group>
 
-    <button mat-raised-button color="primary" (click)="save()" [disabled]="!editorForm.valid">
-        <mat-icon aria-label="Save">save</mat-icon> Save
+    <button mat-icon-button color="primary" (click)="save()" [disabled]="!editorForm.valid">
+        <mat-icon aria-label="Save">save</mat-icon>
     </button>
 </form>

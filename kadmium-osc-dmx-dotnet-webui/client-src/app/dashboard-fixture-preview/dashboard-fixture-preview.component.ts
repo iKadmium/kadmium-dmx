@@ -11,6 +11,9 @@ export class DashboardFixturePreviewComponent implements AfterContentInit
     public static updateRate = 60; //hertz
     public static updateTime = 1000 / DashboardFixturePreviewComponent.updateRate;
 
+    public static width = 150;
+    public static height = 150;
+
     @Input() fixture: PreviewFixture;
     @ViewChild("canvas") canvasRef: ElementRef;
     canvas: HTMLCanvasElement;

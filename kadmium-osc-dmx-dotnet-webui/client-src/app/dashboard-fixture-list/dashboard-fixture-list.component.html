@@ -1,17 +1,7 @@
-<div class="row">
-    <div class="col-md-3" *ngFor="let fixture of universe.fixtures; trackBy: fixture?.id">
-        <div class="panel text-center" [ngClass]="{'panel-default': fixture != activeFixture, 'panel-primary': fixture == activeFixture}"
-            (click)="selectFixture(fixture)">
-            <div class="panel-heading">
-                {{fixture.address}} ({{fixture.group}})
-            </div>
-            <div class="panel-body">
-                <app-dashboard-fixture-preview [fixture]="fixture">
-                </app-dashboard-fixture-preview>
-            </div>
-            <div class="panel-footer">
-                {{fixture.manufacturer}} {{fixture.model}}
-            </div>
-        </div>
-    </div>
-</div>
+<mat-grid-list [cols]="colCount">
+    <mat-grid-tile *ngFor="let fixture of universe?.fixtures; trackBy: fixture?.id" routerLink="{{fixture.id}}">
+        <mat-grid-tile-header>{{fixture.address}} ({{fixture.group}})</mat-grid-tile-header>
+        <mat-grid-tile-footer>{{fixture.manufacturer}} {{fixture.model}}</mat-grid-tile-footer>
+        <app-dashboard-fixture-preview [fixture]="fixture"></app-dashboard-fixture-preview>
+    </mat-grid-tile>
+</mat-grid-list>

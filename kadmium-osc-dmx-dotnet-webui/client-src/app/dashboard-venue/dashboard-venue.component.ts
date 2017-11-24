@@ -5,6 +5,8 @@ import { Status } from "app/status";
 import { PreviewVenue } from "app/preview-venue";
 import { VenueService } from "api/services";
 import { PreviewUniverse } from "app/preview-universe";
+import { MatDialog } from "@angular/material/dialog";
+import { DashboardVenueVenueLoadDialogComponent } from "app/dashboard-venue-venue-load-dialog/dashboard-venue-venue-load-dialog.component";
 
 @Component({
     selector: 'app-dashboard-venue',
@@ -16,27 +18,25 @@ export class DashboardVenueComponent implements OnInit
 {
     public venue: PreviewVenue;
 
-    constructor(private notificationsService: NotificationsService, private venueService: VenueService)
-    {
-
-    }
+    constructor(private notificationsService: NotificationsService, private venueService: VenueService, private dialog: MatDialog)
+    { }
 
     ngOnInit(): void
     {
         this.refreshVenue();
     }
 
-    public refreshVenue(): void
+    public async refreshVenue(): Promise<void>
     {
-        this.venueService.getActiveVenue()
-            .then(response =>
-            {
-                this.venue = new PreviewVenue().load(response.data);
-            })
-            .catch(reason => 
-            {
-                this.notificationsService.add(StatusCode.Error, reason);
-            });
+        try
+        {
+            let response = await this.venueService.getActiveVenue();
+            this.venue = new PreviewVenue().load(response.data);
+        }
+        catch (reason)
+        {
+            this.notificationsService.add(StatusCode.Error, reason);
+        }
     }
 
     public get universeCount(): number
@@ -79,6 +79,19 @@ export class DashboardVenueComponent implements OnInit
         }
 
         return sum;
+    }
+
+    public async loadVenue(): Promise<void>
+    {
+        let ref = this.dialog.open(DashboardVenueVenueLoadDialogComponent, {
+            data: { filename: "" }
+        });
+        let result = await ref.afterClosed().toPromise();
+        if (result != null)
+        {
+            await this.venueService.activateVenueById(result);
+            await this.refreshVenue();
+        }
     }
 
 }

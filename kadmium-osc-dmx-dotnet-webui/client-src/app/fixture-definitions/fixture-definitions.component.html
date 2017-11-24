@@ -41,10 +41,10 @@
     </mat-paginator>
 </div>
 
-<a mat-raised-button routerLink="new" color="primary">
+<a mat-icon-button routerLink="new" matTooltip="Add">
     <mat-icon aria-label="Add">add</mat-icon>
 </a>
-<button mat-raised-button color="primary" (click)="upload(fileInput)">
+<button mat-icon-button (click)="upload(fileInput)" matTooltip="Upload">
     <mat-icon aria-label="Upload">file_upload</mat-icon>
 </button>
 <input #fileInput type="file" name="name" style="display: none;" (change)="filesSelected($event.target.files)" multiple>
