@@ -1,11 +1,11 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from "@angular/router";
 import { Title } from "@angular/platform-browser";
-import { NotificationsService } from "../notifications.service";
 import { StatusCode } from "../status-code.enum";
 import { FixtureDefinitionService } from "api/services";
 import { FixtureDefinition, FixtureDefinitionSkeleton, DMXChannel, MovementAxis, ColorWheelEntry } from "api/models";
 import { MatTableDataSource } from "@angular/material/table";
+import { MatSnackBar } from '@angular/material';
 
 @Component({
     selector: 'app-fixture-definition-editor',
@@ -21,12 +21,12 @@ export class FixtureDefinitionEditorComponent implements OnInit
     private saving: boolean;
 
     constructor(private route: ActivatedRoute, private fixtureDefinitionService: FixtureDefinitionService,
-        private notificationsService: NotificationsService, private title: Title, private router: Router)
+        private snackbar: MatSnackBar, private title: Title, private router: Router)
     {
         this.saving = false;
     }
 
-    async ngOnInit(): Promise<void>
+    ngOnInit()
     {
         this.id = this.route.snapshot.params['id'];
 
@@ -42,49 +42,24 @@ export class FixtureDefinitionEditorComponent implements OnInit
             }
             else
             {
-                this.definition = (await this.fixtureDefinitionService.getFixtureDefinitionById(this.id)).data;
-                this.title.setTitle(`Fixture Definition Editor - ${this.definition.manufacturer} ${this.definition.model}`);
+                this.fixtureDefinitionService.getFixtureDefinitionById(this.id).then(response => 
+                {
+                    this.definition = response.data;
+                    this.title.setTitle(`Fixture Definition Editor - ${this.definition.manufacturer} ${this.definition.model}`);
+                }).catch(error => this.snackbar.open(error, "Close", { duration: 3000 }));
             }
-            this.allManufacturers = (await this.fixtureDefinitionService.getFixtureDefinitionSkeletons()).data
-                .map((skeleton: FixtureDefinitionSkeleton) => skeleton.manufacturer)
-                .filter((value: string, index: number, array: string[]) => array.indexOf(value) == index);
+            this.fixtureDefinitionService.getFixtureDefinitionSkeletons().then(response => 
+            {
+                this.allManufacturers = response.data
+                    .map((skeleton: FixtureDefinitionSkeleton) => skeleton.manufacturer)
+                    .filter((value: string, index: number, array: string[]) => array.indexOf(value) == index);
+            }).catch(error => this.snackbar.open(error, "Close", { duration: 3000 }));
         }
         catch (reason)
         {
-            this.notificationsService.add(StatusCode.Error, reason);
+            this.snackbar.open(reason, "Close", { duration: 3000 });
         }
     }
-
-    public addColorWheelEntry(): void
-    {
-        let minValue = -1;
-        this.definition.colorWheel.forEach((value: ColorWheelEntry) => 
-        {
-            if (value.max > minValue) 
-            {
-                minValue = value.max;
-            }
-        });
-        minValue = minValue < 255 ? minValue + 1 : 255;
-        let entry = new ColorWheelEntry();
-        entry.min = minValue;
-        entry.max = 255;
-        this.definition.colorWheel.push(entry);
-    }
-
-    public removeColorWheelEntry(colorWheelEntry: ColorWheelEntry): void
-    {
-        let index = this.definition.colorWheel.indexOf(colorWheelEntry);
-        this.definition.colorWheel.splice(index, 1);
-    }
-
-    public getOtherColorWheelNames(thisEntry: ColorWheelEntry): string[]
-    {
-        return this.definition.colorWheel
-            .filter(value => value != thisEntry)
-            .map((value: ColorWheelEntry) => value.name);
-    }
-
     public hasColorWheelChannel(): boolean
     {
         return this.definition.channels.find(channel => channel.name == "ColorWheel") != null;
@@ -119,18 +94,18 @@ export class FixtureDefinitionEditorComponent implements OnInit
             if (this.isNewItem())
             {
                 await this.fixtureDefinitionService.postFixtureDefinitionById(this.definition);
-                this.notificationsService.add(StatusCode.Success, "Successfully added " + this.definition.manufacturer + " " + this.definition.model);
+                this.snackbar.open("Successfully added " + this.definition.manufacturer + " " + this.definition.model, "Close", { duration: 3000 });
             }
             else
             {
                 await this.fixtureDefinitionService.putFixtureDefinitionById({ id: this.definition.id, definition: this.definition });
-                this.notificationsService.add(StatusCode.Success, "Successfully edited " + this.definition.manufacturer + " " + this.definition.model);
+                this.snackbar.open("Successfully edited " + this.definition.manufacturer + " " + this.definition.model, "Close", { duration: 3000 });
             }
             this.router.navigate(["../"], { relativeTo: this.route });
         }
         catch (reason)
         {
-            this.notificationsService.add(StatusCode.Error, reason);
+            this.snackbar.open(reason, "Close", { duration: 3000 });
         }
         finally
         {

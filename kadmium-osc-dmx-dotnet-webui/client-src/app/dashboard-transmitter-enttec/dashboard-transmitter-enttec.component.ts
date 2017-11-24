@@ -1,8 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { EnttecProTransmitterService } from "api/services";
 import { Status } from "app/status";
-import { NotificationsService } from "app/notifications.service";
 import { StatusCode } from "app/status-code.enum";
+import { MatSnackBar } from '@angular/material';
 
 @Component({
     selector: 'app-dashboard-transmitter-enttec',
@@ -17,7 +17,7 @@ export class DashboardTransmitterEnttecComponent implements OnInit
     enabledDetermined: boolean;
     enabled: boolean;
 
-    constructor(private enttecTransmitterService: EnttecProTransmitterService, private notificationService: NotificationsService) 
+    constructor(private enttecTransmitterService: EnttecProTransmitterService, private snackbar: MatSnackBar) 
     {
         this.enabledDetermined = false;
     }
@@ -29,7 +29,7 @@ export class DashboardTransmitterEnttecComponent implements OnInit
             {
                 this.status = new Status(response.data.statusCode, response.data.message, response.data.message);
             })
-            .catch(reason => this.notificationService.add(StatusCode.Error, reason));
+            .catch(error => this.snackbar.open(error, "Close", { duration: 3000 }));
 
         this.enttecTransmitterService.getEnttecEnabled().then((response) =>
         {

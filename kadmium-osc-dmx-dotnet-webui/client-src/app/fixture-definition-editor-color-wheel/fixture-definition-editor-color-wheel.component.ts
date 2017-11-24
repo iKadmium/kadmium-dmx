@@ -1,6 +1,8 @@
-import { Component, OnInit, Input } from '@angular/core';
+import { Component, OnInit, Input, ViewChildren, QueryList } from '@angular/core';
 import { FixtureDefinition, ColorWheelEntry } from "api/models";
 import { MatTableDataSource } from "@angular/material/table";
+import { Sleep } from 'app/sleep';
+import { MatExpansionPanel } from '@angular/material';
 
 @Component({
     selector: 'app-fixture-definition-editor-color-wheel',
@@ -10,32 +12,26 @@ import { MatTableDataSource } from "@angular/material/table";
 export class FixtureDefinitionEditorColorWheelComponent implements OnInit
 {
     @Input() definition: FixtureDefinition;
+    @ViewChildren(MatExpansionPanel) panels: QueryList<MatExpansionPanel>;
 
-    public displayedColumns = ['name', 'color', 'min', 'max', 'actions'];
-    public dataSource: MatTableDataSource<ColorWheelEntry>;
     constructor() { }
 
     ngOnInit()
     {
-        this.dataSource = new MatTableDataSource<ColorWheelEntry>(this.definition.colorWheel);
+
     }
 
-    public updateElements(): void
-    {
-        this.dataSource._updateChangeSubscription();
-    }
-
-    public addElement(): void
+    public async addElement(): Promise<void>
     {
         this.definition.colorWheel.push(new ColorWheelEntry());
-        this.updateElements();
+        await Sleep.sleepUntil(() => this.panels.length == this.definition.colorWheel.length);
+        this.panels.last.open();
     }
 
     public removeElement(axis: ColorWheelEntry): void
     {
         let index = this.definition.colorWheel.indexOf(axis);
         this.definition.colorWheel.splice(index, 1);
-        this.updateElements();
     }
 
     public getOtherElementNames(thisEntry: ColorWheelEntry): string[]

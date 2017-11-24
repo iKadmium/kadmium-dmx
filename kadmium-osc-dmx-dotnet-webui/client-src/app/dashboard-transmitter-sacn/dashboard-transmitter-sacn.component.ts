@@ -1,8 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { Status } from "app/status";
 import { SACNTransmitterService } from "api/services";
-import { NotificationsService } from "app/notifications.service";
 import { StatusCode } from "app/status-code.enum";
+import { MatSnackBar } from '@angular/material';
 
 @Component({
   selector: 'app-dashboard-transmitter-sacn',
@@ -18,7 +18,7 @@ export class DashboardTransmitterSacnComponent implements OnInit
   enabledDetermined: boolean;
   enabled: boolean;
 
-  constructor(private sacnTransmitterService: SACNTransmitterService, private notificationService: NotificationsService) 
+  constructor(private sacnTransmitterService: SACNTransmitterService, private snackbar: MatSnackBar) 
   {
     this.enabledDetermined = false;
   }
@@ -30,7 +30,7 @@ export class DashboardTransmitterSacnComponent implements OnInit
       {
         this.status = new Status(response.data.statusCode, response.data.message, response.data.message);
       })
-      .catch(reason => this.notificationService.add(StatusCode.Error, reason));
+      .catch(error => this.snackbar.open(error, "Close", { duration: 3000 }));
 
     this.sacnTransmitterService.getTransmitterEnabled().then((response) =>
     {

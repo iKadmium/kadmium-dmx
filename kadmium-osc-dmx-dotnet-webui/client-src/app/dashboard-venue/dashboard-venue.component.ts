@@ -1,5 +1,4 @@
 import { Component, OnInit, Input, EventEmitter, Output } from '@angular/core';
-import { NotificationsService } from "app/notifications.service";
 import { StatusCode } from "app/status-code.enum";
 import { Status } from "app/status";
 import { PreviewVenue } from "app/preview-venue";
@@ -7,6 +6,7 @@ import { VenueService } from "api/services";
 import { PreviewUniverse } from "app/preview-universe";
 import { MatDialog } from "@angular/material/dialog";
 import { DashboardVenueVenueLoadDialogComponent } from "app/dashboard-venue-venue-load-dialog/dashboard-venue-venue-load-dialog.component";
+import { MatSnackBar } from '@angular/material';
 
 @Component({
     selector: 'app-dashboard-venue',
@@ -18,7 +18,7 @@ export class DashboardVenueComponent implements OnInit
 {
     public venue: PreviewVenue;
 
-    constructor(private notificationsService: NotificationsService, private venueService: VenueService, private dialog: MatDialog)
+    constructor(private snackbar: MatSnackBar, private venueService: VenueService, private dialog: MatDialog)
     { }
 
     ngOnInit(): void
@@ -35,7 +35,7 @@ export class DashboardVenueComponent implements OnInit
         }
         catch (reason)
         {
-            this.notificationsService.add(StatusCode.Error, reason);
+            this.snackbar.open(reason, "Close", { duration: 3000 });
         }
     }
 

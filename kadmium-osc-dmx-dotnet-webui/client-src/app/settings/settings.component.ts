@@ -1,11 +1,11 @@
 import { Component, OnInit } from '@angular/core';
 import { Title } from "@angular/platform-browser";
 
-import { NotificationsService } from "../notifications.service";
 import { StatusCode } from "../status-code.enum";
 import { SettingsService, EnttecProTransmitterService } from "api/services";
 import { Settings } from "api/models";
 import { MatTableDataSource } from "@angular/material/table";
+import { MatSnackBar } from '@angular/material';
 
 @Component({
     selector: 'app-settings',
@@ -25,7 +25,8 @@ export class SettingsComponent implements OnInit
     public dataSource: MatTableDataSource<UnicastTarget>;
     public displayedColumns = ['address', 'actions'];
 
-    constructor(private settingsService: SettingsService, private enttecService: EnttecProTransmitterService, private notificationsService: NotificationsService, title: Title)
+    constructor(private settingsService: SettingsService, private enttecService: EnttecProTransmitterService,
+        private snackbar: MatSnackBar, title: Title)
     {
         title.setTitle("Settings");
         this.saving = false;
@@ -42,20 +43,14 @@ export class SettingsComponent implements OnInit
                 this.fakeTargets = this.settings.sacnTransmitter.unicast.map(x => { return { target: x } });
                 this.dataSource = new MatTableDataSource<UnicastTarget>(this.fakeTargets);
             })
-            .catch(reason =>
-            {
-                this.notificationsService.add(StatusCode.Error, reason);
-            });
+            .catch(error => this.snackbar.open(error, "Close", { duration: 3000 }));
         this.enttecService
             .getEnttecPortNames()
             .then(response =>
             {
                 this.enttecPorts = response.data;
             })
-            .catch(reason =>
-            {
-                this.notificationsService.add(StatusCode.Error, reason)
-            });
+            .catch(error => this.snackbar.open(error, "Close", { duration: 3000 }));
     }
 
     public async save(): Promise<void>
@@ -65,11 +60,11 @@ export class SettingsComponent implements OnInit
         {
             this.settings.sacnTransmitter.unicast = this.fakeTargets.map(x => x.target);
             await this.settingsService.postSettings(this.settings);
-            this.notificationsService.add(StatusCode.Success, "Saved Successfully");
+            this.snackbar.open("Saved Successfully", "Close", { duration: 3000 });
         }
         catch (reason)
         {
-            this.notificationsService.add(StatusCode.Error, reason);
+            this.snackbar.open(reason, "Close", { duration: 3000 });
         }
         finally
         {

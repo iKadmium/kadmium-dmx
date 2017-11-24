@@ -90,6 +90,32 @@ namespace kadmium_osc_dmx_dotnet_webui.Controllers
 
                 }
             }
+
+            foreach (var movement in newDefinition.Movements)
+            {
+                if (movement.Id == 0)
+                {
+                    oldDefinition.Movements.Add(movement);
+                }
+                else
+                {
+                    var oldMovement = oldDefinition.Movements.Single(x => x.Id == movement.Id);
+                    _context.Entry(oldMovement).CurrentValues.SetValues(movement);
+                }
+            }
+
+            foreach (var colorWheelEntry in newDefinition.ColorWheel)
+            {
+                if (colorWheelEntry.Id == 0)
+                {
+                    oldDefinition.ColorWheel.Add(colorWheelEntry);
+                }
+                else
+                {
+                    var oldEntry = oldDefinition.ColorWheel.Single(x => x.Id == colorWheelEntry.Id);
+                    _context.Entry(oldEntry).CurrentValues.SetValues(colorWheelEntry);
+                }
+            }
         }
     }
 }

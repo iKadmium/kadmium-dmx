@@ -3,10 +3,10 @@ import { UniverseStreamService } from "app/universe-stream.service";
 import { UniverseService } from "api/services";
 import { PreviewUniverse } from "app/preview-universe";
 import { PreviewFixture } from "app/preview-fixture";
-import { NotificationsService } from "app/notifications.service";
 import { ActivatedRoute } from "@angular/router";
 import { StatusCode } from "app/status-code.enum";
 import { DashboardFixturePreviewComponent } from "app/dashboard-fixture-preview/dashboard-fixture-preview.component";
+import { MatSnackBar } from '@angular/material';
 
 @Component({
     selector: 'app-dashboard-fixture-detail',
@@ -25,7 +25,7 @@ export class DashboardFixtureDetailComponent implements OnInit, AfterViewInit
     @ViewChild("fixturePreview") fixturePreview: DashboardFixturePreviewComponent;
 
     constructor(private route: ActivatedRoute, private universeService: UniverseService, private universeStreamService: UniverseStreamService,
-        private notificationsService: NotificationsService)
+        private snackbar: MatSnackBar)
     {
         this.data = new Uint8Array(512);
     }
@@ -40,7 +40,7 @@ export class DashboardFixtureDetailComponent implements OnInit, AfterViewInit
             {
                 this.universe = PreviewUniverse.load(response.data);
                 this.fixture = this.universe.fixtures.find(x => x.id == fixtureID);
-            }).catch(reason => this.notificationsService.add(StatusCode.Error, reason));
+            }).catch(error => this.snackbar.open(error, "Close", { duration: 3000 }));
 
         this.universeStreamService.subscribe(universeID, data => 
         {

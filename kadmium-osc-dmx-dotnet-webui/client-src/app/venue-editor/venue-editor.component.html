@@ -1,31 +1,34 @@
 <form *ngIf="venue" class="form-horizontal" #editorForm="ngForm">
-    <h2>Venue Options</h2>
-    <mat-form-field>
-        <input required matInput type="text" name="name" [(ngModel)]="venue.name" placeholder="Name">
-    </mat-form-field>
+    <mat-card>
 
-    <mat-toolbar>
-        <mat-toolbar-row>
-            <span>Universes</span>
-            <button mat-icon-button color="primary" (click)="addUniverse()">
-                <mat-icon>add</mat-icon>
+        <mat-card-content>
+            <div class="column">
+                <mat-form-field>
+                    <input required matInput type="text" name="name" [(ngModel)]="venue.name" placeholder="Name">
+                </mat-form-field>
+            </div>
+
+            <mat-tab-group #universeTabs (selectedTabChange)="tabChanged($event)">
+                <mat-tab *ngFor="let universe of venue.universes; let i = index">
+                    <ng-template mat-tab-label>
+                        {{universe.name}}
+                        <button mat-icon-button (click)="removeUniverse(i)" *ngIf="universeTabs._tabs.length > 2">
+                            <mat-icon aria-label="Remove">clear</mat-icon>
+                        </button>
+                    </ng-template>
+                    <app-universe-editor [universe]="universe" [groups]="groups"></app-universe-editor>
+                </mat-tab>
+                <mat-tab #addUniverseTab>
+                    <ng-template mat-tab-label>
+                        <mat-icon aria-label="Add" matTooltip="Add Universe">add</mat-icon>
+
+                    </ng-template>
+                </mat-tab>
+            </mat-tab-group>
+
+            <button mat-icon-button color="primary" (click)="save()" [disabled]="!editorForm.valid">
+                <mat-icon aria-label="Save">save</mat-icon>
             </button>
-        </mat-toolbar-row>
-    </mat-toolbar>
-
-    <mat-tab-group #universeTabs>
-        <mat-tab *ngFor="let universe of venue.universes; let i = index">
-            <ng-template mat-tab-label>
-                {{universe.name}}
-                <button mat-icon-button (click)="removeUniverse(i)">
-                    <mat-icon aria-label="Remove">clear</mat-icon>
-                </button>
-            </ng-template>
-            <app-universe-editor [universe]="universe" [groups]="groups"></app-universe-editor>
-        </mat-tab>
-    </mat-tab-group>
-
-    <button mat-icon-button color="primary" (click)="save()" [disabled]="!editorForm.valid">
-        <mat-icon aria-label="Save">save</mat-icon>
-    </button>
+        </mat-card-content>
+    </mat-card>
 </form>

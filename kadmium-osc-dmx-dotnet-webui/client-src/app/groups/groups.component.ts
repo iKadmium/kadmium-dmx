@@ -1,5 +1,4 @@
 import { Component, OnInit } from '@angular/core';
-import { NotificationsService } from "../notifications.service";
 import { Title } from "@angular/platform-browser";
 import { StatusCode } from "../status-code.enum";
 import { FileSaver } from "../file-saver";
@@ -7,6 +6,7 @@ import { AsyncFileReader } from "../async-file-reader";
 import { GroupService } from "api/services";
 import { Group } from "api/models";
 import { MatTableDataSource } from "@angular/material/table";
+import { MatSnackBar } from '@angular/material';
 
 @Component({
     selector: 'app-groups',
@@ -22,7 +22,7 @@ export class GroupsComponent implements OnInit
     displayedColumns = ['order', 'name', 'actions'];
     dataSource: MatTableDataSource<Group>;
 
-    constructor(private groupsService: GroupService, private notificationsService: NotificationsService, title: Title)
+    constructor(private groupsService: GroupService, private snackbar: MatSnackBar, title: Title)
     {
         title.setTitle("Groups");
         this.saving = false;
@@ -40,7 +40,7 @@ export class GroupsComponent implements OnInit
         }
         catch (reason)
         {
-            this.notificationsService.add(StatusCode.Error, reason)
+            this.snackbar.open(reason, "Close", { duration: 3000 });
         }
     }
 
@@ -103,11 +103,11 @@ export class GroupsComponent implements OnInit
         try
         {
             await this.groupsService.putGroup(this.groups);
-            this.notificationsService.add(StatusCode.Success, "Saved successfully")
+            this.snackbar.open("Saved successfully", "Close", { duration: 3000 })
         }
         catch (reason)
         {
-            this.notificationsService.add(StatusCode.Error, reason);
+            this.snackbar.open(reason, "Close", { duration: 3000 });
         }
         finally
         {
@@ -150,11 +150,11 @@ export class GroupsComponent implements OnInit
                 group.order = this.getNextOrder();
                 this.groups.push(group);
             }
-            this.notificationsService.add(StatusCode.Success, "Successfully added " + groups.length + " groups");
+            this.snackbar.open("Successfully added " + groups.length + " groups", "Close", { duration: 3000 });
         }
         catch (reason)
         {
-            this.notificationsService.add(StatusCode.Error, reason);
+            this.snackbar.open(reason, "Close", { duration: 3000 });
         }
     }
 

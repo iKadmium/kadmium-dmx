@@ -1,6 +1,8 @@
-import { Component, OnInit, Input } from '@angular/core';
+import { Component, OnInit, Input, ViewChildren, QueryList } from '@angular/core';
 import { FixtureDefinition, MovementAxis } from "api/models";
 import { MatTableDataSource } from "@angular/material/table";
+import { MatExpansionPanel } from '@angular/material';
+import { Sleep } from 'app/sleep';
 
 @Component({
     selector: 'app-fixture-definition-editor-movements',
@@ -10,6 +12,7 @@ import { MatTableDataSource } from "@angular/material/table";
 export class FixtureDefinitionEditorMovementsComponent implements OnInit
 {
     @Input() definition: FixtureDefinition;
+    @ViewChildren(MatExpansionPanel) panels: QueryList<MatExpansionPanel>;
 
     constructor() { }
 
@@ -18,9 +21,11 @@ export class FixtureDefinitionEditorMovementsComponent implements OnInit
     }
 
 
-    public addElement(): void
+    public async addElement(): Promise<void>
     {
         this.definition.movements.push(new MovementAxis());
+        await Sleep.sleepUntil(() => this.panels.length == this.definition.movements.length);
+        this.panels.last.open();
     }
 
     public removeElement(axis: MovementAxis): void

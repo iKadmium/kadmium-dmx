@@ -1,6 +1,5 @@
-import { Component, OnInit, Input } from '@angular/core';
+import { Component, OnInit, Input, ViewChildren, QueryList } from '@angular/core';
 import { StatusCode } from "../status-code.enum";
-import { NotificationsService } from "../notifications.service";
 import { AsyncFileReader } from "../async-file-reader";
 import { FileSaver } from "../file-saver";
 import { GroupService, FixtureDefinitionService } from "api/services";
@@ -13,6 +12,8 @@ import { Observable } from "rxjs/Observable";
 import "rxjs/operator/map";
 import 'rxjs/add/operator/startWith';
 import { FixtureOptionsEditorComponent } from "app/fixture-options-editor/fixture-options-editor.component";
+import { MatExpansionPanel, MatSnackBar } from '@angular/material';
+import { Sleep } from 'app/sleep';
 
 @Component({
     selector: 'app-universe-editor',
@@ -24,11 +25,12 @@ export class UniverseEditorComponent implements OnInit
 {
     @Input("universe") universe: Universe;
     @Input("groups") groups: Group[];
+    @ViewChildren(MatExpansionPanel) panels: QueryList<MatExpansionPanel>;
 
     private selectedFixtures: Fixture[];
     public fixtureDefinitionSkeletons: FixtureDefinitionSkeleton[];
 
-    constructor(private fixtureDefinitionService: FixtureDefinitionService, private notificationsService: NotificationsService, private dialog: MatDialog)
+    constructor(private fixtureDefinitionService: FixtureDefinitionService, private snackbar: MatSnackBar, private dialog: MatDialog)
     {
         this.selectedFixtures = [];
     }
@@ -38,7 +40,7 @@ export class UniverseEditorComponent implements OnInit
         this.fixtureDefinitionService.getFixtureDefinitionSkeletons().then(response => 
         {
             this.fixtureDefinitionSkeletons = response.data;
-        }).catch(reason => this.notificationsService.add(StatusCode.Error, reason));
+        }).catch(error => this.snackbar.open(error, "Close", { duration: 3000 }));
     }
 
     private async removeElement(fixture: Fixture): Promise<void>
@@ -55,7 +57,7 @@ export class UniverseEditorComponent implements OnInit
         return this.universe.fixtures.indexOf(element);
     }
 
-    private addElement(): void
+    private async addElement(): Promise<void>
     {
         let fixture = new Fixture();
         fixture.group = this.groups[0].name;
@@ -63,6 +65,8 @@ export class UniverseEditorComponent implements OnInit
         fixture.type = this.fixtureDefinitionSkeletons[0];
         fixture.options = {};
         this.universe.fixtures.push(fixture);
+        await Sleep.sleepUntil(() => this.panels.length == this.universe.fixtures.length);
+        this.panels.last.open();
     }
 
     private isSelected(fixture: Fixture): boolean
@@ -153,11 +157,11 @@ export class UniverseEditorComponent implements OnInit
                 fixture.type = this.fixtureDefinitionSkeletons.find(x => x.manufacturer == fixture.type.manufacturer && x.model == fixture.type.model);
                 this.universe.fixtures.push(fixture);
             }
-            this.notificationsService.add(StatusCode.Success, "Successfully added " + fixtures.length + " fixtures");
+            this.snackbar.open("Successfully added " + fixtures.length + " fixtures", "Close", { duration: 3000 });
         }
         catch (reason)
         {
-            this.notificationsService.add(StatusCode.Error, reason);
+            this.snackbar.open(reason, "Close", { duration: 3000 });
         }
     }
 

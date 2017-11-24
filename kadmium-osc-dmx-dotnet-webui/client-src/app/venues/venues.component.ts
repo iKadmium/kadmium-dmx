@@ -1,11 +1,11 @@
 import { Component, OnInit } from '@angular/core';
 import { Title } from "@angular/platform-browser";
-import { NotificationsService } from "../notifications.service";
 import { StatusCode } from "../status-code.enum";
 import { AsyncFileReader } from "../async-file-reader";
 import { VenueService } from "api/services";
 import { VenueSkeleton, Venue } from "api/models";
 import { MatTableDataSource } from "@angular/material/table";
+import { MatSnackBar } from '@angular/material';
 
 @Component({
     selector: 'app-venues',
@@ -19,7 +19,7 @@ export class VenuesComponent implements OnInit
     public displayedColumns = ['name', 'actions'];
     public dataSource: MatTableDataSource<VenueSkeleton>;
 
-    constructor(private venueService: VenueService, private notificationsService: NotificationsService, title: Title)
+    constructor(private venueService: VenueService, private snackbar: MatSnackBar, title: Title)
     {
         title.setTitle("Venues");
         this.venues = [];
@@ -32,7 +32,7 @@ export class VenuesComponent implements OnInit
         {
             response.data.forEach(venue => this.venues.push(venue));
             this.updateDataSource();
-        }).catch(reason => this.notificationsService.add(StatusCode.Error, reason));
+        }).catch(error => this.snackbar.open(error, "Close", { duration: 3000 }));
     }
 
     public updateDataSource(): void
@@ -49,11 +49,11 @@ export class VenuesComponent implements OnInit
             {
                 await this.venueService.deleteVenue(venue.id);
                 this.venues.splice(index, 1);
-                this.notificationsService.add(StatusCode.Success, venue.name + " successfully removed");
+                this.snackbar.open(venue.name + " successfully removed", "Close", { duration: 3000 });
             }
             catch (error)
             {
-                this.notificationsService.add(StatusCode.Error, error);
+                this.snackbar.open(error, "Close", { duration: 3000 });
             }
         }
     }
@@ -78,11 +78,11 @@ export class VenuesComponent implements OnInit
             let venue = await AsyncFileReader.read<Venue>(file);
             venue.id = (await this.venueService.postVenue(venue)).data;
             this.venues.push(venue);
-            this.notificationsService.add(StatusCode.Success, "Successfully added " + venue.name);
+            this.snackbar.open("Successfully added " + venue.name, "Close", { duration: 3000 });
         }
         catch (reason)
         {
-            this.notificationsService.add(StatusCode.Error, reason);
+            this.snackbar.open(reason, "Close", { duration: 3000 });
         }
     }
 

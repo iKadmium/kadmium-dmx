@@ -1,6 +1,8 @@
-import { Component, OnInit, Input } from '@angular/core';
+import { Component, OnInit, Input, ViewChildren, QueryList } from '@angular/core';
 import { FixtureDefinition, DMXChannel } from "api/models";
 import { MatTableDataSource } from "@angular/material/table";
+import { MatExpansionPanel, MatExpansionModule } from '@angular/material';
+import { Sleep } from 'app/sleep';
 
 @Component({
     selector: 'app-fixture-definition-editor-channels',
@@ -10,15 +12,20 @@ import { MatTableDataSource } from "@angular/material/table";
 export class FixtureDefinitionEditorChannelsComponent implements OnInit
 {
     @Input() definition: FixtureDefinition;
+    @ViewChildren(MatExpansionPanel) panels: QueryList<MatExpansionPanel>;
 
-    constructor() { }
+    constructor()
+    {
+
+    }
 
     ngOnInit()
     {
 
     }
 
-    public addElement(): void
+
+    public async addElement(): Promise<void>
     {
         let maxChannel = 0;
         this.definition.channels.forEach((value: DMXChannel) => 
@@ -31,7 +38,11 @@ export class FixtureDefinitionEditorChannelsComponent implements OnInit
 
         let channel = new DMXChannel();
         channel.address = maxChannel + 1;
+        channel.min = "0";
+        channel.max = "255";
         this.definition.channels.push(channel);
+        await Sleep.sleepUntil(() => this.panels.length == this.definition.channels.length);
+        this.panels.last.open();
     }
 
     public removeElement(channel: DMXChannel): void

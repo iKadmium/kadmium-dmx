@@ -1,6 +1,5 @@
 import { Component, OnInit, Input, EventEmitter, Output, OnChanges, SimpleChanges, OnDestroy, ViewChildren, QueryList, ViewChild, ElementRef, AfterViewInit } from '@angular/core';
 import { UniverseUpdateData, UniverseStreamService } from "app/universe-stream.service";
-import { NotificationsService } from "app/notifications.service";
 import { StatusCode } from "app/status-code.enum";
 import { FormControl } from "@angular/forms";
 import { PreviewVenue } from "app/preview-venue";
@@ -9,6 +8,7 @@ import { PreviewUniverse } from "app/preview-universe";
 import { UniverseService } from "api/services";
 import { ActivatedRoute } from "@angular/router";
 import { PreviewUniverseCell } from "app/preview-universe-cell";
+import { MatSnackBar } from '@angular/material';
 
 @Component({
     selector: 'app-dashboard-universe',
@@ -38,7 +38,7 @@ export class DashboardUniverseComponent implements OnInit, AfterViewInit
     private canvas: HTMLCanvasElement;
     private context: CanvasRenderingContext2D;
 
-    constructor(private notificationsService: NotificationsService, private universeService: UniverseService,
+    constructor(private snackbar: MatSnackBar, private universeService: UniverseService,
         private universeStreamService: UniverseStreamService, private route: ActivatedRoute) 
     {
         this.cells = [];
@@ -86,7 +86,7 @@ export class DashboardUniverseComponent implements OnInit, AfterViewInit
 
                 }
             })
-            .catch(reason => this.notificationsService.add(StatusCode.Error, reason));
+            .catch(error => this.snackbar.open(error, "Close", { duration: 3000 }));
 
         this.universeStreamService.subscribe(universeID, data =>
         {

@@ -1,5 +1,4 @@
 import { Component, OnInit } from '@angular/core';
-import { NotificationsService } from "../notifications.service";
 import { StatusCode } from "../status-code.enum";
 import { Status } from "app/status";
 import { SafeHtml, DomSanitizer } from "@angular/platform-browser";

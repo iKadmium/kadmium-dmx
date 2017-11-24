@@ -1,6 +1,5 @@
 import { Component, OnInit, AfterViewInit, ViewChild } from '@angular/core';
 import { AsyncFileReader } from "../async-file-reader";
-import { NotificationsService } from "../notifications.service";
 import { StatusCode } from "../status-code.enum";
 import { Title } from "@angular/platform-browser";
 import { FixtureDefinitionService } from "api/services";
@@ -8,6 +7,7 @@ import { FixtureDefinitionSkeleton, FixtureDefinition } from "api/models";
 import { MatTableDataSource } from "@angular/material/table";
 import { MatSort } from "@angular/material/sort";
 import { MatPaginator } from "@angular/material/paginator";
+import { MatSnackBar } from '@angular/material';
 
 @Component({
     selector: 'app-fixture-definitions',
@@ -28,7 +28,7 @@ export class FixtureDefinitionsComponent implements OnInit, AfterViewInit
     @ViewChild(MatPaginator) paginator: MatPaginator;
 
     constructor(private fixtureDefinitionsService: FixtureDefinitionService,
-        private notificationsService: NotificationsService, title: Title)
+        private snackbar: MatSnackBar, title: Title)
     {
         title.setTitle("Fixture Definitions");
         this.skeletons = [];
@@ -46,7 +46,7 @@ export class FixtureDefinitionsComponent implements OnInit, AfterViewInit
             }
             this.updateDataSource();
 
-        }).catch(reason => this.notificationsService.add(StatusCode.Error, reason));
+        }).catch(error => this.snackbar.open(error, "Close", { duration: 3000 }));
     }
 
     ngAfterViewInit(): void
@@ -104,14 +104,14 @@ export class FixtureDefinitionsComponent implements OnInit, AfterViewInit
             {
                 await this.fixtureDefinitionsService.deleteFixtureDefinitionById(fixture.id);
 
-                this.notificationsService.add(StatusCode.Success, fixture.manufacturer + " " + fixture.model + " was deleted");
+                this.snackbar.open(fixture.manufacturer + " " + fixture.model + " was deleted", "Close", { duration: 3000 });
                 let index = this.skeletons.indexOf(fixture);
                 this.skeletons.splice(index, 1);
                 this.updateDataSource();
             }
             catch (reason)
             {
-                this.notificationsService.add(StatusCode.Error, reason);
+                this.snackbar.open(reason, "Close", { duration: 3000 });
             }
         }
     }
@@ -136,11 +136,11 @@ export class FixtureDefinitionsComponent implements OnInit, AfterViewInit
             let definition = await AsyncFileReader.read<FixtureDefinition>(file);
             definition.id = (await this.fixtureDefinitionsService.postFixtureDefinitionById(definition)).data;
             this.skeletons.push(definition);
-            this.notificationsService.add(StatusCode.Success, "Successfully added " + definition.manufacturer + " " + definition.model);
+            this.snackbar.open("Successfully added " + definition.manufacturer + " " + definition.model, "Close", { duration: 3000 });
         }
         catch (reason)
         {
-            this.notificationsService.add(StatusCode.Error, reason);
+            this.snackbar.open(reason, "Close", { duration: 3000 });
         }
     }
 

@@ -2,10 +2,10 @@ import { Component, OnInit, ViewChild, OnDestroy, ContentChild } from '@angular/
 import { Title } from "@angular/platform-browser";
 
 import { StatusStreamService, StatusData } from "../dashboard.service";
-import { NotificationsService } from "../notifications.service";
 
 import { StatusCode } from "../status-code.enum";
 import { Status } from "../status";
+import { MatSnackBar } from '@angular/material';
 
 @Component({
     selector: 'app-dashboard',
@@ -17,7 +17,7 @@ export class DashboardComponent implements OnInit, OnDestroy
 {
     public statuses: Map<string, Status>;
 
-    constructor(private dashboardService: StatusStreamService, private notificationsService: NotificationsService, titleService: Title)
+    constructor(private dashboardService: StatusStreamService, private snackbar: MatSnackBar, titleService: Title)
     {
         titleService.setTitle("Dashboard");
 
@@ -31,9 +31,16 @@ export class DashboardComponent implements OnInit, OnDestroy
         ]);
     }
 
-    async ngOnInit(): Promise<void>
+    ngOnInit()
     {
-        try { await this.dashboardService.subscribe(data => this.updateStatus(data)); } catch (error) { this.notificationsService.add(StatusCode.Error, error); }
+        try
+        {
+            this.dashboardService.subscribe(data => this.updateStatus(data));
+        }
+        catch (error)
+        {
+            this.snackbar.open(error, "Close", { duration: 3000 });
+        }
     }
 
     ngOnDestroy(): void

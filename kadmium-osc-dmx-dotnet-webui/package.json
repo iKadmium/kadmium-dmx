@@ -22,13 +22,9 @@
     "@angular/platform-browser": "*",
     "@angular/platform-browser-dynamic": "*",
     "@angular/router": "*",
-    "angular2-bootstrap-switch": "*",
     "angular2-moment": "^1.7.0",
-    "bootstrap": "*",
     "core-js": "*",
     "hammerjs": "^2.0.8",
-    "ng2-toastr": "*",
-    "ngx-bootstrap": "*",
     "rxjs": "*",
     "zone.js": "*"
   },

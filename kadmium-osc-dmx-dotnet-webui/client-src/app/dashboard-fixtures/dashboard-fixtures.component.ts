@@ -2,11 +2,11 @@ import { Component, OnInit, ViewChild, ElementRef } from '@angular/core';
 import { ActivatedRoute } from "@angular/router";
 import { PreviewUniverse } from "app/preview-universe";
 import { UniverseService } from "api/services";
-import { NotificationsService } from "app/notifications.service";
 import { StatusCode } from "app/status-code.enum";
 import { DashboardFixtureListComponent } from "app/dashboard-fixture-list/dashboard-fixture-list.component";
 import { UniverseStreamService } from "app/universe-stream.service";
 import { PreviewFixture } from "app/preview-fixture";
+import { MatSnackBar } from '@angular/material';
 
 @Component({
     selector: 'app-dashboard-fixtures',
@@ -25,7 +25,7 @@ export class DashboardFixturesComponent implements OnInit
     public selectedFixture: PreviewFixture;
 
     constructor(private route: ActivatedRoute, private universeService: UniverseService, private universeStreamService: UniverseStreamService,
-        private notificationsService: NotificationsService)
+        private snackbar: MatSnackBar)
     {
         this.data = new Uint8Array(512);
     }
@@ -35,7 +35,7 @@ export class DashboardFixturesComponent implements OnInit
         let universeID = parseInt(this.route.snapshot.paramMap.get('universeID'));
         this.universeService.getActiveUniverseByID(universeID)
             .then(response => this.universe = PreviewUniverse.load(response.data))
-            .catch(reason => this.notificationsService.add(StatusCode.Error, reason));
+            .catch(error => this.snackbar.open(error, "Close", { duration: 3000 }));
 
         this.universeStreamService.subscribe(universeID, data => 
         {

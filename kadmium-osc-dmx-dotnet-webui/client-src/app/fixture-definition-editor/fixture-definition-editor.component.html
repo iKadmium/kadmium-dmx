@@ -1,28 +1,33 @@
 <form *ngIf="definition && allManufacturers" class="form-horizontal" #editorForm="ngForm">
-    <h2>General</h2>
-    <mat-form-field>
-        <input required type="text" matInput [(ngModel)]="definition.manufacturer" name="manufacturer" placeholder="Manufacturer"
-            list="manufacturersList">
-    </mat-form-field>
-    <mat-form-field>
-        <input required type="text" matInput [(ngModel)]="definition.model" name="model" placeholder="Model">
-    </mat-form-field>
-    <mat-form-field>
-        <mat-select placeholder="Type" [(value)]="definition.type" name="type">
-            <mat-option [value]="0">LED</mat-option>
-            <mat-option [value]="1">Tungsten</mat-option>
-            <mat-option [value]="2">Effect</mat-option>
-        </mat-select>
-    </mat-form-field>
+    <mat-card>
+        <mat-card-content>
+            <div class="column">
+                <mat-form-field>
+                    <input required type="text" matInput [(ngModel)]="definition.manufacturer" name="manufacturer" placeholder="Manufacturer"
+                        list="manufacturersList">
+                </mat-form-field>
+                <mat-form-field>
+                    <input required type="text" matInput [(ngModel)]="definition.model" name="model" placeholder="Model">
+                </mat-form-field>
+                <mat-form-field>
+                    <mat-select placeholder="Type" [(value)]="definition.type" name="type">
+                        <mat-option [value]="0">LED</mat-option>
+                        <mat-option [value]="1">Tungsten</mat-option>
+                        <mat-option [value]="2">Effect</mat-option>
+                    </mat-select>
+                </mat-form-field>
+            </div>
 
-    <app-fixture-definition-editor-channels [definition]="definition"></app-fixture-definition-editor-channels>
-    <app-fixture-definition-editor-movements [definition]="definition"></app-fixture-definition-editor-movements>
-    <app-fixture-definition-editor-color-wheel *ngIf="hasColorWheelChannel()" [definition]="definition"></app-fixture-definition-editor-color-wheel>
+            <app-fixture-definition-editor-channels [definition]="definition"></app-fixture-definition-editor-channels>
+            <app-fixture-definition-editor-movements [definition]="definition"></app-fixture-definition-editor-movements>
+            <app-fixture-definition-editor-color-wheel *ngIf="hasColorWheelChannel()" [definition]="definition"></app-fixture-definition-editor-color-wheel>
 
-    <br>
-    <button mat-icon-button color="primary" (click)="save()" [disabled]="!editorForm.valid" matTooltip="Save">
-        <mat-icon aria-label="Save">save</mat-icon>
-    </button>
+            <br>
+            <button mat-icon-button color="primary" (click)="save()" [disabled]="!editorForm.valid" matTooltip="Save">
+                <mat-icon aria-label="Save">save</mat-icon>
+            </button>
+        </mat-card-content>
+    </mat-card>
 </form>
 
 <datalist id="axisList" name="axisList">
