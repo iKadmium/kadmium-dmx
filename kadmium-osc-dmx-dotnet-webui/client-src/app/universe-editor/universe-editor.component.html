@@ -34,21 +34,21 @@
             </div>
 
             <mat-action-row>
-                <button mat-icon-button (click)="options(fixture)" matTooltip="Fixture Options">
+                <button mat-icon-button type="button" (click)="options(fixture)" matTooltip="Fixture Options">
                     <mat-icon aria-label="Settings">settings</mat-icon>
                 </button>
-                <button mat-icon-button color="warn" (click)="removeElement(fixture)" matTooltip="Remove Fixture">
+                <button mat-icon-button type="button" color="warn" (click)="removeElement(fixture)" matTooltip="Remove Fixture">
                     <mat-icon aria-label="Remove">remove_circle</mat-icon>
                 </button>
             </mat-action-row>
         </mat-expansion-panel>
-        <button mat-icon-button (click)="addElement()" matTooltip="Add Fixture">
+        <button mat-icon-button type="button" (click)="addElement()" matTooltip="Add Fixture">
             <mat-icon aria-label="Add Fixture">add</mat-icon>
         </button>
-        <button mat-icon-button [disabled]="universe.fixtures.length == 0" (click)="savePresetAs()" matTooltip="Save Preset">
+        <button mat-icon-button type="button" [disabled]="universe.fixtures.length == 0" (click)="savePresetAs()" matTooltip="Save Preset">
             <mat-icon aria-label="Save Preset">cloud_download</mat-icon>
         </button>
-        <button mat-icon-button (click)="upload(fileInput)" matTooltip="Load Preset">
+        <button mat-icon-button type="button" (click)="upload(fileInput)" matTooltip="Load Preset">
             <mat-icon aria-label="Load Preset">cloud_upload</mat-icon>
         </button>
     </mat-card-content>

@@ -1,5 +1,5 @@
 <app-busy-card [loading]="loading" [saving]="saving"></app-busy-card>
-<form *ngIf="!loading && !saving" class="form-horizontal" #editorForm="ngForm">
+<form *ngIf="!loading && !saving" class="form-horizontal" (ngSubmit)="save()" #editorForm="ngForm">
     <mat-card class="main-card">
         <mat-card-title>{{venue.name}}</mat-card-title>
         <mat-card-content>
@@ -13,7 +13,7 @@
                 <mat-tab *ngFor="let universe of venue.universes; let i = index">
                     <ng-template mat-tab-label>
                         {{universe.name}}
-                        <button mat-icon-button (click)="removeUniverse(i)" *ngIf="universeTabs._tabs.length > 2">
+                        <button mat-icon-button type="button" (click)="removeUniverse(i)" *ngIf="universeTabs._tabs.length > 2">
                             <mat-icon aria-label="Remove">clear</mat-icon>
                         </button>
                     </ng-template>
@@ -27,7 +27,7 @@
             </mat-tab-group>
         </mat-card-content>
         <mat-card-actions>
-            <button mat-icon-button color="primary" (click)="save()" [disabled]="!editorForm.valid">
+            <button mat-icon-button color="primary" type="submit" [disabled]="!editorForm.valid">
                 <mat-icon aria-label="Save">save</mat-icon>
             </button>
         </mat-card-actions>

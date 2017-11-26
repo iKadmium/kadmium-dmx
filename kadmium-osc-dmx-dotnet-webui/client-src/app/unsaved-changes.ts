@@ -15,13 +15,11 @@ export class UnsavedChanges<T extends Component> implements CanDeactivate<T> {
 		nextState: RouterStateSnapshot
 	): Observable<boolean> | Promise<boolean> | boolean
 	{
-		if (((component as any).form as NgForm).dirty)
+		let form = (component as any).form as NgForm;
+		if (form != null && form.dirty)
 		{
 			return window.confirm("Leaving this page will cause unsaved changes to be lost. Are you sure you want to continue?");
 		}
-		else
-		{
-			return true;
-		}
+		return true;
 	}
 }

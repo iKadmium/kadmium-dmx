@@ -1,5 +1,5 @@
 <app-busy-card [loading]="loading" [saving]="saving"></app-busy-card>
-<form *ngIf="!loading && !saving" class="form-horizontal" #settingsForm="ngForm">
+<form *ngIf="!loading && !saving" class="form-horizontal" (ngSubmit)="save()" #settingsForm="ngForm">
     <mat-card class="main-card">
         <mat-card-content>
             <mat-tab-group>
@@ -37,13 +37,13 @@
                                     <mat-form-field>
                                         <input matInput required type="text" [(ngModel)]="target.target" [name]="'unicast[' + i + ']'" placeholder="Address" />
                                     </mat-form-field>
-                                    <button mat-icon-button color="warn" (click)="removeElement(element)" matTooltip="Remove">
+                                    <button mat-icon-button type="button" color="warn" (click)="removeElement(element)" matTooltip="Remove">
                                         <mat-icon aria-label="Remove">remove_circle</mat-icon>
                                     </button>
                                 </mat-list-item>
                             </mat-list>
 
-                            <button mat-icon-button (click)="addElement()" matTooltip="Add Target">
+                            <button mat-icon-button type="button" (click)="addElement()" matTooltip="Add Target">
                                 <mat-icon aria-label="Add">add</mat-icon>
                             </button>
                         </mat-card-content>
@@ -69,7 +69,7 @@
             </mat-tab-group>
         </mat-card-content>
         <mat-card-actions>
-            <button mat-icon-button color="primary" (click)="save()" [disabled]="!settingsForm.valid" matTooltip="Save">
+            <button mat-icon-button color="primary" type="submit" [disabled]="!settingsForm.valid" matTooltip="Save">
                 <mat-icon aria-label="Save">save</mat-icon>
             </button>
         </mat-card-actions>

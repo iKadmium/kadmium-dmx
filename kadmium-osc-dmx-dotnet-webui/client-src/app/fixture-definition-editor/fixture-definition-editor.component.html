@@ -1,5 +1,5 @@
 <app-busy-card [loading]="loading" [saving]="saving"></app-busy-card>
-<form *ngIf="!loading && !saving" class="form-horizontal" #editorForm="ngForm">
+<form *ngIf="!loading && !saving" class="form-horizontal" (ngSubmit)="save()" #editorForm="ngForm">
     <mat-card>
         <mat-card-title>{{definition.manufacturer}} {{definition.model}}</mat-card-title>
         <mat-card-content>
@@ -46,7 +46,7 @@
                             </mat-form-field>
 
                             <mat-action-row>
-                                <button mat-icon-button color="warn" (click)="removeChannel(channel)" matTooltip="Remove Channel">
+                                <button mat-icon-button type="button" color="warn" (click)="removeChannel(channel)" matTooltip="Remove Channel">
                                     <mat-icon aria-label="Remove">remove_circle</mat-icon>
                                 </button>
                             </mat-action-row>
@@ -56,7 +56,7 @@
 
                 </mat-card-content>
                 <mat-card-actions>
-                    <button mat-icon-button (click)="addChannel()" matTooltip="Add Channel">
+                    <button mat-icon-button type="button" (click)="addChannel()" matTooltip="Add Channel">
                         <mat-icon aria-label="Add Channel">add</mat-icon>
                     </button>
                 </mat-card-actions>
@@ -96,7 +96,7 @@
                                 />
                             </mat-form-field>
                             <mat-action-row>
-                                <button mat-icon-button color="warn" (click)="removeAxis(axis)" matTooltip="Remove Axis">
+                                <button mat-icon-button type="button" color="warn" (click)="removeAxis(axis)" matTooltip="Remove Axis">
                                     <mat-icon aria-label="Remove Axis">remove_circle</mat-icon>
                                 </button>
                             </mat-action-row>
@@ -107,7 +107,7 @@
                 </mat-card-content>
 
                 <mat-card-actions>
-                    <button mat-icon-button (click)="addAxis()" matTooltip="Add Movement Axis">
+                    <button mat-icon-button type="button" (click)="addAxis()" matTooltip="Add Movement Axis">
                         <mat-icon aria-label="Add Movement Axis">add</mat-icon>
                     </button>
                 </mat-card-actions>
@@ -148,7 +148,7 @@
                         </div>
 
                         <mat-action-row>
-                            <button mat-icon-button color="warn" (click)="removeColorWheelEntry(entry)" matTooltip="Remove Entry">
+                            <button mat-icon-button type="button" color="warn" (click)="removeColorWheelEntry(entry)" matTooltip="Remove Entry">
                                 <mat-icon aria-label="Remove Entry">remove_circle</mat-icon>
                             </button>
                         </mat-action-row>
@@ -157,7 +157,7 @@
                 </mat-card-content>
 
                 <mat-card-actions>
-                    <button mat-icon-button (click)="addColorWheelEntry()" matTooltip="Add Entry">
+                    <button mat-icon-button type="button" (click)="addColorWheelEntry()" matTooltip="Add Entry">
                         <mat-icon aria-label="Add Entry">add</mat-icon>
                     </button>
                 </mat-card-actions>
@@ -165,7 +165,7 @@
 
         </mat-card-content>
         <mat-card-actions>
-            <button mat-icon-button color="primary" (click)="save()" [disabled]="!editorForm.valid" matTooltip="Save">
+            <button mat-icon-button color="primary" type="submit" [disabled]="!editorForm.valid" matTooltip="Save">
                 <mat-icon aria-label="Save">save</mat-icon>
             </button>
         </mat-card-actions>

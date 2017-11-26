@@ -5,7 +5,7 @@ import { StatusCode } from "../status-code.enum";
 import { SettingsService, EnttecProTransmitterService } from "api/services";
 import { Settings } from "api/models";
 import { MatTableDataSource } from "@angular/material/table";
-import { MatSnackBar } from '@angular/material';
+import { MatSnackBar, MatHorizontalStepper } from '@angular/material';
 import { CanDeactivate } from '@angular/router/src/interfaces';
 import { ActivatedRouteSnapshot, RouterStateSnapshot } from '@angular/router';
 import { Observable } from 'rxjs/Observable';
@@ -38,8 +38,6 @@ export class SettingsComponent implements OnInit
         this.saving = false;
         this.fakeTargets = [];
     }
-
-
 
     ngOnInit(): void
     {

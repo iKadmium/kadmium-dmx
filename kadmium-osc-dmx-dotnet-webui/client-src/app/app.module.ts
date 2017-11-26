@@ -5,7 +5,7 @@ import { HttpModule } from '@angular/http';
 import { RouterModule } from '@angular/router';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 
-import { MatButtonModule, MatCheckboxModule, MatInputModule, MatSelectModule, MatCardModule, MatIconModule, MatTableModule, MatTooltipModule, MatSortModule, MatPaginatorModule, MatTabsModule, MatSliderModule, MatDialogModule, MatAutocompleteModule, MatSidenavModule, MatToolbarModule, MatExpansionModule, MatSlideToggleModule, MatListModule, MatGridListModule, MatButtonToggleModule, MatProgressSpinnerModule, MatSnackBar, MatSnackBarModule, MatMenuModule } from "@angular/material";
+import { MatButtonModule, MatCheckboxModule, MatInputModule, MatSelectModule, MatCardModule, MatIconModule, MatTableModule, MatTooltipModule, MatSortModule, MatPaginatorModule, MatTabsModule, MatSliderModule, MatDialogModule, MatAutocompleteModule, MatSidenavModule, MatToolbarModule, MatExpansionModule, MatSlideToggleModule, MatListModule, MatGridListModule, MatButtonToggleModule, MatProgressSpinnerModule, MatSnackBar, MatSnackBarModule, MatMenuModule, MatStepperModule } from "@angular/material";
 
 import { FlexLayoutModule } from '@angular/flex-layout';
 
@@ -151,6 +151,7 @@ import { UnsavedChanges } from 'app/unsaved-changes';
         MatProgressSpinnerModule,
         MatSnackBarModule,
         MatMenuModule,
+        MatStepperModule,
 
         FlexLayoutModule,
 
