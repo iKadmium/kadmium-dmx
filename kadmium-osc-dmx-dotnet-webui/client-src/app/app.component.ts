@@ -1,11 +1,16 @@
 import { Component, ViewChild, OnInit } from '@angular/core';
 import { Title } from "@angular/platform-browser";
 import { MatSidenav } from '@angular/material';
+import { trigger, state, style, transition, animate } from '@angular/animations';
+import { AnimationLibrary } from 'app/animation-library';
 
 @Component({
     selector: 'app-root',
     templateUrl: './app.component.html',
-    styleUrls: ['./app.component.css']
+    styleUrls: ['./app.component.css'],
+    animations: [
+        AnimationLibrary.slideFadeIn()
+    ]
 })
 export class AppComponent implements OnInit
 {

@@ -7,12 +7,16 @@ import { StatusCode } from "../status-code.enum";
 import { Status } from "../status";
 import { MatSnackBar } from '@angular/material';
 import { Sleep } from 'app/sleep';
+import { state, trigger, style, transition, animate } from '@angular/animations';
+import { AnimationLibrary } from 'app/animation-library';
 
 @Component({
     selector: 'app-dashboard',
     templateUrl: './dashboard.component.html',
     styleUrls: ['./dashboard.component.css'],
-    providers: [StatusStreamService]
+    providers: [StatusStreamService],
+    animations: [AnimationLibrary.slideFadeIn()]
+
 })
 export class DashboardComponent implements OnInit, OnDestroy
 {
@@ -59,6 +63,6 @@ export class DashboardComponent implements OnInit, OnDestroy
             panelStatus.statusCode = statusCode;
             panelStatus.body = statusData.message;
         }
-        this.loading = false;
+        //this.loading = false;
     }
 }
