@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild, Injectable } from '@angular/core';
 import { Title } from "@angular/platform-browser";
 
 import { StatusCode } from "../status-code.enum";
@@ -6,6 +6,10 @@ import { SettingsService, EnttecProTransmitterService } from "api/services";
 import { Settings } from "api/models";
 import { MatTableDataSource } from "@angular/material/table";
 import { MatSnackBar } from '@angular/material';
+import { CanDeactivate } from '@angular/router/src/interfaces';
+import { ActivatedRouteSnapshot, RouterStateSnapshot } from '@angular/router';
+import { Observable } from 'rxjs/Observable';
+import { NgForm } from '@angular/forms';
 
 @Component({
     selector: 'app-settings',
@@ -16,7 +20,7 @@ import { MatSnackBar } from '@angular/material';
 export class SettingsComponent implements OnInit
 {
     settings: Settings;
-    saving: boolean;
+    public saving: boolean;
     enttecPorts: string[];
     activeTab: string;
 
@@ -25,6 +29,8 @@ export class SettingsComponent implements OnInit
     public dataSource: MatTableDataSource<UnicastTarget>;
     public displayedColumns = ['address', 'actions'];
 
+    @ViewChild("settingsForm") form: NgForm;
+
     constructor(private settingsService: SettingsService, private enttecService: EnttecProTransmitterService,
         private snackbar: MatSnackBar, title: Title)
     {
@@ -32,6 +38,8 @@ export class SettingsComponent implements OnInit
         this.saving = false;
         this.fakeTargets = [];
     }
+
+
 
     ngOnInit(): void
     {
@@ -51,6 +59,11 @@ export class SettingsComponent implements OnInit
                 this.enttecPorts = response.data;
             })
             .catch(error => this.snackbar.open(error, "Close", { duration: 3000 }));
+    }
+
+    public get loading(): boolean
+    {
+        return this.settings == null || this.enttecPorts == null;
     }
 
     public async save(): Promise<void>

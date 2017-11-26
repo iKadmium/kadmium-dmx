@@ -21,8 +21,12 @@ export class DashboardVenueComponent implements OnInit
     public venue: PreviewVenue;
     public venueSkeletons: VenueSkeleton[];
 
+    public loading: boolean;
+
     constructor(private snackbar: MatSnackBar, private venueService: VenueService, private dialog: MatDialog)
-    { }
+    {
+        this.loading = true;
+    }
 
     ngOnInit(): void
     {
@@ -30,6 +34,7 @@ export class DashboardVenueComponent implements OnInit
         this.venueService.getVenues().then(response => 
         {
             this.venueSkeletons = response.data;
+            this.loading = false;
         }).catch(reason => this.snackbar.open(reason, "Close", { duration: 3000 }));
     }
 
@@ -90,8 +95,10 @@ export class DashboardVenueComponent implements OnInit
 
     public async loadVenue(id: number): Promise<void>
     {
+        this.loading = true;
         await this.venueService.activateVenueById(id);
         await this.refreshVenue();
+        this.loading = false;
     }
 
 }

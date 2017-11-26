@@ -1,15 +1,10 @@
-<mat-card *ngIf="!venues" class="main-card">
-    <mat-card-title>Loading</mat-card-title>
+<app-busy-card [loading]="loading" [saving]="false"></app-busy-card>
+<mat-card *ngIf="!loading" class="main-card">
     <mat-card-content>
-        <mat-spinner></mat-spinner>
-    </mat-card-content>
-</mat-card>
-<mat-card *ngIf="venues" class="main-card">
-    <mat-card-content>
-        <mat-table #table [dataSource]="dataSource" matSort>
+        <mat-table #table [dataSource]="dataSource">
 
             <ng-container matColumnDef="name">
-                <mat-header-cell *matHeaderCellDef mat-sort-header> Name </mat-header-cell>
+                <mat-header-cell *matHeaderCellDef> Name </mat-header-cell>
                 <mat-cell *matCellDef="let element"> {{element.name}} </mat-cell>
             </ng-container>
 
@@ -23,7 +18,7 @@
                         <mat-icon aria-label="Edit">edit</mat-icon>
                     </a>
                     <button mat-icon-button matTooltip="Delete" color="warn" (click)="deleteConfirm(element)">
-                        <mat-icon aria-label="Delete">clear</mat-icon>
+                        <mat-icon aria-label="Delete">delete</mat-icon>
                     </button>
                 </mat-cell>
             </ng-container>

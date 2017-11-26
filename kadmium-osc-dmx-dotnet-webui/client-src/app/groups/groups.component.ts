@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
 import { Title } from "@angular/platform-browser";
 import { StatusCode } from "../status-code.enum";
 import { FileSaver } from "../file-saver";
@@ -7,6 +7,7 @@ import { GroupService } from "api/services";
 import { Group } from "api/models";
 import { MatTableDataSource } from "@angular/material/table";
 import { MatSnackBar } from '@angular/material';
+import { NgForm } from '@angular/forms';
 
 @Component({
     selector: 'app-groups',
@@ -16,16 +17,21 @@ import { MatSnackBar } from '@angular/material';
 })
 export class GroupsComponent implements OnInit
 {
-    saving: boolean;
     groups: Group[];
 
     displayedColumns = ['order', 'name', 'actions'];
     dataSource: MatTableDataSource<Group>;
 
+    public saving: boolean;
+    public loading: boolean;
+
+    @ViewChild("groupsForm") form: NgForm;
+
     constructor(private groupsService: GroupService, private snackbar: MatSnackBar, title: Title)
     {
         title.setTitle("Groups");
         this.saving = false;
+        this.loading = true;
     }
 
     ngOnInit()
@@ -34,6 +40,7 @@ export class GroupsComponent implements OnInit
         {
             this.groups = response.data;
             this.dataSource = new MatTableDataSource<Group>(this.groupsSorted);
+            this.loading = false;
         }).catch(reason => this.snackbar.open(reason, "Close", { duration: 3000 }));
     }
 

@@ -1,10 +1,5 @@
-<mat-card *ngIf="!venue">
-    <mat-card-title>Loading</mat-card-title>
-    <mat-card-content>
-        <mat-spinner></mat-spinner>
-    </mat-card-content>
-</mat-card>
-<mat-card *ngIf="venue">
+<app-busy-card [loading]="loading" [saving]="false"></app-busy-card>
+<mat-card *ngIf="!loading">
     <mat-card-title>{{venue?.name}}</mat-card-title>
     <mat-card-subtitle>{{status.body}}</mat-card-subtitle>
     <mat-card-content>

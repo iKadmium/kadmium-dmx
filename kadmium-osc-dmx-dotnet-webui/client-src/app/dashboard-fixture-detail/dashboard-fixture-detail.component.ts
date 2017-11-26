@@ -22,12 +22,15 @@ export class DashboardFixtureDetailComponent implements OnInit, AfterViewInit
 
     public fixture: PreviewFixture;
 
+    public loading: boolean;
+
     @ViewChild("fixturePreview") fixturePreview: DashboardFixturePreviewComponent;
 
     constructor(private route: ActivatedRoute, private universeService: UniverseService, private universeStreamService: UniverseStreamService,
         private snackbar: MatSnackBar)
     {
         this.data = new Uint8Array(512);
+        this.loading = true;
     }
 
     ngOnInit() 
@@ -40,6 +43,7 @@ export class DashboardFixtureDetailComponent implements OnInit, AfterViewInit
             {
                 this.universe = PreviewUniverse.load(response.data);
                 this.fixture = this.universe.fixtures.find(x => x.id == fixtureID);
+                this.loading = false;
             }).catch(error => this.snackbar.open(error, "Close", { duration: 3000 }));
 
         this.universeStreamService.subscribe(universeID, data => 

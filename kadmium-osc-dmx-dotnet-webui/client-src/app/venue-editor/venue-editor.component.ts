@@ -8,6 +8,7 @@ import { Group, Venue, Universe } from "api/models";
 import { Title } from "@angular/platform-browser";
 import { MatTabGroup } from "@angular/material/tabs";
 import { MatTabChangeEvent, MatTab, MatSnackBar } from '@angular/material';
+import { NgForm } from '@angular/forms';
 
 @Component({
     selector: 'app-venue-editor',
@@ -22,8 +23,11 @@ export class VenueEditorComponent implements OnInit
     @ViewChild("universeTabs") universeTabs: MatTabGroup;
     @ViewChild("addUniverseTab") addUniverseTab: MatTab;
 
+    @ViewChild("editorForm") form: NgForm;
+
     private venueId: number | null;
-    private saving: boolean;
+    public loading: boolean;
+    public saving: boolean;
     private groups: Group[];
 
     public venue: Venue;
@@ -34,6 +38,7 @@ export class VenueEditorComponent implements OnInit
         private groupService: GroupService, private router: Router, private title: Title)
     {
         this.saving = false;
+        this.loading = true;
     }
 
     ngOnInit(): void
@@ -48,12 +53,14 @@ export class VenueEditorComponent implements OnInit
             {
                 this.venue = new Venue();
                 this.venue.universes = [this.createUniverse("New Universe", 1)];
+                this.loading = false;
             }
             else
             {
                 this.venueService.getVenueById(this.venueId).then(response => 
                 {
                     this.venue = response.data;
+                    this.loading = false;
                 }).catch(error => this.snackbar.open(error, "Close", { duration: 3000 }));
             }
         });

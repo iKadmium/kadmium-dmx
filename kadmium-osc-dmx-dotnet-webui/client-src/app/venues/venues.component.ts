@@ -1,11 +1,12 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
 import { Title } from "@angular/platform-browser";
 import { StatusCode } from "../status-code.enum";
 import { AsyncFileReader } from "../async-file-reader";
 import { VenueService } from "api/services";
 import { VenueSkeleton, Venue } from "api/models";
 import { MatTableDataSource } from "@angular/material/table";
-import { MatSnackBar } from '@angular/material';
+import { MatSnackBar, MatDialog, MatSort } from '@angular/material';
+import { DeleteConfirmDialogComponent } from 'app/delete-confirm-dialog/delete-confirm-dialog.component';
 
 @Component({
     selector: 'app-venues',
@@ -19,19 +20,23 @@ export class VenuesComponent implements OnInit
     public displayedColumns = ['name', 'actions'];
     public dataSource: MatTableDataSource<VenueSkeleton>;
 
-    constructor(private venueService: VenueService, private snackbar: MatSnackBar, title: Title)
+    public loading: boolean;
+
+    constructor(private venueService: VenueService, private snackbar: MatSnackBar, title: Title, private dialog: MatDialog)
     {
         title.setTitle("Venues");
-        this.dataSource = new MatTableDataSource([]);
+        this.venues = [];
+        this.dataSource = new MatTableDataSource(this.venues);
+        this.loading = true;
     }
 
     ngOnInit(): void
     {
         this.venueService.getVenues().then(response => 
         {
-            this.venues = response.data;
-            this.dataSource = new MatTableDataSource(this.venues);
+            response.data.forEach(value => this.venues.push(value));
             this.updateDataSource();
+            this.loading = false;
         }).catch(error => this.snackbar.open(error, "Close", { duration: 3000 }));
     }
 
@@ -40,22 +45,26 @@ export class VenuesComponent implements OnInit
         this.dataSource._updateChangeSubscription();
     }
 
-    private async deleteConfirm(index: number): Promise<void>
+    private deleteConfirm(venue: VenueSkeleton): void
     {
-        let venue = this.venues[index];
-        if (window.confirm("Are you sure you want to delete " + venue.name + "?"))
+        this.dialog.open(DeleteConfirmDialogComponent, { data: venue.name }).afterClosed().subscribe(async value =>
         {
-            try 
+            if (value)
             {
-                await this.venueService.deleteVenue(venue.id);
-                this.venues.splice(index, 1);
-                this.snackbar.open(venue.name + " successfully removed", "Close", { duration: 3000 });
+                try 
+                {
+                    await this.venueService.deleteVenue(venue.id);
+                    let index = this.venues.indexOf(venue);
+                    this.venues.splice(index, 1);
+                    this.updateDataSource();
+                    this.snackbar.open(venue.name + " successfully removed", "Close", { duration: 3000 });
+                }
+                catch (error)
+                {
+                    this.snackbar.open(error, "Close", { duration: 3000 });
+                }
             }
-            catch (error)
-            {
-                this.snackbar.open(error, "Close", { duration: 3000 });
-            }
-        }
+        });
     }
 
     public upload(fileInput: any): void
@@ -78,6 +87,7 @@ export class VenuesComponent implements OnInit
             let venue = await AsyncFileReader.read<Venue>(file);
             venue.id = (await this.venueService.postVenue(venue)).data;
             this.venues.push(venue);
+            this.updateDataSource();
             this.snackbar.open("Successfully added " + venue.name, "Close", { duration: 3000 });
         }
         catch (reason)

@@ -17,7 +17,7 @@ import { Sleep } from 'app/sleep';
 export class DashboardComponent implements OnInit, OnDestroy
 {
     public statuses: Map<string, Status>;
-    public loaded: boolean;
+    public loading: boolean;
 
     constructor(private dashboardService: StatusStreamService, private snackbar: MatSnackBar, titleService: Title)
     {
@@ -30,7 +30,7 @@ export class DashboardComponent implements OnInit, OnDestroy
             ["OSCListeners", new Status()]
         ]);
 
-        this.loaded = false;
+        this.loading = true;
     }
 
     ngOnInit()
@@ -59,6 +59,6 @@ export class DashboardComponent implements OnInit, OnDestroy
             panelStatus.statusCode = statusCode;
             panelStatus.body = statusData.message;
         }
-        this.loaded = true;
+        this.loading = false;
     }
 }

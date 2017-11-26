@@ -1,10 +1,5 @@
-<mat-card *ngIf="!groups || saving" class="main-card">
-    <mat-card-title>Loading</mat-card-title>
-    <mat-card-content>
-        <mat-spinner></mat-spinner>
-    </mat-card-content>
-</mat-card>
-<form *ngIf="groups && !saving" #groupsForm="ngForm">
+<app-busy-card [loading]="loading" [saving]="saving"></app-busy-card>
+<form *ngIf="!loading && !saving" #groupsForm="ngForm">
     <mat-card class="main-card">
         <mat-card-content>
             <mat-table #table [dataSource]="dataSource" matSort>

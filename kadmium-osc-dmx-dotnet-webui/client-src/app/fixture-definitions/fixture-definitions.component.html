@@ -1,10 +1,5 @@
-<mat-card *ngIf="!loaded" class="main-card">
-    <mat-card-title>Loading</mat-card-title>
-    <mat-card-content>
-        <mat-spinner></mat-spinner>
-    </mat-card-content>
-</mat-card>
-<mat-card *ngIf="loaded" class="main-card">
+<app-busy-card [loading]="loading" [saving]="false"></app-busy-card>
+<mat-card *ngIf="!loading" class="main-card">
     <mat-card-content>
         <div class="example-header">
             <mat-form-field>
@@ -34,7 +29,7 @@
                             <mat-icon aria-label="Edit">edit</mat-icon>
                         </a>
                         <button mat-icon-button matTooltip="Delete" color="warn" (click)="deleteConfirm(element)">
-                            <mat-icon aria-label="Delete">clear</mat-icon>
+                            <mat-icon aria-label="Delete">delete</mat-icon>
                         </button>
                     </mat-cell>
                 </ng-container>

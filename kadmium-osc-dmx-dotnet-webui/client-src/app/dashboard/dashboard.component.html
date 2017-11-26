@@ -1,10 +1,5 @@
-<mat-card *ngIf="!loaded">
-    <mat-card-title>Loading</mat-card-title>
-    <mat-card-content>
-        <mat-spinner></mat-spinner>
-    </mat-card-content>
-</mat-card>
-<mat-tab-group *ngIf="loaded" class="main-card">
+<app-busy-card [loading]="loading" [saving]="false"></app-busy-card>
+<mat-tab-group *ngIf="!loading" class="main-card">
     <mat-tab>
         <ng-template mat-tab-label>
             <mat-icon class="icon-spaced">{{statuses.get('Venues')?.glyphIcon}}</mat-icon>

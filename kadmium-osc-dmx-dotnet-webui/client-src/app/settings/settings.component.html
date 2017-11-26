@@ -1,10 +1,5 @@
-<mat-card *ngIf="!settings || !enttecPorts" class="main-card">
-    <mat-card-title>Loading</mat-card-title>
-    <mat-card-content>
-        <mat-spinner></mat-spinner>
-    </mat-card-content>
-</mat-card>
-<form *ngIf="settings && enttecPorts" class="form-horizontal" #settingsForm="ngForm">
+<app-busy-card [loading]="loading" [saving]="saving"></app-busy-card>
+<form *ngIf="!loading && !saving" class="form-horizontal" #settingsForm="ngForm">
     <mat-card class="main-card">
         <mat-card-content>
             <mat-tab-group>
@@ -47,14 +42,6 @@
                                     </button>
                                 </mat-list-item>
                             </mat-list>
-                            <!-- <div *ngFor="let target of fakeTargets; let i = index">
-                        <mat-form-field>
-                            <input matInput required type="text" [(ngModel)]="target.target" [name]="'unicast[' + i + ']'" placeholder="Address" />
-                        </mat-form-field>
-                        <button mat-icon-button color="warn" (click)="removeElement(element)" matTooltip="Remove">
-                            <mat-icon aria-label="Remove">remove_circle</mat-icon>
-                        </button>
-                    </div> -->
 
                             <button mat-icon-button (click)="addElement()" matTooltip="Add Target">
                                 <mat-icon aria-label="Add">add</mat-icon>
@@ -67,7 +54,7 @@
                         <mat-card-content>
                             <div class="column">
                                 <mat-form-field>
-                                    <input matInput type="number" name="enttecProTransmitterDelay" min="0" max="10000" [(ngModel)]="settings.enttecProTransmitter.delay"
+                                    <input matInput required type="number" name="enttecProTransmitterDelay" min="0" max="10000" [(ngModel)]="settings.enttecProTransmitter.delay"
                                         placeholder="Delay (ms)" />
                                 </mat-form-field>
                                 <mat-form-field>

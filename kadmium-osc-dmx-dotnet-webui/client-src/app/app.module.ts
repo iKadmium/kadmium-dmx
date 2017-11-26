@@ -38,14 +38,14 @@ import { DashboardOSCListenerComponent } from './dashboard-osc-listener/dashboar
 import { DashboardFixturePreviewComponent } from "app/dashboard-fixture-preview/dashboard-fixture-preview.component";
 import { OSCListenerLiveService } from "app/osclistener-live.service";
 import { DashboardFixturesComponent } from './dashboard-fixtures/dashboard-fixtures.component';
-import { FixtureDefinitionEditorChannelsComponent } from './fixture-definition-editor-channels/fixture-definition-editor-channels.component';
-import { FixtureDefinitionEditorMovementsComponent } from './fixture-definition-editor-movements/fixture-definition-editor-movements.component';
-import { FixtureDefinitionEditorColorWheelComponent } from './fixture-definition-editor-color-wheel/fixture-definition-editor-color-wheel.component';
 import { UniverseEditorPresetSaveDialogComponent } from './universe-editor-preset-save-dialog/universe-editor-preset-save-dialog.component';
 import { DashboardTransmitterEnttecComponent } from './dashboard-transmitter-enttec/dashboard-transmitter-enttec.component';
 import { DashboardTransmitterSacnComponent } from './dashboard-transmitter-sacn/dashboard-transmitter-sacn.component';
 import { DashboardVenueVenueLoadDialogComponent } from './dashboard-venue-venue-load-dialog/dashboard-venue-venue-load-dialog.component';
 import { DashboardFixtureDetailComponent } from './dashboard-fixture-detail/dashboard-fixture-detail.component';
+import { DeleteConfirmDialogComponent } from './delete-confirm-dialog/delete-confirm-dialog.component';
+import { BusyCardComponent } from './busy-card/busy-card.component';
+import { UnsavedChanges } from 'app/unsaved-changes';
 
 @NgModule({
     declarations: [
@@ -73,14 +73,13 @@ import { DashboardFixtureDetailComponent } from './dashboard-fixture-detail/dash
         DashboardFixtureAttributesComponent,
         DashboardOSCListenerComponent,
         DashboardFixturesComponent,
-        FixtureDefinitionEditorChannelsComponent,
-        FixtureDefinitionEditorMovementsComponent,
-        FixtureDefinitionEditorColorWheelComponent,
         UniverseEditorPresetSaveDialogComponent,
         DashboardTransmitterEnttecComponent,
         DashboardTransmitterSacnComponent,
         DashboardVenueVenueLoadDialogComponent,
-        DashboardFixtureDetailComponent
+        DashboardFixtureDetailComponent,
+        DeleteConfirmDialogComponent,
+        BusyCardComponent
     ],
     imports: [
         BrowserModule,
@@ -103,15 +102,15 @@ import { DashboardFixtureDetailComponent } from './dashboard-fixture-detail/dash
                         },
                     ]
             },
-            { path: 'settings', component: SettingsComponent },
-            { path: 'groups', component: GroupsComponent },
+            { path: 'settings', component: SettingsComponent, canDeactivate: [UnsavedChanges] },
+            { path: 'groups', component: GroupsComponent, canDeactivate: [UnsavedChanges] },
             {
                 path: 'venues',
                 children:
                     [
                         { path: '', component: VenuesComponent },
-                        { path: 'new', component: VenueEditorComponent },
-                        { path: ':id', component: VenueEditorComponent },
+                        { path: 'new', component: VenueEditorComponent, canDeactivate: [UnsavedChanges] },
+                        { path: ':id', component: VenueEditorComponent, canDeactivate: [UnsavedChanges] },
                     ]
             },
             {
@@ -119,8 +118,8 @@ import { DashboardFixtureDetailComponent } from './dashboard-fixture-detail/dash
                 children:
                     [
                         { path: '', component: FixtureDefinitionsComponent },
-                        { path: 'new', component: FixtureDefinitionEditorComponent },
-                        { path: ':id', component: FixtureDefinitionEditorComponent },
+                        { path: 'new', component: FixtureDefinitionEditorComponent, canDeactivate: [UnsavedChanges] },
+                        { path: ':id', component: FixtureDefinitionEditorComponent, canDeactivate: [UnsavedChanges] },
                     ]
             },
             { path: '**', redirectTo: 'sets' }
@@ -160,8 +159,13 @@ import { DashboardFixtureDetailComponent } from './dashboard-fixture-detail/dash
         BrowserAnimationsModule,
         ReactiveFormsModule
     ],
-    providers: [OSCListenerLiveService],
+    providers: [OSCListenerLiveService, UnsavedChanges],
     bootstrap: [AppComponent],
-    entryComponents: [UniverseEditorPresetSaveDialogComponent, FixtureOptionsEditorComponent, DashboardVenueVenueLoadDialogComponent]
+    entryComponents: [
+        UniverseEditorPresetSaveDialogComponent,
+        FixtureOptionsEditorComponent,
+        DashboardVenueVenueLoadDialogComponent,
+        DeleteConfirmDialogComponent
+    ]
 })
 export class AppModule { }

@@ -24,18 +24,24 @@ export class DashboardFixturesComponent implements OnInit
 
     public selectedFixture: PreviewFixture;
 
+    public loading: boolean;
+
     constructor(private route: ActivatedRoute, private universeService: UniverseService, private universeStreamService: UniverseStreamService,
         private snackbar: MatSnackBar)
     {
         this.data = new Uint8Array(512);
+        this.loading = true;
     }
 
     ngOnInit() 
     {
         let universeID = parseInt(this.route.snapshot.paramMap.get('universeID'));
         this.universeService.getActiveUniverseByID(universeID)
-            .then(response => this.universe = PreviewUniverse.load(response.data))
-            .catch(error => this.snackbar.open(error, "Close", { duration: 3000 }));
+            .then(response =>
+            {
+                this.universe = PreviewUniverse.load(response.data);
+                this.loading = false;
+            }).catch(error => this.snackbar.open(error, "Close", { duration: 3000 }));
 
         this.universeStreamService.subscribe(universeID, data => 
         {
