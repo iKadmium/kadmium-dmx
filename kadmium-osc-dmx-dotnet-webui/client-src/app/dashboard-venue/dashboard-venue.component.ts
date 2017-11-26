@@ -7,6 +7,7 @@ import { PreviewUniverse } from "app/preview-universe";
 import { MatDialog } from "@angular/material/dialog";
 import { DashboardVenueVenueLoadDialogComponent } from "app/dashboard-venue-venue-load-dialog/dashboard-venue-venue-load-dialog.component";
 import { MatSnackBar } from '@angular/material';
+import { VenueSkeleton } from 'api/models/venue-skeleton';
 
 @Component({
     selector: 'app-dashboard-venue',
@@ -16,7 +17,9 @@ import { MatSnackBar } from '@angular/material';
 })
 export class DashboardVenueComponent implements OnInit
 {
+    @Input() status: Status;
     public venue: PreviewVenue;
+    public venueSkeletons: VenueSkeleton[];
 
     constructor(private snackbar: MatSnackBar, private venueService: VenueService, private dialog: MatDialog)
     { }
@@ -24,6 +27,10 @@ export class DashboardVenueComponent implements OnInit
     ngOnInit(): void
     {
         this.refreshVenue();
+        this.venueService.getVenues().then(response => 
+        {
+            this.venueSkeletons = response.data;
+        }).catch(reason => this.snackbar.open(reason, "Close", { duration: 3000 }));
     }
 
     public async refreshVenue(): Promise<void>
@@ -81,17 +88,10 @@ export class DashboardVenueComponent implements OnInit
         return sum;
     }
 
-    public async loadVenue(): Promise<void>
+    public async loadVenue(id: number): Promise<void>
     {
-        let ref = this.dialog.open(DashboardVenueVenueLoadDialogComponent, {
-            data: { filename: "" }
-        });
-        let result = await ref.afterClosed().toPromise();
-        if (result != null)
-        {
-            await this.venueService.activateVenueById(result);
-            await this.refreshVenue();
-        }
+        await this.venueService.activateVenueById(id);
+        await this.refreshVenue();
     }
 
 }

@@ -6,6 +6,7 @@ import { StatusStreamService, StatusData } from "../dashboard.service";
 import { StatusCode } from "../status-code.enum";
 import { Status } from "../status";
 import { MatSnackBar } from '@angular/material';
+import { Sleep } from 'app/sleep';
 
 @Component({
     selector: 'app-dashboard',
@@ -16,6 +17,7 @@ import { MatSnackBar } from '@angular/material';
 export class DashboardComponent implements OnInit, OnDestroy
 {
     public statuses: Map<string, Status>;
+    public loaded: boolean;
 
     constructor(private dashboardService: StatusStreamService, private snackbar: MatSnackBar, titleService: Title)
     {
@@ -25,10 +27,10 @@ export class DashboardComponent implements OnInit, OnDestroy
             ["Venues", new Status()],
             ["SACNTransmitters", new Status()],
             ["EnttecProTransmitters", new Status()],
-            ["OSCListeners", new Status()],
-            ["Fixtures", new Status()],
-            ["Solvers", new Status()]
+            ["OSCListeners", new Status()]
         ]);
+
+        this.loaded = false;
     }
 
     ngOnInit()
@@ -52,7 +54,11 @@ export class DashboardComponent implements OnInit, OnDestroy
     {
         let panelStatus = this.statuses.get(statusData.controller);
         let statusCode = StatusCode[statusData.code as string]
-        panelStatus.statusCode = statusCode;
-        panelStatus.body = statusData.message;
+        if (panelStatus != null)
+        {
+            panelStatus.statusCode = statusCode;
+            panelStatus.body = statusData.message;
+        }
+        this.loaded = true;
     }
 }

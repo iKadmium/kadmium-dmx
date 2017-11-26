@@ -1,36 +1,40 @@
 <div class="mat-typography">
     <h1 mat-dialog-title>{{fixture.address}} - {{fixture.type.manufacturer}} {{fixture.type.model}}</h1>
     <div mat-dialog-content *ngIf="definition">
-        <fieldset name="options">
-            <legend>General Options</legend>
-            <div class="column">
-                <mat-form-field>
-                    <input matInput [(ngModel)]="fixture.options.maxBrightness" type="number" min="0" max="1" step="0.01" name="maxBrightness"
-                        placeholder="Max Brightness" />
-                </mat-form-field>
-            </div>
-        </fieldset>
-
-        <fieldset *ngIf="moving">
-            <legend>Axis Options</legend>
-            <mat-expansion-panel *ngFor="let axis of axisOptions">
-                <mat-expansion-panel-header>
-                    <mat-panel-title>{{axis.name}}</mat-panel-title>
-                </mat-expansion-panel-header>
+        <mat-card>
+            <mat-card-title>General Options</mat-card-title>
+            <mat-card-content>
                 <div class="column">
-                    <mat-checkbox [(ngModel)]="axis.inverted" [name]="'inverted[' + axis.name + ']'">Inverted</mat-checkbox>
-                    <mat-checkbox [(ngModel)]="axis.restricted" [name]="'restricted[' + axis.name + ']'">Restricted</mat-checkbox>
-                    <mat-form-field *ngIf="axis.restricted">
-                        <input matInput type="number" [(ngModel)]="axis.restrictionMin" [name]="'restrictionMin[' + axis.name + ']'" [min]="axis.min"
-                            [max]="axis.max" [disabled]="!axis.restricted" placeholder="Min">
-                    </mat-form-field>
-                    <mat-form-field *ngIf="axis.restricted">
-                        <input matInput type="number" [(ngModel)]="axis.restrictionMax" [name]="'restrictionMax[' + axis.name + ']'" [min]="axis.min"
-                            [max]="axis.max" [disabled]="!axis.restricted" placeholder="Max" />
+                    <mat-form-field>
+                        <input matInput [(ngModel)]="fixture.options.maxBrightness" type="number" min="0" max="1" step="0.01" name="maxBrightness"
+                            placeholder="Max Brightness" />
                     </mat-form-field>
                 </div>
-            </mat-expansion-panel>
-        </fieldset>
+            </mat-card-content>
+        </mat-card>
+
+        <mat-card *ngIf="moving">
+            <mat-card-title>Axis Options</mat-card-title>
+            <mat-card-content>
+                <mat-expansion-panel *ngFor="let axis of axisOptions">
+                    <mat-expansion-panel-header>
+                        <mat-panel-title>{{axis.name}}</mat-panel-title>
+                    </mat-expansion-panel-header>
+                    <div class="column">
+                        <mat-checkbox [(ngModel)]="axis.inverted" [name]="'inverted[' + axis.name + ']'">Inverted</mat-checkbox>
+                        <mat-checkbox [(ngModel)]="axis.restricted" [name]="'restricted[' + axis.name + ']'">Restricted</mat-checkbox>
+                        <mat-form-field *ngIf="axis.restricted">
+                            <input matInput type="number" [(ngModel)]="axis.restrictionMin" [name]="'restrictionMin[' + axis.name + ']'" [min]="axis.min"
+                                [max]="axis.max" [disabled]="!axis.restricted" placeholder="Min (degrees)">
+                        </mat-form-field>
+                        <mat-form-field *ngIf="axis.restricted">
+                            <input matInput type="number" [(ngModel)]="axis.restrictionMax" [name]="'restrictionMax[' + axis.name + ']'" [min]="axis.min"
+                                [max]="axis.max" [disabled]="!axis.restricted" placeholder="Max (degrees)" />
+                        </mat-form-field>
+                    </div>
+                </mat-expansion-panel>
+            </mat-card-content>
+        </mat-card>
     </div>
     <div mat-dialog-actions>
         <button mat-button [mat-dialog-close]="data.filename" tabindex="2">OK</button>

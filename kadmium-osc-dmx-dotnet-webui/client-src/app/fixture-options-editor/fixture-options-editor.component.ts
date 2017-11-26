@@ -17,7 +17,7 @@ export class FixtureOptionsEditorComponent implements OnInit
 
     private axisOptions: AxisOptions[];
 
-    private definition: FixtureDefinition;
+    public definition: FixtureDefinition;
     public fixture: Fixture;
 
     constructor(public dialogRef: MatDialogRef<FixtureOptionsEditorComponent>, private fixtureDefinitionService: FixtureDefinitionService,

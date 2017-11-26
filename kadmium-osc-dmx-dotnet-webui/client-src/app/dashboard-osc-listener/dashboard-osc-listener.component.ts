@@ -4,6 +4,7 @@ import { OSCListenerService } from "api/services";
 import { MatTableDataSource } from "@angular/material/table";
 import { MatSort } from "@angular/material/sort";
 import { DomSanitizer, SafeStyle } from "@angular/platform-browser";
+import { Status } from 'app/status';
 
 @Component({
     selector: 'app-dashboard-osc-listener',
@@ -17,6 +18,10 @@ export class DashboardOSCListenerComponent implements OnInit, AfterViewInit
     enabled: boolean;
     private renderTimer: number;
 
+    public loaded: boolean;
+
+    @Input() status: Status;
+
     private events: OSCListenerData[];
     public dataSource: MatTableDataSource<OSCListenerData>
     public displayedColumns = ["time", "address", "value", "recognised"];
@@ -27,6 +32,7 @@ export class DashboardOSCListenerComponent implements OnInit, AfterViewInit
         this.enabledDetermined = false;
         this.enabled = false;
         this.events = [];
+        this.loaded = false;
     }
 
     ngOnInit(): void
@@ -36,6 +42,7 @@ export class DashboardOSCListenerComponent implements OnInit, AfterViewInit
         {
             this.enabled = response.data;
             this.enabledDetermined = true;
+            this.loaded = true;
         });
         this.oscListenerLiveService.subscribe(data =>
         {

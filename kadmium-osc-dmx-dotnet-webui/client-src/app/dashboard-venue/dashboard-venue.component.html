@@ -1,14 +1,34 @@
-<mat-toolbar>
-    <span>{{venue?.name}}</span>
-    <span class="toolbar-spacer"></span>
-    <button mat-raised-button color="primary" (click)="loadVenue()">
-        <mat-icon>folder_open</mat-icon> Load Venue</button>
-</mat-toolbar>
+<mat-card *ngIf="!venue">
+    <mat-card-title>Loading</mat-card-title>
+    <mat-card-content>
+        <mat-spinner></mat-spinner>
+    </mat-card-content>
+</mat-card>
+<mat-card *ngIf="venue">
+    <mat-card-title>{{venue?.name}}</mat-card-title>
+    <mat-card-subtitle>{{status.body}}</mat-card-subtitle>
+    <mat-card-content>
+        <mat-card *ngFor="let universe of venue?.universes" flex>
+            <mat-card-title>{{universe.name}}</mat-card-title>
+            <mat-card-actions>
+                <a mat-button routerLink="/venue/dmx/{{universe.universeID}}">
+                    <mat-icon>grid_on</mat-icon>
+                    DMX Channels ({{getDMXChannelCount(universe)}})
+                </a>
+                <a mat-button routerLink="/venue/fixtures/{{universe.universeID}}">
+                    <mat-icon>lightbulb_outline</mat-icon>
+                    Fixtures ({{getFixtureCount(universe)}})
+                </a>
+            </mat-card-actions>
+        </mat-card>
+    </mat-card-content>
+    <mat-card-actions>
+        <button mat-raised-button color="primary" [matMenuTriggerFor]="appMenu">
+            <mat-icon>folder_open</mat-icon> Load Venue
+        </button>
+    </mat-card-actions>
+</mat-card>
 
-<mat-list>
-    <mat-list-item *ngFor="let universe of venue?.universes">
-        <h3 matLine>{{universe.name}}</h3>
-        <a matLine mat-button routerLink="dmx/{{universe.universeID}}">DMX Channels ({{getDMXChannelCount(universe)}})</a>
-        <a matLine mat-button routerLink="fixtures/{{universe.universeID}}">Fixtures ({{getFixtureCount(universe)}})</a>
-    </mat-list-item>
-</mat-list>
+<mat-menu #appMenu="matMenu">
+    <button mat-menu-item *ngFor="let venue of venueSkeletons" (click)="loadVenue(venue.id)"> {{venue.name}} </button>
+</mat-menu>

@@ -39,7 +39,7 @@ export class VenueEditorComponent implements OnInit
     ngOnInit(): void
     {
         this.venueId = this.route.snapshot.params['id'];
-
+        this.title.setTitle("Venue Editor");
         this.groupService.getGroups().then(response =>
         {
             this.groups = response.data;
@@ -48,14 +48,12 @@ export class VenueEditorComponent implements OnInit
             {
                 this.venue = new Venue();
                 this.venue.universes = [this.createUniverse("New Universe", 1)];
-                this.title.setTitle("Venue Editor - New Venue");
             }
             else
             {
                 this.venueService.getVenueById(this.venueId).then(response => 
                 {
                     this.venue = response.data;
-                    this.title.setTitle("Venue Editor - " + this.venue.name);
                 }).catch(error => this.snackbar.open(error, "Close", { duration: 3000 }));
             }
         });

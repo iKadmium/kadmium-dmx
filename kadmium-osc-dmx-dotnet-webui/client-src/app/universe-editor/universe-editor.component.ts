@@ -27,12 +27,11 @@ export class UniverseEditorComponent implements OnInit
     @Input("groups") groups: Group[];
     @ViewChildren(MatExpansionPanel) panels: QueryList<MatExpansionPanel>;
 
-    private selectedFixtures: Fixture[];
     public fixtureDefinitionSkeletons: FixtureDefinitionSkeleton[];
 
     constructor(private fixtureDefinitionService: FixtureDefinitionService, private snackbar: MatSnackBar, private dialog: MatDialog)
     {
-        this.selectedFixtures = [];
+
     }
 
     ngOnInit(): void
@@ -57,7 +56,7 @@ export class UniverseEditorComponent implements OnInit
         return this.universe.fixtures.indexOf(element);
     }
 
-    private async addElement(): Promise<void>
+    public async addElement(): Promise<void>
     {
         let fixture = new Fixture();
         fixture.group = this.groups[0].name;
@@ -67,24 +66,6 @@ export class UniverseEditorComponent implements OnInit
         this.universe.fixtures.push(fixture);
         await Sleep.sleepUntil(() => this.panels.length == this.universe.fixtures.length);
         this.panels.last.open();
-    }
-
-    private isSelected(fixture: Fixture): boolean
-    {
-        return this.selectedFixtures.indexOf(fixture) != -1;
-    }
-
-    private selectFixture(fixture: Fixture, selected: boolean)
-    {
-        let index = this.selectedFixtures.indexOf(fixture);
-        if (selected && index == -1)
-        {
-            this.selectedFixtures.push(fixture);
-        }
-        else if (!selected && index != -1)
-        {
-            this.selectedFixtures.splice(index, 1);
-        }
     }
 
     private get sortedFixtures(): Fixture[]
@@ -103,21 +84,23 @@ export class UniverseEditorComponent implements OnInit
         })
     }
 
-    private async savePresetAs(filenameForm: HTMLInputElement): Promise<void>
+    public async savePresetAs(): Promise<void>
     {
         let ref = this.dialog.open(UniverseEditorPresetSaveDialogComponent, {
-            width: '250px',
-            data: { filename: "" }
+            data: { filename: "", fixtures: this.universe.fixtures }
         });
         ref.afterClosed().subscribe(result =>
         {
-            let name = result;
-            let fixtures = this.selectedFixtures;
-            FileSaver.Save(name + ".json", fixtures);
+            if (result != null)
+            {
+                let name = result.filename;
+                let fixtures = result.fixtures;
+                FileSaver.Save(name + ".json", fixtures);
+            }
         })
     }
 
-    private upload(fileInput: any): void
+    public upload(fileInput: any): void
     {
         (fileInput as HTMLInputElement).click();
     }

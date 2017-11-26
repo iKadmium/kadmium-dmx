@@ -22,15 +22,15 @@ export class VenuesComponent implements OnInit
     constructor(private venueService: VenueService, private snackbar: MatSnackBar, title: Title)
     {
         title.setTitle("Venues");
-        this.venues = [];
-        this.dataSource = new MatTableDataSource(this.venues);
+        this.dataSource = new MatTableDataSource([]);
     }
 
     ngOnInit(): void
     {
         this.venueService.getVenues().then(response => 
         {
-            response.data.forEach(venue => this.venues.push(venue));
+            this.venues = response.data;
+            this.dataSource = new MatTableDataSource(this.venues);
             this.updateDataSource();
         }).catch(error => this.snackbar.open(error, "Close", { duration: 3000 }));
     }

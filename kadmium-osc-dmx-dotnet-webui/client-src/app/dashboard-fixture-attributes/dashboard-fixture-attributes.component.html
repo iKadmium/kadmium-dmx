@@ -6,7 +6,8 @@
         <span mat-line>
             {{attribute.address + fixture.address - 1}} {{attribute.name}} </span>
         <mat-slider mat-line thumbLabel [(ngModel)]="attribute.displayValue" [color]="attribute.controlled ? '' : 'primary'" [min]="attribute.displayMin"
-            [max]="attribute.displayMax" step="1" [disabled]="attribute.controlled" (input)="updateValue(attribute, $event.value)">
+            [max]="attribute.displayMax" step="1" [disabled]="attribute.controlled" (input)="updateValue(attribute, $event.value)"
+            class="attribute-slider">
         </mat-slider>
     </mat-list-item>
     <mat-divider></mat-divider>
@@ -18,6 +19,6 @@
             {{attribute.name}}</span>
         <mat-slider mat-line thumbLabel [(ngModel)]="attribute.displayValue" [color]="attribute.controlled ? '' : 'primary'" [min]="attribute.displayMin"
             [max]="attribute.displayMax" [step]="attribute.range > 1 ? 1 : 0.01" (input)="updateValue(attribute, $event.value)"
-            [disabled]="attribute.controlled"></mat-slider>
+            [disabled]="attribute.controlled" class="attribute-slider"></mat-slider>
     </mat-list-item>
 </mat-list>

@@ -24,6 +24,8 @@ export class FixtureDefinitionsComponent implements OnInit, AfterViewInit
     displayedColumns = ['manufacturer', 'model', 'actions'];
     dataSource: MatTableDataSource<FixtureDefinitionSkeleton>;
 
+    public loaded: boolean;
+
     @ViewChild(MatSort) sort: MatSort;
     @ViewChild(MatPaginator) paginator: MatPaginator;
 
@@ -33,6 +35,7 @@ export class FixtureDefinitionsComponent implements OnInit, AfterViewInit
         title.setTitle("Fixture Definitions");
         this.skeletons = [];
         this.dataSource = new MatTableDataSource<FixtureDefinitionSkeleton>(this.skeletons);
+        this.loaded = false;
     }
 
     ngOnInit(): void
@@ -45,6 +48,7 @@ export class FixtureDefinitionsComponent implements OnInit, AfterViewInit
                 this.manufacturerFilter = this.manufacturers[0];
             }
             this.updateDataSource();
+            this.loaded = true;
 
         }).catch(error => this.snackbar.open(error, "Close", { duration: 3000 }));
     }

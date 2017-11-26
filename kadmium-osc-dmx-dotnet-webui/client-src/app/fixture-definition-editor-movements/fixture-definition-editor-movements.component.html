@@ -11,11 +11,11 @@
                         placeholder="Name" list="axisList">
                 </mat-form-field>
                 <mat-form-field>
-                    <input matInput required type="number" [(ngModel)]="axis.min" [max]="axis.max" [name]="'axisMin[' + i + ']'" placeholder="Min"
+                    <input matInput required type="number" [(ngModel)]="axis.min" [max]="axis.max" [name]="'axisMin[' + i + ']'" placeholder="Min (degrees)"
                     />
                 </mat-form-field>
                 <mat-form-field>
-                    <input matInput required type="number" [(ngModel)]="axis.max" [min]="axis.min" [name]="'axisMax[' + i + ']'" placeholder="Max"
+                    <input matInput required type="number" [(ngModel)]="axis.max" [min]="axis.min" [name]="'axisMax[' + i + ']'" placeholder="Max (degrees)"
                     />
                 </mat-form-field>
                 <mat-action-row>
@@ -27,9 +27,11 @@
 
         </mat-expansion-panel>
 
+    </mat-card-content>
+
+    <mat-card-actions>
         <button mat-icon-button (click)="addElement()" matTooltip="Add Movement Axis">
             <mat-icon aria-label="Add Movement Axis">add</mat-icon>
         </button>
-
-    </mat-card-content>
+    </mat-card-actions>
 </mat-card>

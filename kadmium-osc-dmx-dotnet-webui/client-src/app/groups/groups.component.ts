@@ -26,22 +26,15 @@ export class GroupsComponent implements OnInit
     {
         title.setTitle("Groups");
         this.saving = false;
-        this.groups = [];
-        this.dataSource = new MatTableDataSource<Group>(this.groupsSorted);
     }
 
-    async ngOnInit(): Promise<void>
+    ngOnInit()
     {
-        try
+        this.groupsService.getGroups().then(response => 
         {
-            let response = await this.groupsService.getGroups();
             this.groups = response.data;
-            this.dataSource.data = this.groupsSorted;
-        }
-        catch (reason)
-        {
-            this.snackbar.open(reason, "Close", { duration: 3000 });
-        }
+            this.dataSource = new MatTableDataSource<Group>(this.groupsSorted);
+        }).catch(reason => this.snackbar.open(reason, "Close", { duration: 3000 }));
     }
 
     private getNextOrder(): number
@@ -130,7 +123,7 @@ export class GroupsComponent implements OnInit
         (fileInput as HTMLInputElement).click();
     }
 
-    private async filesSelected(files: File[]): Promise<void>
+    public async filesSelected(files: File[]): Promise<void>
     {
         for (let file of files)
         {

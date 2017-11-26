@@ -1,58 +1,73 @@
-<form *ngIf="groups" #groupsForm="ngForm">
-    <mat-table #table [dataSource]="dataSource" matSort>
+<mat-card *ngIf="!groups || saving" class="main-card">
+    <mat-card-title>Loading</mat-card-title>
+    <mat-card-content>
+        <mat-spinner></mat-spinner>
+    </mat-card-content>
+</mat-card>
+<form *ngIf="groups && !saving" #groupsForm="ngForm">
+    <mat-card class="main-card">
+        <mat-card-content>
+            <mat-table #table [dataSource]="dataSource" matSort>
 
-        <ng-container matColumnDef="order">
-            <mat-header-cell *matHeaderCellDef> Order </mat-header-cell>
-            <mat-cell *matCellDef="let element">
-                <button mat-icon-button (click)="swap(getElementIndex(element), getElementIndex(element) - 1)" [disabled]="getElementIndex(element) == 0"
-                    matTooltip="Move Up">
-                    <mat-icon label="Move Down">arrow_upward</mat-icon>
-                </button>
-                <button mat-icon-button (click)="swap(getElementIndex(element), getElementIndex(element) + 1)" [disabled]="getElementIndex(element) == groups.length - 1"
-                    matTooltip="Move Down">
-                    <mat-icon label="Move Down">arrow_downward</mat-icon>
-                </button>
-            </mat-cell>
-        </ng-container>
+                <ng-container matColumnDef="order">
+                    <mat-header-cell *matHeaderCellDef> Order </mat-header-cell>
+                    <mat-cell *matCellDef="let element">
+                        <button mat-icon-button (click)="swap(getElementIndex(element), getElementIndex(element) - 1)" [disabled]="getElementIndex(element) == 0"
+                            matTooltip="Move Up">
+                            <mat-icon label="Move Down">arrow_upward</mat-icon>
+                        </button>
+                        <button mat-icon-button (click)="swap(getElementIndex(element), getElementIndex(element) + 1)" [disabled]="getElementIndex(element) == groups.length - 1"
+                            matTooltip="Move Down">
+                            <mat-icon label="Move Down">arrow_downward</mat-icon>
+                        </button>
+                    </mat-cell>
+                </ng-container>
 
-        <ng-container matColumnDef="name">
-            <mat-header-cell *matHeaderCellDef> Name </mat-header-cell>
-            <mat-cell *matCellDef="let element">
-                <mat-form-field floatPlaceholder="never">
-                    <input matInput required [unique]="getOtherGroupNames(element)" type="text" [(ngModel)]="element.name" [name]="'groupName[' + getElementIndex(element) + ']'"
-                        placeholder="Name">
-                </mat-form-field>
-            </mat-cell>
-        </ng-container>
+                <ng-container matColumnDef="name">
+                    <mat-header-cell *matHeaderCellDef> Name </mat-header-cell>
+                    <mat-cell *matCellDef="let element">
+                        <mat-form-field floatPlaceholder="never">
+                            <input matInput required [unique]="getOtherGroupNames(element)" type="text" [(ngModel)]="element.name" [name]="'groupName[' + getElementIndex(element) + ']'"
+                                placeholder="Name">
+                        </mat-form-field>
+                    </mat-cell>
+                </ng-container>
 
-        <ng-container matColumnDef="actions">
-            <mat-header-cell *matHeaderCellDef> Actions </mat-header-cell>
-            <mat-cell *matCellDef="let element">
-                <button mat-icon-button color="warn" (click)="delete(element)">
-                    <mat-icon aria-label="Remove">remove_circle</mat-icon>
-                </button>
-            </mat-cell>
-        </ng-container>
+                <ng-container matColumnDef="actions">
+                    <mat-header-cell *matHeaderCellDef> Actions </mat-header-cell>
+                    <mat-cell *matCellDef="let element">
+                        <button mat-icon-button color="warn" (click)="delete(element)">
+                            <mat-icon aria-label="Remove">remove_circle</mat-icon>
+                        </button>
+                    </mat-cell>
+                </ng-container>
 
-        <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
-        <mat-row *matRowDef="let row; columns: displayedColumns;">
+                <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
+                <mat-row *matRowDef="let row; columns: displayedColumns;">
 
-        </mat-row>
-    </mat-table>
+                </mat-row>
+            </mat-table>
 
-    <button mat-icon-button (click)="add()" matTooltip="Add Group">
-        <mat-icon aria-label="Add Group">add</mat-icon>
-    </button>
-    <br>
-    <button mat-icon-button color="primary" [disabled]="!groupsForm.valid" (click)="save()" matTooltip="Save">
-        <mat-icon aria-label="Save">save</mat-icon>
-    </button>
-    <button mat-icon-button [disabled]="!groupsForm.valid" (click)="download()" matTooltip="Download">
-        <mat-icon aria-label="Download">file_download</mat-icon>
-    </button>
-    <button mat-icon-button [disabled]="!groupsForm.valid" (click)="upload(fileInput)" matTooltip="Upload">
-        <mat-icon aria-label="Upload">file_upload</mat-icon>
-    </button>
-    <input #fileInput type="file" name="name" style="display: none;" (change)="filesSelected($event.target.files)" multiple>
+            <button mat-icon-button (click)="add()" matTooltip="Add Group">
+                <mat-icon aria-label="Add Group">add</mat-icon>
+            </button>
+            <br>
+
+
+        </mat-card-content>
+        <mat-card-actions>
+            <button mat-icon-button color="primary" [disabled]="!groupsForm.valid" (click)="save()" matTooltip="Save">
+                <mat-icon aria-label="Save">save</mat-icon>
+            </button>
+            <button mat-icon-button [disabled]="!groupsForm.valid" (click)="download()" matTooltip="Download">
+                <mat-icon aria-label="Download">file_download</mat-icon>
+            </button>
+            <button mat-icon-button [disabled]="!groupsForm.valid" (click)="upload(fileInput)" matTooltip="Upload">
+                <mat-icon aria-label="Upload">file_upload</mat-icon>
+            </button>
+        </mat-card-actions>
+    </mat-card>
 
 </form>
+
+<input #fileInput type="file" name="name" style="display: none;" (change)="filesSelected($event.target.files)" multiple>

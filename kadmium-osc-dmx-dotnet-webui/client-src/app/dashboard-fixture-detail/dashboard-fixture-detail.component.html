@@ -1,10 +1,10 @@
-<mat-toolbar>
-    <button mat-icon-button routerLink="..">
-        <mat-icon aria-label="back">arrow_back</mat-icon>
-    </button>
-    <span>{{fixture?.address}} {{fixture?.manufacturer}} {{fixture?.model}} ({{fixture?.group}})</span>
-</mat-toolbar>
-<mat-card *ngIf="fixture">
+<mat-card *ngIf="fixture" class="main-card">
+    <mat-card-title>
+        <button mat-icon-button routerLink="..">
+            <mat-icon aria-label="back">arrow_back</mat-icon>
+        </button>
+        <span>{{fixture?.address}} {{fixture?.manufacturer}} {{fixture?.model}} ({{fixture?.group}})</span>
+    </mat-card-title>
     <mat-card-content>
         <div style="display: block; text-align: center;">
             <app-dashboard-fixture-preview [fixture]="fixture" #fixturePreview></app-dashboard-fixture-preview>

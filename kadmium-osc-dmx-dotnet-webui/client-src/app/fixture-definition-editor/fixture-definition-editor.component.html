@@ -1,5 +1,12 @@
-<form *ngIf="definition && allManufacturers" class="form-horizontal" #editorForm="ngForm">
+<mat-card *ngIf="!definition || !allManufacturers" class="main-card">
+    <mat-card-title>Loading</mat-card-title>
+    <mat-card-content>
+        <mat-spinner></mat-spinner>
+    </mat-card-content>
+</mat-card>
+<form *ngIf="definition && allManufacturers" class="form-horizontal" #editorForm="ngForm" class="main-card">
     <mat-card>
+        <mat-card-title>{{definition.manufacturer}} {{definition.model}}</mat-card-title>
         <mat-card-content>
             <div class="column">
                 <mat-form-field>
@@ -22,11 +29,12 @@
             <app-fixture-definition-editor-movements [definition]="definition"></app-fixture-definition-editor-movements>
             <app-fixture-definition-editor-color-wheel *ngIf="hasColorWheelChannel()" [definition]="definition"></app-fixture-definition-editor-color-wheel>
 
-            <br>
+        </mat-card-content>
+        <mat-card-actions>
             <button mat-icon-button color="primary" (click)="save()" [disabled]="!editorForm.valid" matTooltip="Save">
                 <mat-icon aria-label="Save">save</mat-icon>
             </button>
-        </mat-card-content>
+        </mat-card-actions>
     </mat-card>
 </form>
 

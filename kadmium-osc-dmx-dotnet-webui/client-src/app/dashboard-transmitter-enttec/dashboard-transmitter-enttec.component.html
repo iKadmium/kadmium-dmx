@@ -1,7 +1,13 @@
-<mat-toolbar>
-    <mat-toolbar-row>
-        <span>Enttec Pro Transmitter</span>
-        <span class="toolbar-spacer"></span>
+<mat-card *ngIf="!loaded">
+    <mat-card-title>Loading</mat-card-title>
+    <mat-card-content>
+        <mat-spinner></mat-spinner>
+    </mat-card-content>
+</mat-card>
+<mat-card *ngIf="loaded">
+    <mat-card-title>Enttec Pro Transmitter</mat-card-title>
+    <mat-card-subtitle>{{status?.body}}</mat-card-subtitle>
+    <mat-card-actions>
         <mat-slide-toggle [checked]="enabled" color="primary" [disabled]="!enabledDetermined" (change)="toggleEnabled()">{{enabled ? "Enabled" : "Disabled"}}</mat-slide-toggle>
-    </mat-toolbar-row>
-</mat-toolbar>
+    </mat-card-actions>
+</mat-card>

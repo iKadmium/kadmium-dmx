@@ -13,11 +13,8 @@ export class DashboardFixtureListComponent implements OnInit
     @ViewChildren(DashboardFixturePreviewComponent) fixtures: QueryList<DashboardFixturePreviewComponent>;
 
     @Input() universe: PreviewUniverse;
-    @Output() fixtureSelected: EventEmitter<PreviewFixture> = new EventEmitter();
 
     public colCount: number;
-
-    public activeFixture: PreviewFixture;
 
     constructor()
     {
@@ -38,12 +35,6 @@ export class DashboardFixtureListComponent implements OnInit
         let width = window.innerWidth;
         let cols = width / DashboardFixturePreviewComponent.width;
         return Math.floor(cols);
-    }
-
-    selectFixture(fixture: PreviewFixture): void
-    {
-        this.activeFixture = fixture;
-        this.fixtureSelected.emit(fixture);
     }
 
     public async render(data: Uint8Array): Promise<void>

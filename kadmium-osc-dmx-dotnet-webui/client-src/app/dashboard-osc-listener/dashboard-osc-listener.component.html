@@ -1,42 +1,49 @@
-<mat-toolbar>
-    <mat-toolbar-row>
-        <span>OSC Listener</span>
-        <span class="toolbar-spacer"></span>
+<mat-card *ngIf="!loaded">
+    <mat-card-title>Loading</mat-card-title>
+    <mat-card-content>
+        <mat-spinner></mat-spinner>
+    </mat-card-content>
+</mat-card>
+<mat-card *ngIf="loaded">
+    <mat-card-title>OSC Listener</mat-card-title>
+    <mat-card-subtitle>{{status?.body}}</mat-card-subtitle>
+    <mat-card-content>
+        <mat-table #table [dataSource]="dataSource" matSort>
+            <ng-container matColumnDef="time">
+                <mat-header-cell *matHeaderCellDef mat-sort-header> Time </mat-header-cell>
+                <mat-cell *matCellDef="let element">
+                    {{element.time | amDateFormat:'hh:mm:ss A'}}
+                </mat-cell>
+            </ng-container>
+
+            <ng-container matColumnDef="recognised">
+                <mat-header-cell *matHeaderCellDef mat-sort-header> Recognised </mat-header-cell>
+                <mat-cell *matCellDef="let element">
+                    {{element.recognised ? 'Yes' : 'No'}}
+                </mat-cell>
+            </ng-container>
+
+            <ng-container matColumnDef="address">
+                <mat-header-cell *matHeaderCellDef mat-sort-header> Address </mat-header-cell>
+                <mat-cell *matCellDef="let element">
+                    {{element.address}}
+                </mat-cell>
+            </ng-container>
+
+            <ng-container matColumnDef="value">
+                <mat-header-cell *matHeaderCellDef mat-sort-header> Value </mat-header-cell>
+                <mat-cell *matCellDef="let element">
+                    <span [style]="getColor(element.value)">
+                        {{element.value}}
+                    </span>
+                </mat-cell>
+            </ng-container>
+
+            <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
+            <mat-row *matRowDef="let row; columns: displayedColumns;"></mat-row>
+        </mat-table>
+    </mat-card-content>
+    <mat-card-actions>
         <mat-slide-toggle [checked]="enabled" color="primary" [disabled]="!enabledDetermined" (change)="toggleEnabled()">{{enabled ? "Enabled" : "Disabled"}}</mat-slide-toggle>
-    </mat-toolbar-row>
-</mat-toolbar>
-
-<mat-table #table [dataSource]="dataSource" matSort>
-    <ng-container matColumnDef="time">
-        <mat-header-cell *matHeaderCellDef mat-sort-header> Time </mat-header-cell>
-        <mat-cell *matCellDef="let element">
-            {{element.time | amDateFormat:'hh:mm:ss A'}}
-        </mat-cell>
-    </ng-container>
-
-    <ng-container matColumnDef="recognised">
-        <mat-header-cell *matHeaderCellDef mat-sort-header> Recognised </mat-header-cell>
-        <mat-cell *matCellDef="let element">
-            {{element.recognised ? 'Yes' : 'No'}}
-        </mat-cell>
-    </ng-container>
-
-    <ng-container matColumnDef="address">
-        <mat-header-cell *matHeaderCellDef mat-sort-header> Address </mat-header-cell>
-        <mat-cell *matCellDef="let element">
-            {{element.address}}
-        </mat-cell>
-    </ng-container>
-
-    <ng-container matColumnDef="value">
-        <mat-header-cell *matHeaderCellDef mat-sort-header> Value </mat-header-cell>
-        <mat-cell *matCellDef="let element">
-            <span [style]="getColor(element.value)">
-                {{element.value}}
-            </span>
-        </mat-cell>
-    </ng-container>
-
-    <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
-    <mat-row *matRowDef="let row; columns: displayedColumns;"></mat-row>
-</mat-table>
+    </mat-card-actions>
+</mat-card>

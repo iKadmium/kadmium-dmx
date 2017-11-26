@@ -1,20 +1,36 @@
-<nav mat-tab-nav-bar>
-    <app-dashboard-nav-menu-item mat-tab-link [status]="statuses.get('Venues')" name="Venue" icon="home" routerLink="venue" routerLinkActive
-        #venueActive="routerLinkActive" [selected]="venueActive.isActive">
-    </app-dashboard-nav-menu-item>
-
-    <app-dashboard-nav-menu-item mat-tab-link [status]="statuses.get('SACNTransmitters')" name="SACN Transmitter" icon="cloud_upload"
-        routerLink="sacnTransmitter" routerLinkActive #sacnActive="routerLinkActive" [selected]="sacnActive.isActive">
-    </app-dashboard-nav-menu-item>
-
-    <app-dashboard-nav-menu-item mat-tab-link [status]="statuses.get('EnttecProTransmitters')" name="Enttec Pro Transmitter"
-        icon="cloud_upload" routerLink="enttecTransmitter" routerLinkActive #enttecActive="routerLinkActive" [selected]="enttecActive.isActive">
-    </app-dashboard-nav-menu-item>
-
-    <app-dashboard-nav-menu-item mat-tab-link [status]="statuses.get('OSCListeners')" name="OSC Listener" icon="cloud_download"
-        routerLink="oscListener" routerLinkActive #oscActive="routerLinkActive" [selected]="oscActive.isActive">
-    </app-dashboard-nav-menu-item>
-</nav>
-<router-outlet>
-
-</router-outlet>
+<mat-card *ngIf="!loaded">
+    <mat-card-title>Loading</mat-card-title>
+    <mat-card-content>
+        <mat-spinner></mat-spinner>
+    </mat-card-content>
+</mat-card>
+<mat-tab-group *ngIf="loaded" class="main-card">
+    <mat-tab>
+        <ng-template mat-tab-label>
+            <mat-icon class="icon-spaced">{{statuses.get('Venues')?.glyphIcon}}</mat-icon>
+            Venue
+        </ng-template>
+        <app-dashboard-venue [status]="statuses.get('Venues')"></app-dashboard-venue>
+    </mat-tab>
+    <mat-tab>
+        <ng-template mat-tab-label>
+            <mat-icon class="icon-spaced">{{statuses.get('SACNTransmitters')?.glyphIcon}}</mat-icon>
+            SACN Transmitter
+        </ng-template>
+        <app-dashboard-transmitter-sacn [status]="statuses.get('SACNTransmitters')"></app-dashboard-transmitter-sacn>
+    </mat-tab>
+    <mat-tab>
+        <ng-template mat-tab-label>
+            <mat-icon class="icon-spaced">{{statuses.get('EnttecProTransmitters')?.glyphIcon}}</mat-icon>
+            Enttec Pro Transmitter
+        </ng-template>
+        <app-dashboard-transmitter-enttec [status]="statuses.get('EnttecProTransmitters')"></app-dashboard-transmitter-enttec>
+    </mat-tab>
+    <mat-tab>
+        <ng-template mat-tab-label>
+            <mat-icon class="icon-spaced">{{statuses.get('OSCListeners')?.glyphIcon}}</mat-icon>
+            OSC Listener
+        </ng-template>
+        <app-dashboard-osc-listener [status]="statuses.get('OSCListeners')"></app-dashboard-osc-listener>
+    </mat-tab>
+</mat-tab-group>

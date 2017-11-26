@@ -8,7 +8,7 @@ import { DashboardFixturePreviewComponent } from "app/dashboard-fixture-preview/
 
 export class PreviewFixture
 {
-    public static strobeFrames = 2;
+    public static strobeFrames = 1;
 
     id: number;
     group: string;

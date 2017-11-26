@@ -29,12 +29,12 @@ export class FixtureDefinitionEditorComponent implements OnInit
     ngOnInit()
     {
         this.id = this.route.snapshot.params['id'];
-
+        this.title.setTitle("Fixture Definition Editor");
         try
         {
             if (this.isNewItem())
             {
-                this.title.setTitle("Fixture Definition Editor - New Definition");
+
                 this.definition = new FixtureDefinition();
                 this.definition.channels = [];
                 this.definition.colorWheel = [];
@@ -45,7 +45,6 @@ export class FixtureDefinitionEditorComponent implements OnInit
                 this.fixtureDefinitionService.getFixtureDefinitionById(this.id).then(response => 
                 {
                     this.definition = response.data;
-                    this.title.setTitle(`Fixture Definition Editor - ${this.definition.manufacturer} ${this.definition.model}`);
                 }).catch(error => this.snackbar.open(error, "Close", { duration: 3000 }));
             }
             this.fixtureDefinitionService.getFixtureDefinitionSkeletons().then(response => 

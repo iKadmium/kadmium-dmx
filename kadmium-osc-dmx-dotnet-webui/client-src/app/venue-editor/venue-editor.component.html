@@ -1,6 +1,12 @@
+<mat-card *ngIf="!venue" class="main-card">
+    <mat-card-title>Loading</mat-card-title>
+    <mat-card-content>
+        <mat-spinner></mat-spinner>
+    </mat-card-content>
+</mat-card>
 <form *ngIf="venue" class="form-horizontal" #editorForm="ngForm">
-    <mat-card>
-
+    <mat-card class="main-card">
+        <mat-card-title>{{venue.name}}</mat-card-title>
         <mat-card-content>
             <div class="column">
                 <mat-form-field>
@@ -21,14 +27,14 @@
                 <mat-tab #addUniverseTab>
                     <ng-template mat-tab-label>
                         <mat-icon aria-label="Add" matTooltip="Add Universe">add</mat-icon>
-
                     </ng-template>
                 </mat-tab>
             </mat-tab-group>
-
+        </mat-card-content>
+        <mat-card-actions>
             <button mat-icon-button color="primary" (click)="save()" [disabled]="!editorForm.valid">
                 <mat-icon aria-label="Save">save</mat-icon>
             </button>
-        </mat-card-content>
+        </mat-card-actions>
     </mat-card>
 </form>

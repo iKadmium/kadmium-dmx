@@ -5,7 +5,9 @@ import { HttpModule } from '@angular/http';
 import { RouterModule } from '@angular/router';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 
-import { MatButtonModule, MatCheckboxModule, MatInputModule, MatSelectModule, MatCardModule, MatIconModule, MatTableModule, MatTooltipModule, MatSortModule, MatPaginatorModule, MatTabsModule, MatSliderModule, MatDialogModule, MatAutocompleteModule, MatSidenavModule, MatToolbarModule, MatExpansionModule, MatSlideToggleModule, MatListModule, MatGridListModule, MatButtonToggleModule, MatProgressSpinnerModule, MatSnackBar, MatSnackBarModule } from "@angular/material";
+import { MatButtonModule, MatCheckboxModule, MatInputModule, MatSelectModule, MatCardModule, MatIconModule, MatTableModule, MatTooltipModule, MatSortModule, MatPaginatorModule, MatTabsModule, MatSliderModule, MatDialogModule, MatAutocompleteModule, MatSidenavModule, MatToolbarModule, MatExpansionModule, MatSlideToggleModule, MatListModule, MatGridListModule, MatButtonToggleModule, MatProgressSpinnerModule, MatSnackBar, MatSnackBarModule, MatMenuModule } from "@angular/material";
+
+import { FlexLayoutModule } from '@angular/flex-layout';
 
 import { MomentModule } from 'angular2-moment';
 
@@ -87,27 +89,19 @@ import { DashboardFixtureDetailComponent } from './dashboard-fixture-detail/dash
 
         RouterModule.forRoot([
             { path: '', redirectTo: 'dashboard', pathMatch: 'full' },
+            { path: 'dashboard', component: DashboardComponent },
             {
-                path: 'dashboard', component: DashboardComponent, children: [
-                    { path: '', redirectTo: 'venue', pathMatch: 'full' },
-                    {
-                        path: 'venue', children:
-                            [
-                                { path: '', component: DashboardVenueComponent },
-                                { path: 'dmx/:universeID', component: DashboardUniverseComponent },
-                                {
-                                    path: 'fixtures/:universeID', children:
-                                        [
-                                            { path: '', component: DashboardFixturesComponent },
-                                            { path: ':fixtureID', component: DashboardFixtureDetailComponent }
-                                        ]
-                                },
-                            ]
-                    },
-                    { path: 'sacnTransmitter', component: DashboardTransmitterSacnComponent },
-                    { path: 'enttecTransmitter', component: DashboardTransmitterEnttecComponent },
-                    { path: 'oscListener', component: DashboardOSCListenerComponent }
-                ]
+                path: 'venue', children:
+                    [
+                        { path: 'dmx/:universeID', component: DashboardUniverseComponent },
+                        {
+                            path: 'fixtures/:universeID', children:
+                                [
+                                    { path: '', component: DashboardFixturesComponent },
+                                    { path: ':fixtureID', component: DashboardFixtureDetailComponent }
+                                ]
+                        },
+                    ]
             },
             { path: 'settings', component: SettingsComponent },
             { path: 'groups', component: GroupsComponent },
@@ -157,6 +151,9 @@ import { DashboardFixtureDetailComponent } from './dashboard-fixture-detail/dash
         MatButtonToggleModule,
         MatProgressSpinnerModule,
         MatSnackBarModule,
+        MatMenuModule,
+
+        FlexLayoutModule,
 
         MomentModule,
 

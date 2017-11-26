@@ -1,7 +1,11 @@
-<mat-toolbar>
-    <button mat-icon-button routerLink="/dashboard/venue">
-        <mat-icon>arrow_back</mat-icon>
-    </button>
-    <span>{{universe?.name}} Fixtures</span>
-</mat-toolbar>
-<app-dashboard-fixture-list *ngIf="universe != null" [universe]="universe" (fixtureSelected)="selectedFixture = $event"></app-dashboard-fixture-list>
+<mat-card class="main-card">
+    <mat-card-title>
+        <button mat-icon-button routerLink="/dashboard">
+            <mat-icon>arrow_back</mat-icon>
+        </button>
+        <span>{{universe?.name}} Fixtures</span>
+    </mat-card-title>
+    <mat-card-content>
+        <app-dashboard-fixture-list *ngIf="universe != null" [universe]="universe" (fixtureSelected)="selectedFixture = $event"></app-dashboard-fixture-list>
+    </mat-card-content>
+</mat-card>

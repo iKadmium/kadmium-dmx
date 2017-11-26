@@ -1,7 +1,7 @@
 <mat-grid-list [cols]="colCount">
-    <mat-grid-tile *ngFor="let fixture of universe?.fixtures; trackBy: fixture?.id" routerLink="{{fixture.id}}">
-        <mat-grid-tile-header>{{fixture.address}} ({{fixture.group}})</mat-grid-tile-header>
-        <mat-grid-tile-footer>{{fixture.manufacturer}} {{fixture.model}}</mat-grid-tile-footer>
-        <app-dashboard-fixture-preview [fixture]="fixture"></app-dashboard-fixture-preview>
+    <mat-grid-tile *ngFor="let fixture of universe.fixtures">
+        <mat-grid-tile-header [routerLink]="fixture.id">{{fixture.address}} ({{fixture.group}})</mat-grid-tile-header>
+        <mat-grid-tile-footer [routerLink]="fixture.id">{{fixture.manufacturer}} {{fixture.model}}</mat-grid-tile-footer>
+        <app-dashboard-fixture-preview [fixture]="fixture" [routerLink]="fixture.id"></app-dashboard-fixture-preview>
     </mat-grid-tile>
 </mat-grid-list>
