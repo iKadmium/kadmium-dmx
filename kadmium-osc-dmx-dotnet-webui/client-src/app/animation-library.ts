@@ -6,14 +6,14 @@ export class AnimationLibrary
     public static animations(duration: number = 400): AnimationTriggerMetadata[]
     {
         return [
-            this.slideIn(duration),
-            this.slideOut(duration),
-            this.fadeIn(duration),
-            this.fadeOut(duration),
-            this.slideInLeft(duration),
-            this.growX(duration),
-            this.growY(duration),
-            this.shrinkY(duration)
+            AnimationLibrary.slideIn(duration),
+            AnimationLibrary.slideOut(duration),
+            AnimationLibrary.fadeIn(duration),
+            AnimationLibrary.fadeOut(duration),
+            AnimationLibrary.slideInLeft(duration),
+            AnimationLibrary.growX(duration),
+            AnimationLibrary.growY(duration),
+            AnimationLibrary.shrinkY(duration)
         ];
     }
 
