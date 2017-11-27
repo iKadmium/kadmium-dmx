@@ -1,5 +1,5 @@
 <app-busy-card [loading]="loading" [saving]="false"></app-busy-card>
-<mat-card *ngIf="!loading" class="main-card">
+<mat-card *ngIf="!loading" @slideIn class="main-card">
     <mat-card-title>
         <button mat-icon-button routerLink="..">
             <mat-icon aria-label="back">arrow_back</mat-icon>

@@ -8,12 +8,14 @@ import { MatTableDataSource } from "@angular/material/table";
 import { MatSnackBar, MatExpansionPanel } from '@angular/material';
 import { Sleep } from 'app/sleep';
 import { NgForm } from '@angular/forms';
+import { AnimationLibrary } from "app/animation-library";
 
 @Component({
     selector: 'app-fixture-definition-editor',
     templateUrl: './fixture-definition-editor.component.html',
     styleUrls: ['./fixture-definition-editor.component.css'],
-    providers: [FixtureDefinitionService]
+    providers: [FixtureDefinitionService],
+    animations: [AnimationLibrary.animations()]
 })
 export class FixtureDefinitionEditorComponent implements OnInit
 {

@@ -1,5 +1,5 @@
 <app-busy-card [loading]="loading" [saving]="saving"></app-busy-card>
-<form *ngIf="!loading && !saving" class="form-horizontal" (ngSubmit)="save()" #editorForm="ngForm">
+<form *ngIf="!loading && !saving" @slideIn (ngSubmit)="save()" #editorForm="ngForm">
     <mat-card>
         <mat-card-title>{{definition.manufacturer}} {{definition.model}}</mat-card-title>
         <mat-card-content>

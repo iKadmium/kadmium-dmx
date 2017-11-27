@@ -3,12 +3,14 @@ import { FixtureDefinition, FixtureDefinitionSkeleton, Fixture } from "api/model
 import { FixtureDefinitionService } from "api/services";
 import { MatDialogRef } from "@angular/material/dialog";
 import { MAT_DIALOG_DATA } from "@angular/material/dialog";
+import { AnimationLibrary } from "app/animation-library";
 
 @Component({
     selector: 'app-fixture-options-editor',
     templateUrl: './fixture-options-editor.component.html',
     styleUrls: ['./fixture-options-editor.component.css'],
-    providers: [FixtureDefinitionService]
+    providers: [FixtureDefinitionService],
+    animations: [AnimationLibrary.animations()]
 })
 export class FixtureOptionsEditorComponent implements OnInit
 {

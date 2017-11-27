@@ -9,12 +9,14 @@ import { UniverseService } from "api/services";
 import { ActivatedRoute } from "@angular/router";
 import { PreviewUniverseCell } from "app/preview-universe-cell";
 import { MatSnackBar } from '@angular/material';
+import { AnimationLibrary } from "app/animation-library";
 
 @Component({
     selector: 'app-dashboard-universe',
     templateUrl: './dashboard-universe.component.html',
     styleUrls: ['./dashboard-universe.component.css'],
-    providers: [UniverseStreamService, UniverseService]
+    providers: [UniverseStreamService, UniverseService],
+    animations: [AnimationLibrary.animations()]
 })
 export class DashboardUniverseComponent implements OnInit, AfterViewInit
 {

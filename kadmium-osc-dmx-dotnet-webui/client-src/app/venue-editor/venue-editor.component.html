@@ -1,6 +1,6 @@
 <app-busy-card [loading]="loading" [saving]="saving"></app-busy-card>
-<form *ngIf="!loading && !saving" class="form-horizontal" (ngSubmit)="save()" #editorForm="ngForm">
-    <mat-card class="main-card">
+<form *ngIf="!loading && !saving" (ngSubmit)="save()" #editorForm="ngForm">
+    <mat-card class="main-card" @slideIn>
         <mat-card-title>{{venue.name}}</mat-card-title>
         <mat-card-content>
             <div class="column">

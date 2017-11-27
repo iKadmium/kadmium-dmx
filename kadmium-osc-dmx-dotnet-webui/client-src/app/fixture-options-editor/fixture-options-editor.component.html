@@ -23,14 +23,17 @@
                     <div class="column">
                         <mat-checkbox [(ngModel)]="axis.inverted" [name]="'inverted[' + axis.name + ']'">Inverted</mat-checkbox>
                         <mat-checkbox [(ngModel)]="axis.restricted" [name]="'restricted[' + axis.name + ']'">Restricted</mat-checkbox>
-                        <mat-form-field *ngIf="axis.restricted">
-                            <input matInput type="number" [(ngModel)]="axis.restrictionMin" [name]="'restrictionMin[' + axis.name + ']'" [min]="axis.min"
-                                [max]="axis.max" [disabled]="!axis.restricted" placeholder="Min (degrees)">
-                        </mat-form-field>
-                        <mat-form-field *ngIf="axis.restricted">
-                            <input matInput type="number" [(ngModel)]="axis.restrictionMax" [name]="'restrictionMax[' + axis.name + ']'" [min]="axis.min"
-                                [max]="axis.max" [disabled]="!axis.restricted" placeholder="Max (degrees)" />
-                        </mat-form-field>
+                        <div *ngIf="axis.restricted" @slideOut @shrinkY @fadeOut class="column">
+                            <mat-form-field @slideIn @growY @fadeIn>
+                                <input matInput type="number" [(ngModel)]="axis.restrictionMin" [name]="'restrictionMin[' + axis.name + ']'" [min]="axis.min"
+                                    [max]="axis.max" [disabled]="!axis.restricted" placeholder="Min (degrees)">
+                            </mat-form-field>
+                            <mat-form-field @slideIn @growY @fadeIn>
+                                <input matInput type="number" [(ngModel)]="axis.restrictionMax" [name]="'restrictionMax[' + axis.name + ']'" [min]="axis.min"
+                                    [max]="axis.max" [disabled]="!axis.restricted" placeholder="Max (degrees)" />
+                            </mat-form-field>
+                        </div>
+
                     </div>
                 </mat-expansion-panel>
             </mat-card-content>

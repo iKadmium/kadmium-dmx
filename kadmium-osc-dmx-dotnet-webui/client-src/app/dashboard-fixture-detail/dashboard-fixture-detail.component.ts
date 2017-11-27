@@ -7,12 +7,14 @@ import { ActivatedRoute } from "@angular/router";
 import { StatusCode } from "app/status-code.enum";
 import { DashboardFixturePreviewComponent } from "app/dashboard-fixture-preview/dashboard-fixture-preview.component";
 import { MatSnackBar } from '@angular/material';
+import { AnimationLibrary } from "app/animation-library";
 
 @Component({
     selector: 'app-dashboard-fixture-detail',
     templateUrl: './dashboard-fixture-detail.component.html',
     styleUrls: ['./dashboard-fixture-detail.component.css'],
-    providers: [UniverseService, UniverseStreamService]
+    providers: [UniverseService, UniverseStreamService],
+    animations: [AnimationLibrary.animations()]
 })
 export class DashboardFixtureDetailComponent implements OnInit, AfterViewInit
 {

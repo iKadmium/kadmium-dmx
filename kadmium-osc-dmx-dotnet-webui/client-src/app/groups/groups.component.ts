@@ -8,12 +8,14 @@ import { Group } from "api/models";
 import { MatTableDataSource } from "@angular/material/table";
 import { MatSnackBar } from '@angular/material';
 import { NgForm } from '@angular/forms';
+import { AnimationLibrary } from "app/animation-library";
 
 @Component({
     selector: 'app-groups',
     templateUrl: './groups.component.html',
     styleUrls: ['./groups.component.css'],
-    providers: [GroupService]
+    providers: [GroupService],
+    animations: [AnimationLibrary.animations()]
 })
 export class GroupsComponent implements OnInit
 {

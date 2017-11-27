@@ -1,6 +1,6 @@
 <app-busy-card [loading]="loading" [saving]="saving"></app-busy-card>
-<form *ngIf="!loading && !saving" class="form-horizontal" (ngSubmit)="save()" #settingsForm="ngForm">
-    <mat-card class="main-card">
+<form *ngIf="!loading && !saving" (ngSubmit)="save()" #settingsForm="ngForm">
+    <mat-card class="main-card" @slideIn>
         <mat-card-content>
             <mat-tab-group>
                 <mat-tab label='Ports'>
@@ -33,11 +33,11 @@
                             <h2>sACN Unicast Targets</h2>
 
                             <mat-list>
-                                <mat-list-item *ngFor="let target of fakeTargets; let i = index" class="column">
-                                    <mat-form-field>
+                                <mat-list-item *ngFor="let target of fakeTargets; let i = index" class="column" @fadeOut>
+                                    <mat-form-field @growX>
                                         <input matInput required type="text" [(ngModel)]="target.target" [name]="'unicast[' + i + ']'" placeholder="Address" />
                                     </mat-form-field>
-                                    <button mat-icon-button type="button" color="warn" (click)="removeElement(element)" matTooltip="Remove">
+                                    <button mat-icon-button type="button" color="warn" (click)="removeElement(i)" matTooltip="Remove">
                                         <mat-icon aria-label="Remove">remove_circle</mat-icon>
                                     </button>
                                 </mat-list-item>

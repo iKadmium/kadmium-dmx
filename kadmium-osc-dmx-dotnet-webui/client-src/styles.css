@@ -60,3 +60,19 @@ html, body, material-app, mat-sidenav-container {
     display: flex !important;
     align-items: center;
   }
+
+  .listItemRow {
+    margin-top: 1em;
+}
+
+.itemListItem {
+  margin-left: 1em;
+  margin-right: 1em;
+}
+
+.listItemContainer {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    width: 100%;
+}

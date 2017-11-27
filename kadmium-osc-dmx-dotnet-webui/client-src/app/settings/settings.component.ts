@@ -4,18 +4,19 @@ import { Title } from "@angular/platform-browser";
 import { StatusCode } from "../status-code.enum";
 import { SettingsService, EnttecProTransmitterService } from "api/services";
 import { Settings } from "api/models";
-import { MatTableDataSource } from "@angular/material/table";
 import { MatSnackBar, MatHorizontalStepper } from '@angular/material';
 import { CanDeactivate } from '@angular/router/src/interfaces';
 import { ActivatedRouteSnapshot, RouterStateSnapshot } from '@angular/router';
 import { Observable } from 'rxjs/Observable';
 import { NgForm } from '@angular/forms';
+import { AnimationLibrary } from "app/animation-library";
 
 @Component({
     selector: 'app-settings',
     templateUrl: './settings.component.html',
     styleUrls: ['./settings.component.css'],
-    providers: [SettingsService, EnttecProTransmitterService]
+    providers: [SettingsService, EnttecProTransmitterService],
+    animations: [AnimationLibrary.animations()]
 })
 export class SettingsComponent implements OnInit
 {
@@ -25,9 +26,6 @@ export class SettingsComponent implements OnInit
     activeTab: string;
 
     public fakeTargets: UnicastTarget[];
-
-    public dataSource: MatTableDataSource<UnicastTarget>;
-    public displayedColumns = ['address', 'actions'];
 
     @ViewChild("settingsForm") form: NgForm;
 
@@ -47,7 +45,6 @@ export class SettingsComponent implements OnInit
             {
                 this.settings = response.data;
                 this.fakeTargets = this.settings.sacnTransmitter.unicast.map(x => { return { target: x } });
-                this.dataSource = new MatTableDataSource<UnicastTarget>(this.fakeTargets);
             })
             .catch(error => this.snackbar.open(error, "Close", { duration: 3000 }));
         this.enttecService
@@ -86,7 +83,6 @@ export class SettingsComponent implements OnInit
     public addElement(): void
     {
         this.fakeTargets.push({ target: "" });
-        this.dataSource._updateChangeSubscription();
     }
 
     public getElementIndex(element: UnicastTarget): number
@@ -94,11 +90,9 @@ export class SettingsComponent implements OnInit
         return this.fakeTargets.indexOf(element);
     }
 
-    public removeElement(element: UnicastTarget): void
+    public removeElement(index: number): void
     {
-        let index = this.getElementIndex(element);
         this.fakeTargets.splice(index, 1);
-        this.dataSource._updateChangeSubscription();
     }
 
 }

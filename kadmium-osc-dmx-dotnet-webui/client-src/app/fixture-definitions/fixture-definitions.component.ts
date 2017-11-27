@@ -10,21 +10,21 @@ import { MatPaginator } from "@angular/material/paginator";
 import { MatSnackBar, MatDialog } from '@angular/material';
 import { DeleteConfirmDialogComponent } from 'app/delete-confirm-dialog/delete-confirm-dialog.component';
 import { BehaviorSubject } from 'rxjs/BehaviorSubject';
+import { AnimationLibrary } from "app/animation-library";
+import { ApiConfiguration } from "api/api-configuration";
 
 @Component({
     selector: 'app-fixture-definitions',
     templateUrl: './fixture-definitions.component.html',
     styleUrls: ['./fixture-definitions.component.css'],
-    providers: [FixtureDefinitionService]
+    providers: [FixtureDefinitionService],
+    animations: [AnimationLibrary.slideIn(), AnimationLibrary.fadeIn(200), AnimationLibrary.fadeOut(200)]
 })
-export class FixtureDefinitionsComponent implements OnInit, AfterViewInit
+export class FixtureDefinitionsComponent implements OnInit
 {
-    manufacturerFilterEnabled: boolean;
-    manufacturerFilter: string;
     skeletons: FixtureDefinitionSkeleton[];
 
-    displayedColumns = ['manufacturer', 'model', 'actions'];
-    dataSource: MatTableDataSource<FixtureDefinitionSkeleton>;
+    filter: string;
 
     public loading: boolean;
     public saving: boolean;
@@ -37,7 +37,7 @@ export class FixtureDefinitionsComponent implements OnInit, AfterViewInit
     {
         title.setTitle("Fixture Definitions");
         this.skeletons = [];
-        this.dataSource = new MatTableDataSource<FixtureDefinitionSkeleton>(this.skeletons);
+        this.filter = "";
         this.loading = true;
         this.saving = false;
     }
@@ -47,33 +47,16 @@ export class FixtureDefinitionsComponent implements OnInit, AfterViewInit
         this.fixtureDefinitionsService.getFixtureDefinitionSkeletons().then(response => 
         {
             response.data.forEach(skeleton => this.skeletons.push(skeleton));
-            if (this.manufacturers.length > 0)
-            {
-                this.manufacturerFilter = this.manufacturers[0];
-            }
-            this.updateDataSource();
             this.loading = false;
 
         }).catch(error => this.snackbar.open(error, "Close", { duration: 3000 }));
-    }
-
-    ngAfterViewInit(): void
-    {
-        this.dataSource.sort = this.sort;
-        this.dataSource.paginator = this.paginator;
     }
 
     applyFilter(filterValue: string)
     {
         filterValue = filterValue.trim(); // Remove whitespace
         filterValue = filterValue.toLowerCase(); // MatTableDataSource defaults to lowercase matches
-        this.dataSource.filter = filterValue;
-    }
-
-    private updateDataSource(): void
-    {
-        this.dataSource._updateChangeSubscription();
-        this.dataSource._updatePaginator(this.dataSource.data.length);
+        this.filter = filterValue;
     }
 
     public get manufacturers(): string[]
@@ -85,24 +68,21 @@ export class FixtureDefinitionsComponent implements OnInit, AfterViewInit
 
     public get filteredData(): FixtureDefinitionSkeleton[]
     {
-        if (this.manufacturerFilterEnabled)
+        let filtered = this.skeletons.filter((value: FixtureDefinitionSkeleton) =>
         {
-            return this.skeletons.filter((value: FixtureDefinitionSkeleton) => value.manufacturer == this.manufacturerFilter);
-        }
-        else
-        {
-            return this.skeletons;
-        }
-    }
-
-    private getEditUrl(fixture: FixtureDefinitionSkeleton): string
-    {
-        return "fixture-definitions" + "/" + fixture.id;
+            let fullName = (value.manufacturer + " " + value.model).toLowerCase();
+            if (this.filter != "")
+            {
+                return fullName.indexOf(this.filter) != -1;
+            }
+            else return true;
+        });
+        return filtered;
     }
 
     private getDownloadUrl(fixture: FixtureDefinitionSkeleton): string
     {
-        return "/api/FixtureDefinition" + "/" + fixture.id;
+        return ApiConfiguration.rootUrl + "/api/FixtureDefinition" + "/" + fixture.id;
     }
 
     private deleteConfirm(fixture: FixtureDefinitionSkeleton): void
@@ -118,7 +98,6 @@ export class FixtureDefinitionsComponent implements OnInit, AfterViewInit
                     this.snackbar.open(fixture.manufacturer + " " + fixture.model + " was deleted", "Close", { duration: 3000 });
                     let index = this.skeletons.indexOf(fixture);
                     this.skeletons.splice(index, 1);
-                    this.updateDataSource();
                 }
                 catch (reason)
                 {
@@ -152,7 +131,6 @@ export class FixtureDefinitionsComponent implements OnInit, AfterViewInit
             let definition = await AsyncFileReader.read<FixtureDefinition>(file);
             definition.id = (await this.fixtureDefinitionsService.postFixtureDefinitionById(definition)).data;
             this.skeletons.push(definition);
-            this.updateDataSource();
             this.snackbar.open("Successfully added " + definition.manufacturer + " " + definition.model, "Close", { duration: 3000 });
         }
         catch (reason)

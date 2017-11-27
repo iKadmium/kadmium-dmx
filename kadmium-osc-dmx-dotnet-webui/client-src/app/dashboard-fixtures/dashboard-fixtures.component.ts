@@ -7,12 +7,14 @@ import { DashboardFixtureListComponent } from "app/dashboard-fixture-list/dashbo
 import { UniverseStreamService } from "app/universe-stream.service";
 import { PreviewFixture } from "app/preview-fixture";
 import { MatSnackBar } from '@angular/material';
+import { AnimationLibrary } from "app/animation-library";
 
 @Component({
     selector: 'app-dashboard-fixtures',
     templateUrl: './dashboard-fixtures.component.html',
     styleUrls: ['./dashboard-fixtures.component.css'],
-    providers: [UniverseStreamService, UniverseService]
+    providers: [UniverseStreamService, UniverseService],
+    animations: [AnimationLibrary.animations()]
 })
 export class DashboardFixturesComponent implements OnInit
 {

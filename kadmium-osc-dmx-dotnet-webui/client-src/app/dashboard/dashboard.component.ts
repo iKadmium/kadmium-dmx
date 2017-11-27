@@ -15,7 +15,7 @@ import { AnimationLibrary } from 'app/animation-library';
     templateUrl: './dashboard.component.html',
     styleUrls: ['./dashboard.component.css'],
     providers: [StatusStreamService],
-    animations: [AnimationLibrary.slideFadeIn()]
+    animations: [AnimationLibrary.animations()]
 
 })
 export class DashboardComponent implements OnInit, OnDestroy
@@ -63,6 +63,6 @@ export class DashboardComponent implements OnInit, OnDestroy
             panelStatus.statusCode = statusCode;
             panelStatus.body = statusData.message;
         }
-        //this.loading = false;
+        this.loading = false;
     }
 }

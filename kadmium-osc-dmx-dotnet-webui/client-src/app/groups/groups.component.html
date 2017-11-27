@@ -1,11 +1,11 @@
 <app-busy-card [loading]="loading" [saving]="saving"></app-busy-card>
 <form *ngIf="!loading && !saving" (ngSubmit)="save()" #groupsForm="ngForm">
-    <mat-card class="main-card">
+    <mat-card class="main-card" @slideIn>
         <mat-card-content>
-            <mat-table #table [dataSource]="dataSource" matSort>
+            <!-- <mat-table #table [dataSource]="dataSource" matSort>
                 <ng-container matColumnDef="order">
                     <mat-header-cell *matHeaderCellDef> Order </mat-header-cell>
-                    <mat-cell *matCellDef="let element">
+                    <mat-cell *matCellDef="let element" @shrink>
                         <button mat-icon-button type="button" (click)="swap(getElementIndex(element), getElementIndex(element) - 1)" [disabled]="getElementIndex(element) == 0"
                             matTooltip="Move Up">
                             <mat-icon label="Move Down">arrow_upward</mat-icon>
@@ -40,13 +40,36 @@
                 <mat-row *matRowDef="let row; columns: displayedColumns;">
 
                 </mat-row>
-            </mat-table>
+            </mat-table> -->
+            <mat-list>
+                <mat-list-item *ngFor="let group of groups; let i = index" class="listItemRow" @fadeOut>
+                    <div class="listItemContainer" @growX>
+                        <div class="orderButtons itemListItem">
+                            <button mat-icon-button type="button" (click)="swap(i, i - 1)" [disabled]="i == 0" matTooltip="Move Up">
+                                <mat-icon label="Move Down">arrow_upward</mat-icon>
+                            </button>
+                            <button mat-icon-button type="button" (click)="swap(i, i + 1)" [disabled]="i == groups.length - 1" matTooltip="Move Down">
+                                <mat-icon label="Move Down">arrow_downward</mat-icon>
+                            </button>
+                        </div>
+                        <div class="groupNameContainer itemListItem">
+                            <mat-form-field class="groupName">
+                                <input matInput required [unique]="getOtherGroupNames(group)" type="text" [(ngModel)]="group.name" [name]="'groupName[' + i + ']'"
+                                    placeholder="Name">
+                            </mat-form-field>
+                        </div>
+                        <div class="removeButton itemListItem">
+                            <button mat-icon-button color="warn" type="button" (click)="delete(group)">
+                                <mat-icon aria-label="Remove">remove_circle</mat-icon>
+                            </button>
+                        </div>
+                    </div>
+                </mat-list-item>
+            </mat-list>
 
             <button mat-icon-button (click)="add()" type="button" matTooltip="Add Group">
                 <mat-icon aria-label="Add Group">add</mat-icon>
             </button>
-            <br>
-
 
         </mat-card-content>
         <mat-card-actions>

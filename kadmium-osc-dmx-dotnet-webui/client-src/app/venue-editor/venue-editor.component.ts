@@ -9,12 +9,14 @@ import { Title } from "@angular/platform-browser";
 import { MatTabGroup } from "@angular/material/tabs";
 import { MatTabChangeEvent, MatTab, MatSnackBar } from '@angular/material';
 import { NgForm } from '@angular/forms';
+import { AnimationLibrary } from "app/animation-library";
 
 @Component({
     selector: 'app-venue-editor',
     templateUrl: './venue-editor.component.html',
     styleUrls: ['./venue-editor.component.css'],
-    providers: [VenueService, GroupService]
+    providers: [VenueService, GroupService],
+    animations: [AnimationLibrary.animations()]
 })
 export class VenueEditorComponent implements OnInit
 {

@@ -1,7 +1,7 @@
 <app-busy-card [loading]="loading" [saving]="false"></app-busy-card>
-<mat-card *ngIf="!loading" class="main-card">
+<mat-card *ngIf="!loading" class="main-card" @slideIn>
     <mat-card-content>
-        <mat-table #table [dataSource]="dataSource">
+        <!-- <mat-table #table [dataSource]="dataSource">
 
             <ng-container matColumnDef="name">
                 <mat-header-cell *matHeaderCellDef> Name </mat-header-cell>
@@ -25,7 +25,27 @@
 
             <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
             <mat-row *matRowDef="let row; columns: displayedColumns;"></mat-row>
-        </mat-table>
+        </mat-table> -->
+        <mat-list>
+            <mat-list-item *ngFor="let element of venues">
+                <div class="listItemContainer">
+                    <div class="itemListItem venueName">
+                        {{element.name}}
+                    </div>
+                    <div class="itemListItem">
+                        <a mat-icon-button matTooltip="Download" href="/api/Venue/Download/{{element.id}}" [download]="element.name + '.json'">
+                            <mat-icon aria-label="Download">file_download</mat-icon>
+                        </a>
+                        <a mat-icon-button matTooltip="Edit" [routerLink]="element.id">
+                            <mat-icon aria-label="Edit">edit</mat-icon>
+                        </a>
+                        <button mat-icon-button matTooltip="Delete" color="warn" (click)="deleteConfirm(element)">
+                            <mat-icon aria-label="Delete">delete</mat-icon>
+                        </button>
+                    </div>
+                </div>
+            </mat-list-item>
+        </mat-list>
 
 
     </mat-card-content>

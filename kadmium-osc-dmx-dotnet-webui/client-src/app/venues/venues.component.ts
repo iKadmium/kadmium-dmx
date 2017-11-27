@@ -7,12 +7,14 @@ import { VenueSkeleton, Venue } from "api/models";
 import { MatTableDataSource } from "@angular/material/table";
 import { MatSnackBar, MatDialog, MatSort } from '@angular/material';
 import { DeleteConfirmDialogComponent } from 'app/delete-confirm-dialog/delete-confirm-dialog.component';
+import { AnimationLibrary } from "app/animation-library";
 
 @Component({
     selector: 'app-venues',
     templateUrl: './venues.component.html',
     styleUrls: ['./venues.component.css'],
-    providers: [VenueService]
+    providers: [VenueService],
+    animations: [AnimationLibrary.animations()]
 })
 export class VenuesComponent implements OnInit
 {

@@ -7,10 +7,7 @@ import { AnimationLibrary } from 'app/animation-library';
 @Component({
     selector: 'app-root',
     templateUrl: './app.component.html',
-    styleUrls: ['./app.component.css'],
-    animations: [
-        AnimationLibrary.slideFadeIn()
-    ]
+    styleUrls: ['./app.component.css']
 })
 export class AppComponent implements OnInit
 {
