@@ -6,27 +6,24 @@
                 <input matInput (keyup)="applyFilter($event.target.value)" placeholder="Filter">
             </mat-form-field>
         </div>
-        <mat-list>
-            <mat-list-item *ngFor="let element of filteredData" @fadeOut>
-                <div class="listItemContainer" @fadeIn>
-                    <div class="itemListItem definitionName">
-                        {{element.manufacturer}} {{element.model}}
-                    </div>
-                    <div class="itemListItem">
-                        <a mat-icon-button matTooltip="Download" [href]="getDownloadUrl(element)" [download]="element.manufacturer + ' ' + element.model + '.json'">
-                            <mat-icon aria-label="Download">file_download</mat-icon>
-                        </a>
-                        <a mat-icon-button matTooltip="Edit" [routerLink]="element.id">
-                            <mat-icon aria-label="Edit">edit</mat-icon>
-                        </a>
-                        <button mat-icon-button matTooltip="Delete" color="warn" (click)="deleteConfirm(element)">
-                            <mat-icon aria-label="Delete">delete</mat-icon>
-                        </button>
-                    </div>
-                </div>
-
-            </mat-list-item>
-        </mat-list>
+        <table>
+            <tr *ngFor="let element of filteredData" @fadeOut>
+                <td @fadeIn>
+                    {{element.manufacturer}} {{element.model}}
+                </td>
+                <td>
+                    <a mat-icon-button matTooltip="Download" [href]="getDownloadUrl(element)" [download]="element.manufacturer + ' ' + element.model + '.json'">
+                        <mat-icon aria-label="Download">file_download</mat-icon>
+                    </a>
+                    <a mat-icon-button matTooltip="Edit" [routerLink]="element.id">
+                        <mat-icon aria-label="Edit">edit</mat-icon>
+                    </a>
+                    <button mat-icon-button matTooltip="Delete" color="warn" (click)="deleteConfirm(element)">
+                        <mat-icon aria-label="Delete">delete</mat-icon>
+                    </button>
+                </td>
+            </tr>
+        </table>
 
     </mat-card-content>
     <mat-card-actions>

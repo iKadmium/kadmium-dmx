@@ -27,6 +27,7 @@
     "core-js": "*",
     "hammerjs": "^2.0.8",
     "rxjs": "*",
+    "web-animations-js": "^2.3.1",
     "zone.js": "*"
   },
   "devDependencies": {
