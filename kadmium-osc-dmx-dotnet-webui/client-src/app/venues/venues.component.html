@@ -6,7 +6,7 @@
                 <td>
                     {{element.name}}
                 </td>
-                <td>
+                <td class="actionsCell">
                     <a mat-icon-button matTooltip="Download" href="/api/Venue/Download/{{element.id}}" [download]="element.name + '.json'">
                         <mat-icon aria-label="Download">file_download</mat-icon>
                     </a>

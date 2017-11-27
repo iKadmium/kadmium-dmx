@@ -11,7 +11,7 @@
                 <td @fadeIn>
                     {{element.manufacturer}} {{element.model}}
                 </td>
-                <td>
+                <td class="actionsCell">
                     <a mat-icon-button matTooltip="Download" [href]="getDownloadUrl(element)" [download]="element.manufacturer + ' ' + element.model + '.json'">
                         <mat-icon aria-label="Download">file_download</mat-icon>
                     </a>
