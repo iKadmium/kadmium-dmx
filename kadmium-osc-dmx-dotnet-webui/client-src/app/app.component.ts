@@ -3,6 +3,7 @@ import { Title } from "@angular/platform-browser";
 import { MatSidenav } from '@angular/material';
 import { trigger, state, style, transition, animate } from '@angular/animations';
 import { AnimationLibrary } from 'app/animation-library';
+import { TdMediaService } from '@covalent/core';
 
 @Component({
     selector: 'app-root',
@@ -11,7 +12,7 @@ import { AnimationLibrary } from 'app/animation-library';
 })
 export class AppComponent implements OnInit
 {
-    constructor(public titleService: Title)
+    constructor(public titleService: Title, public media: TdMediaService)
     {
     }
 

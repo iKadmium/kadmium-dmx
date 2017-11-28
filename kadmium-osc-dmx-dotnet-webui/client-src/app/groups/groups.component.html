@@ -4,27 +4,25 @@
         <mat-card-content>
             <table>
                 <tr *ngFor="let group of groups; let i = index" @fadeOut>
-                    <div @slideInLeft>
-                        <td>
-                            <button mat-icon-button type="button" (click)="swap(i, i - 1)" [disabled]="i == 0" matTooltip="Move Up">
-                                <mat-icon label="Move Down">arrow_upward</mat-icon>
-                            </button>
-                            <button mat-icon-button type="button" (click)="swap(i, i + 1)" [disabled]="i == groups.length - 1" matTooltip="Move Down">
-                                <mat-icon label="Move Down">arrow_downward</mat-icon>
-                            </button>
-                        </td>
-                        <td>
-                            <mat-form-field class="groupName">
-                                <input matInput required [unique]="getOtherGroupNames(group)" type="text" [(ngModel)]="group.name" [name]="'groupName[' + i + ']'"
-                                    placeholder="Name">
-                            </mat-form-field>
-                        </td>
-                        <td class="actionsCell">
-                            <button mat-icon-button color="warn" type="button" (click)="delete(group)">
-                                <mat-icon aria-label="Remove">remove_circle</mat-icon>
-                            </button>
-                        </td>
-                    </div>
+                    <td>
+                        <button mat-icon-button type="button" (click)="swap(i, i - 1)" [disabled]="i == 0" matTooltip="Move Up">
+                            <mat-icon label="Move Down">arrow_upward</mat-icon>
+                        </button>
+                        <button mat-icon-button type="button" (click)="swap(i, i + 1)" [disabled]="i == groups.length - 1" matTooltip="Move Down">
+                            <mat-icon label="Move Down">arrow_downward</mat-icon>
+                        </button>
+                    </td>
+                    <td class="groupNameContainer">
+                        <mat-form-field class="groupName">
+                            <input matInput required [unique]="getOtherGroupNames(group)" type="text" [(ngModel)]="group.name" [name]="'groupName[' + i + ']'"
+                                placeholder="Name">
+                        </mat-form-field>
+                    </td>
+                    <td class="actionsCell">
+                        <button mat-icon-button color="warn" type="button" (click)="delete(group)">
+                            <mat-icon aria-label="Remove">remove_circle</mat-icon>
+                        </button>
+                    </td>
                 </tr>
             </table>
 

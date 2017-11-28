@@ -1,4 +1,4 @@
-<mat-toolbar>
+<!-- <mat-toolbar>
     <button mat-icon-button (click)="sidenav.toggle()">
         <mat-icon aria-label="Menu">menu</mat-icon>
     </button>
@@ -30,4 +30,66 @@
         <router-outlet></router-outlet>
     </div>
 
-</mat-sidenav-container>
+</mat-sidenav-container> -->
+
+<td-layout>
+    <td-layout-nav-list #navList color="accent" [opened]="media.registerQuery('gt-sm') | async" [mode]="(media.registerQuery('gt-sm') | async) ? 'side' : 'over'"
+        [sidenavWidth]="(media.registerQuery('gt-xs') | async) ? '350px' : '100%'" toolbarTitle="kadmium-dmx">
+        <div td-toolbar-content layout="row" layout-align="start center" flex>
+            <button mat-icon-button tdLayoutNavListOpen [hideWhenOpened]="true">
+                <mat-icon>menu</mat-icon>
+            </button>
+            <span>{{titleService.getTitle()}}</span>
+            <span flex></span>
+            <button class="overflow-visible" mat-icon-button [matMenuTriggerFor]="notificationsMenu">
+                <td-notification-count [notifications]="101">
+                    <mat-icon>notifications</mat-icon>
+                </td-notification-count>
+            </button>
+            <mat-menu #notificationsMenu="matMenu" [overlapTrigger]="false">
+                <td-menu>
+                    <div td-menu-header class="md-subhead">Notifications</div>
+                    <mat-nav-list dense>
+                        <ng-template let-last="last" ngFor [ngForOf]="[0,1,2,3,4,5,6,7,8,9]">
+                            <a mat-list-item>
+                                <mat-icon matListAvatar>today</mat-icon>
+                                <h4 matLine>
+                                    <span class="text-wrap">A user did an activity on an item that you've subscribed to follow actions on.</span>
+                                </h4>
+                                <p matLine>22 minutes ago</p>
+                            </a>
+                            <mat-divider *ngIf="!last"></mat-divider>
+                        </ng-template>
+                    </mat-nav-list>
+                    <button mat-button color="accent" td-menu-footer>
+                        See All Notifications
+                    </button>
+                </td-menu>
+            </mat-menu>
+        </div>
+        <mat-nav-list td-sidenav-content [tdLayoutNavListClose]="!media.query('gt-sm')">
+            <a mat-list-item routerLink="/">
+                <h3 matLine> Dashboard </h3>
+            </a>
+            <mat-divider></mat-divider>
+            <a mat-list-item routerLink="/settings">
+                <h3 matLine> Settings </h3>
+            </a>
+            <mat-divider></mat-divider>
+            <a mat-list-item routerLink="/groups">
+                <h3 matLine> Groups </h3>
+            </a>
+            <mat-divider></mat-divider>
+            <a mat-list-item routerLink="/fixture-definitions">
+                <h3 matLine> Fixture Definitions </h3>
+            </a>
+            <mat-divider></mat-divider>
+            <a mat-list-item routerLink="/venues">
+                <h3 matLine> Venues </h3>
+            </a>
+        </mat-nav-list>
+        <div tdMediaToggle="gt-xs" class="body-content" [mediaClasses]="['push-sm']">
+            <router-outlet></router-outlet>
+        </div>
+    </td-layout-nav-list>
+</td-layout>

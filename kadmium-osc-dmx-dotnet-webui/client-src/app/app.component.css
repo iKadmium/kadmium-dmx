@@ -1,14 +1,9 @@
-.body-content 
-{
+.body-content {
     max-width: 1000px;
-    margin: auto;    
-    padding-bottom: 100px;
+    margin: auto;
     margin-top: 2em;
-    display: flex;
-    flex-direction: column;
 }
 
-.sidenavLink 
-{
+.sidenavLink {
     padding-right: 2em;
 }
