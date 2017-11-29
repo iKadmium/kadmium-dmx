@@ -1,57 +1,57 @@
-<mat-card>
-    <mat-card-content>
-        <div class="column">
-            <mat-form-field>
-                <input required matInput [(ngModel)]="universe.name" type="text" [name]="'universeName[' + universe.universeID + ']'" placeholder="Name"
-                />
-            </mat-form-field>
-            <mat-form-field>
-                <input required matInput [(ngModel)]="universe.universeID" type="number" min="1" max="65535" [name]="'universeID[' + universe.universeID + ']'"
-                    placeholder="Universe ID" />
-            </mat-form-field>
-        </div>
-        <h2>Fixtures</h2>
-        <mat-expansion-panel *ngFor="let fixture of universe.fixtures">
-            <mat-expansion-panel-header>{{fixture.address}} {{fixture.type.manufacturer}} {{fixture.type.model}} {{fixture.group}}
-            </mat-expansion-panel-header>
+<div class="column top-margin">
+    <mat-form-field>
+        <input required matInput [(ngModel)]="universe.name" type="text" [name]="'universeName[' + universe.universeID + ']'" placeholder="Name"
+        />
+    </mat-form-field>
+    <mat-form-field>
+        <input required matInput [(ngModel)]="universe.universeID" type="number" min="1" max="65535" [name]="'universeID[' + universe.universeID + ']'"
+            placeholder="Universe ID" />
+    </mat-form-field>
+</div>
+<mat-divider></mat-divider>
+<h2>Fixtures</h2>
+<mat-expansion-panel *ngFor="let fixture of universe.fixtures">
+    <mat-expansion-panel-header>
+        <mat-panel-title>{{fixture.address}} {{fixture.type.manufacturer}} {{fixture.type.model}}</mat-panel-title>
+        <mat-panel-description>{{fixture.group}}</mat-panel-description>
+    </mat-expansion-panel-header>
 
-            <div class="column">
-                <mat-form-field>
-                    <input required type="text" matInput [(ngModel)]="fixture.address" [name]="'address[' + getElementIndex(fixture) + ']'" placeholder="Address">
-                </mat-form-field>
+    <div class="column">
+        <mat-form-field>
+            <input required type="text" matInput [(ngModel)]="fixture.address" [name]="'address[' + getElementIndex(fixture) + ']'" placeholder="Address">
+        </mat-form-field>
 
-                <mat-form-field>
-                    <mat-select required [(value)]="fixture.type" [compareWith]="skeletonCompareFn" placeholder="Model">
-                        <mat-option *ngFor="let skeleton of fixtureDefinitionSkeletons" [value]="skeleton">{{skeleton.manufacturer}} {{skeleton.model}}</mat-option>
-                    </mat-select>
-                </mat-form-field>
+        <mat-form-field>
+            <mat-select required [(value)]="fixture.type" [compareWith]="skeletonCompareFn" placeholder="Model">
+                <mat-option *ngFor="let skeleton of fixtureDefinitionSkeletons" [value]="skeleton">{{skeleton.manufacturer}} {{skeleton.model}}</mat-option>
+            </mat-select>
+        </mat-form-field>
 
-                <mat-form-field>
-                    <mat-select required [(value)]="fixture.group" placeholder="Group">
-                        <mat-option *ngFor="let group of groups" [value]="group.name">{{group.name}}</mat-option>
-                    </mat-select>
-                </mat-form-field>
-            </div>
+        <mat-form-field>
+            <mat-select required [(value)]="fixture.group" placeholder="Group">
+                <mat-option *ngFor="let group of groups" [value]="group.name">{{group.name}}</mat-option>
+            </mat-select>
+        </mat-form-field>
+    </div>
 
-            <mat-action-row>
-                <button mat-icon-button type="button" (click)="options(fixture)" matTooltip="Fixture Options">
-                    <mat-icon aria-label="Settings">settings</mat-icon>
-                </button>
-                <button mat-icon-button type="button" color="warn" (click)="removeElement(fixture)" matTooltip="Remove Fixture">
-                    <mat-icon aria-label="Remove">remove_circle</mat-icon>
-                </button>
-            </mat-action-row>
-        </mat-expansion-panel>
-        <button mat-icon-button type="button" (click)="addElement()" matTooltip="Add Fixture">
-            <mat-icon aria-label="Add Fixture">add</mat-icon>
+    <mat-action-row>
+        <button mat-icon-button type="button" (click)="options(fixture)" matTooltip="Fixture Options">
+            <mat-icon aria-label="Settings">settings</mat-icon>
         </button>
-        <button mat-icon-button type="button" [disabled]="universe.fixtures.length == 0" (click)="savePresetAs()" matTooltip="Save Preset">
-            <mat-icon aria-label="Save Preset">cloud_download</mat-icon>
+        <button mat-icon-button type="button" color="warn" (click)="removeElement(fixture)" matTooltip="Remove Fixture">
+            <mat-icon aria-label="Remove">remove_circle</mat-icon>
         </button>
-        <button mat-icon-button type="button" (click)="upload(fileInput)" matTooltip="Load Preset">
-            <mat-icon aria-label="Load Preset">cloud_upload</mat-icon>
-        </button>
-    </mat-card-content>
-</mat-card>
+    </mat-action-row>
+</mat-expansion-panel>
+
+<button mat-icon-button type="button" (click)="addElement()" matTooltip="Add Fixture">
+    <mat-icon aria-label="Add Fixture">add</mat-icon>
+</button>
+<button mat-icon-button type="button" [disabled]="universe.fixtures.length == 0" (click)="savePresetAs()" matTooltip="Save Preset">
+    <mat-icon aria-label="Save Preset">cloud_download</mat-icon>
+</button>
+<button mat-icon-button type="button" (click)="upload(fileInput)" matTooltip="Load Preset">
+    <mat-icon aria-label="Load Preset">cloud_upload</mat-icon>
+</button>
 
 <input #fileInput type="file" name="name" style="display: none;" (change)="uploadFiles($event.target.files)" multiple>

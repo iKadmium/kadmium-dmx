@@ -91,3 +91,7 @@ table {
     text-align: right;
     white-space: nowrap;
 }
+
+.top-margin {
+    margin-top: 1em;
+}

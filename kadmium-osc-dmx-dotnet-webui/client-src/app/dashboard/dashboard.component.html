@@ -1,5 +1,4 @@
-<app-busy-card [loading]="loading" [saving]="false"></app-busy-card>
-<mat-tab-group *ngIf="!loading" @slideIn class="main-card">
+<mat-tab-group @slideIn class="main-card">
     <mat-tab>
         <ng-template mat-tab-label>
             <mat-icon class="icon-spaced">{{statuses.get('Venues')?.glyphIcon}}</mat-icon>

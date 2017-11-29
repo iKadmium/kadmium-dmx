@@ -4,34 +4,29 @@
         <mat-card-content>
             <mat-tab-group>
                 <mat-tab label='Ports'>
-                    <mat-card>
-                        <mat-card-content>
-                            <div class="column">
-                                <mat-form-field>
-                                    <input matInput required type="number" name="webPort" min="1" max="65535" [(ngModel)]="settings.webPort" placeholder="HTTP Port"
-                                    />
-                                </mat-form-field>
-                                <mat-form-field>
-                                    <input matInput required type="number" name="oscPort" min="1" max="65535" [(ngModel)]="settings.oscPort" placeholder="OSC Port"
-                                    />
-                                </mat-form-field>
-                            </div>
-                        </mat-card-content>
-                    </mat-card>
+                    <div class="column top-margin">
+                        <mat-form-field>
+                            <input matInput required type="number" name="webPort" min="1" max="65535" [(ngModel)]="settings.webPort" placeholder="HTTP Port"
+                            />
+                        </mat-form-field>
+                        <mat-form-field>
+                            <input matInput required type="number" name="oscPort" min="1" max="65535" [(ngModel)]="settings.oscPort" placeholder="OSC Port"
+                            />
+                        </mat-form-field>
+                    </div>
                 </mat-tab>
+
                 <mat-tab label="sACN">
-                    <mat-card>
-                        <mat-card-content>
-                            <div class="column">
-                                <mat-form-field>
-                                    <input matInput required type="number" name="sacnTransmitterDelay" min="0" max="10000" [(ngModel)]="settings.sacnTransmitter.delay"
-                                        placeholder="Delay (ms)" />
-                                </mat-form-field>
-                                <mat-checkbox [(ngModel)]="settings.sacnTransmitter.multicast" name="sacnMulticast">Multicast</mat-checkbox>
-                            </div>
+                    <div class="column top-margin">
+                        <mat-form-field>
+                            <input matInput required type="number" name="sacnTransmitterDelay" min="0" max="10000" [(ngModel)]="settings.sacnTransmitter.delay"
+                                placeholder="Delay (ms)" />
+                        </mat-form-field>
+                        <mat-checkbox [(ngModel)]="settings.sacnTransmitter.multicast" name="sacnMulticast">Multicast</mat-checkbox>
 
-                            <h2>sACN Unicast Targets</h2>
-
+                        <mat-divider></mat-divider>
+                        <h4>sACN Unicast Targets</h4>
+                        <div class="column">
                             <mat-list>
                                 <mat-list-item *ngFor="let target of fakeTargets; let i = index" class="column" @fadeOut>
                                     <mat-form-field @growX>
@@ -46,25 +41,22 @@
                             <button mat-icon-button type="button" (click)="addElement()" matTooltip="Add Target">
                                 <mat-icon aria-label="Add">add</mat-icon>
                             </button>
-                        </mat-card-content>
-                    </mat-card>
+                        </div>
+                    </div>
                 </mat-tab>
+
                 <mat-tab label="Enttec Pro">
-                    <mat-card>
-                        <mat-card-content>
-                            <div class="column">
-                                <mat-form-field>
-                                    <input matInput required type="number" name="enttecProTransmitterDelay" min="0" max="10000" [(ngModel)]="settings.enttecProTransmitter.delay"
-                                        placeholder="Delay (ms)" />
-                                </mat-form-field>
-                                <mat-form-field>
-                                    <mat-select name="enttecProTransmitterPort" [(ngModel)]="settings.enttecProTransmitter.port" placeholder="Port">
-                                        <mat-option *ngFor="let port of enttecPorts" [value]="port">{{port}}</mat-option>
-                                    </mat-select>
-                                </mat-form-field>
-                            </div>
-                        </mat-card-content>
-                    </mat-card>
+                    <div class="column top-margin">
+                        <mat-form-field>
+                            <input matInput required type="number" name="enttecProTransmitterDelay" min="0" max="10000" [(ngModel)]="settings.enttecProTransmitter.delay"
+                                placeholder="Delay (ms)" />
+                        </mat-form-field>
+                        <mat-form-field>
+                            <mat-select name="enttecProTransmitterPort" [(ngModel)]="settings.enttecProTransmitter.port" placeholder="Port">
+                                <mat-option *ngFor="let port of enttecPorts" [value]="port">{{port}}</mat-option>
+                            </mat-select>
+                        </mat-form-field>
+                    </div>
                 </mat-tab>
             </mat-tab-group>
         </mat-card-content>

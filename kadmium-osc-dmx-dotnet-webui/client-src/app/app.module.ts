@@ -7,7 +7,7 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 
 import { MatButtonModule, MatCheckboxModule, MatInputModule, MatSelectModule, MatCardModule, MatIconModule, MatTableModule, MatTooltipModule, MatSortModule, MatPaginatorModule, MatTabsModule, MatSliderModule, MatDialogModule, MatAutocompleteModule, MatSidenavModule, MatToolbarModule, MatExpansionModule, MatSlideToggleModule, MatListModule, MatGridListModule, MatButtonToggleModule, MatProgressSpinnerModule, MatSnackBar, MatSnackBarModule, MatMenuModule, MatStepperModule } from "@angular/material";
 
-import { CovalentLayoutModule, CovalentMediaModule, CovalentNotificationsModule, CovalentMenuModule } from "@covalent/core";
+import { CovalentLayoutModule, CovalentMediaModule, CovalentNotificationsModule, CovalentMenuModule, CovalentLoadingModule } from "@covalent/core";
 
 import { FlexLayoutModule } from '@angular/flex-layout';
 
@@ -93,36 +93,36 @@ import { UnsavedChanges } from 'app/unsaved-changes';
             { path: 'dashboard', component: DashboardComponent },
             {
                 path: 'venue', children:
-                    [
-                        { path: 'dmx/:universeID', component: DashboardUniverseComponent },
-                        {
-                            path: 'fixtures/:universeID', children:
-                                [
-                                    { path: '', component: DashboardFixturesComponent },
-                                    { path: ':fixtureID', component: DashboardFixtureDetailComponent }
-                                ]
-                        },
-                    ]
+                [
+                    { path: 'dmx/:universeID', component: DashboardUniverseComponent },
+                    {
+                        path: 'fixtures/:universeID', children:
+                        [
+                            { path: '', component: DashboardFixturesComponent },
+                            { path: ':fixtureID', component: DashboardFixtureDetailComponent }
+                        ]
+                    },
+                ]
             },
             { path: 'settings', component: SettingsComponent, canDeactivate: [UnsavedChanges] },
             { path: 'groups', component: GroupsComponent, canDeactivate: [UnsavedChanges] },
             {
                 path: 'venues',
                 children:
-                    [
-                        { path: '', component: VenuesComponent },
-                        { path: 'new', component: VenueEditorComponent, canDeactivate: [UnsavedChanges] },
-                        { path: ':id', component: VenueEditorComponent, canDeactivate: [UnsavedChanges] },
-                    ]
+                [
+                    { path: '', component: VenuesComponent },
+                    { path: 'new', component: VenueEditorComponent, canDeactivate: [UnsavedChanges] },
+                    { path: ':id', component: VenueEditorComponent, canDeactivate: [UnsavedChanges] },
+                ]
             },
             {
                 path: 'fixture-definitions',
                 children:
-                    [
-                        { path: '', component: FixtureDefinitionsComponent },
-                        { path: 'new', component: FixtureDefinitionEditorComponent, canDeactivate: [UnsavedChanges] },
-                        { path: ':id', component: FixtureDefinitionEditorComponent, canDeactivate: [UnsavedChanges] },
-                    ]
+                [
+                    { path: '', component: FixtureDefinitionsComponent },
+                    { path: 'new', component: FixtureDefinitionEditorComponent, canDeactivate: [UnsavedChanges] },
+                    { path: ':id', component: FixtureDefinitionEditorComponent, canDeactivate: [UnsavedChanges] },
+                ]
             }
         ]),
 
@@ -158,6 +158,7 @@ import { UnsavedChanges } from 'app/unsaved-changes';
         CovalentMediaModule,
         CovalentNotificationsModule,
         CovalentMenuModule,
+        CovalentLoadingModule,
 
         FlexLayoutModule,
 

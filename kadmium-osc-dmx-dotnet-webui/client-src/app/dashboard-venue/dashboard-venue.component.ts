@@ -8,6 +8,8 @@ import { MatDialog } from "@angular/material/dialog";
 import { DashboardVenueVenueLoadDialogComponent } from "app/dashboard-venue-venue-load-dialog/dashboard-venue-venue-load-dialog.component";
 import { MatSnackBar } from '@angular/material';
 import { VenueSkeleton } from 'api/models/venue-skeleton';
+import { TdLoadingService } from "@covalent/core";
+import { Sleep } from "app/sleep";
 
 @Component({
     selector: 'app-dashboard-venue',

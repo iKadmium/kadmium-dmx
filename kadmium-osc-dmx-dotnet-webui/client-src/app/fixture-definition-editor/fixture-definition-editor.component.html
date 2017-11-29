@@ -20,148 +20,122 @@
                 </mat-form-field>
             </div>
 
-            <mat-card>
-                <mat-card-title>Channels</mat-card-title>
-                <mat-card-content>
-                    <mat-expansion-panel *ngFor="let channel of definition?.channels; let i = index" #channelPanels>
-                        <mat-expansion-panel-header>
-                            <mat-panel-title>{{channel.address}} - {{channel.name}}</mat-panel-title>
-                        </mat-expansion-panel-header>
+            <mat-divider></mat-divider>
+            <h3>Channels</h3>
+            <mat-expansion-panel *ngFor="let channel of definition?.channels; let i = index" #channelPanels>
+                <mat-expansion-panel-header>
+                    <mat-panel-title>{{channel.address}} - {{channel.name}}</mat-panel-title>
+                </mat-expansion-panel-header>
 
-                        <div class="column">
-                            <mat-form-field>
-                                <input required type="number" matInput [(ngModel)]="channel.address" min="1" max="512" [name]="'channelAddress[' + i + ']'"
-                                    placeholder="DMX">
-                            </mat-form-field>
-                            <mat-form-field>
-                                <input required type="text" [unique]="getOtherChannelNames(channel)" matInput [(ngModel)]="channel.name" [name]="'channelName[' + i + ']'"
-                                    list="channelList" placeholder="Name">
-                            </mat-form-field>
-                            <mat-form-field>
-                                <input required type="number" matInput [(ngModel)]="channel.min" min="0" max="255" [name]="'channelMin[' + i + ']'" placeholder="Min">
-                            </mat-form-field>
+                <div class="column">
+                    <mat-form-field>
+                        <input required type="number" matInput [(ngModel)]="channel.address" min="1" max="512" [name]="'channelAddress[' + i + ']'"
+                            placeholder="DMX">
+                    </mat-form-field>
+                    <mat-form-field>
+                        <input required type="text" [unique]="getOtherChannelNames(channel)" matInput [(ngModel)]="channel.name" [name]="'channelName[' + i + ']'"
+                            list="channelList" placeholder="Name">
+                    </mat-form-field>
+                    <mat-form-field>
+                        <input required type="number" matInput [(ngModel)]="channel.min" min="0" max="255" [name]="'channelMin[' + i + ']'" placeholder="Min">
+                    </mat-form-field>
 
-                            <mat-form-field>
-                                <input required type="number" matInput [(ngModel)]="channel.max" min="0" max="255" [name]="'channelMax[' + i + ']'" placeholder="Max">
-                            </mat-form-field>
+                    <mat-form-field>
+                        <input required type="number" matInput [(ngModel)]="channel.max" min="0" max="255" [name]="'channelMax[' + i + ']'" placeholder="Max">
+                    </mat-form-field>
 
-                            <mat-action-row>
-                                <button mat-icon-button type="button" color="warn" (click)="removeChannel(channel)" matTooltip="Remove Channel">
-                                    <mat-icon aria-label="Remove">remove_circle</mat-icon>
-                                </button>
-                            </mat-action-row>
-                        </div>
+                    <mat-action-row>
+                        <button mat-icon-button type="button" color="warn" (click)="removeChannel(channel)" matTooltip="Remove Channel">
+                            <mat-icon aria-label="Remove">remove_circle</mat-icon>
+                        </button>
+                    </mat-action-row>
+                </div>
 
-                    </mat-expansion-panel>
+            </mat-expansion-panel>
 
-                </mat-card-content>
-                <mat-card-actions>
-                    <button mat-icon-button type="button" (click)="addChannel()" matTooltip="Add Channel">
-                        <mat-icon aria-label="Add Channel">add</mat-icon>
-                    </button>
-                </mat-card-actions>
-            </mat-card>
-            <datalist id="channelList" name="channelList">
-                <option>Master</option>
-                <option>Strobe</option>
-                <option>Red</option>
-                <option>Green</option>
-                <option>Blue</option>
-                <option>UV</option>
-                <option>ColorWheel</option>
-                <option>PanCoarse</option>
-                <option>PanFine</option>
-                <option>TiltCoarse</option>
-                <option>TiltFine</option>
-            </datalist>
+            <button mat-icon-button type="button" (click)="addChannel()" matTooltip="Add Channel">
+                <mat-icon aria-label="Add Channel">add</mat-icon>
+            </button>
 
-            <mat-card>
-                <mat-card-title>Movement Axis</mat-card-title>
-                <mat-card-content>
-                    <mat-expansion-panel *ngFor="let axis of definition?.movements; let i = index" #movementPanels>
-                        <mat-expansion-panel-header>
-                            <mat-panel-title>{{axis.name}}</mat-panel-title>
-                        </mat-expansion-panel-header>
-                        <div class="column">
-                            <mat-form-field>
-                                <input required type="text" [unique]="getOtherAxisNames(axis)" matInput [(ngModel)]="axis.name" [name]="'axisName[' + i + ']'"
-                                    placeholder="Name" list="axisList">
-                            </mat-form-field>
-                            <mat-form-field>
-                                <input matInput required type="number" [(ngModel)]="axis.min" [max]="axis.max" [name]="'axisMin[' + i + ']'" placeholder="Min (degrees)"
-                                />
-                            </mat-form-field>
-                            <mat-form-field>
-                                <input matInput required type="number" [(ngModel)]="axis.max" [min]="axis.min" [name]="'axisMax[' + i + ']'" placeholder="Max (degrees)"
-                                />
-                            </mat-form-field>
-                            <mat-action-row>
-                                <button mat-icon-button type="button" color="warn" (click)="removeAxis(axis)" matTooltip="Remove Axis">
-                                    <mat-icon aria-label="Remove Axis">remove_circle</mat-icon>
-                                </button>
-                            </mat-action-row>
-                        </div>
+            <mat-divider></mat-divider>
 
-                    </mat-expansion-panel>
+            <h3>Movement Axis</h3>
+            <mat-expansion-panel *ngFor="let axis of definition?.movements; let i = index" #movementPanels>
+                <mat-expansion-panel-header>
+                    <mat-panel-title>{{axis.name}}</mat-panel-title>
+                </mat-expansion-panel-header>
+                <div class="column">
+                    <mat-form-field>
+                        <input required type="text" [unique]="getOtherAxisNames(axis)" matInput [(ngModel)]="axis.name" [name]="'axisName[' + i + ']'"
+                            placeholder="Name" list="axisList">
+                    </mat-form-field>
+                    <mat-form-field>
+                        <input matInput required type="number" [(ngModel)]="axis.min" [max]="axis.max" [name]="'axisMin[' + i + ']'" placeholder="Min (degrees)"
+                        />
+                    </mat-form-field>
+                    <mat-form-field>
+                        <input matInput required type="number" [(ngModel)]="axis.max" [min]="axis.min" [name]="'axisMax[' + i + ']'" placeholder="Max (degrees)"
+                        />
+                    </mat-form-field>
+                    <mat-action-row>
+                        <button mat-icon-button type="button" color="warn" (click)="removeAxis(axis)" matTooltip="Remove Axis">
+                            <mat-icon aria-label="Remove Axis">remove_circle</mat-icon>
+                        </button>
+                    </mat-action-row>
+                </div>
 
-                </mat-card-content>
+            </mat-expansion-panel>
 
-                <mat-card-actions>
-                    <button mat-icon-button type="button" (click)="addAxis()" matTooltip="Add Movement Axis">
-                        <mat-icon aria-label="Add Movement Axis">add</mat-icon>
-                    </button>
-                </mat-card-actions>
-            </mat-card>
+            <button mat-icon-button type="button" (click)="addAxis()" matTooltip="Add Movement Axis">
+                <mat-icon aria-label="Add Movement Axis">add</mat-icon>
+            </button>
+            <div *ngIf="hasColorWheelChannel()">
+                <mat-divider></mat-divider>
+                <h3>Color Wheel</h3>
 
-            <mat-card *ngIf="hasColorWheelChannel()">
-                <mat-card-title>Color Wheel</mat-card-title>
-                <mat-card-content>
-                    <mat-expansion-panel *ngFor="let entry of definition?.colorWheel; let i = index" #colorWheelPanels>
-                        <mat-expansion-panel-header>
-                            <mat-panel-title>{{entry.name}}</mat-panel-title>
-                        </mat-expansion-panel-header>
+                <mat-expansion-panel *ngFor="let entry of definition?.colorWheel; let i = index" #colorWheelPanels>
+                    <mat-expansion-panel-header>
+                        <mat-panel-title>{{entry.name}}</mat-panel-title>
+                    </mat-expansion-panel-header>
 
-                        <div class="column">
-                            <mat-form-field>
-                                <input required type="text" [unique]="getOtherColorWheelEntryNames(entry)" matInput [(ngModel)]="entry.name" [name]="'colorWheelName[' + i + ']'"
-                                    placeholder="Name">
-                            </mat-form-field>
+                    <div class="column">
+                        <mat-form-field>
+                            <input required type="text" [unique]="getOtherColorWheelEntryNames(entry)" matInput [(ngModel)]="entry.name" [name]="'colorWheelName[' + i + ']'"
+                                placeholder="Name">
+                        </mat-form-field>
 
-                            <div class="mat-input-wrapper mat-form-field-wrapper">
-                                <div class="mat-input-flex mat-form-field-flex">
-                                    <div class="mat-input-infix mat-form-field-infix">
-                                        <input class="mat-input-element" type="color" [(ngModel)]="entry.color" [name]="'colorWheelColor[' + i + ']'" placeholder="Color"
-                                        />
-                                    </div>
+                        <div class="mat-input-wrapper mat-form-field-wrapper">
+                            <div class="mat-input-flex mat-form-field-flex">
+                                <div class="mat-input-infix mat-form-field-infix">
+                                    <input class="mat-input-element" type="color" [(ngModel)]="entry.color" [name]="'colorWheelColor[' + i + ']'" placeholder="Color"
+                                    />
                                 </div>
                             </div>
-
-                            <mat-form-field>
-                                <input matInput required type="number" [(ngModel)]="entry.min" [max]="entry.max" [name]="'axisMin[' + i + ']'" placeholder="Min"
-                                />
-                            </mat-form-field>
-
-                            <mat-form-field>
-                                <input matInput required type="number" [(ngModel)]="entry.max" [min]="entry.min" [name]="'axisMax[' + i + ']'" placeholder="Max"
-                                />
-                            </mat-form-field>
                         </div>
 
-                        <mat-action-row>
-                            <button mat-icon-button type="button" color="warn" (click)="removeColorWheelEntry(entry)" matTooltip="Remove Entry">
-                                <mat-icon aria-label="Remove Entry">remove_circle</mat-icon>
-                            </button>
-                        </mat-action-row>
-                    </mat-expansion-panel>
+                        <mat-form-field>
+                            <input matInput required type="number" [(ngModel)]="entry.min" [max]="entry.max" [name]="'axisMin[' + i + ']'" placeholder="Min"
+                            />
+                        </mat-form-field>
 
-                </mat-card-content>
+                        <mat-form-field>
+                            <input matInput required type="number" [(ngModel)]="entry.max" [min]="entry.min" [name]="'axisMax[' + i + ']'" placeholder="Max"
+                            />
+                        </mat-form-field>
+                    </div>
 
-                <mat-card-actions>
-                    <button mat-icon-button type="button" (click)="addColorWheelEntry()" matTooltip="Add Entry">
-                        <mat-icon aria-label="Add Entry">add</mat-icon>
-                    </button>
-                </mat-card-actions>
-            </mat-card>
+                    <mat-action-row>
+                        <button mat-icon-button type="button" color="warn" (click)="removeColorWheelEntry(entry)" matTooltip="Remove Entry">
+                            <mat-icon aria-label="Remove Entry">remove_circle</mat-icon>
+                        </button>
+                    </mat-action-row>
+                </mat-expansion-panel>
+
+
+                <button mat-icon-button type="button" (click)="addColorWheelEntry()" matTooltip="Add Entry">
+                    <mat-icon aria-label="Add Entry">add</mat-icon>
+                </button>
+            </div>
 
         </mat-card-content>
         <mat-card-actions>
@@ -178,4 +152,18 @@
 </datalist>
 <datalist id="manufacturersList" name="manufacturersList">
     <option *ngFor="let manufacturer of allManufacturers">{{manufacturer}}</option>
+</datalist>
+
+<datalist id="channelList" name="channelList">
+    <option>Master</option>
+    <option>Strobe</option>
+    <option>Red</option>
+    <option>Green</option>
+    <option>Blue</option>
+    <option>UV</option>
+    <option>ColorWheel</option>
+    <option>PanCoarse</option>
+    <option>PanFine</option>
+    <option>TiltCoarse</option>
+    <option>TiltFine</option>
 </datalist>
