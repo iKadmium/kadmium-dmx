@@ -1,8 +1,6 @@
 /* You can add global styles to this file, and also import other style files */
 
 @import "~@angular/material/prebuilt-themes/purple-green.css";
-@import "https://fonts.googleapis.com/icon?family=Material+Icons";
-@import "https://fonts.googleapis.com/css?family=Roboto:300,400,500";
 .column {
     display: -webkit-flex;
     display: flex;
@@ -49,6 +47,7 @@ mat-sidenav-container {
     word-wrap: normal;
     direction: ltr;
     -webkit-font-feature-settings: 'liga';
+    font-feature-settings: 'liga';
     -webkit-font-smoothing: antialiased;
 }
 
@@ -92,4 +91,10 @@ table {
 
 .top-margin {
     margin-top: 1em;
+}
+
+.fixed-fab {
+    position: fixed !important;
+    bottom: 2em;
+    right: 4em;
 }

@@ -3,7 +3,6 @@ import { Title } from "@angular/platform-browser";
 import { MatSidenav } from '@angular/material';
 import { trigger, state, style, transition, animate } from '@angular/animations';
 import { AnimationLibrary } from 'app/animation-library';
-import { TdMediaService } from '@covalent/core';
 
 @Component({
     selector: 'app-root',

@@ -1,0 +1,41 @@
+<mat-card>
+	<mat-card-content>
+		<table>
+			<tr *ngFor="let channel of dmxChannels">
+				<td>{{channel.address + 1}}</td>
+				<td class="column">
+					<mat-slider [min]="channel.min" [max]="channel.max" thumb-label="true" [(ngModel)]="channel.value"></mat-slider>
+					<div class="column" *ngIf="channel.selected">
+						<mat-form-field>
+							<input matInput required type="text" [(ngModel)]="channel.name" placeholder="Name">
+						</mat-form-field>
+						<div style="flex-direction: row; display: flex; width: 100%">
+							<mat-form-field style="flex-grow: 1">
+								<input matInput required type="number" [(ngModel)]="channel.min" placeholder="Min">
+							</mat-form-field>
+							<button mat-icon-button (click)="setMax(channel, channel.value)">
+								<mat-icon>chevron_left</mat-icon>
+							</button>
+						</div>
+						<div style="flex-direction: row; display: flex; width: 100%">
+							<mat-form-field style="flex-grow: 1">
+								<input matInput required type="number" [(ngModel)]="channel.max" placeholder="Max">
+							</mat-form-field>
+							<button mat-icon-button (click)="setMin(channel, channel.value)">
+								<mat-icon>chevron_left</mat-icon>
+							</button>
+						</div>
+					</div>
+				</td>
+				<td>
+					<mat-checkbox [(ngModel)]="channel.selected"></mat-checkbox>
+				</td>
+			</tr>
+
+		</table>
+
+	</mat-card-content>
+</mat-card>
+<button mat-fab class="fixed-fab" [disabled]="selectedChannels.length == 0" (click)="addFixtureDefinition()">
+	<mat-icon>add</mat-icon>
+</button>
