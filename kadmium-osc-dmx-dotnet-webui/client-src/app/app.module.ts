@@ -7,7 +7,7 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 
 import { MatButtonModule, MatCheckboxModule, MatInputModule, MatSelectModule, MatCardModule, MatIconModule, MatTableModule, MatTooltipModule, MatSortModule, MatPaginatorModule, MatTabsModule, MatSliderModule, MatDialogModule, MatAutocompleteModule, MatSidenavModule, MatToolbarModule, MatExpansionModule, MatSlideToggleModule, MatListModule, MatGridListModule, MatButtonToggleModule, MatProgressSpinnerModule, MatSnackBar, MatSnackBarModule, MatMenuModule, MatStepperModule } from "@angular/material";
 
-import { CovalentLayoutModule, CovalentMediaModule, CovalentNotificationsModule, CovalentMenuModule, CovalentLoadingModule } from "@covalent/core";
+import { CovalentLayoutModule, CovalentMediaModule, CovalentNotificationsModule, CovalentMenuModule, CovalentLoadingModule, CovalentExpansionPanelModule } from "@covalent/core";
 
 import { FlexLayoutModule } from '@angular/flex-layout';
 
@@ -153,12 +153,6 @@ import { UnsavedChanges } from 'app/unsaved-changes';
         MatSnackBarModule,
         MatMenuModule,
         MatStepperModule,
-
-        CovalentLayoutModule,
-        CovalentMediaModule,
-        CovalentNotificationsModule,
-        CovalentMenuModule,
-        CovalentLoadingModule,
 
         FlexLayoutModule,
 

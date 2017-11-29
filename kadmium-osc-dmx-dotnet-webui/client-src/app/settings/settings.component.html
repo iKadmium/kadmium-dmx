@@ -29,12 +29,14 @@
                         <div class="column">
                             <mat-list>
                                 <mat-list-item *ngFor="let target of fakeTargets; let i = index" class="column" @fadeOut>
-                                    <mat-form-field @growX>
-                                        <input matInput required type="text" [(ngModel)]="target.target" [name]="'unicast[' + i + ']'" placeholder="Address" />
-                                    </mat-form-field>
-                                    <button mat-icon-button type="button" color="warn" (click)="removeElement(i)" matTooltip="Remove">
-                                        <mat-icon aria-label="Remove">remove_circle</mat-icon>
-                                    </button>
+                                    <div fxLayout="row" class="unicastTargetWrapper">
+                                        <mat-form-field @growX class="unicastTargetName">
+                                            <input matInput required type="text" [(ngModel)]="target.target" [name]="'unicast[' + i + ']'" placeholder="Address" />
+                                        </mat-form-field>
+                                        <button mat-icon-button class="actionsCell" type="button" color="warn" (click)="removeElement(i)" matTooltip="Remove">
+                                            <mat-icon aria-label="Remove">remove_circle</mat-icon>
+                                        </button>
+                                    </div>
                                 </mat-list-item>
                             </mat-list>
 

@@ -12,7 +12,7 @@ import { TdMediaService } from '@covalent/core';
 })
 export class AppComponent implements OnInit
 {
-    constructor(public titleService: Title, public media: TdMediaService)
+    constructor(public titleService: Title)
     {
     }
 
