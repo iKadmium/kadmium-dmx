@@ -17,6 +17,10 @@
                 <mat-icon>lightbulb_outline</mat-icon>
                 Fixtures ({{getFixtureCount(universe)}})
             </a>
+            <a mat-button routerLink="/venue/discover/{{universe.universeID}}">
+                <mat-icon>search</mat-icon>
+                Discover
+            </a>
             <mat-divider *ngIf="!last"></mat-divider>
         </div>
     </mat-card-content>

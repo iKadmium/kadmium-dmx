@@ -19,6 +19,16 @@ namespace kadmium_osc_dmx_dotnet_webui.WebSockets
             MasterController.Instance.OnUpdate += Instance_OnUpdate;
         }
 
+        public override void OnMessage(string message)
+        {
+            JObject obj = JObject.Parse(message);
+            int universeID = obj["universeID"].Value<int>();
+            int channel = obj["channel"].Value<int>();
+            int value = obj["value"].Value<int>();
+
+            this.UpdateDMX(universeID, channel, value);
+        }
+
         private async void Instance_OnUpdate(object sender, EventArgs e)
         {
             try
@@ -29,7 +39,7 @@ namespace kadmium_osc_dmx_dotnet_webui.WebSockets
             catch (Exception)
             { }
         }
-        
+
         public void UpdateDMX(int universeID, int channel, int value)
         {
             Universe universe = MasterController.Instance.Venue.Universes.Single(x => x.UniverseNumber == universeID);

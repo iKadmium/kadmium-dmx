@@ -1,4 +1,4 @@
-<mat-toolbar>
+<mat-toolbar class="title-bar">
     <button mat-icon-button (click)="sidenav.toggle()">
         <mat-icon aria-label="Menu">menu</mat-icon>
     </button>
@@ -6,7 +6,7 @@
 </mat-toolbar>
 
 <mat-sidenav-container class="mat-typography">
-    <mat-sidenav #sidenav [opened]="!isNarrow" [mode]="isNarrow ? 'over' : 'side' ">
+    <mat-sidenav #sidenav [opened]="!isNarrow" [mode]="isNarrow ? 'over' : 'side' " class="title-bar-margin">
         <mat-nav-list>
             <a mat-list-item routerLink="/dashboard" routerLinkActive="active" class="sidenavLink" (click)="toggle(sidenav)">
                 Dashboard
@@ -29,8 +29,12 @@
         </mat-nav-list>
     </mat-sidenav>
 
-    <div fxFlex class="body-content">
-        <router-outlet></router-outlet>
+    <div class="title-bar-margin" style="display: flex">
+        <div class="body-margin"></div>
+        <div class="body-content">
+            <router-outlet></router-outlet>
+        </div>
+        <div class="body-margin"></div>
     </div>
 
 </mat-sidenav-container>

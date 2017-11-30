@@ -1,3 +1,30 @@
-<p>
-  venue-discovery-add-fixture-to-venue-dialog works!
-</p>
+<div class="mat-typography">
+	<form #editorForm="ngForm">
+		<h1 mat-dialog-title>Add Fixture to Group</h1>
+		<div mat-dialog-content>
+			<div class="column">
+				<mat-form-field>
+					<mat-select required [(value)]="data.fixture" placeholder="Fixture Type">
+						<mat-option *ngFor="let definition of definitions" [value]="definition">{{definition.manufacturer}} {{definition.model}}</mat-option>
+					</mat-select>
+				</mat-form-field>
+				<mat-form-field>
+					<mat-select required [(value)]="data.group" placeholder="Group">
+						<mat-option *ngFor="let group of groups" [value]="group.name">{{group.name}}</mat-option>
+					</mat-select>
+				</mat-form-field>
+			</div>
+		</div>
+
+		<div mat-dialog-actions>
+			<button mat-button color="primary" [mat-dialog-close]="data" tabindex="2" [disabled]="!editorForm.valid">
+				<mat-icon>done</mat-icon>
+				OK
+			</button>
+			<button mat-button [mat-dialog-close]="null" tabindex="-1">
+				<mat-icon>cancel</mat-icon>
+				Cancel
+			</button>
+		</div>
+	</form>
+</div>

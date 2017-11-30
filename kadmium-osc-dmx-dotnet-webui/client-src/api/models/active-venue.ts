@@ -3,7 +3,9 @@ import { ActiveUniverse } from './active-universe';
 
 /**
  */
-export class ActiveVenue {
+export class ActiveVenue
+{
     name?: string;
     universes?: ActiveUniverse[];
+    id?: number;
 }

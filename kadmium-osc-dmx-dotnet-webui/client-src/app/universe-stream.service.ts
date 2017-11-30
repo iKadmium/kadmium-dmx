@@ -20,7 +20,7 @@ export class UniverseStreamService
             channel: parseInt(channel + ""),
             value: parseInt(value + "")
         };
-        this.socket.send(data);
+        this.socket.send(JSON.stringify(data));
     }
 
     public subscribe(universeID: number, listener: (data: Uint8Array) => void): void

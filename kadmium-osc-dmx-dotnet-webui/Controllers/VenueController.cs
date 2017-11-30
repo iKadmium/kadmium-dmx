@@ -59,13 +59,14 @@ namespace kadmium_osc_dmx_dotnet_webui.Controllers
             ActiveVenue response = new ActiveVenue
             {
                 Name = MasterController.Instance.Venue?.Name,
+                Id = MasterController.Instance.Venue?.Id ?? 0,
                 Universes = from universe in MasterController.Instance.Venue?.Universes ?? Enumerable.Empty<Universe>()
                             select UniverseController.GetActiveUniverse(universe)
             };
             return response;
         }
 
-        
+
 
         [HttpGet("[action]/{id}")]
         [SwaggerOperation("activateVenueById")]
@@ -144,7 +145,7 @@ namespace kadmium_osc_dmx_dotnet_webui.Controllers
             };
             return download;
         }
-        
+
         private async Task UpdateVenue(Venue oldVenue, Venue newVenue)
         {
             var removals = from universe in oldVenue.Universes
@@ -230,8 +231,9 @@ namespace kadmium_osc_dmx_dotnet_webui.Controllers
     public class ActiveVenue
     {
         public string Name { get; set; }
+        public int Id { get; set; }
         public IEnumerable<ActiveUniverse> Universes { get; set; }
     }
 
-    
+
 }

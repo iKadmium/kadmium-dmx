@@ -1,11 +1,20 @@
 <mat-card>
 	<mat-card-content>
+		<div class="display-container">
+			<mat-form-field>
+				<input matInput type="number" min="0" max="512" placeholder="Display From:" [(ngModel)]="displayFrom">
+			</mat-form-field>
+			<mat-form-field>
+				<input matInput type="number" min="0" max="512" placeholder="Display To:" [(ngModel)]="displayTo">
+			</mat-form-field>
+		</div>
 		<table>
-			<tr *ngFor="let channel of dmxChannels">
-				<td>{{channel.address + 1}}</td>
-				<td class="column">
-					<mat-slider [min]="channel.min" [max]="channel.max" thumb-label="true" [(ngModel)]="channel.value"></mat-slider>
-					<div class="column" *ngIf="channel.selected">
+			<tr *ngFor="let channel of filteredChannels; let i = index" class="channel-row">
+				<td class="address-cell">{{channel.address + 1}}</td>
+				<td class="column slider-cell">
+					<mat-slider [min]="channel.min" [max]="channel.max" thumb-label="true" [(ngModel)]="channel.value" (input)="updateValue(channel.address, $event.value)">
+					</mat-slider>
+					<div class="column" *ngIf="channel.selected" @slideInOut>
 						<mat-form-field>
 							<input matInput required type="text" [(ngModel)]="channel.name" placeholder="Name">
 						</mat-form-field>
@@ -13,7 +22,7 @@
 							<mat-form-field style="flex-grow: 1">
 								<input matInput required type="number" [(ngModel)]="channel.min" placeholder="Min">
 							</mat-form-field>
-							<button mat-icon-button (click)="setMax(channel, channel.value)">
+							<button mat-icon-button (click)="setMin(channel, channel.value)">
 								<mat-icon>chevron_left</mat-icon>
 							</button>
 						</div>
@@ -21,21 +30,22 @@
 							<mat-form-field style="flex-grow: 1">
 								<input matInput required type="number" [(ngModel)]="channel.max" placeholder="Max">
 							</mat-form-field>
-							<button mat-icon-button (click)="setMin(channel, channel.value)">
+							<button mat-icon-button (click)="setMax(channel, channel.value)">
 								<mat-icon>chevron_left</mat-icon>
 							</button>
 						</div>
 					</div>
 				</td>
-				<td>
-					<mat-checkbox [(ngModel)]="channel.selected"></mat-checkbox>
+				<td class="actions-cell">
+					<mat-checkbox [(ngModel)]="channel.selected" matTooltip="Part of new Fixture Definition"></mat-checkbox>
+					<button mat-icon-button matTooltip="Add to Venue" (click)="addFixture(channel.address)">
+						<mat-icon aria-label="Add to Venue">add</mat-icon>
+					</button>
 				</td>
 			</tr>
-
 		</table>
-
 	</mat-card-content>
 </mat-card>
-<button mat-fab class="fixed-fab" [disabled]="selectedChannels.length == 0" (click)="addFixtureDefinition()">
+<button mat-fab class="fixed-fab" [disabled]="selectedChannels.length == 0" (click)="addFixtureDefinition()" matTooltip="Create Fixture Definition">
 	<mat-icon>add</mat-icon>
 </button>
