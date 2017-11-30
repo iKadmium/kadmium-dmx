@@ -74,7 +74,7 @@ namespace kadmium_osc_dmx_dotnet_core
                     EnttecProTransmitter.Load(settings.EnttecProTransmitter)
                 },
                 Listener = new OSCListener(settings.OscPort, "OSC Listener"),
-                Venue = new Venue("New Venue", new[] { new Universe("New Universe", 1, new List<Fixture>()) })
+                Venue = new Venue("No Venue", Enumerable.Empty<Universe>())
             };
             instance.Venue.Activate();
             instance.solversEnabled = true;

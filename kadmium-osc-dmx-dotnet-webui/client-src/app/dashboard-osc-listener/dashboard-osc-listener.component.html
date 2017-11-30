@@ -4,10 +4,10 @@
         <mat-spinner></mat-spinner>
     </mat-card-content>
 </mat-card>
-<mat-card *ngIf="loaded">
+<mat-card *ngIf="loaded" class="dashboard-card">
     <mat-card-title>OSC Listener</mat-card-title>
     <mat-card-subtitle>{{status?.body}}</mat-card-subtitle>
-    <mat-card-content>
+    <!-- <mat-card-content>
         <mat-table #table [dataSource]="dataSource" matSort>
             <ng-container matColumnDef="time">
                 <mat-header-cell *matHeaderCellDef mat-sort-header> Time </mat-header-cell>
@@ -42,8 +42,14 @@
             <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
             <mat-row *matRowDef="let row; columns: displayedColumns;"></mat-row>
         </mat-table>
-    </mat-card-content>
+    </mat-card-content> -->
     <mat-card-actions>
-        <mat-slide-toggle [checked]="enabled" color="primary" [disabled]="!enabledDetermined" (change)="toggleEnabled()">{{enabled ? "Enabled" : "Disabled"}}</mat-slide-toggle>
+        <div style="display: flex; align-items: center">
+            <button mat-raised-button color="primary">
+                <mat-icon>search</mat-icon> Messages
+            </button>
+            <span style="flex: 1"></span>
+            <mat-slide-toggle [checked]="enabled" color="primary" [disabled]="!enabledDetermined" (change)="toggleEnabled()">{{enabled ? "Enabled" : "Disabled"}}</mat-slide-toggle>
+        </div>
     </mat-card-actions>
 </mat-card>

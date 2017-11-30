@@ -98,3 +98,9 @@ table {
     bottom: 2em;
     right: 4em;
 }
+
+@media(min-width: 961px) {
+    .dashboard-card {
+        margin-bottom: 2em !important;
+    }
+}

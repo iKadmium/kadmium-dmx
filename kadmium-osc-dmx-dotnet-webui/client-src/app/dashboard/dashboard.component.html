@@ -1,30 +1,4 @@
-<mat-tab-group @slideIn class="main-card">
-    <mat-tab>
-        <ng-template mat-tab-label>
-            <mat-icon class="icon-spaced">{{statuses.get('Venues')?.glyphIcon}}</mat-icon>
-            Venue
-        </ng-template>
-        <app-dashboard-venue [status]="statuses.get('Venues')"></app-dashboard-venue>
-    </mat-tab>
-    <mat-tab>
-        <ng-template mat-tab-label>
-            <mat-icon class="icon-spaced">{{statuses.get('SACNTransmitters')?.glyphIcon}}</mat-icon>
-            SACN Transmitter
-        </ng-template>
-        <app-dashboard-transmitter-sacn [status]="statuses.get('SACNTransmitters')"></app-dashboard-transmitter-sacn>
-    </mat-tab>
-    <mat-tab>
-        <ng-template mat-tab-label>
-            <mat-icon class="icon-spaced">{{statuses.get('EnttecProTransmitters')?.glyphIcon}}</mat-icon>
-            Enttec Pro Transmitter
-        </ng-template>
-        <app-dashboard-transmitter-enttec [status]="statuses.get('EnttecProTransmitters')"></app-dashboard-transmitter-enttec>
-    </mat-tab>
-    <mat-tab>
-        <ng-template mat-tab-label>
-            <mat-icon class="icon-spaced">{{statuses.get('OSCListeners')?.glyphIcon}}</mat-icon>
-            OSC Listener
-        </ng-template>
-        <app-dashboard-osc-listener [status]="statuses.get('OSCListeners')"></app-dashboard-osc-listener>
-    </mat-tab>
-</mat-tab-group>
+<app-dashboard-venue [status]="statuses.get('Venues')"></app-dashboard-venue>
+<app-dashboard-transmitter-sacn [status]="statuses.get('SACNTransmitters')"></app-dashboard-transmitter-sacn>
+<app-dashboard-transmitter-enttec [status]="statuses.get('EnttecProTransmitters')"></app-dashboard-transmitter-enttec>
+<app-dashboard-osc-listener [status]="statuses.get('OSCListeners')"></app-dashboard-osc-listener>

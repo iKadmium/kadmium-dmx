@@ -1,30 +1,27 @@
-<mat-card>
-    <mat-card-title *ngIf="!loading">{{venue?.name}}</mat-card-title>
-    <mat-card-title *ngIf="loading">Venue</mat-card-title>
-    <mat-card-subtitle *ngIf="!loading">{{status.body}}</mat-card-subtitle>
-    <mat-card-subtitle *ngIf="loading">Loading...</mat-card-subtitle>
-    <mat-card-content *ngIf="loading">
-        <app-busy-card [loading]="loading" [saving]="false"></app-busy-card>
-    </mat-card-content>
-    <mat-card-content *ngIf="!loading">
+<mat-card class="dashboard-card">
+    <mat-card-title>{{venue?.name}}</mat-card-title>
+    <mat-card-subtitle>{{status.body}}</mat-card-subtitle>
+    <mat-card-content>
         <div *ngFor="let universe of venue?.universes; let last = last">
             <h3>{{universe.name}}</h3>
-            <a mat-button routerLink="/venue/dmx/{{universe.universeID}}">
-                <mat-icon>grid_on</mat-icon>
-                DMX Channels ({{getDMXChannelCount(universe)}})
-            </a>
-            <a mat-button routerLink="/venue/fixtures/{{universe.universeID}}">
-                <mat-icon>lightbulb_outline</mat-icon>
-                Fixtures ({{getFixtureCount(universe)}})
-            </a>
-            <a mat-button routerLink="/venue/discover/{{universe.universeID}}">
-                <mat-icon>search</mat-icon>
-                Discover
-            </a>
+            <div class="universe-buttons">
+                <a mat-button routerLink="/venue/dmx/{{universe.universeID}}">
+                    <mat-icon>grid_on</mat-icon>
+                    DMX Channels ({{getDMXChannelCount(universe)}})
+                </a>
+                <a mat-button routerLink="/venue/fixtures/{{universe.universeID}}">
+                    <mat-icon>lightbulb_outline</mat-icon>
+                    Fixtures ({{getFixtureCount(universe)}})
+                </a>
+                <a mat-button routerLink="/venue/discover/{{universe.universeID}}">
+                    <mat-icon>search</mat-icon>
+                    Discover
+                </a>
+            </div>
             <mat-divider *ngIf="!last"></mat-divider>
         </div>
     </mat-card-content>
-    <mat-card-actions *ngIf="!loading">
+    <mat-card-actions>
         <button mat-raised-button color="primary" [matMenuTriggerFor]="appMenu">
             <mat-icon>folder_open</mat-icon> Load Venue
         </button>

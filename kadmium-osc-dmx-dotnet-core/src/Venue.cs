@@ -72,14 +72,17 @@ namespace kadmium_osc_dmx_dotnet_core
             }
         }
 
-        public void Activate()
+        public void Activate(bool updateStatus = true)
         {
             Universes.ForEach(x => x.Activate());
-            if(Status == null)
+            if (Status == null)
             {
                 Status = new Status();
             }
-            Status.Update(StatusCode.Success, Name + " running", this);
+            if (updateStatus)
+            {
+                Status.Update(StatusCode.Success, Name + " running", this);
+            }
         }
 
         public void Deactivate()
