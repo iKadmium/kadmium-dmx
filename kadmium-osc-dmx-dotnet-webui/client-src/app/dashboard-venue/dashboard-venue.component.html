@@ -1,4 +1,5 @@
-<mat-card class="dashboard-card">
+<app-busy-card [loading]="loading" [saving]="false"></app-busy-card>
+<mat-card *ngIf="!loading" class="dashboard-card" [ngClass]="status?.cardClass" @slideIn>
     <mat-card-title>{{venue?.name}}</mat-card-title>
     <mat-card-subtitle>{{status.body}}</mat-card-subtitle>
     <mat-card-content>

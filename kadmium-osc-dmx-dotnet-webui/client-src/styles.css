@@ -99,6 +99,22 @@ table {
     right: 4em;
 }
 
+.dashboard-card-error {
+    background: #824242;
+}
+
+.dashboard-card-info {}
+
+.dashboard-card-success {
+    background: #428242;
+}
+
+.dashboard-card-unknown {}
+
+.dashboard-card-warning {
+    background: #828242;
+}
+
 @media(min-width: 961px) {
     .dashboard-card {
         margin-bottom: 2em !important;

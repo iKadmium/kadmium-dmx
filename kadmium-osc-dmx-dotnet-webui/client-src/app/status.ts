@@ -11,9 +11,9 @@ export class Status
         }
     }
 
-    public get alertStyle(): string
+    public get cardClass(): string
     {
-        return Status.getAlertStyle(this.statusCode);
+        return Status.getCardClass(this.statusCode);
     }
 
     public get glyphIcon(): string
@@ -21,21 +21,21 @@ export class Status
         return Status.getGlyphIcon(this.statusCode);
     }
 
-    public static getAlertStyle(code: StatusCode): string
+    public static getCardClass(code: StatusCode): string
     {
         switch (code)
         {
             case StatusCode.Error:
-                return "warn";
+                return "dashboard-card-error";
             case StatusCode.Info:
-                return "alert-info";
+                return "dashboard-card-info";
             case StatusCode.Success:
-                return "primary";
+                return "dashboard-card-success";
             default:
             case StatusCode.Unknown:
-                return "";
+                return "dashboard-card-unknown";
             case StatusCode.Warning:
-                return "accent";
+                return "dashboard-card-warning";
         }
     }
 

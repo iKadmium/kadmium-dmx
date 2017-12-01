@@ -1,10 +1,5 @@
-<mat-card *ngIf="!loaded">
-    <mat-card-title>Loading</mat-card-title>
-    <mat-card-content>
-        <mat-spinner></mat-spinner>
-    </mat-card-content>
-</mat-card>
-<mat-card *ngIf="loaded" class="dashboard-card">
+<app-busy-card [loading]="!loaded" [saving]="false"></app-busy-card>
+<mat-card *ngIf="loaded" class="dashboard-card" [ngClass]="status?.cardClass" @slideIn>
     <mat-card-title>Enttec Pro Transmitter</mat-card-title>
     <mat-card-subtitle>{{status?.body}}</mat-card-subtitle>
     <mat-card-actions style="display: flex">

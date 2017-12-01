@@ -3,12 +3,14 @@ import { Status } from "app/status";
 import { SACNTransmitterService } from "api/services";
 import { StatusCode } from "app/status-code.enum";
 import { MatSnackBar } from '@angular/material';
+import { AnimationLibrary } from "app/animation-library";
 
 @Component({
     selector: 'app-dashboard-transmitter-sacn',
     templateUrl: './dashboard-transmitter-sacn.component.html',
     styleUrls: ['./dashboard-transmitter-sacn.component.css'],
-    providers: [SACNTransmitterService]
+    providers: [SACNTransmitterService],
+    animations: [AnimationLibrary.animations()]
 })
 export class DashboardTransmitterSacnComponent implements OnInit
 {

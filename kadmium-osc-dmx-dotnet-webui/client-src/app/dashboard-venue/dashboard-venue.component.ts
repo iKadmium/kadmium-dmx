@@ -4,17 +4,17 @@ import { Status } from "app/status";
 import { PreviewVenue } from "app/preview-venue";
 import { VenueService } from "api/services";
 import { PreviewUniverse } from "app/preview-universe";
-import { MatDialog } from "@angular/material/dialog";
-import { DashboardVenueVenueLoadDialogComponent } from "app/dashboard-venue-venue-load-dialog/dashboard-venue-venue-load-dialog.component";
 import { MatSnackBar } from '@angular/material';
 import { VenueSkeleton } from 'api/models/venue-skeleton';
 import { Sleep } from "app/sleep";
+import { AnimationLibrary } from "app/animation-library";
 
 @Component({
     selector: 'app-dashboard-venue',
     templateUrl: './dashboard-venue.component.html',
     styleUrls: ['./dashboard-venue.component.css'],
-    providers: [VenueService]
+    providers: [VenueService],
+    animations: [AnimationLibrary.animations()]
 })
 export class DashboardVenueComponent implements OnInit
 {
@@ -24,7 +24,7 @@ export class DashboardVenueComponent implements OnInit
 
     public loading: boolean;
 
-    constructor(private snackbar: MatSnackBar, private venueService: VenueService, private dialog: MatDialog)
+    constructor(private snackbar: MatSnackBar, private venueService: VenueService)
     {
         this.loading = true;
     }

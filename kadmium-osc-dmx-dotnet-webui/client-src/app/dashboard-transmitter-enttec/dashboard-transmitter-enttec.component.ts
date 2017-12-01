@@ -3,12 +3,14 @@ import { EnttecProTransmitterService } from "api/services";
 import { Status } from "app/status";
 import { StatusCode } from "app/status-code.enum";
 import { MatSnackBar } from '@angular/material';
+import { AnimationLibrary } from "app/animation-library";
 
 @Component({
     selector: 'app-dashboard-transmitter-enttec',
     templateUrl: './dashboard-transmitter-enttec.component.html',
     styleUrls: ['./dashboard-transmitter-enttec.component.css'],
-    providers: [EnttecProTransmitterService]
+    providers: [EnttecProTransmitterService],
+    animations: [AnimationLibrary.animations()]
 })
 export class DashboardTransmitterEnttecComponent implements OnInit
 {

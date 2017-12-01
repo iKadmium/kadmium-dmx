@@ -19,7 +19,6 @@ import { FixtureDefinitionsComponent } from './fixture-definitions/fixture-defin
 import { FixtureDefinitionEditorComponent } from './fixture-definition-editor/fixture-definition-editor.component';
 import { GroupsComponent } from './groups/groups.component';
 import { LabelledInputComponent } from './labelled-input/labelled-input.component';
-import { NavMenuComponent } from './nav-menu/nav-menu.component';
 import { SettingsComponent } from './settings/settings.component';
 import { VenuesComponent } from './venues/venues.component';
 import { UniverseEditorComponent } from './universe-editor/universe-editor.component';
@@ -29,7 +28,6 @@ import { TableInputComponent } from './table-input/table-input.component';
 import { MaxValueValidatorDirective } from './max-value-validator.directive';
 import { MinValueValidatorDirective } from './min-value-validator.directive';
 import { UniqueValueValidatorDirective } from './unique-value-validator.directive';
-import { DashboardNavMenuItemComponent } from './dashboard-nav-menu-item/dashboard-nav-menu-item.component';
 import { DashboardVenueComponent } from './dashboard-venue/dashboard-venue.component';
 import { DashboardUniverseComponent } from './dashboard-universe/dashboard-universe.component';
 import { DashboardFixtureListComponent } from './dashboard-fixture-list/dashboard-fixture-list.component';
@@ -41,7 +39,6 @@ import { DashboardFixturesComponent } from './dashboard-fixtures/dashboard-fixtu
 import { UniverseEditorPresetSaveDialogComponent } from './universe-editor-preset-save-dialog/universe-editor-preset-save-dialog.component';
 import { DashboardTransmitterEnttecComponent } from './dashboard-transmitter-enttec/dashboard-transmitter-enttec.component';
 import { DashboardTransmitterSacnComponent } from './dashboard-transmitter-sacn/dashboard-transmitter-sacn.component';
-import { DashboardVenueVenueLoadDialogComponent } from './dashboard-venue-venue-load-dialog/dashboard-venue-venue-load-dialog.component';
 import { DashboardFixtureDetailComponent } from './dashboard-fixture-detail/dashboard-fixture-detail.component';
 import { DeleteConfirmDialogComponent } from './delete-confirm-dialog/delete-confirm-dialog.component';
 import { BusyCardComponent } from './busy-card/busy-card.component';
@@ -50,6 +47,7 @@ import { VenueDiscoveryComponent } from './venue-discovery/venue-discovery.compo
 import { VenueDiscoveryAddFixtureDefinitionDialogComponent } from './venue-discovery-add-fixture-definition-dialog/venue-discovery-add-fixture-definition-dialog.component';
 import { VenueDiscoveryAddFixtureToVenueDialogComponent } from './venue-discovery-add-fixture-to-venue-dialog/venue-discovery-add-fixture-to-venue-dialog.component';
 import { VenueDiscoverySelectGroupDialogComponent } from './venue-discovery-select-group-dialog/venue-discovery-select-group-dialog.component';
+import { DashboardOscListenerMessagesComponent } from './dashboard-osc-listener-messages/dashboard-osc-listener-messages.component';
 
 @NgModule({
     declarations: [
@@ -59,7 +57,6 @@ import { VenueDiscoverySelectGroupDialogComponent } from './venue-discovery-sele
         FixtureDefinitionEditorComponent,
         GroupsComponent,
         LabelledInputComponent,
-        NavMenuComponent,
         DashboardFixturePreviewComponent,
         SettingsComponent,
         VenuesComponent,
@@ -70,7 +67,6 @@ import { VenueDiscoverySelectGroupDialogComponent } from './venue-discovery-sele
         MaxValueValidatorDirective,
         MinValueValidatorDirective,
         UniqueValueValidatorDirective,
-        DashboardNavMenuItemComponent,
         DashboardVenueComponent,
         DashboardUniverseComponent,
         DashboardFixtureListComponent,
@@ -80,14 +76,14 @@ import { VenueDiscoverySelectGroupDialogComponent } from './venue-discovery-sele
         UniverseEditorPresetSaveDialogComponent,
         DashboardTransmitterEnttecComponent,
         DashboardTransmitterSacnComponent,
-        DashboardVenueVenueLoadDialogComponent,
         DashboardFixtureDetailComponent,
         DeleteConfirmDialogComponent,
         BusyCardComponent,
         VenueDiscoveryComponent,
         VenueDiscoveryAddFixtureDefinitionDialogComponent,
         VenueDiscoveryAddFixtureToVenueDialogComponent,
-        VenueDiscoverySelectGroupDialogComponent
+        VenueDiscoverySelectGroupDialogComponent,
+        DashboardOscListenerMessagesComponent
     ],
     imports: [
         BrowserModule,
@@ -111,6 +107,7 @@ import { VenueDiscoverySelectGroupDialogComponent } from './venue-discovery-sele
                     { path: 'discover/:universeID', component: VenueDiscoveryComponent }
                 ]
             },
+            { path: 'oscListener', component: DashboardOscListenerMessagesComponent },
             { path: 'settings', component: SettingsComponent, canDeactivate: [UnsavedChanges] },
             { path: 'groups', component: GroupsComponent, canDeactivate: [UnsavedChanges] },
             {
@@ -173,7 +170,6 @@ import { VenueDiscoverySelectGroupDialogComponent } from './venue-discovery-sele
     entryComponents: [
         UniverseEditorPresetSaveDialogComponent,
         FixtureOptionsEditorComponent,
-        DashboardVenueVenueLoadDialogComponent,
         DeleteConfirmDialogComponent,
         VenueDiscoveryAddFixtureDefinitionDialogComponent,
         VenueDiscoverySelectGroupDialogComponent,
