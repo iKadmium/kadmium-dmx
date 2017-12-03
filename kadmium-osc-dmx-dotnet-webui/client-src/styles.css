@@ -93,11 +93,6 @@ table {
     margin-top: 1em !important;
 }
 
-.mat-button-wrapper {
-    display: flex;
-    align-items: center;
-}
-
 .button-text {
     margin-left: 8px;
 }

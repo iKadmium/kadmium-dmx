@@ -1,4 +1,4 @@
-<mat-card>
+<mat-card *ngIf="loaded">
 	<mat-card-content>
 		<div class="display-container">
 			<mat-form-field>
@@ -8,44 +8,69 @@
 				<input matInput type="number" min="1" max="512" placeholder="Display To:" [(ngModel)]="displayTo">
 			</mat-form-field>
 		</div>
-		<table>
+
+		<div style="display: flex; flex-direction: column" *ngFor="let channel of filteredChannels; let i = index">
+			<div style="display: flex; margin-top: 0.5em; align-items: center">
+				<div style="flex: 1" class="address-cell">{{channel.address + 1}}</div>
+				<div class="column slider-cell">
+					<span *ngIf="dmxChannelMap.get(channel.address + 1) != null">
+						<span>{{fixtureChannelMap.get(channel.address + 1).group}}</span>
+						<br>
+						<span>{{fixtureChannelMap.get(channel.address + 1).address}} {{fixtureChannelMap.get(channel.address + 1).manufacturer}}
+							{{fixtureChannelMap.get(channel.address + 1).model}}
+						</span>
+						<br>
+						<span *ngFor="let attribute of dmxChannelMap.get(channel.address + 1)">{{attribute.name}}</span>
+					</span>
+
+					<span *ngIf="dmxChannelMap.get(channel.address + 1) == null">Unassigned</span>
+
+					<mat-slider *ngIf="dmxChannelMap.get(channel.address + 1) == null" [min]="channel.min" [max]="channel.max" thumb-label="true"
+					 [(ngModel)]="channel.value" (input)="updateValue(channel.address, $event.value)">
+					</mat-slider>
+				</div>
+				<div style="flex: 1" class="actions-cell">
+					<button mat-icon-button *ngIf="fixtureChannelMap.get(channel.address + 1) == null" matTooltip="Add to Venue" (click)="addFixture(channel.address)">
+						<mat-icon aria-label="Add to Venue">add</mat-icon>
+					</button>
+					<button mat-icon-button *ngIf="fixtureChannelMap.get(channel.address + 1) != null" color="warn" matTooltip="Remove from Venue"
+					 (click)="removeFixture(channel.address)">
+						<mat-icon aria-label="Remove from Venue">remove_circle</mat-icon>
+					</button>
+				</div>
+			</div>
+			<mat-divider style="margin-top: 0.5em"></mat-divider>
+		</div>
+		<!-- <table>
 			<tr *ngFor="let channel of filteredChannels; let i = index" class="channel-row">
 				<td class="address-cell">{{channel.address + 1}}</td>
 				<td class="column slider-cell">
-					<mat-slider [min]="channel.min" [max]="channel.max" thumb-label="true" [(ngModel)]="channel.value" (input)="updateValue(channel.address, $event.value)">
+					<span *ngIf="dmxChannelMap.get(channel.address + 1) != null">
+						<span>{{fixtureChannelMap.get(channel.address + 1).group}}</span>
+						<br>
+						<span>{{fixtureChannelMap.get(channel.address + 1).address}} {{fixtureChannelMap.get(channel.address + 1).manufacturer}}
+							{{fixtureChannelMap.get(channel.address + 1).model}}
+						</span>
+						<br>
+						<span *ngFor="let attribute of dmxChannelMap.get(channel.address + 1)">{{attribute.name}}</span>
+					</span>
+
+					<span *ngIf="dmxChannelMap.get(channel.address + 1) == null">Unassigned</span>
+
+					<mat-slider *ngIf="dmxChannelMap.get(channel.address + 1) == null" [min]="channel.min" [max]="channel.max" thumb-label="true"
+					 [(ngModel)]="channel.value" (input)="updateValue(channel.address, $event.value)">
 					</mat-slider>
-					<div class="column" *ngIf="channel.selected" @slideInOut>
-						<mat-form-field>
-							<input matInput required type="text" [(ngModel)]="channel.name" placeholder="Name">
-						</mat-form-field>
-						<div style="flex-direction: row; display: flex; width: 100%">
-							<mat-form-field style="flex-grow: 1">
-								<input matInput required type="number" [(ngModel)]="channel.min" placeholder="Min">
-							</mat-form-field>
-							<button mat-icon-button (click)="setMin(channel, channel.value)">
-								<mat-icon>chevron_left</mat-icon>
-							</button>
-						</div>
-						<div style="flex-direction: row; display: flex; width: 100%">
-							<mat-form-field style="flex-grow: 1">
-								<input matInput required type="number" [(ngModel)]="channel.max" placeholder="Max">
-							</mat-form-field>
-							<button mat-icon-button (click)="setMax(channel, channel.value)">
-								<mat-icon>chevron_left</mat-icon>
-							</button>
-						</div>
-					</div>
 				</td>
 				<td class="actions-cell">
-					<mat-checkbox [(ngModel)]="channel.selected" matTooltip="Part of new Fixture Definition"></mat-checkbox>
-					<button mat-icon-button matTooltip="Add to Venue" (click)="addFixture(channel.address)">
+					<button mat-icon-button *ngIf="fixtureChannelMap.get(channel.address + 1) == null" matTooltip="Add to Venue" (click)="addFixture(channel.address)">
 						<mat-icon aria-label="Add to Venue">add</mat-icon>
+					</button>
+					<button mat-icon-button *ngIf="fixtureChannelMap.get(channel.address + 1) != null" color="warn" matTooltip="Remove from Venue"
+					 (click)="removeFixture(channel.address)">
+						<mat-icon aria-label="Remove from Venue">remove_circle</mat-icon>
 					</button>
 				</td>
 			</tr>
-		</table>
+		</table> -->
 	</mat-card-content>
 </mat-card>
-<button mat-fab class="fixed-fab" [disabled]="selectedChannels.length == 0" (click)="addFixtureDefinition()" matTooltip="Create Fixture Definition">
-	<mat-icon>add</mat-icon>
-</button>
