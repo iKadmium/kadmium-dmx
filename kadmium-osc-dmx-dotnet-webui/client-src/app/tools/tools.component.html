@@ -1,0 +1,50 @@
+<app-busy-card [loading]="loading" [saving]="false"></app-busy-card>
+<mat-card class="main-card" *ngIf="!loading" @slideIn>
+	<mat-card-content>
+		<h2>Inclusion Options</h2>
+		<mat-expansion-panel>
+			<mat-expansion-panel-header>
+				<mat-panel-title>Groups</mat-panel-title>
+				<mat-panel-description>
+					{{getNames(groupsList)}}
+				</mat-panel-description>
+			</mat-expansion-panel-header>
+			<mat-selection-list #groupsList>
+				<mat-list-option *ngFor="let group of groups" selected="true" [value]="group">
+					{{group.name}}
+				</mat-list-option>
+			</mat-selection-list>
+		</mat-expansion-panel>
+
+		<mat-expansion-panel>
+			<mat-expansion-panel-header>
+				<mat-panel-title>Attributes</mat-panel-title>
+				<mat-panel-description>
+					{{getNames(attributesList)}}
+				</mat-panel-description>
+			</mat-expansion-panel-header>
+			<mat-selection-list #attributesList>
+				<mat-list-option *ngFor="let attribute of attributes" selected="true" [value]="attribute">
+					{{attribute.name}}
+				</mat-list-option>
+			</mat-selection-list>
+		</mat-expansion-panel>
+		<mat-divider class="top-margin"></mat-divider>
+
+		<h2 class="top-margin">I/O</h2>
+		<mat-form-field>
+			<input matInput type="text" required #midiLoopbackName placeholder="MIDI Loopback Name" value="lighting">
+		</mat-form-field>
+
+	</mat-card-content>
+	<mat-card-actions>
+		<button color="primary" mat-raised-button (click)="download('kadmium-dmx Lighting Controller.jsfx', getReaperControllerScript(attributesList))">
+			<mat-icon>code</mat-icon>
+			<span class="button-text">Generate Reaper Controller</span>
+		</button>
+		<button color="primary" mat-raised-button (click)="download('kadmium-dmx Lighting.txt', getOsciiBotControllerScript(attributesList, groupsList, midiLoopbackName.value))">
+			<mat-icon>code</mat-icon>
+			<span class="button-text">Generate OSCII Bot Script</span>
+		</button>
+	</mat-card-actions>
+</mat-card>

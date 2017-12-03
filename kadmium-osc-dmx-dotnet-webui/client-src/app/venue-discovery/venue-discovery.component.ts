@@ -22,7 +22,7 @@ export class VenueDiscoveryComponent implements OnInit
 {
 	public dmxChannels: DiscoveryDMXChannel[]
 
-	public displayFrom: number = 0;
+	public displayFrom: number = 1;
 	public displayTo: number = 50;
 
 	public universeID: number = 1;
@@ -63,7 +63,7 @@ export class VenueDiscoveryComponent implements OnInit
 
 	public get filteredChannels(): DiscoveryDMXChannel[]
 	{
-		return this.dmxChannels.slice(this.displayFrom, this.displayTo);
+		return this.dmxChannels.slice(this.displayFrom - 1, this.displayTo);
 	}
 
 	public setMin(channel: DiscoveryDMXChannel, min: number): void

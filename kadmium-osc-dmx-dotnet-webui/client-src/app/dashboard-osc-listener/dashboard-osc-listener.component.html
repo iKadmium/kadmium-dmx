@@ -5,7 +5,8 @@
     <mat-card-actions>
         <div style="display: flex; align-items: center">
             <button mat-raised-button color="primary" routerLink="/oscListener">
-                <mat-icon>search</mat-icon> Messages
+                <mat-icon>search</mat-icon>
+                <span class="button-text">Messages</span>
             </button>
             <span style="flex: 1"></span>
             <mat-slide-toggle [checked]="enabled" color="primary" [disabled]="!enabledDetermined" (change)="toggleEnabled()">{{enabled ? "Enabled" : "Disabled"}}</mat-slide-toggle>

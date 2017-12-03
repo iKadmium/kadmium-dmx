@@ -48,6 +48,7 @@ import { VenueDiscoveryAddFixtureDefinitionDialogComponent } from './venue-disco
 import { VenueDiscoveryAddFixtureToVenueDialogComponent } from './venue-discovery-add-fixture-to-venue-dialog/venue-discovery-add-fixture-to-venue-dialog.component';
 import { VenueDiscoverySelectGroupDialogComponent } from './venue-discovery-select-group-dialog/venue-discovery-select-group-dialog.component';
 import { DashboardOscListenerMessagesComponent } from './dashboard-osc-listener-messages/dashboard-osc-listener-messages.component';
+import { ToolsComponent } from './tools/tools.component';
 
 @NgModule({
     declarations: [
@@ -83,7 +84,8 @@ import { DashboardOscListenerMessagesComponent } from './dashboard-osc-listener-
         VenueDiscoveryAddFixtureDefinitionDialogComponent,
         VenueDiscoveryAddFixtureToVenueDialogComponent,
         VenueDiscoverySelectGroupDialogComponent,
-        DashboardOscListenerMessagesComponent
+        DashboardOscListenerMessagesComponent,
+        ToolsComponent
     ],
     imports: [
         BrowserModule,
@@ -95,38 +97,39 @@ import { DashboardOscListenerMessagesComponent } from './dashboard-osc-listener-
             { path: 'dashboard', component: DashboardComponent },
             {
                 path: 'venue', children:
-                [
-                    { path: 'dmx/:universeID', component: DashboardUniverseComponent },
-                    {
-                        path: 'fixtures/:universeID', children:
-                        [
-                            { path: '', component: DashboardFixturesComponent },
-                            { path: ':fixtureID', component: DashboardFixtureDetailComponent }
-                        ]
-                    },
-                    { path: 'discover/:universeID', component: VenueDiscoveryComponent }
-                ]
+                    [
+                        { path: 'dmx/:universeID', component: DashboardUniverseComponent },
+                        {
+                            path: 'fixtures/:universeID', children:
+                                [
+                                    { path: '', component: DashboardFixturesComponent },
+                                    { path: ':fixtureID', component: DashboardFixtureDetailComponent }
+                                ]
+                        },
+                        { path: 'discover/:universeID', component: VenueDiscoveryComponent }
+                    ]
             },
             { path: 'oscListener', component: DashboardOscListenerMessagesComponent },
             { path: 'settings', component: SettingsComponent, canDeactivate: [UnsavedChanges] },
             { path: 'groups', component: GroupsComponent, canDeactivate: [UnsavedChanges] },
+            { path: 'tools', component: ToolsComponent },
             {
                 path: 'venues',
                 children:
-                [
-                    { path: '', component: VenuesComponent },
-                    { path: 'new', component: VenueEditorComponent, canDeactivate: [UnsavedChanges] },
-                    { path: ':id', component: VenueEditorComponent, canDeactivate: [UnsavedChanges] },
-                ]
+                    [
+                        { path: '', component: VenuesComponent },
+                        { path: 'new', component: VenueEditorComponent, canDeactivate: [UnsavedChanges] },
+                        { path: ':id', component: VenueEditorComponent, canDeactivate: [UnsavedChanges] },
+                    ]
             },
             {
                 path: 'fixture-definitions',
                 children:
-                [
-                    { path: '', component: FixtureDefinitionsComponent },
-                    { path: 'new', component: FixtureDefinitionEditorComponent, canDeactivate: [UnsavedChanges] },
-                    { path: ':id', component: FixtureDefinitionEditorComponent, canDeactivate: [UnsavedChanges] },
-                ]
+                    [
+                        { path: '', component: FixtureDefinitionsComponent },
+                        { path: 'new', component: FixtureDefinitionEditorComponent, canDeactivate: [UnsavedChanges] },
+                        { path: ':id', component: FixtureDefinitionEditorComponent, canDeactivate: [UnsavedChanges] },
+                    ]
             }
         ]),
 

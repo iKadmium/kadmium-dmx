@@ -8,15 +8,15 @@
             <div class="universe-buttons">
                 <a mat-button routerLink="/venue/dmx/{{universe.universeID}}">
                     <mat-icon>grid_on</mat-icon>
-                    DMX Channels ({{getDMXChannelCount(universe)}})
+                    <span class="button-text">DMX Channels ({{getDMXChannelCount(universe)}})</span>
                 </a>
                 <a mat-button routerLink="/venue/fixtures/{{universe.universeID}}">
                     <mat-icon>lightbulb_outline</mat-icon>
-                    Fixtures ({{getFixtureCount(universe)}})
+                    <span class="button-text">Fixtures ({{getFixtureCount(universe)}})</span>
                 </a>
                 <a mat-button routerLink="/venue/discover/{{universe.universeID}}">
                     <mat-icon>search</mat-icon>
-                    Discover
+                    <span class="button-text">Discover</span>
                 </a>
             </div>
             <mat-divider *ngIf="!last"></mat-divider>
@@ -24,7 +24,8 @@
     </mat-card-content>
     <mat-card-actions>
         <button mat-raised-button color="primary" [matMenuTriggerFor]="appMenu">
-            <mat-icon>folder_open</mat-icon> Load Venue
+            <mat-icon>folder_open</mat-icon>
+            <span class="button-text">Load Venue</span>
         </button>
     </mat-card-actions>
 </mat-card>
