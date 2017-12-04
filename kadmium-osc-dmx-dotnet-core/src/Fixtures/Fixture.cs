@@ -200,7 +200,11 @@ namespace kadmium_osc_dmx_dotnet_core.Fixtures
             if (other.OptionsString != OptionsString) { return false; }
             if (other.FixtureDefinition == null || FixtureDefinition == null)
             {
-                if (!other.Skeleton.Equals(Skeleton)) { return false; }
+                if (other.Skeleton != null && this.Skeleton != null)
+                {
+
+                    if (!other.Skeleton.Equals(Skeleton)) { return false; }
+                }
             }
             else
             {

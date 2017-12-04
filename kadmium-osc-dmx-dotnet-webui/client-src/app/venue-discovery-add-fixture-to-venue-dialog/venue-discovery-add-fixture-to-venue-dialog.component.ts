@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { FixtureDefinitionService, GroupService } from "api/services";
-import { FixtureDefinitionSkeleton, Group } from "api/models";
+import { FixtureDefinitionSkeleton, Group, FixtureDefinition } from "api/models";
 
 @Component({
 	selector: 'app-venue-discovery-add-fixture-to-venue-dialog',
@@ -25,6 +25,7 @@ export class VenueDiscoveryAddFixtureToVenueDialogComponent implements OnInit
 	{
 		this.fixtureDefinitionService.getFixtureDefinitionSkeletons().then(response => this.definitions = response.data);
 		this.groupService.getGroups().then(response => this.groups = response.data);
+
 	}
 
 }

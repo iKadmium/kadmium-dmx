@@ -1,76 +1,18 @@
-<mat-card *ngIf="loaded">
+<app-busy-card [loading]="!loaded" [saving]="saving"></app-busy-card>
+
+<div *ngIf="loaded">
+	<div *ngFor="let channel of filteredChannels; let i = index">
+		<app-venue-discovery-fixture *ngIf="isFirstFixtureChannel(channel.address + 1)" [fixture]="fixtureChannelMap.get(channel.address + 1)"
+		 (removeFixture)="removeFixture($event)">
+		</app-venue-discovery-fixture>
+
+		<app-venue-discovery-unassigned *ngIf="isFirstUnassignedChannel(channel.address + 1)" [start]="channel.address + 1" [length]="getUnassignedBlockSize(channel.address + 1)"
+		 (valueChange)="updateValue($event.address, $event.value)" (addFixtureClick)="addFixture($event)" (addFixtureDefinitionClick)="addFixtureDefinition($event)"></app-venue-discovery-unassigned>
+	</div>
+</div>
+
+<mat-card *ngIf="loaded" class="dashboard-card">
 	<mat-card-content>
-		<div class="display-container">
-			<mat-form-field>
-				<input matInput type="number" min="1" max="512" placeholder="Display From:" [(ngModel)]="displayFrom">
-			</mat-form-field>
-			<mat-form-field>
-				<input matInput type="number" min="1" max="512" placeholder="Display To:" [(ngModel)]="displayTo">
-			</mat-form-field>
-		</div>
-
-		<div style="display: flex; flex-direction: column" *ngFor="let channel of filteredChannels; let i = index">
-			<div style="display: flex; margin-top: 0.5em; align-items: center">
-				<div style="flex: 1" class="address-cell">{{channel.address + 1}}</div>
-				<div class="column slider-cell">
-					<span *ngIf="dmxChannelMap.get(channel.address + 1) != null">
-						<span>{{fixtureChannelMap.get(channel.address + 1).group}}</span>
-						<br>
-						<span>{{fixtureChannelMap.get(channel.address + 1).address}} {{fixtureChannelMap.get(channel.address + 1).manufacturer}}
-							{{fixtureChannelMap.get(channel.address + 1).model}}
-						</span>
-						<br>
-						<span *ngFor="let attribute of dmxChannelMap.get(channel.address + 1)">{{attribute.name}}</span>
-					</span>
-
-					<span *ngIf="dmxChannelMap.get(channel.address + 1) == null">Unassigned</span>
-
-					<mat-slider *ngIf="dmxChannelMap.get(channel.address + 1) == null" [min]="channel.min" [max]="channel.max" thumb-label="true"
-					 [(ngModel)]="channel.value" (input)="updateValue(channel.address, $event.value)">
-					</mat-slider>
-				</div>
-				<div style="flex: 1" class="actions-cell">
-					<button mat-icon-button *ngIf="fixtureChannelMap.get(channel.address + 1) == null" matTooltip="Add to Venue" (click)="addFixture(channel.address)">
-						<mat-icon aria-label="Add to Venue">add</mat-icon>
-					</button>
-					<button mat-icon-button *ngIf="fixtureChannelMap.get(channel.address + 1) != null" color="warn" matTooltip="Remove from Venue"
-					 (click)="removeFixture(channel.address)">
-						<mat-icon aria-label="Remove from Venue">remove_circle</mat-icon>
-					</button>
-				</div>
-			</div>
-			<mat-divider style="margin-top: 0.5em"></mat-divider>
-		</div>
-		<!-- <table>
-			<tr *ngFor="let channel of filteredChannels; let i = index" class="channel-row">
-				<td class="address-cell">{{channel.address + 1}}</td>
-				<td class="column slider-cell">
-					<span *ngIf="dmxChannelMap.get(channel.address + 1) != null">
-						<span>{{fixtureChannelMap.get(channel.address + 1).group}}</span>
-						<br>
-						<span>{{fixtureChannelMap.get(channel.address + 1).address}} {{fixtureChannelMap.get(channel.address + 1).manufacturer}}
-							{{fixtureChannelMap.get(channel.address + 1).model}}
-						</span>
-						<br>
-						<span *ngFor="let attribute of dmxChannelMap.get(channel.address + 1)">{{attribute.name}}</span>
-					</span>
-
-					<span *ngIf="dmxChannelMap.get(channel.address + 1) == null">Unassigned</span>
-
-					<mat-slider *ngIf="dmxChannelMap.get(channel.address + 1) == null" [min]="channel.min" [max]="channel.max" thumb-label="true"
-					 [(ngModel)]="channel.value" (input)="updateValue(channel.address, $event.value)">
-					</mat-slider>
-				</td>
-				<td class="actions-cell">
-					<button mat-icon-button *ngIf="fixtureChannelMap.get(channel.address + 1) == null" matTooltip="Add to Venue" (click)="addFixture(channel.address)">
-						<mat-icon aria-label="Add to Venue">add</mat-icon>
-					</button>
-					<button mat-icon-button *ngIf="fixtureChannelMap.get(channel.address + 1) != null" color="warn" matTooltip="Remove from Venue"
-					 (click)="removeFixture(channel.address)">
-						<mat-icon aria-label="Remove from Venue">remove_circle</mat-icon>
-					</button>
-				</td>
-			</tr>
-		</table> -->
+		<mat-paginator [length]="512" [(pageSize)]="pageSize" [pageIndex]="0" [pageSizeOptions]="[24, 48, 64, 128]" (page)="pageEvent($event)"></mat-paginator>
 	</mat-card-content>
 </mat-card>

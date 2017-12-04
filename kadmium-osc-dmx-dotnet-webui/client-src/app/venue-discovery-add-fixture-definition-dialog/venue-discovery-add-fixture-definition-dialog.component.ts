@@ -15,14 +15,15 @@ export class VenueDiscoveryAddFixtureDefinitionDialogComponent implements OnInit
 	private static detectedAxis: string[] = ["Pan", "Tilt"];
 	private static axisSuffixes: string[][] = [[""], ["Fine", "Coarse"]]
 
-	constructor(public dialogRef: MatDialogRef<VenueDiscoveryAddFixtureDefinitionDialogComponent>, @Inject(MAT_DIALOG_DATA) channels: DMXChannel[])
+	constructor(public dialogRef: MatDialogRef<VenueDiscoveryAddFixtureDefinitionDialogComponent>, @Inject(MAT_DIALOG_DATA) data: AddFixtureDefinitionData)
 	{
 		this.definition = new FixtureDefinition();
-		this.definition.channels = channels;
+		this.definition.channels = data.channels;
 		this.definition.movements = [];
 		this.definition.colorWheel = [];
 		this.definition.lux = 0;
 		this.definition.beamAngle = 0;
+		this.definition.manufacturer = `Venue - ${data.venue}`;
 
 		this.definition.channels.sort((a, b) => 
 		{
@@ -97,4 +98,10 @@ class ChannelCollectionVariant
 	{
 		this.names = [];
 	}
+}
+
+class AddFixtureDefinitionData
+{
+	public channels: DMXChannel[]
+	public venue: string;
 }

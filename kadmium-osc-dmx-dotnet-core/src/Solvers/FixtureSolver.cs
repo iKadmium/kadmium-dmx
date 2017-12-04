@@ -61,6 +61,10 @@ namespace kadmium_osc_dmx_dotnet_core.Solvers
             {
                 solvers.Add(new PanTilt16BitSolver(fixture));
             }
+            if(FireSafetySolver.SuitableFor(fixture.FixtureDefinition))
+            {
+                solvers.Add(new FireSafetySolver(fixture));
+            }
             return solvers;
         }
     }

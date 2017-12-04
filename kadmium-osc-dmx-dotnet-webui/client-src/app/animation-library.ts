@@ -9,6 +9,7 @@ export class AnimationLibrary
             AnimationLibrary.slideIn(duration),
             AnimationLibrary.slideOut(duration),
             AnimationLibrary.slideInOut(duration),
+            AnimationLibrary.slideInBackOut(duration),
             AnimationLibrary.fadeIn(duration),
             AnimationLibrary.fadeOut(duration),
             AnimationLibrary.slideInLeft(duration),
@@ -48,6 +49,20 @@ export class AnimationLibrary
             transition(':leave', [
                 animate(`${duration}ms ease-out`),
                 style({ transform: "translateX(-100%)" })
+            ])
+        ]);
+    }
+
+    public static slideInBackOut(duration: number = 400): AnimationTriggerMetadata
+    {
+        return trigger('slideInBackOut', [
+            transition(':enter', [
+                style({ right: "-2em" }),
+                animate(`${duration}ms ease-in-out`)
+            ]),
+            transition(':leave', [
+                animate(`${duration}ms ease-in-out`),
+                style({ right: "-2em" })
             ])
         ]);
     }

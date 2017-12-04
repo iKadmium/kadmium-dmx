@@ -1,0 +1,16 @@
+.slider-cell {
+    flex: 10;
+}
+
+.actions-cell {
+    flex: 1;
+    white-space: nowrap;
+    margin-right: 1em;
+}
+
+.channel-row {
+    display: flex;
+    align-items: center;
+    margin-top: 0.5em;
+    flex-direction: row;
+}

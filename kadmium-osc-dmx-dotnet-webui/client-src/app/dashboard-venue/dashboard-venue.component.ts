@@ -4,10 +4,12 @@ import { Status } from "app/status";
 import { PreviewVenue } from "app/preview-venue";
 import { VenueService } from "api/services";
 import { PreviewUniverse } from "app/preview-universe";
-import { MatSnackBar } from '@angular/material';
+import { MatSnackBar, MatDialog } from '@angular/material';
 import { VenueSkeleton } from 'api/models/venue-skeleton';
 import { Sleep } from "app/sleep";
 import { AnimationLibrary } from "app/animation-library";
+import { Venue, Universe } from "api/models";
+import { VenueNameDialogComponent } from "app/venue-name-dialog/venue-name-dialog.component";
 
 @Component({
     selector: 'app-dashboard-venue',
@@ -24,7 +26,7 @@ export class DashboardVenueComponent implements OnInit
 
     public loading: boolean;
 
-    constructor(private snackbar: MatSnackBar, private venueService: VenueService)
+    constructor(private snackbar: MatSnackBar, private venueService: VenueService, private dialog: MatDialog)
     {
         this.loading = true;
     }
@@ -100,6 +102,28 @@ export class DashboardVenueComponent implements OnInit
         await this.venueService.activateVenueById(id);
         await this.refreshVenue();
         this.loading = false;
+    }
+
+    public newVenue(): void
+    {
+        let dialogRef = this.dialog.open(VenueNameDialogComponent);
+        dialogRef.afterClosed().subscribe(async next =>
+        {
+            if (next != null)
+            {
+                let universe = new Universe();
+                universe.fixtures = [];
+                universe.name = "New Universe";
+                universe.universeID = 1;
+                let venue = new Venue();
+                venue.name = next;
+                venue.universes = [universe];
+                let response = await this.venueService.postVenue(venue);
+                this.snackbar.open(venue.name + " successfully created", "Close", { duration: 3000 });
+                venue.id = response.data;
+                this.loadVenue(venue.id);
+            }
+        });
     }
 
 }

@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { DMXChannel } from 'api/models/dmxchannel';
-import { MatDialog, MatSnackBar } from '@angular/material';
+import { MatDialog, MatSnackBar, PageEvent } from '@angular/material';
 import { VenueDiscoveryAddFixtureDefinitionDialogComponent } from 'app/venue-discovery-add-fixture-definition-dialog/venue-discovery-add-fixture-definition-dialog.component';
 import { FixtureDefinition } from 'api/models/fixture-definition';
 import { FixtureDefinitionService, VenueService } from 'api/services';
@@ -13,6 +13,8 @@ import { VenueDiscoveryAddFixtureToVenueDialogComponent } from "app/venue-discov
 import { Venue } from 'api/models/venue';
 import { ActiveAttribute } from 'api/models/active-attribute';
 import { ActiveFixture } from 'api/models/active-fixture';
+import { AddFixtureDefinitionEvent } from "app/venue-discovery-unassigned/venue-discovery-unassigned.component";
+import { DeleteConfirmDialogComponent } from "app/delete-confirm-dialog/delete-confirm-dialog.component";
 
 @Component({
 	selector: 'app-venue-discovery',
@@ -25,8 +27,8 @@ export class VenueDiscoveryComponent implements OnInit
 {
 	public dmxChannels: DiscoveryDMXChannel[]
 
-	public displayFrom: number = 300;
-	public displayTo: number = 350;
+	public displayFrom: number = 1;
+	public displayTo: number = 49;
 
 	public universeID: number = 1;
 	public venueID: number = 0;
@@ -38,6 +40,9 @@ export class VenueDiscoveryComponent implements OnInit
 	public fixtureChannelMap: Map<number, ActiveFixture>;
 
 	public loaded: boolean = false;
+	public saving: boolean = false;
+
+	public pageSize: number = 48;
 
 	constructor(private dialog: MatDialog, private fixtureDefinitionService: FixtureDefinitionService,
 		private universeStreamService: UniverseStreamService, public snackbar: MatSnackBar, private venueService: VenueService,
@@ -64,6 +69,7 @@ export class VenueDiscoveryComponent implements OnInit
 
 		this.universeStreamService.subscribe(this.universeID, () => { });
 		this.refreshVenue();
+		this.pageEvent({ length: 512, pageIndex: 0, pageSize: 48 })
 	}
 
 	public async refreshVenue(): Promise<void>
@@ -97,15 +103,9 @@ export class VenueDiscoveryComponent implements OnInit
 		this.loaded = true;
 	}
 
-	public getAttributesByChannel(channel: DiscoveryDMXChannel): ActiveAttribute[]
-	{
-		let value = this.dmxChannelMap.get(channel.address);
-		return value == null ? [] : value;
-	}
-
 	public updateValue(address: number, value: number): void
 	{
-		// this.universeStreamService.set(this.universeID, address, value);
+		this.universeStreamService.set(this.universeID, address, value);
 	}
 
 	public get filteredChannels(): DiscoveryDMXChannel[]
@@ -113,51 +113,80 @@ export class VenueDiscoveryComponent implements OnInit
 		return this.dmxChannels.slice(this.displayFrom - 1, this.displayTo);
 	}
 
-	public setMin(channel: DiscoveryDMXChannel, min: number): void
+	public isFirstFixtureChannel(channel: number): boolean
 	{
-		channel.min = channel.value.toString();
+		let fixture = this.fixtureChannelMap.get(channel);
+		if (fixture == null)
+		{
+			return false;
+		}
+		return fixture.address == channel;
 	}
 
-	public setMax(channel: DiscoveryDMXChannel, max: number): void
+	public isFirstUnassignedChannel(channel: number): boolean
 	{
-		channel.max = channel.value.toString();
+
+		if (channel > this.displayFrom)
+		{
+			return this.fixtureChannelMap.get(channel) == null && this.fixtureChannelMap.get(channel - 1) != null;
+		}
+		else
+		{
+			return this.fixtureChannelMap.get(channel) == null;
+		}
 	}
 
-	public getIsControlled(channel: number): boolean
+	public getUnassignedBlockSize(channel: number): number
 	{
-		let attributes = this.dmxChannelMap.get(channel);
-		return attributes != null && attributes.find(x => x.controlled) != null;
+		let max = 0;
+		for (let i = channel; i < this.displayTo; i++)
+		{
+			if (this.fixtureChannelMap.get(i) == null)
+			{
+				max++;
+			}
+			else
+			{
+				break;
+			}
+		}
+		return max;
 	}
 
-	// public addFixtureDefinition(): void
-	// {
-	// 	let channels = JSON.parse(JSON.stringify(this.selectedChannels)) as DMXChannel[];
-	// 	let dialogRef = this.dialog.open(VenueDiscoveryAddFixtureDefinitionDialogComponent, { data: channels });
-	// 	dialogRef.afterClosed().subscribe(async next =>
-	// 	{
-	// 		if (next != null)
-	// 		{
-	// 			let definition = next as FixtureDefinition;
-	// 			try
-	// 			{
-	// 				let id = await this.fixtureDefinitionService.postFixtureDefinitionById(definition);
-	// 				definition.id = id.data;
-	// 				let address = channels.map(x => x.address).sort((a, b) => a - b)[0];
-	// 				this.snackbar.open(`${definition.manufacturer} ${definition.model} successfully added`);
-	// 				this.selectedChannels.forEach(channel =>
-	// 				{
-	// 					channel.selected = false;
-	// 				});
-	// 				let group = await this.getGroup();
-	// 				await this.addFixtureToVenue(address, definition, group);
-	// 			}
-	// 			catch (error)
-	// 			{
-	// 				this.snackbar.open(error, "Close", { duration: 3000 });
-	// 			}
-	// 		}
-	// 	});
-	// }
+	public addFixtureDefinition(event: AddFixtureDefinitionEvent): void
+	{
+		let channels = JSON.parse(JSON.stringify(event.channels)) as DMXChannel[];
+		let dialogRef = this.dialog.open(VenueDiscoveryAddFixtureDefinitionDialogComponent, { data: { channels: channels, venue: this.venue.name } });
+		dialogRef.afterClosed().subscribe(async next =>
+		{
+			if (next != null)
+			{
+				let definition = next as FixtureDefinition;
+				try
+				{
+					this.saving = true;
+					let id = await this.fixtureDefinitionService.postFixtureDefinitionById(definition);
+					this.saving = false;
+					definition.id = id.data;
+					let address = event.channels.map(x => x.address).sort((a, b) => a - b)[0];
+					this.snackbar.open(`${definition.manufacturer} ${definition.model} successfully added`);
+					event.resolve();
+					let group = await this.getGroup();
+					await this.addFixtureToVenue(address, definition, group);
+				}
+				catch (error)
+				{
+					this.saving = false;
+					event.reject();
+					this.snackbar.open(error, "Close", { duration: 3000 });
+				}
+			}
+			else
+			{
+				event.reject();
+			}
+		});
+	}
 
 	public addFixture(address: number): void
 	{
@@ -202,9 +231,59 @@ export class VenueDiscoveryComponent implements OnInit
 		universe.fixtures.push(fixture);
 		try
 		{
+			this.saving = true;
+			await this.venueService.putVenue({ id: venue.id, venue: venue });
+			this.saving = false;
+			this.snackbar.open("Successfully update " + venue.name, "Close", { duration: 3000 });
+			this.loaded = false;
+			await this.venueService.activateVenueById(venue.id);
+			await this.refreshVenue();
+		}
+		catch (error)
+		{
+			this.saving = false;
+			this.snackbar.open(error, "Close", { duration: 3000 });
+		}
+	}
+
+	public async pageEvent(event: PageEvent): Promise<void>
+	{
+		let promise = new Promise<void>((resolve, reject) =>
+		{
+			this.displayFrom = event.pageSize * event.pageIndex + 1;
+			let displayTo = this.displayFrom + event.pageSize;
+			this.displayTo = displayTo > 513 ? 513 : displayTo;
+		});
+
+		await promise;
+	}
+
+	public removeFixture(fixture: ActiveFixture): void
+	{
+		let name = `${fixture.manufacturer} ${fixture.model} on channel ${fixture.address}`;
+		let dialogRef = this.dialog.open(DeleteConfirmDialogComponent, { data: name });
+		dialogRef.afterClosed().subscribe(async next =>
+		{
+			if (next != null)
+			{
+				await this.removeFixtureFromVenue(fixture);
+			}
+		});
+	}
+
+	public async removeFixtureFromVenue(fixture: ActiveFixture): Promise<void>
+	{
+		let venue = (await this.venueService.getVenueById(this.venueID)).data;
+		let universe = venue.universes.find(x => x.universeID == this.universeID);
+		let index = universe.fixtures.indexOf(x => x.id == fixture.id);
+		universe.fixtures.splice(index, 1);
+		try
+		{
 			await this.venueService.putVenue({ id: venue.id, venue: venue });
 			this.snackbar.open("Successfully update " + venue.name, "Close", { duration: 3000 });
+			this.loaded = false;
 			await this.venueService.activateVenueById(venue.id);
+			await this.refreshVenue();
 		}
 		catch (error)
 		{
