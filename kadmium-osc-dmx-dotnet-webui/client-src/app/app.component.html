@@ -9,23 +9,27 @@
     <mat-sidenav #sidenav [opened]="!isNarrow" [mode]="isNarrow ? 'over' : 'side' " class="title-bar-margin">
         <mat-nav-list>
             <a mat-list-item routerLink="/dashboard" routerLinkActive="active" class="sidenavLink" (click)="toggle(sidenav)">
-                Dashboard
-            </a>
-            <a mat-list-item routerLink="/settings" routerLinkActive="active" class="sidenavLink" (click)="toggle(sidenav)">
-                Settings
+                <mat-icon matListIcon>dashboard</mat-icon>Dashboard
             </a>
             <a mat-list-item routerLink="/groups" routerLinkActive="active" class="sidenavLink" (click)="toggle(sidenav)">
-                Groups
-            </a>
-            <a mat-list-item routerLink="/tools" routerLinkActive="active" class="sidenavLink" (click)="toggle(sidenav)">
-                Tools
+                <mat-icon matListIcon>list</mat-icon>Groups
             </a>
             <a mat-list-item routerLink="/fixture-definitions" routerLinkActive="active" class="sidenavLink" (click)="toggle(sidenav)">
-                Fixture Definitions
+                <mat-icon matListIcon>lightbulb_outline</mat-icon>Fixture Definitions
             </a>
             <a mat-list-item routerLink="/venues" routerLinkActive="active" class="sidenavLink" (click)="toggle(sidenav)">
-                Venues
+                <mat-icon matListIcon>place</mat-icon>Venues
             </a>
+            <mat-divider></mat-divider>
+            <a mat-list-item routerLink="/settings" routerLinkActive="active" class="sidenavLink" (click)="toggle(sidenav)">
+                <mat-icon matListIcon>settings</mat-icon>
+                Settings
+            </a>
+            <a mat-list-item routerLink="/tools" routerLinkActive="active" class="sidenavLink" (click)="toggle(sidenav)">
+                <mat-icon matListIcon>apps</mat-icon>
+                Tools
+            </a>
+
         </mat-nav-list>
     </mat-sidenav>
 
