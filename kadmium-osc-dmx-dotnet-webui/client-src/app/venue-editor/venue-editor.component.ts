@@ -22,8 +22,6 @@ export class VenueEditorComponent implements OnInit
 {
     @ViewChild("universeEditor") universeEditor: UniverseEditorComponent;
     @ViewChild("fixtureOptionsEditor") fixtureOptionsEditor: FixtureOptionsEditorComponent;
-    @ViewChild("universeTabs") universeTabs: MatTabGroup;
-    @ViewChild("addUniverseTab") addUniverseTab: MatTab;
 
     @ViewChild("editorForm") form: NgForm;
 
@@ -68,22 +66,6 @@ export class VenueEditorComponent implements OnInit
         });
     }
 
-    public tabChanged(event: MatTabChangeEvent): void
-    {
-        if (event.tab == this.addUniverseTab)
-        {
-            this.addUniverse();
-        }
-    }
-
-    public addUniverseTabClicked(): void
-    {
-        if (this.universeTabs._tabs.length == 1)
-        {
-            this.addUniverse();
-        }
-    }
-
     private isNewItem(): boolean
     {
         return this.venueId == null;
@@ -98,7 +80,7 @@ export class VenueEditorComponent implements OnInit
         return universe;
     }
 
-    private addUniverse(): void
+    public addUniverse(): void
     {
         let maxNumber = 0;
         this.venue.universes.forEach(value => { if (value.universeID > maxNumber) { maxNumber = value.universeID } });
@@ -106,17 +88,12 @@ export class VenueEditorComponent implements OnInit
         this.venue.universes.push(this.createUniverse("New Universe", universeID));
     }
 
-    private removeUniverse(index: number): void
+    public removeUniverse(index: number): void
     {
-        let universe = this.venue.universes[index];
         this.venue.universes.splice(index, 1);
-        if (index <= this.universeTabs.selectedIndex)
-        {
-            this.universeTabs.selectedIndex--;
-        }
     }
 
-    private async save(): Promise<void>
+    public async save(): Promise<void>
     {
         this.saving = true;
         try

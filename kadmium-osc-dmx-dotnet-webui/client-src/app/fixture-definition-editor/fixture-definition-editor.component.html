@@ -1,8 +1,18 @@
-<app-busy-card [loading]="loading" [saving]="saving"></app-busy-card>
-<form *ngIf="!loading && !saving" @slideIn (ngSubmit)="save()" #editorForm="ngForm">
+<form @slideIn (ngSubmit)="save()" #editorForm="ngForm">
+    <mat-toolbar class="main-toolbar">
+        <app-sidenav-toggle></app-sidenav-toggle>
+        Fixture Definition Editor
+        <span class="toolbar-spacer"></span>
+        <button mat-icon-button color="primary" type="submit" [disabled]="!editorForm.valid" matTooltip="Save">
+            <mat-icon aria-label="Save">save</mat-icon>
+        </button>
+    </mat-toolbar>
     <mat-card>
-        <mat-card-title>{{definition.manufacturer}} {{definition.model}}</mat-card-title>
-        <mat-card-content>
+        <mat-card-title>{{definition?.manufacturer}} {{definition?.model}}</mat-card-title>
+        <mat-card-content *ngIf="loading || saving">
+            <app-busy-card [loading]="loading" [saving]="saving"></app-busy-card>
+        </mat-card-content>
+        <mat-card-content *ngIf="!loading && !saving">
             <div class="column">
                 <mat-form-field>
                     <input required type="text" matInput [(ngModel)]="definition.manufacturer" name="manufacturer" placeholder="Manufacturer"
@@ -21,76 +31,93 @@
             </div>
 
             <mat-divider></mat-divider>
-            <h3>Channels</h3>
-            <mat-expansion-panel *ngFor="let channel of definition?.channels; let i = index" #channelPanels>
-                <mat-expansion-panel-header>
-                    <mat-panel-title>{{channel.address}} - {{channel.name}}</mat-panel-title>
-                </mat-expansion-panel-header>
 
-                <div class="column">
-                    <mat-form-field>
-                        <input required type="number" matInput [(ngModel)]="channel.address" min="1" max="512" [name]="'channelAddress[' + i + ']'"
-                            placeholder="DMX">
-                    </mat-form-field>
-                    <mat-form-field>
-                        <input required type="text" [unique]="getOtherChannelNames(channel)" matInput [(ngModel)]="channel.name" [name]="'channelName[' + i + ']'"
-                            list="channelList" placeholder="Name">
-                    </mat-form-field>
-                    <mat-form-field>
-                        <input required type="number" matInput [(ngModel)]="channel.min" min="0" max="255" [name]="'channelMin[' + i + ']'" placeholder="Min">
-                    </mat-form-field>
+            <div>
+                <mat-toolbar class="sub-toolbar">
+                    Channels
+                    <span class="toolbar-spacer"></span>
+                    <button mat-icon-button type="button" (click)="addChannel()" matTooltip="Add Channel">
+                        <mat-icon aria-label="Add Channel">add</mat-icon>
+                    </button>
+                </mat-toolbar>
 
-                    <mat-form-field>
-                        <input required type="number" matInput [(ngModel)]="channel.max" min="0" max="255" [name]="'channelMax[' + i + ']'" placeholder="Max">
-                    </mat-form-field>
+                <mat-expansion-panel *ngFor="let channel of definition?.channels; let i = index" #channelPanels>
+                    <mat-expansion-panel-header>
+                        <mat-panel-title>{{channel.address}} - {{channel.name}}</mat-panel-title>
+                    </mat-expansion-panel-header>
 
-                    <mat-action-row>
-                        <button mat-icon-button type="button" color="warn" (click)="removeChannel(channel)" matTooltip="Remove Channel">
-                            <mat-icon aria-label="Remove">remove_circle</mat-icon>
-                        </button>
-                    </mat-action-row>
-                </div>
+                    <div class="column">
+                        <mat-form-field>
+                            <input required type="number" matInput [(ngModel)]="channel.address" min="1" max="512" [name]="'channelAddress[' + i + ']'"
+                                placeholder="DMX">
+                        </mat-form-field>
+                        <mat-form-field>
+                            <input required type="text" [unique]="getOtherChannelNames(channel)" matInput [(ngModel)]="channel.name" [name]="'channelName[' + i + ']'"
+                                list="channelList" placeholder="Name">
+                        </mat-form-field>
+                        <mat-form-field>
+                            <input required type="number" matInput [(ngModel)]="channel.min" min="0" max="255" [name]="'channelMin[' + i + ']'" placeholder="Min">
+                        </mat-form-field>
 
-            </mat-expansion-panel>
+                        <mat-form-field>
+                            <input required type="number" matInput [(ngModel)]="channel.max" min="0" max="255" [name]="'channelMax[' + i + ']'" placeholder="Max">
+                        </mat-form-field>
 
-            <button mat-icon-button type="button" (click)="addChannel()" matTooltip="Add Channel">
-                <mat-icon aria-label="Add Channel">add</mat-icon>
-            </button>
+                        <mat-action-row>
+                            <button mat-icon-button type="button" color="warn" (click)="removeChannel(channel)" matTooltip="Remove Channel">
+                                <mat-icon aria-label="Remove">remove_circle</mat-icon>
+                            </button>
+                        </mat-action-row>
+                    </div>
+                </mat-expansion-panel>
+
+            </div>
 
             <mat-divider></mat-divider>
+            <div>
+                <mat-toolbar class="sub-toolbar">
+                    Movement Axis
+                    <span class="toolbar-spacer"></span>
+                    <button mat-icon-button type="button" (click)="addAxis()" matTooltip="Add Movement Axis">
+                        <mat-icon aria-label="Add Movement Axis">add</mat-icon>
+                    </button>
+                </mat-toolbar>
 
-            <h3>Movement Axis</h3>
-            <mat-expansion-panel *ngFor="let axis of definition?.movements; let i = index" #movementPanels>
-                <mat-expansion-panel-header>
-                    <mat-panel-title>{{axis.name}}</mat-panel-title>
-                </mat-expansion-panel-header>
-                <div class="column">
-                    <mat-form-field>
-                        <input required type="text" [unique]="getOtherAxisNames(axis)" matInput [(ngModel)]="axis.name" [name]="'axisName[' + i + ']'"
-                            placeholder="Name" list="axisList">
-                    </mat-form-field>
-                    <mat-form-field>
-                        <input matInput required type="number" [(ngModel)]="axis.min" [max]="axis.max" [name]="'axisMin[' + i + ']'" placeholder="Min (degrees)"
-                        />
-                    </mat-form-field>
-                    <mat-form-field>
-                        <input matInput required type="number" [(ngModel)]="axis.max" [min]="axis.min" [name]="'axisMax[' + i + ']'" placeholder="Max (degrees)"
-                        />
-                    </mat-form-field>
-                    <mat-action-row>
-                        <button mat-icon-button type="button" color="warn" (click)="removeAxis(axis)" matTooltip="Remove Axis">
-                            <mat-icon aria-label="Remove Axis">remove_circle</mat-icon>
-                        </button>
-                    </mat-action-row>
-                </div>
-            </mat-expansion-panel>
+                <mat-expansion-panel *ngFor="let axis of definition?.movements; let i = index" #movementPanels>
+                    <mat-expansion-panel-header>
+                        <mat-panel-title>{{axis.name}}</mat-panel-title>
+                    </mat-expansion-panel-header>
+                    <div class="column">
+                        <mat-form-field>
+                            <input required type="text" [unique]="getOtherAxisNames(axis)" matInput [(ngModel)]="axis.name" [name]="'axisName[' + i + ']'"
+                                placeholder="Name" list="axisList">
+                        </mat-form-field>
+                        <mat-form-field>
+                            <input matInput required type="number" [(ngModel)]="axis.min" [max]="axis.max" [name]="'axisMin[' + i + ']'" placeholder="Min (degrees)"
+                            />
+                        </mat-form-field>
+                        <mat-form-field>
+                            <input matInput required type="number" [(ngModel)]="axis.max" [min]="axis.min" [name]="'axisMax[' + i + ']'" placeholder="Max (degrees)"
+                            />
+                        </mat-form-field>
+                        <mat-action-row>
+                            <button mat-icon-button type="button" color="warn" (click)="removeAxis(axis)" matTooltip="Remove Axis">
+                                <mat-icon aria-label="Remove Axis">remove_circle</mat-icon>
+                            </button>
+                        </mat-action-row>
+                    </div>
+                </mat-expansion-panel>
+            </div>
 
-            <button mat-icon-button type="button" (click)="addAxis()" matTooltip="Add Movement Axis">
-                <mat-icon aria-label="Add Movement Axis">add</mat-icon>
-            </button>
             <div *ngIf="hasColorWheelChannel()">
                 <mat-divider></mat-divider>
-                <h3>Color Wheel</h3>
+                <mat-toolbar class="sub-toolbar">
+                    Color Wheel
+                    <span class="toolbar-spacer"></span>
+                    <button mat-icon-button type="button" (click)="addColorWheelEntry()" matTooltip="Add Entry">
+                        <mat-icon aria-label="Add Entry">add</mat-icon>
+                    </button>
+                </mat-toolbar>
 
                 <mat-expansion-panel *ngFor="let entry of definition?.colorWheel; let i = index" #colorWheelPanels>
                     <mat-expansion-panel-header>
@@ -131,17 +158,10 @@
                 </mat-expansion-panel>
 
 
-                <button mat-icon-button type="button" (click)="addColorWheelEntry()" matTooltip="Add Entry">
-                    <mat-icon aria-label="Add Entry">add</mat-icon>
-                </button>
+
             </div>
 
         </mat-card-content>
-        <mat-card-actions>
-            <button mat-icon-button color="primary" type="submit" [disabled]="!editorForm.valid" matTooltip="Save">
-                <mat-icon aria-label="Save">save</mat-icon>
-            </button>
-        </mat-card-actions>
     </mat-card>
 </form>
 

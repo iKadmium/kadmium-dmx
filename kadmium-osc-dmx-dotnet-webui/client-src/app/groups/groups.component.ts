@@ -59,7 +59,7 @@ export class GroupsComponent implements OnInit
         return maxOrder + 1;
     }
 
-    private add(): void
+    public add(): void
     {
         let group = new Group();
         group.order = this.getNextOrder();
@@ -67,14 +67,14 @@ export class GroupsComponent implements OnInit
         this.dataSource.data = this.groupsSorted;
     }
 
-    private delete(group: Group): void
+    public delete(group: Group): void
     {
         let index = this.groups.indexOf(group);
         this.groups.splice(index, 1);
         this.dataSource.data = this.groupsSorted;
     }
 
-    private swap(oldIndex: number, newIndex: number): void
+    public swap(oldIndex: number, newIndex: number): void
     {
         let oldOrder = this.groupsSorted[oldIndex].order;
         let newOrder = this.groupsSorted[newIndex].order;
@@ -99,7 +99,7 @@ export class GroupsComponent implements OnInit
         return this.groups.sort((a, b) => a.order - b.order);
     }
 
-    private async save(): Promise<void>
+    public async save(): Promise<void>
     {
         this.saving = true;
         try
@@ -117,7 +117,7 @@ export class GroupsComponent implements OnInit
         }
     }
 
-    private async download(): Promise<void>
+    public async download(): Promise<void>
     {
         try
         {
@@ -127,7 +127,7 @@ export class GroupsComponent implements OnInit
         { }
     }
 
-    private upload(fileInput: any): void
+    public upload(fileInput: any): void
     {
         (fileInput as HTMLInputElement).click();
     }

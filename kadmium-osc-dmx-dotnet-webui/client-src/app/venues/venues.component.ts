@@ -19,8 +19,8 @@ import { AnimationLibrary } from "app/animation-library";
 export class VenuesComponent implements OnInit
 {
     venues: VenueSkeleton[];
-    public displayedColumns = ['name', 'actions'];
-    public dataSource: MatTableDataSource<VenueSkeleton>;
+
+    private filter: string = "";
 
     public loading: boolean;
 
@@ -28,7 +28,6 @@ export class VenuesComponent implements OnInit
     {
         title.setTitle("Venues");
         this.venues = [];
-        this.dataSource = new MatTableDataSource(this.venues);
         this.loading = true;
     }
 
@@ -37,14 +36,9 @@ export class VenuesComponent implements OnInit
         this.venueService.getVenues().then(response => 
         {
             response.data.forEach(value => this.venues.push(value));
-            this.updateDataSource();
+            this.venues.sort((a, b) => a.name.localeCompare(b.name));
             this.loading = false;
         }).catch(error => this.snackbar.open(error, "Close", { duration: 3000 }));
-    }
-
-    public updateDataSource(): void
-    {
-        this.dataSource._updateChangeSubscription();
     }
 
     private deleteConfirm(venue: VenueSkeleton): void
@@ -58,7 +52,6 @@ export class VenuesComponent implements OnInit
                     await this.venueService.deleteVenue(venue.id);
                     let index = this.venues.indexOf(venue);
                     this.venues.splice(index, 1);
-                    this.updateDataSource();
                     this.snackbar.open(venue.name + " successfully removed", "Close", { duration: 3000 });
                 }
                 catch (error)
@@ -67,6 +60,26 @@ export class VenuesComponent implements OnInit
                 }
             }
         });
+    }
+
+    public applyFilter(filterValue: string): void
+    {
+        filterValue = filterValue.trim(); // Remove whitespace
+        filterValue = filterValue.toLowerCase(); // MatTableDataSource defaults to lowercase matches
+        this.filter = filterValue;
+    }
+
+    public get filteredData(): VenueSkeleton[]
+    {
+        let filtered = this.venues.filter((value: VenueSkeleton) =>
+        {
+            if (this.filter != "")
+            {
+                return value.name.toLowerCase().indexOf(this.filter) != -1;
+            }
+            else return true;
+        });
+        return filtered;
     }
 
     public upload(fileInput: any): void
@@ -89,7 +102,6 @@ export class VenuesComponent implements OnInit
             let venue = await AsyncFileReader.read<Venue>(file);
             venue.id = (await this.venueService.postVenue(venue)).data;
             this.venues.push(venue);
-            this.updateDataSource();
             this.snackbar.open("Successfully added " + venue.name, "Close", { duration: 3000 });
         }
         catch (reason)

@@ -52,7 +52,7 @@ export class FixtureDefinitionsComponent implements OnInit
         }).catch(error => this.snackbar.open(error, "Close", { duration: 3000 }));
     }
 
-    applyFilter(filterValue: string)
+    public applyFilter(filterValue: string): void
     {
         filterValue = filterValue.trim(); // Remove whitespace
         filterValue = filterValue.toLowerCase(); // MatTableDataSource defaults to lowercase matches

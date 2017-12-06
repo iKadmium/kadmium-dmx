@@ -8,8 +8,21 @@
             placeholder="Universe ID" />
     </mat-form-field>
 </div>
-<mat-divider></mat-divider>
-<h2>Fixtures</h2>
+
+<mat-toolbar class="sub-toolbar">
+    Fixtures
+    <span class="toolbar-spacer"></span>
+    <button mat-icon-button type="button" (click)="addElement()" matTooltip="Add Fixture">
+        <mat-icon aria-label="Add Fixture">add</mat-icon>
+    </button>
+    <button mat-icon-button type="button" [disabled]="universe.fixtures.length == 0" (click)="savePresetAs()" matTooltip="Save Preset">
+        <mat-icon aria-label="Save Preset">cloud_download</mat-icon>
+    </button>
+    <button mat-icon-button type="button" (click)="upload(fileInput)" matTooltip="Load Preset">
+        <mat-icon aria-label="Load Preset">cloud_upload</mat-icon>
+    </button>
+</mat-toolbar>
+
 <mat-expansion-panel *ngFor="let fixture of universe.fixtures">
     <mat-expansion-panel-header>
         <mat-panel-title>{{fixture.address}} {{fixture.type.manufacturer}} {{fixture.type.model}}</mat-panel-title>
@@ -44,14 +57,6 @@
     </mat-action-row>
 </mat-expansion-panel>
 
-<button mat-icon-button type="button" (click)="addElement()" matTooltip="Add Fixture">
-    <mat-icon aria-label="Add Fixture">add</mat-icon>
-</button>
-<button mat-icon-button type="button" [disabled]="universe.fixtures.length == 0" (click)="savePresetAs()" matTooltip="Save Preset">
-    <mat-icon aria-label="Save Preset">cloud_download</mat-icon>
-</button>
-<button mat-icon-button type="button" (click)="upload(fileInput)" matTooltip="Load Preset">
-    <mat-icon aria-label="Load Preset">cloud_upload</mat-icon>
-</button>
+
 
 <input #fileInput type="file" name="name" style="display: none;" (change)="uploadFiles($event.target.files)" multiple>

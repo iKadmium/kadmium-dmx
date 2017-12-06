@@ -1,11 +1,10 @@
+<mat-toolbar class="main-toolbar">
+    <app-sidenav-toggle></app-sidenav-toggle>
+    {{universe?.name}} Fixtures
+    <span class="toolbar-spacer"></span>
+</mat-toolbar>
 <app-busy-card [loading]="loading" [saving]="false"></app-busy-card>
 <mat-card class="main-card" @slideIn *ngIf="!loading">
-    <mat-card-title>
-        <button mat-icon-button routerLink="/dashboard">
-            <mat-icon>arrow_back</mat-icon>
-        </button>
-        <span>{{universe?.name}} Fixtures</span>
-    </mat-card-title>
     <mat-card-content>
         <app-dashboard-fixture-list *ngIf="universe != null" [universe]="universe" (fixtureSelected)="selectedFixture = $event"></app-dashboard-fixture-list>
     </mat-card-content>

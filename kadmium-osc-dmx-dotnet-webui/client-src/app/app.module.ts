@@ -52,6 +52,7 @@ import { ToolsComponent } from './tools/tools.component';
 import { VenueDiscoveryFixtureComponent } from './venue-discovery-fixture/venue-discovery-fixture.component';
 import { VenueDiscoveryUnassignedComponent } from './venue-discovery-unassigned/venue-discovery-unassigned.component';
 import { VenueNameDialogComponent } from './venue-name-dialog/venue-name-dialog.component';
+import { SidenavToggleComponent } from './sidenav-toggle/sidenav-toggle.component';
 
 @NgModule({
     declarations: [
@@ -91,7 +92,8 @@ import { VenueNameDialogComponent } from './venue-name-dialog/venue-name-dialog.
         ToolsComponent,
         VenueDiscoveryFixtureComponent,
         VenueDiscoveryUnassignedComponent,
-        VenueNameDialogComponent
+        VenueNameDialogComponent,
+        SidenavToggleComponent
     ],
     imports: [
         BrowserModule,

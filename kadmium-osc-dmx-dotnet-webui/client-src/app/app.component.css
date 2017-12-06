@@ -7,12 +7,6 @@
     z-index: 2;
 }
 
-@media(min-width: 601px) {
-    .title-bar-margin {
-        margin-top: 64px;
-    }
-}
-
 @media(min-width: 961px) {
     .body-margin {
         flex: 1;
@@ -35,11 +29,5 @@
 @media(max-width: 960px) {
     .body-content {
         flex: 12;
-    }
-}
-
-@media(max-width: 600px) {
-    .title-bar-margin {
-        margin-top: 56px;
     }
 }

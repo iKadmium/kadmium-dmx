@@ -1,7 +1,7 @@
 <app-busy-card [loading]="loading" [saving]="false"></app-busy-card>
 <mat-card *ngIf="!loading" class="dashboard-card" [ngClass]="status?.cardClass" @slideIn>
     <mat-card-title>{{venue?.name}}</mat-card-title>
-    <mat-card-subtitle>{{status.body}}</mat-card-subtitle>
+    <mat-card-subtitle>{{status?.body}}</mat-card-subtitle>
     <mat-card-content>
         <div *ngFor="let universe of venue?.universes; let last = last">
             <h3>{{universe.name}}</h3>
@@ -27,7 +27,7 @@
             <mat-icon>folder_open</mat-icon>
             <span class="button-text">Load</span>
         </button>
-        <button mat-raised-button color="primary" (click)="newVenue()">
+        <button mat-button (click)="newVenue()">
             <mat-icon>create_new_folder</mat-icon>
             <span class="button-text">New</span>
         </button>

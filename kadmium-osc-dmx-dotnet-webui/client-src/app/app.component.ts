@@ -1,22 +1,30 @@
-import { Component, ViewChild, OnInit } from '@angular/core';
+import { Component, ViewChild, OnInit, AfterViewInit } from '@angular/core';
 import { Title } from "@angular/platform-browser";
 import { MatSidenav } from '@angular/material';
 import { trigger, state, style, transition, animate } from '@angular/animations';
 import { AnimationLibrary } from 'app/animation-library';
+import { SidenavService } from "app/sidenav.service";
 
 @Component({
     selector: 'app-root',
     templateUrl: './app.component.html',
-    styleUrls: ['./app.component.css']
+    styleUrls: ['./app.component.css'],
+    providers: [SidenavService]
 })
-export class AppComponent implements OnInit
+export class AppComponent implements OnInit, AfterViewInit
 {
-    constructor(public titleService: Title)
+    @ViewChild("sidenav") sidenav: MatSidenav;
+    constructor(public titleService: Title, private sidenavService: SidenavService)
     {
     }
 
     ngOnInit(): void
     {
+    }
+
+    ngAfterViewInit(): void
+    {
+        this.sidenavService.register(this.sidenav);
     }
 
     ngOnDestroy(): void
@@ -29,11 +37,13 @@ export class AppComponent implements OnInit
         return window.innerWidth < 768;
     }
 
-    public toggle(sidenav: MatSidenav): void
+    public toggleSidenavIfNarrow(): void
     {
         if (this.isNarrow)
         {
-            sidenav.toggle();
+            this.sidenavService.toggle();
         }
     }
+
+
 }

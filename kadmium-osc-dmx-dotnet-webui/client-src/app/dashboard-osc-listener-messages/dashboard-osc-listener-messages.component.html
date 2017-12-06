@@ -1,9 +1,10 @@
+<mat-toolbar class="main-toolbar">
+	<app-sidenav-toggle></app-sidenav-toggle>
+	OSC Listener Messages
+	<span class="toolbar-spacer"></span>
+</mat-toolbar>
 <mat-card>
-	<mat-card-title>
-		<button mat-icon-button routerLink="/dashboard">
-			<mat-icon>arrow_back</mat-icon>
-		</button>
-		OSC Listener Messages</mat-card-title>
+
 	<mat-card-content>
 		<pre style="width: 100%">{{oscText}}</pre>
 	</mat-card-content>

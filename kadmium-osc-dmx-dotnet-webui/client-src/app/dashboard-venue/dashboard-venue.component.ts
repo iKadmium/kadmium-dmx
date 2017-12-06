@@ -99,6 +99,7 @@ export class DashboardVenueComponent implements OnInit
     public async loadVenue(id: number): Promise<void>
     {
         this.loading = true;
+        this.venue = null;
         await this.venueService.activateVenueById(id);
         await this.refreshVenue();
         this.loading = false;
