@@ -22,7 +22,7 @@ namespace kadmium_osc_dmx_dotnet_webui.WebSockets
 
         public override void OnMessage(string message)
         {
-            switch(message)
+            switch (message)
             {
                 case "updateAll":
                     UpdateAll();
@@ -72,15 +72,7 @@ namespace kadmium_osc_dmx_dotnet_webui.WebSockets
                     await SendUpdate("SACNTransmitters", transmitter.Status.StatusCode, transmitter.Status.Message);
                 }
             }
-            if (MasterController.Instance.Venue != null)
-            {
-                await SendUpdate("Venues", StatusCode.Success, MasterController.Instance.Venue.Name + " running");
-            }
-            else
-            {
-                await SendUpdate("Venues", StatusCode.Warning, "No venue loaded");
-            }
-
+            await SendUpdate("Venues", Venue.Status.StatusCode, Venue.Status.Message);
         }
 
         private async Task SendUpdate(string controller, StatusCode statusCode, string message)

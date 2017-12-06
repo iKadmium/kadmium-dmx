@@ -103,6 +103,10 @@ table {
     right: 4em;
 }
 
+.dashboard-card {
+    margin-bottom: 8px;
+}
+
 .dashboard-card-error {
     background: #824242;
 }
@@ -119,8 +123,7 @@ table {
     background: #828242;
 }
 
-@media(min-width: 961px) {
-    .dashboard-card {
-        margin-bottom: 2em !important;
-    }
+.mat-divider {
+    margin-top: 0.5em !important;
+    margin-bottom: 0.5em !important;
 }

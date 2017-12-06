@@ -1,3 +1,30 @@
 .icon-spaced {
     margin-right: 0.5em;
 }
+
+.flex-row {
+    display: flex;
+}
+
+.flex-spacer {
+    flex: 1;
+}
+
+@media (max-width: 960px) {
+    .flex-row {
+        flex-direction: column;
+    }
+    .dashboard-item {
+        margin-bottom: 8px;
+    }
+}
+
+@media (min-width: 961px) {
+    .flex-row {
+        flex-direction: row;
+        margin-bottom: 2em;
+    }
+    .dashboard-item {
+        flex: 0 0 45%;
+    }
+}

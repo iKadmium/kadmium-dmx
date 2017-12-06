@@ -76,7 +76,7 @@ namespace kadmium_osc_dmx_dotnet_core
                 Listener = new OSCListener(settings.OscPort, "OSC Listener"),
                 Venue = new Venue("No Venue", Enumerable.Empty<Universe>())
             };
-            instance.Venue.Activate();
+            instance.Venue.Activate(false);
             instance.solversEnabled = true;
             instance.RenderEnabled = true;
             instance.Rendering = false;

@@ -28,8 +28,6 @@ export class DashboardUniverseComponent implements OnInit, AfterViewInit
 
     renderInterval: number;
 
-    public canvasWidth: number;
-    public canvasHeight: number;
     private cellWidth: number;
     private cellHeight: number;
     private cellPaddingX: number;
@@ -49,9 +47,36 @@ export class DashboardUniverseComponent implements OnInit, AfterViewInit
         this.cellPaddingX = 4;
         this.cellPaddingY = 4;
         this.cellWidth = 50;
-        this.canvasWidth = 10 * this.cellWidth + 11 * this.cellPaddingX;
+
         this.cellHeight = 20;
-        this.canvasHeight = 52 * this.cellHeight + 53 * this.cellPaddingY;
+
+    }
+
+    public get canvasWidth(): number
+    {
+        return this.cellsPerRow * this.cellWidth + (this.cellsPerRow + 1) * this.cellPaddingX;
+    }
+
+    public get canvasHeight(): number
+    {
+        let rows = Math.ceil(512 / this.cellsPerRow);
+        return rows * this.cellHeight + (rows + 1) * this.cellPaddingY;
+    }
+
+    public get cellsPerRow(): number
+    {
+        if (window.innerWidth < 601)
+        {
+            return 5;
+        }
+        else if (window.innerWidth > 1601)
+        {
+            return 20;
+        }
+        else
+        {
+            return 10;
+        }
     }
 
     ngOnInit(): void
@@ -61,32 +86,7 @@ export class DashboardUniverseComponent implements OnInit, AfterViewInit
             .then(response =>
             {
                 this.universe = PreviewUniverse.load(response.data);
-
-                let x = 2 * this.cellPaddingX + this.cellWidth;
-                let y = this.cellPaddingY;
-                for (let address = 0; address < this.data.length; address++)
-                {
-                    let controlled = false;
-                    let fixture = this.universe.fixtures
-                        .find(x => x.channelNumberMap.has(address));
-                    if (fixture != null)
-                    {
-                        controlled = fixture
-                            .channelNumberMap.get(address)
-                            .some(x => x.controlled);
-                    }
-
-                    let cell = new PreviewUniverseCell(this.cellWidth, this.cellHeight, x, y, address, controlled);
-                    this.cells.push(cell);
-                    x += this.cellWidth + this.cellPaddingX;
-
-                    if (x >= this.canvasWidth)
-                    {
-                        y += this.cellHeight + this.cellPaddingY;
-                        x = this.cellPaddingX;
-                    }
-
-                }
+                this.drawCanvas();
             })
             .catch(error => this.snackbar.open(error, "Close", { duration: 3000 }));
 
@@ -94,6 +94,41 @@ export class DashboardUniverseComponent implements OnInit, AfterViewInit
         {
             this.updateData(data);
         });
+
+        window.addEventListener("resize", (ev) =>
+        {
+            this.drawCanvas();
+        });
+    }
+
+    private drawCanvas(): void
+    {
+        let x = 2 * this.cellPaddingX + this.cellWidth;
+        let y = this.cellPaddingY;
+        this.cells = [];
+        for (let address = 0; address < this.data.length; address++)
+        {
+            let controlled = false;
+            let fixture = this.universe.fixtures
+                .find(x => x.channelNumberMap.has(address));
+            if (fixture != null)
+            {
+                controlled = fixture
+                    .channelNumberMap.get(address)
+                    .some(x => x.controlled);
+            }
+
+            let cell = new PreviewUniverseCell(this.cellWidth, this.cellHeight, x, y, address, controlled);
+            this.cells.push(cell);
+            x += this.cellWidth + this.cellPaddingX;
+
+            if (x >= this.canvasWidth)
+            {
+                y += this.cellHeight + this.cellPaddingY;
+                x = this.cellPaddingX;
+            }
+
+        }
     }
 
     ngAfterViewInit(): void
