@@ -9,6 +9,7 @@ import { MatTableDataSource } from "@angular/material/table";
 import { MatSnackBar } from '@angular/material';
 import { NgForm } from '@angular/forms';
 import { AnimationLibrary } from "app/animation-library";
+import { EditorComponent } from "app/editor-component/editor-component";
 
 @Component({
     selector: 'app-groups',
@@ -17,7 +18,7 @@ import { AnimationLibrary } from "app/animation-library";
     providers: [GroupService],
     animations: [AnimationLibrary.animations()]
 })
-export class GroupsComponent implements OnInit
+export class GroupsComponent extends EditorComponent implements OnInit
 {
     groups: Group[];
 
@@ -27,10 +28,11 @@ export class GroupsComponent implements OnInit
     public saving: boolean;
     public loading: boolean;
 
-    @ViewChild("groupsForm") form: NgForm;
+    @ViewChild("groupsForm") formChild: NgForm;
 
     constructor(private groupsService: GroupService, private snackbar: MatSnackBar, title: Title)
     {
+        super();
         title.setTitle("Groups");
         this.saving = false;
         this.loading = true;
@@ -38,6 +40,7 @@ export class GroupsComponent implements OnInit
 
     ngOnInit()
     {
+        this.form = this.formChild;
         this.groupsService.getGroups().then(response => 
         {
             this.groups = response.data;
@@ -105,6 +108,7 @@ export class GroupsComponent implements OnInit
         try
         {
             await this.groupsService.putGroup(this.groups);
+            this.saved = true;
             this.snackbar.open("Saved successfully", "Close", { duration: 3000 })
         }
         catch (reason)

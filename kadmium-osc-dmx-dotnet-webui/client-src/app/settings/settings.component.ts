@@ -10,6 +10,7 @@ import { ActivatedRouteSnapshot, RouterStateSnapshot } from '@angular/router';
 import { Observable } from 'rxjs/Observable';
 import { NgForm } from '@angular/forms';
 import { AnimationLibrary } from "app/animation-library";
+import { EditorComponent } from "app/editor-component/editor-component";
 
 @Component({
     selector: 'app-settings',
@@ -18,7 +19,7 @@ import { AnimationLibrary } from "app/animation-library";
     providers: [SettingsService, EnttecProTransmitterService],
     animations: [AnimationLibrary.animations()]
 })
-export class SettingsComponent implements OnInit
+export class SettingsComponent extends EditorComponent implements OnInit
 {
     settings: Settings;
     public saving: boolean;
@@ -27,11 +28,12 @@ export class SettingsComponent implements OnInit
 
     public fakeTargets: UnicastTarget[];
 
-    @ViewChild("settingsForm") form: NgForm;
+    @ViewChild("settingsForm") formChild: NgForm;
 
     constructor(private settingsService: SettingsService, private enttecService: EnttecProTransmitterService,
         private snackbar: MatSnackBar, title: Title)
     {
+        super();
         title.setTitle("Settings");
         this.saving = false;
         this.fakeTargets = [];
@@ -39,6 +41,7 @@ export class SettingsComponent implements OnInit
 
     ngOnInit(): void
     {
+        this.form = this.formChild;
         this.settingsService
             .getSettings()
             .then(response =>
@@ -68,6 +71,7 @@ export class SettingsComponent implements OnInit
         {
             this.settings.sacnTransmitter.unicast = this.fakeTargets.map(x => x.target);
             await this.settingsService.postSettings(this.settings);
+            this.saved = true;
             this.snackbar.open("Saved Successfully", "Close", { duration: 3000 });
         }
         catch (reason)

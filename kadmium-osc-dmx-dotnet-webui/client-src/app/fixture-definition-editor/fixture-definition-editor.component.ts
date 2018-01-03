@@ -9,6 +9,7 @@ import { MatSnackBar, MatExpansionPanel } from '@angular/material';
 import { Sleep } from 'app/sleep';
 import { NgForm } from '@angular/forms';
 import { AnimationLibrary } from "app/animation-library";
+import { EditorComponent } from "app/editor-component/editor-component";
 
 @Component({
     selector: 'app-fixture-definition-editor',
@@ -17,7 +18,7 @@ import { AnimationLibrary } from "app/animation-library";
     providers: [FixtureDefinitionService],
     animations: [AnimationLibrary.animations()]
 })
-export class FixtureDefinitionEditorComponent implements OnInit
+export class FixtureDefinitionEditorComponent extends EditorComponent implements OnInit
 {
     private id: number | null;
     public allManufacturers: string[];
@@ -29,11 +30,12 @@ export class FixtureDefinitionEditorComponent implements OnInit
     @ViewChildren("colorWheelPanels") colorWheelPanels: QueryList<MatExpansionPanel>;
     @ViewChildren("channelPanels") channelPanels: QueryList<MatExpansionPanel>;
 
-    @ViewChild("editorForm") form: NgForm;
+    @ViewChild("editorForm") formChild: NgForm;
 
     constructor(private route: ActivatedRoute, private fixtureDefinitionService: FixtureDefinitionService,
         private snackbar: MatSnackBar, private title: Title, private router: Router)
     {
+        super();
         this.saving = false;
     }
 
@@ -41,6 +43,7 @@ export class FixtureDefinitionEditorComponent implements OnInit
     {
         this.id = this.route.snapshot.params['id'];
         this.title.setTitle("Fixture Definition Editor");
+        this.form = this.formChild;
         try
         {
             if (this.isNewItem())
@@ -167,11 +170,13 @@ export class FixtureDefinitionEditorComponent implements OnInit
             if (this.isNewItem())
             {
                 await this.fixtureDefinitionService.postFixtureDefinitionById(this.definition);
+                this.saved = true;
                 this.snackbar.open("Successfully added " + this.definition.manufacturer + " " + this.definition.model, "Close", { duration: 3000 });
             }
             else
             {
                 await this.fixtureDefinitionService.putFixtureDefinitionById({ id: this.definition.id, definition: this.definition });
+                this.saved = true;
                 this.snackbar.open("Successfully edited " + this.definition.manufacturer + " " + this.definition.model, "Close", { duration: 3000 });
             }
             this.router.navigate(["../"], { relativeTo: this.route });

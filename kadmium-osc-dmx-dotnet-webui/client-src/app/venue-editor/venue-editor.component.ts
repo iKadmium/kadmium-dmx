@@ -10,6 +10,7 @@ import { MatTabGroup } from "@angular/material/tabs";
 import { MatTabChangeEvent, MatTab, MatSnackBar } from '@angular/material';
 import { NgForm } from '@angular/forms';
 import { AnimationLibrary } from "app/animation-library";
+import { EditorComponent } from "app/editor-component/editor-component";
 
 @Component({
     selector: 'app-venue-editor',
@@ -18,12 +19,12 @@ import { AnimationLibrary } from "app/animation-library";
     providers: [VenueService, GroupService],
     animations: [AnimationLibrary.animations()]
 })
-export class VenueEditorComponent implements OnInit
+export class VenueEditorComponent extends EditorComponent implements OnInit
 {
     @ViewChild("universeEditor") universeEditor: UniverseEditorComponent;
     @ViewChild("fixtureOptionsEditor") fixtureOptionsEditor: FixtureOptionsEditorComponent;
 
-    @ViewChild("editorForm") form: NgForm;
+    @ViewChild("editorForm") formChild: NgForm;
 
     private venueId: number | null;
     public loading: boolean;
@@ -37,6 +38,7 @@ export class VenueEditorComponent implements OnInit
     constructor(private route: ActivatedRoute, private venueService: VenueService, private snackbar: MatSnackBar,
         private groupService: GroupService, private router: Router, private title: Title)
     {
+        super();
         this.saving = false;
         this.loading = true;
     }
@@ -45,6 +47,7 @@ export class VenueEditorComponent implements OnInit
     {
         this.venueId = this.route.snapshot.params['id'];
         this.title.setTitle("Venue Editor");
+        this.form = this.formChild;
         this.groupService.getGroups().then(response =>
         {
             this.groups = response.data;
@@ -101,11 +104,13 @@ export class VenueEditorComponent implements OnInit
             if (this.isNewItem())
             {
                 await this.venueService.postVenue(this.venue);
+                this.saved = true;
                 this.snackbar.open("Successfully added " + this.venue.name, "Close", { duration: 3000 });
             }
             else
             {
                 await this.venueService.putVenue({ id: this.venue.id, venue: this.venue });
+                this.saved = true;
                 this.snackbar.open("Successfully edited " + this.venue.name, "Close", { duration: 3000 });
             }
             this.router.navigate(["../", { relativeTo: this.route }]);

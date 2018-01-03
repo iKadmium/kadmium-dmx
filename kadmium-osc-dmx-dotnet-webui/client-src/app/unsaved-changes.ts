@@ -3,9 +3,10 @@ import { CanDeactivate, ActivatedRouteSnapshot, RouterStateSnapshot } from "@ang
 import { Observable } from "rxjs/Observable";
 import { Component } from "@angular/core";
 import { NgForm } from "@angular/forms";
+import { EditorComponent } from "app/editor-component/editor-component";
 
 @Injectable()
-export class UnsavedChanges<T extends Component> implements CanDeactivate<T> {
+export class UnsavedChanges<T extends EditorComponent> implements CanDeactivate<T> {
 	constructor() { }
 
 	canDeactivate(
@@ -15,8 +16,7 @@ export class UnsavedChanges<T extends Component> implements CanDeactivate<T> {
 		nextState: RouterStateSnapshot
 	): Observable<boolean> | Promise<boolean> | boolean
 	{
-		let form = (component as any).form as NgForm;
-		if (form != null && form.dirty)
+		if (component != null && component.form != null && component.form.dirty && !component.saved)
 		{
 			return window.confirm("Leaving this page will cause unsaved changes to be lost. Are you sure you want to continue?");
 		}
