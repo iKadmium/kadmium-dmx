@@ -100,46 +100,47 @@ import { SidenavToggleComponent } from './sidenav-toggle/sidenav-toggle.componen
         FormsModule,
         HttpModule,
 
-        RouterModule.forRoot([
-            { path: '', redirectTo: 'dashboard', pathMatch: 'full' },
-            { path: 'dashboard', component: DashboardComponent },
-            {
-                path: 'venue', children:
-                [
-                    { path: 'dmx/:universeID', component: DashboardUniverseComponent },
-                    {
-                        path: 'fixtures/:universeID', children:
-                        [
-                            { path: '', component: DashboardFixturesComponent },
-                            { path: ':fixtureID', component: DashboardFixtureDetailComponent }
-                        ]
-                    },
-                    { path: 'discover/:universeID', component: VenueDiscoveryComponent }
-                ]
-            },
-            { path: 'oscListener', component: DashboardOscListenerMessagesComponent },
-            { path: 'settings', component: SettingsComponent, canDeactivate: [UnsavedChanges] },
-            { path: 'groups', component: GroupsComponent, canDeactivate: [UnsavedChanges] },
-            { path: 'tools', component: ToolsComponent },
-            {
-                path: 'venues',
-                children:
-                [
-                    { path: '', component: VenuesComponent },
-                    { path: 'new', component: VenueEditorComponent, canDeactivate: [UnsavedChanges] },
-                    { path: ':id', component: VenueEditorComponent, canDeactivate: [UnsavedChanges] },
-                ]
-            },
-            {
-                path: 'fixture-definitions',
-                children:
-                [
-                    { path: '', component: FixtureDefinitionsComponent },
-                    { path: 'new', component: FixtureDefinitionEditorComponent, canDeactivate: [UnsavedChanges] },
-                    { path: ':id', component: FixtureDefinitionEditorComponent, canDeactivate: [UnsavedChanges] },
-                ]
-            }
-        ]),
+        RouterModule.forRoot(
+            [
+                { path: '', redirectTo: 'dashboard', pathMatch: 'full' },
+                { path: 'dashboard', component: DashboardComponent },
+                {
+                    path: 'venue', children:
+                    [
+                        { path: 'dmx/:universeID', component: DashboardUniverseComponent },
+                        {
+                            path: 'fixtures/:universeID', children:
+                            [
+                                { path: '', component: DashboardFixturesComponent },
+                                { path: ':fixtureID', component: DashboardFixtureDetailComponent }
+                            ]
+                        },
+                        { path: 'discover/:universeID', component: VenueDiscoveryComponent }
+                    ]
+                },
+                { path: 'oscListener', component: DashboardOscListenerMessagesComponent },
+                { path: 'settings', component: SettingsComponent, canDeactivate: [UnsavedChanges] },
+                { path: 'groups', component: GroupsComponent, canDeactivate: [UnsavedChanges] },
+                { path: 'tools', component: ToolsComponent },
+                {
+                    path: 'venues',
+                    children:
+                    [
+                        { path: '', component: VenuesComponent },
+                        { path: 'new', component: VenueEditorComponent, canDeactivate: [UnsavedChanges] },
+                        { path: ':id', component: VenueEditorComponent, canDeactivate: [UnsavedChanges] },
+                    ]
+                },
+                {
+                    path: 'fixture-definitions',
+                    children:
+                    [
+                        { path: '', component: FixtureDefinitionsComponent },
+                        { path: 'new', component: FixtureDefinitionEditorComponent, canDeactivate: [UnsavedChanges] },
+                        { path: ':id', component: FixtureDefinitionEditorComponent, canDeactivate: [UnsavedChanges] },
+                    ]
+                }
+            ]),
 
         ApiModule,
 

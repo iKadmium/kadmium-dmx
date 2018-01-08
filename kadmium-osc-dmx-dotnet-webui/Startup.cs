@@ -1,7 +1,6 @@
-﻿using Microsoft.AspNetCore.Builder;
+using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
-using Microsoft.AspNetCore.SpaServices.Webpack;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Microsoft.EntityFrameworkCore;
@@ -10,7 +9,8 @@ using kadmium_osc_dmx_dotnet_webui.WebSockets;
 using Microsoft.AspNetCore.ResponseCompression;
 using System.IO.Compression;
 using System.IO;
-using Microsoft.Extensions.PlatformAbstractions;
+using Microsoft.DotNet.PlatformAbstractions;
+using System.Collections.Generic;
 
 namespace kadmium_osc_dmx_dotnet_webui
 {
@@ -63,7 +63,8 @@ namespace kadmium_osc_dmx_dotnet_webui
                     Title = "kadmium-osc-dmx API",
                     Version = "v1"
                 });
-                var filePath = Path.Combine(PlatformServices.Default.Application.ApplicationBasePath, "kadmium-osc-dmx-dotnet-webui.xml");
+                
+                var filePath = Path.Combine(ApplicationEnvironment.ApplicationBasePath, "kadmium-osc-dmx-dotnet-webui.xml");
                 c.IncludeXmlComments(filePath);
             });
 
@@ -77,6 +78,38 @@ namespace kadmium_osc_dmx_dotnet_webui
         {
             loggerFactory.AddConsole(Configuration.GetSection("Logging"));
             loggerFactory.AddDebug();
+            
+            app.UseCors(builder =>
+            {
+                builder.AllowAnyMethod();
+                builder.AllowAnyHeader();
+                builder.AllowAnyOrigin();
+            });
+
+            app.UseResponseCompression();
+            app.UseStaticFiles();
+            
+            app.UseSwagger();
+            app.UseSwaggerUI(c =>
+            {
+                c.SwaggerEndpoint("/swagger/v1/swagger.json", "kadmium-osc-dmx API v1");
+            });
+
+            app.UseWebSockets();
+            app.Map("/socket/Status", WebSocketHandler.Map<StatusStreamSocketHandler>);
+            app.Map("/socket/OSC", WebSocketHandler.Map<OSCStreamSocketHandler>);
+            app.MapWhen(x => x.Request.Path.Value.StartsWith("/socket/Universe"), WebSocketHandler.Map<UniverseStreamSocketHandler>);
+            app.MapWhen(x => x.Request.Path.Value.StartsWith("/socket/Fixture"), WebSocketHandler.Map<FixtureStreamSocketHandler>);
+            
+            app.UseMvc(routes =>
+            { 
+                routes.MapRoute(
+                    name: "default",
+                    template: "{controller=Home}/{action=Index}/{id?}");
+
+                //routes.MapSpaFallbackRoute("spa-fallback", new { controller = "Home", action = "Index" });
+                
+            });
 
             if (env.IsDevelopment())
             {
@@ -84,41 +117,9 @@ namespace kadmium_osc_dmx_dotnet_webui
             }
             else
             {
-                //app.UseExceptionHandler("/Home/Error");
-                app.UseDeveloperExceptionPage();
+                app.UseExceptionHandler("/error");
             }
 
-            app.UseCors(builder =>
-            {
-                builder
-                    .AllowAnyMethod()
-                    .AllowAnyHeader()
-                    .AllowAnyOrigin();
-            });
-
-            app.UseWebSockets();
-            app.UseStaticFiles();
-            app.UseResponseCompression();
-            app.UseSwagger();
-            app.UseSwaggerUI(c =>
-            {
-                c.SwaggerEndpoint("/swagger/v1/swagger.json", "kadmium-osc-dmx API v1");
-            });
-
-            app.Map("/socket/Status", WebSocketHandler.Map<StatusStreamSocketHandler>);
-            app.Map("/socket/OSC", WebSocketHandler.Map<OSCStreamSocketHandler>);
-            app.MapWhen(x => x.Request.Path.Value.StartsWith("/socket/Universe"), WebSocketHandler.Map<UniverseStreamSocketHandler>);
-            app.MapWhen(x => x.Request.Path.Value.StartsWith("/socket/Fixture"), WebSocketHandler.Map<FixtureStreamSocketHandler>);
-
-            app.UseMvc(routes =>
-            {
-                routes.MapRoute(
-                    name: "default",
-                    template: "{controller=Home}/{action=Index}/{id?}");
-                routes.MapSpaFallbackRoute(
-                    name: "spa-fallback",
-                    defaults: new { controller = "Home", action = "Index" });
-            });
         }
 
 

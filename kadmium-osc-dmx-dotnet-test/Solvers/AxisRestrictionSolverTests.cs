@@ -15,7 +15,6 @@ namespace kadmium_osc_dmx_dotnet_test.Solvers
         [InlineData(-100, 100, 0, 100, 1.0f, 1.0f)]
         [InlineData(-100, 100, -10, 10, 0.5f, 0.5f)]
         [InlineData(-100, 100, 100, -100, 0.0f, 1.0f)]
-        [InlineData(-100, 100, 100, -100, 0.0f, 1.0f)]
         [InlineData(-270, 270, 0, 0, 0.0f, 0.5f)]
         [InlineData(-270, 270, 0, 0, 1.0f, 0.5f)]
         public void TestAxisRestriction(int originalMin, int originalMax, int restrictedMin, int restrictedMax, float axisValue, float expected)

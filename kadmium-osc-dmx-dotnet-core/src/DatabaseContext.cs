@@ -125,37 +125,37 @@ namespace kadmium_osc_dmx_dotnet_core
             modelBuilder.Entity<FixtureDefinition>()
                 .HasMany(x => x.Channels)
                 .WithOne()
-                .OnDelete(Microsoft.EntityFrameworkCore.Metadata.DeleteBehavior.Cascade);
+                .OnDelete(DeleteBehavior.Cascade);
 
             modelBuilder.Entity<FixtureDefinition>()
                 .HasMany(x => x.ColorWheel)
                 .WithOne()
-                .OnDelete(Microsoft.EntityFrameworkCore.Metadata.DeleteBehavior.Cascade);
+                .OnDelete(DeleteBehavior.Cascade);
 
             modelBuilder.Entity<FixtureDefinition>()
                 .HasMany(x => x.Movements)
                 .WithOne()
-                .OnDelete(Microsoft.EntityFrameworkCore.Metadata.DeleteBehavior.Cascade);
+                .OnDelete(DeleteBehavior.Cascade);
 
             modelBuilder.Entity<Fixture>()
                 .HasOne(x => x.FixtureDefinition)
                 .WithMany()
-                .OnDelete(Microsoft.EntityFrameworkCore.Metadata.DeleteBehavior.Cascade);
+                .OnDelete(DeleteBehavior.Cascade);
 
             modelBuilder.Entity<Fixture>()
                 .HasOne(x => x.Group)
                 .WithMany()
-                .OnDelete(Microsoft.EntityFrameworkCore.Metadata.DeleteBehavior.Cascade);
+                .OnDelete(DeleteBehavior.Cascade);
 
             modelBuilder.Entity<Venue>()
                 .HasMany(x => x.Universes)
                 .WithOne()
-                .OnDelete(Microsoft.EntityFrameworkCore.Metadata.DeleteBehavior.Cascade);
+                .OnDelete(DeleteBehavior.Cascade);
 
             modelBuilder.Entity<Universe>()
                 .HasMany(x => x.Fixtures)
                 .WithOne()
-                .OnDelete(Microsoft.EntityFrameworkCore.Metadata.DeleteBehavior.Cascade);
+                .OnDelete(DeleteBehavior.Cascade);
         }
 
         public async Task<Venue> LoadVenue(int id)
