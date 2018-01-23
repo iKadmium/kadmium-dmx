@@ -1,118 +1,172 @@
 /* tslint:disable */
 import { Injectable } from '@angular/core';
-import { Http, Response, Headers, URLSearchParams, RequestOptions } from '@angular/http';
-
-import 'rxjs/add/operator/toPromise';
-
+import {
+  HttpClient, HttpRequest, HttpResponse, 
+  HttpHeaders, HttpParams } from '@angular/common/http';
+import { BaseService } from '../base-service';
 import { ApiConfiguration } from '../api-configuration';
-import { ApiResponse as _ApiResponse_ } from '../api-response';
+import { Observable } from 'rxjs/Observable';
+import { map } from 'rxjs/operators/map';
+import { filter } from 'rxjs/operators/filter';
 
 import { Status } from '../models/status';
 
-
 @Injectable()
-export class EnttecProTransmitterService {
+export class EnttecProTransmitterService extends BaseService {
   constructor(
-    public http: Http
+    config: ApiConfiguration,
+    http: HttpClient
   ) {
+    super(config, http);
   }
 
   /**
+   * @return Success
    */
-  getEnttecPortNames(): Promise<_ApiResponse_<string[]>> {
-    let options = new RequestOptions({
-      method: "get",
-      url: ApiConfiguration.rootUrl + `/api/EnttecProTransmitter/Ports`,
-      search: new URLSearchParams(),
-      headers: new Headers()
-    });
-    ApiConfiguration.prepareRequestOptions(options);
-    return this.http.request(options.url, options)
-      .toPromise()
-      .then(response => {
-        if (response.status < 200 || response.status > 299) {
-          throw response;
-        }
-        return new _ApiResponse_(response, response.json() as string[]);
-      })
-      .catch(e => {
-        ApiConfiguration.handleError(e);
-        throw e;
+   getEnttecPortNamesResponse(): Observable<HttpResponse<string[]>> {
+    let __params = this.newParams();
+    let __headers = new HttpHeaders();
+    let __body: any = null;
+    let req = new HttpRequest<any>(
+      "GET",
+      this.rootUrl + `/api/EnttecProTransmitter/Ports`,
+      __body,
+      {
+        headers: __headers,
+        params: __params,
+        responseType: 'json'
       });
+
+    return this.http.request<any>(req).pipe(
+      filter(_r => _r instanceof HttpResponse),
+      map(_r => {
+        let _resp = _r as HttpResponse<any>;
+        let _body: string[] = null;
+        _body = _resp.body as string[]
+        return _resp.clone({body: _body}) as HttpResponse<string[]>;
+      })
+    );
   }
 
   /**
+   * @return Success
    */
-  getEnttecEnabled(): Promise<_ApiResponse_<boolean>> {
-    let options = new RequestOptions({
-      method: "get",
-      url: ApiConfiguration.rootUrl + `/api/EnttecProTransmitter/Enabled`,
-      search: new URLSearchParams(),
-      headers: new Headers()
-    });
-    ApiConfiguration.prepareRequestOptions(options);
-    return this.http.request(options.url, options)
-      .toPromise()
-      .then(response => {
-        if (response.status < 200 || response.status > 299) {
-          throw response;
-        }
-        return new _ApiResponse_(response, response.text() == 'true');
-      })
-      .catch(e => {
-        ApiConfiguration.handleError(e);
-        throw e;
-      });
+   getEnttecPortNames(): Observable<string[]> {
+    return this.getEnttecPortNamesResponse().pipe(
+      map(_r => _r.body)
+    );
   }
 
   /**
-   * @param value - undefined
+   * @return Success
    */
-  setEnttecEnabled(value: boolean): Promise<_ApiResponse_<void>> {
-    let options = new RequestOptions({
-      method: "get",
-      url: ApiConfiguration.rootUrl + `/api/EnttecProTransmitter/Enabled/${value}`,
-      search: new URLSearchParams(),
-      headers: new Headers()
-    });
-    
-    ApiConfiguration.prepareRequestOptions(options);
-    return this.http.request(options.url, options)
-      .toPromise()
-      .then(response => {
-        if (response.status < 200 || response.status > 299) {
-          throw response;
-        }
-        return new _ApiResponse_(response, null);
-      })
-      .catch(e => {
-        ApiConfiguration.handleError(e);
-        throw e;
+   getEnttecEnabledResponse(): Observable<HttpResponse<boolean>> {
+    let __params = this.newParams();
+    let __headers = new HttpHeaders();
+    let __body: any = null;
+    let req = new HttpRequest<any>(
+      "GET",
+      this.rootUrl + `/api/EnttecProTransmitter/Enabled`,
+      __body,
+      {
+        headers: __headers,
+        params: __params,
+        responseType: 'text'
       });
+
+    return this.http.request<any>(req).pipe(
+      filter(_r => _r instanceof HttpResponse),
+      map(_r => {
+        let _resp = _r as HttpResponse<any>;
+        let _body: boolean = null;
+        _body = _resp.body == 'true'
+        return _resp.clone({body: _body}) as HttpResponse<boolean>;
+      })
+    );
   }
 
   /**
+   * @return Success
    */
-  getEnttecStatus(): Promise<_ApiResponse_<Status>> {
-    let options = new RequestOptions({
-      method: "get",
-      url: ApiConfiguration.rootUrl + `/api/EnttecProTransmitter/Status`,
-      search: new URLSearchParams(),
-      headers: new Headers()
-    });
-    ApiConfiguration.prepareRequestOptions(options);
-    return this.http.request(options.url, options)
-      .toPromise()
-      .then(response => {
-        if (response.status < 200 || response.status > 299) {
-          throw response;
-        }
-        return new _ApiResponse_(response, response.json() as Status);
-      })
-      .catch(e => {
-        ApiConfiguration.handleError(e);
-        throw e;
+   getEnttecEnabled(): Observable<boolean> {
+    return this.getEnttecEnabledResponse().pipe(
+      map(_r => _r.body)
+    );
+  }
+
+  /**
+   * @param value undefined
+   */
+   setEnttecEnabledResponse(value: boolean): Observable<HttpResponse<void>> {
+    let __params = this.newParams();
+    let __headers = new HttpHeaders();
+    let __body: any = null;
+
+    let req = new HttpRequest<any>(
+      "GET",
+      this.rootUrl + `/api/EnttecProTransmitter/Enabled/${value}`,
+      __body,
+      {
+        headers: __headers,
+        params: __params,
+        responseType: 'text'
       });
+
+    return this.http.request<any>(req).pipe(
+      filter(_r => _r instanceof HttpResponse),
+      map(_r => {
+        let _resp = _r as HttpResponse<any>;
+        let _body: void = null;
+        
+        return _resp.clone({body: _body}) as HttpResponse<void>;
+      })
+    );
+  }
+
+  /**
+   * @param value undefined
+   */
+   setEnttecEnabled(value: boolean): Observable<void> {
+    return this.setEnttecEnabledResponse(value).pipe(
+      map(_r => _r.body)
+    );
+  }
+
+  /**
+   * @return Success
+   */
+   getEnttecStatusResponse(): Observable<HttpResponse<Status>> {
+    let __params = this.newParams();
+    let __headers = new HttpHeaders();
+    let __body: any = null;
+    let req = new HttpRequest<any>(
+      "GET",
+      this.rootUrl + `/api/EnttecProTransmitter/Status`,
+      __body,
+      {
+        headers: __headers,
+        params: __params,
+        responseType: 'json'
+      });
+
+    return this.http.request<any>(req).pipe(
+      filter(_r => _r instanceof HttpResponse),
+      map(_r => {
+        let _resp = _r as HttpResponse<any>;
+        let _body: Status = null;
+        _body = _resp.body as Status
+        return _resp.clone({body: _body}) as HttpResponse<Status>;
+      })
+    );
+  }
+
+  /**
+   * @return Success
+   */
+   getEnttecStatus(): Observable<Status> {
+    return this.getEnttecStatusResponse().pipe(
+      map(_r => _r.body)
+    );
   }
 }
 

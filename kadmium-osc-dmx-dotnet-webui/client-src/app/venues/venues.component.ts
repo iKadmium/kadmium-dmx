@@ -33,12 +33,14 @@ export class VenuesComponent implements OnInit
 
     ngOnInit(): void
     {
-        this.venueService.getVenues().then(response => 
-        {
-            response.data.forEach(value => this.venues.push(value));
-            this.venues.sort((a, b) => a.name.localeCompare(b.name));
-            this.loading = false;
-        }).catch(error => this.snackbar.open(error, "Close", { duration: 3000 }));
+        this.venueService.getVenues()
+            .toPromise()
+            .then(response => 
+            {
+                response.forEach(value => this.venues.push(value));
+                this.venues.sort((a, b) => a.name.localeCompare(b.name));
+                this.loading = false;
+            }).catch(error => this.snackbar.open(error, "Close", { duration: 3000 }));
     }
 
     private deleteConfirm(venue: VenueSkeleton): void
@@ -100,7 +102,7 @@ export class VenuesComponent implements OnInit
         try
         {
             let venue = await AsyncFileReader.read<Venue>(file);
-            venue.id = (await this.venueService.postVenue(venue)).data;
+            venue.id = (await this.venueService.postVenue(venue).toPromise());
             this.venues.push(venue);
             this.snackbar.open("Successfully added " + venue.name, "Close", { duration: 3000 });
         }

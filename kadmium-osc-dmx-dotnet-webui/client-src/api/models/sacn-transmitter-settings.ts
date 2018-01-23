@@ -1,9 +1,10 @@
 /* tslint:disable */
 
-/**
- */
-export class SacnTransmitterSettings {
-    delay?: number;
-    multicast?: boolean;
-    unicast?: string[];
+export interface SacnTransmitterSettings {
+
+  delay?: number;
+
+  multicast?: boolean;
+
+  unicast?: string[];
 }

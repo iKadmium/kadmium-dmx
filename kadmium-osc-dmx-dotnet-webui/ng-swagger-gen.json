@@ -8,7 +8,6 @@
   "defaultTag": "Api",
   "removeStaleFiles": true,
   "modelIndex": true,
-  "errorHandler": true,
   "serviceIndex": true,
   "apiModule": true
 }

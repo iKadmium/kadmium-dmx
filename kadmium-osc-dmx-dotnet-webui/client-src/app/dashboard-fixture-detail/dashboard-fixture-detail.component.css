@@ -1,0 +1,11 @@
+.fixture-preview {
+    position: sticky;
+    z-index: 100;
+    top: 64px;
+}
+
+@media(max-width: 600px) {
+    .fixture-preview {
+        top: 56px;
+    }
+}

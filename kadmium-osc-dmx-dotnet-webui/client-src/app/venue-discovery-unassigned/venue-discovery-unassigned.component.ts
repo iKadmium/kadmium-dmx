@@ -78,9 +78,9 @@ export interface ValueChangeEvent
 	value: number;
 }
 
-class SelectableChannel extends DMXChannel
+interface SelectableChannel extends DMXChannel
 {
-	public selected: boolean;
+	selected: boolean;
 }
 
 export class AddFixtureDefinitionEvent

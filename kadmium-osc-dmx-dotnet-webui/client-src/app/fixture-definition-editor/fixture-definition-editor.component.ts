@@ -48,25 +48,29 @@ export class FixtureDefinitionEditorComponent extends EditorComponent implements
         {
             if (this.isNewItem())
             {
-
-                this.definition = new FixtureDefinition();
-                this.definition.channels = [];
-                this.definition.colorWheel = [];
-                this.definition.movements = [];
+                this.definition = {
+                    channels: [],
+                    colorWheel: [],
+                    movements: []
+                };
             }
             else
             {
-                this.fixtureDefinitionService.getFixtureDefinitionById(this.id).then(response => 
-                {
-                    this.definition = response.data;
-                }).catch(error => this.snackbar.open(error, "Close", { duration: 3000 }));
+                this.fixtureDefinitionService.getFixtureDefinitionById(this.id)
+                    .toPromise()
+                    .then(response => 
+                    {
+                        this.definition = response;
+                    }).catch(error => this.snackbar.open(error, "Close", { duration: 3000 }));
             }
-            this.fixtureDefinitionService.getFixtureDefinitionSkeletons().then(response => 
-            {
-                this.allManufacturers = response.data
-                    .map((skeleton: FixtureDefinitionSkeleton) => skeleton.manufacturer)
-                    .filter((value: string, index: number, array: string[]) => array.indexOf(value) == index);
-            }).catch(error => this.snackbar.open(error, "Close", { duration: 3000 }));
+            this.fixtureDefinitionService.getFixtureDefinitionSkeletons()
+                .toPromise()
+                .then(response => 
+                {
+                    this.allManufacturers = response
+                        .map((skeleton: FixtureDefinitionSkeleton) => skeleton.manufacturer)
+                        .filter((value: string, index: number, array: string[]) => array.indexOf(value) == index);
+                }).catch(error => this.snackbar.open(error, "Close", { duration: 3000 }));
         }
         catch (reason)
         {
@@ -100,10 +104,11 @@ export class FixtureDefinitionEditorComponent extends EditorComponent implements
             }
         });
 
-        let channel = new DMXChannel();
-        channel.address = maxChannel + 1;
-        channel.min = "0";
-        channel.max = "255";
+        let channel: DMXChannel = {
+            address: maxChannel + 1,
+            min: "0",
+            max: "255"
+        };
         this.definition.channels.push(channel);
         await Sleep.sleepUntil(() => this.channelPanels.length == this.definition.channels.length);
         this.channelPanels.last.open();
@@ -124,7 +129,7 @@ export class FixtureDefinitionEditorComponent extends EditorComponent implements
 
     public async addColorWheelEntry(): Promise<void>
     {
-        this.definition.colorWheel.push(new ColorWheelEntry());
+        this.definition.colorWheel.push({});
         await Sleep.sleepUntil(() => this.colorWheelPanels.length == this.definition.colorWheel.length);
         this.colorWheelPanels.last.open();
     }
@@ -144,7 +149,7 @@ export class FixtureDefinitionEditorComponent extends EditorComponent implements
 
     public async addAxis(): Promise<void>
     {
-        this.definition.movements.push(new MovementAxis());
+        this.definition.movements.push({});
         await Sleep.sleepUntil(() => this.movementPanels.length == this.definition.movements.length);
         this.movementPanels.last.open();
     }

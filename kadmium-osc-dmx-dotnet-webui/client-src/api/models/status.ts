@@ -1,8 +1,8 @@
 /* tslint:disable */
 
-/**
- */
-export class Status {
-    message?: string;
-    statusCode?: number;
+export interface Status {
+
+  message?: string;
+
+  statusCode?: number;
 }

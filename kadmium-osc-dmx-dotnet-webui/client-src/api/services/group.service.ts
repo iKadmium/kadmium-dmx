@@ -1,107 +1,164 @@
 /* tslint:disable */
 import { Injectable } from '@angular/core';
-import { Http, Response, Headers, URLSearchParams, RequestOptions } from '@angular/http';
-
-import 'rxjs/add/operator/toPromise';
-
+import {
+  HttpClient, HttpRequest, HttpResponse, 
+  HttpHeaders, HttpParams } from '@angular/common/http';
+import { BaseService } from '../base-service';
 import { ApiConfiguration } from '../api-configuration';
-import { ApiResponse as _ApiResponse_ } from '../api-response';
+import { Observable } from 'rxjs/Observable';
+import { map } from 'rxjs/operators/map';
+import { filter } from 'rxjs/operators/filter';
 
 import { Group } from '../models/group';
 
-
 @Injectable()
-export class GroupService {
+export class GroupService extends BaseService {
   constructor(
-    public http: Http
+    config: ApiConfiguration,
+    http: HttpClient
   ) {
+    super(config, http);
   }
 
   /**
+   * @return Success
    */
-  getGroups(): Promise<_ApiResponse_<Group[]>> {
-    let options = new RequestOptions({
-      method: "get",
-      url: ApiConfiguration.rootUrl + `/api/Group`,
-      search: new URLSearchParams(),
-      headers: new Headers()
-    });
-    ApiConfiguration.prepareRequestOptions(options);
-    return this.http.request(options.url, options)
-      .toPromise()
-      .then(response => {
-        if (response.status < 200 || response.status > 299) {
-          throw response;
-        }
-        return new _ApiResponse_(response, response.json() as Group[]);
-      })
-      .catch(e => {
-        ApiConfiguration.handleError(e);
-        throw e;
+   getGroupsResponse(): Observable<HttpResponse<Group[]>> {
+    let __params = this.newParams();
+    let __headers = new HttpHeaders();
+    let __body: any = null;
+    let req = new HttpRequest<any>(
+      "GET",
+      this.rootUrl + `/api/Group`,
+      __body,
+      {
+        headers: __headers,
+        params: __params,
+        responseType: 'json'
       });
+
+    return this.http.request<any>(req).pipe(
+      filter(_r => _r instanceof HttpResponse),
+      map(_r => {
+        let _resp = _r as HttpResponse<any>;
+        let _body: Group[] = null;
+        _body = _resp.body as Group[]
+        return _resp.clone({body: _body}) as HttpResponse<Group[]>;
+      })
+    );
   }
 
   /**
-   * @param groups - undefined
+   * @return Success
    */
-  putGroup(groups?: Group[]): Promise<_ApiResponse_<void>> {
-    let options = new RequestOptions({
-      method: "put",
-      url: ApiConfiguration.rootUrl + `/api/Group`,
-      search: new URLSearchParams(),
-      headers: new Headers()
-    });
-    options.body = groups;
-    ApiConfiguration.prepareRequestOptions(options);
-    return this.http.request(options.url, options)
-      .toPromise()
-      .then(response => {
-        if (response.status < 200 || response.status > 299) {
-          throw response;
-        }
-        return new _ApiResponse_(response, null);
-      })
-      .catch(e => {
-        ApiConfiguration.handleError(e);
-        throw e;
-      });
+   getGroups(): Observable<Group[]> {
+    return this.getGroupsResponse().pipe(
+      map(_r => _r.body)
+    );
   }
 
   /**
-   * @param value - undefined
-   * @param group - undefined
-   * @param attribute - undefined
+   * @param groups undefined
    */
-  setAttribute(params: GroupService.SetAttributeParams): Promise<_ApiResponse_<void>> {
-    let options = new RequestOptions({
-      method: "get",
-      url: ApiConfiguration.rootUrl + `/api/Group/Set/${params.group}/${params.attribute}/${params.value}`,
-      search: new URLSearchParams(),
-      headers: new Headers()
-    });
-    
-    
-    
-    ApiConfiguration.prepareRequestOptions(options);
-    return this.http.request(options.url, options)
-      .toPromise()
-      .then(response => {
-        if (response.status < 200 || response.status > 299) {
-          throw response;
-        }
-        return new _ApiResponse_(response, null);
-      })
-      .catch(e => {
-        ApiConfiguration.handleError(e);
-        throw e;
+   putGroupResponse(groups?: Group[]): Observable<HttpResponse<void>> {
+    let __params = this.newParams();
+    let __headers = new HttpHeaders();
+    let __body: any = null;
+    __body = groups;
+    let req = new HttpRequest<any>(
+      "PUT",
+      this.rootUrl + `/api/Group`,
+      __body,
+      {
+        headers: __headers,
+        params: __params,
+        responseType: 'text'
       });
+
+    return this.http.request<any>(req).pipe(
+      filter(_r => _r instanceof HttpResponse),
+      map(_r => {
+        let _resp = _r as HttpResponse<any>;
+        let _body: void = null;
+        
+        return _resp.clone({body: _body}) as HttpResponse<void>;
+      })
+    );
+  }
+
+  /**
+   * @param groups undefined
+   */
+   putGroup(groups?: Group[]): Observable<void> {
+    return this.putGroupResponse(groups).pipe(
+      map(_r => _r.body)
+    );
+  }
+
+  /**
+   * @param params The `GroupService.SetAttributeParams` containing the following parameters:
+   *
+   * - `value`: 
+   *
+   * - `group`: 
+   *
+   * - `attribute`:
+   */
+   setAttributeResponse(params: GroupService.SetAttributeParams): Observable<HttpResponse<void>> {
+    let __params = this.newParams();
+    let __headers = new HttpHeaders();
+    let __body: any = null;
+
+
+
+    let req = new HttpRequest<any>(
+      "GET",
+      this.rootUrl + `/api/Group/Set/${params.group}/${params.attribute}/${params.value}`,
+      __body,
+      {
+        headers: __headers,
+        params: __params,
+        responseType: 'text'
+      });
+
+    return this.http.request<any>(req).pipe(
+      filter(_r => _r instanceof HttpResponse),
+      map(_r => {
+        let _resp = _r as HttpResponse<any>;
+        let _body: void = null;
+        
+        return _resp.clone({body: _body}) as HttpResponse<void>;
+      })
+    );
+  }
+
+  /**
+   * @param params The `GroupService.SetAttributeParams` containing the following parameters:
+   *
+   * - `value`: 
+   *
+   * - `group`: 
+   *
+   * - `attribute`:
+   */
+   setAttribute(params: GroupService.SetAttributeParams): Observable<void> {
+    return this.setAttributeResponse(params).pipe(
+      map(_r => _r.body)
+    );
   }
 }
 
 export module GroupService {
-  export interface SetAttributeParams {
+
+  /**
+   * Parameters for setAttribute
+   */
+   export interface SetAttributeParams {
+
     value: number;
+
     group: string;
+
     attribute: string;
   }
 }

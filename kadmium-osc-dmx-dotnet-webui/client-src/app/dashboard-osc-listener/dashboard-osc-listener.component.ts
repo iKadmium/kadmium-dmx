@@ -33,12 +33,14 @@ export class DashboardOSCListenerComponent implements OnInit
 
     ngOnInit(): void
     {
-        this.oscListenerService.getOSCListenerEnabled().then((response) =>
-        {
-            this.enabled = response.data;
-            this.enabledDetermined = true;
-            this.loaded = true;
-        });
+        this.oscListenerService.getOSCListenerEnabled()
+            .toPromise()
+            .then((response) =>
+            {
+                this.enabled = response;
+                this.enabledDetermined = true;
+                this.loaded = true;
+            });
 
     }
 

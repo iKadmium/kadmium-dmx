@@ -48,25 +48,30 @@ export class VenueEditorComponent extends EditorComponent implements OnInit
         this.venueId = this.route.snapshot.params['id'];
         this.title.setTitle("Venue Editor");
         this.form = this.formChild;
-        this.groupService.getGroups().then(response =>
-        {
-            this.groups = response.data;
+        this.groupService.getGroups()
+            .toPromise()
+            .then(response =>
+            {
+                this.groups = response;
 
-            if (this.isNewItem())
-            {
-                this.venue = new Venue();
-                this.venue.universes = [this.createUniverse("New Universe", 1)];
-                this.loading = false;
-            }
-            else
-            {
-                this.venueService.getVenueById(this.venueId).then(response => 
+                if (this.isNewItem())
                 {
-                    this.venue = response.data;
+                    this.venue = {
+                        universes: [this.createUniverse("New Universe", 1)]
+                    };
                     this.loading = false;
-                }).catch(error => this.snackbar.open(error, "Close", { duration: 3000 }));
-            }
-        });
+                }
+                else
+                {
+                    this.venueService.getVenueById(this.venueId)
+                        .toPromise()
+                        .then(response => 
+                        {
+                            this.venue = response;
+                            this.loading = false;
+                        }).catch(error => this.snackbar.open(error, "Close", { duration: 3000 }));
+                }
+            });
     }
 
     private isNewItem(): boolean
@@ -76,10 +81,11 @@ export class VenueEditorComponent extends EditorComponent implements OnInit
 
     private createUniverse(name: string, universeID: number): Universe
     {
-        let universe = new Universe();
-        universe.name = name;
-        universe.fixtures = [];
-        universe.universeID = universeID;
+        let universe: Universe = {
+            name: name,
+            fixtures: [],
+            universeID: universeID
+        };
         return universe;
     }
 

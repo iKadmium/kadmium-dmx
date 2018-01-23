@@ -1,220 +1,351 @@
 /* tslint:disable */
 import { Injectable } from '@angular/core';
-import { Http, Response, Headers, URLSearchParams, RequestOptions } from '@angular/http';
-
-import 'rxjs/add/operator/toPromise';
-
+import {
+  HttpClient, HttpRequest, HttpResponse, 
+  HttpHeaders, HttpParams } from '@angular/common/http';
+import { BaseService } from '../base-service';
 import { ApiConfiguration } from '../api-configuration';
-import { ApiResponse as _ApiResponse_ } from '../api-response';
+import { Observable } from 'rxjs/Observable';
+import { map } from 'rxjs/operators/map';
+import { filter } from 'rxjs/operators/filter';
 
 import { Look } from '../models/look';
 
-
 @Injectable()
-export class LookService {
+export class LookService extends BaseService {
   constructor(
-    public http: Http
+    config: ApiConfiguration,
+    http: HttpClient
   ) {
+    super(config, http);
   }
 
   /**
+   * @return Success
    */
-  getLooks(): Promise<_ApiResponse_<Look[]>> {
-    let options = new RequestOptions({
-      method: "get",
-      url: ApiConfiguration.rootUrl + `/api/Look`,
-      search: new URLSearchParams(),
-      headers: new Headers()
-    });
-    ApiConfiguration.prepareRequestOptions(options);
-    return this.http.request(options.url, options)
-      .toPromise()
-      .then(response => {
-        if (response.status < 200 || response.status > 299) {
-          throw response;
-        }
-        return new _ApiResponse_(response, response.json() as Look[]);
-      })
-      .catch(e => {
-        ApiConfiguration.handleError(e);
-        throw e;
+   getLooksResponse(): Observable<HttpResponse<Look[]>> {
+    let __params = this.newParams();
+    let __headers = new HttpHeaders();
+    let __body: any = null;
+    let req = new HttpRequest<any>(
+      "GET",
+      this.rootUrl + `/api/Look`,
+      __body,
+      {
+        headers: __headers,
+        params: __params,
+        responseType: 'json'
       });
+
+    return this.http.request<any>(req).pipe(
+      filter(_r => _r instanceof HttpResponse),
+      map(_r => {
+        let _resp = _r as HttpResponse<any>;
+        let _body: Look[] = null;
+        _body = _resp.body as Look[]
+        return _resp.clone({body: _body}) as HttpResponse<Look[]>;
+      })
+    );
   }
 
   /**
-   * @param look - undefined
+   * @return Success
    */
-  postLook(look?: Look): Promise<_ApiResponse_<number>> {
-    let options = new RequestOptions({
-      method: "post",
-      url: ApiConfiguration.rootUrl + `/api/Look`,
-      search: new URLSearchParams(),
-      headers: new Headers()
-    });
-    options.body = look;
-    ApiConfiguration.prepareRequestOptions(options);
-    return this.http.request(options.url, options)
-      .toPromise()
-      .then(response => {
-        if (response.status < 200 || response.status > 299) {
-          throw response;
-        }
-        return new _ApiResponse_(response, parseFloat(response.text()));
-      })
-      .catch(e => {
-        ApiConfiguration.handleError(e);
-        throw e;
-      });
+   getLooks(): Observable<Look[]> {
+    return this.getLooksResponse().pipe(
+      map(_r => _r.body)
+    );
   }
 
   /**
-   * @param id - undefined
+   * @param look undefined
+   * @return Success
    */
-  getLookById(id: number): Promise<_ApiResponse_<Look>> {
-    let options = new RequestOptions({
-      method: "get",
-      url: ApiConfiguration.rootUrl + `/api/Look/${id}`,
-      search: new URLSearchParams(),
-      headers: new Headers()
-    });
-    
-    ApiConfiguration.prepareRequestOptions(options);
-    return this.http.request(options.url, options)
-      .toPromise()
-      .then(response => {
-        if (response.status < 200 || response.status > 299) {
-          throw response;
-        }
-        return new _ApiResponse_(response, response.json() as Look);
-      })
-      .catch(e => {
-        ApiConfiguration.handleError(e);
-        throw e;
+   postLookResponse(look?: Look): Observable<HttpResponse<number>> {
+    let __params = this.newParams();
+    let __headers = new HttpHeaders();
+    let __body: any = null;
+    __body = look;
+    let req = new HttpRequest<any>(
+      "POST",
+      this.rootUrl + `/api/Look`,
+      __body,
+      {
+        headers: __headers,
+        params: __params,
+        responseType: 'text'
       });
+
+    return this.http.request<any>(req).pipe(
+      filter(_r => _r instanceof HttpResponse),
+      map(_r => {
+        let _resp = _r as HttpResponse<any>;
+        let _body: number = null;
+        _body = parseFloat(_resp.body as string)
+        return _resp.clone({body: _body}) as HttpResponse<number>;
+      })
+    );
   }
 
   /**
-   * @param id - undefined
-   * @param look - undefined
+   * @param look undefined
+   * @return Success
    */
-  putLook(params: LookService.PutLookParams): Promise<_ApiResponse_<void>> {
-    let options = new RequestOptions({
-      method: "put",
-      url: ApiConfiguration.rootUrl + `/api/Look/${params.id}`,
-      search: new URLSearchParams(),
-      headers: new Headers()
-    });
-    
-    options.body = params.look;
-    ApiConfiguration.prepareRequestOptions(options);
-    return this.http.request(options.url, options)
-      .toPromise()
-      .then(response => {
-        if (response.status < 200 || response.status > 299) {
-          throw response;
-        }
-        return new _ApiResponse_(response, null);
-      })
-      .catch(e => {
-        ApiConfiguration.handleError(e);
-        throw e;
-      });
+   postLook(look?: Look): Observable<number> {
+    return this.postLookResponse(look).pipe(
+      map(_r => _r.body)
+    );
   }
 
   /**
-   * @param id - undefined
+   * @param id undefined
+   * @return Success
    */
-  deleteLook(id: number): Promise<_ApiResponse_<void>> {
-    let options = new RequestOptions({
-      method: "delete",
-      url: ApiConfiguration.rootUrl + `/api/Look/${id}`,
-      search: new URLSearchParams(),
-      headers: new Headers()
-    });
-    
-    ApiConfiguration.prepareRequestOptions(options);
-    return this.http.request(options.url, options)
-      .toPromise()
-      .then(response => {
-        if (response.status < 200 || response.status > 299) {
-          throw response;
-        }
-        return new _ApiResponse_(response, null);
-      })
-      .catch(e => {
-        ApiConfiguration.handleError(e);
-        throw e;
+   getLookByIdResponse(id: number): Observable<HttpResponse<Look>> {
+    let __params = this.newParams();
+    let __headers = new HttpHeaders();
+    let __body: any = null;
+
+    let req = new HttpRequest<any>(
+      "GET",
+      this.rootUrl + `/api/Look/${id}`,
+      __body,
+      {
+        headers: __headers,
+        params: __params,
+        responseType: 'json'
       });
+
+    return this.http.request<any>(req).pipe(
+      filter(_r => _r instanceof HttpResponse),
+      map(_r => {
+        let _resp = _r as HttpResponse<any>;
+        let _body: Look = null;
+        _body = _resp.body as Look
+        return _resp.clone({body: _body}) as HttpResponse<Look>;
+      })
+    );
   }
 
   /**
-   * @param id - undefined
-   * @param amount - undefined
+   * @param id undefined
+   * @return Success
    */
-  activateLookById(params: LookService.ActivateLookByIdParams): Promise<_ApiResponse_<void>> {
-    let options = new RequestOptions({
-      method: "get",
-      url: ApiConfiguration.rootUrl + `/api/Look/Activate/${params.id}/${params.amount}`,
-      search: new URLSearchParams(),
-      headers: new Headers()
-    });
-    
-    
-    ApiConfiguration.prepareRequestOptions(options);
-    return this.http.request(options.url, options)
-      .toPromise()
-      .then(response => {
-        if (response.status < 200 || response.status > 299) {
-          throw response;
-        }
-        return new _ApiResponse_(response, null);
-      })
-      .catch(e => {
-        ApiConfiguration.handleError(e);
-        throw e;
-      });
+   getLookById(id: number): Observable<Look> {
+    return this.getLookByIdResponse(id).pipe(
+      map(_r => _r.body)
+    );
   }
 
   /**
-   * @param amount - undefined
-   * @param look - undefined
+   * @param params The `LookService.PutLookParams` containing the following parameters:
+   *
+   * - `id`: 
+   *
+   * - `look`:
    */
-  activateLook(params: LookService.ActivateLookParams): Promise<_ApiResponse_<void>> {
-    let options = new RequestOptions({
-      method: "post",
-      url: ApiConfiguration.rootUrl + `/api/Look/Activate/${params.amount}`,
-      search: new URLSearchParams(),
-      headers: new Headers()
-    });
-    
-    options.body = params.look;
-    ApiConfiguration.prepareRequestOptions(options);
-    return this.http.request(options.url, options)
-      .toPromise()
-      .then(response => {
-        if (response.status < 200 || response.status > 299) {
-          throw response;
-        }
-        return new _ApiResponse_(response, null);
-      })
-      .catch(e => {
-        ApiConfiguration.handleError(e);
-        throw e;
+   putLookResponse(params: LookService.PutLookParams): Observable<HttpResponse<void>> {
+    let __params = this.newParams();
+    let __headers = new HttpHeaders();
+    let __body: any = null;
+
+    __body = params.look;
+    let req = new HttpRequest<any>(
+      "PUT",
+      this.rootUrl + `/api/Look/${params.id}`,
+      __body,
+      {
+        headers: __headers,
+        params: __params,
+        responseType: 'text'
       });
+
+    return this.http.request<any>(req).pipe(
+      filter(_r => _r instanceof HttpResponse),
+      map(_r => {
+        let _resp = _r as HttpResponse<any>;
+        let _body: void = null;
+        
+        return _resp.clone({body: _body}) as HttpResponse<void>;
+      })
+    );
+  }
+
+  /**
+   * @param params The `LookService.PutLookParams` containing the following parameters:
+   *
+   * - `id`: 
+   *
+   * - `look`:
+   */
+   putLook(params: LookService.PutLookParams): Observable<void> {
+    return this.putLookResponse(params).pipe(
+      map(_r => _r.body)
+    );
+  }
+
+  /**
+   * @param id undefined
+   */
+   deleteLookResponse(id: number): Observable<HttpResponse<void>> {
+    let __params = this.newParams();
+    let __headers = new HttpHeaders();
+    let __body: any = null;
+
+    let req = new HttpRequest<any>(
+      "DELETE",
+      this.rootUrl + `/api/Look/${id}`,
+      __body,
+      {
+        headers: __headers,
+        params: __params,
+        responseType: 'text'
+      });
+
+    return this.http.request<any>(req).pipe(
+      filter(_r => _r instanceof HttpResponse),
+      map(_r => {
+        let _resp = _r as HttpResponse<any>;
+        let _body: void = null;
+        
+        return _resp.clone({body: _body}) as HttpResponse<void>;
+      })
+    );
+  }
+
+  /**
+   * @param id undefined
+   */
+   deleteLook(id: number): Observable<void> {
+    return this.deleteLookResponse(id).pipe(
+      map(_r => _r.body)
+    );
+  }
+
+  /**
+   * @param params The `LookService.ActivateLookByIdParams` containing the following parameters:
+   *
+   * - `id`: 
+   *
+   * - `amount`:
+   */
+   activateLookByIdResponse(params: LookService.ActivateLookByIdParams): Observable<HttpResponse<void>> {
+    let __params = this.newParams();
+    let __headers = new HttpHeaders();
+    let __body: any = null;
+
+
+    let req = new HttpRequest<any>(
+      "GET",
+      this.rootUrl + `/api/Look/Activate/${params.id}/${params.amount}`,
+      __body,
+      {
+        headers: __headers,
+        params: __params,
+        responseType: 'text'
+      });
+
+    return this.http.request<any>(req).pipe(
+      filter(_r => _r instanceof HttpResponse),
+      map(_r => {
+        let _resp = _r as HttpResponse<any>;
+        let _body: void = null;
+        
+        return _resp.clone({body: _body}) as HttpResponse<void>;
+      })
+    );
+  }
+
+  /**
+   * @param params The `LookService.ActivateLookByIdParams` containing the following parameters:
+   *
+   * - `id`: 
+   *
+   * - `amount`:
+   */
+   activateLookById(params: LookService.ActivateLookByIdParams): Observable<void> {
+    return this.activateLookByIdResponse(params).pipe(
+      map(_r => _r.body)
+    );
+  }
+
+  /**
+   * @param params The `LookService.ActivateLookParams` containing the following parameters:
+   *
+   * - `amount`: 
+   *
+   * - `look`:
+   */
+   activateLookResponse(params: LookService.ActivateLookParams): Observable<HttpResponse<void>> {
+    let __params = this.newParams();
+    let __headers = new HttpHeaders();
+    let __body: any = null;
+
+    __body = params.look;
+    let req = new HttpRequest<any>(
+      "POST",
+      this.rootUrl + `/api/Look/Activate/${params.amount}`,
+      __body,
+      {
+        headers: __headers,
+        params: __params,
+        responseType: 'text'
+      });
+
+    return this.http.request<any>(req).pipe(
+      filter(_r => _r instanceof HttpResponse),
+      map(_r => {
+        let _resp = _r as HttpResponse<any>;
+        let _body: void = null;
+        
+        return _resp.clone({body: _body}) as HttpResponse<void>;
+      })
+    );
+  }
+
+  /**
+   * @param params The `LookService.ActivateLookParams` containing the following parameters:
+   *
+   * - `amount`: 
+   *
+   * - `look`:
+   */
+   activateLook(params: LookService.ActivateLookParams): Observable<void> {
+    return this.activateLookResponse(params).pipe(
+      map(_r => _r.body)
+    );
   }
 }
 
 export module LookService {
-  export interface PutLookParams {
+
+  /**
+   * Parameters for putLook
+   */
+   export interface PutLookParams {
+
     id: number;
+
     look?: Look;
   }
-  export interface ActivateLookByIdParams {
+
+  /**
+   * Parameters for activateLookById
+   */
+   export interface ActivateLookByIdParams {
+
     id: number;
+
     amount: number;
   }
-  export interface ActivateLookParams {
+
+  /**
+   * Parameters for activateLook
+   */
+   export interface ActivateLookParams {
+
     amount: number;
+
     look?: Look;
   }
 }

@@ -17,13 +17,14 @@ export class VenueDiscoveryAddFixtureDefinitionDialogComponent implements OnInit
 
 	constructor(public dialogRef: MatDialogRef<VenueDiscoveryAddFixtureDefinitionDialogComponent>, @Inject(MAT_DIALOG_DATA) data: AddFixtureDefinitionData)
 	{
-		this.definition = new FixtureDefinition();
-		this.definition.channels = data.channels;
-		this.definition.movements = [];
-		this.definition.colorWheel = [];
-		this.definition.lux = 0;
-		this.definition.beamAngle = 0;
-		this.definition.manufacturer = `Venue - ${data.venue}`;
+		this.definition = {
+			channels: data.channels,
+			movements: [],
+			colorWheel: [],
+			lux: 0,
+			beamAngle: 0,
+			manufacturer: `Venue - ${data.venue}`
+		};
 
 		this.definition.channels.sort((a, b) => 
 		{
@@ -43,10 +44,11 @@ export class VenueDiscoveryAddFixtureDefinitionDialogComponent implements OnInit
 						.map(channel => channel.name)
 						.indexOf(name) != -1))
 				{
-					let axis = new MovementAxis();
-					axis.min = -90;
-					axis.max = 90;
-					axis.name = axisName.axisName;
+					let axis: MovementAxis = {
+						min: -90,
+						max: 90,
+						name: axisName.axisName
+					};
 					this.definition.movements.push(axis);
 				}
 			}

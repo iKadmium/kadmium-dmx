@@ -1,8 +1,8 @@
 /* tslint:disable */
 
-/**
- */
-export class FixtureDefinitionDownloadSkeleton {
-    manufacturer?: string;
-    model?: string;
+export interface FixtureDefinitionDownloadSkeleton {
+
+  manufacturer?: string;
+
+  model?: string;
 }

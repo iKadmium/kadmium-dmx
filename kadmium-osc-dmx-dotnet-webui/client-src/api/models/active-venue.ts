@@ -1,11 +1,11 @@
 /* tslint:disable */
 import { ActiveUniverse } from './active-universe';
 
-/**
- */
-export class ActiveVenue
-{
-    name?: string;
-    universes?: ActiveUniverse[];
-    id?: number;
+export interface ActiveVenue {
+
+  name?: string;
+
+  id?: number;
+
+  universes?: ActiveUniverse[];
 }

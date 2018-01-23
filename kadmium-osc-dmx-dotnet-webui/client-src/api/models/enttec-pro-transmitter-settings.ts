@@ -1,8 +1,8 @@
 /* tslint:disable */
 
-/**
- */
-export class EnttecProTransmitterSettings {
-    delay?: number;
-    port?: string;
+export interface EnttecProTransmitterSettings {
+
+  delay?: number;
+
+  port?: string;
 }

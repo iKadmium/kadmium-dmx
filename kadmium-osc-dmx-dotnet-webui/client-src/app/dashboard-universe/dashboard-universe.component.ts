@@ -83,9 +83,10 @@ export class DashboardUniverseComponent implements OnInit, AfterViewInit
     {
         let universeID = parseInt(this.route.snapshot.paramMap.get('universeID'));
         this.universeService.getActiveUniverseByID(universeID)
+            .toPromise()
             .then(response =>
             {
-                this.universe = PreviewUniverse.load(response.data);
+                this.universe = PreviewUniverse.load(response);
                 this.drawCanvas();
             })
             .catch(error => this.snackbar.open(error, "Close", { duration: 3000 }));

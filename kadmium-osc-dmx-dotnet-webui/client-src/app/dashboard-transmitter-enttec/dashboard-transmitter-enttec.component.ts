@@ -28,12 +28,14 @@ export class DashboardTransmitterEnttecComponent implements OnInit
 
     ngOnInit()
     {
-        this.enttecTransmitterService.getEnttecEnabled().then((response) =>
-        {
-            this.enabled = response.data;
-            this.enabledDetermined = true;
-            this.loaded = true;
-        });
+        this.enttecTransmitterService.getEnttecEnabled()
+            .toPromise()
+            .then((response) =>
+            {
+                this.enabled = response;
+                this.enabledDetermined = true;
+                this.loaded = true;
+            });
     }
 
     async toggleEnabled(): Promise<void>

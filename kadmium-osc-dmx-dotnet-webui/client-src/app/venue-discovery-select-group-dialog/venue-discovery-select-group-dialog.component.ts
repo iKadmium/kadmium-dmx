@@ -16,10 +16,12 @@ export class VenueDiscoverySelectGroupDialogComponent implements OnInit
 
 	ngOnInit()
 	{
-		this.groupsService.getGroups().then(response =>
-		{
-			this.groups = response.data;
-		});
+		this.groupsService.getGroups()
+			.toPromise()
+			.then(response =>
+			{
+				this.groups = response;
+			});
 	}
 
 }

@@ -1,9 +1,10 @@
 /* tslint:disable */
 
-/**
- */
-export class ColorLookSetting {
-    color?: string;
-    id?: number;
-    group?: string;
+export interface ColorLookSetting {
+
+  color?: string;
+
+  id?: number;
+
+  group?: string;
 }

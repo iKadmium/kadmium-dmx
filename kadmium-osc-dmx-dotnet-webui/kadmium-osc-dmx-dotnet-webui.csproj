@@ -11,7 +11,7 @@
     <TypeScriptCompileBlocked>true</TypeScriptCompileBlocked>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
-    <DocumentationFile>bin\Debug\netcoreapp1.1\kadmium-osc-dmx-dotnet-webui.xml</DocumentationFile>
+    <DocumentationFile>bin\$(Configuration)\$(TargetFramework)\kadmium-osc-dmx-dotnet-webui.xml</DocumentationFile>
     <NoWarn>1701;1702;1705;1591</NoWarn>
   </PropertyGroup>
   <PropertyGroup>
@@ -24,10 +24,7 @@
     </ItemGroup>
   </Target>
   <ItemGroup>
-    <!--<Content Include="wwwroot\**\*">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-      <CopyToPublishDirector>Always</CopyToPublishDirector>
-    </Content>-->
+    <!--<Content Include="wwwroot\**\*"><CopyToOutputDirectory>Always</CopyToOutputDirectory><CopyToPublishDirector>Always</CopyToPublishDirector></Content>-->
     <Content Update="settings.schema.json">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
       <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>

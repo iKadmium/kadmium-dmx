@@ -12,6 +12,7 @@ import { DeleteConfirmDialogComponent } from 'app/delete-confirm-dialog/delete-c
 import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 import { AnimationLibrary } from "app/animation-library";
 import { ApiConfiguration } from "api/api-configuration";
+import { URLs } from "app/url";
 
 @Component({
     selector: 'app-fixture-definitions',
@@ -44,12 +45,14 @@ export class FixtureDefinitionsComponent implements OnInit
 
     ngOnInit(): void
     {
-        this.fixtureDefinitionsService.getFixtureDefinitionSkeletons().then(response => 
-        {
-            response.data.forEach(skeleton => this.skeletons.push(skeleton));
-            this.loading = false;
+        this.fixtureDefinitionsService.getFixtureDefinitionSkeletons()
+            .toPromise()
+            .then(response => 
+            {
+                response.forEach(skeleton => this.skeletons.push(skeleton));
+                this.loading = false;
 
-        }).catch(error => this.snackbar.open(error, "Close", { duration: 3000 }));
+            }).catch(error => this.snackbar.open(error, "Close", { duration: 3000 }));
     }
 
     public applyFilter(filterValue: string): void
@@ -82,7 +85,12 @@ export class FixtureDefinitionsComponent implements OnInit
 
     private getDownloadUrl(fixture: FixtureDefinitionSkeleton): string
     {
-        return ApiConfiguration.rootUrl + "/api/FixtureDefinition" + "/" + fixture.id;
+        return URLs.getApiURL() + "/api/FixtureDefinition/" + fixture.id;
+    }
+
+    private getDownloadFilename(fixture: FixtureDefinitionSkeleton): string
+    {
+        return fixture.manufacturer + ' ' + fixture.model + '.json';
     }
 
     private deleteConfirm(fixture: FixtureDefinitionSkeleton): void
@@ -129,7 +137,7 @@ export class FixtureDefinitionsComponent implements OnInit
         try
         {
             let definition = await AsyncFileReader.read<FixtureDefinition>(file);
-            definition.id = (await this.fixtureDefinitionsService.postFixtureDefinitionById(definition)).data;
+            definition.id = (await this.fixtureDefinitionsService.postFixtureDefinitionById(definition).toPromise());
             this.skeletons.push(definition);
             this.snackbar.open("Successfully added " + definition.manufacturer + " " + definition.model, "Close", { duration: 3000 });
         }

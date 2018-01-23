@@ -39,9 +39,10 @@ export class DashboardFixturesComponent implements OnInit
     {
         let universeID = parseInt(this.route.snapshot.paramMap.get('universeID'));
         this.universeService.getActiveUniverseByID(universeID)
+            .toPromise()
             .then(response =>
             {
-                this.universe = PreviewUniverse.load(response.data);
+                this.universe = PreviewUniverse.load(response);
                 this.loading = false;
             }).catch(error => this.snackbar.open(error, "Close", { duration: 3000 }));
 

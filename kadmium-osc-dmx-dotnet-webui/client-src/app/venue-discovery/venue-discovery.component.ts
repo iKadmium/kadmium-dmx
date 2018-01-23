@@ -57,11 +57,12 @@ export class VenueDiscoveryComponent implements OnInit
 	{
 		for (let i = 0; i < 512; i++)
 		{
-			let channel = new DiscoveryDMXChannel();
-			channel.address = i;
-			channel.min = "0";
-			channel.max = "255";
-			channel.value = 0;
+			let channel: DiscoveryDMXChannel = {
+				address: i,
+				min: "0",
+				max: "255",
+				value: 0
+			};
 			this.dmxChannels.push(channel);
 		}
 
@@ -74,9 +75,9 @@ export class VenueDiscoveryComponent implements OnInit
 
 	public async refreshVenue(): Promise<void>
 	{
-		let response = await this.venueService.getActiveVenue();
-		this.venueID = response.data.id;
-		this.venue = response.data;
+		let response = await this.venueService.getActiveVenue().toPromise();
+		this.venueID = response.id;
+		this.venue = response;
 		this.universe = this.venue.universes.find(x => x.universeID == this.universeID);
 
 		this.dmxChannelMap.clear();
@@ -165,9 +166,9 @@ export class VenueDiscoveryComponent implements OnInit
 				try
 				{
 					this.saving = true;
-					let id = await this.fixtureDefinitionService.postFixtureDefinitionById(definition);
+					let id = await this.fixtureDefinitionService.postFixtureDefinitionById(definition).toPromise();
 					this.saving = false;
-					definition.id = id.data;
+					definition.id = id;
 					let address = event.channels.map(x => x.address).sort((a, b) => a - b)[0];
 					this.snackbar.open(`${definition.manufacturer} ${definition.model} successfully added`);
 					event.resolve();
@@ -221,13 +222,14 @@ export class VenueDiscoveryComponent implements OnInit
 
 	public async addFixtureToVenue(address: number, definition: FixtureDefinitionSkeleton, group: string): Promise<void>
 	{
-		let venue = (await this.venueService.getVenueById(this.venueID)).data;
+		let venue = (await this.venueService.getVenueById(this.venueID).toPromise());
 		let universe = venue.universes.find(x => x.universeID == this.universeID);
-		let fixture = new Fixture();
-		fixture.address = address;
-		fixture.group = group;
-		fixture.type = definition;
-		fixture.options = {};
+		let fixture: Fixture = {
+			address: address,
+			group: group,
+			type: definition,
+			options: {}
+		};
 		universe.fixtures.push(fixture);
 		try
 		{
@@ -273,7 +275,7 @@ export class VenueDiscoveryComponent implements OnInit
 
 	public async removeFixtureFromVenue(fixture: ActiveFixture): Promise<void>
 	{
-		let venue = (await this.venueService.getVenueById(this.venueID)).data;
+		let venue = (await this.venueService.getVenueById(this.venueID).toPromise());
 		let universe = venue.universes.find(x => x.universeID == this.universeID);
 		let index = universe.fixtures.indexOf(x => x.id == fixture.id);
 		universe.fixtures.splice(index, 1);
@@ -293,12 +295,7 @@ export class VenueDiscoveryComponent implements OnInit
 
 }
 
-class DiscoveryDMXChannel extends DMXChannel
+interface DiscoveryDMXChannel extends DMXChannel
 {
-	public value: number;
-
-	constructor()
-	{
-		super();
-	}
+	value: number;
 }

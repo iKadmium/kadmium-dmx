@@ -22,9 +22,6 @@ export class GroupsComponent extends EditorComponent implements OnInit
 {
     groups: Group[];
 
-    displayedColumns = ['order', 'name', 'actions'];
-    dataSource: MatTableDataSource<Group>;
-
     public saving: boolean;
     public loading: boolean;
 
@@ -41,12 +38,13 @@ export class GroupsComponent extends EditorComponent implements OnInit
     ngOnInit()
     {
         this.form = this.formChild;
-        this.groupsService.getGroups().then(response => 
-        {
-            this.groups = response.data;
-            this.dataSource = new MatTableDataSource<Group>(this.groupsSorted);
-            this.loading = false;
-        }).catch(reason => this.snackbar.open(reason, "Close", { duration: 3000 }));
+        this.groupsService.getGroups()
+            .toPromise()
+            .then(response => 
+            {
+                this.groups = response;
+                this.loading = false;
+            }).catch(reason => this.snackbar.open(reason, "Close", { duration: 3000 }));
     }
 
     private getNextOrder(): number
@@ -64,17 +62,17 @@ export class GroupsComponent extends EditorComponent implements OnInit
 
     public add(): void
     {
-        let group = new Group();
-        group.order = this.getNextOrder();
+        let group: Group = {
+            order: this.getNextOrder()
+        };
+
         this.groups.push(group);
-        this.dataSource.data = this.groupsSorted;
     }
 
     public delete(group: Group): void
     {
         let index = this.groups.indexOf(group);
         this.groups.splice(index, 1);
-        this.dataSource.data = this.groupsSorted;
     }
 
     public swap(oldIndex: number, newIndex: number): void
@@ -83,7 +81,6 @@ export class GroupsComponent extends EditorComponent implements OnInit
         let newOrder = this.groupsSorted[newIndex].order;
         this.groupsSorted[oldIndex].order = newOrder;
         this.groupsSorted[newIndex].order = oldOrder;
-        this.dataSource.data = this.groupsSorted;
     }
 
     private getOtherGroupNames(group: Group): string[]

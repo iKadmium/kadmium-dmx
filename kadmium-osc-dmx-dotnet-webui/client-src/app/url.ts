@@ -1,3 +1,5 @@
+declare var environment;
+
 export class URLs
 {
     static getSocketURL(socketName: SocketController): string
@@ -14,6 +16,11 @@ export class URLs
         let socketURL = root + "/socket/" + SocketController[socketName];
 
         return socketURL;
+    }
+
+    static getApiURL(): string
+    {
+        return "http://" + window.location.hostname + ":5000";
     }
 }
 

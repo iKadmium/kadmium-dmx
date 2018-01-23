@@ -108,6 +108,11 @@ table {
     background: #824242;
 }
 
+.mat-toolbar-row,
+.mat-toolbar-single-row {
+    white-space: normal !important;
+}
+
 .main-toolbar {
     position: sticky;
     top: 0px;
@@ -125,7 +130,7 @@ table {
         top: 55px;
     }
     .filter-box {
-        display: none;
+        display: none !important;
     }
 }
 

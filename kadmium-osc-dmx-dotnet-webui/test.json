@@ -1,0 +1,1733 @@
+﻿{
+    "swagger": "2.0",
+    "info": {
+        "version": "v1",
+        "title": "kadmium-osc-dmx API"
+    },
+    "basePath": "/",
+    "paths": {
+        "/api/EnttecProTransmitter/Ports": {
+            "get": {
+                "tags": [
+                    "EnttecProTransmitter"
+                ],
+                "operationId": "getEnttecPortNames",
+                "consumes": [],
+                "produces": [
+                    "text/plain",
+                    "application/json",
+                    "text/json"
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Success",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "type": "string"
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/api/EnttecProTransmitter/Enabled": {
+            "get": {
+                "tags": [
+                    "EnttecProTransmitter"
+                ],
+                "operationId": "getEnttecEnabled",
+                "consumes": [],
+                "produces": [
+                    "text/plain",
+                    "application/json",
+                    "text/json"
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Success",
+                        "schema": {
+                            "type": "boolean"
+                        }
+                    }
+                }
+            }
+        },
+        "/api/EnttecProTransmitter/Enabled/{value}": {
+            "get": {
+                "tags": [
+                    "EnttecProTransmitter"
+                ],
+                "operationId": "setEnttecEnabled",
+                "consumes": [],
+                "produces": [],
+                "parameters": [
+                    {
+                        "name": "value",
+                        "in": "path",
+                        "required": true,
+                        "type": "boolean"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Success"
+                    }
+                }
+            }
+        },
+        "/api/EnttecProTransmitter/Status": {
+            "get": {
+                "tags": [
+                    "EnttecProTransmitter"
+                ],
+                "operationId": "getEnttecStatus",
+                "consumes": [],
+                "produces": [
+                    "text/plain",
+                    "application/json",
+                    "text/json"
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Success",
+                        "schema": {
+                            "$ref": "#/definitions/Status"
+                        }
+                    }
+                }
+            }
+        },
+        "/api/FixtureDefinition": {
+            "get": {
+                "tags": [
+                    "FixtureDefinition"
+                ],
+                "operationId": "getFixtureDefinitionSkeletons",
+                "consumes": [],
+                "produces": [
+                    "text/plain",
+                    "application/json",
+                    "text/json"
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Success",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/FixtureDefinitionSkeleton"
+                            }
+                        }
+                    }
+                }
+            },
+            "post": {
+                "tags": [
+                    "FixtureDefinition"
+                ],
+                "operationId": "postFixtureDefinitionById",
+                "consumes": [
+                    "application/json-patch+json",
+                    "application/json",
+                    "text/json",
+                    "application/*+json"
+                ],
+                "produces": [
+                    "text/plain",
+                    "application/json",
+                    "text/json"
+                ],
+                "parameters": [
+                    {
+                        "name": "definition",
+                        "in": "body",
+                        "required": false,
+                        "schema": {
+                            "$ref": "#/definitions/FixtureDefinition"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Success",
+                        "schema": {
+                            "format": "int32",
+                            "type": "integer"
+                        }
+                    }
+                }
+            }
+        },
+        "/api/FixtureDefinition/{id}": {
+            "get": {
+                "tags": [
+                    "FixtureDefinition"
+                ],
+                "operationId": "getFixtureDefinitionById",
+                "consumes": [],
+                "produces": [
+                    "text/plain",
+                    "application/json",
+                    "text/json"
+                ],
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "type": "integer",
+                        "format": "int32"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Success",
+                        "schema": {
+                            "$ref": "#/definitions/FixtureDefinition"
+                        }
+                    }
+                }
+            },
+            "put": {
+                "tags": [
+                    "FixtureDefinition"
+                ],
+                "operationId": "putFixtureDefinitionById",
+                "consumes": [
+                    "application/json-patch+json",
+                    "application/json",
+                    "text/json",
+                    "application/*+json"
+                ],
+                "produces": [],
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "type": "integer",
+                        "format": "int32"
+                    },
+                    {
+                        "name": "definition",
+                        "in": "body",
+                        "required": false,
+                        "schema": {
+                            "$ref": "#/definitions/FixtureDefinition"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Success"
+                    }
+                }
+            },
+            "delete": {
+                "tags": [
+                    "FixtureDefinition"
+                ],
+                "operationId": "deleteFixtureDefinitionById",
+                "consumes": [],
+                "produces": [],
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "type": "integer",
+                        "format": "int32"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Success"
+                    }
+                }
+            }
+        },
+        "/api/Group": {
+            "get": {
+                "tags": [
+                    "Group"
+                ],
+                "operationId": "getGroups",
+                "consumes": [],
+                "produces": [
+                    "text/plain",
+                    "application/json",
+                    "text/json"
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Success",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/Group"
+                            }
+                        }
+                    }
+                }
+            },
+            "put": {
+                "tags": [
+                    "Group"
+                ],
+                "operationId": "putGroup",
+                "consumes": [
+                    "application/json-patch+json",
+                    "application/json",
+                    "text/json",
+                    "application/*+json"
+                ],
+                "produces": [],
+                "parameters": [
+                    {
+                        "name": "groups",
+                        "in": "body",
+                        "required": false,
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/Group"
+                            }
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Success"
+                    }
+                }
+            }
+        },
+        "/api/Group/Set/{group}/{attribute}/{value}": {
+            "get": {
+                "tags": [
+                    "Group"
+                ],
+                "operationId": "setAttribute",
+                "consumes": [],
+                "produces": [],
+                "parameters": [
+                    {
+                        "name": "group",
+                        "in": "path",
+                        "required": true,
+                        "type": "string"
+                    },
+                    {
+                        "name": "attribute",
+                        "in": "path",
+                        "required": true,
+                        "type": "string"
+                    },
+                    {
+                        "name": "value",
+                        "in": "path",
+                        "required": true,
+                        "type": "number",
+                        "format": "float"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Success"
+                    }
+                }
+            }
+        },
+        "/api/Look": {
+            "get": {
+                "tags": [
+                    "Look"
+                ],
+                "operationId": "getLooks",
+                "consumes": [],
+                "produces": [
+                    "text/plain",
+                    "application/json",
+                    "text/json"
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Success",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/Look"
+                            }
+                        }
+                    }
+                }
+            },
+            "post": {
+                "tags": [
+                    "Look"
+                ],
+                "operationId": "postLook",
+                "consumes": [
+                    "application/json-patch+json",
+                    "application/json",
+                    "text/json",
+                    "application/*+json"
+                ],
+                "produces": [
+                    "text/plain",
+                    "application/json",
+                    "text/json"
+                ],
+                "parameters": [
+                    {
+                        "name": "look",
+                        "in": "body",
+                        "required": false,
+                        "schema": {
+                            "$ref": "#/definitions/Look"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Success",
+                        "schema": {
+                            "format": "int32",
+                            "type": "integer"
+                        }
+                    }
+                }
+            }
+        },
+        "/api/Look/{id}": {
+            "get": {
+                "tags": [
+                    "Look"
+                ],
+                "operationId": "getLookById",
+                "consumes": [],
+                "produces": [
+                    "text/plain",
+                    "application/json",
+                    "text/json"
+                ],
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "type": "integer",
+                        "format": "int32"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Success",
+                        "schema": {
+                            "$ref": "#/definitions/Look"
+                        }
+                    }
+                }
+            },
+            "put": {
+                "tags": [
+                    "Look"
+                ],
+                "operationId": "putLook",
+                "consumes": [
+                    "application/json-patch+json",
+                    "application/json",
+                    "text/json",
+                    "application/*+json"
+                ],
+                "produces": [],
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "type": "integer",
+                        "format": "int32"
+                    },
+                    {
+                        "name": "look",
+                        "in": "body",
+                        "required": false,
+                        "schema": {
+                            "$ref": "#/definitions/Look"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Success"
+                    }
+                }
+            },
+            "delete": {
+                "tags": [
+                    "Look"
+                ],
+                "operationId": "deleteLook",
+                "consumes": [],
+                "produces": [],
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "type": "integer",
+                        "format": "int32"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Success"
+                    }
+                }
+            }
+        },
+        "/api/Look/Activate/{id}/{amount}": {
+            "get": {
+                "tags": [
+                    "Look"
+                ],
+                "operationId": "activateLookById",
+                "consumes": [],
+                "produces": [],
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "type": "integer",
+                        "format": "int32"
+                    },
+                    {
+                        "name": "amount",
+                        "in": "path",
+                        "required": true,
+                        "type": "number",
+                        "format": "float"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Success"
+                    }
+                }
+            }
+        },
+        "/api/Look/Activate/{amount}": {
+            "post": {
+                "tags": [
+                    "Look"
+                ],
+                "operationId": "activateLook",
+                "consumes": [
+                    "application/json-patch+json",
+                    "application/json",
+                    "text/json",
+                    "application/*+json"
+                ],
+                "produces": [],
+                "parameters": [
+                    {
+                        "name": "look",
+                        "in": "body",
+                        "required": false,
+                        "schema": {
+                            "$ref": "#/definitions/Look"
+                        }
+                    },
+                    {
+                        "name": "amount",
+                        "in": "path",
+                        "required": true,
+                        "type": "number",
+                        "format": "float"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Success"
+                    }
+                }
+            }
+        },
+        "/api/OSCListener/Enabled": {
+            "get": {
+                "tags": [
+                    "OSCListener"
+                ],
+                "operationId": "getOSCListenerEnabled",
+                "consumes": [],
+                "produces": [
+                    "text/plain",
+                    "application/json",
+                    "text/json"
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Success",
+                        "schema": {
+                            "type": "boolean"
+                        }
+                    }
+                }
+            }
+        },
+        "/api/OSCListener/Enabled/{value}": {
+            "get": {
+                "tags": [
+                    "OSCListener"
+                ],
+                "operationId": "setOSCListenerEnabled",
+                "consumes": [],
+                "produces": [],
+                "parameters": [
+                    {
+                        "name": "value",
+                        "in": "path",
+                        "required": true,
+                        "type": "boolean"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Success"
+                    }
+                }
+            }
+        },
+        "/api/Preview": {
+            "get": {
+                "tags": [
+                    "Preview"
+                ],
+                "operationId": "getPreview",
+                "consumes": [],
+                "produces": [
+                    "text/plain",
+                    "application/json",
+                    "text/json"
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Success",
+                        "schema": {
+                            "$ref": "#/definitions/PreviewResult"
+                        }
+                    }
+                }
+            }
+        },
+        "/api/SACNTransmitter/Enabled": {
+            "get": {
+                "tags": [
+                    "SACNTransmitter"
+                ],
+                "operationId": "getTransmitterEnabled",
+                "consumes": [],
+                "produces": [
+                    "text/plain",
+                    "application/json",
+                    "text/json"
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Success",
+                        "schema": {
+                            "type": "boolean"
+                        }
+                    }
+                }
+            }
+        },
+        "/api/SACNTransmitter/Enabled/{value}": {
+            "get": {
+                "tags": [
+                    "SACNTransmitter"
+                ],
+                "operationId": "setTransmitterEnabled",
+                "consumes": [],
+                "produces": [],
+                "parameters": [
+                    {
+                        "name": "value",
+                        "in": "path",
+                        "required": true,
+                        "type": "boolean"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Success"
+                    }
+                }
+            }
+        },
+        "/api/SACNTransmitter/Status": {
+            "get": {
+                "tags": [
+                    "SACNTransmitter"
+                ],
+                "operationId": "getTransmitterStatus",
+                "consumes": [],
+                "produces": [
+                    "text/plain",
+                    "application/json",
+                    "text/json"
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Success",
+                        "schema": {
+                            "$ref": "#/definitions/Status"
+                        }
+                    }
+                }
+            }
+        },
+        "/api/Settings": {
+            "get": {
+                "tags": [
+                    "Settings"
+                ],
+                "operationId": "getSettings",
+                "consumes": [],
+                "produces": [
+                    "text/plain",
+                    "application/json",
+                    "text/json"
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Success",
+                        "schema": {
+                            "$ref": "#/definitions/Settings"
+                        }
+                    }
+                }
+            },
+            "post": {
+                "tags": [
+                    "Settings"
+                ],
+                "operationId": "postSettings",
+                "consumes": [
+                    "application/json-patch+json",
+                    "application/json",
+                    "text/json",
+                    "application/*+json"
+                ],
+                "produces": [],
+                "parameters": [
+                    {
+                        "name": "value",
+                        "in": "body",
+                        "required": false,
+                        "schema": {
+                            "$ref": "#/definitions/Settings"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Success"
+                    }
+                }
+            }
+        },
+        "/api/SolversLive/Enabled": {
+            "get": {
+                "tags": [
+                    "SolversLive"
+                ],
+                "operationId": "getSolversEnabled",
+                "consumes": [],
+                "produces": [
+                    "text/plain",
+                    "application/json",
+                    "text/json"
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Success",
+                        "schema": {
+                            "type": "boolean"
+                        }
+                    }
+                }
+            }
+        },
+        "/api/SolversLive/Enabled/{value}": {
+            "get": {
+                "tags": [
+                    "SolversLive"
+                ],
+                "operationId": "setSolversEnabled",
+                "consumes": [],
+                "produces": [],
+                "parameters": [
+                    {
+                        "name": "value",
+                        "in": "path",
+                        "required": true,
+                        "type": "boolean"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Success"
+                    }
+                }
+            }
+        },
+        "/api/Universe": {
+            "post": {
+                "tags": [
+                    "Universe"
+                ],
+                "operationId": "postUniverse",
+                "consumes": [
+                    "application/json-patch+json",
+                    "application/json",
+                    "text/json",
+                    "application/*+json"
+                ],
+                "produces": [],
+                "parameters": [
+                    {
+                        "name": "value",
+                        "in": "body",
+                        "required": false,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Success"
+                    }
+                }
+            }
+        },
+        "/api/Universe/{id}": {
+            "put": {
+                "tags": [
+                    "Universe"
+                ],
+                "operationId": "putUniverse",
+                "consumes": [
+                    "application/json-patch+json",
+                    "application/json",
+                    "text/json",
+                    "application/*+json"
+                ],
+                "produces": [],
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "type": "integer",
+                        "format": "int32"
+                    },
+                    {
+                        "name": "value",
+                        "in": "body",
+                        "required": false,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Success"
+                    }
+                }
+            },
+            "delete": {
+                "tags": [
+                    "Universe"
+                ],
+                "operationId": "deleteUniverse",
+                "consumes": [],
+                "produces": [],
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "type": "integer",
+                        "format": "int32"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Success"
+                    }
+                }
+            }
+        },
+        "/api/Universe/getActive/{universeID}": {
+            "get": {
+                "tags": [
+                    "Universe"
+                ],
+                "operationId": "getActiveUniverseByID",
+                "consumes": [],
+                "produces": [
+                    "text/plain",
+                    "application/json",
+                    "text/json"
+                ],
+                "parameters": [
+                    {
+                        "name": "universeID",
+                        "in": "path",
+                        "required": true,
+                        "type": "integer",
+                        "format": "int32"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Success",
+                        "schema": {
+                            "$ref": "#/definitions/ActiveUniverse"
+                        }
+                    }
+                }
+            }
+        },
+        "/api/Venue": {
+            "get": {
+                "tags": [
+                    "Venue"
+                ],
+                "summary": "Get a list of the Venues in the database",
+                "operationId": "getVenues",
+                "consumes": [],
+                "produces": [
+                    "text/plain",
+                    "application/json",
+                    "text/json"
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Success",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/VenueSkeleton"
+                            }
+                        }
+                    }
+                }
+            },
+            "post": {
+                "tags": [
+                    "Venue"
+                ],
+                "operationId": "postVenue",
+                "consumes": [
+                    "application/json-patch+json",
+                    "application/json",
+                    "text/json",
+                    "application/*+json"
+                ],
+                "produces": [
+                    "text/plain",
+                    "application/json",
+                    "text/json"
+                ],
+                "parameters": [
+                    {
+                        "name": "venue",
+                        "in": "body",
+                        "required": false,
+                        "schema": {
+                            "$ref": "#/definitions/Venue"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Success",
+                        "schema": {
+                            "format": "int32",
+                            "type": "integer"
+                        }
+                    }
+                }
+            }
+        },
+        "/api/Venue/{id}": {
+            "get": {
+                "tags": [
+                    "Venue"
+                ],
+                "summary": "Get a single venue by its ID",
+                "operationId": "getVenueById",
+                "consumes": [],
+                "produces": [
+                    "text/plain",
+                    "application/json",
+                    "text/json"
+                ],
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "The Venue ID",
+                        "required": true,
+                        "type": "integer",
+                        "format": "int32"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Success",
+                        "schema": {
+                            "$ref": "#/definitions/Venue"
+                        }
+                    }
+                }
+            },
+            "put": {
+                "tags": [
+                    "Venue"
+                ],
+                "operationId": "putVenue",
+                "consumes": [
+                    "application/json-patch+json",
+                    "application/json",
+                    "text/json",
+                    "application/*+json"
+                ],
+                "produces": [],
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "type": "integer",
+                        "format": "int32"
+                    },
+                    {
+                        "name": "venue",
+                        "in": "body",
+                        "required": false,
+                        "schema": {
+                            "$ref": "#/definitions/Venue"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Success"
+                    }
+                }
+            },
+            "delete": {
+                "tags": [
+                    "Venue"
+                ],
+                "operationId": "deleteVenue",
+                "consumes": [],
+                "produces": [],
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "type": "integer",
+                        "format": "int32"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Success"
+                    }
+                }
+            }
+        },
+        "/api/Venue/GetActive": {
+            "get": {
+                "tags": [
+                    "Venue"
+                ],
+                "operationId": "getActiveVenue",
+                "consumes": [],
+                "produces": [
+                    "text/plain",
+                    "application/json",
+                    "text/json"
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Success",
+                        "schema": {
+                            "$ref": "#/definitions/ActiveVenue"
+                        }
+                    }
+                }
+            }
+        },
+        "/api/Venue/Activate/{id}": {
+            "get": {
+                "tags": [
+                    "Venue"
+                ],
+                "operationId": "activateVenueById",
+                "consumes": [],
+                "produces": [],
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "type": "integer",
+                        "format": "int32"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Success"
+                    }
+                }
+            }
+        },
+        "/api/Venue/Activate/{name}": {
+            "get": {
+                "tags": [
+                    "Venue"
+                ],
+                "operationId": "activateVenueByName",
+                "consumes": [],
+                "produces": [],
+                "parameters": [
+                    {
+                        "name": "name",
+                        "in": "path",
+                        "required": true,
+                        "type": "string"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Success"
+                    }
+                }
+            }
+        },
+        "/api/Venue/Download/{id}": {
+            "get": {
+                "tags": [
+                    "Venue"
+                ],
+                "operationId": "downloadVenue",
+                "consumes": [],
+                "produces": [
+                    "text/plain",
+                    "application/json",
+                    "text/json"
+                ],
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "type": "integer",
+                        "format": "int32"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Success",
+                        "schema": {
+                            "$ref": "#/definitions/VenueDownload"
+                        }
+                    }
+                }
+            }
+        }
+    },
+    "definitions": {
+        "Status": {
+            "type": "object",
+            "properties": {
+                "message": {
+                    "type": "string",
+                    "readOnly": true
+                },
+                "statusCode": {
+                    "format": "int32",
+                    "enum": [
+                        0,
+                        1,
+                        2,
+                        3
+                    ],
+                    "type": "integer",
+                    "readOnly": true
+                }
+            }
+        },
+        "FixtureDefinitionSkeleton": {
+            "type": "object",
+            "properties": {
+                "id": {
+                    "format": "int32",
+                    "type": "integer"
+                },
+                "manufacturer": {
+                    "type": "string"
+                },
+                "model": {
+                    "type": "string"
+                }
+            }
+        },
+        "FixtureDefinition": {
+            "type": "object",
+            "properties": {
+                "id": {
+                    "format": "int32",
+                    "type": "integer"
+                },
+                "manufacturer": {
+                    "type": "string"
+                },
+                "model": {
+                    "type": "string"
+                },
+                "channels": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/DMXChannel"
+                    },
+                    "readOnly": true
+                },
+                "movements": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/MovementAxis"
+                    },
+                    "readOnly": true
+                },
+                "colorWheel": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/ColorWheelEntry"
+                    }
+                },
+                "type": {
+                    "format": "int32",
+                    "enum": [
+                        0,
+                        1,
+                        2
+                    ],
+                    "type": "integer"
+                },
+                "lux": {
+                    "format": "float",
+                    "type": "number"
+                },
+                "beamAngle": {
+                    "format": "float",
+                    "type": "number"
+                }
+            }
+        },
+        "DMXChannel": {
+            "type": "object",
+            "properties": {
+                "id": {
+                    "format": "int32",
+                    "type": "integer"
+                },
+                "min": {
+                    "format": "byte",
+                    "type": "string"
+                },
+                "max": {
+                    "format": "byte",
+                    "type": "string"
+                },
+                "address": {
+                    "format": "int32",
+                    "type": "integer"
+                },
+                "name": {
+                    "type": "string"
+                }
+            }
+        },
+        "MovementAxis": {
+            "type": "object",
+            "properties": {
+                "id": {
+                    "format": "int32",
+                    "type": "integer"
+                },
+                "name": {
+                    "type": "string"
+                },
+                "min": {
+                    "format": "int32",
+                    "type": "integer"
+                },
+                "max": {
+                    "format": "int32",
+                    "type": "integer"
+                }
+            }
+        },
+        "ColorWheelEntry": {
+            "type": "object",
+            "properties": {
+                "id": {
+                    "format": "int32",
+                    "type": "integer"
+                },
+                "name": {
+                    "type": "string"
+                },
+                "min": {
+                    "format": "int32",
+                    "type": "integer"
+                },
+                "max": {
+                    "format": "int32",
+                    "type": "integer"
+                },
+                "color": {
+                    "type": "string"
+                }
+            }
+        },
+        "Group": {
+            "type": "object",
+            "properties": {
+                "id": {
+                    "format": "int32",
+                    "type": "integer"
+                },
+                "name": {
+                    "type": "string"
+                },
+                "order": {
+                    "format": "int32",
+                    "type": "integer"
+                }
+            }
+        },
+        "Look": {
+            "type": "object",
+            "properties": {
+                "id": {
+                    "format": "int32",
+                    "type": "integer"
+                },
+                "name": {
+                    "type": "string"
+                },
+                "attributeLookSettings": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/AttributeLookSetting"
+                    }
+                },
+                "colorLookSettings": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/ColorLookSetting"
+                    }
+                }
+            }
+        },
+        "AttributeLookSetting": {
+            "type": "object",
+            "properties": {
+                "attributeName": {
+                    "type": "string"
+                },
+                "attributeValue": {
+                    "format": "float",
+                    "type": "number"
+                },
+                "id": {
+                    "format": "int32",
+                    "type": "integer"
+                },
+                "group": {
+                    "type": "string"
+                }
+            }
+        },
+        "ColorLookSetting": {
+            "type": "object",
+            "properties": {
+                "color": {
+                    "type": "string"
+                },
+                "id": {
+                    "format": "int32",
+                    "type": "integer"
+                },
+                "group": {
+                    "type": "string"
+                }
+            }
+        },
+        "PreviewResult": {
+            "type": "object",
+            "properties": {
+                "groups": {
+                    "type": "array",
+                    "items": {
+                        "type": "string"
+                    }
+                },
+                "universes": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/PreviewUniverse"
+                    }
+                }
+            }
+        },
+        "PreviewUniverse": {
+            "type": "object",
+            "properties": {
+                "name": {
+                    "type": "string"
+                },
+                "universeID": {
+                    "format": "int32",
+                    "type": "integer"
+                },
+                "fixtures": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/PreviewFixture"
+                    }
+                }
+            }
+        },
+        "PreviewFixture": {
+            "type": "object",
+            "properties": {
+                "address": {
+                    "format": "int32",
+                    "type": "integer"
+                },
+                "group": {
+                    "type": "string"
+                },
+                "definition": {
+                    "$ref": "#/definitions/FixtureDefinition"
+                }
+            }
+        },
+        "Settings": {
+            "type": "object",
+            "properties": {
+                "webPort": {
+                    "format": "int32",
+                    "type": "integer"
+                },
+                "oscPort": {
+                    "format": "int32",
+                    "type": "integer"
+                },
+                "enttecProTransmitter": {
+                    "$ref": "#/definitions/EnttecProTransmitterSettings"
+                },
+                "sacnTransmitter": {
+                    "$ref": "#/definitions/SacnTransmitterSettings"
+                }
+            }
+        },
+        "EnttecProTransmitterSettings": {
+            "type": "object",
+            "properties": {
+                "delay": {
+                    "format": "int32",
+                    "type": "integer"
+                },
+                "port": {
+                    "type": "string"
+                }
+            }
+        },
+        "SacnTransmitterSettings": {
+            "type": "object",
+            "properties": {
+                "delay": {
+                    "format": "int32",
+                    "type": "integer"
+                },
+                "multicast": {
+                    "type": "boolean"
+                },
+                "unicast": {
+                    "type": "array",
+                    "items": {
+                        "type": "string"
+                    }
+                }
+            }
+        },
+        "ActiveUniverse": {
+            "type": "object",
+            "properties": {
+                "universeID": {
+                    "format": "int32",
+                    "type": "integer"
+                },
+                "name": {
+                    "type": "string"
+                },
+                "fixtures": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/ActiveFixture"
+                    }
+                }
+            }
+        },
+        "ActiveFixture": {
+            "type": "object",
+            "properties": {
+                "id": {
+                    "format": "int32",
+                    "type": "integer"
+                },
+                "manufacturer": {
+                    "type": "string"
+                },
+                "model": {
+                    "type": "string"
+                },
+                "address": {
+                    "format": "int32",
+                    "type": "integer"
+                },
+                "group": {
+                    "type": "string"
+                },
+                "colorWheel": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/ColorWheelEntry"
+                    }
+                },
+                "movementAxis": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/MovementAxis"
+                    }
+                },
+                "attributes": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/ActiveAttribute"
+                    }
+                }
+            }
+        },
+        "ActiveAttribute": {
+            "type": "object",
+            "properties": {
+                "name": {
+                    "type": "string"
+                },
+                "value": {
+                    "format": "float",
+                    "type": "number"
+                },
+                "displayMin": {
+                    "format": "int32",
+                    "type": "integer"
+                },
+                "displayMax": {
+                    "format": "int32",
+                    "type": "integer"
+                },
+                "controlled": {
+                    "type": "boolean"
+                },
+                "dmx": {
+                    "type": "boolean"
+                },
+                "dmxAddress": {
+                    "format": "int32",
+                    "type": "integer"
+                }
+            }
+        },
+        "VenueSkeleton": {
+            "type": "object",
+            "properties": {
+                "id": {
+                    "format": "int32",
+                    "type": "integer"
+                },
+                "name": {
+                    "type": "string"
+                }
+            }
+        },
+        "Venue": {
+            "type": "object",
+            "properties": {
+                "id": {
+                    "format": "int32",
+                    "type": "integer"
+                },
+                "name": {
+                    "type": "string"
+                },
+                "universes": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/Universe"
+                    }
+                }
+            }
+        },
+        "Universe": {
+            "type": "object",
+            "properties": {
+                "id": {
+                    "format": "int32",
+                    "type": "integer"
+                },
+                "name": {
+                    "type": "string"
+                },
+                "universeID": {
+                    "format": "int32",
+                    "type": "integer"
+                },
+                "fixtures": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/Fixture"
+                    },
+                    "readOnly": true
+                }
+            }
+        },
+        "Fixture": {
+            "type": "object",
+            "properties": {
+                "id": {
+                    "format": "int32",
+                    "type": "integer"
+                },
+                "address": {
+                    "format": "int32",
+                    "type": "integer"
+                },
+                "type": {
+                    "$ref": "#/definitions/FixtureDefinitionSkeleton"
+                },
+                "options": {
+                    "type": "object"
+                },
+                "group": {
+                    "type": "string"
+                }
+            }
+        },
+        "ActiveVenue": {
+            "type": "object",
+            "properties": {
+                "name": {
+                    "type": "string"
+                },
+                "id": {
+                    "format": "int32",
+                    "type": "integer"
+                },
+                "universes": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/ActiveUniverse"
+                    }
+                }
+            }
+        },
+        "VenueDownload": {
+            "type": "object",
+            "properties": {
+                "name": {
+                    "type": "string"
+                },
+                "universes": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/UniverseDownload"
+                    }
+                }
+            }
+        },
+        "UniverseDownload": {
+            "type": "object",
+            "properties": {
+                "name": {
+                    "type": "string"
+                },
+                "universeID": {
+                    "format": "int32",
+                    "type": "integer"
+                },
+                "fixtures": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/FixtureDownload"
+                    }
+                }
+            }
+        },
+        "FixtureDownload": {
+            "type": "object",
+            "properties": {
+                "address": {
+                    "format": "int32",
+                    "type": "integer"
+                },
+                "skeleton": {
+                    "$ref": "#/definitions/FixtureDefinitionDownloadSkeleton"
+                },
+                "options": {
+                    "type": "object"
+                },
+                "group": {
+                    "type": "string"
+                }
+            }
+        },
+        "FixtureDefinitionDownloadSkeleton": {
+            "type": "object",
+            "properties": {
+                "manufacturer": {
+                    "type": "string"
+                },
+                "model": {
+                    "type": "string"
+                }
+            }
+        }
+    },
+    "securityDefinitions": {}
+}

@@ -1,7 +1,6 @@
 export { EnttecProTransmitterService } from './services/enttec-pro-transmitter.service';
 export { FixtureDefinitionService } from './services/fixture-definition.service';
 export { GroupService } from './services/group.service';
-export { HomeService } from './services/home.service';
 export { LookService } from './services/look.service';
 export { OSCListenerService } from './services/osclistener.service';
 export { PreviewService } from './services/preview.service';

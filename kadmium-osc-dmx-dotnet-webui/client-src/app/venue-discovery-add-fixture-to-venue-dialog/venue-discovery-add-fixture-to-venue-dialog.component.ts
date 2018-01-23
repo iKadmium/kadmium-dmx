@@ -23,8 +23,12 @@ export class VenueDiscoveryAddFixtureToVenueDialogComponent implements OnInit
 
 	ngOnInit()
 	{
-		this.fixtureDefinitionService.getFixtureDefinitionSkeletons().then(response => this.definitions = response.data);
-		this.groupService.getGroups().then(response => this.groups = response.data);
+		this.fixtureDefinitionService.getFixtureDefinitionSkeletons()
+			.toPromise()
+			.then(response => this.definitions = response);
+		this.groupService.getGroups()
+			.toPromise()
+			.then(response => this.groups = response);
 
 	}
 

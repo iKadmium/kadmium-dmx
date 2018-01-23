@@ -7,8 +7,6 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 
 import { MatButtonModule, MatCheckboxModule, MatInputModule, MatSelectModule, MatCardModule, MatIconModule, MatTableModule, MatTooltipModule, MatSortModule, MatPaginatorModule, MatTabsModule, MatSliderModule, MatDialogModule, MatAutocompleteModule, MatSidenavModule, MatToolbarModule, MatExpansionModule, MatSlideToggleModule, MatListModule, MatGridListModule, MatButtonToggleModule, MatProgressSpinnerModule, MatSnackBar, MatSnackBarModule, MatMenuModule, MatStepperModule } from "@angular/material";
 
-import { FlexLayoutModule } from '@angular/flex-layout';
-
 import { MomentModule } from 'angular2-moment';
 
 import { ApiModule } from "api/api.module";
@@ -169,8 +167,6 @@ import { SidenavToggleComponent } from './sidenav-toggle/sidenav-toggle.componen
         MatSnackBarModule,
         MatMenuModule,
         MatStepperModule,
-
-        FlexLayoutModule,
 
         MomentModule,
 

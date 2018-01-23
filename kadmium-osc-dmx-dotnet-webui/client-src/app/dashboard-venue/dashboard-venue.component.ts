@@ -34,19 +34,21 @@ export class DashboardVenueComponent implements OnInit
     ngOnInit(): void
     {
         this.refreshVenue();
-        this.venueService.getVenues().then(response => 
-        {
-            this.venueSkeletons = response.data;
-            this.loading = false;
-        }).catch(reason => this.snackbar.open(reason, "Close", { duration: 3000 }));
+        this.venueService.getVenues()
+            .toPromise()
+            .then(response => 
+            {
+                this.venueSkeletons = response;
+                this.loading = false;
+            }).catch(reason => this.snackbar.open(reason, "Close", { duration: 3000 }));
     }
 
     public async refreshVenue(): Promise<void>
     {
         try
         {
-            let response = await this.venueService.getActiveVenue();
-            this.venue = new PreviewVenue().load(response.data);
+            let response = await this.venueService.getActiveVenue().toPromise();
+            this.venue = new PreviewVenue().load(response);
         }
         catch (reason)
         {
@@ -100,8 +102,15 @@ export class DashboardVenueComponent implements OnInit
     {
         this.loading = true;
         this.venue = null;
-        await this.venueService.activateVenueById(id);
-        await this.refreshVenue();
+        try
+        {
+            await this.venueService.activateVenueById(id).toPromise();
+            await this.refreshVenue();
+        }
+        catch (error)
+        {
+            console.error(error);
+        }
         this.loading = false;
     }
 
@@ -112,16 +121,18 @@ export class DashboardVenueComponent implements OnInit
         {
             if (next != null)
             {
-                let universe = new Universe();
-                universe.fixtures = [];
-                universe.name = "New Universe";
-                universe.universeID = 1;
-                let venue = new Venue();
-                venue.name = next;
-                venue.universes = [universe];
-                let response = await this.venueService.postVenue(venue);
+                let universe: Universe = {
+                    fixtures: [],
+                    name: "New Universe",
+                    universeID: 1
+                };
+                let venue: Venue = {
+                    name: next,
+                    universes: [universe]
+                };
+                let response = await this.venueService.postVenue(venue).toPromise();
                 this.snackbar.open(venue.name + " successfully created", "Close", { duration: 3000 });
-                venue.id = response.data;
+                venue.id = response;
                 this.loadVenue(venue.id);
             }
         });

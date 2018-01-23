@@ -30,12 +30,14 @@ export class FixtureOptionsEditorComponent implements OnInit
 
     ngOnInit(): void
     {
-        this.fixtureDefinitionService.getFixtureDefinitionById(this.fixture.type.id).then(response =>
-        {
-            this.definition = response.data;
-            this.axisOptions = this.definition.movements
-                .map(value => new AxisOptions(value.name, this.fixture, this.definition));
-        });
+        this.fixtureDefinitionService.getFixtureDefinitionById(this.fixture.type.id)
+            .toPromise()
+            .then(response =>
+            {
+                this.definition = response;
+                this.axisOptions = this.definition.movements
+                    .map(value => new AxisOptions(value.name, this.fixture, this.definition));
+            });
     }
 
     public get moving(): boolean

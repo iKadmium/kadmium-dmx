@@ -45,15 +45,19 @@ export class ToolsComponent implements OnInit
 			new Attribute("Fire")
 		];
 
-		promises.push(this.groupService.getGroups().then(response =>
-		{
-			this.groups = response.data;
-		}));
+		promises.push(this.groupService.getGroups()
+			.toPromise()
+			.then(response =>
+			{
+				this.groups = response;
+			}));
 
-		promises.push(this.settingsService.getSettings().then(response =>
-		{
-			this.settings = response.data;
-		}));
+		promises.push(this.settingsService.getSettings()
+			.toPromise()
+			.then(response =>
+			{
+				this.settings = response;
+			}));
 
 		Promise.all(promises).then(x => 
 		{

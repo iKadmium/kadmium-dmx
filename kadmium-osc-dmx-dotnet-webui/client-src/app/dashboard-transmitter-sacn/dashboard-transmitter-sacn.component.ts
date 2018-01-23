@@ -28,12 +28,14 @@ export class DashboardTransmitterSacnComponent implements OnInit
 
     ngOnInit()
     {
-        this.sacnTransmitterService.getTransmitterEnabled().then((response) =>
-        {
-            this.enabled = response.data;
-            this.enabledDetermined = true;
-            this.loaded = true;
-        });
+        this.sacnTransmitterService.getTransmitterEnabled()
+            .toPromise()
+            .then((response) =>
+            {
+                this.enabled = response;
+                this.enabledDetermined = true;
+                this.loaded = true;
+            });
     }
 
     async toggleEnabled(): Promise<void>

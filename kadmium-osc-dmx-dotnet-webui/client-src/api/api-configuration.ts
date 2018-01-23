@@ -1,8 +1,10 @@
-import { RequestOptions } from '@angular/http';
+/* tslint:disable */
+import { Injectable } from '@angular/core';
 
-export class ApiConfiguration
-{
-  public static rootUrl: string = window.location.protocol + "//" + window.location.hostname + ":5000";
-  public static handleError: (error: any) => void = (error) => { };
-  public static prepareRequestOptions: (options: RequestOptions) => void = (req) => { };
+/**
+ * Contains global configuration for API services
+ */
+@Injectable()
+export class ApiConfiguration {
+  rootUrl: string = "http://localhost/";
 }

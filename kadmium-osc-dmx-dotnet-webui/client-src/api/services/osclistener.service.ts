@@ -1,69 +1,97 @@
 /* tslint:disable */
 import { Injectable } from '@angular/core';
-import { Http, Response, Headers, URLSearchParams, RequestOptions } from '@angular/http';
-
-import 'rxjs/add/operator/toPromise';
-
+import {
+  HttpClient, HttpRequest, HttpResponse, 
+  HttpHeaders, HttpParams } from '@angular/common/http';
+import { BaseService } from '../base-service';
 import { ApiConfiguration } from '../api-configuration';
-import { ApiResponse as _ApiResponse_ } from '../api-response';
-
+import { Observable } from 'rxjs/Observable';
+import { map } from 'rxjs/operators/map';
+import { filter } from 'rxjs/operators/filter';
 
 
 @Injectable()
-export class OSCListenerService {
+export class OSCListenerService extends BaseService {
   constructor(
-    public http: Http
+    config: ApiConfiguration,
+    http: HttpClient
   ) {
+    super(config, http);
   }
 
   /**
+   * @return Success
    */
-  getOSCListenerEnabled(): Promise<_ApiResponse_<boolean>> {
-    let options = new RequestOptions({
-      method: "get",
-      url: ApiConfiguration.rootUrl + `/api/OSCListener/Enabled`,
-      search: new URLSearchParams(),
-      headers: new Headers()
-    });
-    ApiConfiguration.prepareRequestOptions(options);
-    return this.http.request(options.url, options)
-      .toPromise()
-      .then(response => {
-        if (response.status < 200 || response.status > 299) {
-          throw response;
-        }
-        return new _ApiResponse_(response, response.text() == 'true');
-      })
-      .catch(e => {
-        ApiConfiguration.handleError(e);
-        throw e;
+   getOSCListenerEnabledResponse(): Observable<HttpResponse<boolean>> {
+    let __params = this.newParams();
+    let __headers = new HttpHeaders();
+    let __body: any = null;
+    let req = new HttpRequest<any>(
+      "GET",
+      this.rootUrl + `/api/OSCListener/Enabled`,
+      __body,
+      {
+        headers: __headers,
+        params: __params,
+        responseType: 'text'
       });
+
+    return this.http.request<any>(req).pipe(
+      filter(_r => _r instanceof HttpResponse),
+      map(_r => {
+        let _resp = _r as HttpResponse<any>;
+        let _body: boolean = null;
+        _body = _resp.body == 'true'
+        return _resp.clone({body: _body}) as HttpResponse<boolean>;
+      })
+    );
   }
 
   /**
-   * @param value - undefined
+   * @return Success
    */
-  setOSCListenerEnabled(value: boolean): Promise<_ApiResponse_<void>> {
-    let options = new RequestOptions({
-      method: "get",
-      url: ApiConfiguration.rootUrl + `/api/OSCListener/Enabled/${value}`,
-      search: new URLSearchParams(),
-      headers: new Headers()
-    });
-    
-    ApiConfiguration.prepareRequestOptions(options);
-    return this.http.request(options.url, options)
-      .toPromise()
-      .then(response => {
-        if (response.status < 200 || response.status > 299) {
-          throw response;
-        }
-        return new _ApiResponse_(response, null);
-      })
-      .catch(e => {
-        ApiConfiguration.handleError(e);
-        throw e;
+   getOSCListenerEnabled(): Observable<boolean> {
+    return this.getOSCListenerEnabledResponse().pipe(
+      map(_r => _r.body)
+    );
+  }
+
+  /**
+   * @param value undefined
+   */
+   setOSCListenerEnabledResponse(value: boolean): Observable<HttpResponse<void>> {
+    let __params = this.newParams();
+    let __headers = new HttpHeaders();
+    let __body: any = null;
+
+    let req = new HttpRequest<any>(
+      "GET",
+      this.rootUrl + `/api/OSCListener/Enabled/${value}`,
+      __body,
+      {
+        headers: __headers,
+        params: __params,
+        responseType: 'text'
       });
+
+    return this.http.request<any>(req).pipe(
+      filter(_r => _r instanceof HttpResponse),
+      map(_r => {
+        let _resp = _r as HttpResponse<any>;
+        let _body: void = null;
+        
+        return _resp.clone({body: _body}) as HttpResponse<void>;
+      })
+    );
+  }
+
+  /**
+   * @param value undefined
+   */
+   setOSCListenerEnabled(value: boolean): Observable<void> {
+    return this.setOSCListenerEnabledResponse(value).pipe(
+      map(_r => _r.body)
+    );
   }
 }
 

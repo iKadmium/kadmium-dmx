@@ -24,7 +24,7 @@
                     {{element.manufacturer}} {{element.model}}
                 </td>
                 <td class="actionsCell">
-                    <a mat-icon-button matTooltip="Download" [href]="getDownloadUrl(element)" [download]="element.manufacturer + ' ' + element.model + '.json'">
+                    <a mat-icon-button matTooltip="Download" [href]="getDownloadUrl(element)" [download]="getDownloadFilename(element)">
                         <mat-icon aria-label="Download">file_download</mat-icon>
                     </a>
                     <a mat-icon-button matTooltip="Edit" [routerLink]="element.id">

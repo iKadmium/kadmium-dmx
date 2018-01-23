@@ -1,157 +1,238 @@
 /* tslint:disable */
 import { Injectable } from '@angular/core';
-import { Http, Response, Headers, URLSearchParams, RequestOptions } from '@angular/http';
-
-import 'rxjs/add/operator/toPromise';
-
+import {
+  HttpClient, HttpRequest, HttpResponse, 
+  HttpHeaders, HttpParams } from '@angular/common/http';
+import { BaseService } from '../base-service';
 import { ApiConfiguration } from '../api-configuration';
-import { ApiResponse as _ApiResponse_ } from '../api-response';
+import { Observable } from 'rxjs/Observable';
+import { map } from 'rxjs/operators/map';
+import { filter } from 'rxjs/operators/filter';
 
 import { FixtureDefinitionSkeleton } from '../models/fixture-definition-skeleton';
 import { FixtureDefinition } from '../models/fixture-definition';
 
-
 @Injectable()
-export class FixtureDefinitionService {
+export class FixtureDefinitionService extends BaseService {
   constructor(
-    public http: Http
+    config: ApiConfiguration,
+    http: HttpClient
   ) {
+    super(config, http);
   }
 
   /**
+   * @return Success
    */
-  getFixtureDefinitionSkeletons(): Promise<_ApiResponse_<FixtureDefinitionSkeleton[]>> {
-    let options = new RequestOptions({
-      method: "get",
-      url: ApiConfiguration.rootUrl + `/api/FixtureDefinition`,
-      search: new URLSearchParams(),
-      headers: new Headers()
-    });
-    ApiConfiguration.prepareRequestOptions(options);
-    return this.http.request(options.url, options)
-      .toPromise()
-      .then(response => {
-        if (response.status < 200 || response.status > 299) {
-          throw response;
-        }
-        return new _ApiResponse_(response, response.json() as FixtureDefinitionSkeleton[]);
-      })
-      .catch(e => {
-        ApiConfiguration.handleError(e);
-        throw e;
+   getFixtureDefinitionSkeletonsResponse(): Observable<HttpResponse<FixtureDefinitionSkeleton[]>> {
+    let __params = this.newParams();
+    let __headers = new HttpHeaders();
+    let __body: any = null;
+    let req = new HttpRequest<any>(
+      "GET",
+      this.rootUrl + `/api/FixtureDefinition`,
+      __body,
+      {
+        headers: __headers,
+        params: __params,
+        responseType: 'json'
       });
+
+    return this.http.request<any>(req).pipe(
+      filter(_r => _r instanceof HttpResponse),
+      map(_r => {
+        let _resp = _r as HttpResponse<any>;
+        let _body: FixtureDefinitionSkeleton[] = null;
+        _body = _resp.body as FixtureDefinitionSkeleton[]
+        return _resp.clone({body: _body}) as HttpResponse<FixtureDefinitionSkeleton[]>;
+      })
+    );
   }
 
   /**
-   * @param definition - undefined
+   * @return Success
    */
-  postFixtureDefinitionById(definition?: FixtureDefinition): Promise<_ApiResponse_<number>> {
-    let options = new RequestOptions({
-      method: "post",
-      url: ApiConfiguration.rootUrl + `/api/FixtureDefinition`,
-      search: new URLSearchParams(),
-      headers: new Headers()
-    });
-    options.body = definition;
-    ApiConfiguration.prepareRequestOptions(options);
-    return this.http.request(options.url, options)
-      .toPromise()
-      .then(response => {
-        if (response.status < 200 || response.status > 299) {
-          throw response;
-        }
-        return new _ApiResponse_(response, parseFloat(response.text()));
-      })
-      .catch(e => {
-        ApiConfiguration.handleError(e);
-        throw e;
-      });
+   getFixtureDefinitionSkeletons(): Observable<FixtureDefinitionSkeleton[]> {
+    return this.getFixtureDefinitionSkeletonsResponse().pipe(
+      map(_r => _r.body)
+    );
   }
 
   /**
-   * @param id - undefined
+   * @param definition undefined
+   * @return Success
    */
-  getFixtureDefinitionById(id: number): Promise<_ApiResponse_<FixtureDefinition>> {
-    let options = new RequestOptions({
-      method: "get",
-      url: ApiConfiguration.rootUrl + `/api/FixtureDefinition/${id}`,
-      search: new URLSearchParams(),
-      headers: new Headers()
-    });
-    
-    ApiConfiguration.prepareRequestOptions(options);
-    return this.http.request(options.url, options)
-      .toPromise()
-      .then(response => {
-        if (response.status < 200 || response.status > 299) {
-          throw response;
-        }
-        return new _ApiResponse_(response, response.json() as FixtureDefinition);
-      })
-      .catch(e => {
-        ApiConfiguration.handleError(e);
-        throw e;
+   postFixtureDefinitionByIdResponse(definition?: FixtureDefinition): Observable<HttpResponse<number>> {
+    let __params = this.newParams();
+    let __headers = new HttpHeaders();
+    let __body: any = null;
+    __body = definition;
+    let req = new HttpRequest<any>(
+      "POST",
+      this.rootUrl + `/api/FixtureDefinition`,
+      __body,
+      {
+        headers: __headers,
+        params: __params,
+        responseType: 'text'
       });
+
+    return this.http.request<any>(req).pipe(
+      filter(_r => _r instanceof HttpResponse),
+      map(_r => {
+        let _resp = _r as HttpResponse<any>;
+        let _body: number = null;
+        _body = parseFloat(_resp.body as string)
+        return _resp.clone({body: _body}) as HttpResponse<number>;
+      })
+    );
   }
 
   /**
-   * @param id - undefined
-   * @param definition - undefined
+   * @param definition undefined
+   * @return Success
    */
-  putFixtureDefinitionById(params: FixtureDefinitionService.PutFixtureDefinitionByIdParams): Promise<_ApiResponse_<void>> {
-    let options = new RequestOptions({
-      method: "put",
-      url: ApiConfiguration.rootUrl + `/api/FixtureDefinition/${params.id}`,
-      search: new URLSearchParams(),
-      headers: new Headers()
-    });
-    
-    options.body = params.definition;
-    ApiConfiguration.prepareRequestOptions(options);
-    return this.http.request(options.url, options)
-      .toPromise()
-      .then(response => {
-        if (response.status < 200 || response.status > 299) {
-          throw response;
-        }
-        return new _ApiResponse_(response, null);
-      })
-      .catch(e => {
-        ApiConfiguration.handleError(e);
-        throw e;
-      });
+   postFixtureDefinitionById(definition?: FixtureDefinition): Observable<number> {
+    return this.postFixtureDefinitionByIdResponse(definition).pipe(
+      map(_r => _r.body)
+    );
   }
 
   /**
-   * @param id - undefined
+   * @param id undefined
+   * @return Success
    */
-  deleteFixtureDefinitionById(id: number): Promise<_ApiResponse_<void>> {
-    let options = new RequestOptions({
-      method: "delete",
-      url: ApiConfiguration.rootUrl + `/api/FixtureDefinition/${id}`,
-      search: new URLSearchParams(),
-      headers: new Headers()
-    });
-    
-    ApiConfiguration.prepareRequestOptions(options);
-    return this.http.request(options.url, options)
-      .toPromise()
-      .then(response => {
-        if (response.status < 200 || response.status > 299) {
-          throw response;
-        }
-        return new _ApiResponse_(response, null);
-      })
-      .catch(e => {
-        ApiConfiguration.handleError(e);
-        throw e;
+   getFixtureDefinitionByIdResponse(id: number): Observable<HttpResponse<FixtureDefinition>> {
+    let __params = this.newParams();
+    let __headers = new HttpHeaders();
+    let __body: any = null;
+
+    let req = new HttpRequest<any>(
+      "GET",
+      this.rootUrl + `/api/FixtureDefinition/${id}`,
+      __body,
+      {
+        headers: __headers,
+        params: __params,
+        responseType: 'json'
       });
+
+    return this.http.request<any>(req).pipe(
+      filter(_r => _r instanceof HttpResponse),
+      map(_r => {
+        let _resp = _r as HttpResponse<any>;
+        let _body: FixtureDefinition = null;
+        _body = _resp.body as FixtureDefinition
+        return _resp.clone({body: _body}) as HttpResponse<FixtureDefinition>;
+      })
+    );
+  }
+
+  /**
+   * @param id undefined
+   * @return Success
+   */
+   getFixtureDefinitionById(id: number): Observable<FixtureDefinition> {
+    return this.getFixtureDefinitionByIdResponse(id).pipe(
+      map(_r => _r.body)
+    );
+  }
+
+  /**
+   * @param params The `FixtureDefinitionService.PutFixtureDefinitionByIdParams` containing the following parameters:
+   *
+   * - `id`: 
+   *
+   * - `definition`:
+   */
+   putFixtureDefinitionByIdResponse(params: FixtureDefinitionService.PutFixtureDefinitionByIdParams): Observable<HttpResponse<void>> {
+    let __params = this.newParams();
+    let __headers = new HttpHeaders();
+    let __body: any = null;
+
+    __body = params.definition;
+    let req = new HttpRequest<any>(
+      "PUT",
+      this.rootUrl + `/api/FixtureDefinition/${params.id}`,
+      __body,
+      {
+        headers: __headers,
+        params: __params,
+        responseType: 'text'
+      });
+
+    return this.http.request<any>(req).pipe(
+      filter(_r => _r instanceof HttpResponse),
+      map(_r => {
+        let _resp = _r as HttpResponse<any>;
+        let _body: void = null;
+        
+        return _resp.clone({body: _body}) as HttpResponse<void>;
+      })
+    );
+  }
+
+  /**
+   * @param params The `FixtureDefinitionService.PutFixtureDefinitionByIdParams` containing the following parameters:
+   *
+   * - `id`: 
+   *
+   * - `definition`:
+   */
+   putFixtureDefinitionById(params: FixtureDefinitionService.PutFixtureDefinitionByIdParams): Observable<void> {
+    return this.putFixtureDefinitionByIdResponse(params).pipe(
+      map(_r => _r.body)
+    );
+  }
+
+  /**
+   * @param id undefined
+   */
+   deleteFixtureDefinitionByIdResponse(id: number): Observable<HttpResponse<void>> {
+    let __params = this.newParams();
+    let __headers = new HttpHeaders();
+    let __body: any = null;
+
+    let req = new HttpRequest<any>(
+      "DELETE",
+      this.rootUrl + `/api/FixtureDefinition/${id}`,
+      __body,
+      {
+        headers: __headers,
+        params: __params,
+        responseType: 'text'
+      });
+
+    return this.http.request<any>(req).pipe(
+      filter(_r => _r instanceof HttpResponse),
+      map(_r => {
+        let _resp = _r as HttpResponse<any>;
+        let _body: void = null;
+        
+        return _resp.clone({body: _body}) as HttpResponse<void>;
+      })
+    );
+  }
+
+  /**
+   * @param id undefined
+   */
+   deleteFixtureDefinitionById(id: number): Observable<void> {
+    return this.deleteFixtureDefinitionByIdResponse(id).pipe(
+      map(_r => _r.body)
+    );
   }
 }
 
 export module FixtureDefinitionService {
-  export interface PutFixtureDefinitionByIdParams {
+
+  /**
+   * Parameters for putFixtureDefinitionById
+   */
+   export interface PutFixtureDefinitionByIdParams {
+
     id: number;
+
     definition?: FixtureDefinition;
   }
 }

@@ -41,9 +41,10 @@ export class DashboardFixtureDetailComponent implements OnInit, AfterViewInit
         let fixtureID = parseInt(this.route.snapshot.paramMap.get('fixtureID'));
 
         this.universeService.getActiveUniverseByID(universeID)
+            .toPromise()
             .then(response =>
             {
-                this.universe = PreviewUniverse.load(response.data);
+                this.universe = PreviewUniverse.load(response);
                 this.fixture = this.universe.fixtures.find(x => x.id == fixtureID);
                 this.loading = false;
             }).catch(error => this.snackbar.open(error, "Close", { duration: 3000 }));

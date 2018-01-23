@@ -44,17 +44,19 @@ export class SettingsComponent extends EditorComponent implements OnInit
         this.form = this.formChild;
         this.settingsService
             .getSettings()
+            .toPromise()
             .then(response =>
             {
-                this.settings = response.data;
+                this.settings = response;
                 this.fakeTargets = this.settings.sacnTransmitter.unicast.map(x => { return { target: x } });
             })
             .catch(error => this.snackbar.open(error, "Close", { duration: 3000 }));
         this.enttecService
             .getEnttecPortNames()
+            .toPromise()
             .then(response =>
             {
-                this.enttecPorts = response.data;
+                this.enttecPorts = response;
             })
             .catch(error => this.snackbar.open(error, "Close", { duration: 3000 }));
     }

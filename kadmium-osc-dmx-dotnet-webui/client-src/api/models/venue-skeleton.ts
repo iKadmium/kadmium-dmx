@@ -1,8 +1,8 @@
 /* tslint:disable */
 
-/**
- */
-export class VenueSkeleton {
-    id?: number;
-    name?: string;
+export interface VenueSkeleton {
+
+  id?: number;
+
+  name?: string;
 }

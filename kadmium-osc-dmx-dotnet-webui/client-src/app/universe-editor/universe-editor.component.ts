@@ -36,10 +36,12 @@ export class UniverseEditorComponent implements OnInit
 
     ngOnInit(): void
     {
-        this.fixtureDefinitionService.getFixtureDefinitionSkeletons().then(response => 
-        {
-            this.fixtureDefinitionSkeletons = response.data;
-        }).catch(error => this.snackbar.open(error, "Close", { duration: 3000 }));
+        this.fixtureDefinitionService.getFixtureDefinitionSkeletons()
+            .toPromise()
+            .then(response => 
+            {
+                this.fixtureDefinitionSkeletons = response;
+            }).catch(error => this.snackbar.open(error, "Close", { duration: 3000 }));
     }
 
     private async removeElement(fixture: Fixture): Promise<void>
@@ -58,11 +60,12 @@ export class UniverseEditorComponent implements OnInit
 
     public async addElement(): Promise<void>
     {
-        let fixture = new Fixture();
-        fixture.group = this.groups[0].name;
-        fixture.address = 1;
-        fixture.type = this.fixtureDefinitionSkeletons[0];
-        fixture.options = {};
+        let fixture: Fixture = {
+            group: this.groups[0].name,
+            address: 1,
+            type: this.fixtureDefinitionSkeletons[0],
+            options: {}
+        };
         this.universe.fixtures.push(fixture);
         await Sleep.sleepUntil(() => this.panels.length == this.universe.fixtures.length);
         this.panels.last.open();

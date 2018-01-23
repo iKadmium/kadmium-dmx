@@ -6,7 +6,6 @@
     <AssemblyName>kadmium-osc-dmx-dotnet-core</AssemblyName>
     <PackageId>kadmium-osc-dmx-dotnet-core</PackageId>
     <RuntimeIdentifiers>win10-x64</RuntimeIdentifiers>
-    <PackageTargetFallback>$(PackageTargetFallback);dnxcore50</PackageTargetFallback>
   </PropertyGroup>
   <ItemGroup>
     <Compile Remove="Looks\**" />
