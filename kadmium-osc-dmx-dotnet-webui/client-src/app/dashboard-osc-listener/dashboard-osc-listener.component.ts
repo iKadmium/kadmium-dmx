@@ -50,7 +50,7 @@ export class DashboardOSCListenerComponent implements OnInit
         this.enabledDetermined = false;
         try
         {
-            await this.oscListenerService.setOSCListenerEnabled(!oldValue);
+            await this.oscListenerService.setOSCListenerEnabled(!oldValue).toPromise();
             this.enabled = !oldValue;
         }
         catch (error)

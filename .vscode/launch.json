@@ -16,7 +16,7 @@
             "type": "coreclr",
             "request": "launch",
             "preLaunchTask": "build",
-            "program": "${workspaceRoot}\\kadmium-osc-dmx-dotnet-webui\\bin\\Debug\\netcoreapp1.1\\kadmium-osc-dmx-dotnet-webui.dll",
+            "program": "${workspaceRoot}\\kadmium-osc-dmx-dotnet-webui\\bin\\Debug\\netcoreapp2.0\\kadmium-osc-dmx-dotnet-webui.dll",
             "args": [],
             "cwd": "${workspaceRoot}\\kadmium-osc-dmx-dotnet-webui",
             "stopAtEntry": false,

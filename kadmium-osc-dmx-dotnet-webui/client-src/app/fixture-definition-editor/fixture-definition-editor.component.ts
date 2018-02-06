@@ -174,13 +174,13 @@ export class FixtureDefinitionEditorComponent extends EditorComponent implements
         {
             if (this.isNewItem())
             {
-                await this.fixtureDefinitionService.postFixtureDefinitionById(this.definition);
+                await this.fixtureDefinitionService.postFixtureDefinitionById(this.definition).toPromise();
                 this.saved = true;
                 this.snackbar.open("Successfully added " + this.definition.manufacturer + " " + this.definition.model, "Close", { duration: 3000 });
             }
             else
             {
-                await this.fixtureDefinitionService.putFixtureDefinitionById({ id: this.definition.id, definition: this.definition });
+                await this.fixtureDefinitionService.putFixtureDefinitionById({ id: this.definition.id, definition: this.definition }).toPromise();
                 this.saved = true;
                 this.snackbar.open("Successfully edited " + this.definition.manufacturer + " " + this.definition.model, "Close", { duration: 3000 });
             }

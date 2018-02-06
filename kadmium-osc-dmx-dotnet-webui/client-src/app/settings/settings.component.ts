@@ -72,7 +72,7 @@ export class SettingsComponent extends EditorComponent implements OnInit
         try
         {
             this.settings.sacnTransmitter.unicast = this.fakeTargets.map(x => x.target);
-            await this.settingsService.postSettings(this.settings);
+            await this.settingsService.postSettings(this.settings).toPromise();
             this.saved = true;
             this.snackbar.open("Saved Successfully", "Close", { duration: 3000 });
         }

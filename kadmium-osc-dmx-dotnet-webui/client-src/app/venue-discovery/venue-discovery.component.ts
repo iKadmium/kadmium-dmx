@@ -234,11 +234,11 @@ export class VenueDiscoveryComponent implements OnInit
 		try
 		{
 			this.saving = true;
-			await this.venueService.putVenue({ id: venue.id, venue: venue });
+			await this.venueService.putVenue({ id: venue.id, venue: venue }).toPromise();
 			this.saving = false;
 			this.snackbar.open("Successfully update " + venue.name, "Close", { duration: 3000 });
 			this.loaded = false;
-			await this.venueService.activateVenueById(venue.id);
+			await this.venueService.activateVenueById(venue.id).toPromise();
 			await this.refreshVenue();
 		}
 		catch (error)

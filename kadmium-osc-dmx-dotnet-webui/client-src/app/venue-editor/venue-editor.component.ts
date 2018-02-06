@@ -109,13 +109,13 @@ export class VenueEditorComponent extends EditorComponent implements OnInit
         {
             if (this.isNewItem())
             {
-                await this.venueService.postVenue(this.venue);
+                await this.venueService.postVenue(this.venue).toPromise();
                 this.saved = true;
                 this.snackbar.open("Successfully added " + this.venue.name, "Close", { duration: 3000 });
             }
             else
             {
-                await this.venueService.putVenue({ id: this.venue.id, venue: this.venue });
+                await this.venueService.putVenue({ id: this.venue.id, venue: this.venue }).toPromise();
                 this.saved = true;
                 this.snackbar.open("Successfully edited " + this.venue.name, "Close", { duration: 3000 });
             }

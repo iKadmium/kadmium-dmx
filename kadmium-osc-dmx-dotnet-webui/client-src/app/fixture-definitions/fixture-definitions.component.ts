@@ -102,7 +102,7 @@ export class FixtureDefinitionsComponent implements OnInit
                 try
                 {
                     this.saving = true;
-                    await this.fixtureDefinitionsService.deleteFixtureDefinitionById(fixture.id);
+                    await this.fixtureDefinitionsService.deleteFixtureDefinitionById(fixture.id).toPromise();
                     this.snackbar.open(fixture.manufacturer + " " + fixture.model + " was deleted", "Close", { duration: 3000 });
                     let index = this.skeletons.indexOf(fixture);
                     this.skeletons.splice(index, 1);

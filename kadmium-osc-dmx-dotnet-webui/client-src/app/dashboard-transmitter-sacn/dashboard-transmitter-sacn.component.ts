@@ -44,7 +44,7 @@ export class DashboardTransmitterSacnComponent implements OnInit
         this.enabledDetermined = false;
         try
         {
-            await this.sacnTransmitterService.setTransmitterEnabled(!oldValue);
+            await this.sacnTransmitterService.setTransmitterEnabled(!oldValue).toPromise();
             this.enabled = !oldValue;
         }
         catch (error)

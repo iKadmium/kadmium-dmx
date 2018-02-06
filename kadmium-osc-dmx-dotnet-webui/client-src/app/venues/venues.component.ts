@@ -51,7 +51,7 @@ export class VenuesComponent implements OnInit
             {
                 try 
                 {
-                    await this.venueService.deleteVenue(venue.id);
+                    await this.venueService.deleteVenue(venue.id).toPromise();
                     let index = this.venues.indexOf(venue);
                     this.venues.splice(index, 1);
                     this.snackbar.open(venue.name + " successfully removed", "Close", { duration: 3000 });

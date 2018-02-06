@@ -44,7 +44,7 @@ export class DashboardTransmitterEnttecComponent implements OnInit
         this.enabledDetermined = false;
         try
         {
-            await this.enttecTransmitterService.setEnttecEnabled(!oldValue);
+            await this.enttecTransmitterService.setEnttecEnabled(!oldValue).toPromise();
             this.enabled = !oldValue;
         }
         catch (error)

@@ -104,7 +104,7 @@ export class GroupsComponent extends EditorComponent implements OnInit
         this.saving = true;
         try
         {
-            await this.groupsService.putGroup(this.groups);
+            await this.groupsService.putGroup(this.groups).toPromise();
             this.saved = true;
             this.snackbar.open("Saved successfully", "Close", { duration: 3000 })
         }
