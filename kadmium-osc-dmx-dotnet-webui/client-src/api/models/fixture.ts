@@ -1,7 +1,8 @@
 /* tslint:disable */
 import { FixtureDefinitionSkeleton } from './fixture-definition-skeleton';
 
-export interface Fixture {
+export interface Fixture
+{
 
   id?: number;
 
@@ -9,7 +10,7 @@ export interface Fixture {
 
   type?: FixtureDefinitionSkeleton;
 
-  options?: {};
+  options?: any;
 
   group?: string;
 }

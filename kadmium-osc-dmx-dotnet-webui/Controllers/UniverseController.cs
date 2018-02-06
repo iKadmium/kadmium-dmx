@@ -86,7 +86,14 @@ namespace kadmium_osc_dmx_dotnet_webui.Controllers
                 if (fixture.Solvers.Any(solver => solver is MovementRestrictionSolver))
                 {
                     var solver = fixture.Solvers.Single(x => x is MovementRestrictionSolver) as MovementRestrictionSolver;
-                    return solver.Axis[attribute.Name].RestrictedMin;
+                    if (solver.Axis.ContainsKey(attribute.Name))
+                    {
+                        return solver.Axis[attribute.Name].RestrictedMin;
+                    }
+                    else
+                    {
+                        return fixture.MovementAxis[attribute.Name].Min;
+                    }
                 }
                 else
                 {
@@ -111,7 +118,14 @@ namespace kadmium_osc_dmx_dotnet_webui.Controllers
                 if (fixture.Solvers.Any(solver => solver is MovementRestrictionSolver))
                 {
                     var solver = fixture.Solvers.Single(x => x is MovementRestrictionSolver) as MovementRestrictionSolver;
-                    return solver.Axis[attribute.Name].RestrictedMax;
+                    if (solver.Axis.ContainsKey(attribute.Name))
+                    {
+                        return solver.Axis[attribute.Name].RestrictedMax;
+                    }
+                    else
+                    {
+                        return fixture.MovementAxis[attribute.Name].Max;
+                    }
                 }
                 else
                 {

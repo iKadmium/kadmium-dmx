@@ -37,6 +37,18 @@ export class FixtureOptionsEditorComponent implements OnInit
                 this.definition = response;
                 this.axisOptions = this.definition.movements
                     .map(value => new AxisOptions(value.name, this.fixture, this.definition));
+
+                if (this.moving)
+                {
+                    if (this.fixture.options.axisInversions == null)
+                    {
+                        this.fixture.options.axisInversions = [];
+                    }
+                    if (this.fixture.options.axisRestrictions == null)
+                    {
+                        this.fixture.options.axisRestrictions = [];
+                    }
+                }
             });
     }
 

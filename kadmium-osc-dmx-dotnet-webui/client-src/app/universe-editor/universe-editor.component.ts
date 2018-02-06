@@ -64,7 +64,11 @@ export class UniverseEditorComponent implements OnInit
             group: this.groups[0].name,
             address: 1,
             type: this.fixtureDefinitionSkeletons[0],
-            options: {}
+            options: {
+                maxBrightness: 1,
+                axisInversions: [],
+                axisRestrictions: []
+            }
         };
         this.universe.fixtures.push(fixture);
         await Sleep.sleepUntil(() => this.panels.length == this.universe.fixtures.length);
