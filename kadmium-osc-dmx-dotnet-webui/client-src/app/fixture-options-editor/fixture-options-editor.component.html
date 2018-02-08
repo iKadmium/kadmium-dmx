@@ -1,43 +1,46 @@
 <div class="mat-typography">
-    <h1 mat-dialog-title>{{fixture.address}} - {{fixture.type.manufacturer}} {{fixture.type.model}}</h1>
-    <div mat-dialog-content *ngIf="definition" style="padding-bottom: 1em">
-        <h3>General Options</h3>
-        <div class="column">
-            <mat-form-field>
-                <input matInput [(ngModel)]="fixture.options.maxBrightness" type="number" min="0" max="1" step="0.01" name="maxBrightness"
-                    placeholder="Max Brightness" />
-            </mat-form-field>
-        </div>
+    <form #editorForm="ngForm">
+        <h1 mat-dialog-title>{{fixture.address}} - {{fixture.type.manufacturer}} {{fixture.type.model}}</h1>
+        <div mat-dialog-content *ngIf="definition" style="padding-bottom: 1em">
+            <h3>General Options</h3>
 
+            <div class="column">
+                <mat-form-field>
+                    <input matInput required [(ngModel)]="options.maxBrightness" type="number" min="0" max="1" step="0.01" name="maxBrightness"
+                        placeholder="Max Brightness" />
+                </mat-form-field>
+            </div>
 
-        <div *ngIf="moving">
-            <mat-divider></mat-divider>
+            <div *ngIf="moving">
+                <mat-divider></mat-divider>
 
-            <h3>Axis Options</h3>
-            <mat-expansion-panel *ngFor="let axis of axisOptions">
-                <mat-expansion-panel-header>
-                    <mat-panel-title>{{axis.name}}</mat-panel-title>
-                </mat-expansion-panel-header>
-                <div class="column">
-                    <mat-checkbox [(ngModel)]="axis.inverted" [name]="'inverted[' + axis.name + ']'">Inverted</mat-checkbox>
-                    <mat-checkbox [(ngModel)]="axis.restricted" [name]="'restricted[' + axis.name + ']'">Restricted</mat-checkbox>
-                    <div *ngIf="axis.restricted" @slideOut @shrinkY @fadeOut class="column">
-                        <mat-form-field @slideIn @growY @fadeIn>
-                            <input matInput type="number" [(ngModel)]="axis.restrictionMin" [name]="'restrictionMin[' + axis.name + ']'" [min]="axis.min"
-                                [max]="axis.max" [disabled]="!axis.restricted" placeholder="Min (degrees)">
-                        </mat-form-field>
-                        <mat-form-field @slideIn @growY @fadeIn>
-                            <input matInput type="number" [(ngModel)]="axis.restrictionMax" [name]="'restrictionMax[' + axis.name + ']'" [min]="axis.min"
-                                [max]="axis.max" [disabled]="!axis.restricted" placeholder="Max (degrees)" />
-                        </mat-form-field>
+                <h3>Axis Options</h3>
+                <mat-expansion-panel *ngFor="let axis of axisOptions">
+                    <mat-expansion-panel-header>
+                        <mat-panel-title>{{axis.name}}</mat-panel-title>
+                    </mat-expansion-panel-header>
+                    <div class="column">
+                        <mat-checkbox [(ngModel)]="axis.inverted" [name]="'inverted[' + axis.name + ']'">Inverted</mat-checkbox>
+                        <mat-checkbox [(ngModel)]="axis.restricted" [name]="'restricted[' + axis.name + ']'">Restricted</mat-checkbox>
+                        <div *ngIf="axis.restricted" @slideOut @shrinkY @fadeOut class="column">
+                            <mat-form-field @slideIn @growY @fadeIn>
+                                <input matInput type="number" [(ngModel)]="axis.restrictionMin" [name]="'restrictionMin[' + axis.name + ']'" [min]="axis.min"
+                                    [max]="axis.max" [disabled]="!axis.restricted" placeholder="Min (degrees)">
+                            </mat-form-field>
+                            <mat-form-field @slideIn @growY @fadeIn>
+                                <input matInput type="number" [(ngModel)]="axis.restrictionMax" [name]="'restrictionMax[' + axis.name + ']'" [min]="axis.min"
+                                    [max]="axis.max" [disabled]="!axis.restricted" placeholder="Max (degrees)" />
+                            </mat-form-field>
+                        </div>
+
                     </div>
-
-                </div>
-            </mat-expansion-panel>
+                </mat-expansion-panel>
+            </div>
 
         </div>
-    </div>
-    <div mat-dialog-actions>
-        <button mat-button [mat-dialog-close]="data.filename" tabindex="2">OK</button>
-    </div>
+        <div mat-dialog-actions>
+            <button mat-button [mat-dialog-close]="options" [disabled]="editorForm.invalid" tabindex="2">OK</button>
+            <button mat-button [mat-dialog-close]="null" tabindex="-1">Cancel</button>
+        </div>
+    </form>
 </div>

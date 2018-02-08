@@ -87,7 +87,10 @@ export class UniverseEditorComponent implements OnInit
         });
         ref.afterClosed().subscribe(result =>
         {
-
+            if (result != null)
+            {
+                fixture.options = result;
+            }
         })
     }
 
