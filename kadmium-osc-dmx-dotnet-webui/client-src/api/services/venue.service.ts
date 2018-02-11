@@ -339,6 +339,46 @@ export class VenueService extends BaseService {
   }
 
   /**
+   * @param venueUpload undefined
+   * @return Success
+   */
+   uploadVenueResponse(venueUpload?: VenueDownload): Observable<HttpResponse<number>> {
+    let __params = this.newParams();
+    let __headers = new HttpHeaders();
+    let __body: any = null;
+    __body = venueUpload;
+    let req = new HttpRequest<any>(
+      "POST",
+      this.rootUrl + `/api/Venue/upload`,
+      __body,
+      {
+        headers: __headers,
+        params: __params,
+        responseType: 'text'
+      });
+
+    return this.http.request<any>(req).pipe(
+      filter(_r => _r instanceof HttpResponse),
+      map(_r => {
+        let _resp = _r as HttpResponse<any>;
+        let _body: number = null;
+        _body = parseFloat(_resp.body as string)
+        return _resp.clone({body: _body}) as HttpResponse<number>;
+      })
+    );
+  }
+
+  /**
+   * @param venueUpload undefined
+   * @return Success
+   */
+   uploadVenue(venueUpload?: VenueDownload): Observable<number> {
+    return this.uploadVenueResponse(venueUpload).pipe(
+      map(_r => _r.body)
+    );
+  }
+
+  /**
    * @param id undefined
    * @return Success
    */

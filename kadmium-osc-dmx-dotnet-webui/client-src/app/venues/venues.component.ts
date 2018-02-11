@@ -102,13 +102,13 @@ export class VenuesComponent implements OnInit
         try
         {
             let venue = await AsyncFileReader.read<Venue>(file);
-            venue.id = (await this.venueService.postVenue(venue).toPromise());
+            venue.id = (await this.venueService.uploadVenue(venue).toPromise());
             this.venues.push(venue);
             this.snackbar.open("Successfully added " + venue.name, "Close", { duration: 3000 });
         }
         catch (reason)
         {
-            this.snackbar.open(reason, "Close", { duration: 3000 });
+            this.snackbar.open(reason.message, "Close", { duration: 3000 });
         }
     }
 

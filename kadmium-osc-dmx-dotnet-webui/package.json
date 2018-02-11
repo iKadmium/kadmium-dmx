@@ -43,7 +43,7 @@
     "karma-coverage-istanbul-reporter": "*",
     "karma-jasmine": "*",
     "karma-jasmine-html-reporter": "*",
-    "ng-swagger-gen": "*",
+    "ng-swagger-gen": "^0.10.0",
     "node-sass": "*",
     "protractor": "*",
     "ts-node": "*",

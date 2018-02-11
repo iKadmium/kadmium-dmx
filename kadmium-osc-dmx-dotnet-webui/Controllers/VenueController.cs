@@ -108,6 +108,72 @@ namespace kadmium_osc_dmx_dotnet_webui.Controllers
             return venue.Id;
         }
 
+        [HttpPost("Upload")]
+        [SwaggerOperation("uploadVenue")]
+        public async Task<int> Upload([FromBody]VenueDownload venueUpload)
+        {
+            //check to see if we have all the right fixture definitions
+            var fixtureTypes = from universe in venueUpload.Universes
+                               from fixture in universe.Fixtures
+                               select fixture.Skeleton;
+
+            var uniqueFixtureTypes = fixtureTypes.Distinct();
+            var unknownTypes = from fixtureType in uniqueFixtureTypes
+                               where !_context.FixtureDefinitions.Any(x => x.Manufacturer == fixtureType.Manufacturer && x.Model == fixtureType.Model)
+                               select fixtureType;
+
+            if (unknownTypes.Count() > 0)
+            {
+                string unknownTypesString = string.Join(", ", unknownTypes.Select(x => x.Manufacturer + " " + x.Model));
+                throw new ArgumentException("The following fixture types are not known: " + unknownTypesString);
+            }
+
+            var groups = from universe in venueUpload.Universes
+                         from fixture in universe.Fixtures
+                         select fixture.Group;
+
+            var uniqueGroups = groups.Distinct();
+            var unknownGroups = from groupName in uniqueGroups
+                                where !_context.Groups.Any(x => x.Name == groupName)
+                                select groupName;
+
+            if (unknownGroups.Count() > 0)
+            {
+                string unknownGroupsString = string.Join(", ", unknownGroups);
+                throw new ArgumentException("The following groups are not known: " + unknownGroupsString);
+            }
+
+            List<Universe> universes = new List<Universe>();
+            foreach (var universeDownload in venueUpload.Universes)
+            {
+                List<Fixture> fixtures = new List<Fixture>();
+                foreach (var fixtureDownload in universeDownload.Fixtures)
+                {
+                    var fixture = await GetFixture(fixtureDownload);
+                    fixtures.Add(fixture);
+                }
+                var universe = new Universe(universeDownload.Name, universeDownload.UniverseID, fixtures);
+                universes.Add(universe);
+            }
+
+            Venue venue = new Venue(venueUpload.Name, universes);
+
+            await _context.Venues.AddAsync(venue);
+            await _context.SaveChangesAsync();
+            return venue.Id;
+        }
+
+        private async Task<Fixture> GetFixture(FixtureDownload fixtureDownload)
+        {
+            Fixture fixture = new Fixture(fixtureDownload.Address, fixtureDownload.Options);
+            FixtureDefinition definition = await _context.FixtureDefinitions.SingleAsync(x =>
+                x.Manufacturer == fixtureDownload.Skeleton.Manufacturer
+                && x.Model == fixtureDownload.Skeleton.Model);
+            Group group = await _context.Groups.SingleAsync(x => x.Name == fixtureDownload.Group);
+            fixture.Initialize(definition, group);
+            return fixture;
+        }
+
         [HttpPut("{id}")]
         [SwaggerOperation("putVenue")]
         public async Task Put(int id, [FromBody]Venue venue)

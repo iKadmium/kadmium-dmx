@@ -20,12 +20,12 @@ namespace kadmium_osc_dmx_dotnet_webui.WebSockets
             MasterController.Instance.SolverStatus.Updated += SolverStatusUpdated;
         }
 
-        public override void OnMessage(string message)
+        public async override void OnMessage(string message)
         {
             switch (message)
             {
                 case "updateAll":
-                    UpdateAll();
+                    await UpdateAll();
                     break;
             }
 
