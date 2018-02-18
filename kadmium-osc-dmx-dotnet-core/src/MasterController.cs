@@ -12,8 +12,8 @@ namespace kadmium_osc_dmx_dotnet_core
 {
     public class MasterController : IDisposable
     {
-        static int UPDATES_PER_SECOND = 40; // in hz
-        static int UPDATE_TIME = 1000 / UPDATES_PER_SECOND;
+        public static int UPDATES_PER_SECOND = 40; // in hz
+        public static int UPDATE_TIME = 1000 / UPDATES_PER_SECOND;
 
         public event EventHandler<EventArgs> VenueActivated;
 
