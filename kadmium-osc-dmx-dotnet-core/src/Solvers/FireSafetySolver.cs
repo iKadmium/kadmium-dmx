@@ -7,12 +7,17 @@ namespace kadmium_osc_dmx_dotnet_core.Solvers
 {
     public class FireSafetySolver : FixtureSolver
     {
-        private static float DecayRate = (1f / MasterController.UPDATES_PER_SECOND);
+        public static float DecayTime = 1f;
+        public static float DecayRate = (DecayTime / MasterController.UPDATES_PER_SECOND);
         private Fixture Fixture { get; }
 
         public FireSafetySolver(Fixture fixture) : base(fixture, "FireSafety", "FireActivate")
         {
             fixture.Settables["Fire"].Controlled = true;
+            if(fixture.Settables.ContainsKey("FireHeight"))
+            {
+                fixture.Settables["FireHeight"].Controlled = true;
+            }
             Fixture = fixture;
         }
 
@@ -25,7 +30,10 @@ namespace kadmium_osc_dmx_dotnet_core.Solvers
                     Attributes["FireHeight"].Value = Attributes["FireActivate"].Value;
                     Attributes["Fire"].Value = Attributes["FireActivate"].Value > 0f ? 1f : 0;
                 }
-                Attributes["Fire"].Value = Attributes["FireActivate"].Value;
+                else
+                {
+                    Attributes["Fire"].Value = Attributes["FireActivate"].Value;
+                }
                 if (Attributes["FireSafety"].Value > DecayRate)
                 {
                     Fixture.Settables["FireSafety"].Value -= DecayRate;

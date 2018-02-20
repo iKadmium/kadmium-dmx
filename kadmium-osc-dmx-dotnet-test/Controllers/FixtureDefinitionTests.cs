@@ -61,7 +61,7 @@ namespace kadmium_osc_dmx_dotnet_test
                 Assert.Equal(definition, expectedDefinition);
             }
         }
-
+        
         [Theory]
         [InlineData("Strobe", "UV")]
         public async Task TestChannels(string channelToRemoveName, string channelToAddName)
@@ -120,6 +120,21 @@ namespace kadmium_osc_dmx_dotnet_test
             definition.Channels.Add(new DMXChannel("Red", definition.Channels.Count + 1));
             definition.Channels.Add(new DMXChannel("Green", definition.Channels.Count + 1));
             definition.Channels.Add(new DMXChannel("Blue", definition.Channels.Count + 1));
+            return definition;
+        }
+
+        public static FixtureDefinition GetFireFixtureDefinition(bool fireHeightChannel = false)
+        {
+            var definition = new FixtureDefinition()
+            {
+                Manufacturer = "Generic",
+                Model = "Fire Fixture"
+            };
+            definition.Channels.Add(new DMXChannel("Fire", definition.Channels.Count + 1));
+            if (fireHeightChannel)
+            {
+                definition.Channels.Add(new DMXChannel("FireHeight", definition.Channels.Count + 1));
+            }
             return definition;
         }
 

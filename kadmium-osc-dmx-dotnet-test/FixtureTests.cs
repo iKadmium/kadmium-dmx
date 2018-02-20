@@ -42,6 +42,15 @@ namespace kadmium_osc_dmx_dotnet_test
             return fixture;
         }
 
+        public static Fixture GetFireFixture(bool fireHeightChannel = false)
+        {
+            FixtureDefinition definition = FixtureDefinitionTests.GetFireFixtureDefinition(fireHeightChannel);
+            Group group = GroupTests.GetGroup();
+            Fixture fixture = new Fixture(1, new JObject());
+            fixture.Initialize(definition, group);
+            return fixture;
+        }
+
         public static Fixture GetFixture(FixtureDefinition definition, int startChannel, Group group)
         {
             Fixture fixture = new Fixture()

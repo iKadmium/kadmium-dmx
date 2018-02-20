@@ -1,4 +1,4 @@
-﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc;
 using kadmium_osc_dmx_dotnet_core;
 using System.Collections.Generic;
 using System.Linq;
@@ -38,7 +38,7 @@ namespace kadmium_osc_dmx_dotnet_webui.Controllers
         {
             var definition = await _context.LoadFixtureDefinition(id);
             var filename = definition.Manufacturer + " " + definition.Model + ".json";
-            Request.HttpContext.Response.Headers.Add("Content-Disposition", "filename=" + filename);
+            Request?.HttpContext.Response.Headers.Add("Content-Disposition", "filename=" + filename);
             return definition;
         }
 
