@@ -26,6 +26,30 @@ export class FixtureDefinitionEditorComponent extends EditorComponent implements
 
     public saving: boolean;
 
+    private channelNameOptions: string[] = [
+        'Master',
+        'Strobe',
+        'Red',
+        'Green',
+        'Blue',
+        'UV',
+        'ColorWheel',
+        'Pan',
+        'PanCoarse',
+        'PanFine',
+        'Tilt',
+        'TiltCoarse',
+        'TiltFine',
+        'CO2',
+        'Fire',
+        'FireHeight'
+    ];
+
+    private allAxis: string[] = [
+        'Pan',
+        'Tilt'
+    ]
+
     @ViewChildren("movementPanels") movementPanels: QueryList<MatExpansionPanel>;
     @ViewChildren("colorWheelPanels") colorWheelPanels: QueryList<MatExpansionPanel>;
     @ViewChildren("channelPanels") channelPanels: QueryList<MatExpansionPanel>;
@@ -165,6 +189,26 @@ export class FixtureDefinitionEditorComponent extends EditorComponent implements
         return this.definition.movements
             .filter(value => value != thisEntry)
             .map((value: MovementAxis) => value.name);
+    }
+
+    public getFilteredChannelNameOptions(channel: DMXChannel): string[]
+    {
+        let options = this.channelNameOptions
+            .filter(x => x.startsWith(channel.name) && x != channel.name);
+        return options.filter(x => 
+        {
+            return !this.getOtherChannelNames(channel).find(other => other == x);
+        });
+    }
+
+    public getFilteredManufacturers(beginning: string): string[]
+    {
+        return this.allManufacturers.filter(x => x.startsWith(beginning) && x != beginning);
+    }
+
+    public getFilteredAxis(beginning: string): string[]
+    {
+        return this.allAxis.filter(x => x.startsWith(beginning) && x != beginning);
     }
 
     public async save(): Promise<void>

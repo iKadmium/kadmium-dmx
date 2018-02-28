@@ -13,10 +13,13 @@
             <app-busy-card [loading]="loading" [saving]="saving"></app-busy-card>
         </mat-card-content>
         <mat-card-content *ngIf="!loading && !saving">
+            <mat-autocomplete #manufacturersAuto="matAutocomplete">
+                <mat-option *ngFor="let manufacturer of getFilteredManufacturers(definition.manufacturer)" [value]="manufacturer">{{manufacturer}}</mat-option>
+            </mat-autocomplete>
             <div class="column">
                 <mat-form-field>
                     <input required type="text" matInput [(ngModel)]="definition.manufacturer" name="manufacturer" placeholder="Manufacturer"
-                        list="manufacturersList">
+                        [matAutocomplete]="manufacturersAuto">
                 </mat-form-field>
                 <mat-form-field>
                     <input required type="text" matInput [(ngModel)]="definition.model" name="model" placeholder="Model">
@@ -44,6 +47,9 @@
                         <mat-panel-title>{{channel.address}} - {{channel.name}}</mat-panel-title>
                     </mat-expansion-panel-header>
 
+                    <mat-autocomplete #channelNames="matAutocomplete">
+                        <mat-option *ngFor="let option of getFilteredChannelNameOptions(channel)" [value]="option">{{option}}</mat-option>
+                    </mat-autocomplete>
                     <div class="column">
                         <mat-form-field>
                             <input required type="number" matInput [(ngModel)]="channel.address" min="1" max="512" [name]="'channelAddress[' + i + ']'"
@@ -51,7 +57,7 @@
                         </mat-form-field>
                         <mat-form-field>
                             <input required type="text" [unique]="getOtherChannelNames(channel)" matInput [(ngModel)]="channel.name" [name]="'channelName[' + i + ']'"
-                                list="channelList" placeholder="Name">
+                                [matAutocomplete]="channelNames" placeholder="Name">
                         </mat-form-field>
                         <mat-form-field>
                             <input required type="number" matInput [(ngModel)]="channel.min" min="0" max="255" [name]="'channelMin[' + i + ']'" placeholder="Min">
@@ -84,10 +90,13 @@
                     <mat-expansion-panel-header>
                         <mat-panel-title>{{axis.name}}</mat-panel-title>
                     </mat-expansion-panel-header>
+                    <mat-autocomplete #axisAuto="matAutocomplete">
+                        <mat-option *ngFor="let axis of getFilteredAxis(axis.name)" [value]="axis">{{axis}}</mat-option>
+                    </mat-autocomplete>
                     <div class="column">
                         <mat-form-field>
                             <input required type="text" [unique]="getOtherAxisNames(axis)" matInput [(ngModel)]="axis.name" [name]="'axisName[' + i + ']'"
-                                placeholder="Name" list="axisList">
+                                placeholder="Name" [matAutocomplete]="axisAuto">
                         </mat-form-field>
                         <mat-form-field>
                             <input matInput required type="number" [(ngModel)]="axis.min" [max]="axis.max" [name]="'axisMin[' + i + ']'" placeholder="Min (degrees)"
@@ -161,25 +170,3 @@
         </mat-card-content>
     </mat-card>
 </form>
-
-<datalist id="axisList" name="axisList">
-    <option>Pan</option>
-    <option>Tilt</option>
-</datalist>
-<datalist id="manufacturersList" name="manufacturersList">
-    <option *ngFor="let manufacturer of allManufacturers">{{manufacturer}}</option>
-</datalist>
-
-<datalist id="channelList" name="channelList">
-    <option>Master</option>
-    <option>Strobe</option>
-    <option>Red</option>
-    <option>Green</option>
-    <option>Blue</option>
-    <option>UV</option>
-    <option>ColorWheel</option>
-    <option>PanCoarse</option>
-    <option>PanFine</option>
-    <option>TiltCoarse</option>
-    <option>TiltFine</option>
-</datalist>

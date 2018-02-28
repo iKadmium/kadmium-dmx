@@ -42,7 +42,7 @@ export class ToolsComponent implements OnInit
 			new Attribute("Tilt"),
 			new Attribute("RandomMove"),
 			new Attribute("CO2"),
-			new Attribute("Fire")
+			new Attribute("FireActivate")
 		];
 
 		promises.push(this.groupService.getGroups()
@@ -141,7 +141,6 @@ export class ToolsComponent implements OnInit
 			initLines.join("\r\n"),
 			blockLines.join("\r\n")
 		].join("\r\n\r\n");
-		console.log(script);
 		return script;
 	}
 
@@ -235,7 +234,6 @@ export class ToolsComponent implements OnInit
 			midiMsgLines.join("\r\n")
 		].join("\r\n\r\n");
 
-		console.log(lines);
 		return lines;
 	}
 
