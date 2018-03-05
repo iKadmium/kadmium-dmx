@@ -1,4 +1,4 @@
-﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json.Linq;
 using kadmium_osc_dmx_dotnet_core;
 using System.Collections.Generic;
@@ -49,6 +49,7 @@ namespace kadmium_osc_dmx_dotnet_webui.Controllers
         public async Task<Venue> Get(int id)
         {
             var venue = await _context.LoadVenue(id);
+            SortFixtures(venue);
             return venue;
         }
 
@@ -102,6 +103,7 @@ namespace kadmium_osc_dmx_dotnet_webui.Controllers
         [SwaggerOperation("postVenue")]
         public async Task<int> Post([FromBody]Venue venue)
         {
+            SortFixtures(venue);
             await venue.Initialize(_context);
             await _context.Venues.AddAsync(venue);
             await _context.SaveChangesAsync();
@@ -157,7 +159,8 @@ namespace kadmium_osc_dmx_dotnet_webui.Controllers
             }
 
             Venue venue = new Venue(venueUpload.Name, universes);
-
+            SortFixtures(venue);
+            
             await _context.Venues.AddAsync(venue);
             await _context.SaveChangesAsync();
             return venue.Id;
@@ -178,6 +181,7 @@ namespace kadmium_osc_dmx_dotnet_webui.Controllers
         [SwaggerOperation("putVenue")]
         public async Task Put(int id, [FromBody]Venue venue)
         {
+            SortFixtures(venue);
             await venue.Initialize(_context);
             var oldVenue = await _context.LoadVenue(id);
             await UpdateVenue(oldVenue, venue);
@@ -263,6 +267,14 @@ namespace kadmium_osc_dmx_dotnet_webui.Controllers
             oldFixture.GroupString = newFixture.GroupString;
             oldFixture.Skeleton = newFixture.Skeleton;
             await oldFixture.Initialize(_context);
+        }
+
+        private void SortFixtures(Venue venue)
+        {
+            foreach (var universe in venue.Universes)
+            {
+                universe.Fixtures.Sort(new Comparison<Fixture>((x, y) => x.StartChannel.CompareTo(y.StartChannel)));
+            }
         }
 
     }

@@ -277,14 +277,14 @@ export class VenueDiscoveryComponent implements OnInit
 	{
 		let venue = (await this.venueService.getVenueById(this.venueID).toPromise());
 		let universe = venue.universes.find(x => x.universeID == this.universeID);
-		let index = universe.fixtures.indexOf(x => x.id == fixture.id);
+		let index = universe.fixtures.findIndex(x => x.id == fixture.id);
 		universe.fixtures.splice(index, 1);
 		try
 		{
-			await this.venueService.putVenue({ id: venue.id, venue: venue });
+			await this.venueService.putVenue({ id: venue.id, venue: venue }).toPromise();
 			this.snackbar.open("Successfully update " + venue.name, "Close", { duration: 3000 });
 			this.loaded = false;
-			await this.venueService.activateVenueById(venue.id);
+			await this.venueService.activateVenueById(venue.id).toPromise();
 			await this.refreshVenue();
 		}
 		catch (error)
