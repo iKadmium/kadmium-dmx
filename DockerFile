@@ -1,0 +1,33 @@
+FROM node:8.10 as node
+WORKDIR app
+
+COPY kadmium-dmx-webui/package.json /app/
+RUN npm install
+
+COPY kadmium-dmx-webui/ /app/
+ARG env=production
+
+RUN npm run build -- --prod --configuration=$env
+
+FROM microsoft/aspnetcore-build:2.0 AS build-env
+WORKDIR /app
+
+# Copy csproj and restore as distinct layers
+COPY kadmium-dmx-core/*.csproj ./kadmium-dmx-core/
+COPY kadmium-dmx-test/*.csproj ./kadmium-dmx-test/
+COPY kadmium-dmx-webapi/*.csproj ./kadmium-dmx-webapi/
+COPY kadmium-dmx.sln .
+RUN dotnet restore
+
+# Copy everything else and build
+COPY kadmium-dmx-core/ ./kadmium-dmx-core/
+COPY kadmium-dmx-test/ ./kadmium-dmx-test/
+COPY kadmium-dmx-webapi/ ./kadmium-dmx-webapi/
+RUN dotnet publish -c Release -o out
+COPY --from=node /app/dist kadmium-dmx-webapi/out/wwwroot
+
+# Build runtime image
+FROM microsoft/aspnetcore:2.0
+WORKDIR /app/kadmium-dmx-webapi
+COPY --from=build-env /app/kadmium-dmx-webapi/out .
+ENTRYPOINT ["dotnet", "kadmium-dmx-webapi.dll"]

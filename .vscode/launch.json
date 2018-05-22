@@ -6,7 +6,7 @@
             "request": "launch",
             "name": "Launch Chrome",
             "url": "http://localhost:4200",
-            "webRoot": "${workspaceRoot}",
+            "webRoot": "${workspaceFolder}",
             "sourceMapPathOverrides": {
                 "webpack:///C:*": "C:/*"
             }
@@ -16,9 +16,9 @@
             "type": "coreclr",
             "request": "launch",
             "preLaunchTask": "build",
-            "program": "${workspaceRoot}\\kadmium-osc-dmx-dotnet-webui\\bin\\Debug\\netcoreapp2.0\\kadmium-osc-dmx-dotnet-webui.dll",
+            "program": "${workspaceFolder}\\kadmium-dmx-webapi\\bin\\Debug\\netcoreapp2.0\\kadmium-dmx-webapi.dll",
             "args": [],
-            "cwd": "${workspaceRoot}\\kadmium-osc-dmx-dotnet-webui",
+            "cwd": "${workspaceFolder}\\kadmium-dmx-webui",
             "stopAtEntry": false,
             "launchBrowser": {
                 "enabled": true,
@@ -38,7 +38,7 @@
                 "ASPNETCORE_ENVIRONMENT": "Development"
             },
             "sourceFileMap": {
-                "/Views": "${workspaceRoot}/Views"
+                "/Views": "${workspaceFolder}/Views"
             }
         },
         {

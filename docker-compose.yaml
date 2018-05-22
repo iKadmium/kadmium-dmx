@@ -1,0 +1,25 @@
+version: "3.6"
+services:
+  web:
+    # replace username/repo:tag with your name and image details
+    image: kadmium/kadmium-dmx:0.1
+    volumes:
+      - kadmium-dmx-volume:/app/kadmium-dmx/data
+    deploy:
+      replicas: 1
+      resources:
+        limits:
+          cpus: "0.1"
+          memory: 250M
+      restart_policy:
+        condition: on-failure
+    ports:
+      - "5000:5000"
+      - "9001:9001/udp"
+    networks:
+      - webnet
+volumes:
+  kadmium-dmx-volume:
+
+networks:
+  webnet:

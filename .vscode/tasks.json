@@ -6,7 +6,7 @@
         {
             "taskName": "build",
             "args": [
-                "${workspaceRoot}\\kadmium-osc-dmx-dotnet-webui"
+                "${workspaceRoot}\\kadmium-dmx-webapi"
             ],
             "isBuildCommand": true,
             "problemMatcher": "$msCompile"
@@ -14,7 +14,7 @@
         {
             "taskName": "test",
             "args": [
-                "${workspaceRoot}\\kadmium-osc-dmx-dotnet-test"
+                "${workspaceRoot}\\kadmium-dmx-test"
             ],
             "isTestCommand": true,
             "problemMatcher": "$msCompile"
@@ -22,7 +22,7 @@
         {
             "taskName": "publish",
             "args": [
-                "${workspaceRoot}\\kadmium-osc-dmx-dotnet-webui\\kadmium-osc-dmx-dotnet-webui.csproj",
+                "${workspaceRoot}\\kadmium-dmx-webapi\\kadmium-dmx-webapi.csproj",
                 "-c",
                 "Release",
                 "-r",
@@ -36,7 +36,7 @@
             "taskName": "install",
             "command": "npm",
             "options": {
-                "cwd": "${workspaceRoot}\\kadmium-osc-dmx-dotnet-webui"
+                "cwd": "${workspaceRoot}\\kadmium-dmx-webapi"
             },
             "args": [
                 "install"
@@ -45,7 +45,7 @@
         {
             "taskName": "serve",
             "options": {
-                "cwd": "${workspaceRoot}\\kadmium-osc-dmx-dotnet-webui"
+                "cwd": "${workspaceRoot}\\kadmium-dmx-webui"
             },
             "command": "ng",
             "args": [
