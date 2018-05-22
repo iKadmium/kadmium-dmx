@@ -1,4 +1,4 @@
-# kadmium-osc-dmx-dotnet
+# kadmium-dmx
 A lighting automation tool for live performances.
 
 # Who is it for?
