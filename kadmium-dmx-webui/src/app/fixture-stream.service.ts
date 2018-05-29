@@ -33,6 +33,7 @@ export class FixtureStreamService
         if (this.socket != null)
         {
             this.socket.removeEventListener("message", this.listener);
+            this.socket.close();
         }
     }
 

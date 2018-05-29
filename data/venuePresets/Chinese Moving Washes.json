@@ -1,105 +1,102 @@
-﻿{
-  "name": "Chinese Moving Washes",
-  "fixtures": [
-    {
-      "address": 301,
-      "group": "rearSides",
-      "options": {
-        "maxBrightness": 1,
-        "axisInversions": [],
-        "axisRestrictions": [
-          {
-            "name": "Pan",
-            "min": -90,
-            "max": 90
-          },
-          {
-            "name": "Tilt",
-            "min": 0,
-            "max": 90
-          }
-        ]
-      },
-      "type": {
-        "manufacturer": "Generic",
-        "model": "Chinese Moving Wash"
-      }
-    },
-    {
-      "address": 315,
-      "group": "rearSides",
-      "options": {
-        "maxBrightness": 1,
-        "axisInversions": [],
-        "axisRestrictions": [
-          {
-            "name": "Pan",
-            "min": -90,
-            "max": 90
-          },
-          {
-            "name": "Tilt",
-            "min": 0,
-            "max": 90
-          }
-        ]
-      },
-      "type": {
-        "manufacturer": "Generic",
-        "model": "Chinese Moving Wash"
-      }
-    },
-    {
-      "address": 329,
-      "group": "rearSides",
-      "options": {
-        "maxBrightness": 1,
-        "axisInversions": [
-          "Pan"
-        ],
-        "axisRestrictions": [
-          {
-            "name": "Pan",
-            "min": -90,
-            "max": 90
-          },
-          {
-            "name": "Tilt",
-            "min": 0,
-            "max": 90
-          }
-        ]
-      },
-      "type": {
-        "manufacturer": "Generic",
-        "model": "Chinese Moving Wash"
-      }
-    },
-    {
-      "address": 343,
-      "group": "rearSides",
-      "options": {
-        "maxBrightness": 1,
-        "axisInversions": [
-          "Pan"
-        ],
-        "axisRestrictions": [
-          {
-            "name": "Pan",
-            "min": -90,
-            "max": 90
-          },
-          {
-            "name": "Tilt",
-            "min": 0,
-            "max": 90
-          }
-        ]
-      },
-      "type": {
-        "manufacturer": "Generic",
-        "model": "Chinese Moving Wash"
-      }
-    }
-  ]
-}
+﻿[
+	{
+		"address": 301,
+		"group": "rearSides",
+		"options": {
+			"maxBrightness": 1,
+			"axisInversions": [],
+			"axisRestrictions": [
+				{
+					"name": "Pan",
+					"min": -90,
+					"max": 90
+				},
+				{
+					"name": "Tilt",
+					"min": 0,
+					"max": 90
+				}
+			]
+		},
+		"type": {
+			"manufacturer": "Generic",
+			"model": "Chinese Moving Wash"
+		}
+	},
+	{
+		"address": 315,
+		"group": "rearSides",
+		"options": {
+			"maxBrightness": 1,
+			"axisInversions": [],
+			"axisRestrictions": [
+				{
+					"name": "Pan",
+					"min": -90,
+					"max": 90
+				},
+				{
+					"name": "Tilt",
+					"min": 0,
+					"max": 90
+				}
+			]
+		},
+		"type": {
+			"manufacturer": "Generic",
+			"model": "Chinese Moving Wash"
+		}
+	},
+	{
+		"address": 329,
+		"group": "rearSides",
+		"options": {
+			"maxBrightness": 1,
+			"axisInversions": [
+				"Pan"
+			],
+			"axisRestrictions": [
+				{
+					"name": "Pan",
+					"min": -90,
+					"max": 90
+				},
+				{
+					"name": "Tilt",
+					"min": 0,
+					"max": 90
+				}
+			]
+		},
+		"type": {
+			"manufacturer": "Generic",
+			"model": "Chinese Moving Wash"
+		}
+	},
+	{
+		"address": 343,
+		"group": "rearSides",
+		"options": {
+			"maxBrightness": 1,
+			"axisInversions": [
+				"Pan"
+			],
+			"axisRestrictions": [
+				{
+					"name": "Pan",
+					"min": -90,
+					"max": 90
+				},
+				{
+					"name": "Tilt",
+					"min": 0,
+					"max": 90
+				}
+			]
+		},
+		"type": {
+			"manufacturer": "Generic",
+			"model": "Chinese Moving Wash"
+		}
+	}
+]

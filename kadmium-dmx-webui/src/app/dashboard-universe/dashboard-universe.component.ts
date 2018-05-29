@@ -18,7 +18,7 @@ import { AnimationLibrary } from "app/animation-library";
     providers: [UniverseStreamService, UniverseService],
     animations: [AnimationLibrary.animations()]
 })
-export class DashboardUniverseComponent implements OnInit, AfterViewInit
+export class DashboardUniverseComponent implements OnInit, AfterViewInit, OnDestroy
 {
 
     public universe: PreviewUniverse;
@@ -100,6 +100,11 @@ export class DashboardUniverseComponent implements OnInit, AfterViewInit
         {
             this.drawCanvas();
         });
+    }
+
+    ngOnDestroy(): void
+    {
+        this.universeStreamService.unsubscribe();
     }
 
     private drawCanvas(): void

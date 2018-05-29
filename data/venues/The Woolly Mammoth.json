@@ -1,153 +1,152 @@
 {
-  "$schema": "./venue.schema.json",
-  "name": "The Woolly Mammoth",
-  "universes": [
-    {
-      "name": "Main Universe",
-      "universeID": 1,
-      "fixtures": [
-        {
-          "address": 88,
-          "type": {
-            "manufacturer": "AVE",
-            "model": "Par64B"
-          },
-          "group": "vocalist",
-          "options": {
-            "axisInversions": [],
-            "axisRestrictions": [],
-            "maxBrightness": 1
-          }
-        },
-        {
-          "address": 41,
-          "type": {
-            "manufacturer": "AVE",
-            "model": "Par64B"
-          },
-          "group": "bassist",
-          "options": {
-            "axisInversions": [],
-            "axisRestrictions": [],
-            "maxBrightness": 1
-          }
-        },
-        {
-          "address": 48,
-          "type": {
-            "manufacturer": "AVE",
-            "model": "Par64B"
-          },
-          "group": "guitarist",
-          "options": {
-            "axisInversions": [],
-            "axisRestrictions": [],
-            "maxBrightness": 1
-          }
-        },
-        {
-          "address": 67,
-          "type": {
-            "manufacturer": "AVE",
-            "model": "Par64B"
-          },
-          "group": "drummer",
-          "options": {
-            "axisInversions": [],
-            "axisRestrictions": [],
-            "maxBrightness": 1
-          }
-        },
-        {
-          "address": 74,
-          "type": {
-            "manufacturer": "AVE",
-            "model": "Par64B"
-          },
-          "group": "drummer",
-          "options": {
-            "axisInversions": [],
-            "axisRestrictions": [],
-            "maxBrightness": 1
-          }
-        },
-        {
-          "address": 101,
-          "type": {
-            "manufacturer": "iSolution",
-            "model": "iMove 250S"
-          },
-          "group": "rearSides",
-          "options": {
-            "axisInversions": [],
-            "axisRestrictions": [
-              {
-                "name": "Pan",
-                "min": 0,
-                "max": 90
-              },
-              {
-                "name": "Tilt",
-                "min": 0,
-                "max": 90
-              }
-            ],
-            "maxBrightness": 1
-          }
-        },
-        {
-          "address": 117,
-          "type": {
-            "manufacturer": "iSolution",
-            "model": "iMove 250S"
-          },
-          "group": "rearSides",
-          "options": {
-            "axisInversions": [],
-            "axisRestrictions": [],
-            "maxBrightness": 1
-          }
-        },
-        {
-          "address": 133,
-          "type": {
-            "manufacturer": "iSolution",
-            "model": "iMove 250S"
-          },
-          "group": "rearSides",
-          "options": {
-            "axisInversions": [],
-            "axisRestrictions": [],
-            "maxBrightness": 1
-          }
-        },
-        {
-          "address": 149,
-          "type": {
-            "manufacturer": "iSolution",
-            "model": "iMove 250S"
-          },
-          "group": "rearSides",
-          "options": {
-            "axisInversions": [],
-            "axisRestrictions": [],
-            "maxBrightness": 1
-          }
-        },
-        {
-          "address": 165,
-          "type": {
-            "manufacturer": "iSolution",
-            "model": "iMove 250S"
-          },
-          "group": "rearSides",
-          "options": {
-            "axisInversions": [],
-            "axisRestrictions": [],
-            "maxBrightness": 1
-          }
-        }
-      ]
-    }
-  ]
+	"name": "The Woolly Mammoth",
+	"universes": [
+		{
+			"name": "Main Universe",
+			"universeID": 1,
+			"fixtures": [
+				{
+					"address": 88,
+					"skeleton": {
+						"manufacturer": "AVE",
+						"model": "Par64B"
+					},
+					"group": "vocalist",
+					"options": {
+						"axisInversions": [],
+						"axisRestrictions": [],
+						"maxBrightness": 1
+					}
+				},
+				{
+					"address": 41,
+					"skeleton": {
+						"manufacturer": "AVE",
+						"model": "Par64B"
+					},
+					"group": "bassist",
+					"options": {
+						"axisInversions": [],
+						"axisRestrictions": [],
+						"maxBrightness": 1
+					}
+				},
+				{
+					"address": 48,
+					"skeleton": {
+						"manufacturer": "AVE",
+						"model": "Par64B"
+					},
+					"group": "guitarist",
+					"options": {
+						"axisInversions": [],
+						"axisRestrictions": [],
+						"maxBrightness": 1
+					}
+				},
+				{
+					"address": 67,
+					"skeleton": {
+						"manufacturer": "AVE",
+						"model": "Par64B"
+					},
+					"group": "drummer",
+					"options": {
+						"axisInversions": [],
+						"axisRestrictions": [],
+						"maxBrightness": 1
+					}
+				},
+				{
+					"address": 74,
+					"skeleton": {
+						"manufacturer": "AVE",
+						"model": "Par64B"
+					},
+					"group": "drummer",
+					"options": {
+						"axisInversions": [],
+						"axisRestrictions": [],
+						"maxBrightness": 1
+					}
+				},
+				{
+					"address": 101,
+					"skeleton": {
+						"manufacturer": "iSolution",
+						"model": "iMove 250S"
+					},
+					"group": "rearSides",
+					"options": {
+						"axisInversions": [],
+						"axisRestrictions": [
+							{
+								"name": "Pan",
+								"min": 0,
+								"max": 90
+							},
+							{
+								"name": "Tilt",
+								"min": 0,
+								"max": 90
+							}
+						],
+						"maxBrightness": 1
+					}
+				},
+				{
+					"address": 117,
+					"skeleton": {
+						"manufacturer": "iSolution",
+						"model": "iMove 250S"
+					},
+					"group": "rearSides",
+					"options": {
+						"axisInversions": [],
+						"axisRestrictions": [],
+						"maxBrightness": 1
+					}
+				},
+				{
+					"address": 133,
+					"skeleton": {
+						"manufacturer": "iSolution",
+						"model": "iMove 250S"
+					},
+					"group": "rearSides",
+					"options": {
+						"axisInversions": [],
+						"axisRestrictions": [],
+						"maxBrightness": 1
+					}
+				},
+				{
+					"address": 149,
+					"skeleton": {
+						"manufacturer": "iSolution",
+						"model": "iMove 250S"
+					},
+					"group": "rearSides",
+					"options": {
+						"axisInversions": [],
+						"axisRestrictions": [],
+						"maxBrightness": 1
+					}
+				},
+				{
+					"address": 165,
+					"skeleton": {
+						"manufacturer": "iSolution",
+						"model": "iMove 250S"
+					},
+					"group": "rearSides",
+					"options": {
+						"axisInversions": [],
+						"axisRestrictions": [],
+						"maxBrightness": 1
+					}
+				}
+			]
+		}
+	]
 }

@@ -1,4 +1,4 @@
-import { Component, OnInit, Input, OnChanges, SimpleChanges, OnDestroy } from '@angular/core';
+import { Component, OnInit, Input, OnChanges, SimpleChanges, OnDestroy, Output, EventEmitter } from '@angular/core';
 import { PreviewFixture } from "app/preview-fixture";
 import { PreviewVenue } from "app/preview-venue";
 import { PreviewAttribute } from "app/preview-attribute";
@@ -10,55 +10,20 @@ import { FixtureStreamService, AttributeUpdateMessage } from 'app/fixture-stream
 	styleUrls: ['./dashboard-fixture-color.component.scss'],
 	providers: [FixtureStreamService]
 })
-export class DashboardFixtureColorComponent implements OnInit, OnChanges, OnDestroy
+export class DashboardFixtureColorComponent implements OnInit
 {
 	@Input() fixture: PreviewFixture;
-	public attributes: PreviewAttribute[];
-	public dmxAttributes: PreviewAttribute[];
-	public nonDmxAttributes: PreviewAttribute[];
+	@Input() attributes: PreviewAttribute[];
+	@Output() setValue = new EventEmitter<AttributeUpdateMessage>();
 	public color: string = "";
 
-	constructor(private fixtureStreamService: FixtureStreamService) 
+	constructor() 
 	{
-		this.attributes = [];
 	}
 
-	ngOnChanges(changes: SimpleChanges): void
-	{
-		if (changes["fixture"] != null)
-		{
-			if (!changes["fixture"].firstChange)
-			{
-				this.fixtureStreamService.unsubscribe();
-			}
-			if (changes["fixture"].currentValue != null)
-			{
-				let fixture = changes["fixture"].currentValue as PreviewFixture;
-				this.fixtureStreamService.subscribe(fixture.id, data => 
-				{
-					for (let update of data)
-					{
-						let attribute = this.fixture.channelNameMap.get(update.name);
-						if (attribute.value != update.value)
-						{
-							attribute.value = update.value;
-						}
-					}
-					this.attributes = Array.from(this.fixture.channelNameMap.values());
-					this.dmxAttributes = this.attributes.filter(x => x.dmx);
-					this.nonDmxAttributes = this.attributes.filter(x => !x.dmx);
-				});
-			}
-		}
-	}
 
 	ngOnInit()
 	{
-	}
-
-	ngOnDestroy(): void
-	{
-		this.fixtureStreamService.unsubscribe();
 	}
 
 	public setColor(color: string): void
@@ -67,7 +32,6 @@ export class DashboardFixtureColorComponent implements OnInit, OnChanges, OnDest
 		let green = color.slice(3, 5);
 		let blue = color.slice(5, 7);
 		let hsv = this.RGBtoHSV(parseInt(red, 16), parseInt(green, 16), parseInt(blue, 16));
-		console.log(`${hsv.h} ${hsv.s} ${hsv.v}`);
 
 		let messages: AttributeUpdateMessage[] = [
 			{
@@ -89,7 +53,7 @@ export class DashboardFixtureColorComponent implements OnInit, OnChanges, OnDest
 
 		for (let message of messages)
 		{
-			this.fixtureStreamService.set(this.fixture.id, message.attributeName, message.attributeValue);
+			this.setValue.emit(message);
 		}
 
 	}

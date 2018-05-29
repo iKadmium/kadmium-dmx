@@ -41,6 +41,7 @@ export class StatusStreamService
         {
             this.socket.removeEventListener("message", this.messageListener);
             this.socket.removeEventListener("open", this.openListener);
+            this.socket.close();
         }
     }
 }

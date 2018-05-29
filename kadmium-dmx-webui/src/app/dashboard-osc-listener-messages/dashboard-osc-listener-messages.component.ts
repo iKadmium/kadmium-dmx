@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChild, AfterViewInit } from '@angular/core';
+import { Component, OnInit, ViewChild, AfterViewInit, OnDestroy } from '@angular/core';
 import { OSCListenerData, OSCListenerLiveService } from "app/osclistener-live.service";
 import { MatTableDataSource } from "@angular/material/table";
 import { MatSort } from "@angular/material/sort";
@@ -10,7 +10,7 @@ import { DomSanitizer, SafeStyle } from "@angular/platform-browser";
 	styleUrls: ['./dashboard-osc-listener-messages.component.scss'],
 	providers: [OSCListenerLiveService]
 })
-export class DashboardOscListenerMessagesComponent implements OnInit, AfterViewInit
+export class DashboardOscListenerMessagesComponent implements OnInit, AfterViewInit, OnDestroy
 {
 	static MAX_LENGTH = 50;
 	private renderTimer: number;
@@ -42,6 +42,11 @@ export class DashboardOscListenerMessagesComponent implements OnInit, AfterViewI
 	ngAfterViewInit(): void
 	{
 		this.dataSource.sort = this.sort;
+	}
+
+	ngOnDestroy()
+	{
+		this.oscListenerLiveService.unsubscribe();
 	}
 
 	public getColor(value: number): SafeStyle

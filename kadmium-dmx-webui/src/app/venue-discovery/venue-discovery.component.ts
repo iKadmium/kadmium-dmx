@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import { DMXChannel } from 'api/models/dmxchannel';
 import { MatDialog, MatSnackBar, PageEvent } from '@angular/material';
 import { VenueDiscoveryAddFixtureDefinitionDialogComponent } from 'app/venue-discovery-add-fixture-definition-dialog/venue-discovery-add-fixture-definition-dialog.component';
@@ -23,7 +23,7 @@ import { DeleteConfirmDialogComponent } from "app/delete-confirm-dialog/delete-c
 	providers: [MatDialog, FixtureDefinitionService, UniverseStreamService, VenueService],
 	animations: [AnimationLibrary.animations()]
 })
-export class VenueDiscoveryComponent implements OnInit
+export class VenueDiscoveryComponent implements OnInit, OnDestroy
 {
 	public dmxChannels: DiscoveryDMXChannel[]
 
@@ -71,6 +71,11 @@ export class VenueDiscoveryComponent implements OnInit
 		this.universeStreamService.subscribe(this.universeID, () => { });
 		this.refreshVenue();
 		this.pageEvent({ length: 512, pageIndex: 0, pageSize: 48 })
+	}
+
+	ngOnDestroy()
+	{
+		this.universeStreamService.unsubscribe();
 	}
 
 	public async refreshVenue(): Promise<void>

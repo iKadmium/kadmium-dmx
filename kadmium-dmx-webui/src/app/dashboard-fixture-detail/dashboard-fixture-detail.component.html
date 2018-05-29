@@ -18,10 +18,10 @@
     <mat-card-content>
         <mat-tab-group>
             <mat-tab label="Attributes">
-                <app-dashboard-fixture-attributes [fixture]="fixture"></app-dashboard-fixture-attributes>
+                <app-dashboard-fixture-attributes [fixture]="fixture" [attributes]="attributes" (setValue)="updateValue($event)"></app-dashboard-fixture-attributes>
             </mat-tab>
             <mat-tab label="Color">
-                <app-dashboard-fixture-color [fixture]="fixture"></app-dashboard-fixture-color>
+                <app-dashboard-fixture-color [fixture]="fixture" [attributes]="attributes" (setValue)="updateValue($event)"></app-dashboard-fixture-color>
             </mat-tab>
         </mat-tab-group>
     </mat-card-content>

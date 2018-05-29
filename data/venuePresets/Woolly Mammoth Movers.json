@@ -1,132 +1,129 @@
-{
-  "name": "Woolly Mammoth Movers",
-  "fixtures": [
-    {
-      "address": 101,
-      "type": {
-        "manufacturer": "iSolution",
-        "model": "iMove 250S"
-      },
-      "group": "rearSides",
-      "options": {
-        "axisInversions": [],
-        "axisRestrictions": [
-          {
-            "name": "Pan",
-            "min": 0,
-            "max": 90
-          },
-          {
-            "name": "Tilt",
-            "min": 0,
-            "max": 90
-          }
-        ],
-        "maxBrightness": 1
-      }
-    },
-    {
-      "address": 117,
-      "type": {
-        "manufacturer": "iSolution",
-        "model": "iMove 250S"
-      },
-      "group": "rearSides",
-      "options": {
-        "axisInversions": [],
-        "axisRestrictions": [
-          {
-            "name": "Pan",
-            "min": -1,
-            "max": 1
-          },
-          {
-            "name": "Tilt",
-            "min": 0,
-            "max": 90
-          }
-        ],
-        "maxBrightness": 1
-      }
-    },
-    {
-      "address": 133,
-      "type": {
-        "manufacturer": "iSolution",
-        "model": "iMove 250S"
-      },
-      "group": "rearSides",
-      "options": {
-        "axisInversions": [
-          "Pan"
-        ],
-        "axisRestrictions": [
-          {
-            "name": "Pan",
-            "min": -90,
-            "max": 0
-          },
-          {
-            "name": "Tilt",
-            "min": 0,
-            "max": 90
-          }
-        ],
-        "maxBrightness": 1
-      }
-    },
-    {
-      "address": 149,
-      "type": {
-        "manufacturer": "iSolution",
-        "model": "iMove 250S"
-      },
-      "group": "rearSides",
-      "options": {
-        "axisInversions": [
-          "Tilt"
-        ],
-        "axisRestrictions": [
-          {
-            "name": "Pan",
-            "min": 0,
-            "max": 90
-          },
-          {
-            "name": "Tilt",
-            "min": 0,
-            "max": 45
-          }
-        ],
-        "maxBrightness": 1
-      }
-    },
-    {
-      "address": 165,
-      "type": {
-        "manufacturer": "iSolution",
-        "model": "iMove 250S"
-      },
-      "group": "rearSides",
-      "options": {
-        "axisInversions": [
-          "Pan",
-          "Tilt"
-        ],
-        "axisRestrictions": [
-          {
-            "name": "Pan",
-            "min": -90,
-            "max": 0
-          },
-          {
-            "name": "Tilt",
-            "min": 0,
-            "max": 45
-          }
-        ],
-        "maxBrightness": 1
-      }
-    }
-  ]
-}
+[
+	{
+		"address": 101,
+		"type": {
+			"manufacturer": "iSolution",
+			"model": "iMove 250S"
+		},
+		"group": "rearSides",
+		"options": {
+			"axisInversions": [],
+			"axisRestrictions": [
+				{
+					"name": "Pan",
+					"min": 0,
+					"max": 90
+				},
+				{
+					"name": "Tilt",
+					"min": 0,
+					"max": 90
+				}
+			],
+			"maxBrightness": 1
+		}
+	},
+	{
+		"address": 117,
+		"type": {
+			"manufacturer": "iSolution",
+			"model": "iMove 250S"
+		},
+		"group": "rearSides",
+		"options": {
+			"axisInversions": [],
+			"axisRestrictions": [
+				{
+					"name": "Pan",
+					"min": -1,
+					"max": 1
+				},
+				{
+					"name": "Tilt",
+					"min": 0,
+					"max": 90
+				}
+			],
+			"maxBrightness": 1
+		}
+	},
+	{
+		"address": 133,
+		"type": {
+			"manufacturer": "iSolution",
+			"model": "iMove 250S"
+		},
+		"group": "rearSides",
+		"options": {
+			"axisInversions": [
+				"Pan"
+			],
+			"axisRestrictions": [
+				{
+					"name": "Pan",
+					"min": -90,
+					"max": 0
+				},
+				{
+					"name": "Tilt",
+					"min": 0,
+					"max": 90
+				}
+			],
+			"maxBrightness": 1
+		}
+	},
+	{
+		"address": 149,
+		"type": {
+			"manufacturer": "iSolution",
+			"model": "iMove 250S"
+		},
+		"group": "rearSides",
+		"options": {
+			"axisInversions": [
+				"Tilt"
+			],
+			"axisRestrictions": [
+				{
+					"name": "Pan",
+					"min": 0,
+					"max": 90
+				},
+				{
+					"name": "Tilt",
+					"min": 0,
+					"max": 45
+				}
+			],
+			"maxBrightness": 1
+		}
+	},
+	{
+		"address": 165,
+		"type": {
+			"manufacturer": "iSolution",
+			"model": "iMove 250S"
+		},
+		"group": "rearSides",
+		"options": {
+			"axisInversions": [
+				"Pan",
+				"Tilt"
+			],
+			"axisRestrictions": [
+				{
+					"name": "Pan",
+					"min": -90,
+					"max": 0
+				},
+				{
+					"name": "Tilt",
+					"min": 0,
+					"max": 45
+				}
+			],
+			"maxBrightness": 1
+		}
+	}
+]

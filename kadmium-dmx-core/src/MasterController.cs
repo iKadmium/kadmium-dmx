@@ -8,6 +8,7 @@ using System.Collections.Generic;
 using System;
 using Microsoft.EntityFrameworkCore;
 using System.Diagnostics;
+using System.Runtime.InteropServices;
 
 namespace kadmium_dmx_core
 {
@@ -73,12 +74,15 @@ namespace kadmium_dmx_core
                 Settings = settings,
                 Groups = new Dictionary<string, Group>(),
                 Transmitters = new List<Transmitter>{
-                    SACNTransmitter.Load(settings.SacnTransmitter),
-                    EnttecProTransmitter.Load(settings.EnttecProTransmitter)
+                    SACNTransmitter.Load(settings.SacnTransmitter)
                 },
                 Listener = new OSCListener(settings.OscPort, "OSC Listener"),
                 Venue = new Venue("No Venue", Enumerable.Empty<Universe>())
             };
+            if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
+            {
+                instance.Transmitters.Add(EnttecProTransmitter.Load(settings.EnttecProTransmitter));
+            }
             instance.Venue.Activate(false);
             instance.solversEnabled = true;
             instance.RenderEnabled = true;
@@ -91,24 +95,31 @@ namespace kadmium_dmx_core
             {
                 while (!instance.CancellationTokenSource.IsCancellationRequested)
                 {
-                    stopwatch.Start();
-                    if (instance.SolversEnabled)
+                    try
                     {
-                        instance.Solving = true;
-                        instance.Update();
-                        instance.Solving = false;
+                        stopwatch.Start();
+                        if (instance.SolversEnabled)
+                        {
+                            instance.Solving = true;
+                            instance.Update();
+                            instance.Solving = false;
+                        }
+                        if (instance.RenderEnabled)
+                        {
+                            instance.Rendering = true;
+                            await instance.Render();
+                            instance.Rendering = false;
+                        }
+                        stopwatch.Stop();
+                        int timeDifference = (int)(UPDATE_TIME - stopwatch.ElapsedMilliseconds);
+                        if (timeDifference > 0)
+                        {
+                            await Task.Delay(timeDifference);
+                        }
                     }
-                    if (instance.RenderEnabled)
+                    catch(Exception e)
                     {
-                        instance.Rendering = true;
-                        await instance.Render();
-                        instance.Rendering = false;
-                    }
-                    stopwatch.Stop();
-                    int timeDifference = (int)(UPDATE_TIME - stopwatch.ElapsedMilliseconds);
-                    if (timeDifference > 0)
-                    {
-                        await Task.Delay(timeDifference);
+                        Console.Error.WriteLine(e.StackTrace);
                     }
                 }
             });
@@ -155,7 +166,7 @@ namespace kadmium_dmx_core
         {
             await (Venue?.Render() ?? Task.CompletedTask);
         }
-        
+
         public void Dispose()
         {
             RenderTask.Dispose();

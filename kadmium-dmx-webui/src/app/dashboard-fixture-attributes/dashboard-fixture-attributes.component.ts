@@ -10,14 +10,17 @@ import { AttributeUpdateMessage, FixtureStreamService } from "app/fixture-stream
     styleUrls: ['./dashboard-fixture-attributes.component.css'],
     providers: [FixtureStreamService]
 })
-export class DashboardFixtureAttributesComponent implements OnInit, OnChanges, OnDestroy
+export class DashboardFixtureAttributesComponent implements OnInit, OnChanges
 {
     @Input() fixture: PreviewFixture;
-    public attributes: PreviewAttribute[];
+    @Input() attributes: PreviewAttribute[];
     public dmxAttributes: PreviewAttribute[];
     public nonDmxAttributes: PreviewAttribute[];
+    private firstUpdate: boolean = true;
 
-    constructor(private fixtureStreamService: FixtureStreamService)
+    @Output() setValue = new EventEmitter<AttributeUpdateMessage>();
+
+    constructor()
     {
         this.attributes = [];
     }
@@ -28,36 +31,11 @@ export class DashboardFixtureAttributesComponent implements OnInit, OnChanges, O
 
     ngOnChanges(changes: SimpleChanges): void
     {
-        if (changes["fixture"] != null)
+        if (changes["attributes"] != null && changes["attributes"].currentValue != null)
         {
-            if (!changes["fixture"].firstChange)
-            {
-                this.fixtureStreamService.unsubscribe();
-            }
-            if (changes["fixture"].currentValue != null)
-            {
-                let fixture = changes["fixture"].currentValue as PreviewFixture;
-                this.fixtureStreamService.subscribe(fixture.id, data => 
-                {
-                    for (let update of data)
-                    {
-                        let attribute = this.fixture.channelNameMap.get(update.name);
-                        if (attribute.value != update.value)
-                        {
-                            attribute.value = update.value;
-                        }
-                    }
-                    this.attributes = Array.from(this.fixture.channelNameMap.values());
-                    this.dmxAttributes = this.attributes.filter(x => x.dmx);
-                    this.nonDmxAttributes = this.attributes.filter(x => !x.dmx);
-                });
-            }
+            this.dmxAttributes = changes["attributes"].currentValue.filter(x => x.dmx);
+            this.nonDmxAttributes = changes["attributes"].currentValue.filter(x => !x.dmx);
         }
-    }
-
-    ngOnDestroy(): void
-    {
-        this.fixtureStreamService.unsubscribe();
     }
 
     public updateValue(attribute: PreviewAttribute, value: string): void
@@ -74,7 +52,8 @@ export class DashboardFixtureAttributesComponent implements OnInit, OnChanges, O
                 fixtureID: this.fixture.id
             };
 
-            this.fixtureStreamService.set(this.fixture.id, attribute.name, trueValue);
+            this.setValue.emit(data);
         }
     }
+
 }

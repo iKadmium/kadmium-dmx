@@ -97,14 +97,17 @@ namespace kadmium_dmx_core
 
         public static async Task<Settings> LoadSettings()
         {
+            Console.WriteLine("Searching for settings in " + SettingsLocation);
             if (!File.Exists(SettingsLocation))
             {
+                Console.WriteLine("Not found, using defaults");
                 var settings = new Settings();
                 SaveSettings(settings);
                 return settings;
             }
             else
             {
+                Console.WriteLine("Settings found, loading");
                 JObject obj = await ValidatedLoad(SettingsLocation, SettingsSchema) as JObject;
                 var settings = obj.ToObject<Settings>();
                 return settings;

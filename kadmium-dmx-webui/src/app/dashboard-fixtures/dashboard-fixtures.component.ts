@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChild, ElementRef } from '@angular/core';
+import { Component, OnInit, ViewChild, ElementRef, OnDestroy } from '@angular/core';
 import { ActivatedRoute } from "@angular/router";
 import { PreviewUniverse } from "app/preview-universe";
 import { UniverseService } from "api/services";
@@ -16,7 +16,7 @@ import { AnimationLibrary } from "app/animation-library";
     providers: [UniverseStreamService, UniverseService],
     animations: [AnimationLibrary.animations()]
 })
-export class DashboardFixturesComponent implements OnInit
+export class DashboardFixturesComponent implements OnInit, OnDestroy
 {
     @ViewChild(DashboardFixtureListComponent) fixtureList: DashboardFixtureListComponent;
 
@@ -55,6 +55,11 @@ export class DashboardFixturesComponent implements OnInit
         });
 
         this.renderTimer = window.setInterval(async () => await this.render(), 100);
+    }
+
+    ngOnDestroy()
+    {
+        this.universeStreamService.unsubscribe();
     }
 
     public selectFixture(fixture: PreviewFixture): void

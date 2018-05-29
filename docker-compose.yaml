@@ -2,15 +2,15 @@ version: "3.6"
 services:
   web:
     # replace username/repo:tag with your name and image details
-    image: kadmium/kadmium-dmx:0.1
+    image: kadmium/kadmium-dmx:0.14
     volumes:
-      - kadmium-dmx-volume:/app/kadmium-dmx/data
+      - kadmium-dmx-volume:/app/kadmium-dmx-webapi/kadmium-dmx/data
     deploy:
       replicas: 1
       resources:
         limits:
-          cpus: "0.1"
-          memory: 250M
+          cpus: "1"
+          memory: 512M
       restart_policy:
         condition: on-failure
     ports:

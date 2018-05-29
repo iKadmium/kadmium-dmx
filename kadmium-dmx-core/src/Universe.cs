@@ -15,7 +15,7 @@ namespace kadmium_dmx_core
 
         public int Id { get; set; }
         public string Name { get; set; }
-        [JsonProperty(PropertyName ="universeID")]
+        [JsonProperty(PropertyName = "universeID")]
         public int UniverseNumber { get; set; }
         public List<Fixture> Fixtures { get; }
         [NotMapped]
@@ -54,7 +54,7 @@ namespace kadmium_dmx_core
             {
                 fixture.Dispose();
             }
-            foreach(var client in Transmitted?.GetInvocationList() ?? Enumerable.Empty<Delegate>())
+            foreach (var client in Transmitted?.GetInvocationList() ?? Enumerable.Empty<Delegate>())
             {
                 Transmitted -= (client as EventHandler<DMXEventArgs>);
             }
@@ -63,7 +63,7 @@ namespace kadmium_dmx_core
                 Rendered -= (client as EventHandler<UpdateEventArgs>);
             }
         }
-        
+
         public void Render()
         {
             foreach (Fixture fixture in Fixtures)
@@ -76,7 +76,7 @@ namespace kadmium_dmx_core
 
         public async Task Initialize(DatabaseContext context)
         {
-            foreach(Fixture fixture in Fixtures)
+            foreach (Fixture fixture in Fixtures)
             {
                 await fixture.Initialize(context);
             }
@@ -84,7 +84,7 @@ namespace kadmium_dmx_core
 
         public async Task Transmit()
         {
-            foreach(var transmitter in MasterController.Instance.Transmitters)
+            foreach (var transmitter in MasterController.Instance.Transmitters)
             {
                 await transmitter.Transmit(DMX, UniverseNumber);
             }
@@ -110,13 +110,13 @@ namespace kadmium_dmx_core
         {
             if (other.Name != Name) { return false; }
             if (other.UniverseNumber != UniverseNumber) { return false; }
-            foreach(Fixture fixture in Fixtures)
+            foreach (Fixture fixture in Fixtures)
             {
-                if(!other.Fixtures.Any(x => x.Equals(fixture))) { return false; }
+                if (!other.Fixtures.Any(x => x.Equals(fixture))) { return false; }
             }
-            foreach(Fixture fixture in other.Fixtures)
+            foreach (Fixture fixture in other.Fixtures)
             {
-                if(!Fixtures.Any(x => x.Equals(fixture))) { return false; }
+                if (!Fixtures.Any(x => x.Equals(fixture))) { return false; }
             }
             return true;
         }

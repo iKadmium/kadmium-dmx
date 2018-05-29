@@ -50,7 +50,7 @@ export class PreviewAttribute
         return (this.dmx || this.range > 5) ? Math.round(value) : value;
     }
 
-    public load(data: ActiveAttribute): void
+    public load(data: ActiveAttribute): PreviewAttribute
     {
         this.name = data.name;
         this.value = data.value;
@@ -59,5 +59,6 @@ export class PreviewAttribute
         this.dmx = data.dmx;
         this.controlled = data.controlled;
         this.address = data.dmxAddress;
+        return this;
     }
 }

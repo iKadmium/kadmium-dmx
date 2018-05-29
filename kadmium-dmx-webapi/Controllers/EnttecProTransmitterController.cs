@@ -31,7 +31,8 @@ namespace kadmium_dmx_webapi.Controllers
         [SwaggerOperation("getEnttecEnabled")]
         public bool Enabled()
         {
-            return MasterController.Instance.Transmitters.Single(x => x is EnttecProTransmitter).Enabled;
+            var transmitter = MasterController.Instance.Transmitters.SingleOrDefault(x => x is EnttecProTransmitter);
+            return transmitter?.Enabled ?? false;
         }
 
         [HttpGet("[action]/{value}")]

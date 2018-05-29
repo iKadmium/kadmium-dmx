@@ -32,25 +32,29 @@
                         </mat-form-field>
                         <mat-checkbox [(ngModel)]="settings.sacnTransmitter.multicast" name="sacnMulticast">Multicast</mat-checkbox>
 
-                        <mat-divider></mat-divider>
-                        <h4>sACN Unicast Targets</h4>
-                        <div class="column">
-                            <mat-list>
-                                <mat-list-item *ngFor="let target of fakeTargets; let i = index" class="column" @fadeOut>
-                                    <div fxLayout="row" class="unicastTargetWrapper">
-                                        <mat-form-field @growX class="unicastTargetName">
-                                            <input matInput required type="text" [(ngModel)]="target.target" [name]="'unicast[' + i + ']'" placeholder="Address" />
-                                        </mat-form-field>
-                                        <button mat-icon-button class="actionsCell" type="button" color="warn" (click)="removeElement(i)" matTooltip="Remove">
-                                            <mat-icon aria-label="Remove">remove_circle</mat-icon>
-                                        </button>
-                                    </div>
-                                </mat-list-item>
-                            </mat-list>
+                        <div>
+                            <mat-toolbar class="sub-toolbar">
+                                sACN Unicast Targets
+                                <span class="toolbar-spacer"></span>
+                                <button mat-icon-button type="button" (click)="addElement()" matTooltip="Add Target">
+                                    <mat-icon aria-label="Add">add</mat-icon>
+                                </button>
+                            </mat-toolbar>
+                            <div class="column">
+                                <mat-list>
+                                    <mat-list-item *ngFor="let target of fakeTargets; let i = index" class="column" @fadeOut>
+                                        <div fxLayout="row" class="unicastTargetWrapper">
+                                            <mat-form-field @growX class="unicastTargetName">
+                                                <input matInput required type="text" [(ngModel)]="target.target" [name]="'unicast[' + i + ']'" placeholder="Address" />
+                                            </mat-form-field>
+                                            <button mat-icon-button class="actionsCell" type="button" color="warn" (click)="removeElement(i)" matTooltip="Remove">
+                                                <mat-icon aria-label="Remove">remove_circle</mat-icon>
+                                            </button>
+                                        </div>
+                                    </mat-list-item>
+                                </mat-list>
 
-                            <button mat-icon-button type="button" (click)="addElement()" matTooltip="Add Target">
-                                <mat-icon aria-label="Add">add</mat-icon>
-                            </button>
+                            </div>
                         </div>
                     </div>
                 </mat-tab>
