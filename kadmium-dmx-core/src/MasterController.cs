@@ -16,6 +16,8 @@ namespace kadmium_dmx_core
     {
         public static int UPDATES_PER_SECOND = 40; // in hz
         public static int UPDATE_TIME = 1000 / UPDATES_PER_SECOND;
+        public static TimeSpan UPDATE_TIME_SPAN = new TimeSpan(0, 0, 0, 0, UPDATE_TIME);
+        public static long MEMORY_LIMIT = (1024 * 1024 * 256);
 
         public event EventHandler<EventArgs> VenueActivated;
 
@@ -57,19 +59,11 @@ namespace kadmium_dmx_core
         public bool RenderEnabled { get; set; }
         public Status SolverStatus { get; private set; }
 
-        private static MasterController instance;
-
-        public static MasterController Instance
-        {
-            get
-            {
-                return instance;
-            }
-        }
+        public static MasterController Instance { get; private set; }
 
         public static void Initialise(Settings settings)
         {
-            instance = new MasterController()
+            Instance = new MasterController()
             {
                 Settings = settings,
                 Groups = new Dictionary<string, Group>(),
@@ -81,43 +75,45 @@ namespace kadmium_dmx_core
             };
             if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
             {
-                instance.Transmitters.Add(EnttecProTransmitter.Load(settings.EnttecProTransmitter));
+                //instance.Transmitters.Add(EnttecProTransmitter.Load(settings.EnttecProTransmitter));
             }
-            instance.Venue.Activate(false);
-            instance.solversEnabled = true;
-            instance.RenderEnabled = true;
-            instance.Rendering = false;
-            instance.Solving = false;
-            instance.CancellationTokenSource = new CancellationTokenSource();
+            Instance.Venue.Activate(false);
+            Instance.solversEnabled = true;
+            Instance.RenderEnabled = true;
+            Instance.Rendering = false;
+            Instance.Solving = false;
+            Instance.CancellationTokenSource = new CancellationTokenSource();
 
-            Stopwatch stopwatch = new Stopwatch();
-            instance.RenderTask = Task.Run(async () =>
+            Instance.RenderTask = Task.Run(async () =>
             {
-                while (!instance.CancellationTokenSource.IsCancellationRequested)
+                Stopwatch stopwatch = new Stopwatch();
+                while (!Instance.CancellationTokenSource.IsCancellationRequested)
                 {
                     try
                     {
-                        stopwatch.Start();
-                        if (instance.SolversEnabled)
+                        stopwatch.Restart();
+                        if (Instance.SolversEnabled)
                         {
-                            instance.Solving = true;
-                            instance.Update();
-                            instance.Solving = false;
+                            Instance.Solving = true;
+                            Instance.Update();
+                            Instance.Solving = false;
                         }
-                        if (instance.RenderEnabled)
+                        if (Instance.RenderEnabled)
                         {
-                            instance.Rendering = true;
-                            await instance.Render();
-                            instance.Rendering = false;
+                            Instance.Rendering = true;
+                            await Instance.Render();
+                            Instance.Rendering = false;
                         }
+
                         stopwatch.Stop();
-                        int timeDifference = (int)(UPDATE_TIME - stopwatch.ElapsedMilliseconds);
-                        if (timeDifference > 0)
+                        TimeSpan delayTime = UPDATE_TIME_SPAN - stopwatch.Elapsed;
+                        if (delayTime > TimeSpan.Zero)
                         {
-                            await Task.Delay(timeDifference);
+                            Thread.Sleep(delayTime);
                         }
+
                     }
-                    catch(Exception e)
+                    catch (Exception e)
                     {
                         Console.Error.WriteLine(e.StackTrace);
                     }
