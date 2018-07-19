@@ -3,6 +3,7 @@ using kadmium_dmx_core;
 using System.Linq;
 using kadmium_dmx_core.Transmitters;
 using Swashbuckle.AspNetCore.SwaggerGen;
+using Swashbuckle.AspNetCore.Annotations;
 
 // For more information on enabling Web API for empty projects, visit http://go.microsoft.com/fwlink/?LinkID=397860
 

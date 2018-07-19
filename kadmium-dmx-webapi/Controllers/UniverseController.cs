@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Linq;
 using kadmium_dmx_core;
 using Microsoft.AspNetCore.Mvc;
@@ -6,6 +6,7 @@ using Swashbuckle.AspNetCore.SwaggerGen;
 using System.Collections.Generic;
 using kadmium_dmx_core.Fixtures;
 using kadmium_dmx_core.Solvers;
+using Swashbuckle.AspNetCore.Annotations;
 
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 

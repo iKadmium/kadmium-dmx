@@ -52,6 +52,7 @@ import { VenueDiscoveryUnassignedComponent } from './venue-discovery-unassigned/
 import { VenueNameDialogComponent } from './venue-name-dialog/venue-name-dialog.component';
 import { SidenavToggleComponent } from './sidenav-toggle/sidenav-toggle.component';
 import { DashboardFixtureColorComponent } from './dashboard-fixture-color/dashboard-fixture-color.component';
+import { UniverseEditorAddMultipleFixturesDialogComponent } from './universe-editor-add-multiple-fixtures-dialog/universe-editor-add-multiple-fixtures-dialog.component';
 
 @NgModule({
     declarations: [
@@ -93,7 +94,8 @@ import { DashboardFixtureColorComponent } from './dashboard-fixture-color/dashbo
         VenueDiscoveryUnassignedComponent,
         VenueNameDialogComponent,
         SidenavToggleComponent,
-        DashboardFixtureColorComponent
+        DashboardFixtureColorComponent,
+        UniverseEditorAddMultipleFixturesDialogComponent
     ],
     imports: [
         BrowserModule,
@@ -179,6 +181,7 @@ import { DashboardFixtureColorComponent } from './dashboard-fixture-color/dashbo
     bootstrap: [AppComponent],
     entryComponents: [
         UniverseEditorPresetSaveDialogComponent,
+        UniverseEditorAddMultipleFixturesDialogComponent,
         FixtureOptionsEditorComponent,
         DeleteConfirmDialogComponent,
         VenueDiscoveryAddFixtureDefinitionDialogComponent,

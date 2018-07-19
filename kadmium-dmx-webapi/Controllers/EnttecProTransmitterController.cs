@@ -1,10 +1,11 @@
-﻿using System.Linq;
+using System.Linq;
 using Microsoft.AspNetCore.Mvc;
 using kadmium_dmx_core.Transmitters;
 using kadmium_dmx_core;
 using Swashbuckle.AspNetCore.SwaggerGen;
 using System;
 using System.Collections.Generic;
+using Swashbuckle.AspNetCore.Annotations;
 
 namespace kadmium_dmx_webapi.Controllers
 {

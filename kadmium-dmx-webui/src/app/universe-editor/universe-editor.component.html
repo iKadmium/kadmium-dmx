@@ -15,6 +15,9 @@
     <button mat-icon-button type="button" (click)="addElement()" matTooltip="Add Fixture">
         <mat-icon aria-label="Add Fixture">add</mat-icon>
     </button>
+    <button mat-icon-button type="button" (click)="addElements()" matTooltip="Add Fixtures">
+        <mat-icon aria-label="Add Multiple Fixtures">playlist_add</mat-icon>
+    </button>
     <button mat-icon-button type="button" [disabled]="universe.fixtures.length == 0" (click)="savePresetAs()" matTooltip="Save Preset">
         <mat-icon aria-label="Save Preset">cloud_download</mat-icon>
     </button>

@@ -5,6 +5,8 @@ using System.Linq;
 using kadmium_dmx_core.Fixtures;
 using System.Threading.Tasks;
 using Swashbuckle.AspNetCore.SwaggerGen;
+using Microsoft.EntityFrameworkCore;
+using Swashbuckle.AspNetCore.Annotations;
 
 // For more information on enabling MVC for empty projects, visit http://go.microsoft.com/fwlink/?LinkID=397860
 
@@ -24,11 +26,11 @@ namespace kadmium_dmx_webapi.Controllers
         [SwaggerOperation("getFixtureDefinitionSkeletons")]
         public IEnumerable<FixtureDefinitionSkeleton> Get()
         {
-            List<FixtureDefinitionSkeleton> skeletons = _context.FixtureDefinitions
+            var skeletons = _context.FixtureDefinitions
                 .Select(x => x.GetSkeleton())
                 .OrderBy(x => x.Manufacturer)
-                .ThenBy(x => x.Model)
-                .ToList();
+                .ThenBy(x => x.Model);
+
             return skeletons;
         }
 

@@ -30,7 +30,7 @@ namespace kadmium_dmx_core.Fixtures
             {
                 Id = Id,
                 Manufacturer = Manufacturer,
-                Model = Model
+                Model = Model,
             };
             return skeleton;
         }
@@ -63,16 +63,19 @@ namespace kadmium_dmx_core.Fixtures
 
         public FixtureDefinition Clone()
         {
-            FixtureDefinition cloned = new FixtureDefinition();
-            cloned.Id = Id;
-            cloned.Manufacturer = Manufacturer;
-            cloned.Model = Model;
+            FixtureDefinition cloned = new FixtureDefinition
+            {
+                Id = Id,
+                Manufacturer = Manufacturer,
+                Model = Model,
+                Type = Type,
+                Lux = Lux,
+                BeamAngle = BeamAngle
+            };
             cloned.Channels.AddRange(from channel in Channels select channel.Clone() as DMXChannel);
             cloned.Movements.AddRange(from movement in Movements select movement.Clone());
             cloned.ColorWheel.AddRange(from color in ColorWheel select color.Clone());
-            cloned.Type = Type;
-            cloned.Lux = Lux;
-            cloned.BeamAngle = BeamAngle;
+            
             return cloned;
         }
     }
@@ -82,7 +85,7 @@ namespace kadmium_dmx_core.Fixtures
         public int Id { get; set; }
         public string Manufacturer { get; set; }
         public string Model { get; set; }
-
+        
         public bool Equals(FixtureDefinitionSkeleton other)
         {
             if (other.Manufacturer != Manufacturer) { return false; }

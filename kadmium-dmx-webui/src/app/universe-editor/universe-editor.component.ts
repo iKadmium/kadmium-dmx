@@ -14,6 +14,7 @@ import 'rxjs/add/operator/startWith';
 import { FixtureOptionsEditorComponent } from "app/fixture-options-editor/fixture-options-editor.component";
 import { MatExpansionPanel, MatSnackBar } from '@angular/material';
 import { Sleep } from 'app/sleep';
+import { UniverseEditorAddMultipleFixturesDialogComponent, IUniverseEditorAddMultipleFixturesDialogInputData, IUniverseEditorAddMultipleFixturesDialogOutputData } from '../universe-editor-add-multiple-fixtures-dialog/universe-editor-add-multiple-fixtures-dialog.component';
 
 @Component({
     selector: 'app-universe-editor',
@@ -73,6 +74,45 @@ export class UniverseEditorComponent implements OnInit
         this.universe.fixtures.push(fixture);
         await Sleep.sleepUntil(() => this.panels.length == this.universe.fixtures.length);
         this.panels.last.open();
+    }
+
+    public async addElements(): Promise<void>
+    {
+        let inputData: IUniverseEditorAddMultipleFixturesDialogInputData = {
+            groups: this.groups,
+            skeletons: this.fixtureDefinitionSkeletons
+        };
+        let ref = this.dialog.open(UniverseEditorAddMultipleFixturesDialogComponent, {
+            data: inputData
+        });
+        ref.afterClosed().subscribe(async result =>
+        {
+            if (result != null)
+            {
+                let data = result as IUniverseEditorAddMultipleFixturesDialogOutputData;
+                let definition = await (this.fixtureDefinitionService.getFixtureDefinitionById(data.skeleton.id)).toPromise();
+                let runningAddress = data.address;
+                let addresses = definition.channels
+                    .map(x => x.address)
+                    .sort();
+                let channelCount = addresses[addresses.length - 1] - addresses[0] + 1;
+                for (let i = 0; i < data.quantity; i++)
+                {
+                    let fixture: Fixture = {
+                        group: data.group.name,
+                        address: runningAddress,
+                        type: data.skeleton,
+                        options: {
+                            maxBrightness: 1,
+                            axisInversions: [],
+                            axisRestrictions: []
+                        }
+                    };
+                    this.universe.fixtures.push(fixture);
+                    runningAddress += channelCount;
+                }
+            }
+        })
     }
 
     private get sortedFixtures(): Fixture[]
