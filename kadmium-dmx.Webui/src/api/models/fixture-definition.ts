@@ -3,13 +3,13 @@ import { DMXChannel } from './dmxchannel';
 import { MovementAxis } from './movement-axis';
 import { ColorWheelEntry } from './color-wheel-entry';
 
-export interface FixtureDefinition {
+export interface FixtureDefinition
+{
 
-  id?: number;
-
-  manufacturer?: string;
-
-  model?: string;
+  skeleton: {
+    manufacturer?: string;
+    model?: string;
+  }
 
   channels?: DMXChannel[];
 
@@ -17,7 +17,7 @@ export interface FixtureDefinition {
 
   colorWheel?: ColorWheelEntry[];
 
-  type?: number;
+  fixtureType?: number;
 
   lux?: number;
 

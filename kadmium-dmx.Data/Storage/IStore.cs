@@ -12,7 +12,6 @@ namespace kadmium_dmx_data.Storage
 
         Task<TItem> Get(TKey id);
         Task<IEnumerable<TItem>> GetAll();
-        Task<IEnumerable<TKey>> GetKeys();
 
         Task Remove(TKey id);
         Task RemoveAll();

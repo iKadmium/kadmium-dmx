@@ -149,7 +149,6 @@ export class GroupsComponent extends EditorComponent implements OnInit
             groups.sort((a, b) => a.order - b.order);
             for (let group of groups)
             {
-                group.id = 0;
                 group.order = this.getNextOrder();
                 this.groups.push(group);
             }

@@ -73,6 +73,7 @@ export class FixtureDefinitionEditorComponent extends EditorComponent implements
             if (this.isNewItem())
             {
                 this.definition = {
+                    skeleton: {},
                     channels: [],
                     colorWheel: [],
                     movements: []
@@ -216,10 +217,21 @@ export class FixtureDefinitionEditorComponent extends EditorComponent implements
         this.saving = true;
         try
         {
-
-            await this.fixtureDefinitionService.putFixtureDefinitionById({ id: { manufacturer: this.definition.manufacturer, model: this.definition.model }, definition: this.definition }).toPromise();
-            this.saved = true;
-            this.snackbar.open("Successfully edited " + this.definition.manufacturer + " " + this.definition.model, "Close", { duration: 3000 });
+            if (this.id == null)
+            {
+                await this.fixtureDefinitionService.postFixtureDefinitionById(this.definition).toPromise();
+                this.saved = true;
+                this.snackbar.open("Successfully edited " + this.definition.skeleton.manufacturer + " " + this.definition.skeleton.model, "Close", { duration: 3000 });
+            }
+            else
+            {
+                await this.fixtureDefinitionService.putFixtureDefinitionById({
+                    id: { manufacturer: this.definition.skeleton.manufacturer, model: this.definition.skeleton.model },
+                    definition: this.definition
+                }).toPromise();
+                this.saved = true;
+                this.snackbar.open("Successfully edited " + this.definition.skeleton.manufacturer + " " + this.definition.skeleton.model, "Close", { duration: 3000 });
+            }
 
             this.router.navigate(["../"], { relativeTo: this.route });
         }

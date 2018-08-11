@@ -23,7 +23,10 @@ export class VenueDiscoveryAddFixtureDefinitionDialogComponent implements OnInit
 			colorWheel: [],
 			lux: 0,
 			beamAngle: 0,
-			manufacturer: `Venue - ${data.venue}`
+			skeleton: {
+				manufacturer: `Venue - ${data.venue}`,
+				model: ''
+			}
 		};
 
 		this.definition.channels.sort((a, b) => 

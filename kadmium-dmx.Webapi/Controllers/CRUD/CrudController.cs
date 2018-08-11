@@ -25,9 +25,10 @@ namespace kadmium_dmx_webapi.Controllers
 
         // GET: api/<controller>
         [HttpGet]
-        public virtual Task<IEnumerable<TKey>> Get()
+        public virtual async Task<IEnumerable<TKey>> Get()
         {
-            return Store.GetKeys();
+            var items = await Store.GetAll();
+            return items.Select(x => KeyAccessor(x));
         }
 
         // GET api/<controller>/5
@@ -38,7 +39,7 @@ namespace kadmium_dmx_webapi.Controllers
         }
 
         // POST api/<controller>/5
-        [HttpPost("{originalKey}")]
+        [HttpPost]
         public virtual async Task Post([FromBody]TItem value)
         {
             await Store.Add(value);

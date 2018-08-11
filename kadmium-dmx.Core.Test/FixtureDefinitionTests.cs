@@ -12,11 +12,13 @@ namespace kadmium_dmx_test
         {
             FixtureDefinition definition = new FixtureDefinition()
             {
-                Channels = new List<IDMXChannelData>
+                Channels = new List<DMXChannelData>
                 {
                     new DMXChannelData { Name = "Master", Address = 1, Min = 0, Max = 191 },
-                    new DMXChannelData { Name = "Master", Address = 1, Min = 192, Max = 255 }
-                }
+                    new DMXChannelData { Name = "Strobe", Address = 1, Min = 192, Max = 255 }
+                },
+                Movements = new List<MovementAxisData>(),
+                ColorWheel = new List<ColorWheelEntryData>()
             };
             return definition;
         }
@@ -29,22 +31,27 @@ namespace kadmium_dmx_test
                 {
                     Model = "Moving Fixture",
                     Manufacturer = "Generic"
-                }
+                },
+                Channels = new List<DMXChannelData>
+                {
+                    new DMXChannelData
+                    {
+                        Address = (ushort)1,
+                        Name = axisName
+                    }
+                },
+                Movements = new List<MovementAxisData>
+                {
+                    new MovementAxisData
+                    {
+                        Name = axisName,
+                        Min = min,
+                        Max = max
+                    }
+                },
+                ColorWheel = new List<ColorWheelEntryData>()
             };
-
-            definition.Channels.Add(new DMXChannelData
-            {
-                Address = (ushort)(definition.Channels.Count + 1),
-                Name = axisName
-            });
-
-            definition.Movements.Add(new MovementAxisData
-            {
-                Name = axisName,
-                Min = min,
-                Max = max
-            });
-
+            
             return definition;
         }
 
@@ -57,12 +64,14 @@ namespace kadmium_dmx_test
                     Manufacturer = "Generic",
                     Model = "RGB Fixture"
                 },
-                Channels = new List<IDMXChannelData>
+                Channels = new List<DMXChannelData>
                 {
                     new DMXChannelData {Name = "Red", Address = 1 },
                     new DMXChannelData {Name = "Green", Address = 2 },
                     new DMXChannelData {Name = "Blue", Address = 3 }
-                }
+                },
+                Movements = new List<MovementAxisData>(),
+                ColorWheel = new List<ColorWheelEntryData>()
             };
 
             return definition;
@@ -77,13 +86,15 @@ namespace kadmium_dmx_test
                     Manufacturer = "Generic",
                     Model = "RGB Fixture"
                 },
-                Channels = new List<IDMXChannelData>
+                Channels = new List<DMXChannelData>
                 {
                     new DMXChannelData {Name = "Red", Address = 1 },
                     new DMXChannelData {Name = "Green", Address = 2 },
                     new DMXChannelData {Name = "Blue", Address = 3 },
                     new DMXChannelData {Name = "White", Address = 4 }
-                }
+                },
+                Movements = new List<MovementAxisData>(),
+                ColorWheel = new List<ColorWheelEntryData>()
             };
 
             return definition;
@@ -98,10 +109,12 @@ namespace kadmium_dmx_test
                     Manufacturer = "Generic",
                     Model = "Fire Fixture"
                 },
-                Channels = new List<IDMXChannelData>
+                Channels = new List<DMXChannelData>
                 {
                     new DMXChannelData {Name = "Fire", Address = 1 }
-                }
+                },
+                Movements = new List<MovementAxisData>(),
+                ColorWheel = new List<ColorWheelEntryData>()
             };
             if (fireHeightChannel)
             {

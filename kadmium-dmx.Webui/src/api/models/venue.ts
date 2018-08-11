@@ -1,10 +1,8 @@
 /* tslint:disable */
 import { Universe } from './universe';
 
-export interface Venue {
-
-  id?: number;
-
+export interface Venue
+{
   name?: string;
 
   universes?: Universe[];

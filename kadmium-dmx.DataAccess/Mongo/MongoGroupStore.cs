@@ -7,9 +7,9 @@ using System.Text;
 
 namespace kadmium_dmx_data.Mongo
 {
-    public class MongoGroupStore : MongoStore<string, IGroupData>, IGroupStore
+    public class MongoGroupStore : MongoStore<string, GroupData>, IGroupStore
     {
-        public MongoGroupStore(IMongoDatabase database) : base(database, (group => group.Name))
+        public MongoGroupStore(IMongoDatabase database) : base(database, nameof(GroupData.Name) )
         {
         }
     }

@@ -7,7 +7,7 @@
             "fixtures": [
                 {
                     "address": 301,
-                    "skeleton": {
+                    "type": {
                         "manufacturer": "Generic",
                         "model": "Chinese Moving Wash"
                     },
@@ -31,7 +31,7 @@
                 },
                 {
                     "address": 315,
-                    "skeleton": {
+                    "type": {
                         "manufacturer": "Generic",
                         "model": "Chinese Moving Wash"
                     },
@@ -55,7 +55,7 @@
                 },
                 {
                     "address": 329,
-                    "skeleton": {
+                    "type": {
                         "manufacturer": "Generic",
                         "model": "Chinese Moving Wash"
                     },
@@ -81,7 +81,7 @@
                 },
                 {
                     "address": 343,
-                    "skeleton": {
+                    "type": {
                         "manufacturer": "Generic",
                         "model": "Chinese Moving Wash"
                     },
@@ -107,7 +107,7 @@
                 },
                 {
                     "address": 400,
-                    "skeleton": {
+                    "type": {
                         "manufacturer": "Generic",
                         "model": "Chinese RGBW (5ch)"
                     },
@@ -120,7 +120,7 @@
                 },
                 {
                     "address": 405,
-                    "skeleton": {
+                    "type": {
                         "manufacturer": "Generic",
                         "model": "Chinese RGBW (5ch)"
                     },
@@ -133,7 +133,7 @@
                 },
                 {
                     "address": 410,
-                    "skeleton": {
+                    "type": {
                         "manufacturer": "Generic",
                         "model": "Chinese RGBW (5ch)"
                     },
@@ -146,7 +146,7 @@
                 },
                 {
                     "address": 415,
-                    "skeleton": {
+                    "type": {
                         "manufacturer": "Generic",
                         "model": "Chinese RGBW (5ch)"
                     },

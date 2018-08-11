@@ -40,8 +40,9 @@ namespace kadmium_dmx_test.Solvers.Solvers
         {
             var definition = new FixtureDefinition
             {
-                Movements = new List<IMovementAxisData>(),
-                Channels  = new List<IDMXChannelData>()
+                Movements = new List<MovementAxisData>(),
+                Channels  = new List<DMXChannelData>(),
+                ColorWheel = new List<ColorWheelEntryData>()
             };
 
             foreach (string axisName in axis)
@@ -62,7 +63,7 @@ namespace kadmium_dmx_test.Solvers.Solvers
                     Address = (ushort)(definition.Channels.Count + 1)
                 });
             }
-            var data = new FixtureData();
+            var data = new FixtureData() { Options = "{}" };
             Fixture fixture = new Fixture(data, definition);
             return fixture;
         }

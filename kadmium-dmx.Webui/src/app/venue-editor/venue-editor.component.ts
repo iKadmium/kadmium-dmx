@@ -29,7 +29,7 @@ export class VenueEditorComponent extends EditorComponent implements OnInit
     private venueId: number | null;
     public loading: boolean;
     public saving: boolean;
-    private groups: Group[];
+    public groups: Group[];
 
     public venue: Venue;
 
@@ -115,7 +115,7 @@ export class VenueEditorComponent extends EditorComponent implements OnInit
             }
             else
             {
-                await this.venueService.putVenue({ id: this.venue.id, venue: this.venue }).toPromise();
+                await this.venueService.putVenue({ id: this.venue.name, venue: this.venue }).toPromise();
                 this.saved = true;
                 this.snackbar.open("Successfully edited " + this.venue.name, "Close", { duration: 3000 });
             }

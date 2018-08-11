@@ -4,7 +4,7 @@ using System.Text;
 
 namespace kadmium_dmx_data.Types
 {
-    public class GroupData : IGroupData
+    public class GroupData : BsonSerializable, IGroupData
     {
         public string Name { get; set; }
         public int Order { get; set; }

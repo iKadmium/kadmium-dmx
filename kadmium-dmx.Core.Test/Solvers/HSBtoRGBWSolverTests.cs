@@ -48,7 +48,7 @@ namespace kadmium_dmx_test.Solvers
         public static Fixture GetRGBWFixture(JObject options = null)
         {
             var definition = FixtureDefinitionTests.GetRGBWFixtureDefinition();
-            var data = new FixtureData { Options = options ?? new JObject() };
+            var data = new FixtureData { Options = options?.ToString() ?? "{}" };
             var fixture = new Fixture(data, definition);
             return fixture;
         }

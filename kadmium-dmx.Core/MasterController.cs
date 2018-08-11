@@ -118,11 +118,11 @@ namespace kadmium_dmx_core
                             {
                                 Name = "Default Universe",
                                 UniverseID = 1,
-                                Fixtures = new List<IFixtureData>()
+                                Fixtures = new List<FixtureData>()
                             }
                     }
                 },
-                new Dictionary<FixtureDefinitionSkeleton, IFixtureDefinition>()
+                new Dictionary<FixtureDefinitionSkeleton, FixtureDefinition>()
             );
 
             if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
@@ -139,7 +139,7 @@ namespace kadmium_dmx_core
             RenderTask = Task.Run(RenderLoop);
         }
 
-        public void LoadVenue(IVenueData venue, IDictionary<FixtureDefinitionSkeleton, IFixtureDefinition> definitions)
+        public void LoadVenue(IVenueData venue, IDictionary<FixtureDefinitionSkeleton, FixtureDefinition> definitions)
         {
             SolversEnabled = false;
             Venue?.Dispose();

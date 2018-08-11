@@ -52,7 +52,8 @@ namespace kadmium_dmx_test
         {
             IFixtureData data = new FixtureData
             {
-                Address = address
+                Address = address,
+                Options = options?.ToString() ?? "{}"
             };
             Fixture fixture = new Fixture(data, definition);
 

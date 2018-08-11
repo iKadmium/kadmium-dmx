@@ -45,7 +45,7 @@ namespace kadmium_dmx_test.Solvers
             var data = new FixtureData
             {
                 Address = 1,
-                Options = options ?? new JObject()
+                Options = options?.ToString() ?? "{}"
             };
             var definition = FixtureDefinitionTests.GetRGBFixtureDefinition();
             var fixture = new Fixture(data, definition);

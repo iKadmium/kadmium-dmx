@@ -48,7 +48,7 @@ namespace kadmium_dmx_core.Solvers
         public static bool SuitableFor(IFixtureDefinition definition)
         {
             return definition.Channels.Any(x => x.Name == "ColorWheel") &&
-                definition.ColorWheel.Count > 0 &&
+                definition.ColorWheel.Count() > 0 &&
                 !(definition.Channels.Any(x => x.Name == "Red") &&
                 definition.Channels.Any(x => x.Name == "Green") &&
                 definition.Channels.Any(x => x.Name == "Blue")); // suitable if there's a colorwheel but no RGB

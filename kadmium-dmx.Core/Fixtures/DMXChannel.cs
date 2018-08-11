@@ -25,9 +25,9 @@ namespace kadmium_dmx_core.Fixtures
 
         public DMXChannel(IDMXChannelData data) : base(data.Name)
         {
-            Min = data.Min;
-            Max = data.Max;
-            Address = data.Address;
+            Min = (byte)data.Min;
+            Max = (byte)data.Max;
+            Address = (ushort)data.Address;
         }
 
         public override string ToString()

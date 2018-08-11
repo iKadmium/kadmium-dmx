@@ -22,7 +22,7 @@ namespace kadmium_dmx_core
 
         event EventHandler OnUpdate;
 
-        void LoadVenue(IVenueData venue, IDictionary<FixtureDefinitionSkeleton, IFixtureDefinition> definitions);
+        void LoadVenue(IVenueData venue, IDictionary<FixtureDefinitionSkeleton, FixtureDefinition> definitions);
         Task SetSettings(Settings value);
     }
 }

@@ -1,10 +1,8 @@
 /* tslint:disable */
 
-export interface Group {
-
-  id?: number;
+export interface Group
+{
 
   name?: string;
-
   order?: number;
 }

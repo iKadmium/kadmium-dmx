@@ -21,13 +21,13 @@
         <table>
             <tr *ngFor="let element of filteredData">
                 <td>
-                    {{element.name}}
+                    {{element}}
                 </td>
                 <td class="actionsCell">
-                    <a mat-icon-button matTooltip="Download" href="/api/Venue/Download/{{element.id}}" [download]="element.name + '.json'">
+                    <a mat-icon-button matTooltip="Download" href="/api/Venue/Download/{{element}}" [download]="element + '.json'">
                         <mat-icon aria-label="Download">file_download</mat-icon>
                     </a>
-                    <a mat-icon-button matTooltip="Edit" [routerLink]="element.id">
+                    <a mat-icon-button matTooltip="Edit" [routerLink]="element">
                         <mat-icon aria-label="Edit">edit</mat-icon>
                     </a>
                     <button mat-icon-button matTooltip="Delete" color="warn" (click)="deleteConfirm(element)">

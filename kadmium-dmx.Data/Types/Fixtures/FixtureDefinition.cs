@@ -1,24 +1,19 @@
 ﻿using MongoDB.Bson;
 using MongoDB.Bson.Serialization.Attributes;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 
 namespace kadmium_dmx_data.Types.Fixtures
 {
-    public class FixtureDefinition : IFixtureDefinition
+    public class FixtureDefinition : BsonSerializable, IFixtureDefinition
     {
-        [BsonId]
-        [BsonRepresentation(BsonType.ObjectId)]
-        public string _id { get; set; }
-
         public FixtureDefinitionSkeleton Skeleton { get; set; }
-        public List<IDMXChannelData> Channels { get; set; }
-        public List<IMovementAxisData> Movements { get; set; }
-        public List<IColorWheelEntryData> ColorWheel { get; set; }
+        public IList<DMXChannelData> Channels { get; set; }
+        public IList<MovementAxisData> Movements { get; set; }
+        public IList<ColorWheelEntryData> ColorWheel { get; set; }
         public FixtureType FixtureType { get; set; }
-        public float Lux { get; set; }
-        public float BeamAngle { get; set; }
 
         public override string ToString()
         {
@@ -28,7 +23,9 @@ namespace kadmium_dmx_data.Types.Fixtures
 
     public class FixtureDefinitionSkeleton : IEquatable<FixtureDefinitionSkeleton>
     {
+        [JsonProperty("manufacturer")]
         public string Manufacturer { get; set; }
+        [JsonProperty("model")]
         public string Model { get; set; }
 
         public bool Equals(FixtureDefinitionSkeleton other)

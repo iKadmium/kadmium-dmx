@@ -17,7 +17,7 @@ using kadmium_dmx_data.Types;
 namespace kadmium_dmx_webapi.Controllers
 {
     [Route("api/[controller]")]
-    public class VenueController : CrudController<IVenueStore, string, IVenueData>
+    public class VenueController : CrudController<IVenueStore, string, VenueData>
     {
         private IMasterController MasterController { get; }
         private IFixtureDefinitionStore FixtureDefinitionStore { get; }

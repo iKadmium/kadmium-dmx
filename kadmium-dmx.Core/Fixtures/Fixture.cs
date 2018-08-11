@@ -26,7 +26,7 @@ namespace kadmium_dmx_core.Fixtures
         public Fixture(IFixtureData data, IFixtureDefinition definition)
         {
             Group = data.Group;
-            Options = data.Options;
+            Options = JObject.Parse(data.Options);
             Address = data.Address;
             FixtureDefinitionSkeleton = definition.Skeleton;
 

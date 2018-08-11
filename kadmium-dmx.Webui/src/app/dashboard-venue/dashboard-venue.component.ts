@@ -5,7 +5,6 @@ import { PreviewVenue } from "app/preview-venue";
 import { VenueService } from "api/services";
 import { PreviewUniverse } from "app/preview-universe";
 import { MatSnackBar, MatDialog } from '@angular/material';
-import { VenueSkeleton } from 'api/models/venue-skeleton';
 import { Sleep } from "app/sleep";
 import { AnimationLibrary } from "app/animation-library";
 import { Venue, Universe } from "api/models";
@@ -22,7 +21,7 @@ export class DashboardVenueComponent implements OnInit
 {
     @Input() status: Status;
     public venue: PreviewVenue;
-    public venueSkeletons: VenueSkeleton[];
+    public venueSkeletons: string[];
 
     public loading: boolean;
 
@@ -98,13 +97,13 @@ export class DashboardVenueComponent implements OnInit
         return sum;
     }
 
-    public async loadVenue(id: number): Promise<void>
+    public async loadVenue(name: string): Promise<void>
     {
         this.loading = true;
         this.venue = null;
         try
         {
-            await this.venueService.activateVenueById(id).toPromise();
+            await this.venueService.activateVenueById(name).toPromise();
             await this.refreshVenue();
         }
         catch (error)
@@ -132,8 +131,7 @@ export class DashboardVenueComponent implements OnInit
                 };
                 let response = await this.venueService.postVenue(venue).toPromise();
                 this.snackbar.open(venue.name + " successfully created", "Close", { duration: 3000 });
-                venue.id = response;
-                this.loadVenue(venue.id);
+                this.loadVenue(venue.name);
             }
         });
     }

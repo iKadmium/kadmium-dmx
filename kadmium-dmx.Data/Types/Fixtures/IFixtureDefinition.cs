@@ -1,15 +1,18 @@
-﻿using System.Collections.Generic;
+﻿using kadmium_dmx_data.Types.Venues;
+using MongoDB.Bson.Serialization.Attributes;
+using MongoDB.Bson.Serialization.Serializers;
+using Newtonsoft.Json;
+using System.Collections.Generic;
 
 namespace kadmium_dmx_data.Types.Fixtures
 {
+    [BsonSerializer(typeof(ImpliedImplementationInterfaceSerializer<IFixtureDefinition, FixtureDefinition>))]
     public interface IFixtureDefinition
     {
         FixtureDefinitionSkeleton Skeleton { get; set; }
-        List<IDMXChannelData> Channels { get; set; }
-        List<IMovementAxisData> Movements { get; set; }
-        List<IColorWheelEntryData> ColorWheel { get; set; }
+        IList<DMXChannelData> Channels { get; set; }
+        IList<MovementAxisData> Movements { get; set; }
+        IList<ColorWheelEntryData> ColorWheel { get; set; }
         FixtureType FixtureType { get; set; }
-        float BeamAngle { get; set; }
-        float Lux { get; set; }
     }
 }

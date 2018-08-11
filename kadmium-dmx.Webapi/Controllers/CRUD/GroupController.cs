@@ -38,10 +38,10 @@ namespace kadmium_dmx_webapi.Controllers
 
         [HttpPut]
         [SwaggerOperation("putGroup")]
-        public async Task Put([FromBody]IEnumerable<IGroupData> groups)
+        public async Task Put([FromBody]IEnumerable<GroupData> groups)
         {
             await Store.RemoveAll();
-            var putTasks = groups.Select(group => Store.Update(group.Name, group));
+            var putTasks = groups.Select(group => Store.Add(group));
             await Task.WhenAll(putTasks);
             MasterController.SetGroups(groups);
         }

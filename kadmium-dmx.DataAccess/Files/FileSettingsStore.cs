@@ -20,7 +20,7 @@ namespace kadmium_dmx_data
         public FileSettingsStore()
         { }
 
-        public async Task<ISettings> GetSettings()
+        public async Task<Settings> GetSettings()
         {
             Console.WriteLine("Searching for settings in " + SettingsLocation);
             if (!File.Exists(SettingsLocation))

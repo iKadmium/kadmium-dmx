@@ -1,7 +1,9 @@
 ﻿{
 	"$schema": "../fixture.schema.json",
-	"model": "Chinese Moving Wash",
-	"manufacturer": "Generic",
+	"skeleton": {
+		"model": "Chinese Moving Wash",
+		"manufacturer": "Generic"
+	},
 	"type": "LED",
 	"beamAngle": 30.0,
 	"lux": 4000.0,

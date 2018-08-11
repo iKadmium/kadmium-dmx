@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using kadmium_dmx_core.Fixtures;
 using kadmium_dmx_data.Types;
 using kadmium_dmx_data.Types.Fixtures;
@@ -41,7 +42,7 @@ namespace kadmium_dmx_core.Solvers
 
         internal static bool SuitableFor(IFixtureDefinition definition)
         {
-            return definition.Movements.Count > 0;
+            return definition.Movements.Any();
         }
     }
 

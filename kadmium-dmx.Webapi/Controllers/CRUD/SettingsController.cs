@@ -39,7 +39,7 @@ namespace kadmium_dmx_webapi.Controllers
         public async Task Post([FromBody]Settings value)
         {
             await Store.SaveSettings(value);
-            MasterController.SetSettings(value);
+            await MasterController.SetSettings(value);
         }
     }
 }

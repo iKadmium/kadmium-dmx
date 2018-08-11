@@ -5,7 +5,7 @@ namespace kadmium_dmx_data.Storage
 {
     public interface ISettingsStore
     {
-        Task<ISettings> GetSettings();
+        Task<Settings> GetSettings();
         Task SaveSettings(ISettings settings);
     }
 }

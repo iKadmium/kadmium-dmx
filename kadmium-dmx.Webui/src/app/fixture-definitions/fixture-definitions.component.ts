@@ -137,9 +137,9 @@ export class FixtureDefinitionsComponent implements OnInit
         try
         {
             let definition = await AsyncFileReader.read<FixtureDefinition>(file);
-            definition.id = (await this.fixtureDefinitionsService.postFixtureDefinitionById(definition).toPromise());
-            this.skeletons.push(definition);
-            this.snackbar.open("Successfully added " + definition.manufacturer + " " + definition.model, "Close", { duration: 3000 });
+            await this.fixtureDefinitionsService.postFixtureDefinitionById(definition).toPromise();
+            this.skeletons.push(definition.skeleton);
+            this.snackbar.open("Successfully added " + definition.skeleton.manufacturer + " " + definition.skeleton.model, "Close", { duration: 3000 });
         }
         catch (reason)
         {

@@ -1,32 +1,36 @@
 /* tslint:disable */
 import { Injectable } from '@angular/core';
-import {
-  HttpClient, HttpRequest, HttpResponse, 
-  HttpHeaders, HttpParams } from '@angular/common/http';
+import
+{
+  HttpClient, HttpRequest, HttpResponse,
+  HttpHeaders, HttpParams
+} from '@angular/common/http';
 import { BaseService } from '../base-service';
 import { ApiConfiguration } from '../api-configuration';
 import { Observable } from 'rxjs/Observable';
 import { map } from 'rxjs/operators/map';
 import { filter } from 'rxjs/operators/filter';
 
-import { VenueSkeleton } from '../models/venue-skeleton';
 import { Venue } from '../models/venue';
 import { ActiveVenue } from '../models/active-venue';
 import { VenueDownload } from '../models/venue-download';
 
 @Injectable()
-export class VenueService extends BaseService {
+export class VenueService extends BaseService
+{
   constructor(
     config: ApiConfiguration,
     http: HttpClient
-  ) {
+  )
+  {
     super(config, http);
   }
 
   /**
    * @return Success
    */
-   getVenuesResponse(): Observable<HttpResponse<VenueSkeleton[]>> {
+  getVenuesResponse(): Observable<HttpResponse<string[]>>
+  {
     let __params = this.newParams();
     let __headers = new HttpHeaders();
     let __body: any = null;
@@ -42,11 +46,12 @@ export class VenueService extends BaseService {
 
     return this.http.request<any>(req).pipe(
       filter(_r => _r instanceof HttpResponse),
-      map(_r => {
+      map(_r =>
+      {
         let _resp = _r as HttpResponse<any>;
-        let _body: VenueSkeleton[] = null;
-        _body = _resp.body as VenueSkeleton[]
-        return _resp.clone({body: _body}) as HttpResponse<VenueSkeleton[]>;
+        let _body: string[] = null;
+        _body = _resp.body as string[]
+        return _resp.clone({ body: _body }) as HttpResponse<string[]>;
       })
     );
   }
@@ -54,7 +59,8 @@ export class VenueService extends BaseService {
   /**
    * @return Success
    */
-   getVenues(): Observable<VenueSkeleton[]> {
+  getVenues(): Observable<string[]>
+  {
     return this.getVenuesResponse().pipe(
       map(_r => _r.body)
     );
@@ -64,7 +70,8 @@ export class VenueService extends BaseService {
    * @param venue undefined
    * @return Success
    */
-   postVenueResponse(venue?: Venue): Observable<HttpResponse<number>> {
+  postVenueResponse(venue?: Venue): Observable<HttpResponse<number>>
+  {
     let __params = this.newParams();
     let __headers = new HttpHeaders();
     let __body: any = null;
@@ -81,11 +88,12 @@ export class VenueService extends BaseService {
 
     return this.http.request<any>(req).pipe(
       filter(_r => _r instanceof HttpResponse),
-      map(_r => {
+      map(_r =>
+      {
         let _resp = _r as HttpResponse<any>;
         let _body: number = null;
         _body = parseFloat(_resp.body as string)
-        return _resp.clone({body: _body}) as HttpResponse<number>;
+        return _resp.clone({ body: _body }) as HttpResponse<number>;
       })
     );
   }
@@ -94,7 +102,8 @@ export class VenueService extends BaseService {
    * @param venue undefined
    * @return Success
    */
-   postVenue(venue?: Venue): Observable<number> {
+  postVenue(venue?: Venue): Observable<number>
+  {
     return this.postVenueResponse(venue).pipe(
       map(_r => _r.body)
     );
@@ -104,7 +113,8 @@ export class VenueService extends BaseService {
    * @param id The Venue ID
    * @return Success
    */
-   getVenueByIdResponse(id: number): Observable<HttpResponse<Venue>> {
+  getVenueByIdResponse(id: number): Observable<HttpResponse<Venue>>
+  {
     let __params = this.newParams();
     let __headers = new HttpHeaders();
     let __body: any = null;
@@ -121,11 +131,12 @@ export class VenueService extends BaseService {
 
     return this.http.request<any>(req).pipe(
       filter(_r => _r instanceof HttpResponse),
-      map(_r => {
+      map(_r =>
+      {
         let _resp = _r as HttpResponse<any>;
         let _body: Venue = null;
         _body = _resp.body as Venue
-        return _resp.clone({body: _body}) as HttpResponse<Venue>;
+        return _resp.clone({ body: _body }) as HttpResponse<Venue>;
       })
     );
   }
@@ -134,7 +145,8 @@ export class VenueService extends BaseService {
    * @param id The Venue ID
    * @return Success
    */
-   getVenueById(id: number): Observable<Venue> {
+  getVenueById(id: number): Observable<Venue>
+  {
     return this.getVenueByIdResponse(id).pipe(
       map(_r => _r.body)
     );
@@ -147,7 +159,8 @@ export class VenueService extends BaseService {
    *
    * - `venue`:
    */
-   putVenueResponse(params: VenueService.PutVenueParams): Observable<HttpResponse<void>> {
+  putVenueResponse(params: VenueService.PutVenueParams): Observable<HttpResponse<void>>
+  {
     let __params = this.newParams();
     let __headers = new HttpHeaders();
     let __body: any = null;
@@ -165,11 +178,12 @@ export class VenueService extends BaseService {
 
     return this.http.request<any>(req).pipe(
       filter(_r => _r instanceof HttpResponse),
-      map(_r => {
+      map(_r =>
+      {
         let _resp = _r as HttpResponse<any>;
         let _body: void = null;
-        
-        return _resp.clone({body: _body}) as HttpResponse<void>;
+
+        return _resp.clone({ body: _body }) as HttpResponse<void>;
       })
     );
   }
@@ -181,7 +195,8 @@ export class VenueService extends BaseService {
    *
    * - `venue`:
    */
-   putVenue(params: VenueService.PutVenueParams): Observable<void> {
+  putVenue(params: VenueService.PutVenueParams): Observable<void>
+  {
     return this.putVenueResponse(params).pipe(
       map(_r => _r.body)
     );
@@ -190,7 +205,8 @@ export class VenueService extends BaseService {
   /**
    * @param id undefined
    */
-   deleteVenueResponse(id: number): Observable<HttpResponse<void>> {
+  deleteVenueResponse(id: string): Observable<HttpResponse<void>>
+  {
     let __params = this.newParams();
     let __headers = new HttpHeaders();
     let __body: any = null;
@@ -207,11 +223,12 @@ export class VenueService extends BaseService {
 
     return this.http.request<any>(req).pipe(
       filter(_r => _r instanceof HttpResponse),
-      map(_r => {
+      map(_r =>
+      {
         let _resp = _r as HttpResponse<any>;
         let _body: void = null;
-        
-        return _resp.clone({body: _body}) as HttpResponse<void>;
+
+        return _resp.clone({ body: _body }) as HttpResponse<void>;
       })
     );
   }
@@ -219,7 +236,8 @@ export class VenueService extends BaseService {
   /**
    * @param id undefined
    */
-   deleteVenue(id: number): Observable<void> {
+  deleteVenue(id: string): Observable<void>
+  {
     return this.deleteVenueResponse(id).pipe(
       map(_r => _r.body)
     );
@@ -228,7 +246,8 @@ export class VenueService extends BaseService {
   /**
    * @return Success
    */
-   getActiveVenueResponse(): Observable<HttpResponse<ActiveVenue>> {
+  getActiveVenueResponse(): Observable<HttpResponse<ActiveVenue>>
+  {
     let __params = this.newParams();
     let __headers = new HttpHeaders();
     let __body: any = null;
@@ -244,11 +263,12 @@ export class VenueService extends BaseService {
 
     return this.http.request<any>(req).pipe(
       filter(_r => _r instanceof HttpResponse),
-      map(_r => {
+      map(_r =>
+      {
         let _resp = _r as HttpResponse<any>;
         let _body: ActiveVenue = null;
         _body = _resp.body as ActiveVenue
-        return _resp.clone({body: _body}) as HttpResponse<ActiveVenue>;
+        return _resp.clone({ body: _body }) as HttpResponse<ActiveVenue>;
       })
     );
   }
@@ -256,46 +276,9 @@ export class VenueService extends BaseService {
   /**
    * @return Success
    */
-   getActiveVenue(): Observable<ActiveVenue> {
+  getActiveVenue(): Observable<ActiveVenue>
+  {
     return this.getActiveVenueResponse().pipe(
-      map(_r => _r.body)
-    );
-  }
-
-  /**
-   * @param id undefined
-   */
-   activateVenueByIdResponse(id: number): Observable<HttpResponse<void>> {
-    let __params = this.newParams();
-    let __headers = new HttpHeaders();
-    let __body: any = null;
-
-    let req = new HttpRequest<any>(
-      "GET",
-      this.rootUrl + `/api/Venue/Activate/${id}`,
-      __body,
-      {
-        headers: __headers,
-        params: __params,
-        responseType: 'text'
-      });
-
-    return this.http.request<any>(req).pipe(
-      filter(_r => _r instanceof HttpResponse),
-      map(_r => {
-        let _resp = _r as HttpResponse<any>;
-        let _body: void = null;
-        
-        return _resp.clone({body: _body}) as HttpResponse<void>;
-      })
-    );
-  }
-
-  /**
-   * @param id undefined
-   */
-   activateVenueById(id: number): Observable<void> {
-    return this.activateVenueByIdResponse(id).pipe(
       map(_r => _r.body)
     );
   }
@@ -303,7 +286,8 @@ export class VenueService extends BaseService {
   /**
    * @param name undefined
    */
-   activateVenueByNameResponse(name: string): Observable<HttpResponse<void>> {
+  activateVenueByIdResponse(name: string): Observable<HttpResponse<void>>
+  {
     let __params = this.newParams();
     let __headers = new HttpHeaders();
     let __body: any = null;
@@ -320,11 +304,12 @@ export class VenueService extends BaseService {
 
     return this.http.request<any>(req).pipe(
       filter(_r => _r instanceof HttpResponse),
-      map(_r => {
+      map(_r =>
+      {
         let _resp = _r as HttpResponse<any>;
         let _body: void = null;
-        
-        return _resp.clone({body: _body}) as HttpResponse<void>;
+
+        return _resp.clone({ body: _body }) as HttpResponse<void>;
       })
     );
   }
@@ -332,24 +317,25 @@ export class VenueService extends BaseService {
   /**
    * @param name undefined
    */
-   activateVenueByName(name: string): Observable<void> {
-    return this.activateVenueByNameResponse(name).pipe(
+  activateVenueById(name: string): Observable<void>
+  {
+    return this.activateVenueByIdResponse(name).pipe(
       map(_r => _r.body)
     );
   }
 
   /**
-   * @param venueUpload undefined
-   * @return Success
+   * @param name undefined
    */
-   uploadVenueResponse(venueUpload?: VenueDownload): Observable<HttpResponse<number>> {
+  activateVenueByNameResponse(name: string): Observable<HttpResponse<void>>
+  {
     let __params = this.newParams();
     let __headers = new HttpHeaders();
     let __body: any = null;
-    __body = venueUpload;
+
     let req = new HttpRequest<any>(
-      "POST",
-      this.rootUrl + `/api/Venue/upload`,
+      "GET",
+      this.rootUrl + `/api/Venue/Activate/${name}`,
       __body,
       {
         headers: __headers,
@@ -359,21 +345,22 @@ export class VenueService extends BaseService {
 
     return this.http.request<any>(req).pipe(
       filter(_r => _r instanceof HttpResponse),
-      map(_r => {
+      map(_r =>
+      {
         let _resp = _r as HttpResponse<any>;
-        let _body: number = null;
-        _body = parseFloat(_resp.body as string)
-        return _resp.clone({body: _body}) as HttpResponse<number>;
+        let _body: void = null;
+
+        return _resp.clone({ body: _body }) as HttpResponse<void>;
       })
     );
   }
 
   /**
-   * @param venueUpload undefined
-   * @return Success
+   * @param name undefined
    */
-   uploadVenue(venueUpload?: VenueDownload): Observable<number> {
-    return this.uploadVenueResponse(venueUpload).pipe(
+  activateVenueByName(name: string): Observable<void>
+  {
+    return this.activateVenueByNameResponse(name).pipe(
       map(_r => _r.body)
     );
   }
@@ -382,7 +369,8 @@ export class VenueService extends BaseService {
    * @param id undefined
    * @return Success
    */
-   downloadVenueResponse(id: number): Observable<HttpResponse<VenueDownload>> {
+  downloadVenueResponse(id: number): Observable<HttpResponse<VenueDownload>>
+  {
     let __params = this.newParams();
     let __headers = new HttpHeaders();
     let __body: any = null;
@@ -399,11 +387,12 @@ export class VenueService extends BaseService {
 
     return this.http.request<any>(req).pipe(
       filter(_r => _r instanceof HttpResponse),
-      map(_r => {
+      map(_r =>
+      {
         let _resp = _r as HttpResponse<any>;
         let _body: VenueDownload = null;
         _body = _resp.body as VenueDownload
-        return _resp.clone({body: _body}) as HttpResponse<VenueDownload>;
+        return _resp.clone({ body: _body }) as HttpResponse<VenueDownload>;
       })
     );
   }
@@ -412,21 +401,24 @@ export class VenueService extends BaseService {
    * @param id undefined
    * @return Success
    */
-   downloadVenue(id: number): Observable<VenueDownload> {
+  downloadVenue(id: number): Observable<VenueDownload>
+  {
     return this.downloadVenueResponse(id).pipe(
       map(_r => _r.body)
     );
   }
 }
 
-export module VenueService {
+export module VenueService
+{
 
   /**
    * Parameters for putVenue
    */
-   export interface PutVenueParams {
+  export interface PutVenueParams
+  {
 
-    id: number;
+    id: string;
 
     venue?: Venue;
   }

@@ -8,24 +8,24 @@
         </button>
     </mat-toolbar>
     <mat-card>
-        <mat-card-title>{{definition?.manufacturer}} {{definition?.model}}</mat-card-title>
+        <mat-card-title>{{definition?.skeleton.manufacturer}} {{definition?.skeleton.model}}</mat-card-title>
         <mat-card-content *ngIf="loading || saving">
             <app-busy-card [loading]="loading" [saving]="saving"></app-busy-card>
         </mat-card-content>
         <mat-card-content *ngIf="!loading && !saving">
             <mat-autocomplete #manufacturersAuto="matAutocomplete">
-                <mat-option *ngFor="let manufacturer of getFilteredManufacturers(definition.manufacturer)" [value]="manufacturer">{{manufacturer}}</mat-option>
+                <mat-option *ngFor="let manufacturer of getFilteredManufacturers(definition.skeleton.manufacturer)" [value]="manufacturer">{{manufacturer}}</mat-option>
             </mat-autocomplete>
             <div class="column">
                 <mat-form-field>
-                    <input required type="text" matInput [(ngModel)]="definition.manufacturer" name="manufacturer" placeholder="Manufacturer"
+                    <input required type="text" matInput [(ngModel)]="definition.skeleton.manufacturer" name="manufacturer" placeholder="Manufacturer"
                         [matAutocomplete]="manufacturersAuto">
                 </mat-form-field>
                 <mat-form-field>
-                    <input required type="text" matInput [(ngModel)]="definition.model" name="model" placeholder="Model">
+                    <input required type="text" matInput [(ngModel)]="definition.skeleton.model" name="model" placeholder="Model">
                 </mat-form-field>
                 <mat-form-field>
-                    <mat-select required placeholder="Type" [(value)]="definition.type" name="type">
+                    <mat-select required placeholder="Type" [(value)]="definition.fixtureType" name="type">
                         <mat-option [value]="0">LED</mat-option>
                         <mat-option [value]="1">Tungsten</mat-option>
                         <mat-option [value]="2">Effect</mat-option>

@@ -12,12 +12,12 @@ namespace kadmium_dmx_data.Mongo
     public abstract class MongoStore<TKey, TItem> : IStore<TKey, TItem> where TKey  : IEquatable<TKey>
     {
         protected IMongoCollection<TItem> Collection { get; set; }
-        protected Func<TItem, TKey> KeyAccessor { get; set; }
+        private string KeyName { get; }
 
-        public MongoStore(IMongoDatabase database, Func<TItem, TKey> keyAccessor)
+        public MongoStore(IMongoDatabase database, string keyName)
         {
             Collection = database.GetCollection<TItem>(typeof(TItem).Name);
-            KeyAccessor = keyAccessor;
+            KeyName = keyName;
         }
 
         public async Task Add(TItem entity)
@@ -27,7 +27,8 @@ namespace kadmium_dmx_data.Mongo
 
         public async Task<TItem> Get(TKey id)
         {
-            var results = await Collection.FindAsync(x => KeyAccessor(x).Equals(id));
+            var filter = Builders<TItem>.Filter.Eq(KeyName, id);
+            var results = await Collection.FindAsync(filter);
             return await results.SingleAsync();
         }
 
@@ -37,20 +38,16 @@ namespace kadmium_dmx_data.Mongo
             return results.ToEnumerable();
         }
 
-        public async Task<IEnumerable<TKey>> GetKeys()
-        {
-            var items = await GetAll();
-            return items.Select(item => KeyAccessor(item));
-        }
-
         public async Task Update(TKey id, TItem entity)
         {
-            await Collection.FindOneAndReplaceAsync(x => KeyAccessor(x).Equals(id), entity);
+            var filter = Builders<TItem>.Filter.Eq(KeyName, id);
+            await Collection.FindOneAndReplaceAsync(filter, entity);
         }
 
         public async Task Remove(TKey id)
         {
-            await Collection.FindOneAndDeleteAsync(item => KeyAccessor(item).Equals(id));
+            var filter = Builders<TItem>.Filter.Eq(KeyName, id);
+            await Collection.FindOneAndDeleteAsync(filter);
         }
 
         public async Task RemoveAll()
