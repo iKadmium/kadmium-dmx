@@ -32,17 +32,17 @@ namespace kadmium_dmx_core.Fixtures
 
             Settables = new Dictionary<string, FixtureAttribute>();
             FrameSettables = new Dictionary<string, FixtureAttribute>();
-            foreach (var attributeData in definition.Channels ?? Enumerable.Empty<DMXChannelData>())
+            foreach (var attributeData in definition.Channels ?? Enumerable.Empty<IDMXChannelData>())
             {
                 Settables.Add(attributeData.Name, new DMXChannel(attributeData));
                 FrameSettables.Add(attributeData.Name, new DMXChannel(attributeData));
             }
             MovementAxis = new Dictionary<string, Fixtures.MovementAxis>();
-            foreach (var axis in definition.Movements ?? Enumerable.Empty<MovementAxisData>())
+            foreach (var axis in definition.Movements ?? Enumerable.Empty<IMovementAxisData>())
             {
                 MovementAxis.Add(axis.Name, new MovementAxis(axis));
             }
-            var colorWheelEntries = from entryData in definition.ColorWheel ?? Enumerable.Empty<ColorWheelEntryData>()
+            var colorWheelEntries = from entryData in definition.ColorWheel ?? Enumerable.Empty<IColorWheelEntryData>()
                           select new ColorWheelEntry(entryData);
             ColorWheel = colorWheelEntries.ToList();
 

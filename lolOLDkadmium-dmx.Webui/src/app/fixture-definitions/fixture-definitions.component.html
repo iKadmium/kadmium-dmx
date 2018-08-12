@@ -1,0 +1,43 @@
+<mat-toolbar class="main-toolbar">
+    <app-sidenav-toggle></app-sidenav-toggle>
+    Fixture Definitions
+    <span class="toolbar-spacer">
+        <mat-form-field class="filter-box">
+            <mat-icon>search</mat-icon>
+            <input matInput (keyup)="applyFilter($event.target.value)">
+        </mat-form-field>
+    </span>
+    <a mat-icon-button routerLink="new" matTooltip="Add">
+        <mat-icon aria-label="Add">add</mat-icon>
+    </a>
+    <button mat-icon-button (click)="upload(fileInput)" matTooltip="Upload">
+        <mat-icon aria-label="Upload">file_upload</mat-icon>
+    </button>
+</mat-toolbar>
+<mat-card *ngIf="!loading" class="main-card" @slideIn>
+    <app-busy-card [loading]="loading" [saving]="false"></app-busy-card>
+    <mat-card-content>
+
+        <table>
+            <tr *ngFor="let element of filteredData" @fadeOut>
+                <td @fadeIn>
+                    {{element.manufacturer}} {{element.model}}
+                </td>
+                <td class="actionsCell">
+                    <a mat-icon-button matTooltip="Download" [href]="getDownloadURL(element)" [download]="getDownloadFilename(element)">
+                        <mat-icon aria-label="Download">file_download</mat-icon>
+                    </a>
+                    <a mat-icon-button matTooltip="Edit" [routerLink]="element.manufacturer + '/' + element.model">
+                        <mat-icon aria-label="Edit">edit</mat-icon>
+                    </a>
+                    <button mat-icon-button matTooltip="Delete" color="warn" (click)="deleteConfirm(element)">
+                        <mat-icon aria-label="Delete">delete</mat-icon>
+                    </button>
+                </td>
+            </tr>
+        </table>
+
+    </mat-card-content>
+</mat-card>
+
+<input #fileInput type="file" name="name" style="display: none;" (change)="filesSelected($event.target.files)" multiple>

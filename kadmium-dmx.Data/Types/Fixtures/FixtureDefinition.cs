@@ -10,16 +10,24 @@ namespace kadmium_dmx_data.Types.Fixtures
     public class FixtureDefinition : BsonSerializable, IFixtureDefinition
     {
         public FixtureDefinitionSkeleton Skeleton { get; set; }
-        public IList<DMXChannelData> Channels { get; set; }
-        public IList<MovementAxisData> Movements { get; set; }
-        public IList<ColorWheelEntryData> ColorWheel { get; set; }
+        public IEnumerable<IDMXChannelData> Channels { get; set; }
+        public IEnumerable<IMovementAxisData> Movements { get; set; }
+        public IEnumerable<IColorWheelEntryData> ColorWheel { get; set; }
         public FixtureType FixtureType { get; set; }
 
         public FixtureDefinition()
         {
-            Channels = new List<DMXChannelData>();
-            Movements = new List<MovementAxisData>();
-            ColorWheel = new List<ColorWheelEntryData>();
+            Channels = new List<IDMXChannelData>();
+            Movements = new List<IMovementAxisData>();
+            ColorWheel = new List<IColorWheelEntryData>();
+        }
+
+        [JsonConstructor]
+        public FixtureDefinition(IEnumerable<DMXChannelData> channels, IEnumerable<MovementAxisData> movements, IEnumerable<ColorWheelEntryData> colorWheel) : base()
+        {
+            Channels = channels;
+            Movements = movements;
+            ColorWheel = colorWheel;
         }
 
         public override string ToString()

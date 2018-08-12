@@ -38,9 +38,9 @@ namespace kadmium_dmx_test.Solvers
             Assert.Equal(masterChannel.ByteValue, expectedMaster);
         }
 
-        public List<ColorWheelEntryData> GetDefaultColorWheel()
+        public List<IColorWheelEntryData> GetDefaultColorWheel()
         {
-            var entries = new List<ColorWheelEntryData>
+            var entries = new List<IColorWheelEntryData>
             {
                 new ColorWheelEntryData
                 {
@@ -75,11 +75,11 @@ namespace kadmium_dmx_test.Solvers
             return entries;
         }
 
-        public static Fixture GetColorWheelFixture(List<ColorWheelEntryData> colors)
+        public static Fixture GetColorWheelFixture(List<IColorWheelEntryData> colors)
         {
             IFixtureDefinition definition = new FixtureDefinition()
             {
-                Channels = new List<DMXChannelData>
+                Channels = new List<IDMXChannelData>
                 {
                     new DMXChannelData
                     {
@@ -93,7 +93,7 @@ namespace kadmium_dmx_test.Solvers
                     }
                 },
                 ColorWheel = colors,
-                Movements = new List<MovementAxisData>()
+                Movements = new List<IMovementAxisData>()
             };
             IFixtureData data = new FixtureData
             {

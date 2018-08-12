@@ -38,31 +38,34 @@ namespace kadmium_dmx_test.Solvers.Solvers
 
         public static Fixture Get16BitMovingFixture(params string[] axis)
         {
-            var definition = new FixtureDefinition
-            {
-                Movements = new List<MovementAxisData>(),
-                Channels  = new List<DMXChannelData>(),
-                ColorWheel = new List<ColorWheelEntryData>()
-            };
+            var movements = new List<IMovementAxisData>();
+            var channels = new List<IDMXChannelData>();
 
             foreach (string axisName in axis)
             {
-                definition.Movements.Add(new MovementAxisData
+                movements.Add(new MovementAxisData
                 {
                     Name = axisName,
                     Min = -90,
                     Max = 90
                 });
-                definition.Channels.Add(new DMXChannelData
+                channels.Add(new DMXChannelData
                 {
                     Name = axisName + "Coarse",
-                    Address = (ushort)(definition.Channels.Count + 1)
+                    Address = (ushort)(channels.Count + 1)
                 });
-                definition.Channels.Add(new DMXChannelData {
+                channels.Add(new DMXChannelData {
                     Name = axisName + "Fine",
-                    Address = (ushort)(definition.Channels.Count + 1)
+                    Address = (ushort)(channels.Count + 1)
                 });
             }
+
+            var definition = new FixtureDefinition
+            {
+                Movements = movements,
+                Channels = channels,
+                ColorWheel = new List<IColorWheelEntryData>()
+            };
             var data = new FixtureData() { Options = new FixtureOptions() };
             Fixture fixture = new Fixture(data, definition);
             return fixture;

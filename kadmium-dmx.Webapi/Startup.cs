@@ -21,6 +21,7 @@ using NSwag.AspNetCore;
 using NSwag.SwaggerGeneration.Processors;
 using kadmium_dmx_webapi.Controllers;
 using Newtonsoft.Json.Converters;
+using Newtonsoft.Json;
 
 namespace kadmium_dmx_webapi
 {
@@ -57,7 +58,9 @@ namespace kadmium_dmx_webapi
                 options.Conventions.Add(new KebabCaseRoutingConvention());
             })
             .SetCompatibilityVersion(Microsoft.AspNetCore.Mvc.CompatibilityVersion.Latest)
-            .AddJsonOptions(options => options.SerializerSettings.Converters.Add(new StringEnumConverter()));
+            .AddJsonOptions(options => {
+                options.SerializerSettings.Converters.Add(new StringEnumConverter());
+            });
 
             services.AddCors(options =>
             {

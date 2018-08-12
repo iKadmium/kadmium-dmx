@@ -1,0 +1,33 @@
+.sidenavLink {
+    padding-right: 2em;
+}
+
+.title-bar {
+    position: fixed;
+    z-index: 2;
+}
+
+@media(min-width: 961px) {
+    .body-margin {
+        flex: 1;
+    }
+    .body-content {
+        margin-top: 2em;
+        flex: 10;
+    }
+}
+
+@media(min-width: 1281px) {
+    .body-margin {
+        flex: 2;
+    }
+    .body-content {
+        flex: 8;
+    }
+}
+
+@media(max-width: 960px) {
+    .body-content {
+        flex: 12;
+    }
+}

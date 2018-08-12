@@ -1,0 +1,28 @@
+<mat-toolbar class="main-toolbar">
+    <app-sidenav-toggle></app-sidenav-toggle>
+    {{fixture?.address}} {{fixture?.manufacturer}} {{fixture?.model}} ({{fixture?.group}})
+    <span class="toolbar-spacer"></span>
+</mat-toolbar>
+<app-busy-card [loading]="loading" [saving]="false"></app-busy-card>
+<mat-card *ngIf="!loading" @slideIn class="main-card fixture-preview">
+    <mat-card-content>
+        <div style="text-align: center;">
+            <app-dashboard-fixture-preview [fixture]="fixture" #fixturePreview></app-dashboard-fixture-preview>
+        </div>
+    </mat-card-content>
+</mat-card>
+
+
+
+<mat-card *ngIf="!loading" @slideIn class="main-card">
+    <mat-card-content>
+        <mat-tab-group>
+            <mat-tab label="Attributes">
+                <app-dashboard-fixture-attributes [fixture]="fixture" [universeID]="universe.universeID" [attributes]="attributes" (setValue)="updateValue($event)"></app-dashboard-fixture-attributes>
+            </mat-tab>
+            <mat-tab label="Color">
+                <app-dashboard-fixture-color [fixture]="fixture" [universeID]="universe.universeID" [attributes]="attributes" (setValue)="updateValue($event)"></app-dashboard-fixture-color>
+            </mat-tab>
+        </mat-tab-group>
+    </mat-card-content>
+</mat-card>

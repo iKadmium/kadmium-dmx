@@ -26,7 +26,7 @@ namespace kadmium_dmx_core.Solvers
 
         private static IEnumerable<string> Get16BitAxisNames(IFixtureDefinition fixtureDefinition)
         {
-            var names = from movement in fixtureDefinition.Movements ?? Enumerable.Empty<MovementAxisData>()
+            var names = from movement in fixtureDefinition.Movements ?? Enumerable.Empty<IMovementAxisData>()
                         where fixtureDefinition.Channels.Any(x => x.Name == movement.Name + "Coarse")
                         && fixtureDefinition.Channels.Any(x => x.Name == movement.Name + "Fine")
                         select movement.Name;

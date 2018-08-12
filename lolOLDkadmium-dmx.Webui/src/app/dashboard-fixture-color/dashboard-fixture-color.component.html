@@ -1,0 +1,5 @@
+<div class="centered">
+	<span [(colorPicker)]="color" [cpToggle]="true" [style.background]="color" [cpDialogDisplay]="'inline'" [cpOutputFormat]="'hex'"
+	 [cpAlphaChannel]="'disabled'" (colorPickerChange)="setColor($event)">
+	</span>
+</div>

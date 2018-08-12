@@ -10,9 +10,9 @@ namespace kadmium_dmx_data.Types.Fixtures
     public interface IFixtureDefinition
     {
         FixtureDefinitionSkeleton Skeleton { get; set; }
-        IList<DMXChannelData> Channels { get; set; }
-        IList<MovementAxisData> Movements { get; set; }
-        IList<ColorWheelEntryData> ColorWheel { get; set; }
+        IEnumerable<IDMXChannelData> Channels { get; set; }
+        IEnumerable<IMovementAxisData> Movements { get; set; }
+        IEnumerable<IColorWheelEntryData> ColorWheel { get; set; }
         FixtureType FixtureType { get; set; }
     }
 }

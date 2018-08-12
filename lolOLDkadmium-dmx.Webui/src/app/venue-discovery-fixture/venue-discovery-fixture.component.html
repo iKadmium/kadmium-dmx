@@ -1,0 +1,21 @@
+<mat-card class="dashboard-card">
+	<mat-card-title>{{fixture.manufacturer}} {{fixture.model}} ({{fixture.group}})</mat-card-title>
+	<mat-card-content>
+		<div class="channel-row" *ngFor="let channel of channels">
+			<div style="flex: 1" class="address-cell">{{channel.dmxAddress + fixture.address - 1}}</div>
+			<div class="column slider-cell">
+				<div class="column slider-cell">
+					{{channel.name}}
+				</div>
+			</div>
+			<div style="flex: 1" class="actions-cell">
+
+			</div>
+		</div>
+	</mat-card-content>
+	<mat-card-actions>
+		<button mat-icon-button color="warn" matTooltip="Remove from Venue" (click)="removeFixture()">
+			<mat-icon aria-label="Remove from Venue">remove_circle</mat-icon>
+		</button>
+	</mat-card-actions>
+</mat-card>

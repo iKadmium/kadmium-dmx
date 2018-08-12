@@ -1,0 +1,16 @@
+.fixture-preview {
+    position: sticky;
+    z-index: 100;
+    top: 64px;
+}
+
+.mat-toolbar-row,
+.mat-toolbar-single-row {
+    white-space: normal !important;
+}
+
+@media(max-width: 600px) {
+    .fixture-preview {
+        top: 56px;
+    }
+}

@@ -1,0 +1,56 @@
+<mat-toolbar class="main-toolbar">
+	<app-sidenav-toggle></app-sidenav-toggle>
+	Tools
+	<span class="toolbar-spacer"></span>
+	<button mat-button (click)="download('kadmium-dmx Lighting Controller.jsfx', getReaperControllerScript(attributesList))"
+	 matTooltip="Generate Reaper Controller">
+		<mat-icon>code</mat-icon>
+		<span class="button-text">Reaper</span>
+	</button>
+	<button mat-button (click)="download('kadmium-dmx Lighting.txt', getOsciiBotControllerScript(attributesList, groupsList, midiLoopbackName.value))"
+	 matTooltip="Generate OSCII Bot Script">
+		<mat-icon>code</mat-icon>
+		<span class="button-text">OSCII Bot</span>
+	</button>
+</mat-toolbar>
+<app-busy-card [loading]="loading" [saving]="false"></app-busy-card>
+<mat-card class="main-card" @slideIn>
+	<mat-card-content>
+		<h2>Inclusion Options</h2>
+		<mat-expansion-panel>
+			<mat-expansion-panel-header>
+				<mat-panel-title>Groups</mat-panel-title>
+				<mat-panel-description>
+					{{groupsList.selectedOptions.selected.length}} selected
+				</mat-panel-description>
+			</mat-expansion-panel-header>
+			<mat-selection-list #groupsList>
+				<mat-list-option *ngFor="let group of groups" selected="true" [value]="group">
+					{{group.name}}
+				</mat-list-option>
+			</mat-selection-list>
+		</mat-expansion-panel>
+
+		<mat-expansion-panel>
+			<mat-expansion-panel-header>
+				<mat-panel-title>Attributes</mat-panel-title>
+				<mat-panel-description>
+					{{attributesList.selectedOptions.selected.length}} selected
+				</mat-panel-description>
+			</mat-expansion-panel-header>
+			<mat-selection-list #attributesList>
+				<mat-list-option *ngFor="let attribute of attributes" selected="true" [value]="attribute">
+					{{attribute.name}}
+				</mat-list-option>
+			</mat-selection-list>
+		</mat-expansion-panel>
+		<mat-divider class="top-margin"></mat-divider>
+
+		<h2 class="top-margin">I/O</h2>
+		<mat-form-field>
+			<input matInput type="text" required #midiLoopbackName placeholder="MIDI Loopback Name" value="lighting">
+		</mat-form-field>
+
+	</mat-card-content>
+
+</mat-card>

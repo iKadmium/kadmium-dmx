@@ -12,13 +12,13 @@ namespace kadmium_dmx_test
         {
             FixtureDefinition definition = new FixtureDefinition()
             {
-                Channels = new List<DMXChannelData>
+                Channels = new List<IDMXChannelData>
                 {
                     new DMXChannelData { Name = "Master", Address = 1, Min = 0, Max = 191 },
                     new DMXChannelData { Name = "Strobe", Address = 1, Min = 192, Max = 255 }
                 },
-                Movements = new List<MovementAxisData>(),
-                ColorWheel = new List<ColorWheelEntryData>()
+                Movements = new List<IMovementAxisData>(),
+                ColorWheel = new List<IColorWheelEntryData>()
             };
             return definition;
         }
@@ -32,7 +32,7 @@ namespace kadmium_dmx_test
                     Model = "Moving Fixture",
                     Manufacturer = "Generic"
                 },
-                Channels = new List<DMXChannelData>
+                Channels = new List<IDMXChannelData>
                 {
                     new DMXChannelData
                     {
@@ -40,7 +40,7 @@ namespace kadmium_dmx_test
                         Name = axisName
                     }
                 },
-                Movements = new List<MovementAxisData>
+                Movements = new List<IMovementAxisData>
                 {
                     new MovementAxisData
                     {
@@ -49,7 +49,7 @@ namespace kadmium_dmx_test
                         Max = max
                     }
                 },
-                ColorWheel = new List<ColorWheelEntryData>()
+                ColorWheel = new List<IColorWheelEntryData>()
             };
             
             return definition;
@@ -64,14 +64,14 @@ namespace kadmium_dmx_test
                     Manufacturer = "Generic",
                     Model = "RGB Fixture"
                 },
-                Channels = new List<DMXChannelData>
+                Channels = new List<IDMXChannelData>
                 {
                     new DMXChannelData {Name = "Red", Address = 1 },
                     new DMXChannelData {Name = "Green", Address = 2 },
                     new DMXChannelData {Name = "Blue", Address = 3 }
                 },
-                Movements = new List<MovementAxisData>(),
-                ColorWheel = new List<ColorWheelEntryData>()
+                Movements = new List<IMovementAxisData>(),
+                ColorWheel = new List<IColorWheelEntryData>()
             };
 
             return definition;
@@ -86,15 +86,15 @@ namespace kadmium_dmx_test
                     Manufacturer = "Generic",
                     Model = "RGB Fixture"
                 },
-                Channels = new List<DMXChannelData>
+                Channels = new List<IDMXChannelData>
                 {
                     new DMXChannelData {Name = "Red", Address = 1 },
                     new DMXChannelData {Name = "Green", Address = 2 },
                     new DMXChannelData {Name = "Blue", Address = 3 },
                     new DMXChannelData {Name = "White", Address = 4 }
                 },
-                Movements = new List<MovementAxisData>(),
-                ColorWheel = new List<ColorWheelEntryData>()
+                Movements = new List<IMovementAxisData>(),
+                ColorWheel = new List<IColorWheelEntryData>()
             };
 
             return definition;
@@ -102,6 +102,20 @@ namespace kadmium_dmx_test
 
         public static FixtureDefinition GetFireFixtureDefinition(bool fireHeightChannel = false)
         {
+            var channels = new List<IDMXChannelData>
+            {
+                new DMXChannelData {Name = "Fire", Address = 1 }
+            };
+
+            if (fireHeightChannel)
+            {
+                channels.Add(new DMXChannelData
+                {
+                    Name = "FireHeight",
+                    Address = (ushort)(channels.Count + 1)
+                });
+            }
+
             var definition = new FixtureDefinition()
             {
                 Skeleton = new FixtureDefinitionSkeleton
@@ -109,20 +123,11 @@ namespace kadmium_dmx_test
                     Manufacturer = "Generic",
                     Model = "Fire Fixture"
                 },
-                Channels = new List<DMXChannelData>
-                {
-                    new DMXChannelData {Name = "Fire", Address = 1 }
-                },
-                Movements = new List<MovementAxisData>(),
-                ColorWheel = new List<ColorWheelEntryData>()
+                Channels = channels,
+                Movements = new List<IMovementAxisData>(),
+                ColorWheel = new List<IColorWheelEntryData>()
             };
-            if (fireHeightChannel)
-            {
-                definition.Channels.Add(new DMXChannelData {
-                    Name = "FireHeight",
-                    Address = (ushort)(definition.Channels.Count + 1)
-                });
-            }
+
             return definition;
         }
     }
