@@ -27,16 +27,16 @@ namespace kadmium_dmx_test
         public static Fixture GetSharedMasterAndStrobeFixture()
         {
             FixtureDefinition definition = FixtureDefinitionTests.GetSharedMasterAndStrobeFixture();
-            Fixture fixture = GetFixture(1, definition, new JObject());
+            Fixture fixture = GetFixture(1, definition);
             return fixture;
         }
 
-        public static Fixture GetMovingFixture(string axisName, int axisMin, int axisMax, JObject options = null)
+        public static Fixture GetMovingFixture(string axisName, int axisMin, int axisMax, FixtureOptions options = null)
         {
             FixtureDefinition definition = FixtureDefinitionTests.GetMovingFixtureDefinition(axisName, axisMin, axisMax);
             FixtureDefinitionTests.GetMovingFixtureDefinition(axisName, axisMin, axisMax);
             Group group = GroupTests.GetGroup();
-            Fixture fixture = GetFixture(1, definition, options ?? new JObject());
+            Fixture fixture = GetFixture(1, definition, options);
             return fixture;
         }
 
@@ -44,16 +44,16 @@ namespace kadmium_dmx_test
         {
             FixtureDefinition definition = FixtureDefinitionTests.GetFireFixtureDefinition(fireHeightChannel);
             Group group = GroupTests.GetGroup();
-            Fixture fixture = GetFixture(1, definition, new JObject());
+            Fixture fixture = GetFixture(1, definition, null);
             return fixture;
         }
 
-        public static Fixture GetFixture(int address, IFixtureDefinition definition, JObject options)
+        public static Fixture GetFixture(ushort address, IFixtureDefinition definition, FixtureOptions options = null)
         {
             IFixtureData data = new FixtureData
             {
                 Address = address,
-                Options = options?.ToString() ?? "{}"
+                Options = options ?? new FixtureOptions()
             };
             Fixture fixture = new Fixture(data, definition);
 

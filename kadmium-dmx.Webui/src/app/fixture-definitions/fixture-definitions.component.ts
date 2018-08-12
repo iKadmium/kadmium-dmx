@@ -1,24 +1,20 @@
-import { Component, OnInit, AfterViewInit, ViewChild } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
 import { AsyncFileReader } from "../async-file-reader";
-import { StatusCode } from "../status-code.enum";
 import { Title } from "@angular/platform-browser";
-import { FixtureDefinitionService } from "api/services";
 import { FixtureDefinitionSkeleton, FixtureDefinition } from "api/models";
-import { MatTableDataSource } from "@angular/material/table";
 import { MatSort } from "@angular/material/sort";
 import { MatPaginator } from "@angular/material/paginator";
 import { MatSnackBar, MatDialog } from '@angular/material';
+import { AnimationLibrary } from "../animation-library";
+import { APIClient } from 'api';
+import { URLs } from '../url';
 import { DeleteConfirmDialogComponent } from 'app/delete-confirm-dialog/delete-confirm-dialog.component';
-import { BehaviorSubject } from 'rxjs/BehaviorSubject';
-import { AnimationLibrary } from "app/animation-library";
-import { ApiConfiguration } from "api/api-configuration";
-import { URLs } from "app/url";
 
 @Component({
     selector: 'app-fixture-definitions',
     templateUrl: './fixture-definitions.component.html',
     styleUrls: ['./fixture-definitions.component.css'],
-    providers: [FixtureDefinitionService],
+    providers: [APIClient],
     animations: [AnimationLibrary.slideIn(), AnimationLibrary.fadeIn(200), AnimationLibrary.fadeOut(200)]
 })
 export class FixtureDefinitionsComponent implements OnInit
@@ -33,8 +29,8 @@ export class FixtureDefinitionsComponent implements OnInit
     @ViewChild(MatSort) sort: MatSort;
     @ViewChild(MatPaginator) paginator: MatPaginator;
 
-    constructor(private fixtureDefinitionsService: FixtureDefinitionService,
-        private snackbar: MatSnackBar, title: Title, private dialog: MatDialog)
+    constructor(private apiClient: APIClient, private dialog: MatDialog,
+        private snackbar: MatSnackBar, title: Title)
     {
         title.setTitle("Fixture Definitions");
         this.skeletons = [];
@@ -45,7 +41,7 @@ export class FixtureDefinitionsComponent implements OnInit
 
     ngOnInit(): void
     {
-        this.fixtureDefinitionsService.getFixtureDefinitionSkeletons()
+        this.apiClient.getFixtureDefinitions()
             .toPromise()
             .then(response => 
             {
@@ -83,14 +79,17 @@ export class FixtureDefinitionsComponent implements OnInit
         return filtered;
     }
 
-    private getDownloadUrl(fixture: FixtureDefinitionSkeleton): string
+    public upload(fileInput: any): void
     {
-        return URLs.getApiURL() + "/api/FixtureDefinition/" + fixture.id;
+        (fileInput as HTMLInputElement).click();
     }
 
-    private getDownloadFilename(fixture: FixtureDefinitionSkeleton): string
+    public async filesSelected(files: File[]): Promise<void>
     {
-        return fixture.manufacturer + ' ' + fixture.model + '.json';
+        for (let file of files)
+        {
+            await this.uploadFile(file);
+        }
     }
 
     private deleteConfirm(fixture: FixtureDefinitionSkeleton): void
@@ -102,7 +101,7 @@ export class FixtureDefinitionsComponent implements OnInit
                 try
                 {
                     this.saving = true;
-                    await this.fixtureDefinitionsService.deleteFixtureDefinitionById(fixture.id).toPromise();
+                    await this.apiClient.deleteFixtureDefinition({ manufacturer: fixture.manufacturer, model: fixture.model }).toPromise();
                     this.snackbar.open(fixture.manufacturer + " " + fixture.model + " was deleted", "Close", { duration: 3000 });
                     let index = this.skeletons.indexOf(fixture);
                     this.skeletons.splice(index, 1);
@@ -119,17 +118,14 @@ export class FixtureDefinitionsComponent implements OnInit
         });
     }
 
-    public upload(fileInput: any): void
+    public getDownloadURL(skeleton: FixtureDefinitionSkeleton): string
     {
-        (fileInput as HTMLInputElement).click();
+        return `${URLs.getApiURL()}/${skeleton.manufacturer}/${skeleton.model}/download`;
     }
 
-    public async filesSelected(files: File[]): Promise<void>
+    public getDownloadFilename(skeleton: FixtureDefinitionSkeleton): string
     {
-        for (let file of files)
-        {
-            await this.uploadFile(file);
-        }
+        return `${skeleton.manufacturer} ${skeleton.model}.json`;
     }
 
     private async uploadFile(file: File): Promise<void>
@@ -137,7 +133,7 @@ export class FixtureDefinitionsComponent implements OnInit
         try
         {
             let definition = await AsyncFileReader.read<FixtureDefinition>(file);
-            await this.fixtureDefinitionsService.postFixtureDefinitionById(definition).toPromise();
+            await this.apiClient.postFixtureDefinition({ value: definition }).toPromise();
             this.skeletons.push(definition.skeleton);
             this.snackbar.open("Successfully added " + definition.skeleton.manufacturer + " " + definition.skeleton.model, "Close", { duration: 3000 });
         }

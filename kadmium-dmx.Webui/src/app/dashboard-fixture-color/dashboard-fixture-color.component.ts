@@ -1,8 +1,8 @@
 import { Component, OnInit, Input, OnChanges, SimpleChanges, OnDestroy, Output, EventEmitter } from '@angular/core';
-import { PreviewFixture } from "app/preview-fixture";
-import { PreviewVenue } from "app/preview-venue";
-import { PreviewAttribute } from "app/preview-attribute";
-import { FixtureStreamService, AttributeUpdateMessage } from 'app/fixture-stream.service';
+import { PreviewFixture } from "../preview-fixture";
+import { PreviewVenue } from "../preview-venue";
+import { PreviewAttribute } from "../preview-attribute";
+import { FixtureStreamService, AttributeUpdateMessage } from '../fixture-stream.service';
 
 @Component({
 	selector: 'app-dashboard-fixture-color',
@@ -13,6 +13,7 @@ import { FixtureStreamService, AttributeUpdateMessage } from 'app/fixture-stream
 export class DashboardFixtureColorComponent implements OnInit
 {
 	@Input() fixture: PreviewFixture;
+	@Input() universeID: number;
 	@Input() attributes: PreviewAttribute[];
 	@Output() setValue = new EventEmitter<AttributeUpdateMessage>();
 	public color: string = "";
@@ -20,7 +21,6 @@ export class DashboardFixtureColorComponent implements OnInit
 	constructor() 
 	{
 	}
-
 
 	ngOnInit()
 	{
@@ -37,17 +37,20 @@ export class DashboardFixtureColorComponent implements OnInit
 			{
 				attributeName: "Hue",
 				attributeValue: hsv.h,
-				fixtureID: this.fixture.id
+				fixtureAddress: this.fixture.address,
+				universeID: this.universeID
 			},
 			{
 				attributeName: "Saturation",
 				attributeValue: hsv.s,
-				fixtureID: this.fixture.id
+				fixtureAddress: this.fixture.address,
+				universeID: this.universeID
 			},
 			{
 				attributeName: "Brightness",
 				attributeValue: hsv.v,
-				fixtureID: this.fixture.id
+				fixtureAddress: this.fixture.address,
+				universeID: this.universeID
 			}
 		]
 

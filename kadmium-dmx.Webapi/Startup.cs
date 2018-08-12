@@ -17,6 +17,10 @@ using kadmium_dmx_data.Mongo;
 using kadmium_dmx_data.Storage;
 using kadmium_dmx_data.Types.Settings;
 using kadmium_dmx_core;
+using NSwag.AspNetCore;
+using NSwag.SwaggerGeneration.Processors;
+using kadmium_dmx_webapi.Controllers;
+using Newtonsoft.Json.Converters;
 
 namespace kadmium_dmx_webapi
 {
@@ -46,10 +50,15 @@ namespace kadmium_dmx_webapi
                     options.Providers.Add<GzipCompressionProvider>();
                 });
 
+            services.AddMvcCore().AddApiExplorer();
+
             services.AddMvc(options =>
             {
                 options.Conventions.Add(new KebabCaseRoutingConvention());
-            });
+            })
+            .SetCompatibilityVersion(Microsoft.AspNetCore.Mvc.CompatibilityVersion.Latest)
+            .AddJsonOptions(options => options.SerializerSettings.Converters.Add(new StringEnumConverter()));
+
             services.AddCors(options =>
             {
                 options.AddPolicy("AllowAll", p => p.AllowAnyOrigin()
@@ -57,17 +66,7 @@ namespace kadmium_dmx_webapi
                     .AllowAnyHeader());
             });
 
-            services.AddSwaggerGen(c =>
-            {
-                c.SwaggerDoc("v1", new Swashbuckle.AspNetCore.Swagger.Info
-                {
-                    Title = "kadmium-osc-dmx API",
-                    Version = "v1"
-                });
-
-                var filePath = Path.Combine(ApplicationEnvironment.ApplicationBasePath, "kadmium-dmx-webapi.xml");
-                c.IncludeXmlComments(filePath);
-            });
+            services.AddSwagger();
 
             MongoClient client = new MongoClient("mongodb://docker:32768");
             var database = client.GetDatabase("kadmium-dmx");
@@ -84,6 +83,7 @@ namespace kadmium_dmx_webapi
             services.AddTransient<ISettingsStore, FileSettingsStore>();
 
             services.AddSingleton<IMasterController>(MasterController);
+            services.AddSingleton<IRenderer>(MasterController.Renderer);
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -102,10 +102,8 @@ namespace kadmium_dmx_webapi
             app.UseResponseCompression();
             app.UseStaticFiles();
 
-            app.UseSwagger();
-            app.UseSwaggerUI(c =>
-            {
-                c.SwaggerEndpoint("/swagger/v1/swagger.json", "kadmium-osc-dmx API v1");
+            app.UseSwaggerUi3WithApiExplorer(config => {
+                config.GeneratorSettings.OperationProcessors.Add(new SwaggerOperationProcessor());
             });
 
             app.UseWebSockets();

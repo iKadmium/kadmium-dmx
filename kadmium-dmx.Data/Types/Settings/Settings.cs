@@ -4,8 +4,8 @@
     {
         public int WebPort { get; set; }
         public int OscPort { get; set; }
-        public IEnttecProTransmitterSettings EnttecProTransmitter { get; set; }
-        public ISacnTransmitterSettings SacnTransmitter {get;set;}
+        public EnttecProTransmitterSettings EnttecProTransmitter { get; set; }
+        public SacnTransmitterSettings SacnTransmitter {get;set;}
 
         public Settings()
         {

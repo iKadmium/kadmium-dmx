@@ -13,16 +13,12 @@ namespace kadmium_dmx_core
 {
     public interface IMasterController
     {
-        void SetGroups(IEnumerable<IGroupData> data);
         Dictionary<string, Group> Groups { get; }
         Venue Venue { get; }
         List<Transmitter> Transmitters { get; }
         Listener Listener { get; }
-        Status SolverStatus { get; }
 
-        event EventHandler OnUpdate;
-
-        void LoadVenue(IVenueData venue, IDictionary<FixtureDefinitionSkeleton, FixtureDefinition> definitions);
+        Task LoadVenue(IVenueData venue, IDictionary<FixtureDefinitionSkeleton, IFixtureDefinition> definitions, IEnumerable<IGroupData> groups);
         Task SetSettings(Settings value);
     }
 }

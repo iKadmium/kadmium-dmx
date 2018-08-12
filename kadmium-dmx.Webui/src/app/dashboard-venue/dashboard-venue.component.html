@@ -35,5 +35,5 @@
 </mat-card>
 
 <mat-menu #appMenu="matMenu">
-    <button mat-menu-item *ngFor="let venue of venueSkeletons" (click)="loadVenue(venue.id)"> {{venue.name}} </button>
+    <button mat-menu-item *ngFor="let venue of venueSkeletons" (click)="loadVenue(venue)"> {{venue}} </button>
 </mat-menu>

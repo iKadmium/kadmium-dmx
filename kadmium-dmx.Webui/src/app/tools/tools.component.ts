@@ -1,27 +1,24 @@
 import { Component, OnInit } from '@angular/core';
-import { Group } from 'api/models/group';
-import { GroupService } from 'api/services/group.service';
-import { AnimationLibrary } from 'app/animation-library';
+import { AnimationLibrary } from '../animation-library';
 import { MatSelectionList } from '@angular/material';
-import { Settings } from 'api/models/settings';
-import { SettingsService } from 'api/services/settings.service';
 import { Title } from '@angular/platform-browser';
+import { APIClient, GroupData, Settings } from 'api';
 
 @Component({
 	selector: 'app-tools',
 	templateUrl: './tools.component.html',
 	styleUrls: ['./tools.component.scss'],
-	providers: [GroupService, SettingsService],
+	providers: [APIClient],
 	animations: [AnimationLibrary.animations()]
 })
 export class ToolsComponent implements OnInit
 {
 	public loading: boolean
-	public groups: Group[];
+	public groups: GroupData[];
 	public attributes: Attribute[];
 	public settings: Settings;
 
-	constructor(private groupService: GroupService, private settingsService: SettingsService, private titleService: Title)
+	constructor(private apiClient: APIClient, private titleService: Title)
 	{
 		this.loading = true;
 	}
@@ -45,14 +42,14 @@ export class ToolsComponent implements OnInit
 			new Attribute("FireActivate")
 		];
 
-		promises.push(this.groupService.getGroups()
+		promises.push(this.apiClient.getGroups()
 			.toPromise()
 			.then(response =>
 			{
 				this.groups = response;
 			}));
 
-		promises.push(this.settingsService.getSettings()
+		promises.push(this.apiClient.getSettings()
 			.toPromise()
 			.then(response =>
 			{
@@ -148,7 +145,7 @@ export class ToolsComponent implements OnInit
 	{
 		let ioLines = [];
 		let selectedAttributes: Attribute[] = attributesList.selectedOptions.selected.map(x => x.value);
-		let selectedGroups: Group[] = groupsList.selectedOptions.selected.map(x => x.value);
+		let selectedGroups: GroupData[] = groupsList.selectedOptions.selected.map(x => x.value);
 
 		ioLines.push(
 			`@output lightingOutput OSC "backingtracks.local:${this.settings.oscPort}"`,

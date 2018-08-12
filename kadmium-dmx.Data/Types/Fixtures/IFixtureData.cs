@@ -7,9 +7,9 @@ namespace kadmium_dmx_data.Types.Fixtures
 {
     public interface IFixtureData
     {
-        int Address { get; set; }
+        ushort Address { get; set; }
         FixtureDefinitionSkeleton Type { get; set; }
-        string Options { get; set; }
+        FixtureOptions Options { get; set; }
         string Group { get; set; }
     }
 }

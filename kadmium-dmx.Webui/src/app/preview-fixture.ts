@@ -4,13 +4,12 @@ import { PreviewAttribute } from "./preview-attribute";
 import { RGB } from "./color";
 import { PreviewFixtureData } from "./preview.service";
 import { ActiveFixture } from "api/models";
-import { DashboardFixturePreviewComponent } from "app/dashboard-fixture-preview/dashboard-fixture-preview.component";
+import { DashboardFixturePreviewComponent } from "./dashboard-fixture-preview/dashboard-fixture-preview.component";
 
 export class PreviewFixture
 {
     public static strobeFrames = 1;
 
-    id: number;
     group: string;
 
     address: number;
@@ -27,7 +26,6 @@ export class PreviewFixture
 
     constructor(data: ActiveFixture)
     {
-        this.id = data.id;
         this.group = data.group;
         this.address = data.address;
         this.manufacturer = data.manufacturer;

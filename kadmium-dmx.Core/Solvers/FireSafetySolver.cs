@@ -10,7 +10,7 @@ namespace kadmium_dmx_core.Solvers
     public class FireSafetySolver : FixtureSolver
     {
         public static float DecayTime = 1f;
-        public static float DecayRate = (DecayTime / MasterController.UPDATES_PER_SECOND);
+        public static float DecayRate = (DecayTime / Renderer.UPDATES_PER_SECOND);
         private Fixture Fixture { get; }
 
         public FireSafetySolver(Fixture fixture) : base(fixture, "FireSafety", "FireActivate")

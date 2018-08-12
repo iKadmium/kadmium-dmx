@@ -63,7 +63,7 @@ namespace kadmium_dmx_test.Solvers.Solvers
                     Address = (ushort)(definition.Channels.Count + 1)
                 });
             }
-            var data = new FixtureData() { Options = "{}" };
+            var data = new FixtureData() { Options = new FixtureOptions() };
             Fixture fixture = new Fixture(data, definition);
             return fixture;
         }

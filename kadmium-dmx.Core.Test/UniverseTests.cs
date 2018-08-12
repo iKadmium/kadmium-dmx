@@ -25,7 +25,7 @@ namespace kadmium_dmx_test
                         }
                     }
                 },
-                new Dictionary<FixtureDefinitionSkeleton, FixtureDefinition>
+                new Dictionary<FixtureDefinitionSkeleton, IFixtureDefinition>
                 {
                     { definition.Skeleton, definition }
                 }

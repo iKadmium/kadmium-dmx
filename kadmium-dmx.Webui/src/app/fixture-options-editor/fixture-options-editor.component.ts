@@ -1,14 +1,14 @@
 import { Component, OnInit, Input, SimpleChanges, Inject } from '@angular/core';
-import { FixtureDefinition, FixtureDefinitionSkeleton, Fixture } from "api/models";
-import { FixtureDefinitionService } from "api/services";
+import { FixtureDefinition, FixtureDefinitionSkeleton, FixtureData } from "api/models";
 import { MAT_DIALOG_DATA, MatDialogRef } from "@angular/material/dialog";
-import { AnimationLibrary } from "app/animation-library";
+import { AnimationLibrary } from "../animation-library";
+import { APIClient } from 'api';
 
 @Component({
     selector: 'app-fixture-options-editor',
     templateUrl: './fixture-options-editor.component.html',
     styleUrls: ['./fixture-options-editor.component.css'],
-    providers: [FixtureDefinitionService],
+    providers: [APIClient],
     animations: [AnimationLibrary.animations()]
 })
 export class FixtureOptionsEditorComponent implements OnInit
@@ -19,11 +19,11 @@ export class FixtureOptionsEditorComponent implements OnInit
     private axisOptions: AxisOptions[];
 
     public definition: FixtureDefinition;
-    public fixture: Fixture;
+    public fixture: FixtureData;
     public options: FixtureOptions;
 
-    constructor(public dialogRef: MatDialogRef<FixtureOptionsEditorComponent>, private fixtureDefinitionService: FixtureDefinitionService,
-        @Inject(MAT_DIALOG_DATA) public data: { fixture: Fixture })
+    constructor(public dialogRef: MatDialogRef<FixtureOptionsEditorComponent>, private apiClient: APIClient,
+        @Inject(MAT_DIALOG_DATA) public data: { fixture: FixtureData })
     {
         this.fixture = data.fixture;
         this.options = {
@@ -47,7 +47,7 @@ export class FixtureOptionsEditorComponent implements OnInit
 
     ngOnInit(): void
     {
-        this.fixtureDefinitionService.getFixtureDefinitionById(this.fixture.type.id)
+        this.apiClient.getFixtureDefinition({ manufacturer: this.fixture.type.manufacturer, model: this.fixture.type.model })
             .toPromise()
             .then(response =>
             {

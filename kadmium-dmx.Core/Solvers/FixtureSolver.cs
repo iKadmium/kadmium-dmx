@@ -24,7 +24,7 @@ namespace kadmium_dmx_core.Solvers
             }
         }
 
-        public static IEnumerable<FixtureSolver> GetDefaultSolvers(Fixture fixture, IFixtureDefinition definition, JObject options)
+        public static IEnumerable<FixtureSolver> GetDefaultSolvers(Fixture fixture, IFixtureDefinition definition, FixtureOptions options)
         {
             List<FixtureSolver> solvers = new List<FixtureSolver>();
             if (MasterAtFullSolver.SuitableFor(definition))

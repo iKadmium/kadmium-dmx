@@ -1,7 +1,7 @@
 import { Component, OnInit, Input, ContentChildren, ViewChildren, QueryList, EventEmitter, Output } from '@angular/core';
-import { PreviewFixture } from "app/preview-fixture";
-import { DashboardFixturePreviewComponent } from "app/dashboard-fixture-preview/dashboard-fixture-preview.component";
-import { PreviewUniverse } from "app/preview-universe";
+import { PreviewFixture } from "../preview-fixture";
+import { DashboardFixturePreviewComponent } from "../dashboard-fixture-preview/dashboard-fixture-preview.component";
+import { PreviewUniverse } from "../preview-universe";
 
 @Component({
     selector: 'app-dashboard-fixture-list',

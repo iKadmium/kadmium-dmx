@@ -6,6 +6,6 @@ namespace kadmium_dmx_data.Storage
     public interface ISettingsStore
     {
         Task<Settings> GetSettings();
-        Task SaveSettings(ISettings settings);
+        Task SaveSettings(Settings settings);
     }
 }

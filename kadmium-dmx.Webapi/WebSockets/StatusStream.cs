@@ -25,7 +25,6 @@ namespace kadmium_dmx_webapi.WebSockets
                 transmitter.Status.Updated += TransmitterStatusUpdated;
             }
             Venue.Status.Updated += VenueStatusUpdated;
-            MasterController.SolverStatus.Updated += SolverStatusUpdated;
         }
 
         public async override void OnMessage(string message)
@@ -67,7 +66,6 @@ namespace kadmium_dmx_webapi.WebSockets
 
         public async Task UpdateAll()
         {
-            await SendUpdate("Solvers", MasterController.SolverStatus.StatusCode, MasterController.SolverStatus.Message);
             await SendUpdate("OSCListeners", MasterController.Listener.Status.StatusCode, MasterController.Listener.Status.Message);
             foreach (var transmitter in MasterController.Transmitters)
             {
@@ -102,7 +100,6 @@ namespace kadmium_dmx_webapi.WebSockets
                 transmitter.Status.Updated -= TransmitterStatusUpdated;
             }
             Venue.Status.Updated -= VenueStatusUpdated;
-            MasterController.SolverStatus.Updated -= SolverStatusUpdated;
         }
 
         public static async Task Acceptor(HttpContext httpContext, Func<Task> n)

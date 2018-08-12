@@ -1,21 +1,21 @@
 import { Component, OnInit, Input, EventEmitter, Output, OnChanges, SimpleChanges, OnDestroy, ViewChildren, QueryList, ViewChild, ElementRef, AfterViewInit } from '@angular/core';
-import { UniverseUpdateData, UniverseStreamService } from "app/universe-stream.service";
-import { StatusCode } from "app/status-code.enum";
+import { UniverseUpdateData, UniverseStreamService } from "../universe-stream.service";
+import { StatusCode } from "../status-code.enum";
 import { FormControl } from "@angular/forms";
-import { PreviewVenue } from "app/preview-venue";
-import { PreviewAttribute } from "app/preview-attribute";
-import { PreviewUniverse } from "app/preview-universe";
-import { UniverseService } from "api/services";
+import { PreviewVenue } from "../preview-venue";
+import { PreviewAttribute } from "../preview-attribute";
+import { PreviewUniverse } from "../preview-universe";
 import { ActivatedRoute } from "@angular/router";
-import { PreviewUniverseCell } from "app/preview-universe-cell";
+import { PreviewUniverseCell } from "../preview-universe-cell";
 import { MatSnackBar } from '@angular/material';
-import { AnimationLibrary } from "app/animation-library";
+import { AnimationLibrary } from "../animation-library";
+import { APIClient } from 'api';
 
 @Component({
     selector: 'app-dashboard-universe',
     templateUrl: './dashboard-universe.component.html',
     styleUrls: ['./dashboard-universe.component.css'],
-    providers: [UniverseStreamService, UniverseService],
+    providers: [UniverseStreamService, APIClient],
     animations: [AnimationLibrary.animations()]
 })
 export class DashboardUniverseComponent implements OnInit, AfterViewInit, OnDestroy
@@ -38,7 +38,7 @@ export class DashboardUniverseComponent implements OnInit, AfterViewInit, OnDest
     private canvas: HTMLCanvasElement;
     private context: CanvasRenderingContext2D;
 
-    constructor(private snackbar: MatSnackBar, private universeService: UniverseService,
+    constructor(private snackbar: MatSnackBar, private apiClient: APIClient,
         private universeStreamService: UniverseStreamService, private route: ActivatedRoute) 
     {
         this.cells = [];
@@ -82,7 +82,7 @@ export class DashboardUniverseComponent implements OnInit, AfterViewInit, OnDest
     ngOnInit(): void
     {
         let universeID = parseInt(this.route.snapshot.paramMap.get('universeID'));
-        this.universeService.getActiveUniverseByID(universeID)
+        this.apiClient.getActiveUniverse({ universeID: universeID })
             .toPromise()
             .then(response =>
             {

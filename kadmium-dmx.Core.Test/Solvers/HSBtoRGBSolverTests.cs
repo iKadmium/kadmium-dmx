@@ -40,12 +40,12 @@ namespace kadmium_dmx_test.Solvers
             Assert.Contains(fixture.Solvers, (x => x is HSBtoRGBSolver));
         }
 
-        public static Fixture GetRGBFixture(JObject options = null)
+        public static Fixture GetRGBFixture(FixtureOptions options = null)
         {
             var data = new FixtureData
             {
                 Address = 1,
-                Options = options?.ToString() ?? "{}"
+                Options = options ?? new FixtureOptions()
             };
             var definition = FixtureDefinitionTests.GetRGBFixtureDefinition();
             var fixture = new Fixture(data, definition);

@@ -1,4 +1,5 @@
 ﻿using kadmium_dmx_core.Solvers;
+using kadmium_dmx_data.Types.Fixtures;
 using Newtonsoft.Json.Linq;
 using Xunit;
 
@@ -28,12 +29,13 @@ namespace kadmium_dmx_test.Solvers
             Assert.Equal(limit, fixture.FrameSettables["Blue"].Value);
         }
 
-        static JObject GetLimitedOptions(float limit)
+        static FixtureOptions GetLimitedOptions(float limit)
         {
-            JObject obj = new JObject(
-                new JProperty("maxBrightness", limit)
-            );
-            return obj;
+            FixtureOptions options = new FixtureOptions
+            {
+                MaxBrightness = limit
+            };
+            return options;
         }
     }
 }

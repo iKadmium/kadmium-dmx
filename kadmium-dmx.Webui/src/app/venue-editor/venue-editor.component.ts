@@ -3,21 +3,21 @@ import { ActivatedRoute, Router } from "@angular/router";
 import { UniverseEditorComponent } from "../universe-editor/universe-editor.component";
 import { FixtureOptionsEditorComponent } from "../fixture-options-editor/fixture-options-editor.component";
 import { StatusCode } from "../status-code.enum";
-import { GroupService, VenueService } from "api/services";
-import { Group, Venue, Universe } from "api/models";
+import { UniverseData } from "api/models";
 import { Title } from "@angular/platform-browser";
 import { MatTabGroup } from "@angular/material/tabs";
 import { MatTabChangeEvent, MatTab, MatSnackBar } from '@angular/material';
 import { NgForm } from '@angular/forms';
-import { AnimationLibrary } from "app/animation-library";
-import { EditorComponent } from "app/editor-component/editor-component";
+import { AnimationLibrary } from "../animation-library";
+import { EditorComponent } from "../editor-component/editor-component";
+import { APIClient, GroupData, VenueData } from 'api';
 
 @Component({
     selector: 'app-venue-editor',
     templateUrl: './venue-editor.component.html',
     styleUrls: ['./venue-editor.component.css'],
-    providers: [VenueService, GroupService],
-    animations: [AnimationLibrary.animations()]
+    animations: [AnimationLibrary.animations()],
+    providers: [APIClient]
 })
 export class VenueEditorComponent extends EditorComponent implements OnInit
 {
@@ -26,17 +26,17 @@ export class VenueEditorComponent extends EditorComponent implements OnInit
 
     @ViewChild("editorForm") formChild: NgForm;
 
-    private venueId: number | null;
+    private venueName: string | null;
     public loading: boolean;
     public saving: boolean;
-    public groups: Group[];
+    public groups: GroupData[];
 
-    public venue: Venue;
+    public venue: VenueData;
 
-    public activeUniverse: Universe;
+    public activeUniverse: UniverseData;
 
-    constructor(private route: ActivatedRoute, private venueService: VenueService, private snackbar: MatSnackBar,
-        private groupService: GroupService, private router: Router, private title: Title)
+    constructor(private route: ActivatedRoute, private apiClient: APIClient, private snackbar: MatSnackBar,
+        private router: Router, private title: Title)
     {
         super();
         this.saving = false;
@@ -45,10 +45,10 @@ export class VenueEditorComponent extends EditorComponent implements OnInit
 
     ngOnInit(): void
     {
-        this.venueId = this.route.snapshot.params['id'];
+        this.venueName = this.route.snapshot.params['id'];
         this.title.setTitle("Venue Editor");
         this.form = this.formChild;
-        this.groupService.getGroups()
+        this.apiClient.getGroups()
             .toPromise()
             .then(response =>
             {
@@ -57,13 +57,15 @@ export class VenueEditorComponent extends EditorComponent implements OnInit
                 if (this.isNewItem())
                 {
                     this.venue = {
+                        id: "",
+                        name: "",
                         universes: [this.createUniverse("New Universe", 1)]
                     };
                     this.loading = false;
                 }
                 else
                 {
-                    this.venueService.getVenueById(this.venueId)
+                    this.apiClient.getVenue({ name: this.venueName })
                         .toPromise()
                         .then(response => 
                         {
@@ -76,12 +78,12 @@ export class VenueEditorComponent extends EditorComponent implements OnInit
 
     private isNewItem(): boolean
     {
-        return this.venueId == null;
+        return this.venueName == null;
     }
 
-    private createUniverse(name: string, universeID: number): Universe
+    private createUniverse(name: string, universeID: number): UniverseData
     {
-        let universe: Universe = {
+        let universe: UniverseData = {
             name: name,
             fixtures: [],
             universeID: universeID
@@ -109,13 +111,13 @@ export class VenueEditorComponent extends EditorComponent implements OnInit
         {
             if (this.isNewItem())
             {
-                await this.venueService.postVenue(this.venue).toPromise();
+                await this.apiClient.postVenue({ value: this.venue }).toPromise();
                 this.saved = true;
                 this.snackbar.open("Successfully added " + this.venue.name, "Close", { duration: 3000 });
             }
             else
             {
-                await this.venueService.putVenue({ id: this.venue.name, venue: this.venue }).toPromise();
+                await this.apiClient.putVenue({ originalName: this.venueName, value: this.venue }).toPromise();
                 this.saved = true;
                 this.snackbar.open("Successfully edited " + this.venue.name, "Close", { duration: 3000 });
             }

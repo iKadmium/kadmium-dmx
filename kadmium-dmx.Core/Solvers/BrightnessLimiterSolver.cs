@@ -12,9 +12,9 @@ namespace kadmium_dmx_core.Solvers
         public string[] TargetAttributes = { "Red", "Green", "Blue", "White", "Amber", "UV" };
         public float MaxBrightness { get; set; }
 
-        public BrightnessLimiterSolver(Fixture fixture, JObject options) : base(fixture)
+        public BrightnessLimiterSolver(Fixture fixture, FixtureOptions options) : base(fixture)
         {
-            MaxBrightness = options["maxBrightness"].Value<float>();
+            MaxBrightness = options.MaxBrightness.Value;
             var matchingAttributes = from attribute in fixture.Settables.Values
                                      where TargetAttributes.Contains(attribute.Name)
                                      select attribute;
@@ -43,9 +43,9 @@ namespace kadmium_dmx_core.Solvers
             }
         }
 
-        internal static bool SuitableFor(IFixtureDefinition definition, JObject options)
+        internal static bool SuitableFor(IFixtureDefinition definition, FixtureOptions options)
         {
-            return options["maxBrightness"]?.Value<float>() < 1f;
+            return options.MaxBrightness.HasValue && options.MaxBrightness.Value < 1f;
         }
     }
 }

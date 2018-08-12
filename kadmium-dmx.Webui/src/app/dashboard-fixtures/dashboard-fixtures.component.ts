@@ -1,19 +1,18 @@
-import { Component, OnInit, ViewChild, ElementRef, OnDestroy } from '@angular/core';
+import { Component, OnInit, ViewChild, OnDestroy } from '@angular/core';
 import { ActivatedRoute } from "@angular/router";
-import { PreviewUniverse } from "app/preview-universe";
-import { UniverseService } from "api/services";
-import { StatusCode } from "app/status-code.enum";
-import { DashboardFixtureListComponent } from "app/dashboard-fixture-list/dashboard-fixture-list.component";
-import { UniverseStreamService } from "app/universe-stream.service";
-import { PreviewFixture } from "app/preview-fixture";
+import { PreviewUniverse } from "../preview-universe";
+import { DashboardFixtureListComponent } from "../dashboard-fixture-list/dashboard-fixture-list.component";
+import { UniverseStreamService } from "../universe-stream.service";
+import { PreviewFixture } from "../preview-fixture";
 import { MatSnackBar } from '@angular/material';
-import { AnimationLibrary } from "app/animation-library";
+import { AnimationLibrary } from "../animation-library";
+import { APIClient } from 'api';
 
 @Component({
     selector: 'app-dashboard-fixtures',
     templateUrl: './dashboard-fixtures.component.html',
     styleUrls: ['./dashboard-fixtures.component.css'],
-    providers: [UniverseStreamService, UniverseService],
+    providers: [UniverseStreamService, APIClient],
     animations: [AnimationLibrary.animations()]
 })
 export class DashboardFixturesComponent implements OnInit, OnDestroy
@@ -21,14 +20,15 @@ export class DashboardFixturesComponent implements OnInit, OnDestroy
     @ViewChild(DashboardFixtureListComponent) fixtureList: DashboardFixtureListComponent;
 
     public universe: PreviewUniverse;
-    private renderTimer: number;
     private data: Uint8Array;
 
     public selectedFixture: PreviewFixture;
 
     public loading: boolean;
 
-    constructor(private route: ActivatedRoute, private universeService: UniverseService, private universeStreamService: UniverseStreamService,
+    private renderTimer: number;
+
+    constructor(private route: ActivatedRoute, private apiClient: APIClient, private universeStreamService: UniverseStreamService,
         private snackbar: MatSnackBar)
     {
         this.data = new Uint8Array(512);
@@ -38,7 +38,7 @@ export class DashboardFixturesComponent implements OnInit, OnDestroy
     ngOnInit() 
     {
         let universeID = parseInt(this.route.snapshot.paramMap.get('universeID'));
-        this.universeService.getActiveUniverseByID(universeID)
+        this.apiClient.getActiveUniverse({ universeID: universeID })
             .toPromise()
             .then(response =>
             {

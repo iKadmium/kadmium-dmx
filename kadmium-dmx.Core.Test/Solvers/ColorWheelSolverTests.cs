@@ -98,7 +98,7 @@ namespace kadmium_dmx_test.Solvers
             IFixtureData data = new FixtureData
             {
                 Address = 1,
-                Options = "{}"
+                Options = new FixtureOptions()
             };
             Fixture fixture = new Fixture(data, definition);
             return fixture;

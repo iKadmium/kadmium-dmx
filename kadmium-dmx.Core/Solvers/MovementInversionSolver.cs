@@ -11,9 +11,9 @@ namespace kadmium_dmx_core.Solvers
     {
         public IEnumerable<string> InvertedAxis { get; set; }
 
-        public MovementInversionSolver(Fixture fixture, IFixtureDefinition definition, JObject options) : base(fixture)
+        public MovementInversionSolver(Fixture fixture, IFixtureDefinition definition, FixtureOptions options) : base(fixture)
         {
-            InvertedAxis = GetInvertedAxis(definition, options);
+            InvertedAxis = options.AxisInversions;
         }
 
         public override void Solve(Dictionary<string, FixtureAttribute> Attributes)
@@ -24,21 +24,9 @@ namespace kadmium_dmx_core.Solvers
             }
         }
 
-        private static IEnumerable<string> GetInvertedAxis(IFixtureDefinition definition, JObject options)
+        public static bool SuitableFor(IFixtureDefinition definition, FixtureOptions options)
         {
-            var invertOptions = from option in options["axisInversions"]?.Values<string>() ?? Enumerable.Empty<string>()
-                                select option;
-
-            var invertedAxis = from option in invertOptions
-                               where definition.Movements.Any(x => x.Name == option)
-                               select option;
-
-            return invertedAxis;
-        }
-
-        public static bool SuitableFor(IFixtureDefinition definition, JObject options)
-        {
-            return GetInvertedAxis(definition, options).Count() > 0;
+            return options.AxisInversions.Any();
         }
     }
 }

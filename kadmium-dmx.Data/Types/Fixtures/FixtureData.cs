@@ -7,11 +7,11 @@ using Newtonsoft.Json.Linq;
 
 namespace kadmium_dmx_data.Types.Fixtures
 {
-    public class FixtureData : BsonSerializable, IFixtureData
+    public class FixtureData : IFixtureData
     {
-        public int Address { get; set; }
+        public ushort Address { get; set; }
         public FixtureDefinitionSkeleton Type { get; set; }
-        public string Options { get; set; }
+        public FixtureOptions Options { get; set; }
         public string Group { get; set; }
     }
 }

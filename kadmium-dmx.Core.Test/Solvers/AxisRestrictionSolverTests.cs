@@ -1,6 +1,8 @@
 ﻿using kadmium_dmx_core.Fixtures;
 using kadmium_dmx_core.Solvers;
+using kadmium_dmx_data.Types.Fixtures;
 using Newtonsoft.Json.Linq;
+using System.Collections.Generic;
 using System.Linq;
 using Xunit;
 
@@ -61,24 +63,26 @@ namespace kadmium_dmx_test.Solvers
 
         public static Fixture GetRestrictedFixture(string movementAxis, int originalMin, int originalMax, int restrictedMin, int restrictedMax)
         {
-            JObject options = GetRestrictionOptions(movementAxis, restrictedMin, restrictedMax);
+            FixtureOptions options = GetRestrictionOptions(movementAxis, restrictedMin, restrictedMax);
             Fixture fixture = FixtureTests.GetMovingFixture(movementAxis, originalMin, originalMax, options);
             return fixture;
         }
 
-        public static JObject GetRestrictionOptions(string name, int min, int max)
+        public static FixtureOptions GetRestrictionOptions(string name, int min, int max)
         {
-            JObject options = new JObject(
-                new JProperty("axisRestrictions",
-                    new JArray(
-                        new JObject(
-                            new JProperty("name", name),
-                            new JProperty("min", min),
-                            new JProperty("max", max)
-                        )
-                    )
-                )
-            );
+            FixtureOptions options = new FixtureOptions
+            {
+                AxisRestrictions = new List<MovementAxisRestriction>
+                {
+                    new MovementAxisRestriction
+                    {
+                        Name = name,
+                        Min = min,
+                        Max = max
+                    }
+                }
+            };
+
             return options;
         }
     }

@@ -34,7 +34,7 @@ namespace kadmium_dmx_test.Solvers
             fixture.Settables["FireSafety"].Value = 1f;
             fixture.Update();
             Assert.True(fixture.Settables["FireSafety"].Value > 0f);
-            float updatesToDecay = FireSafetySolver.DecayTime * MasterController.UPDATES_PER_SECOND;
+            float updatesToDecay = FireSafetySolver.DecayTime * Renderer.UPDATES_PER_SECOND;
             int decayUpdatesInt = (int)Math.Ceiling(updatesToDecay);
             for (int i = 0; i < decayUpdatesInt; i++)
             {

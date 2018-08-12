@@ -2,8 +2,6 @@ using System.Linq;
 using Microsoft.AspNetCore.Mvc;
 using System.Collections.Generic;
 using System.Threading.Tasks;
-using Swashbuckle.AspNetCore.SwaggerGen;
-using Swashbuckle.AspNetCore.Annotations;
 using kadmium_dmx_data;
 using kadmium_dmx_data.Storage;
 using kadmium_dmx_data.Types;
@@ -28,27 +26,23 @@ namespace kadmium_dmx_webapi.Controllers
 
         // GET: /<controller>/
         [HttpGet]
-        [SwaggerOperation("getGroups")]
-        public async Task<IEnumerable<IGroupData>> Get()
+        public async Task<IEnumerable<GroupData>> Get()
         {
-            IEnumerable<IGroupData> returnVal;
+            IEnumerable<GroupData> returnVal;
             returnVal = (await Store.GetAll()).OrderBy(x => x.Order);
             return returnVal;
         }
 
         [HttpPut]
-        [SwaggerOperation("putGroup")]
         public async Task Put([FromBody]IEnumerable<GroupData> groups)
         {
             await Store.RemoveAll();
             var putTasks = groups.Select(group => Store.Add(group));
             await Task.WhenAll(putTasks);
-            MasterController.SetGroups(groups);
         }
 
         [HttpGet("[action]/{group}/{attribute}/{value}")]
-        [SwaggerOperation("setAttribute")]
-        public void Set(string group, string attribute, float value)
+        public void SetAttribute(string group, string attribute, float value)
         {
             MasterController.Groups[group].Set(attribute, value);
         }

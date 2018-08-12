@@ -1,5 +1,4 @@
 using Microsoft.AspNetCore.Mvc;
-using Swashbuckle.AspNetCore.SwaggerGen;
 
 namespace kadmium_dmx_webapi.Controllers
 {

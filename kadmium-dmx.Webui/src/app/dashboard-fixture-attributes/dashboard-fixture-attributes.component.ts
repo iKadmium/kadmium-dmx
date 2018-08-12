@@ -1,8 +1,8 @@
 import { Component, OnInit, Input, EventEmitter, Output, OnChanges, SimpleChanges, OnDestroy } from '@angular/core';
-import { PreviewFixture } from "app/preview-fixture";
-import { PreviewVenue } from "app/preview-venue";
-import { PreviewAttribute } from "app/preview-attribute";
-import { AttributeUpdateMessage, FixtureStreamService } from "app/fixture-stream.service";
+import { PreviewFixture } from "../preview-fixture";
+import { PreviewVenue } from "../preview-venue";
+import { PreviewAttribute } from "../preview-attribute";
+import { AttributeUpdateMessage, FixtureStreamService } from "../fixture-stream.service";
 
 @Component({
     selector: 'app-dashboard-fixture-attributes',
@@ -12,6 +12,7 @@ import { AttributeUpdateMessage, FixtureStreamService } from "app/fixture-stream
 })
 export class DashboardFixtureAttributesComponent implements OnInit, OnChanges
 {
+    @Input() universeID: number;
     @Input() fixture: PreviewFixture;
     @Input() attributes: PreviewAttribute[];
     public dmxAttributes: PreviewAttribute[];
@@ -47,9 +48,10 @@ export class DashboardFixtureAttributesComponent implements OnInit, OnChanges
         if (trueValue >= 0.0 && trueValue <= 1.0)
         {
             let data: AttributeUpdateMessage = {
+                universeID: this.universeID,
                 attributeName: attribute.name,
                 attributeValue: trueValue,
-                fixtureID: this.fixture.id
+                fixtureAddress: this.fixture.address
             };
 
             this.setValue.emit(data);

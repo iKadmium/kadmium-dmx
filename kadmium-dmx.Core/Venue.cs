@@ -19,7 +19,7 @@ namespace kadmium_dmx_core
         public static Status Status { get; set; }
         public List<Universe> Universes { get; set; }
 
-        public Venue(IVenueData data, IDictionary<FixtureDefinitionSkeleton, FixtureDefinition> fixtureDefinitions)
+        public Venue(IVenueData data, IDictionary<FixtureDefinitionSkeleton, IFixtureDefinition> fixtureDefinitions)
         {
             Name = data.Name;
             var universes = from universeData in data.Universes

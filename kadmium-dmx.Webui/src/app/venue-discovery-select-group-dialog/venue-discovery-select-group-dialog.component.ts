@@ -1,22 +1,21 @@
 import { Component, OnInit } from '@angular/core';
-import { GroupService } from "api/services";
-import { Group } from "api/models";
+import { APIClient, GroupData } from 'api';
 
 @Component({
 	selector: 'app-venue-discovery-select-group-dialog',
 	templateUrl: './venue-discovery-select-group-dialog.component.html',
 	styleUrls: ['./venue-discovery-select-group-dialog.component.scss'],
-	providers: [GroupService]
+	providers: [APIClient]
 })
 export class VenueDiscoverySelectGroupDialogComponent implements OnInit
 {
-	public groups: Group[];
+	public groups: GroupData[];
 
-	constructor(private groupsService: GroupService) { }
+	constructor(private apiClient: APIClient) { }
 
 	ngOnInit()
 	{
-		this.groupsService.getGroups()
+		this.apiClient.getGroups()
 			.toPromise()
 			.then(response =>
 			{

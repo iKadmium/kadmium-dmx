@@ -17,9 +17,6 @@ namespace kadmium_dmx_core
 {
     public class MasterController : IDisposable, IMasterController
     {
-        public static int UPDATES_PER_SECOND = 40; // in hz
-        public static int UPDATE_TIME = 1000 / UPDATES_PER_SECOND;
-        public static TimeSpan UPDATE_TIME_SPAN = new TimeSpan(0, 0, 0, 0, UPDATE_TIME);
         public static long MEMORY_LIMIT = (1024 * 1024 * 256);
 
         public event EventHandler<EventArgs> VenueActivated;
@@ -30,79 +27,12 @@ namespace kadmium_dmx_core
         public Venue Venue { get; private set; }
         public ISettings Settings { get; set; }
         public Strobe Strobe { get; }
-
-        public Task RenderTask { get; set; }
-
-        public bool Rendering { get; set; }
-        public bool Solving { get; set; }
-        private CancellationTokenSource CancellationTokenSource { get; set; }
-
-        public event EventHandler OnUpdate;
-
-        private bool solversEnabled;
-        public bool SolversEnabled
-        {
-            get { return solversEnabled; }
-            set
-            {
-                solversEnabled = value;
-                if (value)
-                {
-                    int count = (from universe in Venue.Universes
-                                 select universe.Fixtures.Count()).Sum();
-                    SolverStatus.Update(StatusCode.Success, "Solving for " + count + " fixtures", this);
-                }
-                else
-                {
-                    SolverStatus.Update(StatusCode.Error, "Solvers are Disabled", this);
-                }
-            }
-        }
-
-        public bool RenderEnabled { get; set; }
-        public Status SolverStatus { get; private set; }
-
-        private async Task RenderLoop()
-        {
-            Stopwatch stopwatch = new Stopwatch();
-            while (!CancellationTokenSource.IsCancellationRequested)
-            {
-                try
-                {
-                    stopwatch.Restart();
-                    if (SolversEnabled)
-                    {
-                        Solving = true;
-                        Update();
-                        Solving = false;
-                    }
-                    if (RenderEnabled)
-                    {
-                        Rendering = true;
-                        await Render();
-                        Rendering = false;
-                    }
-
-                    stopwatch.Stop();
-                    TimeSpan delayTime = UPDATE_TIME_SPAN - stopwatch.Elapsed;
-                    if (delayTime > TimeSpan.Zero)
-                    {
-                        Thread.Sleep(delayTime);
-                    }
-
-                }
-                catch (Exception e)
-                {
-                    Console.Error.WriteLine(e.StackTrace);
-                }
-            }
-        }
+        public Renderer Renderer { get; }
 
         public MasterController(ISettings settings)
         {
             Strobe = new Strobe();
-            this.SolverStatus = new Status("No Solvers Loaded");
-
+            
             Settings = settings;
             Groups = new Dictionary<string, Group>();
             Transmitters = new List<Transmitter>{
@@ -122,7 +52,7 @@ namespace kadmium_dmx_core
                             }
                     }
                 },
-                new Dictionary<FixtureDefinitionSkeleton, FixtureDefinition>()
+                new Dictionary<FixtureDefinitionSkeleton, IFixtureDefinition>()
             );
 
             if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
@@ -130,65 +60,45 @@ namespace kadmium_dmx_core
                 //instance.Transmitters.Add(EnttecProTransmitter.Load(settings.EnttecProTransmitter));
             }
             Venue.Activate(false);
-            solversEnabled = true;
-            RenderEnabled = true;
-            Rendering = false;
-            Solving = false;
-            CancellationTokenSource = new CancellationTokenSource();
-
-            RenderTask = Task.Run(RenderLoop);
+            Renderer = new Renderer(this);
         }
 
-        public void LoadVenue(IVenueData venue, IDictionary<FixtureDefinitionSkeleton, FixtureDefinition> definitions)
+        public async Task LoadVenue(IVenueData venue, IDictionary<FixtureDefinitionSkeleton, IFixtureDefinition> definitions, IEnumerable<IGroupData> groupData)
         {
-            SolversEnabled = false;
+            await Renderer.Stop();
+            var groups = from grp in groupData
+                         select new Group(grp);
+
+            Groups = groups.ToDictionary(x => x.Name);
             Venue?.Dispose();
             Venue = new Venue(venue, definitions);
+            var fixtureGroups = from universe in Venue.Universes
+                                from fixture in universe.Fixtures
+                                group fixture by fixture.Group into groupName
+                                select groupName;
+            foreach(var fixtureGroup in fixtureGroups)
+            {
+                Groups[fixtureGroup.Key].Fixtures.AddRange(fixtureGroup);
+            }
+
             Venue.Activate(true);
             VenueActivated?.Invoke(this, new EventArgs());
-            SolversEnabled = true;
-        }
-
-        public void Update()
-        {
-            foreach (Group group in Groups.Values)
-            {
-                group.Update();
-            }
-            Venue?.Update();
-            OnUpdate?.Invoke(this, new EventArgs());
-        }
-
-        public async Task Render()
-        {
-            await (Venue?.Render(Transmitters) ?? Task.CompletedTask);
+            Renderer.Start();
         }
 
         public void Dispose()
         {
-            RenderTask.Dispose();
+            Renderer.Dispose();
             foreach (var transmitter in Transmitters)
             {
                 transmitter?.Dispose();
             }
             Listener?.Dispose();
         }
-
-        public void SetGroups(IEnumerable<IGroupData> groupData)
-        {
-            var groups = from grp in groupData
-                         select new Group(grp);
-
-            Groups = groups.ToDictionary(x => x.Name);
-        }
-
+        
         public async Task SetSettings(Settings value)
         {
-            RenderEnabled = false;
-            while (Rendering)
-            {
-                await Task.Delay(10);
-            }
+            await Renderer.Stop();
             foreach (var transmitter in Transmitters)
             {
                 transmitter.Dispose();
@@ -197,7 +107,7 @@ namespace kadmium_dmx_core
 
             Transmitters.Add(new SACNTransmitter(value.SacnTransmitter));
             Transmitters.Add(new EnttecProTransmitter(value.EnttecProTransmitter));
-            RenderEnabled = true;
+            Renderer.Start();
         }
 
     }

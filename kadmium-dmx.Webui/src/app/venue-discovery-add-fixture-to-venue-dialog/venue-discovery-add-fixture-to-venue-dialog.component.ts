@@ -1,19 +1,18 @@
 import { Component, OnInit } from '@angular/core';
-import { FixtureDefinitionService, GroupService } from "api/services";
-import { FixtureDefinitionSkeleton, Group, FixtureDefinition } from "api/models";
+import { APIClient, FixtureDefinitionSkeleton, GroupData } from 'api';
 
 @Component({
 	selector: 'app-venue-discovery-add-fixture-to-venue-dialog',
 	templateUrl: './venue-discovery-add-fixture-to-venue-dialog.component.html',
 	styleUrls: ['./venue-discovery-add-fixture-to-venue-dialog.component.scss'],
-	providers: [FixtureDefinitionService, GroupService]
+	providers: [APIClient]
 })
 export class VenueDiscoveryAddFixtureToVenueDialogComponent implements OnInit
 {
-	public groups: Group[];
+	public groups: GroupData[];
 	public definitions: FixtureDefinitionSkeleton[];
 	public data;
-	constructor(private fixtureDefinitionService: FixtureDefinitionService, private groupService: GroupService) 
+	constructor(private apiClient: APIClient) 
 	{
 		this.data = {
 			group: {},
@@ -23,10 +22,10 @@ export class VenueDiscoveryAddFixtureToVenueDialogComponent implements OnInit
 
 	ngOnInit()
 	{
-		this.fixtureDefinitionService.getFixtureDefinitionSkeletons()
+		this.apiClient.getFixtureDefinitions()
 			.toPromise()
 			.then(response => this.definitions = response);
-		this.groupService.getGroups()
+		this.apiClient.getGroups()
 			.toPromise()
 			.then(response => this.groups = response);
 

@@ -9,7 +9,7 @@ import { MatButtonModule, MatCheckboxModule, MatInputModule, MatSelectModule, Ma
 
 import { ColorPickerModule } from "ngx-color-picker";
 
-import { ApiModule } from "../api/api.module";
+import { APIClientModule } from "api";
 
 import { AppComponent } from './app.component';
 import { DashboardComponent } from './dashboard/dashboard.component';
@@ -114,7 +114,7 @@ import { UniverseEditorAddMultipleFixturesDialogComponent } from './universe-edi
                                 path: 'fixtures/:universeID', children:
                                     [
                                         { path: '', component: DashboardFixturesComponent },
-                                        { path: ':fixtureID', component: DashboardFixtureDetailComponent }
+                                        { path: ':fixtureAddress', component: DashboardFixtureDetailComponent }
                                     ]
                             },
                             { path: 'discover/:universeID', component: VenueDiscoveryComponent }
@@ -139,12 +139,12 @@ import { UniverseEditorAddMultipleFixturesDialogComponent } from './universe-edi
                         [
                             { path: '', component: FixtureDefinitionsComponent },
                             { path: 'new', component: FixtureDefinitionEditorComponent, canDeactivate: [UnsavedChanges] },
-                            { path: ':id', component: FixtureDefinitionEditorComponent, canDeactivate: [UnsavedChanges] },
+                            { path: ':manufacturer/:model', component: FixtureDefinitionEditorComponent, canDeactivate: [UnsavedChanges] },
                         ]
                 }
             ]),
 
-        ApiModule,
+        APIClientModule,
 
         MatButtonModule,
         MatCheckboxModule,

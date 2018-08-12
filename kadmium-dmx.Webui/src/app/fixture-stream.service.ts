@@ -13,9 +13,9 @@ export class FixtureStreamService
 
     }
 
-    public subscribe(fixtureID: number, listener: (data: AttributeUpdateData[]) => void): void
+    public subscribe(universeID: number, fixtureAddress: number, listener: (data: AttributeUpdateData[]) => void): void
     {
-        this.socket = new WebSocket(this.socketUrl + "/" + fixtureID);
+        this.socket = new WebSocket(`${this.socketUrl}/${universeID}/${fixtureAddress}`);
         if (this.listener != null)
         {
             this.unsubscribe();
@@ -37,10 +37,11 @@ export class FixtureStreamService
         }
     }
 
-    public set(fixtureID: number, attributeName: string, attributeValue: number): void
+    public set(universeID: number, fixtureAddress: number, attributeName: string, attributeValue: number): void
     {
         let message: AttributeUpdateMessage = {
-            fixtureID: fixtureID,
+            universeID: universeID,
+            fixtureAddress: fixtureAddress,
             attributeName: attributeName,
             attributeValue: attributeValue
         };
@@ -50,7 +51,8 @@ export class FixtureStreamService
 
 export interface AttributeUpdateMessage
 {
-    fixtureID: number;
+    universeID: number,
+    fixtureAddress: number;
     attributeName: string;
     attributeValue: number;
 }

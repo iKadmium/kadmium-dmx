@@ -2,11 +2,9 @@ using System;
 using System.Linq;
 using kadmium_dmx_core;
 using Microsoft.AspNetCore.Mvc;
-using Swashbuckle.AspNetCore.SwaggerGen;
 using System.Collections.Generic;
 using kadmium_dmx_core.Fixtures;
 using kadmium_dmx_core.Solvers;
-using Swashbuckle.AspNetCore.Annotations;
 
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
@@ -23,7 +21,6 @@ namespace kadmium_dmx_webapi.Controllers
         }
 
         [HttpGet("getActive/{universeID}")]
-        [SwaggerOperation("getActiveUniverseByID")]
         public ActiveUniverse GetActive(int universeID)
         {
             var universe = MasterController.Venue.Universes.Single(x => x.UniverseID == universeID);

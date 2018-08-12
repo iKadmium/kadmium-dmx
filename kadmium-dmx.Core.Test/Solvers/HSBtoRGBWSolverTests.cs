@@ -45,10 +45,10 @@ namespace kadmium_dmx_test.Solvers
             Assert.Contains(fixture.Solvers, (x => x is HSBtoRGBWSolver));
         }
 
-        public static Fixture GetRGBWFixture(JObject options = null)
+        public static Fixture GetRGBWFixture(FixtureOptions options = null)
         {
             var definition = FixtureDefinitionTests.GetRGBWFixtureDefinition();
-            var data = new FixtureData { Options = options?.ToString() ?? "{}" };
+            var data = new FixtureData { Options = options ?? new FixtureOptions() };
             var fixture = new Fixture(data, definition);
             return fixture;
         }

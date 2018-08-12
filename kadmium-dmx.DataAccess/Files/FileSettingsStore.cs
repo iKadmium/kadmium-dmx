@@ -39,7 +39,7 @@ namespace kadmium_dmx_data
             }
         }
 
-        public async Task SaveSettings(ISettings settings)
+        public async Task SaveSettings(Settings settings)
         {
             var serializer = new JsonSerializer()
             {

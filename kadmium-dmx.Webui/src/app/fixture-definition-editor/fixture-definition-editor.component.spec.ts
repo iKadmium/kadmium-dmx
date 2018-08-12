@@ -1,8 +1,8 @@
 import { FixtureDefinitionEditorComponent } from './fixture-definition-editor.component';
 import { FormsModule } from "@angular/forms";
-import { TableInputComponent } from "app/table-input/table-input.component";
-import { LabelledInputComponent } from "app/labelled-input/labelled-input.component";
-import { UniqueValueValidatorDirective } from "app/unique-value-validator.directive";
+import { TableInputComponent } from "../table-input/table-input.component";
+import { LabelledInputComponent } from "../labelled-input/labelled-input.component";
+import { UniqueValueValidatorDirective } from "../unique-value-validator.directive";
 import { FixtureDefinitionService, MockFixtureDefinitionService } from "app/fixture-definition.service";
 import { HttpModule } from "@angular/http";
 import { RouterTestingModule } from "@angular/router/testing";

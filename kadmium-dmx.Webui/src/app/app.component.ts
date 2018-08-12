@@ -2,10 +2,9 @@ import { Component, ViewChild, OnInit, AfterViewInit } from '@angular/core';
 import { Title } from "@angular/platform-browser";
 import { MatSidenav } from '@angular/material';
 import { trigger, state, style, transition, animate } from '@angular/animations';
-import { AnimationLibrary } from 'app/animation-library';
-import { SidenavService } from "app/sidenav.service";
-import { ApiConfiguration } from "api/api-configuration";
-import { URLs } from "app/url";
+import { AnimationLibrary } from './animation-library';
+import { SidenavService } from "./sidenav.service";
+import { URLs } from "./url";
 
 @Component({
     selector: 'app-root',
@@ -16,9 +15,8 @@ import { URLs } from "app/url";
 export class AppComponent implements OnInit, AfterViewInit
 {
     @ViewChild("sidenav") sidenav: MatSidenav;
-    constructor(public titleService: Title, private sidenavService: SidenavService, private config: ApiConfiguration)
+    constructor(public titleService: Title, private sidenavService: SidenavService)
     {
-        config.rootUrl = URLs.getApiURL();
     }
 
     ngOnInit(): void

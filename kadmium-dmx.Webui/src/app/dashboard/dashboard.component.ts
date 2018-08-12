@@ -6,9 +6,9 @@ import { StatusStreamService, StatusData } from "../dashboard.service";
 import { StatusCode } from "../status-code.enum";
 import { Status } from "../status";
 import { MatSnackBar } from '@angular/material';
-import { Sleep } from 'app/sleep';
+import { Sleep } from '../sleep';
 import { state, trigger, style, transition, animate } from '@angular/animations';
-import { AnimationLibrary } from 'app/animation-library';
+import { AnimationLibrary } from '../animation-library';
 
 @Component({
     selector: 'app-dashboard',

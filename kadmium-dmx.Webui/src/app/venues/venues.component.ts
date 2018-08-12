@@ -2,18 +2,18 @@ import { Component, OnInit, ViewChild } from '@angular/core';
 import { Title } from "@angular/platform-browser";
 import { StatusCode } from "../status-code.enum";
 import { AsyncFileReader } from "../async-file-reader";
-import { VenueService } from "api/services";
-import { Venue } from "api/models";
+import { APIClient } from "api/api-client.service";
 import { MatTableDataSource } from "@angular/material/table";
 import { MatSnackBar, MatDialog, MatSort } from '@angular/material';
-import { DeleteConfirmDialogComponent } from 'app/delete-confirm-dialog/delete-confirm-dialog.component';
-import { AnimationLibrary } from "app/animation-library";
+import { DeleteConfirmDialogComponent } from '../delete-confirm-dialog/delete-confirm-dialog.component';
+import { AnimationLibrary } from "../animation-library";
+import { VenueData } from 'api/models/venue-data.model';
 
 @Component({
     selector: 'app-venues',
     templateUrl: './venues.component.html',
     styleUrls: ['./venues.component.css'],
-    providers: [VenueService],
+    providers: [APIClient],
     animations: [AnimationLibrary.animations()]
 })
 export class VenuesComponent implements OnInit
@@ -24,7 +24,7 @@ export class VenuesComponent implements OnInit
 
     public loading: boolean;
 
-    constructor(private venueService: VenueService, private snackbar: MatSnackBar, title: Title, private dialog: MatDialog)
+    constructor(private apiService: APIClient, private snackbar: MatSnackBar, title: Title, private dialog: MatDialog)
     {
         title.setTitle("Venues");
         this.venues = [];
@@ -33,7 +33,7 @@ export class VenuesComponent implements OnInit
 
     ngOnInit(): void
     {
-        this.venueService.getVenues()
+        this.apiService.getVenues()
             .toPromise()
             .then(response => 
             {
@@ -43,18 +43,18 @@ export class VenuesComponent implements OnInit
             }).catch(error => this.snackbar.open(error, "Close", { duration: 3000 }));
     }
 
-    private deleteConfirm(venue: string): void
+    private deleteConfirm(venueName: string): void
     {
-        this.dialog.open(DeleteConfirmDialogComponent, { data: venue }).afterClosed().subscribe(async value =>
+        this.dialog.open(DeleteConfirmDialogComponent, { data: venueName }).afterClosed().subscribe(async value =>
         {
             if (value)
             {
                 try 
                 {
-                    await this.venueService.deleteVenue(venue).toPromise();
-                    let index = this.venues.indexOf(venue);
+                    await this.apiService.deleteVenue({ name: venueName }).toPromise();
+                    let index = this.venues.indexOf(venueName);
                     this.venues.splice(index, 1);
-                    this.snackbar.open(venue + " successfully removed", "Close", { duration: 3000 });
+                    this.snackbar.open(venueName + " successfully removed", "Close", { duration: 3000 });
                 }
                 catch (error)
                 {
@@ -101,15 +101,9 @@ export class VenuesComponent implements OnInit
     {
         try
         {
-            let venue = await AsyncFileReader.read<Venue>(file);
-            for (let universe of venue.universes)
-            {
-                for (let fixture of universe.fixtures)
-                {
-                    fixture.options = JSON.stringify(fixture.options);
-                }
-            }
-            await this.venueService.postVenue(venue).toPromise();
+            let venue = await AsyncFileReader.read<VenueData>(file);
+            venue.id = "";
+            await this.apiService.postVenue({ value: venue }).toPromise();
             this.venues.push(venue.name);
             this.snackbar.open("Successfully added " + venue.name, "Close", { duration: 3000 });
         }

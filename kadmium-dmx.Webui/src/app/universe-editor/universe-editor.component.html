@@ -18,7 +18,7 @@
     <button mat-icon-button type="button" (click)="addElements()" matTooltip="Add Fixtures">
         <mat-icon aria-label="Add Multiple Fixtures">playlist_add</mat-icon>
     </button>
-    <button mat-icon-button type="button" [disabled]="universe.fixtures.length == 0" (click)="savePresetAs()" matTooltip="Save Preset">
+    <button mat-icon-button type="button" [disabled]="universe?.fixtures.length == 0" (click)="savePresetAs()" matTooltip="Save Preset">
         <mat-icon aria-label="Save Preset">cloud_download</mat-icon>
     </button>
     <button mat-icon-button type="button" (click)="upload(fileInput)" matTooltip="Load Preset">
@@ -26,7 +26,7 @@
     </button>
 </mat-toolbar>
 
-<mat-expansion-panel *ngFor="let fixture of universe.fixtures">
+<mat-expansion-panel *ngFor="let fixture of universe?.fixtures">
     <mat-expansion-panel-header>
         <mat-panel-title>{{fixture.address}} {{fixture.type.manufacturer}} {{fixture.type.model}}</mat-panel-title>
         <mat-panel-description>{{fixture.group}}</mat-panel-description>

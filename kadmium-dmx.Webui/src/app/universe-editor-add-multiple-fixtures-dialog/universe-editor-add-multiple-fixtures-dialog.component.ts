@@ -1,6 +1,6 @@
 import { Component, OnInit, Inject } from '@angular/core';
-import { Group, FixtureDefinitionSkeleton } from 'api/models';
-import { MatDialogRef, MAT_DIALOG_DATA } from '../../../node_modules/@angular/material';
+import { FixtureDefinitionSkeleton, GroupData } from 'api/models';
+import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material';
 
 @Component({
 	selector: 'app-universe-editor-add-multiple-fixtures-dialog',
@@ -9,12 +9,12 @@ import { MatDialogRef, MAT_DIALOG_DATA } from '../../../node_modules/@angular/ma
 })
 export class UniverseEditorAddMultipleFixturesDialogComponent implements OnInit
 {
-	public group: Group;
+	public group: GroupData;
 	public fixtureType: FixtureDefinitionSkeleton;
 	public quantity: number;
 	public address: number;
 
-	public groups: Group[];
+	public groups: GroupData[];
 	public fixtureDefinitionSkeletons: FixtureDefinitionSkeleton[];
 
 	constructor(public dialogRef: MatDialogRef<UniverseEditorAddMultipleFixturesDialogComponent>,
@@ -50,13 +50,13 @@ export class UniverseEditorAddMultipleFixturesDialogComponent implements OnInit
 export interface IUniverseEditorAddMultipleFixturesDialogInputData
 {
 	skeletons: FixtureDefinitionSkeleton[],
-	groups: Group[]
+	groups: GroupData[]
 }
 
 export interface IUniverseEditorAddMultipleFixturesDialogOutputData
 {
 	quantity: number,
 	address: number,
-	group: Group,
+	group: GroupData,
 	skeleton: FixtureDefinitionSkeleton
 }

@@ -24,10 +24,10 @@
                     {{element.manufacturer}} {{element.model}}
                 </td>
                 <td class="actionsCell">
-                    <a mat-icon-button matTooltip="Download" [href]="getDownloadUrl(element)" [download]="getDownloadFilename(element)">
+                    <a mat-icon-button matTooltip="Download" [href]="getDownloadURL(element)" [download]="getDownloadFilename(element)">
                         <mat-icon aria-label="Download">file_download</mat-icon>
                     </a>
-                    <a mat-icon-button matTooltip="Edit" [routerLink]="element.id">
+                    <a mat-icon-button matTooltip="Edit" [routerLink]="element.manufacturer + '/' + element.model">
                         <mat-icon aria-label="Edit">edit</mat-icon>
                     </a>
                     <button mat-icon-button matTooltip="Delete" color="warn" (click)="deleteConfirm(element)">

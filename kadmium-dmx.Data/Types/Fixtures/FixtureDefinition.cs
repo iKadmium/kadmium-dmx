@@ -15,6 +15,13 @@ namespace kadmium_dmx_data.Types.Fixtures
         public IList<ColorWheelEntryData> ColorWheel { get; set; }
         public FixtureType FixtureType { get; set; }
 
+        public FixtureDefinition()
+        {
+            Channels = new List<DMXChannelData>();
+            Movements = new List<MovementAxisData>();
+            ColorWheel = new List<ColorWheelEntryData>();
+        }
+
         public override string ToString()
         {
             return Skeleton?.ToString();
@@ -31,6 +38,11 @@ namespace kadmium_dmx_data.Types.Fixtures
         public bool Equals(FixtureDefinitionSkeleton other)
         {
             return Manufacturer == other.Manufacturer && Model == other.Model;
+        }
+
+        public override int GetHashCode()
+        {
+            return HashCode.Combine(Manufacturer, Model);
         }
 
         public override string ToString()

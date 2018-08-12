@@ -21,12 +21,14 @@ namespace kadmium_dmx_webapi.WebSockets
         public bool Sending { get; set; }
 
         private IMasterController MasterController { get; }
+        private IRenderer Renderer { get; }
 
-        public FixtureStreamSocketHandler(IMasterController masterController)
+        public FixtureStreamSocketHandler(IMasterController masterController, IRenderer renderer)
         {
             MasterController = masterController;
+            Renderer = renderer;
             Sending = false;
-            MasterController.OnUpdate += Instance_OnUpdate;
+            Renderer.OnUpdate += Instance_OnUpdate;
         }
 
         private async void Instance_OnUpdate(object sender, System.EventArgs e)
@@ -83,7 +85,7 @@ namespace kadmium_dmx_webapi.WebSockets
 
         public override void Dispose()
         {
-            MasterController.OnUpdate -= Instance_OnUpdate;
+            Renderer.OnUpdate -= Instance_OnUpdate;
         }
 
         public static async Task Acceptor(HttpContext httpContext, Func<Task> n)
@@ -93,7 +95,9 @@ namespace kadmium_dmx_webapi.WebSockets
 
             var socket = await httpContext.WebSockets.AcceptWebSocketAsync();
 
-            using (var h = new FixtureStreamSocketHandler(httpContext.RequestServices.GetService<IMasterController>()))
+            using (var h = new FixtureStreamSocketHandler(
+                httpContext.RequestServices.GetService<IMasterController>(),
+                httpContext.RequestServices.GetService<IRenderer>()))
             {
                 h.Socket = socket;
                 while (socket.State != WebSocketState.Open)

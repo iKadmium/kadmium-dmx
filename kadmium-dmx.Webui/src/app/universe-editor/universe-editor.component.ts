@@ -1,43 +1,40 @@
 import { Component, OnInit, Input, ViewChildren, QueryList } from '@angular/core';
-import { StatusCode } from "../status-code.enum";
 import { AsyncFileReader } from "../async-file-reader";
 import { FileSaver } from "../file-saver";
-import { GroupService, FixtureDefinitionService } from "api/services";
-import { Group, FixtureDefinitionSkeleton, Universe, Fixture } from "api/models";
+import { FixtureDefinitionSkeleton, UniverseData, FixtureData } from "api/models";
 import { MatDialog } from "@angular/material/dialog";
-import { UniverseEditorPresetSaveDialogComponent } from "app/universe-editor-preset-save-dialog/universe-editor-preset-save-dialog.component";
-import { FormControl } from "@angular/forms";
-import { Observable } from "rxjs/Observable";
+import { UniverseEditorPresetSaveDialogComponent } from "../universe-editor-preset-save-dialog/universe-editor-preset-save-dialog.component";
 
 import "rxjs/operator/map";
 import 'rxjs/add/operator/startWith';
-import { FixtureOptionsEditorComponent } from "app/fixture-options-editor/fixture-options-editor.component";
+import { FixtureOptionsEditorComponent } from "../fixture-options-editor/fixture-options-editor.component";
 import { MatExpansionPanel, MatSnackBar } from '@angular/material';
-import { Sleep } from 'app/sleep';
+import { Sleep } from '../sleep';
 import { UniverseEditorAddMultipleFixturesDialogComponent, IUniverseEditorAddMultipleFixturesDialogInputData, IUniverseEditorAddMultipleFixturesDialogOutputData } from '../universe-editor-add-multiple-fixtures-dialog/universe-editor-add-multiple-fixtures-dialog.component';
+import { APIClient, GroupData } from 'api';
 
 @Component({
     selector: 'app-universe-editor',
     templateUrl: './universe-editor.component.html',
     styleUrls: ['./universe-editor.component.css'],
-    providers: [FixtureDefinitionService, GroupService]
+    providers: [APIClient]
 })
 export class UniverseEditorComponent implements OnInit
 {
-    @Input("universe") universe: Universe;
-    @Input("groups") groups: Group[];
+    @Input("universe") universe: UniverseData;
+    @Input("groups") groups: GroupData[];
     @ViewChildren(MatExpansionPanel) panels: QueryList<MatExpansionPanel>;
 
     public fixtureDefinitionSkeletons: FixtureDefinitionSkeleton[];
 
-    constructor(private fixtureDefinitionService: FixtureDefinitionService, private snackbar: MatSnackBar, private dialog: MatDialog)
+    constructor(private apiClient: APIClient, private snackbar: MatSnackBar, private dialog: MatDialog)
     {
 
     }
 
     ngOnInit(): void
     {
-        this.fixtureDefinitionService.getFixtureDefinitionSkeletons()
+        this.apiClient.getFixtureDefinitions()
             .toPromise()
             .then(response => 
             {
@@ -45,23 +42,21 @@ export class UniverseEditorComponent implements OnInit
             }).catch(error => this.snackbar.open(error, "Close", { duration: 3000 }));
     }
 
-    private async removeElement(fixture: Fixture): Promise<void>
-    {
-        if (window.confirm("Are you sure you want to delete " + fixture.type.manufacturer + " " + fixture.type.model + "?"))
-        {
-            let index = this.universe.fixtures.indexOf(fixture);
-            this.universe.fixtures.splice(index, 1);
-        }
-    }
 
-    public getElementIndex(element: Fixture): number
+    public getElementIndex(element: FixtureData): number
     {
         return this.universe.fixtures.indexOf(element);
     }
 
+    public removeElement(element: FixtureData): void
+    {
+        let index = this.universe.fixtures.indexOf(element);
+        this.universe.fixtures.splice(index, 1);
+    }
+
     public async addElement(): Promise<void>
     {
-        let fixture: Fixture = {
+        let fixture: FixtureData = {
             group: this.groups[0].name,
             address: 1,
             type: this.fixtureDefinitionSkeletons[0],
@@ -90,7 +85,7 @@ export class UniverseEditorComponent implements OnInit
             if (result != null)
             {
                 let data = result as IUniverseEditorAddMultipleFixturesDialogOutputData;
-                let definition = await (this.fixtureDefinitionService.getFixtureDefinitionById(data.skeleton.id)).toPromise();
+                let definition = await (this.apiClient.getFixtureDefinition({ manufacturer: data.skeleton.manufacturer, model: data.skeleton.model })).toPromise();
                 let runningAddress = data.address;
                 let addresses = definition.channels
                     .map(x => x.address)
@@ -98,7 +93,7 @@ export class UniverseEditorComponent implements OnInit
                 let channelCount = addresses[addresses.length - 1] - addresses[0] + 1;
                 for (let i = 0; i < data.quantity; i++)
                 {
-                    let fixture: Fixture = {
+                    let fixture: FixtureData = {
                         group: data.group.name,
                         address: runningAddress,
                         type: data.skeleton,
@@ -115,12 +110,8 @@ export class UniverseEditorComponent implements OnInit
         })
     }
 
-    private get sortedFixtures(): Fixture[]
-    {
-        return this.universe.fixtures.slice().sort((a, b) => a.address - b.address);
-    }
 
-    public options(fixture: Fixture): void
+    public options(fixture: FixtureData): void
     {
         let ref = this.dialog.open(FixtureOptionsEditorComponent, {
             data: { fixture: fixture }
@@ -175,7 +166,7 @@ export class UniverseEditorComponent implements OnInit
         }
         else
         {
-            return x.id == y.id;
+            return x.model == y.model && x.manufacturer == y.manufacturer;
         }
     }
 
@@ -183,10 +174,9 @@ export class UniverseEditorComponent implements OnInit
     {
         try
         {
-            let fixtures = await AsyncFileReader.read<Fixture[]>(file);
+            let fixtures = await AsyncFileReader.read<FixtureData[]>(file);
             for (let fixture of fixtures)
             {
-                fixture.id = 0;
                 fixture.type = this.fixtureDefinitionSkeletons.find(x => x.manufacturer == fixture.type.manufacturer && x.model == fixture.type.model);
                 this.universe.fixtures.push(fixture);
             }

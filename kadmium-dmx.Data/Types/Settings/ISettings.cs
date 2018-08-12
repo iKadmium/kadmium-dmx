@@ -2,8 +2,8 @@
 {
     public interface ISettings
     {
-        IEnttecProTransmitterSettings EnttecProTransmitter { get; set; }
-        ISacnTransmitterSettings SacnTransmitter { get; set; }
+        EnttecProTransmitterSettings EnttecProTransmitter { get; set; }
+        SacnTransmitterSettings SacnTransmitter { get; set; }
         int OscPort { get; set; }
         int WebPort { get; set; }
     }

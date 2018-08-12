@@ -1,6 +1,6 @@
 import { Component, OnInit, Inject } from '@angular/core';
 import { MatDialogRef, MAT_DIALOG_DATA } from "@angular/material/dialog";
-import { Fixture } from 'api/models';
+import { FixtureData } from 'api/models';
 import { MatListOption } from '@angular/material';
 
 @Component({

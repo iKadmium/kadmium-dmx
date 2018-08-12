@@ -24,7 +24,7 @@ namespace kadmium_dmx_core
         public event EventHandler<UpdateEventArgs> Rendered;
         public event EventHandler<DMXEventArgs> Transmitted;
 
-        public Universe(IUniverseData data, IDictionary<FixtureDefinitionSkeleton, FixtureDefinition> fixtureDefinitions)
+        public Universe(IUniverseData data, IDictionary<FixtureDefinitionSkeleton, IFixtureDefinition> fixtureDefinitions)
         {
             Name = data.Name;
             UniverseID = data.UniverseID;

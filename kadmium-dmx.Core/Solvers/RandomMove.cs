@@ -42,7 +42,7 @@ namespace kadmium_dmx_core.Solvers
 
         internal static bool SuitableFor(IFixtureDefinition definition)
         {
-            return definition.Movements.Any();
+            return definition.Movements?.Any() ?? false;
         }
     }
 

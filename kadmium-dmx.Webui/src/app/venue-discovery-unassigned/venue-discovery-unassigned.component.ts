@@ -1,6 +1,6 @@
 import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
-import { DMXChannel } from "api/models";
-import { AnimationLibrary } from "app/animation-library";
+import { AnimationLibrary } from "../animation-library";
+import { DMXChannelData } from 'api';
 
 @Component({
 	selector: 'app-venue-discovery-unassigned',
@@ -25,7 +25,7 @@ export class VenueDiscoveryUnassignedComponent implements OnInit
 		let end = this.start + this.length;
 		for (let i = this.start; i < end; i++)
 		{
-			this.channels.push({ address: i, selected: false, min: "0", max: "255", name: "" });
+			this.channels.push({ address: i, selected: false, min: 0, max: 255, name: "" });
 		}
 	}
 
@@ -78,7 +78,7 @@ export interface ValueChangeEvent
 	value: number;
 }
 
-interface SelectableChannel extends DMXChannel
+interface SelectableChannel extends DMXChannelData
 {
 	selected: boolean;
 }

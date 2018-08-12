@@ -11,15 +11,15 @@ namespace kadmium_dmx_core.Solvers
     {
         public Dictionary<string, RestrictableMovementAxis> Axis { get; set; }
 
-        public MovementRestrictionSolver(Fixture fixture, JObject options) : base(fixture)
+        public MovementRestrictionSolver(Fixture fixture, FixtureOptions options) : base(fixture)
         {
             Axis = new Dictionary<string, RestrictableMovementAxis>();
-            foreach (JObject obj in options["axisRestrictions"].Values<JObject>())
+            foreach (var restriction in options.AxisRestrictions)
             {
-                MovementAxis movement = fixture.MovementAxis[obj["name"].Value<string>()];
+                MovementAxis movement = fixture.MovementAxis[restriction.Name];
 
-                int min = obj["min"].Value<int>();
-                int max = obj["max"].Value<int>();
+                int min = restriction.Min;
+                int max = restriction.Max;
                 var axis = new RestrictableMovementAxis(movement, min, max);
                 Axis.Add(movement.Name, axis);
             }
@@ -33,10 +33,10 @@ namespace kadmium_dmx_core.Solvers
             }
         }
 
-        private static IEnumerable<string> GetRestrictedAxisNames(IFixtureDefinition definition, JObject options)
+        private static IEnumerable<string> GetRestrictedAxisNames(IFixtureDefinition definition, FixtureOptions options)
         {
-            var restrictedNames = from option in options["axisRestrictions"]?.Values<JObject>() ?? Enumerable.Empty<JObject>()
-                                  select option["name"].Value<string>();
+            var restrictedNames = from option in options.AxisRestrictions
+                                  select option.Name;
 
             var restrictedAxis = from name in restrictedNames
                                  where definition.Movements.Any(x => x.Name == name)
@@ -45,7 +45,7 @@ namespace kadmium_dmx_core.Solvers
             return restrictedAxis;
         }
 
-        internal static bool SuitableFor(IFixtureDefinition definition, JObject options)
+        internal static bool SuitableFor(IFixtureDefinition definition, FixtureOptions options)
         {
             return GetRestrictedAxisNames(definition, options).Any();
         }

@@ -3,7 +3,7 @@ import { CanDeactivate, ActivatedRouteSnapshot, RouterStateSnapshot } from "@ang
 import { Observable } from "rxjs/Observable";
 import { Component } from "@angular/core";
 import { NgForm } from "@angular/forms";
-import { EditorComponent } from "app/editor-component/editor-component";
+import { EditorComponent } from "./editor-component/editor-component";
 
 @Injectable()
 export class UnsavedChanges<T extends EditorComponent> implements CanDeactivate<T> {

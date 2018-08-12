@@ -1,12 +1,12 @@
 import { DashboardComponent } from './dashboard.component';
-import { StatusStreamService, MockDashboardService } from "app/dashboard.service";
-import { OSCListenerLiveService, MockOSCListenerService } from "app/osclistener-live.service";
+import { StatusStreamService, MockDashboardService } from "../dashboard.service";
+import { OSCListenerLiveService, MockOSCListenerService } from "../osclistener-live.service";
 import { FixtureStreamService, MockSolversLiveService } from "app/solvers-live.service";
 import { NotificationsService } from "app/notifications.service";
 import { ComponentFixture, TestBed, fakeAsync } from "@angular/core/testing";
 import { async } from "@angular/core/testing";
 import { EnttecProTransmitterService, VenueService } from "api/services";
-import { UniverseStreamService } from "app/universe-stream.service";
+import { UniverseStreamService } from "../universe-stream.service";
 
 describe('DashboardComponent', () =>
 {

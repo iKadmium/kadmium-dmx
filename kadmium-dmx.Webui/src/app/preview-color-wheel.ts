@@ -19,7 +19,7 @@ export class PreviewColorWheel
         let filtered = this.entries.filter(entry => entry.min <= dmxValue && entry.max >= dmxValue);
         if (filtered.length == 1)
         {
-            return RGB.parse(filtered[0].color);
+            return RGB.parse(filtered[0].colorString);
         }
         else
         {

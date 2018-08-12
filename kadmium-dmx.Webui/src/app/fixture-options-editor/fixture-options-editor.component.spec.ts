@@ -2,8 +2,8 @@ import { async, ComponentFixture, TestBed, fakeAsync } from '@angular/core/testi
 
 import { FixtureOptionsEditorComponent } from './fixture-options-editor.component';
 import { FormsModule } from "@angular/forms";
-import { LabelledInputComponent } from "app/labelled-input/labelled-input.component";
-import { TableInputComponent } from "app/table-input/table-input.component";
+import { LabelledInputComponent } from "../labelled-input/labelled-input.component";
+import { TableInputComponent } from "../table-input/table-input.component";
 import { MockFixtureDefinitionService, FixtureDefinitionService } from "app/fixture-definition.service";
 
 describe('FixtureOptionsEditorComponent', () =>

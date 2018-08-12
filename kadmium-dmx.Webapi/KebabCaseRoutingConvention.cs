@@ -1,4 +1,4 @@
-﻿using Microsoft.AspNetCore.Mvc.ApplicationModels;
+using Microsoft.AspNetCore.Mvc.ApplicationModels;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -30,14 +30,13 @@ namespace kadmium_dmx_webapi
 
                     if (controllerAction.Controller.ControllerName != "Home")
                     {
-                        template.Append(PascalToKebabCase(controller.ControllerName));
+                        template.Append(controller.ControllerName.PascalToKebabCase());
                     }
-
 
 
                     if (controllerAction.ActionName != "Index")
                     {
-                        template.Append("/" + PascalToKebabCase(controllerAction.ActionName));
+                        template.Append("/" + controllerAction.ActionName.PascalToKebabCase());
                     }
 
                     selector.AttributeRouteModel = new AttributeRouteModel()
@@ -49,19 +48,7 @@ namespace kadmium_dmx_webapi
 
         }
 
-        public static string PascalToKebabCase(string value)
-        {
-            if (string.IsNullOrEmpty(value))
-                return value;
-
-            return Regex.Replace(
-                value,
-                "(?<!^)([A-Z][a-z]|(?<=[a-z])[A-Z])",
-                "-$1",
-                RegexOptions.Compiled)
-                .Trim()
-                .ToLower();
-        }
+        
     }
 
 }

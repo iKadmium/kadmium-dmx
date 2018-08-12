@@ -1,15 +1,15 @@
 import { Component, OnInit, Input } from '@angular/core';
-import { EnttecProTransmitterService } from "api/services";
-import { Status } from "app/status";
-import { StatusCode } from "app/status-code.enum";
+import { Status } from "../status";
+import { StatusCode } from "../status-code.enum";
 import { MatSnackBar } from '@angular/material';
-import { AnimationLibrary } from "app/animation-library";
+import { AnimationLibrary } from "../animation-library";
+import { APIClient } from 'api';
 
 @Component({
     selector: 'app-dashboard-transmitter-enttec',
     templateUrl: './dashboard-transmitter-enttec.component.html',
     styleUrls: ['./dashboard-transmitter-enttec.component.css'],
-    providers: [EnttecProTransmitterService],
+    providers: [APIClient],
     animations: [AnimationLibrary.animations()]
 })
 export class DashboardTransmitterEnttecComponent implements OnInit
@@ -20,7 +20,7 @@ export class DashboardTransmitterEnttecComponent implements OnInit
     enabled: boolean;
     loaded: boolean;
 
-    constructor(private enttecTransmitterService: EnttecProTransmitterService, private snackbar: MatSnackBar) 
+    constructor(private apiClient: APIClient, private snackbar: MatSnackBar) 
     {
         this.enabledDetermined = false;
         this.loaded = false;
@@ -28,7 +28,7 @@ export class DashboardTransmitterEnttecComponent implements OnInit
 
     ngOnInit()
     {
-        this.enttecTransmitterService.getEnttecEnabled()
+        this.apiClient.enabledEnttecProTransmitter()
             .toPromise()
             .then((response) =>
             {
@@ -44,7 +44,7 @@ export class DashboardTransmitterEnttecComponent implements OnInit
         this.enabledDetermined = false;
         try
         {
-            await this.enttecTransmitterService.setEnttecEnabled(!oldValue).toPromise();
+            await this.apiClient.setEnabledEnttecProTransmitter({ value: !oldValue }).toPromise();
             this.enabled = !oldValue;
         }
         catch (error)

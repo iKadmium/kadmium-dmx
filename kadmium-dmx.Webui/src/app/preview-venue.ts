@@ -1,12 +1,12 @@
-import { PreviewUniverse } from "app/preview-universe";
-import { PreviewUniverseData } from "app/preview.service";
+import { PreviewUniverse } from "./preview-universe";
+import { PreviewUniverseData } from "./preview.service";
 import { ActiveVenue } from "api/models";
 
 export class PreviewVenue
 {
     public name: string;
     public universes: PreviewUniverse[];
-    
+
     constructor()
     {
         this.name = "";

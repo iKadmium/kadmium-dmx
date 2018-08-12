@@ -8,5 +8,11 @@ namespace kadmium_dmx_data.Types.Venues
     {
         public string Name { get; set; }
         public IEnumerable<UniverseData> Universes { get; set; }
+
+        public VenueData()
+        {
+            Name = "";
+            Universes = new List<UniverseData>();
+        }
     }
 }

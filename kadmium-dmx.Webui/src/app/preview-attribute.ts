@@ -1,4 +1,4 @@
-import { PreviewAttributeData } from "app/preview.service";
+import { PreviewAttributeData } from "./preview.service";
 import { ActiveAttribute } from "api/models";
 
 export class PreviewAttribute

@@ -7,10 +7,17 @@ using MongoDB.Bson.Serialization.Serializers;
 
 namespace kadmium_dmx_data.Types.Venues
 {
-    public class UniverseData : BsonSerializable, IUniverseData
+    public class UniverseData : IUniverseData
     {
         public string Name { get; set; }
         public int UniverseID { get; set; }
         public IEnumerable<FixtureData> Fixtures { get; set; }
+
+        public UniverseData()
+        {
+            Name = "";
+            UniverseID = 0;
+            Fixtures = new List<FixtureData>();
+        }
     }
 }

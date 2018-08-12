@@ -1,20 +1,20 @@
 import { Component, OnInit, Input, EventEmitter, Output } from '@angular/core';
-import { StatusCode } from "app/status-code.enum";
-import { Status } from "app/status";
-import { PreviewVenue } from "app/preview-venue";
-import { VenueService } from "api/services";
-import { PreviewUniverse } from "app/preview-universe";
+import { StatusCode } from "../status-code.enum";
+import { Status } from "../status";
+import { PreviewVenue } from "../preview-venue";
+import { PreviewUniverse } from "../preview-universe";
 import { MatSnackBar, MatDialog } from '@angular/material';
-import { Sleep } from "app/sleep";
-import { AnimationLibrary } from "app/animation-library";
-import { Venue, Universe } from "api/models";
-import { VenueNameDialogComponent } from "app/venue-name-dialog/venue-name-dialog.component";
+import { Sleep } from "../sleep";
+import { AnimationLibrary } from "../animation-library";
+import { UniverseData } from "api/models";
+import { VenueNameDialogComponent } from "../venue-name-dialog/venue-name-dialog.component";
+import { APIClient, VenueData } from 'api';
 
 @Component({
     selector: 'app-dashboard-venue',
     templateUrl: './dashboard-venue.component.html',
     styleUrls: ['./dashboard-venue.component.css'],
-    providers: [VenueService],
+    providers: [APIClient],
     animations: [AnimationLibrary.animations()]
 })
 export class DashboardVenueComponent implements OnInit
@@ -25,7 +25,7 @@ export class DashboardVenueComponent implements OnInit
 
     public loading: boolean;
 
-    constructor(private snackbar: MatSnackBar, private venueService: VenueService, private dialog: MatDialog)
+    constructor(private snackbar: MatSnackBar, private apiClient: APIClient, private dialog: MatDialog)
     {
         this.loading = true;
     }
@@ -33,7 +33,7 @@ export class DashboardVenueComponent implements OnInit
     ngOnInit(): void
     {
         this.refreshVenue();
-        this.venueService.getVenues()
+        this.apiClient.getVenues()
             .toPromise()
             .then(response => 
             {
@@ -46,7 +46,7 @@ export class DashboardVenueComponent implements OnInit
     {
         try
         {
-            let response = await this.venueService.getActiveVenue().toPromise();
+            let response = await this.apiClient.getActiveVenue().toPromise();
             this.venue = new PreviewVenue().load(response);
         }
         catch (reason)
@@ -103,7 +103,7 @@ export class DashboardVenueComponent implements OnInit
         this.venue = null;
         try
         {
-            await this.venueService.activateVenueById(name).toPromise();
+            await this.apiClient.activateVenue({ name: name }).toPromise();
             await this.refreshVenue();
         }
         catch (error)
@@ -120,16 +120,17 @@ export class DashboardVenueComponent implements OnInit
         {
             if (next != null)
             {
-                let universe: Universe = {
+                let universe: UniverseData = {
                     fixtures: [],
                     name: "New Universe",
                     universeID: 1
                 };
-                let venue: Venue = {
+                let venue: VenueData = {
+                    id: "",
                     name: next,
                     universes: [universe]
                 };
-                let response = await this.venueService.postVenue(venue).toPromise();
+                let response = await this.apiClient.postVenue({ value: venue }).toPromise();
                 this.snackbar.open(venue.name + " successfully created", "Close", { duration: 3000 });
                 this.loadVenue(venue.name);
             }

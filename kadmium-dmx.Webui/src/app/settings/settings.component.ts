@@ -2,21 +2,21 @@ import { Component, OnInit, ViewChild, Injectable } from '@angular/core';
 import { Title } from "@angular/platform-browser";
 
 import { StatusCode } from "../status-code.enum";
-import { SettingsService, EnttecProTransmitterService } from "api/services";
 import { Settings } from "api/models";
 import { MatSnackBar, MatHorizontalStepper } from '@angular/material';
 import { CanDeactivate } from '@angular/router/src/interfaces';
 import { ActivatedRouteSnapshot, RouterStateSnapshot } from '@angular/router';
 import { Observable } from 'rxjs/Observable';
 import { NgForm } from '@angular/forms';
-import { AnimationLibrary } from "app/animation-library";
-import { EditorComponent } from "app/editor-component/editor-component";
+import { AnimationLibrary } from "../animation-library";
+import { EditorComponent } from "../editor-component/editor-component";
+import { APIClient } from 'api';
 
 @Component({
     selector: 'app-settings',
     templateUrl: './settings.component.html',
     styleUrls: ['./settings.component.css'],
-    providers: [SettingsService, EnttecProTransmitterService],
+    providers: [APIClient],
     animations: [AnimationLibrary.animations()]
 })
 export class SettingsComponent extends EditorComponent implements OnInit
@@ -30,8 +30,7 @@ export class SettingsComponent extends EditorComponent implements OnInit
 
     @ViewChild("settingsForm") formChild: NgForm;
 
-    constructor(private settingsService: SettingsService, private enttecService: EnttecProTransmitterService,
-        private snackbar: MatSnackBar, title: Title)
+    constructor(private apiClient: APIClient, private snackbar: MatSnackBar, title: Title)
     {
         super();
         title.setTitle("Settings");
@@ -42,7 +41,7 @@ export class SettingsComponent extends EditorComponent implements OnInit
     ngOnInit(): void
     {
         this.form = this.formChild;
-        this.settingsService
+        this.apiClient
             .getSettings()
             .toPromise()
             .then(response =>
@@ -51,8 +50,8 @@ export class SettingsComponent extends EditorComponent implements OnInit
                 this.fakeTargets = this.settings.sacnTransmitter.unicast.map(x => { return { target: x } });
             })
             .catch(error => this.snackbar.open(error, "Close", { duration: 3000 }));
-        this.enttecService
-            .getEnttecPortNames()
+        this.apiClient
+            .getPortsEnttecProTransmitters()
             .toPromise()
             .then(response =>
             {
@@ -72,7 +71,7 @@ export class SettingsComponent extends EditorComponent implements OnInit
         try
         {
             this.settings.sacnTransmitter.unicast = this.fakeTargets.map(x => x.target);
-            await this.settingsService.postSettings(this.settings).toPromise();
+            await this.apiClient.postSettings({ value: this.settings }).toPromise();
             this.saved = true;
             this.snackbar.open("Saved Successfully", "Close", { duration: 3000 });
         }

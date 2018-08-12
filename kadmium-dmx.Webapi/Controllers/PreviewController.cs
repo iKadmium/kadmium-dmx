@@ -3,8 +3,6 @@ using Microsoft.AspNetCore.Mvc;
 using kadmium_dmx_core;
 using System.Collections.Generic;
 using kadmium_dmx_core.Fixtures;
-using Swashbuckle.AspNetCore.SwaggerGen;
-using Swashbuckle.AspNetCore.Annotations;
 using kadmium_dmx_data.Types.Fixtures;
 using kadmium_dmx_data.Storage;
 using System.Threading.Tasks;
@@ -28,7 +26,6 @@ namespace kadmium_dmx_webapi.Controllers
 
         // GET: /<controller>/
         [HttpGet]
-        [SwaggerOperation("getPreview")]
         public async Task<PreviewResult> Get()
         {
             var fixtureDefinitionTasks = from grp in MasterController.Groups.Values
