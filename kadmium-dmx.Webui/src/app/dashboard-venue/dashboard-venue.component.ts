@@ -14,7 +14,6 @@ import { APIClient, VenueData } from 'api';
     selector: 'app-dashboard-venue',
     templateUrl: './dashboard-venue.component.html',
     styleUrls: ['./dashboard-venue.component.css'],
-    providers: [APIClient],
     animations: [AnimationLibrary.animations()]
 })
 export class DashboardVenueComponent implements OnInit

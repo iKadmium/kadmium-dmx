@@ -1,7 +1,9 @@
 import { Injectable } from '@angular/core';
 import { URLs, SocketController } from "./url";
 
-@Injectable()
+@Injectable({
+    providedIn: 'root'
+})
 export class UniverseStreamService
 {
     private socketUrl = URLs.getSocketURL(SocketController.Universe);

@@ -9,7 +9,6 @@ import { APIClient } from 'api';
     selector: 'app-dashboard-transmitter-enttec',
     templateUrl: './dashboard-transmitter-enttec.component.html',
     styleUrls: ['./dashboard-transmitter-enttec.component.css'],
-    providers: [APIClient],
     animations: [AnimationLibrary.animations()]
 })
 export class DashboardTransmitterEnttecComponent implements OnInit
@@ -20,7 +19,7 @@ export class DashboardTransmitterEnttecComponent implements OnInit
     enabled: boolean;
     loaded: boolean;
 
-    constructor(private apiClient: APIClient, private snackbar: MatSnackBar) 
+    constructor(private apiClient: APIClient) 
     {
         this.enabledDetermined = false;
         this.loaded = false;

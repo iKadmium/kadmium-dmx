@@ -15,7 +15,6 @@ import { APIClient } from 'api';
     selector: 'app-dashboard-universe',
     templateUrl: './dashboard-universe.component.html',
     styleUrls: ['./dashboard-universe.component.css'],
-    providers: [UniverseStreamService, APIClient],
     animations: [AnimationLibrary.animations()]
 })
 export class DashboardUniverseComponent implements OnInit, AfterViewInit, OnDestroy

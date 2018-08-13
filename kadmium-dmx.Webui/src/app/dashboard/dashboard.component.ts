@@ -14,7 +14,6 @@ import { AnimationLibrary } from '../animation-library';
     selector: 'app-dashboard',
     templateUrl: './dashboard.component.html',
     styleUrls: ['./dashboard.component.css'],
-    providers: [StatusStreamService],
     animations: [AnimationLibrary.animations()]
 
 })

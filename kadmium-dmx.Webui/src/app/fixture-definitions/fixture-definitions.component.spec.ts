@@ -2,8 +2,14 @@ import { async, ComponentFixture, TestBed, fakeAsync } from '@angular/core/testi
 
 import { FixtureDefinitionsComponent } from './fixture-definitions.component';
 import { FormsModule } from "@angular/forms";
-import { MockFixtureDefinitionService, FixtureDefinitionService } from "app/fixture-definition.service";
-import { NotificationsService } from "app/notifications.service";
+import { MockComponent } from '../../../node_modules/ng-mocks';
+import { SidenavToggleComponent } from '../sidenav-toggle/sidenav-toggle.component';
+import { MatIcon, MatFormField, MatToolbar, MatCard, MatCardContent, MatDialog, MatSnackBar } from '../../../node_modules/@angular/material';
+import { BusyCardComponent } from '../busy-card/busy-card.component';
+import { RouterTestingModule } from '../../../node_modules/@angular/router/testing';
+import { NoopAnimationsModule } from '../../../node_modules/@angular/platform-browser/animations';
+import { APIClient } from 'api';
+import { from } from '../../../node_modules/rxjs';
 
 describe('FixtureDefinitionsComponent', () =>
 {
@@ -13,16 +19,38 @@ describe('FixtureDefinitionsComponent', () =>
     beforeEach(async(() =>
     {
         TestBed.configureTestingModule({
-            declarations: [FixtureDefinitionsComponent],
-            imports: [FormsModule]
-        }).overrideComponent(FixtureDefinitionsComponent, {
+            declarations: [
+                FixtureDefinitionsComponent,
+                MockComponent(SidenavToggleComponent),
+                MockComponent(MatIcon),
+                MockComponent(MatFormField),
+                MockComponent(MatToolbar),
+                MockComponent(BusyCardComponent),
+                MockComponent(MatCard),
+                MockComponent(MatCardContent),
+            ],
+            imports: [
+                FormsModule,
+                RouterTestingModule,
+                NoopAnimationsModule
+            ]
+        });
+
+        TestBed.overrideComponent(FixtureDefinitionsComponent, {
             set: {
                 providers: [
-                    NotificationsService,
-                    { provide: FixtureDefinitionService, useClass: MockFixtureDefinitionService }
+                    {
+                        provide: APIClient, useValue: jasmine.createSpyObj<APIClient>({
+                            getFixtureDefinitions: from([])
+                        })
+                    },
+                    { provide: MatDialog, useValue: jasmine.createSpyObj<MatDialog>({ open: null }) },
+                    { provide: MatSnackBar, useValue: jasmine.createSpyObj<MatSnackBar>({ open: null }) }
                 ]
             }
-        }).compileComponents();
+        });
+
+        TestBed.compileComponents();
     }));
 
     beforeEach(() =>

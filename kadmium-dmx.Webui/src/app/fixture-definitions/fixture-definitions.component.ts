@@ -14,7 +14,6 @@ import { DeleteConfirmDialogComponent } from 'app/delete-confirm-dialog/delete-c
     selector: 'app-fixture-definitions',
     templateUrl: './fixture-definitions.component.html',
     styleUrls: ['./fixture-definitions.component.css'],
-    providers: [APIClient],
     animations: [AnimationLibrary.slideIn(), AnimationLibrary.fadeIn(200), AnimationLibrary.fadeOut(200)]
 })
 export class FixtureDefinitionsComponent implements OnInit

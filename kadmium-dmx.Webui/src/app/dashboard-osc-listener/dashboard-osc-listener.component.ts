@@ -7,7 +7,6 @@ import { APIClient } from 'api';
     selector: 'app-dashboard-osc-listener',
     templateUrl: './dashboard-osc-listener.component.html',
     styleUrls: ['./dashboard-osc-listener.component.css'],
-    providers: [APIClient],
     animations: [AnimationLibrary.animations()]
 })
 export class DashboardOSCListenerComponent implements OnInit

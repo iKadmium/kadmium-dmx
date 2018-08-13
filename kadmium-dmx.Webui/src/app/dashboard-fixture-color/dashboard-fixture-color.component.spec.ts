@@ -1,25 +1,34 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { DashboardFixtureColorComponent } from './dashboard-fixture-color.component';
+import { ColorPickerComponent, ColorPickerDirective } from '../../../node_modules/ngx-color-picker';
+import { MockComponent, MockDirective } from '../../../node_modules/ng-mocks';
 
-describe('DashboardFixtureColorComponent', () => {
-  let component: DashboardFixtureColorComponent;
-  let fixture: ComponentFixture<DashboardFixtureColorComponent>;
+describe('DashboardFixtureColorComponent', () =>
+{
+	let component: DashboardFixtureColorComponent;
+	let fixture: ComponentFixture<DashboardFixtureColorComponent>;
 
-  beforeEach(async(() => {
-    TestBed.configureTestingModule({
-      declarations: [ DashboardFixtureColorComponent ]
-    })
-    .compileComponents();
-  }));
+	beforeEach(async(() =>
+	{
+		TestBed.configureTestingModule({
+			declarations: [
+				DashboardFixtureColorComponent,
+				MockComponent(ColorPickerComponent),
+				MockDirective(ColorPickerDirective)
+			]
+		}).compileComponents();
+	}));
 
-  beforeEach(() => {
-    fixture = TestBed.createComponent(DashboardFixtureColorComponent);
-    component = fixture.componentInstance;
-    fixture.detectChanges();
-  });
+	beforeEach(() =>
+	{
+		fixture = TestBed.createComponent(DashboardFixtureColorComponent);
+		component = fixture.componentInstance;
+		fixture.detectChanges();
+	});
 
-  it('should create', () => {
-    expect(component).toBeTruthy();
-  });
+	it('should create', () =>
+	{
+		expect(component).toBeTruthy();
+	});
 });

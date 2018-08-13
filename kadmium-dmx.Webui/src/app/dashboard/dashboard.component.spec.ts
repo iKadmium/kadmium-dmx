@@ -1,12 +1,15 @@
 import { DashboardComponent } from './dashboard.component';
-import { StatusStreamService, MockDashboardService } from "../dashboard.service";
-import { OSCListenerLiveService, MockOSCListenerService } from "../osclistener-live.service";
-import { FixtureStreamService, MockSolversLiveService } from "app/solvers-live.service";
-import { NotificationsService } from "app/notifications.service";
 import { ComponentFixture, TestBed, fakeAsync } from "@angular/core/testing";
 import { async } from "@angular/core/testing";
-import { EnttecProTransmitterService, VenueService } from "api/services";
-import { UniverseStreamService } from "../universe-stream.service";
+import { MatSnackBar, MatToolbar, MatDialog, MatDialogClose, MatIcon } from '../../../node_modules/@angular/material';
+import { StatusStreamService } from '../dashboard.service';
+import { Title } from '../../../node_modules/@angular/platform-browser';
+import { SidenavToggleComponent } from '../sidenav-toggle/sidenav-toggle.component';
+import { MockComponent, MockDirective } from '../../../node_modules/ng-mocks';
+import { DashboardOSCListenerComponent } from '../dashboard-osc-listener/dashboard-osc-listener.component';
+import { DashboardVenueComponent } from '../dashboard-venue/dashboard-venue.component';
+import { DashboardTransmitterEnttecComponent } from '../dashboard-transmitter-enttec/dashboard-transmitter-enttec.component';
+import { DashboardTransmitterSacnComponent } from '../dashboard-transmitter-sacn/dashboard-transmitter-sacn.component';
 
 describe('DashboardComponent', () =>
 {
@@ -17,19 +20,22 @@ describe('DashboardComponent', () =>
     {
         TestBed.configureTestingModule({
             declarations: [
-                DashboardComponent
+                DashboardComponent,
+                MockComponent(SidenavToggleComponent),
+                MockComponent(MatToolbar),
+                MockComponent(DashboardVenueComponent),
+                MockComponent(DashboardOSCListenerComponent),
+                MockComponent(DashboardTransmitterEnttecComponent),
+                MockComponent(DashboardTransmitterSacnComponent)
             ]
         });
         TestBed.overrideComponent(DashboardComponent, {
             set: {
                 providers: [
-                    NotificationsService,
-                    { provide: VenueService, useValue: VenueService },
-                    { provide: StatusStreamService, useValue: MockDashboardService },
-                    { provide: FixtureStreamService, useValue: MockSolversLiveService },
-                    { provide: OSCListenerLiveService, useValue: MockOSCListenerService },
-                    { provide: UniverseStreamService, useValue: UniverseStreamService },
-                    { provide: EnttecProTransmitterService, useValue: EnttecProTransmitterService },
+                    { provide: MatSnackBar, useValue: jasmine.createSpyObj<MatSnackBar>({ open: null }) },
+                    { provide: StatusStreamService, useValue: jasmine.createSpyObj<StatusStreamService>({ subscribe: null }) },
+                    { provide: MatDialog, useValue: jasmine.createSpyObj<MatDialog>({ open: null }) },
+                    { provide: Title, useValue: jasmine.createSpyObj<Title>({ setTitle: null }) },
                 ]
             }
         });

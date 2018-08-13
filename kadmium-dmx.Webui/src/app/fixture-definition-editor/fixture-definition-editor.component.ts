@@ -13,7 +13,6 @@ import { APIClient, FixtureType, ColorWheelEntryData, DMXChannelData } from 'api
     selector: 'app-fixture-definition-editor',
     templateUrl: './fixture-definition-editor.component.html',
     styleUrls: ['./fixture-definition-editor.component.css'],
-    providers: [APIClient],
     animations: [AnimationLibrary.animations()]
 })
 export class FixtureDefinitionEditorComponent extends EditorComponent implements OnInit

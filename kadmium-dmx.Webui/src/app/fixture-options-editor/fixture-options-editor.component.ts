@@ -8,7 +8,6 @@ import { APIClient } from 'api';
     selector: 'app-fixture-options-editor',
     templateUrl: './fixture-options-editor.component.html',
     styleUrls: ['./fixture-options-editor.component.css'],
-    providers: [APIClient],
     animations: [AnimationLibrary.animations()]
 })
 export class FixtureOptionsEditorComponent implements OnInit
@@ -23,7 +22,7 @@ export class FixtureOptionsEditorComponent implements OnInit
     public options: FixtureOptions;
 
     constructor(public dialogRef: MatDialogRef<FixtureOptionsEditorComponent>, private apiClient: APIClient,
-        @Inject(MAT_DIALOG_DATA) public data: { fixture: FixtureData })
+        @Inject(MAT_DIALOG_DATA) public data: FixtureContainer)
     {
         this.fixture = data.fixture;
         this.options = {
@@ -61,6 +60,11 @@ export class FixtureOptionsEditorComponent implements OnInit
     {
         return this.definition.movements.length > 0;
     }
+}
+
+export class FixtureContainer
+{
+    fixture: FixtureData;
 }
 
 class AxisOptions

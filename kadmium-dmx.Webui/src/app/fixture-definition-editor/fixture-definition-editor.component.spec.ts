@@ -1,13 +1,15 @@
 import { FixtureDefinitionEditorComponent } from './fixture-definition-editor.component';
 import { FormsModule } from "@angular/forms";
-import { TableInputComponent } from "../table-input/table-input.component";
-import { LabelledInputComponent } from "../labelled-input/labelled-input.component";
-import { UniqueValueValidatorDirective } from "../unique-value-validator.directive";
-import { FixtureDefinitionService, MockFixtureDefinitionService } from "app/fixture-definition.service";
-import { HttpModule } from "@angular/http";
 import { RouterTestingModule } from "@angular/router/testing";
-import { NotificationsService } from "app/notifications.service";
 import { async, ComponentFixture, TestBed, fakeAsync } from "@angular/core/testing";
+import { APIClient } from 'api';
+import { from } from '../../../node_modules/rxjs';
+import { MockComponent, MockDirective, MockModule } from '../../../node_modules/ng-mocks';
+import { SidenavToggleComponent } from '../sidenav-toggle/sidenav-toggle.component';
+import { MatToolbar, MatCard, MatCardTitle, MatCardContent, MatIcon, MatAutocomplete, MatOption, MatFormField, MatSelect, MatExpansionPanel, MatExpansionPanelHeader, MatCardActions, MatExpansionPanelTitle, MatExpansionPanelActionRow, MatDivider, MatAutocompleteModule, MatSnackBar } from '../../../node_modules/@angular/material';
+import { BusyCardComponent } from '../busy-card/busy-card.component';
+import { UniqueValueValidatorDirective } from '../unique-value-validator.directive';
+import { NoopAnimationsModule } from '../../../node_modules/@angular/platform-browser/animations';
 
 describe('FixtureDefinitionEditorComponent', () =>
 {
@@ -19,23 +21,49 @@ describe('FixtureDefinitionEditorComponent', () =>
         TestBed.configureTestingModule({
             declarations: [
                 FixtureDefinitionEditorComponent,
-                TableInputComponent,
-                LabelledInputComponent,
-                UniqueValueValidatorDirective
+                MockComponent(SidenavToggleComponent),
+                MockComponent(MatToolbar),
+                MockComponent(MatCard),
+                MockComponent(MatCardTitle),
+                MockComponent(MatCardContent),
+                MockComponent(MatCardActions),
+                MockComponent(BusyCardComponent),
+                MockComponent(MatIcon),
+                MockComponent(MatSelect),
+                MockComponent(MatFormField),
+                MockComponent(MatExpansionPanel),
+                MockComponent(MatExpansionPanelHeader),
+                MockComponent(MatExpansionPanelTitle),
+                MockComponent(MatExpansionPanelActionRow),
+                MockComponent(MatDivider),
+
+                MockDirective(UniqueValueValidatorDirective)
             ],
             imports: [
                 RouterTestingModule,
-                HttpModule,
-                FormsModule
+                FormsModule,
+                MatAutocompleteModule,
+                NoopAnimationsModule
             ]
-        }).overrideComponent(FixtureDefinitionEditorComponent, {
+        });
+
+        TestBed.overrideComponent(FixtureDefinitionEditorComponent, {
             set: {
                 providers: [
-                    NotificationsService,
-                    { provide: FixtureDefinitionService, useClass: MockFixtureDefinitionService }
+                    {
+                        provide: APIClient, useValue: jasmine.createSpyObj<APIClient>({
+                            getFixtureDefinition: from([]),
+                            getFixtureDefinitions: from([[]]),
+                            postFixtureDefinition: from([null]),
+                            putFixtureDefinition: from([null])
+                        })
+                    },
+                    { provide: MatSnackBar, useValue: jasmine.createSpyObj<MatSnackBar>({ open: null }) }
                 ]
             }
-        }).compileComponents();
+        })
+
+        TestBed.compileComponents();
     }));
 
     beforeEach(() =>

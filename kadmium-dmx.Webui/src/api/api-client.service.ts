@@ -18,7 +18,9 @@ type APIHttpOptions = HttpOptions & {
 /**
  * Created with https://github.com/flowup/api-client-generator
  */
-@Injectable()
+@Injectable({
+  providedIn: 'root'
+})
 export class APIClient implements APIClientInterface
 {
 

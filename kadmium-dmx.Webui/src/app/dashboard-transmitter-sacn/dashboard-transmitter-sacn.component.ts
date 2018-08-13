@@ -9,7 +9,6 @@ import { APIClient } from 'api';
     selector: 'app-dashboard-transmitter-sacn',
     templateUrl: './dashboard-transmitter-sacn.component.html',
     styleUrls: ['./dashboard-transmitter-sacn.component.css'],
-    providers: [APIClient],
     animations: [AnimationLibrary.animations()]
 })
 export class DashboardTransmitterSacnComponent implements OnInit
@@ -20,7 +19,7 @@ export class DashboardTransmitterSacnComponent implements OnInit
     enabled: boolean;
     loaded: boolean;
 
-    constructor(private apiClient: APIClient, private snackbar: MatSnackBar) 
+    constructor(private apiClient: APIClient) 
     {
         this.enabledDetermined = false;
         this.loaded = false;

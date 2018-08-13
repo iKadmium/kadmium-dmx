@@ -1,29 +1,29 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { DashboardFixturePreviewComponent } from './dashboard-fixture-preview.component';
 
-import { Preview2DFixtureComponent } from './preview2d-fixture.component';
 
 describe('Preview2DFixtureComponent', () =>
 {
-  let component: Preview2DFixtureComponent;
-  let fixture: ComponentFixture<Preview2DFixtureComponent>;
+	let component: DashboardFixturePreviewComponent;
+	let fixture: ComponentFixture<DashboardFixturePreviewComponent>;
 
-  beforeEach(async(() =>
-  {
-    TestBed.configureTestingModule({
-      declarations: [Preview2DFixtureComponent]
-    })
-      .compileComponents();
-  }));
+	beforeEach(async(() =>
+	{
+		TestBed.configureTestingModule({
+			declarations: [DashboardFixturePreviewComponent]
+		})
+			.compileComponents();
+	}));
 
-  beforeEach(() =>
-  {
-    fixture = TestBed.createComponent(Preview2DFixtureComponent);
-    component = fixture.componentInstance;
-    fixture.detectChanges();
-  });
+	beforeEach(() =>
+	{
+		fixture = TestBed.createComponent(DashboardFixturePreviewComponent);
+		component = fixture.componentInstance;
+		fixture.detectChanges();
+	});
 
-  it('should create', () =>
-  {
-    expect(component).toBeTruthy();
-  });
+	it('should create', () =>
+	{
+		expect(component).toBeTruthy();
+	});
 });

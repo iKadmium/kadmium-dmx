@@ -12,7 +12,6 @@ import { APIClient } from 'api';
     selector: 'app-dashboard-fixtures',
     templateUrl: './dashboard-fixtures.component.html',
     styleUrls: ['./dashboard-fixtures.component.css'],
-    providers: [UniverseStreamService, APIClient],
     animations: [AnimationLibrary.animations()]
 })
 export class DashboardFixturesComponent implements OnInit, OnDestroy
