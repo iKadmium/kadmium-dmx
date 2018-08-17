@@ -103,7 +103,7 @@ class ChannelCollectionVariant
 	}
 }
 
-class AddFixtureDefinitionData
+export class AddFixtureDefinitionData
 {
 	public channels: DMXChannelData[]
 	public venue: string;

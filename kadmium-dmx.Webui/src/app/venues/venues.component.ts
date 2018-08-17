@@ -24,7 +24,7 @@ export class VenuesComponent implements OnInit
 
     public loading: boolean;
 
-    constructor(private apiService: APIClient, private snackbar: MatSnackBar, title: Title, private dialog: MatDialog)
+    constructor(private apiClient: APIClient, private snackbar: MatSnackBar, title: Title, private dialog: MatDialog)
     {
         title.setTitle("Venues");
         this.venues = [];
@@ -33,7 +33,7 @@ export class VenuesComponent implements OnInit
 
     ngOnInit(): void
     {
-        this.apiService.getVenues()
+        this.apiClient.getVenues()
             .toPromise()
             .then(response => 
             {
@@ -51,7 +51,7 @@ export class VenuesComponent implements OnInit
             {
                 try 
                 {
-                    await this.apiService.deleteVenue({ name: venueName }).toPromise();
+                    await this.apiClient.deleteVenue({ name: venueName }).toPromise();
                     let index = this.venues.indexOf(venueName);
                     this.venues.splice(index, 1);
                     this.snackbar.open(venueName + " successfully removed", "Close", { duration: 3000 });
@@ -103,7 +103,7 @@ export class VenuesComponent implements OnInit
         {
             let venue = await AsyncFileReader.read<VenueData>(file);
             venue.id = "";
-            await this.apiService.postVenue({ value: venue }).toPromise();
+            await this.apiClient.postVenue({ value: venue }).toPromise();
             this.venues.push(venue.name);
             this.snackbar.open("Successfully added " + venue.name, "Close", { duration: 3000 });
         }

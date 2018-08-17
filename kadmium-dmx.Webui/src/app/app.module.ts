@@ -16,13 +16,11 @@ import { DashboardComponent } from './dashboard/dashboard.component';
 import { FixtureDefinitionsComponent } from './fixture-definitions/fixture-definitions.component';
 import { FixtureDefinitionEditorComponent } from './fixture-definition-editor/fixture-definition-editor.component';
 import { GroupsComponent } from './groups/groups.component';
-import { LabelledInputComponent } from './labelled-input/labelled-input.component';
 import { SettingsComponent } from './settings/settings.component';
 import { VenuesComponent } from './venues/venues.component';
 import { UniverseEditorComponent } from './universe-editor/universe-editor.component';
 import { FixtureOptionsEditorComponent } from './fixture-options-editor/fixture-options-editor.component';
 import { VenueEditorComponent } from './venue-editor/venue-editor.component';
-import { TableInputComponent } from './table-input/table-input.component';
 import { MaxValueValidatorDirective } from './max-value-validator.directive';
 import { MinValueValidatorDirective } from './min-value-validator.directive';
 import { UniqueValueValidatorDirective } from './unique-value-validator.directive';
@@ -61,14 +59,12 @@ import { UniverseEditorAddMultipleFixturesDialogComponent } from './universe-edi
         FixtureDefinitionsComponent,
         FixtureDefinitionEditorComponent,
         GroupsComponent,
-        LabelledInputComponent,
         DashboardFixturePreviewComponent,
         SettingsComponent,
         VenuesComponent,
         UniverseEditorComponent,
         FixtureOptionsEditorComponent,
         VenueEditorComponent,
-        TableInputComponent,
         MaxValueValidatorDirective,
         MinValueValidatorDirective,
         UniqueValueValidatorDirective,

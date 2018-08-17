@@ -21,7 +21,7 @@
 			<mat-expansion-panel-header>
 				<mat-panel-title>Groups</mat-panel-title>
 				<mat-panel-description>
-					{{groupsList.selectedOptions.selected.length}} selected
+					{{groupsList?.selectedOptions?.selected?.length}} selected
 				</mat-panel-description>
 			</mat-expansion-panel-header>
 			<mat-selection-list #groupsList>
@@ -35,7 +35,7 @@
 			<mat-expansion-panel-header>
 				<mat-panel-title>Attributes</mat-panel-title>
 				<mat-panel-description>
-					{{attributesList.selectedOptions.selected.length}} selected
+					{{attributesList?.selectedOptions?.selected?.length}} selected
 				</mat-panel-description>
 			</mat-expansion-panel-header>
 			<mat-selection-list #attributesList>

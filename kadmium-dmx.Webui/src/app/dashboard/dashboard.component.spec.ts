@@ -33,7 +33,7 @@ describe('DashboardComponent', () =>
             set: {
                 providers: [
                     { provide: MatSnackBar, useValue: jasmine.createSpyObj<MatSnackBar>({ open: null }) },
-                    { provide: StatusStreamService, useValue: jasmine.createSpyObj<StatusStreamService>({ subscribe: null }) },
+                    { provide: StatusStreamService, useValue: jasmine.createSpyObj<StatusStreamService>({ subscribe: null, unsubscribe: null }) },
                     { provide: MatDialog, useValue: jasmine.createSpyObj<MatDialog>({ open: null }) },
                     { provide: Title, useValue: jasmine.createSpyObj<Title>({ setTitle: null }) },
                 ]

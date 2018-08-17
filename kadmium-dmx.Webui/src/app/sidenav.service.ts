@@ -4,7 +4,6 @@ import { MatSidenav } from "@angular/material/sidenav";
 @Injectable()
 export class SidenavService
 {
-
 	private static sidenav: MatSidenav;
 	constructor() { }
 
@@ -15,6 +14,9 @@ export class SidenavService
 
 	public toggle(): void
 	{
-		SidenavService.sidenav.toggle();
+		if (SidenavService.sidenav != null)
+		{
+			SidenavService.sidenav.toggle();
+		}
 	}
 }

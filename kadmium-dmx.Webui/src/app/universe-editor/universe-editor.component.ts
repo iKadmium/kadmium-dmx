@@ -29,7 +29,6 @@ export class UniverseEditorComponent implements OnInit
 
     constructor(private apiClient: APIClient, private snackbar: MatSnackBar, private dialog: MatDialog)
     {
-
     }
 
     ngOnInit(): void

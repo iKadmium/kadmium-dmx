@@ -9,7 +9,6 @@ import { SidenavService } from "../sidenav.service";
 })
 export class SidenavToggleComponent implements OnInit
 {
-
 	constructor(private sidenavService: SidenavService) { }
 
 	ngOnInit()

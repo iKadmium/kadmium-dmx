@@ -1,25 +1,52 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { VenueDiscoveryFixtureComponent } from './venue-discovery-fixture.component';
+import { MockComponent } from '../../../node_modules/ng-mocks';
+import { MatCard, MatCardTitle, MatCardContent, MatIcon, MatCardActions } from '../../../node_modules/@angular/material';
+import { ActiveFixture } from 'api';
 
-describe('VenueDiscoveryFixtureComponent', () => {
-  let component: VenueDiscoveryFixtureComponent;
-  let fixture: ComponentFixture<VenueDiscoveryFixtureComponent>;
+describe('VenueDiscoveryFixtureComponent', () =>
+{
+	let component: VenueDiscoveryFixtureComponent;
+	let fixture: ComponentFixture<VenueDiscoveryFixtureComponent>;
+	let activeFixture: ActiveFixture;
 
-  beforeEach(async(() => {
-    TestBed.configureTestingModule({
-      declarations: [ VenueDiscoveryFixtureComponent ]
-    })
-    .compileComponents();
-  }));
+	beforeEach(async(() =>
+	{
+		activeFixture = {
+			address: 1,
+			attributes: [],
+			colorWheel: [],
+			group: "",
+			manufacturer: "",
+			model: "",
+			movementAxis: []
+		};
 
-  beforeEach(() => {
-    fixture = TestBed.createComponent(VenueDiscoveryFixtureComponent);
-    component = fixture.componentInstance;
-    fixture.detectChanges();
-  });
+		TestBed.configureTestingModule({
+			declarations: [
+				VenueDiscoveryFixtureComponent,
+				MockComponent(MatCard),
+				MockComponent(MatCardTitle),
+				MockComponent(MatCardContent),
+				MockComponent(MatIcon),
+				MockComponent(MatCardActions)
+			]
+		});
 
-  it('should create', () => {
-    expect(component).toBeTruthy();
-  });
+		TestBed.compileComponents();
+	}));
+
+	beforeEach(() =>
+	{
+		fixture = TestBed.createComponent(VenueDiscoveryFixtureComponent);
+		component = fixture.componentInstance;
+		component.fixture = activeFixture;
+		fixture.detectChanges();
+	});
+
+	it('should create', () =>
+	{
+		expect(component).toBeTruthy();
+	});
 });

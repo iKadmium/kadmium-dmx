@@ -11,7 +11,7 @@ import { MatListOption } from '@angular/material';
 export class UniverseEditorPresetSaveDialogComponent implements OnInit
 {
     constructor(public dialogRef: MatDialogRef<UniverseEditorPresetSaveDialogComponent>,
-        @Inject(MAT_DIALOG_DATA) public data: any) { }
+        @Inject(MAT_DIALOG_DATA) public data: UniverseEditorPresetSaveDialogComponentData) { }
 
     ngOnInit()
     {
@@ -26,4 +26,9 @@ export class UniverseEditorPresetSaveDialogComponent implements OnInit
     {
         this.dialogRef.close();
     }
+}
+
+export interface UniverseEditorPresetSaveDialogComponentData
+{
+    fixtures: FixtureData[]
 }

@@ -2,12 +2,9 @@ import { async, ComponentFixture, TestBed, fakeAsync } from '@angular/core/testi
 
 import { FixtureOptionsEditorComponent, FixtureContainer } from './fixture-options-editor.component';
 import { FormsModule } from "@angular/forms";
-import { LabelledInputComponent } from "../labelled-input/labelled-input.component";
-import { TableInputComponent } from "../table-input/table-input.component";
-import { APIClient, FixtureData } from '../../api';
+import { APIClient, FixtureData, FixtureDefinition, FixtureType } from '../../api';
 import { MatDialogRef, MatFormField, MatExpansionPanel, MatExpansionPanelHeader, MatExpansionPanelTitle, MatCheckbox, MatDivider, MatDialogClose, MAT_DIALOG_DATA } from '../../../node_modules/@angular/material';
 import { MockComponent } from '../../../node_modules/ng-mocks';
-import { InjectionToken } from '../../../node_modules/@angular/core';
 import { from } from '../../../node_modules/rxjs';
 
 describe('FixtureOptionsEditorComponent', () =>
@@ -16,6 +13,7 @@ describe('FixtureOptionsEditorComponent', () =>
     let fixture: ComponentFixture<FixtureOptionsEditorComponent>;
 
     let fixtureContainer: FixtureContainer;
+    let definition: FixtureDefinition;
 
     beforeEach(async(() =>
     {
@@ -30,6 +28,19 @@ describe('FixtureOptionsEditorComponent', () =>
                 options: { maxBrightness: 1, axisInversions: [], axisRestrictions: [] }
             }
         };
+
+        definition = {
+            channels: [],
+            colorWheel: [],
+            fixtureType: FixtureType.LED,
+            id: "",
+            movements: [],
+            skeleton: {
+                manufacturer: fixtureContainer.fixture.type.manufacturer,
+                model: fixtureContainer.fixture.type.model
+            }
+        }
+
         TestBed.configureTestingModule({
             declarations: [
                 FixtureOptionsEditorComponent,
@@ -48,7 +59,7 @@ describe('FixtureOptionsEditorComponent', () =>
         TestBed.overrideComponent(FixtureOptionsEditorComponent, {
             set: {
                 providers: [
-                    { provide: APIClient, useValue: jasmine.createSpyObj<APIClient>({ getFixtureDefinition: from([]) }) },
+                    { provide: APIClient, useValue: jasmine.createSpyObj<APIClient>({ getFixtureDefinition: from([definition]) }) },
                     { provide: MatDialogRef, useValue: jasmine.createSpyObj<MatDialogRef<FixtureOptionsEditorComponent>>({ close: null }) },
                     { provide: MAT_DIALOG_DATA, useValue: fixtureContainer }
                 ]

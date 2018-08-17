@@ -52,9 +52,9 @@ describe('DashboardFixtureDetailComponent', () =>
 						})
 					},
 					{ provide: ActivatedRoute, useValue: { snapshot: { paramMap: { get: param => paramMap[param] } } } },
-					{ provide: UniverseStreamService, useValue: jasmine.createSpyObj<UniverseStreamService>({ subscribe: null }) },
+					{ provide: UniverseStreamService, useValue: jasmine.createSpyObj<UniverseStreamService>({ subscribe: null, unsubscribe: null }) },
 					{ provide: MatSnackBar, useValue: jasmine.createSpyObj<MatSnackBar>({ open: null }) },
-					{ provide: FixtureStreamService, useValue: jasmine.createSpyObj<FixtureStreamService>({ subscribe: null }) }
+					{ provide: FixtureStreamService, useValue: jasmine.createSpyObj<FixtureStreamService>({ subscribe: null, unsubscribe: null }) }
 				]
 			}
 		});
