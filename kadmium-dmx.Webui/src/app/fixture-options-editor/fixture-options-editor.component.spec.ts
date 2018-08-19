@@ -2,10 +2,10 @@ import { async, ComponentFixture, TestBed, fakeAsync } from '@angular/core/testi
 
 import { FixtureOptionsEditorComponent, FixtureContainer } from './fixture-options-editor.component';
 import { FormsModule } from "@angular/forms";
-import { APIClient, FixtureData, FixtureDefinition, FixtureType } from '../../api';
-import { MatDialogRef, MatFormField, MatExpansionPanel, MatExpansionPanelHeader, MatExpansionPanelTitle, MatCheckbox, MatDivider, MatDialogClose, MAT_DIALOG_DATA } from '../../../node_modules/@angular/material';
-import { MockComponent } from '../../../node_modules/ng-mocks';
-import { from } from '../../../node_modules/rxjs';
+import { APIClient, FixtureData, FixtureDefinition, FixtureType } from 'api';
+import { MatDialogRef, MatFormField, MatExpansionPanel, MatExpansionPanelHeader, MatExpansionPanelTitle, MatCheckbox, MatDivider, MatDialogClose, MAT_DIALOG_DATA } from '@angular/material';
+import { MockComponent } from 'ng-mocks';
+import { from } from 'rxjs';
 
 describe('FixtureOptionsEditorComponent', () =>
 {

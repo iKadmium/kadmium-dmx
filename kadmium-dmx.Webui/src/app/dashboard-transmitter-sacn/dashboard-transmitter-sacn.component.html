@@ -6,6 +6,8 @@
     </mat-card-content>
     <mat-card-actions style="display: flex">
         <span style="flex: 1"></span>
-        <mat-slide-toggle [checked]="enabled" color="primary" [disabled]="!enabledDetermined" (change)="toggleEnabled()">{{enabled ? "Enabled" : "Disabled"}}</mat-slide-toggle>
+        <mat-slide-toggle [checked]="enabled" color="primary" [disabled]="!enabledDetermined" (change)="toggleEnabled()">
+            {{enabled ? "Enabled" : "Disabled"}}
+        </mat-slide-toggle>
     </mat-card-actions>
 </mat-card>

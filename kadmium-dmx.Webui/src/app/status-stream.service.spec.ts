@@ -1,7 +1,7 @@
 import { TestBed, inject } from '@angular/core/testing';
 
-import { StatusStreamService } from './dashboard.service';
 import { AppModule } from "./app.module";
+import { StatusStreamService } from './status-stream.service';
 
 describe('DashboardService', () =>
 {

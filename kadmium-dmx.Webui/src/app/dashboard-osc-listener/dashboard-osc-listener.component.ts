@@ -2,6 +2,7 @@ import { Component, OnInit, Input } from '@angular/core';
 import { Status } from '../status';
 import { AnimationLibrary } from "../animation-library";
 import { APIClient } from 'api';
+import { MessageService } from 'app/message.service';
 
 @Component({
     selector: 'app-dashboard-osc-listener',
@@ -11,15 +12,13 @@ import { APIClient } from 'api';
 })
 export class DashboardOSCListenerComponent implements OnInit
 {
-    enabledDetermined: boolean;
-    enabled: boolean;
-
-    public loaded: boolean;
-
     @Input() status: Status;
 
+    public enabledDetermined: boolean;
+    public enabled: boolean;
+    public loaded: boolean;
 
-    constructor(private apiClient: APIClient)
+    constructor(private apiClient: APIClient, private messageService: MessageService)
     {
         this.enabledDetermined = false;
         this.enabled = false;
@@ -28,18 +27,25 @@ export class DashboardOSCListenerComponent implements OnInit
 
     ngOnInit(): void
     {
-        this.apiClient.enabledOSCListener()
-            .toPromise()
-            .then((response) =>
-            {
-                this.enabled = response;
-                this.enabledDetermined = true;
-                this.loaded = true;
-            });
-
+        try
+        {
+            this.apiClient
+                .enabledOSCListener()
+                .toPromise()
+                .then(response =>
+                {
+                    this.enabled = response;
+                    this.enabledDetermined = true;
+                    this.loaded = true;
+                });
+        }
+        catch (error) 
+        {
+            this.messageService.error(error);
+        }
     }
 
-    async toggleEnabled(): Promise<void>
+    public async toggleEnabled(): Promise<void>
     {
         let oldValue = this.enabled;
         this.enabledDetermined = false;
@@ -51,10 +57,8 @@ export class DashboardOSCListenerComponent implements OnInit
         catch (error)
         {
             this.enabled = oldValue;
+            this.messageService.error(error);
         }
         this.enabledDetermined = true;
     }
-
-
-
 }

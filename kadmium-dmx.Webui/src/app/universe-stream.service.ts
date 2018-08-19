@@ -1,5 +1,8 @@
 import { Injectable } from '@angular/core';
 import { URLs, SocketController } from "./url";
+import { Observable } from 'rxjs';
+import { resolve } from 'path';
+import { WebSocketSubject, WebSocketSubjectConfig } from 'rxjs/webSocket';
 
 @Injectable({
     providedIn: 'root'
@@ -8,11 +11,10 @@ export class UniverseStreamService
 {
     private socketUrl = URLs.getSocketURL(SocketController.Universe);
     private socket: WebSocket;
-    private listener: (message: any) => void;
+    private subject: WebSocketSubject<Uint8Array>;
 
     constructor()
     {
-        //this.socket = new WebSocket(this.socketUrl);
     }
 
     public set(universeID: number, channel: number, value: number): void
@@ -22,58 +24,16 @@ export class UniverseStreamService
             channel: parseInt(channel + ""),
             value: parseInt(value + "")
         };
-        this.socket.send(JSON.stringify(data));
+        this.subject.next(data as any);
     }
 
-    public subscribe(universeID: number, listener: (data: Uint8Array) => void): void
+    public open(universeID: number): Observable<Uint8Array>
     {
-        this.socket = new WebSocket(this.socketUrl + "/" + universeID);
-        this.socket.binaryType = "arraybuffer";
-        if (this.listener != null)
-        {
-            this.unsubscribe();
-        }
-        this.listener = (message) =>
-        {
-            if (message.data instanceof ArrayBuffer)
-            {
-                let arr = new Uint8Array(message.data);
-                listener(arr);
-            }
+        let config: WebSocketSubjectConfig<Uint8Array> = {
+            binaryType: "arraybuffer",
+            url: `${this.socketUrl}/${universeID}`
         };
-        this.socket.addEventListener("message", this.listener);
+        this.subject = new WebSocketSubject<Uint8Array>(config);
+        return this.subject.asObservable();
     }
-
-    public unsubscribe(): void
-    {
-        if (this.socket != null)
-        {
-            this.socket.removeEventListener("message", this.listener);
-            this.socket.close();
-        }
-    }
-}
-
-export interface UniverseUpdateData
-{
-    universeID: number,
-    values: number[]
-}
-
-export class MockSACNTransmitterService
-{
-    private enabled: boolean;
-    private values: number[];
-
-    constructor()
-    {
-        this.enabled = true;
-        this.values = [].fill(0, 0, 512);
-    }
-
-    public subscribe(thisRef: Object): void
-    {
-
-    }
-
 }

@@ -1,9 +1,9 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { VenueDiscoveryAddFixtureDefinitionDialogComponent, AddFixtureDefinitionData } from './venue-discovery-add-fixture-definition-dialog.component';
-import { FormsModule } from '../../../node_modules/@angular/forms';
-import { MockComponent } from '../../../node_modules/ng-mocks';
-import { MatFormField, MatSelect, MatOption, MatDialogClose, MatIcon, MatDialogRef, MAT_DIALOG_DATA } from '../../../node_modules/@angular/material';
+import { FormsModule } from '@angular/forms';
+import { MockComponent } from 'ng-mocks';
+import { MatFormField, MatSelect, MatOption, MatDialogClose, MatIcon, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material';
 
 describe('VenueDiscoveryAddFixtureDefinitionDialogComponent', () =>
 {

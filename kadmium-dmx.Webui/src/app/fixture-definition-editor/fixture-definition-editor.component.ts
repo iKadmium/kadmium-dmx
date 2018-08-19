@@ -2,12 +2,13 @@ import { Component, OnInit, ViewChildren, QueryList, ViewChild } from '@angular/
 import { ActivatedRoute, Router } from "@angular/router";
 import { Title } from "@angular/platform-browser";
 import { FixtureDefinition, FixtureDefinitionSkeleton, MovementAxis } from "api/models";
-import { MatSnackBar, MatExpansionPanel } from '@angular/material';
+import { MatExpansionPanel } from '@angular/material';
 import { Sleep } from '../sleep';
 import { NgForm } from '@angular/forms';
 import { AnimationLibrary } from "../animation-library";
 import { EditorComponent } from "../editor-component/editor-component";
 import { APIClient, FixtureType, ColorWheelEntryData, DMXChannelData } from 'api';
+import { MessageService } from 'app/message.service';
 
 @Component({
     selector: 'app-fixture-definition-editor',
@@ -55,7 +56,7 @@ export class FixtureDefinitionEditorComponent extends EditorComponent implements
     @ViewChild("editorForm") formChild: NgForm;
 
     constructor(private route: ActivatedRoute, private apiClient: APIClient,
-        private snackbar: MatSnackBar, private title: Title, private router: Router)
+        private messageService: MessageService, private title: Title, private router: Router)
     {
         super();
         this.saving = false;
@@ -90,7 +91,7 @@ export class FixtureDefinitionEditorComponent extends EditorComponent implements
                     .then(response => 
                     {
                         this.definition = response;
-                    }).catch(error => this.snackbar.open(error, "Close", { duration: 3000 }));
+                    }).catch(error => this.messageService.error(error));
             }
             this.apiClient.getFixtureDefinitions()
                 .toPromise()
@@ -99,11 +100,11 @@ export class FixtureDefinitionEditorComponent extends EditorComponent implements
                     this.allManufacturers = response
                         .map((skeleton: FixtureDefinitionSkeleton) => skeleton.manufacturer)
                         .filter((value: string, index: number, array: string[]) => array.indexOf(value) == index);
-                }).catch(error => this.snackbar.open(error, "Close", { duration: 3000 }));
+                }).catch(error => this.messageService.error(error));
         }
         catch (reason)
         {
-            this.snackbar.open(reason, "Close", { duration: 3000 });
+            this.messageService.error(reason);
         }
     }
 
@@ -235,7 +236,7 @@ export class FixtureDefinitionEditorComponent extends EditorComponent implements
             {
                 await this.apiClient.postFixtureDefinition({ value: this.definition }).toPromise();
                 this.saved = true;
-                this.snackbar.open("Successfully edited " + this.definition.skeleton.manufacturer + " " + this.definition.skeleton.model, "Close", { duration: 3000 });
+                this.messageService.info("Successfully edited " + this.definition.skeleton.manufacturer + " " + this.definition.skeleton.model);
             }
             else
             {
@@ -245,14 +246,14 @@ export class FixtureDefinitionEditorComponent extends EditorComponent implements
                     value: this.definition
                 }).toPromise();
                 this.saved = true;
-                this.snackbar.open("Successfully edited " + this.definition.skeleton.manufacturer + " " + this.definition.skeleton.model, "Close", { duration: 3000 });
+                this.messageService.info("Successfully edited " + this.definition.skeleton.manufacturer + " " + this.definition.skeleton.model);
             }
 
             this.router.navigate(["../"], { relativeTo: this.route });
         }
         catch (reason)
         {
-            this.snackbar.open(reason, "Close", { duration: 3000 });
+            this.messageService.error(reason);
         }
         finally
         {

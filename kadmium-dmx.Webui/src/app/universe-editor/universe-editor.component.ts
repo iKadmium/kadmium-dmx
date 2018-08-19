@@ -8,10 +8,11 @@ import { UniverseEditorPresetSaveDialogComponent } from "../universe-editor-pres
 import "rxjs/operator/map";
 import 'rxjs/add/operator/startWith';
 import { FixtureOptionsEditorComponent } from "../fixture-options-editor/fixture-options-editor.component";
-import { MatExpansionPanel, MatSnackBar } from '@angular/material';
+import { MatExpansionPanel } from '@angular/material';
 import { Sleep } from '../sleep';
 import { UniverseEditorAddMultipleFixturesDialogComponent, IUniverseEditorAddMultipleFixturesDialogInputData, IUniverseEditorAddMultipleFixturesDialogOutputData } from '../universe-editor-add-multiple-fixtures-dialog/universe-editor-add-multiple-fixtures-dialog.component';
 import { APIClient, GroupData } from 'api';
+import { MessageService } from 'app/message.service';
 
 @Component({
     selector: 'app-universe-editor',
@@ -27,7 +28,7 @@ export class UniverseEditorComponent implements OnInit
 
     public fixtureDefinitionSkeletons: FixtureDefinitionSkeleton[];
 
-    constructor(private apiClient: APIClient, private snackbar: MatSnackBar, private dialog: MatDialog)
+    constructor(private apiClient: APIClient, private messageService: MessageService, private dialog: MatDialog)
     {
     }
 
@@ -38,7 +39,7 @@ export class UniverseEditorComponent implements OnInit
             .then(response => 
             {
                 this.fixtureDefinitionSkeletons = response;
-            }).catch(error => this.snackbar.open(error, "Close", { duration: 3000 }));
+            }).catch(error => this.messageService.error(error));
     }
 
 
@@ -179,11 +180,11 @@ export class UniverseEditorComponent implements OnInit
                 fixture.type = this.fixtureDefinitionSkeletons.find(x => x.manufacturer == fixture.type.manufacturer && x.model == fixture.type.model);
                 this.universe.fixtures.push(fixture);
             }
-            this.snackbar.open("Successfully added " + fixtures.length + " fixtures", "Close", { duration: 3000 });
+            this.messageService.info("Successfully added " + fixtures.length + " fixtures");
         }
         catch (reason)
         {
-            this.snackbar.open(reason, "Close", { duration: 3000 });
+            this.messageService.error(reason);
         }
     }
 

@@ -1,41 +1,22 @@
 import { Injectable } from '@angular/core';
 import { URLs, SocketController } from "./url";
+import { Observable, Subject } from 'rxjs';
+import { WebSocketSubject } from 'rxjs/webSocket';
 
 
 @Injectable()
 export class OSCListenerLiveService
 {
     private socketUrl = URLs.getSocketURL(SocketController.OSC);
-    private socket: WebSocket;
-    private listener: (message: any) => void;
+    private subject: WebSocketSubject<OSCListenerData>;
 
     constructor()
-    {
+    { }
 
-    }
-
-    public subscribe(listener: (data: OSCListenerData) => void): void
+    public open(): Observable<OSCListenerData>
     {
-        this.socket = new WebSocket(this.socketUrl);
-        if (this.listener != null)
-        {
-            this.unsubscribe();
-        }
-        this.listener = (message) =>
-        {
-            let msg = JSON.parse(message.data) as OSCListenerData;
-            listener(msg);
-        };
-        this.socket.addEventListener("message", this.listener);
-    }
-
-    public unsubscribe(): void
-    {
-        if (this.socket != null)
-        {
-            this.socket.removeEventListener("message", this.listener);
-            this.socket.close();
-        }
+        this.subject = new WebSocketSubject<OSCListenerData>(this.socketUrl);
+        return this.subject.asObservable();
     }
 }
 
@@ -45,42 +26,4 @@ export interface OSCListenerData
     recognised: boolean;
     time: Date;
     value: number;
-}
-
-export class MockOSCListenerService
-{
-    private enabled: boolean;
-
-    constructor()
-    {
-        this.enabled = true;
-    }
-
-    public getEnabled(): Promise<boolean>
-    {
-        let promise = new Promise<boolean>(
-            (resolve, reject) =>
-            {
-                resolve(this.enabled);
-            }
-        );
-        return promise;
-    }
-
-    public setEnabled(value: boolean): Promise<void>
-    {
-        let promise = new Promise<void>(
-            (resolve, reject) =>
-            {
-                this.enabled = value;
-                resolve();
-            }
-        );
-        return promise;
-    }
-
-    public subscribe(thisRef: Object): void
-    {
-
-    }
 }

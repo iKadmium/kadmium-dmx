@@ -1,11 +1,11 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { VenueDiscoverySelectGroupDialogComponent } from './venue-discovery-select-group-dialog.component';
-import { FormsModule } from '../../../node_modules/@angular/forms';
-import { MockComponent } from '../../../node_modules/ng-mocks';
-import { MatDialog, MatDialogContainer, MatDialogContent, MatButtonToggleGroup, MatButtonToggle, MatDialogClose, MatIcon } from '../../../node_modules/@angular/material';
+import { FormsModule } from '@angular/forms';
+import { MockComponent } from 'ng-mocks';
+import { MatDialog, MatDialogContainer, MatDialogContent, MatButtonToggleGroup, MatButtonToggle, MatDialogClose, MatIcon } from '@angular/material';
 import { APIClient } from 'api';
-import { from } from '../../../node_modules/rxjs';
+import { from } from 'rxjs';
 
 describe('VenueDiscoverySelectGroupDialogComponent', () =>
 {

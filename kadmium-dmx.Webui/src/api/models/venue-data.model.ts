@@ -1,10 +1,12 @@
 /* tslint:disable */
-import {
+import
+{
   BsonSerializable,
   UniverseData,
-} from './..';
+} from '..';
 
-export interface VenueData extends BsonSerializable {
+export interface VenueData extends BsonSerializable
+{
   name: string;
   universes: UniverseData[];
 }

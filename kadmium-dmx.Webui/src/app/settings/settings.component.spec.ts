@@ -1,13 +1,14 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { SettingsComponent } from './settings.component';
-import { MockComponent } from '../../../node_modules/ng-mocks';
+import { MockComponent } from 'ng-mocks';
 import { BusyCardComponent } from '../busy-card/busy-card.component';
 import { SidenavToggleComponent } from '../sidenav-toggle/sidenav-toggle.component';
-import { MatIcon, MatToolbar, MatFormField, MatTab, MatCheckbox, MatOption, MatList, MatSelect, MatListItem, MatTabGroup, MatCardContent, MatCard, MatSnackBar } from '../../../node_modules/@angular/material';
-import { FormsModule } from '../../../node_modules/@angular/forms';
+import { MatIcon, MatToolbar, MatFormField, MatTab, MatCheckbox, MatOption, MatList, MatSelect, MatListItem, MatTabGroup, MatCardContent, MatCard } from '@angular/material';
+import { FormsModule } from '@angular/forms';
 import { APIClient } from 'api';
-import { from } from '../../../node_modules/rxjs';
+import { from } from 'rxjs';
+import { MessageService } from 'app/message.service';
 
 describe('SettingsComponent', () =>
 {
@@ -43,7 +44,7 @@ describe('SettingsComponent', () =>
 			set: {
 				providers: [
 					{ provide: APIClient, useValue: jasmine.createSpyObj<APIClient>({ getSettings: from([]), getPortsEnttecProTransmitters: from([]) }) },
-					{ provide: MatSnackBar, useValue: jasmine.createSpyObj<MatSnackBar>({ open: null }) }
+					{ provide: MessageService, useValue: jasmine.createSpyObj<MessageService>({ error: null }) }
 				]
 			}
 		})

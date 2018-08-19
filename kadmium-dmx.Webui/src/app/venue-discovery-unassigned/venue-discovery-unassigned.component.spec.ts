@@ -1,9 +1,9 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { VenueDiscoveryUnassignedComponent } from './venue-discovery-unassigned.component';
-import { MatCardTitle, MatFormField, MatIcon, MatSlider, MatCard, MatCardContent } from '../../../node_modules/@angular/material';
-import { MockComponent } from '../../../node_modules/ng-mocks';
-import { FormsModule } from '../../../node_modules/@angular/forms';
+import { MatCardTitle, MatFormField, MatIcon, MatSlider, MatCard, MatCardContent } from '@angular/material';
+import { MockComponent } from 'ng-mocks';
+import { FormsModule } from '@angular/forms';
 
 describe('VenueDiscoveryUnassignedComponent', () =>
 {

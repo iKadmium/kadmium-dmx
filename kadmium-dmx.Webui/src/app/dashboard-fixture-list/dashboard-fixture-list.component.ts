@@ -1,5 +1,4 @@
-import { Component, OnInit, Input, ContentChildren, ViewChildren, QueryList, EventEmitter, Output } from '@angular/core';
-import { PreviewFixture } from "../preview-fixture";
+import { Component, OnInit, Input, ViewChildren, QueryList } from '@angular/core';
 import { DashboardFixturePreviewComponent } from "../dashboard-fixture-preview/dashboard-fixture-preview.component";
 import { PreviewUniverse } from "../preview-universe";
 
@@ -23,23 +22,22 @@ export class DashboardFixtureListComponent implements OnInit
 
     ngOnInit()
     {
-        window.addEventListener("resize", (ev) =>
+        window.addEventListener("resize", () =>
         {
-            this.colCount = this.getCols();
+            this.colCount = this.getCols(window.innerWidth);
         });
-        this.colCount = this.getCols();
+        this.colCount = this.getCols(window.innerWidth);
     }
 
-    public getCols(): number
+    private getCols(width: number): number
     {
-        let width = window.innerWidth;
         let cols = width / DashboardFixturePreviewComponent.width;
         return Math.floor(cols);
     }
 
     public async render(data: Uint8Array): Promise<void>
     {
-        Promise.all(this.fixtures.map(item => item.render(data)));
+        await Promise.all(this.fixtures.map(item => item.render(data)));
     }
 
 }

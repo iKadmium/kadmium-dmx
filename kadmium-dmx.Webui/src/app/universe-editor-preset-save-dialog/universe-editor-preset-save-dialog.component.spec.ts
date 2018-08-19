@@ -1,8 +1,8 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { UniverseEditorPresetSaveDialogComponent, UniverseEditorPresetSaveDialogComponentData } from './universe-editor-preset-save-dialog.component';
-import { MockComponent } from '../../../node_modules/ng-mocks';
-import { MatList, MatListOption, MatSelectionList, MatFormField, MatDialogRef, MAT_DIALOG_DATA } from '../../../node_modules/@angular/material';
+import { MockComponent } from 'ng-mocks';
+import { MatList, MatListOption, MatSelectionList, MatFormField, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material';
 
 describe('UniverseEditorPresetSaveDialogComponent', () =>
 {

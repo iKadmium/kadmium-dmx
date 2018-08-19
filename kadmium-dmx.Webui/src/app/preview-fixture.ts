@@ -10,19 +10,17 @@ export class PreviewFixture
 {
     public static strobeFrames = 1;
 
-    group: string;
+    public group: string;
+    public address: number;
+    public manufacturer: string;
+    public model: string;
 
-    address: number;
+    public channelNameMap: Map<string, PreviewAttribute>;
+    public channelNumberMap: Map<number, PreviewAttribute[]>;
 
-    channelNameMap: Map<string, PreviewAttribute>;
-    channelNumberMap: Map<number, PreviewAttribute[]>;
+    public colorWheel: PreviewColorWheel;
 
-    manufacturer: string;
-    model: string;
-
-    colorWheel: PreviewColorWheel;
-
-    strobeFrameCount: number;
+    private strobeFrameCount: number;
 
     constructor(data: ActiveFixture)
     {
@@ -107,7 +105,7 @@ export class PreviewFixture
         return this.channelNameMap.get("ColorWheel") != null;
     }
 
-    public get fillStyle(): string
+    public getFillStyle(): string
     {
         if (this.optionalGetValue("Strobe") > 0)
         {
@@ -141,13 +139,13 @@ export class PreviewFixture
         }
     }
 
-    public get strokeStyle(): string
+    public getStrokeStyle(): string
     {
         let stroke = new RGB(this.red * 255, this.green * 255, this.blue * 255).invert();
         return stroke.toString();
     }
 
-    public get pan(): number | null
+    public getPan(): number | null
     {
         if (this.channelNameMap.get("PanCoarse") != null)
         {
@@ -160,7 +158,7 @@ export class PreviewFixture
         return null;
     }
 
-    public get tilt(): number | null
+    public getTilt(): number | null
     {
         if (this.channelNameMap.get("TiltCoarse") != null)
         {
@@ -173,7 +171,7 @@ export class PreviewFixture
         return null;
     }
 
-    optionalGetValue(name: string, defaultValue?: number): number
+    public optionalGetValue(name: string, defaultValue?: number): number
     {
         defaultValue = defaultValue || 0;
         let channel = this.channelNameMap.get(name);

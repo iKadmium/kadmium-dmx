@@ -1,16 +1,12 @@
-import { Component, OnInit, ViewChild, Injectable } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
 import { Title } from "@angular/platform-browser";
 
-import { StatusCode } from "../status-code.enum";
 import { Settings } from "api/models";
-import { MatSnackBar, MatHorizontalStepper } from '@angular/material';
-import { CanDeactivate } from '@angular/router/src/interfaces';
-import { ActivatedRouteSnapshot, RouterStateSnapshot } from '@angular/router';
-import { Observable } from 'rxjs/Observable';
 import { NgForm } from '@angular/forms';
 import { AnimationLibrary } from "../animation-library";
 import { EditorComponent } from "../editor-component/editor-component";
 import { APIClient } from 'api';
+import { MessageService } from 'app/message.service';
 
 @Component({
     selector: 'app-settings',
@@ -30,7 +26,7 @@ export class SettingsComponent extends EditorComponent implements OnInit
 
     @ViewChild("settingsForm") formChild: NgForm;
 
-    constructor(private apiClient: APIClient, private snackbar: MatSnackBar, title: Title)
+    constructor(private apiClient: APIClient, private messageService: MessageService, title: Title)
     {
         super();
         title.setTitle("Settings");
@@ -49,7 +45,7 @@ export class SettingsComponent extends EditorComponent implements OnInit
                 this.settings = response;
                 this.fakeTargets = this.settings.sacnTransmitter.unicast.map(x => { return { target: x } });
             })
-            .catch(error => this.snackbar.open(error, "Close", { duration: 3000 }));
+            .catch(error => this.messageService.error(error));
         this.apiClient
             .getPortsEnttecProTransmitters()
             .toPromise()
@@ -57,7 +53,7 @@ export class SettingsComponent extends EditorComponent implements OnInit
             {
                 this.enttecPorts = response;
             })
-            .catch(error => this.snackbar.open(error, "Close", { duration: 3000 }));
+            .catch(error => this.messageService.error(error));
     }
 
     public get loading(): boolean
@@ -73,11 +69,11 @@ export class SettingsComponent extends EditorComponent implements OnInit
             this.settings.sacnTransmitter.unicast = this.fakeTargets.map(x => x.target);
             await this.apiClient.postSettings({ value: this.settings }).toPromise();
             this.saved = true;
-            this.snackbar.open("Saved Successfully", "Close", { duration: 3000 });
+            this.messageService.info("Saved Successfully");
         }
-        catch (reason)
+        catch (error)
         {
-            this.snackbar.open(reason, "Close", { duration: 3000 });
+            this.messageService.error(error);
         }
         finally
         {

@@ -35,9 +35,8 @@ namespace kadmium_dmx_webapi.WebSockets
                     {
                         case WebSocketMessageType.Text:
                             string message = System.Text.Encoding.UTF8.GetString(receiveSegment.Array, receiveSegment.Offset, received.Count);
-                            OnMessage(message);
-
-
+                            var messageObject = JObject.Parse(message);
+                            OnMessage(messageObject);
                             break;
                         case WebSocketMessageType.Close:
                             break;
@@ -92,7 +91,7 @@ namespace kadmium_dmx_webapi.WebSockets
             return Task.Run(() => { });
         }
 
-        public virtual void OnMessage(string message)
+        public virtual void OnMessage(JObject message)
         {
 
         }

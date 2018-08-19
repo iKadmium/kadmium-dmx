@@ -1,13 +1,13 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { ToolsComponent } from './tools.component';
-import { MockComponent } from '../../../node_modules/ng-mocks';
+import { MockComponent } from 'ng-mocks';
 import { SidenavToggleComponent } from '../sidenav-toggle/sidenav-toggle.component';
-import { MatIcon, MatToolbar, MatExpansionPanelTitle, MatExpansionPanelDescription, MatListOption, MatList, MatExpansionPanelHeader, MatSelectionList, MatDivider, MatCard, MatCardContent, MatExpansionPanel, MatFormField } from '../../../node_modules/@angular/material';
+import { MatIcon, MatToolbar, MatExpansionPanelTitle, MatExpansionPanelDescription, MatListOption, MatList, MatExpansionPanelHeader, MatSelectionList, MatDivider, MatCard, MatCardContent, MatExpansionPanel, MatFormField } from '@angular/material';
 import { BusyCardComponent } from '../busy-card/busy-card.component';
 import { APIClient } from 'api';
-import { from } from '../../../node_modules/rxjs';
-import { NoopAnimationsModule } from '../../../node_modules/@angular/platform-browser/animations';
+import { from } from 'rxjs';
+import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 
 describe('ToolsComponent', () =>
 {

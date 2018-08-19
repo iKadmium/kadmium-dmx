@@ -1,14 +1,16 @@
 /* tslint:disable */
-import {
+import
+{
   BsonSerializable,
   ColorWheelEntryData,
   DMXChannelData,
   FixtureDefinitionSkeleton,
   FixtureType,
   MovementAxisData,
-} from './..';
+} from '..';
 
-export interface FixtureDefinition extends BsonSerializable {
+export interface FixtureDefinition extends BsonSerializable
+{
   channels: DMXChannelData[];
   colorWheel: ColorWheelEntryData[];
   fixtureType: FixtureType;

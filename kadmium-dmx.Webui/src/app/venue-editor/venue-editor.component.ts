@@ -2,15 +2,13 @@ import { Component, OnInit, ViewChild } from '@angular/core';
 import { ActivatedRoute, Router } from "@angular/router";
 import { UniverseEditorComponent } from "../universe-editor/universe-editor.component";
 import { FixtureOptionsEditorComponent } from "../fixture-options-editor/fixture-options-editor.component";
-import { StatusCode } from "../status-code.enum";
 import { UniverseData } from "api/models";
 import { Title } from "@angular/platform-browser";
-import { MatTabGroup } from "@angular/material/tabs";
-import { MatTabChangeEvent, MatTab, MatSnackBar } from '@angular/material';
 import { NgForm } from '@angular/forms';
 import { AnimationLibrary } from "../animation-library";
 import { EditorComponent } from "../editor-component/editor-component";
 import { APIClient, GroupData, VenueData } from 'api';
+import { MessageService } from 'app/message.service';
 
 @Component({
     selector: 'app-venue-editor',
@@ -35,7 +33,7 @@ export class VenueEditorComponent extends EditorComponent implements OnInit
 
     public activeUniverse: UniverseData;
 
-    constructor(private route: ActivatedRoute, private apiClient: APIClient, private snackbar: MatSnackBar,
+    constructor(private route: ActivatedRoute, private apiClient: APIClient, private messageService: MessageService,
         private router: Router, private title: Title)
     {
         super();
@@ -71,7 +69,7 @@ export class VenueEditorComponent extends EditorComponent implements OnInit
                         {
                             this.venue = response;
                             this.loading = false;
-                        }).catch(error => this.snackbar.open(error, "Close", { duration: 3000 }));
+                        }).catch(error => this.messageService.error(error));
                 }
             });
     }
@@ -113,19 +111,19 @@ export class VenueEditorComponent extends EditorComponent implements OnInit
             {
                 await this.apiClient.postVenue({ value: this.venue }).toPromise();
                 this.saved = true;
-                this.snackbar.open("Successfully added " + this.venue.name, "Close", { duration: 3000 });
+                this.messageService.info("Successfully added " + this.venue.name);
             }
             else
             {
                 await this.apiClient.putVenue({ originalName: this.venueName, value: this.venue }).toPromise();
                 this.saved = true;
-                this.snackbar.open("Successfully edited " + this.venue.name, "Close", { duration: 3000 });
+                this.messageService.info("Successfully edited " + this.venue.name);
             }
             this.router.navigate(["../", { relativeTo: this.route }]);
         }
         catch (error)
         {
-            this.snackbar.open(error, "Close", { duration: 3000 });
+            this.messageService.error(error);
         }
         finally
         {

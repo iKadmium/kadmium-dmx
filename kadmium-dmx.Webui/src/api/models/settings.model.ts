@@ -1,10 +1,12 @@
 /* tslint:disable */
-import {
+import
+{
   EnttecProTransmitterSettings,
   SacnTransmitterSettings,
-} from './..';
+} from '..';
 
-export interface Settings {
+export interface Settings
+{
   enttecProTransmitter: EnttecProTransmitterSettings;
   oscPort: number;
   sacnTransmitter: SacnTransmitterSettings;

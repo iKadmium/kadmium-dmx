@@ -1,9 +1,11 @@
 /* tslint:disable */
-import {
+import
+{
   StatusCode,
-} from './..';
+} from '..';
 
-export interface Status {
+export interface Status
+{
   message: string;
   statusCode: StatusCode;
 }

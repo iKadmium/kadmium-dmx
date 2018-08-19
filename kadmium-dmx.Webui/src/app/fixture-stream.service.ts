@@ -1,5 +1,7 @@
 import { Injectable } from '@angular/core';
 import { URLs, SocketController } from "./url";
+import { Observable } from 'rxjs';
+import { resolve } from 'dns';
 
 @Injectable({
     providedIn: 'root'
@@ -8,33 +10,36 @@ export class FixtureStreamService
 {
     private socketUrl = URLs.getSocketURL(SocketController.Fixture);
     private socket: WebSocket;
-    private listener: (message: any) => void;
 
     constructor()
     {
 
     }
 
-    public subscribe(universeID: number, fixtureAddress: number, listener: (data: AttributeUpdateData[]) => void): void
+    public open(universeID: number, fixtureAddress: number): Promise<Observable<AttributeUpdateData[]>>
     {
         this.socket = new WebSocket(`${this.socketUrl}/${universeID}/${fixtureAddress}`);
-        if (this.listener != null)
+        let promise = new Promise<Observable<AttributeUpdateData[]>>((resolve, reject) =>
         {
-            this.unsubscribe();
-        }
-        this.listener = (message) =>
-        {
-            let updates = JSON.parse(message.data) as AttributeUpdateData[];
-            listener(updates);
-        };
-        this.socket.addEventListener("message", this.listener);
+            this.socket.addEventListener("open", () =>
+            {
+                let observable = new Observable<AttributeUpdateData[]>(subscriber =>
+                {
+                    this.socket.addEventListener("message", event =>
+                    {
+                        subscriber.next(JSON.parse(event.data) as AttributeUpdateData[]);
+                    });
+                });
+                resolve();
+            })
+        });
+        return promise;
     }
 
-    public unsubscribe(): void
+    public close(): void
     {
         if (this.socket != null)
         {
-            this.socket.removeEventListener("message", this.listener);
             this.socket.close();
         }
     }

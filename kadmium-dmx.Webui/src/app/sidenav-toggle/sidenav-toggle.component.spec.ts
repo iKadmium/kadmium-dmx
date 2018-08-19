@@ -1,9 +1,9 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { SidenavToggleComponent } from './sidenav-toggle.component';
-import { MatIcon } from '../../../node_modules/@angular/material';
-import { MockComponent } from '../../../node_modules/ng-mocks';
-import { SidenavService } from 'app/sidenav.service';
+import { MatIcon } from '@angular/material';
+import { MockComponent } from 'ng-mocks';
+import { SidenavService } from '../sidenav.service';
 
 describe('SidenavToggleComponent', () =>
 {

@@ -1,15 +1,13 @@
-import { Component, OnInit, Input, EventEmitter, Output, OnChanges, SimpleChanges, OnDestroy, ViewChildren, QueryList, ViewChild, ElementRef, AfterViewInit } from '@angular/core';
-import { UniverseUpdateData, UniverseStreamService } from "../universe-stream.service";
-import { StatusCode } from "../status-code.enum";
-import { FormControl } from "@angular/forms";
-import { PreviewVenue } from "../preview-venue";
-import { PreviewAttribute } from "../preview-attribute";
+import { Component, OnInit, OnDestroy, ViewChild, ElementRef, AfterViewInit } from '@angular/core';
+import { UniverseStreamService } from "../universe-stream.service";
 import { PreviewUniverse } from "../preview-universe";
 import { ActivatedRoute } from "@angular/router";
 import { PreviewUniverseCell } from "../preview-universe-cell";
-import { MatSnackBar } from '@angular/material';
 import { AnimationLibrary } from "../animation-library";
 import { APIClient } from 'api';
+import { Subscription } from 'rxjs';
+import { MessageService } from 'app/message.service';
+import { DashboardFixturePreviewComponent } from 'app/dashboard-fixture-preview/dashboard-fixture-preview.component';
 
 @Component({
     selector: 'app-dashboard-universe',
@@ -19,13 +17,12 @@ import { APIClient } from 'api';
 })
 export class DashboardUniverseComponent implements OnInit, AfterViewInit, OnDestroy
 {
-
     public universe: PreviewUniverse;
-    public data: Uint8Array;
+    private data: Uint8Array;
 
-    cells: PreviewUniverseCell[];
+    private cells: PreviewUniverseCell[];
 
-    renderInterval: number;
+    private renderInterval: number;
 
     private cellWidth: number;
     private cellHeight: number;
@@ -36,9 +33,14 @@ export class DashboardUniverseComponent implements OnInit, AfterViewInit, OnDest
 
     private canvas: HTMLCanvasElement;
     private context: CanvasRenderingContext2D;
+    private subscription: Subscription;
 
-    constructor(private snackbar: MatSnackBar, private apiClient: APIClient,
-        private universeStreamService: UniverseStreamService, private route: ActivatedRoute) 
+    constructor(
+        private messageService: MessageService,
+        private apiClient: APIClient,
+        private universeStreamService: UniverseStreamService,
+        private route: ActivatedRoute
+    ) 
     {
         this.cells = [];
         this.data = new Uint8Array(512);
@@ -46,9 +48,49 @@ export class DashboardUniverseComponent implements OnInit, AfterViewInit, OnDest
         this.cellPaddingX = 4;
         this.cellPaddingY = 4;
         this.cellWidth = 50;
-
         this.cellHeight = 20;
+    }
 
+    ngOnInit(): void
+    {
+        let universeID = parseInt(this.route.snapshot.paramMap.get('universeID'));
+
+        try
+        {
+            this.apiClient.getActiveUniverse({ universeID: universeID })
+                .toPromise()
+                .then(response =>
+                {
+                    this.universe = PreviewUniverse.load(response);
+                    this.drawCanvas();
+                });
+
+            this.subscription = this.universeStreamService
+                .open(universeID)
+                .subscribe(data => this.updateData(data));
+        }
+        catch (error)
+        {
+            this.messageService.error(error);
+        }
+
+        window.addEventListener("resize", () =>
+        {
+            this.drawCanvas();
+        });
+    }
+
+    ngAfterViewInit(): void
+    {
+        this.canvas = (this.canvasElement.nativeElement as HTMLCanvasElement);
+        this.context = this.canvas.getContext("2d");
+        this.renderInterval = window.setInterval(() => this.render(), DashboardFixturePreviewComponent.updateTime);
+    }
+
+    ngOnDestroy(): void
+    {
+        if (this.subscription != null) { this.subscription.unsubscribe(); }
+        window.clearInterval(this.renderInterval);
     }
 
     public get canvasWidth(): number
@@ -78,34 +120,6 @@ export class DashboardUniverseComponent implements OnInit, AfterViewInit, OnDest
         }
     }
 
-    ngOnInit(): void
-    {
-        let universeID = parseInt(this.route.snapshot.paramMap.get('universeID'));
-        this.apiClient.getActiveUniverse({ universeID: universeID })
-            .toPromise()
-            .then(response =>
-            {
-                this.universe = PreviewUniverse.load(response);
-                this.drawCanvas();
-            })
-            .catch(error => this.snackbar.open(error, "Close", { duration: 3000 }));
-
-        this.universeStreamService.subscribe(universeID, data =>
-        {
-            this.updateData(data);
-        });
-
-        window.addEventListener("resize", (ev) =>
-        {
-            this.drawCanvas();
-        });
-    }
-
-    ngOnDestroy(): void
-    {
-        this.universeStreamService.unsubscribe();
-    }
-
     private drawCanvas(): void
     {
         let x = 2 * this.cellPaddingX + this.cellWidth;
@@ -132,15 +146,7 @@ export class DashboardUniverseComponent implements OnInit, AfterViewInit, OnDest
                 y += this.cellHeight + this.cellPaddingY;
                 x = this.cellPaddingX;
             }
-
         }
-    }
-
-    ngAfterViewInit(): void
-    {
-        this.canvas = (this.canvasElement.nativeElement as HTMLCanvasElement);
-        this.context = this.canvas.getContext("2d");
-        this.renderInterval = window.setInterval(() => this.render(), 100);
     }
 
     private render(): void

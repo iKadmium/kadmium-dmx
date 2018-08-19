@@ -1,29 +1,45 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { VenueDiscoveryComponent } from './venue-discovery.component';
-import { MockComponent } from '../../../node_modules/ng-mocks';
+import { MockComponent } from 'ng-mocks';
 import { SidenavToggleComponent } from '../sidenav-toggle/sidenav-toggle.component';
-import { MatToolbar, MatPaginator, MatCardContent, MatCard, MatDialog, MatSnackBar } from '../../../node_modules/@angular/material';
+import { MatToolbar, MatPaginator, MatCardContent, MatCard, MatDialog } from '@angular/material';
 import { BusyCardComponent } from '../busy-card/busy-card.component';
 import { VenueDiscoveryFixtureComponent } from '../venue-discovery-fixture/venue-discovery-fixture.component';
 import { VenueDiscoveryUnassignedComponent } from '../venue-discovery-unassigned/venue-discovery-unassigned.component';
-import { APIClient } from 'api';
-import { from } from '../../../node_modules/rxjs';
-import { ActivatedRoute } from '../../../node_modules/@angular/router';
-import { FormsModule } from '../../../node_modules/@angular/forms';
+import { APIClient, ActiveVenue } from 'api';
+import { from } from 'rxjs';
+import { ActivatedRoute } from '@angular/router';
+import { FormsModule } from '@angular/forms';
+import { MessageService } from 'app/message.service';
 
 describe('VenueDiscoveryComponent', () =>
 {
 	let component: VenueDiscoveryComponent;
 	let fixture: ComponentFixture<VenueDiscoveryComponent>;
 	let route: any;
+	let universeID: number;
+	let venue: ActiveVenue;
 
 	beforeEach(async(() =>
 	{
+		universeID = 1;
+
+		venue = {
+			name: "Active Venue",
+			universes: [
+				{
+					universeID: universeID,
+					name: "Active Universe",
+					fixtures: []
+				}
+			]
+		}
+
 		route = {
 			snapshot: {
 				params: {
-					universeID: 1
+					universeID: universeID
 				}
 			}
 		}
@@ -48,8 +64,8 @@ describe('VenueDiscoveryComponent', () =>
 			set: {
 				providers: [
 					{ provide: MatDialog, useValue: jasmine.createSpyObj<MatDialog>({ open: null }) },
-					{ provide: APIClient, useValue: jasmine.createSpyObj<APIClient>({ getActiveVenue: from([]) }) },
-					{ provide: MatSnackBar, useValue: jasmine.createSpyObj<MatSnackBar>({ open: null }) },
+					{ provide: APIClient, useValue: jasmine.createSpyObj<APIClient>({ getActiveVenue: from([venue]) }) },
+					{ provide: MessageService, useValue: jasmine.createSpyObj<MessageService>({ error: null }) },
 					{ provide: ActivatedRoute, useValue: route }
 				]
 			}

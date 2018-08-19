@@ -1,14 +1,12 @@
-import { Component, OnInit, ViewChild, OnDestroy, ContentChild } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import { Title } from "@angular/platform-browser";
 
-import { StatusStreamService, StatusData } from "../dashboard.service";
-
-import { StatusCode } from "../status-code.enum";
 import { Status } from "../status";
-import { MatSnackBar } from '@angular/material';
-import { Sleep } from '../sleep';
-import { state, trigger, style, transition, animate } from '@angular/animations';
 import { AnimationLibrary } from '../animation-library';
+import { Subscription } from 'rxjs';
+import { StatusCode } from 'api';
+import { StatusStreamService, StatusData } from '../status-stream.service';
+import { MessageService } from 'app/message.service';
 
 @Component({
     selector: 'app-dashboard',
@@ -19,19 +17,21 @@ import { AnimationLibrary } from '../animation-library';
 })
 export class DashboardComponent implements OnInit, OnDestroy
 {
+    private controllers = ["Venues", "SACNTransmitters", "OSCListeners"];
     public statuses: Map<string, Status>;
     public loading: boolean;
 
-    constructor(private dashboardService: StatusStreamService, private snackbar: MatSnackBar, titleService: Title)
+    private subscription: Subscription;
+
+    constructor(private statusStreamService: StatusStreamService, private messageService: MessageService, titleService: Title)
     {
         titleService.setTitle("Dashboard");
 
-        this.statuses = new Map<string, Status>([
-            ["Venues", new Status()],
-            ["SACNTransmitters", new Status()],
-            ["EnttecProTransmitters", new Status()],
-            ["OSCListeners", new Status()]
-        ]);
+        this.statuses = new Map<string, Status>();
+        for (let controllerName of this.controllers)
+        {
+            this.statuses.set(controllerName, new Status());
+        }
 
         this.loading = true;
     }
@@ -40,23 +40,27 @@ export class DashboardComponent implements OnInit, OnDestroy
     {
         try
         {
-            this.dashboardService.subscribe(data => this.updateStatus(data));
+            let observable = this.statusStreamService.open();
+            this.subscription = observable.subscribe(data => this.updateStatus(data));
         }
         catch (error)
         {
-            this.snackbar.open(error, "Close", { duration: 3000 });
+            this.messageService.error(error);
         }
     }
 
     ngOnDestroy(): void
     {
-        this.dashboardService.unsubscribe();
+        if (this.subscription != null)
+        {
+            this.subscription.unsubscribe();
+        }
     }
 
-    public async updateStatus(statusData: StatusData): Promise<void>
+    private async updateStatus(statusData: StatusData): Promise<void>
     {
         let panelStatus = this.statuses.get(statusData.controller);
-        let statusCode = StatusCode[statusData.code as string]
+        let statusCode = StatusCode[statusData.code as string] as StatusCode;
         if (panelStatus != null)
         {
             panelStatus.statusCode = statusCode;

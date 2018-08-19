@@ -4,11 +4,12 @@ import { Title } from "@angular/platform-browser";
 import { FixtureDefinitionSkeleton, FixtureDefinition } from "api/models";
 import { MatSort } from "@angular/material/sort";
 import { MatPaginator } from "@angular/material/paginator";
-import { MatSnackBar, MatDialog } from '@angular/material';
+import { MatDialog } from '@angular/material';
 import { AnimationLibrary } from "../animation-library";
 import { APIClient } from 'api';
 import { URLs } from '../url';
-import { DeleteConfirmDialogComponent } from 'app/delete-confirm-dialog/delete-confirm-dialog.component';
+import { DeleteConfirmDialogComponent } from '../delete-confirm-dialog/delete-confirm-dialog.component';
+import { MessageService } from 'app/message.service';
 
 @Component({
     selector: 'app-fixture-definitions',
@@ -29,7 +30,7 @@ export class FixtureDefinitionsComponent implements OnInit
     @ViewChild(MatPaginator) paginator: MatPaginator;
 
     constructor(private apiClient: APIClient, private dialog: MatDialog,
-        private snackbar: MatSnackBar, title: Title)
+        private messageService: MessageService, title: Title)
     {
         title.setTitle("Fixture Definitions");
         this.skeletons = [];
@@ -47,7 +48,7 @@ export class FixtureDefinitionsComponent implements OnInit
                 response.forEach(skeleton => this.skeletons.push(skeleton));
                 this.loading = false;
 
-            }).catch(error => this.snackbar.open(error, "Close", { duration: 3000 }));
+            }).catch(error => this.messageService.error(error));
     }
 
     public applyFilter(filterValue: string): void
@@ -101,13 +102,13 @@ export class FixtureDefinitionsComponent implements OnInit
                 {
                     this.saving = true;
                     await this.apiClient.deleteFixtureDefinition({ manufacturer: fixture.manufacturer, model: fixture.model }).toPromise();
-                    this.snackbar.open(fixture.manufacturer + " " + fixture.model + " was deleted", "Close", { duration: 3000 });
+                    this.messageService.info(fixture.manufacturer + " " + fixture.model + " was deleted");
                     let index = this.skeletons.indexOf(fixture);
                     this.skeletons.splice(index, 1);
                 }
-                catch (reason)
+                catch (error)
                 {
-                    this.snackbar.open(reason, "Close", { duration: 3000 });
+                    this.messageService.error(error);
                 }
                 finally
                 {
@@ -134,11 +135,11 @@ export class FixtureDefinitionsComponent implements OnInit
             let definition = await AsyncFileReader.read<FixtureDefinition>(file);
             await this.apiClient.postFixtureDefinition({ value: definition }).toPromise();
             this.skeletons.push(definition.skeleton);
-            this.snackbar.open("Successfully added " + definition.skeleton.manufacturer + " " + definition.skeleton.model, "Close", { duration: 3000 });
+            this.messageService.info("Successfully added " + definition.skeleton.manufacturer + " " + definition.skeleton.model);
         }
-        catch (reason)
+        catch (error)
         {
-            this.snackbar.open(reason, "Close", { duration: 3000 });
+            this.messageService.error(error);
         }
     }
 

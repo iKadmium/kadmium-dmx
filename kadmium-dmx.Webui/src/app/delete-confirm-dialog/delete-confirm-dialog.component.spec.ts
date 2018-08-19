@@ -1,9 +1,9 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { DeleteConfirmDialogComponent } from './delete-confirm-dialog.component';
-import { MockComponent } from '../../../node_modules/ng-mocks';
-import { MatDialogClose, MatIcon, MatDialogRef, MAT_DIALOG_DATA } from '../../../node_modules/@angular/material';
-import { InjectionToken } from '../../../node_modules/@angular/core';
+import { MockComponent } from 'ng-mocks';
+import { MatDialogClose, MatIcon, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material';
+import { InjectionToken } from '@angular/core';
 
 describe('DeleteConfirmDialogComponent', () =>
 {

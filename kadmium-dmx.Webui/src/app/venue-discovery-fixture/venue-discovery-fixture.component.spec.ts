@@ -1,8 +1,8 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { VenueDiscoveryFixtureComponent } from './venue-discovery-fixture.component';
-import { MockComponent } from '../../../node_modules/ng-mocks';
-import { MatCard, MatCardTitle, MatCardContent, MatIcon, MatCardActions } from '../../../node_modules/@angular/material';
+import { MockComponent } from 'ng-mocks';
+import { MatCard, MatCardTitle, MatCardContent, MatIcon, MatCardActions } from '@angular/material';
 import { ActiveFixture } from 'api';
 
 describe('VenueDiscoveryFixtureComponent', () =>

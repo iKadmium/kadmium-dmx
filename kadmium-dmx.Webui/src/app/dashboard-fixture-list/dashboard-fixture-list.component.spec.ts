@@ -1,10 +1,10 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { DashboardFixtureListComponent } from './dashboard-fixture-list.component';
-import { MockComponent } from '../../../node_modules/ng-mocks';
-import { MatGridList, MatGridTile, MatGridTileHeaderCssMatStyler, MatGridTileFooterCssMatStyler } from '../../../node_modules/@angular/material';
+import { MockComponent } from 'ng-mocks';
+import { MatGridList, MatGridTile, MatGridTileHeaderCssMatStyler, MatGridTileFooterCssMatStyler } from '@angular/material';
 import { DashboardFixturePreviewComponent } from '../dashboard-fixture-preview/dashboard-fixture-preview.component';
-import { RouterTestingModule } from '../../../node_modules/@angular/router/testing';
+import { RouterTestingModule } from '@angular/router/testing';
 
 describe('DashboardFixtureListComponent', () =>
 {

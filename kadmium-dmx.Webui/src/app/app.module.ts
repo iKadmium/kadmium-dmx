@@ -33,7 +33,6 @@ import { DashboardFixturePreviewComponent } from "./dashboard-fixture-preview/da
 import { OSCListenerLiveService } from "./osclistener-live.service";
 import { DashboardFixturesComponent } from './dashboard-fixtures/dashboard-fixtures.component';
 import { UniverseEditorPresetSaveDialogComponent } from './universe-editor-preset-save-dialog/universe-editor-preset-save-dialog.component';
-import { DashboardTransmitterEnttecComponent } from './dashboard-transmitter-enttec/dashboard-transmitter-enttec.component';
 import { DashboardTransmitterSacnComponent } from './dashboard-transmitter-sacn/dashboard-transmitter-sacn.component';
 import { DashboardFixtureDetailComponent } from './dashboard-fixture-detail/dashboard-fixture-detail.component';
 import { DeleteConfirmDialogComponent } from './delete-confirm-dialog/delete-confirm-dialog.component';
@@ -51,6 +50,7 @@ import { VenueNameDialogComponent } from './venue-name-dialog/venue-name-dialog.
 import { SidenavToggleComponent } from './sidenav-toggle/sidenav-toggle.component';
 import { DashboardFixtureColorComponent } from './dashboard-fixture-color/dashboard-fixture-color.component';
 import { UniverseEditorAddMultipleFixturesDialogComponent } from './universe-editor-add-multiple-fixtures-dialog/universe-editor-add-multiple-fixtures-dialog.component';
+import { DashboardUniverseCellComponent } from './dashboard-universe-cell/dashboard-universe-cell.component';
 
 @NgModule({
     declarations: [
@@ -75,7 +75,6 @@ import { UniverseEditorAddMultipleFixturesDialogComponent } from './universe-edi
         DashboardOSCListenerComponent,
         DashboardFixturesComponent,
         UniverseEditorPresetSaveDialogComponent,
-        DashboardTransmitterEnttecComponent,
         DashboardTransmitterSacnComponent,
         DashboardFixtureDetailComponent,
         DeleteConfirmDialogComponent,
@@ -91,7 +90,8 @@ import { UniverseEditorAddMultipleFixturesDialogComponent } from './universe-edi
         VenueNameDialogComponent,
         SidenavToggleComponent,
         DashboardFixtureColorComponent,
-        UniverseEditorAddMultipleFixturesDialogComponent
+        UniverseEditorAddMultipleFixturesDialogComponent,
+        DashboardUniverseCellComponent
     ],
     imports: [
         BrowserModule,
@@ -173,7 +173,7 @@ import { UniverseEditorAddMultipleFixturesDialogComponent } from './universe-edi
         BrowserAnimationsModule,
         ReactiveFormsModule
     ],
-    providers: [OSCListenerLiveService, UnsavedChanges],
+    providers: [UnsavedChanges, MatSnackBar],
     bootstrap: [AppComponent],
     entryComponents: [
         UniverseEditorPresetSaveDialogComponent,

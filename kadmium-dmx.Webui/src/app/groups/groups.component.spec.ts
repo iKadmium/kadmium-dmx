@@ -1,15 +1,16 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { GroupsComponent } from './groups.component';
-import { MockComponent, MockDirective } from '../../../node_modules/ng-mocks';
-import { FormsModule } from '../../../node_modules/@angular/forms';
+import { MockComponent, MockDirective } from 'ng-mocks';
+import { FormsModule } from '@angular/forms';
 import { SidenavToggleComponent } from '../sidenav-toggle/sidenav-toggle.component';
-import { MatIcon, MatToolbar, MatFormField, MatCardContent, MatCard, MatSnackBar } from '../../../node_modules/@angular/material';
+import { MatIcon, MatToolbar, MatFormField, MatCardContent, MatCard } from '@angular/material';
 import { BusyCardComponent } from '../busy-card/busy-card.component';
 import { UniqueValueValidatorDirective } from '../unique-value-validator.directive';
 import { APIClient } from 'api';
-import { from } from '../../../node_modules/rxjs';
-import { NoopAnimationsModule } from '../../../node_modules/@angular/platform-browser/animations';
+import { from } from 'rxjs';
+import { NoopAnimationsModule } from '@angular/platform-browser/animations';
+import { MessageService } from 'app/message.service';
 
 describe('GroupsComponent', () =>
 {
@@ -41,7 +42,7 @@ describe('GroupsComponent', () =>
 			set: {
 				providers: [
 					{ provide: APIClient, useValue: jasmine.createSpyObj<APIClient>({ getGroups: from([[]]) }) },
-					{ provide: MatSnackBar, useValue: jasmine.createSpyObj<MatSnackBar>({ open: null }) }
+					{ provide: MessageService, useValue: jasmine.createSpyObj<MessageService>({ error: null }) }
 				]
 			}
 		})

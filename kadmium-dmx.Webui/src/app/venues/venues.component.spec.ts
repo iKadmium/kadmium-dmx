@@ -2,12 +2,13 @@ import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { VenuesComponent } from './venues.component';
 import { BusyCardComponent } from '../busy-card/busy-card.component';
-import { MockComponent } from '../../../node_modules/ng-mocks';
-import { MatFormField, MatIcon, MatToolbar, MatCard, MatCardContent, MatSnackBar, MatDialog } from '../../../node_modules/@angular/material';
+import { MockComponent } from 'ng-mocks';
+import { MatFormField, MatIcon, MatToolbar, MatCard, MatCardContent, MatDialog } from '@angular/material';
 import { SidenavToggleComponent } from '../sidenav-toggle/sidenav-toggle.component';
-import { RouterTestingModule } from '../../../node_modules/@angular/router/testing';
-import { from } from '../../../node_modules/rxjs';
+import { RouterTestingModule } from '@angular/router/testing';
+import { from } from 'rxjs';
 import { APIClient } from 'api';
+import { MessageService } from 'app/message.service';
 
 describe('VenuesComponent', () =>
 {
@@ -36,7 +37,7 @@ describe('VenuesComponent', () =>
 			set: {
 				providers: [
 					{ provide: APIClient, useValue: jasmine.createSpyObj<APIClient>({ getVenues: from([[]]) }) },
-					{ provide: MatSnackBar, useValue: jasmine.createSpyObj<MatSnackBar>({ open: null }) },
+					{ provide: MessageService, useValue: jasmine.createSpyObj<MessageService>({ error: null }) },
 					{ provide: MatDialog, useValue: jasmine.createSpyObj<MatDialog>({ open: null }) }
 				]
 			}

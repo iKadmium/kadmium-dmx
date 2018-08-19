@@ -15,14 +15,13 @@ export class DashboardFixturePreviewComponent implements AfterContentInit
     public static height = 150;
 
     @Input() fixture: PreviewFixture;
-    @ViewChild("canvas") canvasRef: ElementRef;
-    canvas: HTMLCanvasElement;
-    ctx: CanvasRenderingContext2D;
+    @ViewChild("canvas") canvasRef: ElementRef<HTMLCanvasElement>;
+
+    private canvas: HTMLCanvasElement;
+    private ctx: CanvasRenderingContext2D;
 
     constructor()
-    {
-
-    }
+    { }
 
     ngAfterContentInit(): void
     {
@@ -35,32 +34,36 @@ export class DashboardFixturePreviewComponent implements AfterContentInit
         let promise = new Promise<void>((resolve) => 
         {
             this.fixture.update(data);
-            this.ctx.fillStyle = this.fixture.fillStyle;
+
+            this.ctx.fillStyle = this.fixture.getFillStyle();
             this.ctx.fillRect(0, 0, this.canvas.width, this.canvas.height);
 
-            this.ctx.strokeStyle = this.fixture.strokeStyle;
+            this.ctx.strokeStyle = this.fixture.getStrokeStyle();
             this.ctx.lineWidth = 2;
 
-            if (this.fixture.pan != null)
+            let pan = this.fixture.getPan();
+            if (pan != null)
             {
-                let panX = this.fixture.pan * this.canvas.width;
-                this.ctx.beginPath();
-                this.ctx.moveTo(panX, 0);
-                this.ctx.lineTo(panX, this.canvas.width);
-                this.ctx.stroke();
+                let panX = pan * this.canvas.width;
+                this.strokeLine(panX, 0, panX, this.canvas.height, this.ctx);
             }
 
-            if (this.fixture.tilt != null)
+            let tilt = this.fixture.getTilt();
+            if (tilt != null)
             {
-                let tiltY = this.fixture.tilt * this.canvas.height;
-                this.ctx.beginPath();
-                this.ctx.moveTo(0, tiltY);
-                this.ctx.lineTo(this.canvas.width, tiltY);
-                this.ctx.stroke();
+                let tiltY = tilt * this.canvas.height;
+                this.strokeLine(0, tiltY, this.canvas.width, tiltY, this.ctx);
             }
             resolve();
         });
         return promise;
     }
 
+    private strokeLine(x1: number, y1: number, x2: number, y2: number, ctx: CanvasRenderingContext2D): void
+    {
+        ctx.beginPath();
+        ctx.moveTo(x1, y1);
+        ctx.lineTo(x2, y2);
+        ctx.stroke();
+    }
 }

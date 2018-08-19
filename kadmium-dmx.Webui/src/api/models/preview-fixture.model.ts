@@ -1,9 +1,11 @@
 /* tslint:disable */
-import {
+import
+{
   IFixtureDefinition,
-} from './..';
+} from '..';
 
-export interface PreviewFixture {
+export interface PreviewFixture
+{
   address: number;
   definition: IFixtureDefinition;
   group: string;

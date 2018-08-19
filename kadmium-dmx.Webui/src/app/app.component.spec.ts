@@ -1,8 +1,8 @@
 import { TestBed, async } from '@angular/core/testing';
 import { RouterTestingModule } from '@angular/router/testing';
 import { AppComponent } from './app.component';
-import { MatSidenav, MatDivider, MatNavList, MatSidenavContainer, MatSpinner, MatIcon } from '../../node_modules/@angular/material';
-import { MockComponent } from '../../node_modules/ng-mocks';
+import { MatSidenav, MatDivider, MatNavList, MatSidenavContainer, MatSpinner, MatIcon } from '@angular/material';
+import { MockComponent } from 'ng-mocks';
 
 describe('AppComponent', () =>
 {

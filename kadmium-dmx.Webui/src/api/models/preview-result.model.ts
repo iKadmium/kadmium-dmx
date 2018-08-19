@@ -1,9 +1,11 @@
 /* tslint:disable */
-import {
+import
+{
   PreviewUniverse,
-} from './..';
+} from '..';
 
-export interface PreviewResult {
+export interface PreviewResult
+{
   groups: string[];
   universes: PreviewUniverse[];
 }

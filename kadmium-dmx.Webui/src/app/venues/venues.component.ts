@@ -1,13 +1,12 @@
-import { Component, OnInit, ViewChild } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { Title } from "@angular/platform-browser";
-import { StatusCode } from "../status-code.enum";
 import { AsyncFileReader } from "../async-file-reader";
 import { APIClient } from "api/api-client.service";
-import { MatTableDataSource } from "@angular/material/table";
-import { MatSnackBar, MatDialog, MatSort } from '@angular/material';
+import { MatDialog } from '@angular/material';
 import { DeleteConfirmDialogComponent } from '../delete-confirm-dialog/delete-confirm-dialog.component';
 import { AnimationLibrary } from "../animation-library";
 import { VenueData } from 'api/models/venue-data.model';
+import { MessageService } from 'app/message.service';
 
 @Component({
     selector: 'app-venues',
@@ -24,7 +23,7 @@ export class VenuesComponent implements OnInit
 
     public loading: boolean;
 
-    constructor(private apiClient: APIClient, private snackbar: MatSnackBar, title: Title, private dialog: MatDialog)
+    constructor(private apiClient: APIClient, private messageService: MessageService, title: Title, private dialog: MatDialog)
     {
         title.setTitle("Venues");
         this.venues = [];
@@ -40,7 +39,7 @@ export class VenuesComponent implements OnInit
                 this.venues = response;
                 this.venues.sort();
                 this.loading = false;
-            }).catch(error => this.snackbar.open(error, "Close", { duration: 3000 }));
+            }).catch(error => this.messageService.error(error));
     }
 
     private deleteConfirm(venueName: string): void
@@ -54,11 +53,11 @@ export class VenuesComponent implements OnInit
                     await this.apiClient.deleteVenue({ name: venueName }).toPromise();
                     let index = this.venues.indexOf(venueName);
                     this.venues.splice(index, 1);
-                    this.snackbar.open(venueName + " successfully removed", "Close", { duration: 3000 });
+                    this.messageService.info(venueName + " successfully removed");
                 }
                 catch (error)
                 {
-                    this.snackbar.open(error, "Close", { duration: 3000 });
+                    this.messageService.error(error);
                 }
             }
         });
@@ -105,11 +104,11 @@ export class VenuesComponent implements OnInit
             venue.id = "";
             await this.apiClient.postVenue({ value: venue }).toPromise();
             this.venues.push(venue.name);
-            this.snackbar.open("Successfully added " + venue.name, "Close", { duration: 3000 });
+            this.messageService.info("Successfully added " + venue.name);
         }
         catch (reason)
         {
-            this.snackbar.open(reason.message, "Close", { duration: 3000 });
+            this.messageService.error(reason.message);
         }
     }
 

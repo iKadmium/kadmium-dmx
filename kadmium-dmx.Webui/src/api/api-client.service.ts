@@ -3,7 +3,7 @@
 import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
 import { Inject, Injectable, InjectionToken, Optional } from '@angular/core';
 import { Observable, throwError } from 'rxjs';
-import { DefaultHttpOptions, HttpOptions, APIClientInterface } from './';
+import { DefaultHttpOptions, HttpOptions, APIClientInterface } from '.';
 
 import * as models from './models';
 

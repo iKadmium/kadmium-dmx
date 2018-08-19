@@ -1,9 +1,9 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { UniverseEditorAddMultipleFixturesDialogComponent, IUniverseEditorAddMultipleFixturesDialogInputData } from './universe-editor-add-multiple-fixtures-dialog.component';
-import { MockComponent } from '../../../node_modules/ng-mocks';
-import { FormsModule } from '../../../node_modules/@angular/forms';
-import { MatFormField, MatSelect, MatOption, MatDialogRef, MAT_DIALOG_DATA } from '../../../node_modules/@angular/material';
+import { MockComponent } from 'ng-mocks';
+import { FormsModule } from '@angular/forms';
+import { MatFormField, MatSelect, MatOption, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material';
 
 describe('UniverseEditorAddMultipleFixturesDialogComponent', () =>
 {

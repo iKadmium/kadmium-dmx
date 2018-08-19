@@ -1,9 +1,8 @@
 import { Component, OnInit, Input } from '@angular/core';
 import { Status } from "../status";
-import { StatusCode } from "../status-code.enum";
-import { MatSnackBar } from '@angular/material';
 import { AnimationLibrary } from "../animation-library";
 import { APIClient } from 'api';
+import { MessageService } from '../message.service';
 
 @Component({
     selector: 'app-dashboard-transmitter-sacn',
@@ -15,29 +14,38 @@ export class DashboardTransmitterSacnComponent implements OnInit
 {
     @Input() status: Status;
 
-    enabledDetermined: boolean;
-    enabled: boolean;
-    loaded: boolean;
+    public enabledDetermined: boolean;
+    public enabled: boolean;
+    public loaded: boolean;
 
-    constructor(private apiClient: APIClient) 
+    constructor(private apiClient: APIClient, private messageService: MessageService) 
     {
         this.enabledDetermined = false;
+        this.enabled = false;
         this.loaded = false;
     }
 
-    ngOnInit()
+    ngOnInit(): void
     {
-        this.apiClient.enabledSACNTransmitter()
-            .toPromise()
-            .then((response) =>
-            {
-                this.enabled = response;
-                this.enabledDetermined = true;
-                this.loaded = true;
-            });
+        try
+        {
+            this.apiClient
+                .enabledSACNTransmitter()
+                .toPromise()
+                .then(response =>
+                {
+                    this.enabled = response;
+                    this.enabledDetermined = true;
+                    this.loaded = true;
+                });
+        }
+        catch (error)
+        {
+            this.messageService.error(error);
+        }
     }
 
-    async toggleEnabled(): Promise<void>
+    public async toggleEnabled(): Promise<void>
     {
         let oldValue = this.enabled;
         this.enabledDetermined = false;
@@ -49,8 +57,8 @@ export class DashboardTransmitterSacnComponent implements OnInit
         catch (error)
         {
             this.enabled = oldValue;
+            this.messageService.error(error);
         }
         this.enabledDetermined = true;
     }
-
 }

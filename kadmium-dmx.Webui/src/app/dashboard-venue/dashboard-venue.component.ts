@@ -1,14 +1,13 @@
-import { Component, OnInit, Input, EventEmitter, Output } from '@angular/core';
-import { StatusCode } from "../status-code.enum";
+import { Component, OnInit, Input } from '@angular/core';
 import { Status } from "../status";
 import { PreviewVenue } from "../preview-venue";
 import { PreviewUniverse } from "../preview-universe";
-import { MatSnackBar, MatDialog } from '@angular/material';
-import { Sleep } from "../sleep";
+import { MatDialog } from '@angular/material';
 import { AnimationLibrary } from "../animation-library";
 import { UniverseData } from "api/models";
 import { VenueNameDialogComponent } from "../venue-name-dialog/venue-name-dialog.component";
 import { APIClient, VenueData } from 'api';
+import { MessageService } from 'app/message.service';
 
 @Component({
     selector: 'app-dashboard-venue',
@@ -24,7 +23,7 @@ export class DashboardVenueComponent implements OnInit
 
     public loading: boolean;
 
-    constructor(private snackbar: MatSnackBar, private apiClient: APIClient, private dialog: MatDialog)
+    constructor(private messageService: MessageService, private apiClient: APIClient, private dialog: MatDialog)
     {
         this.loading = true;
     }
@@ -38,7 +37,7 @@ export class DashboardVenueComponent implements OnInit
             {
                 this.venueSkeletons = response;
                 this.loading = false;
-            }).catch(reason => this.snackbar.open(reason, "Close", { duration: 3000 }));
+            }).catch(reason => this.messageService.error(reason));
     }
 
     public async refreshVenue(): Promise<void>
@@ -50,7 +49,7 @@ export class DashboardVenueComponent implements OnInit
         }
         catch (reason)
         {
-            this.snackbar.open(reason, "Close", { duration: 3000 });
+            this.messageService.error(reason);
         }
     }
 
@@ -129,8 +128,7 @@ export class DashboardVenueComponent implements OnInit
                     name: next,
                     universes: [universe]
                 };
-                let response = await this.apiClient.postVenue({ value: venue }).toPromise();
-                this.snackbar.open(venue.name + " successfully created", "Close", { duration: 3000 });
+                this.messageService.info(venue.name + " successfully created");
                 this.loadVenue(venue.name);
             }
         });

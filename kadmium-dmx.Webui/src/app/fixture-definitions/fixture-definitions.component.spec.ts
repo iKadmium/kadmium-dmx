@@ -2,14 +2,15 @@ import { async, ComponentFixture, TestBed, fakeAsync } from '@angular/core/testi
 
 import { FixtureDefinitionsComponent } from './fixture-definitions.component';
 import { FormsModule } from "@angular/forms";
-import { MockComponent } from '../../../node_modules/ng-mocks';
+import { MockComponent } from 'ng-mocks';
 import { SidenavToggleComponent } from '../sidenav-toggle/sidenav-toggle.component';
-import { MatIcon, MatFormField, MatToolbar, MatCard, MatCardContent, MatDialog, MatSnackBar } from '../../../node_modules/@angular/material';
+import { MatIcon, MatFormField, MatToolbar, MatCard, MatCardContent, MatDialog } from '@angular/material';
 import { BusyCardComponent } from '../busy-card/busy-card.component';
-import { RouterTestingModule } from '../../../node_modules/@angular/router/testing';
-import { NoopAnimationsModule } from '../../../node_modules/@angular/platform-browser/animations';
+import { RouterTestingModule } from '@angular/router/testing';
+import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { APIClient } from 'api';
-import { from } from '../../../node_modules/rxjs';
+import { from } from 'rxjs';
+import { MessageService } from '../message.service';
 
 describe('FixtureDefinitionsComponent', () =>
 {
@@ -45,7 +46,7 @@ describe('FixtureDefinitionsComponent', () =>
                         })
                     },
                     { provide: MatDialog, useValue: jasmine.createSpyObj<MatDialog>({ open: null }) },
-                    { provide: MatSnackBar, useValue: jasmine.createSpyObj<MatSnackBar>({ open: null }) }
+                    { provide: MessageService, useValue: jasmine.createSpyObj<MessageService>({ error: null }) }
                 ]
             }
         });

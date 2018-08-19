@@ -1,8 +1,8 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { DashboardFixtureColorComponent } from './dashboard-fixture-color.component';
-import { ColorPickerComponent, ColorPickerDirective } from '../../../node_modules/ngx-color-picker';
-import { MockComponent, MockDirective } from '../../../node_modules/ng-mocks';
+import { ColorPickerComponent, ColorPickerDirective } from 'ngx-color-picker';
+import { MockComponent, MockDirective } from 'ng-mocks';
 
 describe('DashboardFixtureColorComponent', () =>
 {

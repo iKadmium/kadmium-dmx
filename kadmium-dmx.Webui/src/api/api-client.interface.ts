@@ -1,10 +1,11 @@
 /* tslint:disable */
 
 import { Observable } from 'rxjs';
-import { HttpOptions } from './';
+import { HttpOptions } from '.';
 import * as models from './models';
 
-export interface APIClientInterface {
+export interface APIClientInterface
+{
 
   getFixtureDefinition(
     args: {

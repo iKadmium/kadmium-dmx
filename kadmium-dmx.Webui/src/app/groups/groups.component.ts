@@ -1,14 +1,12 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { Title } from "@angular/platform-browser";
-import { StatusCode } from "../status-code.enum";
 import { FileSaver } from "../file-saver";
 import { AsyncFileReader } from "../async-file-reader";
-import { MatTableDataSource } from "@angular/material/table";
-import { MatSnackBar } from '@angular/material';
 import { NgForm } from '@angular/forms';
 import { AnimationLibrary } from "../animation-library";
 import { EditorComponent } from "../editor-component/editor-component";
 import { APIClient, GroupData } from 'api';
+import { MessageService } from 'app/message.service';
 
 @Component({
     selector: 'app-groups',
@@ -26,7 +24,7 @@ export class GroupsComponent extends EditorComponent implements OnInit
 
     @ViewChild("groupsForm") formChild: NgForm;
 
-    constructor(private apiClient: APIClient, private snackbar: MatSnackBar, title: Title)
+    constructor(private apiClient: APIClient, private messageService: MessageService, title: Title)
     {
         super();
         title.setTitle("Groups");
@@ -43,7 +41,7 @@ export class GroupsComponent extends EditorComponent implements OnInit
             {
                 this.groups = response;
                 this.loading = false;
-            }).catch(reason => this.snackbar.open(reason, "Close", { duration: 3000 }));
+            }).catch(reason => this.messageService.error(reason));
     }
 
     private getNextOrder(): number
@@ -84,11 +82,6 @@ export class GroupsComponent extends EditorComponent implements OnInit
         this.groupsSorted[newIndex].order = oldOrder;
     }
 
-    private getOtherGroupNames(group: GroupData): string[]
-    {
-        let result = this.groups.filter(item => item != group).map(grp => grp.name);
-        return result;
-    }
 
     public getElementIndex(group: GroupData): number
     {
@@ -107,11 +100,11 @@ export class GroupsComponent extends EditorComponent implements OnInit
         {
             await this.apiClient.putGroup({ groups: this.groups }).toPromise();
             this.saved = true;
-            this.snackbar.open("Saved successfully", "Close", { duration: 3000 })
+            this.messageService.info("Saved successfully");
         }
-        catch (reason)
+        catch (error)
         {
-            this.snackbar.open(reason, "Close", { duration: 3000 });
+            this.messageService.error(error);
         }
         finally
         {
@@ -153,11 +146,11 @@ export class GroupsComponent extends EditorComponent implements OnInit
                 group.order = this.getNextOrder();
                 this.groups.push(group);
             }
-            this.snackbar.open("Successfully added " + groups.length + " groups", "Close", { duration: 3000 });
+            this.messageService.info("Successfully added " + groups.length + " groups");
         }
-        catch (reason)
+        catch (error)
         {
-            this.snackbar.open(reason, "Close", { duration: 3000 });
+            this.messageService.error(error);
         }
     }
 

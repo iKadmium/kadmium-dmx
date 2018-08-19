@@ -1,16 +1,17 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { VenueEditorComponent } from './venue-editor.component';
-import { MatToolbar, MatIcon, MatCard, MatCardTitle, MatCardContent, MatFormFieldControl, MatFormField, MatCardActions, MatSnackBar } from '../../../node_modules/@angular/material';
-import { MockComponent } from '../../../node_modules/ng-mocks';
-import { FormsModule } from '../../../node_modules/@angular/forms';
+import { MatToolbar, MatIcon, MatCard, MatCardTitle, MatCardContent, MatFormField, MatCardActions } from '@angular/material';
+import { MockComponent } from 'ng-mocks';
+import { FormsModule } from '@angular/forms';
 import { SidenavToggleComponent } from '../sidenav-toggle/sidenav-toggle.component';
 import { BusyCardComponent } from '../busy-card/busy-card.component';
 import { UniverseEditorComponent } from '../universe-editor/universe-editor.component';
 import { APIClient } from 'api';
-import { from } from '../../../node_modules/rxjs';
-import { ActivatedRoute } from '../../../node_modules/@angular/router';
-import { RouterTestingModule } from '../../../node_modules/@angular/router/testing';
+import { from } from 'rxjs';
+import { ActivatedRoute } from '@angular/router';
+import { RouterTestingModule } from '@angular/router/testing';
+import { MessageService } from 'app/message.service';
 
 describe('VenueEditorComponent', () =>
 {
@@ -58,7 +59,7 @@ describe('VenueEditorComponent', () =>
 						})
 					},
 					{ provide: ActivatedRoute, useValue: route },
-					{ provide: MatSnackBar, useValue: jasmine.createSpyObj<MatSnackBar>({ open: null }) }
+					{ provide: MessageService, useValue: jasmine.createSpyObj<MessageService>({ error: null }) }
 				]
 			}
 		})

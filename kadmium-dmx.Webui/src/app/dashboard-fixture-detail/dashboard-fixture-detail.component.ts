@@ -1,15 +1,15 @@
-import { Component, OnInit, ViewChild, ElementRef, AfterViewInit, OnDestroy } from '@angular/core';
+import { Component, OnInit, ViewChild, AfterViewInit, OnDestroy } from '@angular/core';
 import { UniverseStreamService } from "../universe-stream.service";
 import { PreviewUniverse } from "../preview-universe";
 import { PreviewFixture } from "../preview-fixture";
 import { ActivatedRoute } from "@angular/router";
-import { StatusCode } from "../status-code.enum";
 import { DashboardFixturePreviewComponent } from "../dashboard-fixture-preview/dashboard-fixture-preview.component";
-import { MatSnackBar, MAT_CHIPS_DEFAULT_OPTIONS } from '@angular/material';
 import { AnimationLibrary } from "../animation-library";
 import { PreviewAttribute } from '../preview-attribute';
-import { AttributeUpdateMessage, FixtureStreamService } from '../fixture-stream.service';
-import { APIClient } from 'api';
+import { AttributeUpdateMessage, FixtureStreamService, AttributeUpdateData } from '../fixture-stream.service';
+import { APIClient, ActiveUniverse } from 'api';
+import { Subscription } from 'rxjs';
+import { MessageService } from 'app/message.service';
 
 @Component({
     selector: 'app-dashboard-fixture-detail',
@@ -19,21 +19,27 @@ import { APIClient } from 'api';
 })
 export class DashboardFixtureDetailComponent implements OnInit, OnDestroy, AfterViewInit
 {
-    public universe: PreviewUniverse;
+    private universeID: number;
     private renderTimer: number;
     private data: Uint8Array;
 
     public fixture: PreviewFixture;
-
     public loading: boolean;
-    private firstUpdate: boolean = true;
 
     public attributes: PreviewAttribute[];
 
+    private fixtureStreamSubscription: Subscription;
+    private universeStreamSubscription: Subscription;
+
     @ViewChild("fixturePreview") fixturePreview: DashboardFixturePreviewComponent;
 
-    constructor(private route: ActivatedRoute, private apiClient: APIClient, private universeStreamService: UniverseStreamService,
-        private snackbar: MatSnackBar, private fixtureStreamService: FixtureStreamService)
+    constructor(
+        private route: ActivatedRoute,
+        private apiClient: APIClient,
+        private universeStreamService: UniverseStreamService,
+        private errorService: MessageService,
+        private fixtureStreamService: FixtureStreamService
+    )
     {
         this.data = new Uint8Array(512);
         this.loading = true;
@@ -41,40 +47,41 @@ export class DashboardFixtureDetailComponent implements OnInit, OnDestroy, After
 
     ngOnInit() 
     {
-        let universeID = parseInt(this.route.snapshot.paramMap.get('universeID'));
+        this.universeID = parseInt(this.route.snapshot.paramMap.get('universeID'));
         let fixtureAddress = parseInt(this.route.snapshot.paramMap.get('fixtureAddress'));
 
-        this.apiClient.getActiveUniverse({ universeID: universeID })
+        this.apiClient
+            .getActiveUniverse({ universeID: this.universeID })
             .toPromise()
             .then(response =>
             {
-                this.universe = PreviewUniverse.load(response);
-                let fixture = this.universe.fixtures.find(x => x.address == fixtureAddress);
-                this.fixture = fixture;
+                this.loadUniverse(response, fixtureAddress);
                 this.loading = false;
-                let activeFixture = response.fixtures.find(x => x.address == fixtureAddress);
-                this.attributes = activeFixture.attributes.map(x => new PreviewAttribute().load(x));
-
-                this.fixtureStreamService.subscribe(universeID, fixtureAddress, data => 
+                this.fixtureStreamService.open(this.universeID, fixtureAddress).then(data => 
                 {
-                    for (let update of data)
+                    this.fixtureStreamSubscription = data.subscribe(data =>
                     {
-                        let attribute = this.attributes.find(x => x.name == update.name);
-                        if (attribute.value != update.value)
-                        {
-                            attribute.value = update.value;
-                        }
-                    }
-                });
-            }).catch(error => this.snackbar.open(error, "Close", { duration: 3000 }));
+                        this.updateValues(data);
+                    })
+                }).catch(error => this.errorService.error(error));
+            }).catch(error => this.errorService.error(error));
 
-        this.universeStreamService.subscribe(universeID, data => 
-        {
-            for (let i = 0; i < data.length; i++)
+        this.universeStreamSubscription = this.universeStreamService
+            .open(this.universeID)
+            .subscribe(data => 
             {
-                this.data[i] = data[i];
-            }
-        });
+                this.data = data.slice();
+            });
+
+    }
+
+    private loadUniverse(universeData: ActiveUniverse, fixtureAddress: number): void
+    {
+        let universe = PreviewUniverse.load(universeData);
+        let fixture = universe.fixtures.find(x => x.address == fixtureAddress);
+        this.fixture = fixture;
+        let activeFixture = universeData.fixtures.find(x => x.address == fixtureAddress);
+        this.attributes = activeFixture.attributes.map(x => new PreviewAttribute().load(x));
     }
 
     ngAfterViewInit(): void
@@ -84,21 +91,35 @@ export class DashboardFixtureDetailComponent implements OnInit, OnDestroy, After
 
     ngOnDestroy(): void
     {
-        this.universeStreamService.unsubscribe();
-        this.fixtureStreamService.unsubscribe();
+        if (this.universeStreamSubscription != null) { this.universeStreamSubscription.unsubscribe(); }
+        if (this.fixtureStreamSubscription != null) { this.fixtureStreamSubscription.unsubscribe(); }
+        this.fixtureStreamService.close();
+        window.clearInterval(this.renderTimer);
     }
 
     private async render(): Promise<void>
     {
         if (this.fixturePreview != null)
         {
-            this.fixturePreview.render(this.data);
+            await this.fixturePreview.render(this.data);
         }
     }
 
-    updateValue(data: AttributeUpdateMessage): void
+    private updateValues(data: AttributeUpdateData[]): void
     {
-        this.fixtureStreamService.set(this.universe.universeID, this.fixture.address, data.attributeName, data.attributeValue);
+        for (let update of data)
+        {
+            let attribute = this.attributes.find(x => x.name == update.name);
+            if (attribute.value != update.value)
+            {
+                attribute.value = update.value;
+            }
+        }
+    }
+
+    public updateValue(data: AttributeUpdateMessage): void
+    {
+        this.fixtureStreamService.set(this.universeID, this.fixture.address, data.attributeName, data.attributeValue);
     }
 
 }

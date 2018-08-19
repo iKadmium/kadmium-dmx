@@ -15,9 +15,9 @@ export class DashboardFixtureAttributesComponent implements OnInit, OnChanges
     @Input() universeID: number;
     @Input() fixture: PreviewFixture;
     @Input() attributes: PreviewAttribute[];
+
     public dmxAttributes: PreviewAttribute[];
     public nonDmxAttributes: PreviewAttribute[];
-    private firstUpdate: boolean = true;
 
     @Output() setValue = new EventEmitter<AttributeUpdateMessage>();
 

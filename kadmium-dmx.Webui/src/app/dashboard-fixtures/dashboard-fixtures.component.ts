@@ -4,9 +4,10 @@ import { PreviewUniverse } from "../preview-universe";
 import { DashboardFixtureListComponent } from "../dashboard-fixture-list/dashboard-fixture-list.component";
 import { UniverseStreamService } from "../universe-stream.service";
 import { PreviewFixture } from "../preview-fixture";
-import { MatSnackBar } from '@angular/material';
 import { AnimationLibrary } from "../animation-library";
 import { APIClient } from 'api';
+import { Subscription } from 'rxjs';
+import { MessageService } from 'app/message.service';
 
 @Component({
     selector: 'app-dashboard-fixtures',
@@ -26,9 +27,9 @@ export class DashboardFixturesComponent implements OnInit, OnDestroy
     public loading: boolean;
 
     private renderTimer: number;
+    private subscription: Subscription;
 
-    constructor(private route: ActivatedRoute, private apiClient: APIClient, private universeStreamService: UniverseStreamService,
-        private snackbar: MatSnackBar)
+    constructor(private route: ActivatedRoute, private apiClient: APIClient, private universeStreamService: UniverseStreamService, private messageService: MessageService)
     {
         this.data = new Uint8Array(512);
         this.loading = true;
@@ -37,28 +38,38 @@ export class DashboardFixturesComponent implements OnInit, OnDestroy
     ngOnInit() 
     {
         let universeID = parseInt(this.route.snapshot.paramMap.get('universeID'));
-        this.apiClient.getActiveUniverse({ universeID: universeID })
-            .toPromise()
-            .then(response =>
-            {
-                this.universe = PreviewUniverse.load(response);
-                this.loading = false;
-            }).catch(error => this.snackbar.open(error, "Close", { duration: 3000 }));
-
-        this.universeStreamService.subscribe(universeID, data => 
+        try
         {
-            for (let i = 0; i < data.length; i++)
-            {
-                this.data[i] = data[i];
-            }
-        });
+            this.apiClient.getActiveUniverse({ universeID: universeID })
+                .toPromise()
+                .then(response =>
+                {
+                    this.universe = PreviewUniverse.load(response);
+                    this.loading = false;
+                });
+
+            this.subscription = this.universeStreamService
+                .open(universeID)
+                .subscribe(data => 
+                {
+                    for (let i = 0; i < data.length; i++)
+                    {
+                        this.data[i] = data[i];
+                    }
+                });
+        }
+        catch (error)
+        {
+            this.messageService.error(error);
+        }
 
         this.renderTimer = window.setInterval(async () => await this.render(), 100);
     }
 
     ngOnDestroy()
     {
-        this.universeStreamService.unsubscribe();
+        window.clearInterval(this.renderTimer);
+        if (this.subscription != null) { this.subscription.unsubscribe(); }
     }
 
     public selectFixture(fixture: PreviewFixture): void

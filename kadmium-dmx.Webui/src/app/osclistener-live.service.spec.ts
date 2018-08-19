@@ -4,15 +4,15 @@ import { OSCListenerLiveService } from './osclistener-live.service';
 
 describe('OSCListenerService', () =>
 {
-  beforeEach(() =>
-  {
-    TestBed.configureTestingModule({
-      providers: [OSCListenerLiveService]
-    });
-  });
+	beforeEach(() =>
+	{
+		TestBed.configureTestingModule({
+			providers: [OSCListenerLiveService]
+		});
+	});
 
-  it('should ...', inject([OSCListenerLiveService], (service: OSCListenerLiveService) =>
-  {
-    expect(service).toBeTruthy();
-  }));
+	it('should ...', inject([OSCListenerLiveService], (service: OSCListenerLiveService) =>
+	{
+		expect(service).toBeTruthy();
+	}));
 });

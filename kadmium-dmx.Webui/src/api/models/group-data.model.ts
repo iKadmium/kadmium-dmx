@@ -1,9 +1,11 @@
 /* tslint:disable */
-import {
+import
+{
   BsonSerializable,
-} from './..';
+} from '..';
 
-export interface GroupData extends BsonSerializable {
+export interface GroupData extends BsonSerializable
+{
   name: string;
   order: number;
 }
