@@ -31,13 +31,20 @@ export class DashboardVenueComponent implements OnInit
     ngOnInit(): void
     {
         this.refreshVenue();
-        this.apiClient.getVenues()
-            .toPromise()
-            .then(response => 
-            {
-                this.venueSkeletons = response;
-                this.loading = false;
-            }).catch(reason => this.messageService.error(reason));
+        try
+        {
+            this.apiClient.getVenues()
+                .toPromise()
+                .then(response => 
+                {
+                    this.venueSkeletons = response;
+                    this.loading = false;
+                });
+        }
+        catch (error)
+        {
+            this.messageService.error(error);
+        }
     }
 
     public async refreshVenue(): Promise<void>
@@ -78,23 +85,6 @@ export class DashboardVenueComponent implements OnInit
         return sum;
     }
 
-    public get solverAttributeCount(): number
-    {
-        if (this.venue == null) { return 0 };
-
-        let sum = 0;
-        for (let universe of this.venue.universes)
-        {
-            for (let fixture of universe.fixtures)
-            {
-                let attributes = Array.from(fixture.channelNameMap.values());
-                sum += attributes.filter(x => !x.dmx).length
-            }
-        }
-
-        return sum;
-    }
-
     public async loadVenue(name: string): Promise<void>
     {
         this.loading = true;
@@ -106,32 +96,39 @@ export class DashboardVenueComponent implements OnInit
         }
         catch (error)
         {
-            console.error(error);
+            this.messageService.error(error);
         }
         this.loading = false;
     }
 
-    public newVenue(): void
+    public async newVenue(): Promise<void>
     {
         let dialogRef = this.dialog.open(VenueNameDialogComponent);
-        dialogRef.afterClosed().subscribe(async next =>
+        let next = await dialogRef.afterClosed().toPromise();
+
+        if (next != null)
         {
-            if (next != null)
+            let universe: UniverseData = {
+                fixtures: [],
+                name: "New Universe",
+                universeID: 1
+            };
+            let venue: VenueData = {
+                id: "",
+                name: next,
+                universes: [universe]
+            };
+            try
             {
-                let universe: UniverseData = {
-                    fixtures: [],
-                    name: "New Universe",
-                    universeID: 1
-                };
-                let venue: VenueData = {
-                    id: "",
-                    name: next,
-                    universes: [universe]
-                };
+                await this.apiClient.postVenue({ value: venue });
                 this.messageService.info(venue.name + " successfully created");
-                this.loadVenue(venue.name);
+                await this.loadVenue(venue.name);
             }
-        });
+            catch (error)
+            {
+                this.messageService.error(error);
+            }
+        }
     }
 
 }

@@ -31,7 +31,8 @@ export class UniverseStreamService
     {
         let config: WebSocketSubjectConfig<Uint8Array> = {
             binaryType: "arraybuffer",
-            url: `${this.socketUrl}/${universeID}`
+            url: `${this.socketUrl}/${universeID}`,
+            deserializer: (e: MessageEvent) => new Uint8Array(e.data)
         };
         this.subject = new WebSocketSubject<Uint8Array>(config);
         return this.subject.asObservable();

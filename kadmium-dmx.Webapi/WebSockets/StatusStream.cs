@@ -28,7 +28,7 @@ namespace kadmium_dmx_webapi.WebSockets
             Venue.Status.Updated += VenueStatusUpdated;
         }
 
-        public async override void OnMessage(JObject message)
+        public async override void OnMessage(JToken message)
         {
             switch (message.Value<string>())
             {

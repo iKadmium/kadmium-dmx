@@ -6,15 +6,15 @@
         <div *ngFor="let universe of venue?.universes; let last = last">
             <h3>{{universe.name}}</h3>
             <div class="universe-buttons">
-                <a mat-button routerLink="/venue/dmx/{{universe.universeID}}">
+                <a mat-button routerLink="venue/dmx/{{universe.universeID}}">
                     <mat-icon>grid_on</mat-icon>
                     <span class="button-text">DMX Channels ({{getDMXChannelCount(universe)}})</span>
                 </a>
-                <a mat-button routerLink="/venue/fixtures/{{universe.universeID}}">
+                <a mat-button routerLink="venue/fixtures/{{universe.universeID}}">
                     <mat-icon>lightbulb_outline</mat-icon>
                     <span class="button-text">Fixtures ({{getFixtureCount(universe)}})</span>
                 </a>
-                <a mat-button routerLink="/venue/discover/{{universe.universeID}}">
+                <a mat-button routerLink="venue/discover/{{universe.universeID}}">
                     <mat-icon>search</mat-icon>
                     <span class="button-text">Discover</span>
                 </a>

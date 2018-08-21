@@ -124,18 +124,12 @@ export class DashboardUniverseComponent implements OnInit, AfterViewInit, OnDest
     {
         let x = 2 * this.cellPaddingX + this.cellWidth;
         let y = this.cellPaddingY;
+
         this.cells = [];
+
         for (let address = 0; address < this.data.length; address++)
         {
-            let controlled = false;
-            let fixture = this.universe.fixtures
-                .find(x => x.channelNumberMap.has(address));
-            if (fixture != null)
-            {
-                controlled = fixture
-                    .channelNumberMap.get(address)
-                    .some(x => x.controlled);
-            }
+            let controlled = this.getIsControlled(address);
 
             let cell = new PreviewUniverseCell(this.cellWidth, this.cellHeight, x, y, address, controlled);
             this.cells.push(cell);
@@ -149,17 +143,33 @@ export class DashboardUniverseComponent implements OnInit, AfterViewInit, OnDest
         }
     }
 
+    private getIsControlled(address: number)
+    {
+        let fixture = this.universe.fixtures
+            .find(x => x.channelNumberMap.has(address));
+        if (fixture != null)
+        {
+            return fixture
+                .channelNumberMap.get(address)
+                .some(x => x.controlled);
+        }
+        return false;
+    }
+
     private render(): void
     {
-        for (let i = 0; i < this.data.length; i++)
+        if (this.cells.length > 0)
         {
-            this.cells[i].render(this.context, this.data[i]);
+            for (let i = 0; i < this.data.length; i++)
+            {
+                this.cells[i].render(this.context, this.data[i]);
+            }
         }
     }
 
     private updateData(data: Uint8Array): void
     {
-        for (let i = 0; i < data.length; i++)
+        for (let i = 0; i < this.data.length; i++)
         {
             this.data[i] = data[i];
         }

@@ -37,7 +37,7 @@ export class DashboardFixtureDetailComponent implements OnInit, OnDestroy, After
         private route: ActivatedRoute,
         private apiClient: APIClient,
         private universeStreamService: UniverseStreamService,
-        private errorService: MessageService,
+        private messageService: MessageService,
         private fixtureStreamService: FixtureStreamService
     )
     {
@@ -50,21 +50,31 @@ export class DashboardFixtureDetailComponent implements OnInit, OnDestroy, After
         this.universeID = parseInt(this.route.snapshot.paramMap.get('universeID'));
         let fixtureAddress = parseInt(this.route.snapshot.paramMap.get('fixtureAddress'));
 
-        this.apiClient
-            .getActiveUniverse({ universeID: this.universeID })
-            .toPromise()
-            .then(response =>
-            {
-                this.loadUniverse(response, fixtureAddress);
-                this.loading = false;
-                this.fixtureStreamService.open(this.universeID, fixtureAddress).then(data => 
+        try
+        {
+            this.apiClient
+                .getActiveUniverse({ universeID: this.universeID })
+                .toPromise()
+                .then(response =>
                 {
-                    this.fixtureStreamSubscription = data.subscribe(data =>
+                    this.loadUniverse(response, fixtureAddress);
+                    this.loading = false;
+                    try
                     {
-                        this.updateValues(data);
-                    })
-                }).catch(error => this.errorService.error(error));
-            }).catch(error => this.errorService.error(error));
+                        this.fixtureStreamSubscription = this.fixtureStreamService
+                            .open(this.universeID, fixtureAddress)
+                            .subscribe(data => this.updateValues(data));
+                    }
+                    catch (error)
+                    {
+                        this.messageService.error(error);
+                    }
+                });
+        }
+        catch (error)
+        {
+            this.messageService.error(error);
+        }
 
         this.universeStreamSubscription = this.universeStreamService
             .open(this.universeID)
@@ -93,7 +103,6 @@ export class DashboardFixtureDetailComponent implements OnInit, OnDestroy, After
     {
         if (this.universeStreamSubscription != null) { this.universeStreamSubscription.unsubscribe(); }
         if (this.fixtureStreamSubscription != null) { this.fixtureStreamSubscription.unsubscribe(); }
-        this.fixtureStreamService.close();
         window.clearInterval(this.renderTimer);
     }
 

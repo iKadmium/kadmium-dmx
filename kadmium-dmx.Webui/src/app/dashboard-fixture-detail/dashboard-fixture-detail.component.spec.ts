@@ -102,7 +102,7 @@ describe('DashboardFixtureDetailComponent', () =>
 						getActiveUniverse: from([activeUniverseData])
 					})
 				},
-				{ provide: FixtureStreamService, useValue: jasmine.createSpyObj<FixtureStreamService>({ open: Promise.resolve(fixtureStreamObservable), close: null }) },
+				{ provide: FixtureStreamService, useValue: jasmine.createSpyObj<FixtureStreamService>({ open: fixtureStreamObservable }) },
 				{ provide: UniverseStreamService, useValue: jasmine.createSpyObj<UniverseStreamService>({ open: universeStreamObservable }) },
 				{ provide: ActivatedRoute, useValue: { snapshot: { paramMap: { get: param => paramMap[param] } } } },
 				{ provide: MessageService, useValue: jasmine.createSpyObj<MessageService>({ error: null }) },
@@ -130,6 +130,20 @@ describe('DashboardFixtureDetailComponent', () =>
 		fixture.detectChanges();
 		expect(apiClient.getActiveUniverse).toHaveBeenCalledTimes(1);
 	});
+
+	it('should show an error if it fails to get the active universe', fakeAsync(() =>
+	{
+		let error = new Error("Error Message");
+		let apiClientService = TestBed.get(APIClient) as jasmine.SpyObj<APIClient>;
+		let errorService = TestBed.get(MessageService) as jasmine.SpyObj<MessageService>;
+		apiClientService.getActiveUniverse.and.throwError(error.message);
+
+		fixture.detectChanges();
+		tick();
+
+		expect(errorService.error).toHaveBeenCalledWith(error);
+		fixture.destroy();
+	}));
 
 	it('should load the active universe', fakeAsync(() =>
 	{
@@ -166,13 +180,16 @@ describe('DashboardFixtureDetailComponent', () =>
 		fixture.destroy();
 	}));
 
-	it('should close the fixture stream socket when destroyed', fakeAsync(() =>
+	it('should unsubscribe from the fixture stream socket when destroyed', fakeAsync(() =>
 	{
 		let fixtureStreamService = TestBed.get(FixtureStreamService) as jasmine.SpyObj<FixtureStreamService>;
+		let mockSubscription = jasmine.createSpyObj<Subscription>({ unsubscribe: null });
+		let mockObservable = jasmine.createSpyObj<Observable<AttributeUpdateData[]>>({ subscribe: mockSubscription });
+		fixtureStreamService.open.and.returnValue(mockObservable);
 		fixture.detectChanges();
 		tick();
 		fixture.destroy();
-		expect(fixtureStreamService.close).toHaveBeenCalledTimes(1);
+		expect(mockSubscription.unsubscribe).toHaveBeenCalledTimes(1);
 	}));
 
 	it('should open a universe stream socket when created', fakeAsync(() =>

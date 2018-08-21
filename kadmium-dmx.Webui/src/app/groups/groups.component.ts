@@ -82,6 +82,12 @@ export class GroupsComponent extends EditorComponent implements OnInit
         this.groupsSorted[newIndex].order = oldOrder;
     }
 
+    public getOtherGroupNames(group: GroupData): string[]
+    {
+        let otherGroups = this.groups.filter(x => x != group);
+        let otherGroupNames = otherGroups.map(x => x.name);
+        return otherGroupNames;
+    }
 
     public getElementIndex(group: GroupData): number
     {

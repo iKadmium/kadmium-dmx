@@ -27,7 +27,7 @@ namespace kadmium_dmx_webapi.WebSockets
             Renderer.OnUpdate += Instance_OnUpdate;
         }
 
-        public override void OnMessage(JObject message)
+        public override void OnMessage(JToken message)
         {
             int universeID = message["universeID"].Value<int>();
             int channel = message["channel"].Value<int>();

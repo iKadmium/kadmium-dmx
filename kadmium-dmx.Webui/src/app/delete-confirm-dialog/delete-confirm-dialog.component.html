@@ -5,11 +5,11 @@
 
     </div>
     <div mat-dialog-actions>
-        <button mat-button color="warn" [mat-dialog-close]="true" tabindex="2">
+        <button mat-button color="warn" (click)="delete()" class="delete">
             <mat-icon>delete</mat-icon>
             Delete
         </button>
-        <button mat-button [mat-dialog-close]="false" tabindex="-1">
+        <button mat-button (click)="cancel()" class="cancel">
             <mat-icon>cancel</mat-icon>
             Cancel
         </button>

@@ -23,7 +23,7 @@ export class FixtureDefinitionEditorComponent extends EditorComponent implements
     public allManufacturers: string[];
     public definition: FixtureDefinition;
 
-    public saving: boolean;
+    public saving: boolean = false;
 
     private channelNameOptions: string[] = [
         'Master',
@@ -55,11 +55,15 @@ export class FixtureDefinitionEditorComponent extends EditorComponent implements
 
     @ViewChild("editorForm") formChild: NgForm;
 
-    constructor(private route: ActivatedRoute, private apiClient: APIClient,
-        private messageService: MessageService, private title: Title, private router: Router)
+    constructor(
+        private route: ActivatedRoute,
+        private apiClient: APIClient,
+        private messageService: MessageService,
+        private title: Title,
+        private router: Router
+    )
     {
         super();
-        this.saving = false;
     }
 
     ngOnInit()
@@ -91,7 +95,7 @@ export class FixtureDefinitionEditorComponent extends EditorComponent implements
                     .then(response => 
                     {
                         this.definition = response;
-                    }).catch(error => this.messageService.error(error));
+                    });
             }
             this.apiClient.getFixtureDefinitions()
                 .toPromise()
@@ -100,7 +104,7 @@ export class FixtureDefinitionEditorComponent extends EditorComponent implements
                     this.allManufacturers = response
                         .map((skeleton: FixtureDefinitionSkeleton) => skeleton.manufacturer)
                         .filter((value: string, index: number, array: string[]) => array.indexOf(value) == index);
-                }).catch(error => this.messageService.error(error));
+                });
         }
         catch (reason)
         {
@@ -120,7 +124,7 @@ export class FixtureDefinitionEditorComponent extends EditorComponent implements
 
     private isNewItem(): boolean
     {
-        return this.manufacturer == null || this.model == null;
+        return this.manufacturer == null || this.manufacturer == "" || this.model == null || this.model == "";
     }
 
     public async addChannel(): Promise<void>
@@ -232,7 +236,7 @@ export class FixtureDefinitionEditorComponent extends EditorComponent implements
         this.saving = true;
         try
         {
-            if (this.manufacturer == null)
+            if (this.isNewItem())
             {
                 await this.apiClient.postFixtureDefinition({ value: this.definition }).toPromise();
                 this.saved = true;

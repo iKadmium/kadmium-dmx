@@ -30,7 +30,6 @@ import { DashboardFixtureListComponent } from './dashboard-fixture-list/dashboar
 import { DashboardFixtureAttributesComponent } from './dashboard-fixture-attributes/dashboard-fixture-attributes.component';
 import { DashboardOSCListenerComponent } from './dashboard-osc-listener/dashboard-osc-listener.component';
 import { DashboardFixturePreviewComponent } from "./dashboard-fixture-preview/dashboard-fixture-preview.component";
-import { OSCListenerLiveService } from "./osclistener-live.service";
 import { DashboardFixturesComponent } from './dashboard-fixtures/dashboard-fixtures.component';
 import { UniverseEditorPresetSaveDialogComponent } from './universe-editor-preset-save-dialog/universe-editor-preset-save-dialog.component';
 import { DashboardTransmitterSacnComponent } from './dashboard-transmitter-sacn/dashboard-transmitter-sacn.component';
@@ -50,7 +49,6 @@ import { VenueNameDialogComponent } from './venue-name-dialog/venue-name-dialog.
 import { SidenavToggleComponent } from './sidenav-toggle/sidenav-toggle.component';
 import { DashboardFixtureColorComponent } from './dashboard-fixture-color/dashboard-fixture-color.component';
 import { UniverseEditorAddMultipleFixturesDialogComponent } from './universe-editor-add-multiple-fixtures-dialog/universe-editor-add-multiple-fixtures-dialog.component';
-import { DashboardUniverseCellComponent } from './dashboard-universe-cell/dashboard-universe-cell.component';
 
 @NgModule({
     declarations: [
@@ -91,7 +89,6 @@ import { DashboardUniverseCellComponent } from './dashboard-universe-cell/dashbo
         SidenavToggleComponent,
         DashboardFixtureColorComponent,
         UniverseEditorAddMultipleFixturesDialogComponent,
-        DashboardUniverseCellComponent
     ],
     imports: [
         BrowserModule,
@@ -101,22 +98,26 @@ import { DashboardUniverseCellComponent } from './dashboard-universe-cell/dashbo
         RouterModule.forRoot(
             [
                 { path: '', redirectTo: 'dashboard', pathMatch: 'full' },
-                { path: 'dashboard', component: DashboardComponent },
                 {
-                    path: 'venue', children:
-                        [
-                            { path: 'dmx/:universeID', component: DashboardUniverseComponent },
-                            {
-                                path: 'fixtures/:universeID', children:
-                                    [
-                                        { path: '', component: DashboardFixturesComponent },
-                                        { path: ':fixtureAddress', component: DashboardFixtureDetailComponent }
-                                    ]
-                            },
-                            { path: 'discover/:universeID', component: VenueDiscoveryComponent }
-                        ]
+                    path: 'dashboard', children: [
+                        { path: '', component: DashboardComponent },
+                        {
+                            path: 'venue', children:
+                                [
+                                    { path: 'dmx/:universeID', component: DashboardUniverseComponent },
+                                    {
+                                        path: 'fixtures/:universeID', children:
+                                            [
+                                                { path: '', component: DashboardFixturesComponent },
+                                                { path: ':fixtureAddress', component: DashboardFixtureDetailComponent }
+                                            ]
+                                    },
+                                    { path: 'discover/:universeID', component: VenueDiscoveryComponent }
+                                ]
+                        },
+                        { path: 'oscListener', component: DashboardOscListenerMessagesComponent }
+                    ]
                 },
-                { path: 'oscListener', component: DashboardOscListenerMessagesComponent },
                 { path: 'settings', component: SettingsComponent, canDeactivate: [UnsavedChanges] },
                 { path: 'groups', component: GroupsComponent, canDeactivate: [UnsavedChanges] },
                 { path: 'tools', component: ToolsComponent },

@@ -4,13 +4,13 @@
 		<div mat-dialog-content>
 			<div class="column">
 				<mat-form-field>
-					<input matInput required type="text" [(ngModel)]="definition.manufacturer" placeholder="Manufacturer" name="manufacturer">
+					<input matInput required type="text" [(ngModel)]="definition.skeleton.manufacturer" placeholder="Manufacturer" name="manufacturer">
 				</mat-form-field>
 				<mat-form-field>
-					<input matInput required type="text" [(ngModel)]="definition.model" placeholder="Model" name="model">
+					<input matInput required type="text" [(ngModel)]="definition.skeleton.model" placeholder="Model" name="model">
 				</mat-form-field>
 				<mat-form-field>
-					<mat-select required placeholder="Type" [(value)]="definition.type" name="type">
+					<mat-select required placeholder="Type" [(value)]="definition.fixtureType" name="type">
 						<mat-option [value]="0">LED</mat-option>
 						<mat-option [value]="1">Tungsten</mat-option>
 						<mat-option [value]="2">Effect</mat-option>

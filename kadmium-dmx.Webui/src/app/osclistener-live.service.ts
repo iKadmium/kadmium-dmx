@@ -4,7 +4,9 @@ import { Observable, Subject } from 'rxjs';
 import { WebSocketSubject } from 'rxjs/webSocket';
 
 
-@Injectable()
+@Injectable({
+    providedIn: 'root'
+})
 export class OSCListenerLiveService
 {
     private socketUrl = URLs.getSocketURL(SocketController.OSC);

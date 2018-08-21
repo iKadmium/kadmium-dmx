@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import { URLs, SocketController } from "./url";
 import { Observable } from 'rxjs';
 import { resolve } from 'dns';
+import { WebSocketSubject } from '../../node_modules/rxjs/webSocket';
 
 @Injectable({
     providedIn: 'root'
@@ -9,39 +10,17 @@ import { resolve } from 'dns';
 export class FixtureStreamService
 {
     private socketUrl = URLs.getSocketURL(SocketController.Fixture);
-    private socket: WebSocket;
+    private subject: WebSocketSubject<AttributeUpdateData[]>;
 
     constructor()
     {
 
     }
 
-    public open(universeID: number, fixtureAddress: number): Promise<Observable<AttributeUpdateData[]>>
+    public open(universeID: number, fixtureAddress: number): Observable<AttributeUpdateData[]>
     {
-        this.socket = new WebSocket(`${this.socketUrl}/${universeID}/${fixtureAddress}`);
-        let promise = new Promise<Observable<AttributeUpdateData[]>>((resolve, reject) =>
-        {
-            this.socket.addEventListener("open", () =>
-            {
-                let observable = new Observable<AttributeUpdateData[]>(subscriber =>
-                {
-                    this.socket.addEventListener("message", event =>
-                    {
-                        subscriber.next(JSON.parse(event.data) as AttributeUpdateData[]);
-                    });
-                });
-                resolve();
-            })
-        });
-        return promise;
-    }
-
-    public close(): void
-    {
-        if (this.socket != null)
-        {
-            this.socket.close();
-        }
+        this.subject = new WebSocketSubject<AttributeUpdateData[]>(`${this.socketUrl}/${universeID}/${fixtureAddress}`);
+        return this.subject;
     }
 
     public set(universeID: number, fixtureAddress: number, attributeName: string, attributeValue: number): void
@@ -52,7 +31,7 @@ export class FixtureStreamService
             attributeName: attributeName,
             attributeValue: attributeValue
         };
-        this.socket.send(JSON.stringify(message));
+        this.subject.next(JSON.stringify(message) as any);
     }
 }
 

@@ -66,7 +66,7 @@ namespace kadmium_dmx_webapi.WebSockets
             return Task.Delay(0);
         }
 
-        public override void OnMessage(JObject message)
+        public override void OnMessage(JToken message)
         {
             var msg = message.ToObject<FixtureUpdateMessage>();
             UpdateAttribute(msg.UniverseID, msg.FixtureAddress, msg.AttributeName, msg.AttributeValue);
