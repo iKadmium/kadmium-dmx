@@ -1,5 +1,4 @@
 import { Component, OnInit, Input, ViewChildren, QueryList } from '@angular/core';
-import { AsyncFileReader } from "../async-file-reader";
 import { FileSaver } from "../file-saver";
 import { FixtureDefinitionSkeleton, UniverseData, FixtureData } from "api/models";
 import { MatDialog } from "@angular/material/dialog";
@@ -13,6 +12,7 @@ import { Sleep } from '../sleep';
 import { UniverseEditorAddMultipleFixturesDialogComponent, IUniverseEditorAddMultipleFixturesDialogInputData, IUniverseEditorAddMultipleFixturesDialogOutputData } from '../universe-editor-add-multiple-fixtures-dialog/universe-editor-add-multiple-fixtures-dialog.component';
 import { APIClient, GroupData } from 'api';
 import { MessageService } from 'app/message.service';
+import { FileReaderService } from '../file-reader.service';
 
 @Component({
     selector: 'app-universe-editor',
@@ -28,7 +28,11 @@ export class UniverseEditorComponent implements OnInit
 
     public fixtureDefinitionSkeletons: FixtureDefinitionSkeleton[];
 
-    constructor(private apiClient: APIClient, private messageService: MessageService, private dialog: MatDialog)
+    constructor(
+        private apiClient: APIClient,
+        private messageService: MessageService,
+        private fileReader: FileReaderService,
+        private dialog: MatDialog)
     {
     }
 
@@ -174,7 +178,7 @@ export class UniverseEditorComponent implements OnInit
     {
         try
         {
-            let fixtures = await AsyncFileReader.read<FixtureData[]>(file);
+            let fixtures = await this.fileReader.read<FixtureData[]>(file);
             for (let fixture of fixtures)
             {
                 fixture.type = this.fixtureDefinitionSkeletons.find(x => x.manufacturer == fixture.type.manufacturer && x.model == fixture.type.model);

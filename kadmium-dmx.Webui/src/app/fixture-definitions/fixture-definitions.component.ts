@@ -1,15 +1,13 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
-import { AsyncFileReader } from "../async-file-reader";
 import { Title } from "@angular/platform-browser";
 import { FixtureDefinitionSkeleton, FixtureDefinition } from "api/models";
-import { MatSort } from "@angular/material/sort";
-import { MatPaginator } from "@angular/material/paginator";
 import { MatDialog } from '@angular/material';
 import { AnimationLibrary } from "../animation-library";
 import { APIClient } from 'api';
 import { URLs } from '../url';
 import { DeleteConfirmDialogComponent } from '../delete-confirm-dialog/delete-confirm-dialog.component';
 import { MessageService } from 'app/message.service';
+import { FileReaderService } from '../file-reader.service';
 
 @Component({
     selector: 'app-fixture-definitions',
@@ -19,55 +17,54 @@ import { MessageService } from 'app/message.service';
 })
 export class FixtureDefinitionsComponent implements OnInit
 {
-    skeletons: FixtureDefinitionSkeleton[];
+    public skeletons: FixtureDefinitionSkeleton[];
 
-    filter: string;
+    public filter: string;
+    public filteredData: FixtureDefinitionSkeleton[];
 
     public loading: boolean;
     public saving: boolean;
 
-    @ViewChild(MatSort) sort: MatSort;
-    @ViewChild(MatPaginator) paginator: MatPaginator;
-
-    constructor(private apiClient: APIClient, private dialog: MatDialog,
-        private messageService: MessageService, title: Title)
+    constructor(
+        private apiClient: APIClient,
+        private dialog: MatDialog,
+        private messageService: MessageService,
+        private fileReader: FileReaderService,
+        title: Title)
     {
         title.setTitle("Fixture Definitions");
         this.skeletons = [];
         this.filter = "";
         this.loading = true;
         this.saving = false;
+        this.filteredData = [];
     }
 
     ngOnInit(): void
     {
-        this.apiClient.getFixtureDefinitions()
-            .toPromise()
-            .then(response => 
-            {
-                response.forEach(skeleton => this.skeletons.push(skeleton));
-                this.loading = false;
-
-            }).catch(error => this.messageService.error(error));
+        try
+        {
+            this.apiClient.getFixtureDefinitions()
+                .toPromise()
+                .then(response => 
+                {
+                    this.skeletons = response;
+                    this.applyFilter("");
+                    this.loading = false;
+                });
+        }
+        catch (error)
+        {
+            this.messageService.error(error);
+        }
     }
 
     public applyFilter(filterValue: string): void
     {
-        filterValue = filterValue.trim(); // Remove whitespace
-        filterValue = filterValue.toLowerCase(); // MatTableDataSource defaults to lowercase matches
-        this.filter = filterValue;
-    }
-
-    public get manufacturers(): string[]
-    {
-        return this.skeletons
-            .map((value: FixtureDefinitionSkeleton) => value.manufacturer)
-            .filter((value: string, index: number, array: string[]) => array.indexOf(value) === index);
-    }
-
-    public get filteredData(): FixtureDefinitionSkeleton[]
-    {
-        let filtered = this.skeletons.filter((value: FixtureDefinitionSkeleton) =>
+        this.filter = filterValue
+            .trim()
+            .toLowerCase();
+        this.filteredData = this.skeletons.filter((value: FixtureDefinitionSkeleton) =>
         {
             let fullName = (value.manufacturer + " " + value.model).toLowerCase();
             if (this.filter != "")
@@ -76,7 +73,13 @@ export class FixtureDefinitionsComponent implements OnInit
             }
             else return true;
         });
-        return filtered;
+    }
+
+    public get manufacturers(): string[]
+    {
+        return this.skeletons
+            .map((value: FixtureDefinitionSkeleton) => value.manufacturer)
+            .filter((value: string, index: number, array: string[]) => array.indexOf(value) === index);
     }
 
     public upload(fileInput: any): void
@@ -92,30 +95,29 @@ export class FixtureDefinitionsComponent implements OnInit
         }
     }
 
-    private deleteConfirm(fixture: FixtureDefinitionSkeleton): void
+    public async deleteConfirm(fixture: FixtureDefinitionSkeleton): Promise<void>
     {
-        this.dialog.open(DeleteConfirmDialogComponent, { data: `${fixture.manufacturer} ${fixture.model}` }).afterClosed().subscribe(async value =>
+        let value = await this.dialog.open(DeleteConfirmDialogComponent, { data: `${fixture.manufacturer} ${fixture.model}` }).afterClosed().toPromise();
+
+        if (value != null)
         {
-            if (value)
+            try
             {
-                try
-                {
-                    this.saving = true;
-                    await this.apiClient.deleteFixtureDefinition({ manufacturer: fixture.manufacturer, model: fixture.model }).toPromise();
-                    this.messageService.info(fixture.manufacturer + " " + fixture.model + " was deleted");
-                    let index = this.skeletons.indexOf(fixture);
-                    this.skeletons.splice(index, 1);
-                }
-                catch (error)
-                {
-                    this.messageService.error(error);
-                }
-                finally
-                {
-                    this.saving = false;
-                }
+                this.saving = true;
+                await this.apiClient.deleteFixtureDefinition({ manufacturer: fixture.manufacturer, model: fixture.model }).toPromise();
+                this.messageService.info(fixture.manufacturer + " " + fixture.model + " was deleted");
+                let index = this.skeletons.indexOf(fixture);
+                this.skeletons.splice(index, 1);
             }
-        });
+            catch (error)
+            {
+                this.messageService.error(error);
+            }
+            finally
+            {
+                this.saving = false;
+            }
+        }
     }
 
     public getDownloadURL(skeleton: FixtureDefinitionSkeleton): string
@@ -132,7 +134,7 @@ export class FixtureDefinitionsComponent implements OnInit
     {
         try
         {
-            let definition = await AsyncFileReader.read<FixtureDefinition>(file);
+            let definition = await this.fileReader.read<FixtureDefinition>(file);
             await this.apiClient.postFixtureDefinition({ value: definition }).toPromise();
             this.skeletons.push(definition.skeleton);
             this.messageService.info("Successfully added " + definition.skeleton.manufacturer + " " + definition.skeleton.model);

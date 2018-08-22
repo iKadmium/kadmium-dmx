@@ -1,12 +1,12 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { Title } from "@angular/platform-browser";
 import { FileSaver } from "../file-saver";
-import { AsyncFileReader } from "../async-file-reader";
 import { NgForm } from '@angular/forms';
 import { AnimationLibrary } from "../animation-library";
 import { EditorComponent } from "../editor-component/editor-component";
 import { APIClient, GroupData } from 'api';
 import { MessageService } from 'app/message.service';
+import { FileReaderService } from '../file-reader.service';
 
 @Component({
     selector: 'app-groups',
@@ -24,7 +24,11 @@ export class GroupsComponent extends EditorComponent implements OnInit
 
     @ViewChild("groupsForm") formChild: NgForm;
 
-    constructor(private apiClient: APIClient, private messageService: MessageService, title: Title)
+    constructor(
+        private apiClient: APIClient,
+        private messageService: MessageService,
+        private fileReader: FileReaderService,
+        title: Title)
     {
         super();
         title.setTitle("Groups");
@@ -145,7 +149,7 @@ export class GroupsComponent extends EditorComponent implements OnInit
     {
         try
         {
-            let groups = await AsyncFileReader.read<GroupData[]>(file);
+            let groups = await this.fileReader.read<GroupData[]>(file);
             groups.sort((a, b) => a.order - b.order);
             for (let group of groups)
             {

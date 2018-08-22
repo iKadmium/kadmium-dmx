@@ -1,12 +1,12 @@
 import { Component, OnInit } from '@angular/core';
 import { Title } from "@angular/platform-browser";
-import { AsyncFileReader } from "../async-file-reader";
 import { APIClient } from "api/api-client.service";
 import { MatDialog } from '@angular/material';
 import { DeleteConfirmDialogComponent } from '../delete-confirm-dialog/delete-confirm-dialog.component';
 import { AnimationLibrary } from "../animation-library";
 import { VenueData } from 'api/models/venue-data.model';
 import { MessageService } from 'app/message.service';
+import { FileReaderService } from '../file-reader.service';
 
 @Component({
     selector: 'app-venues',
@@ -23,7 +23,12 @@ export class VenuesComponent implements OnInit
 
     public loading: boolean;
 
-    constructor(private apiClient: APIClient, private messageService: MessageService, title: Title, private dialog: MatDialog)
+    constructor(
+        private apiClient: APIClient,
+        private messageService: MessageService,
+        title: Title,
+        private fileReader: FileReaderService,
+        private dialog: MatDialog)
     {
         title.setTitle("Venues");
         this.venues = [];
@@ -100,7 +105,7 @@ export class VenuesComponent implements OnInit
     {
         try
         {
-            let venue = await AsyncFileReader.read<VenueData>(file);
+            let venue = await this.fileReader.read<VenueData>(file);
             venue.id = "";
             await this.apiClient.postVenue({ value: venue }).toPromise();
             this.venues.push(venue.name);
