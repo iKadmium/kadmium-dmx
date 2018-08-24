@@ -1,23 +1,22 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { Title } from "@angular/platform-browser";
-import { FileSaver } from "../file-saver";
 import { NgForm } from '@angular/forms';
 import { AnimationLibrary } from "../animation-library";
 import { EditorComponent } from "../editor-component/editor-component";
 import { APIClient, GroupData } from 'api';
 import { MessageService } from 'app/message.service';
 import { FileReaderService } from '../file-reader.service';
+import { FileSaverService } from '../file-saver.service';
 
 @Component({
     selector: 'app-groups',
     templateUrl: './groups.component.html',
     styleUrls: ['./groups.component.css'],
-    providers: [APIClient],
     animations: [AnimationLibrary.animations()]
 })
 export class GroupsComponent extends EditorComponent implements OnInit
 {
-    groups: GroupData[];
+    public groups: GroupData[];
 
     public saving: boolean;
     public loading: boolean;
@@ -28,6 +27,7 @@ export class GroupsComponent extends EditorComponent implements OnInit
         private apiClient: APIClient,
         private messageService: MessageService,
         private fileReader: FileReaderService,
+        private fileSaver: FileSaverService,
         title: Title)
     {
         super();
@@ -39,13 +39,21 @@ export class GroupsComponent extends EditorComponent implements OnInit
     ngOnInit()
     {
         this.form = this.formChild;
-        this.apiClient.getGroups()
-            .toPromise()
-            .then(response => 
-            {
-                this.groups = response;
-                this.loading = false;
-            }).catch(reason => this.messageService.error(reason));
+        try
+        {
+            this.apiClient.getGroups()
+                .toPromise()
+                .then(response => 
+                {
+                    this.groups = response;
+                    this.sortGroups();
+                    this.loading = false;
+                });
+        }
+        catch (error)
+        {
+            this.messageService.error(error);
+        }
     }
 
     private getNextOrder(): number
@@ -80,10 +88,11 @@ export class GroupsComponent extends EditorComponent implements OnInit
 
     public swap(oldIndex: number, newIndex: number): void
     {
-        let oldOrder = this.groupsSorted[oldIndex].order;
-        let newOrder = this.groupsSorted[newIndex].order;
-        this.groupsSorted[oldIndex].order = newOrder;
-        this.groupsSorted[newIndex].order = oldOrder;
+        let oldOrder = this.groups[oldIndex].order;
+        let newOrder = this.groups[newIndex].order;
+        this.groups[oldIndex].order = newOrder;
+        this.groups[newIndex].order = oldOrder;
+        this.sortGroups();
     }
 
     public getOtherGroupNames(group: GroupData): string[]
@@ -98,7 +107,7 @@ export class GroupsComponent extends EditorComponent implements OnInit
         return this.groups.indexOf(group);
     }
 
-    private get groupsSorted(): GroupData[]
+    private sortGroups(): GroupData[]
     {
         return this.groups.sort((a, b) => a.order - b.order);
     }
@@ -122,19 +131,19 @@ export class GroupsComponent extends EditorComponent implements OnInit
         }
     }
 
-    public async download(): Promise<void>
+    public download(): void
     {
         try
         {
-            FileSaver.Save("groups.json", this.groups);
+            this.fileSaver.save("groups.json", this.groups);
         }
         catch (error)
         { }
     }
 
-    public upload(fileInput: any): void
+    public upload(fileInput: HTMLInputElement): void
     {
-        (fileInput as HTMLInputElement).click();
+        fileInput.click();
     }
 
     public async filesSelected(files: File[]): Promise<void>

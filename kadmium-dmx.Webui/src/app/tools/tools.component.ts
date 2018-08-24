@@ -3,12 +3,13 @@ import { AnimationLibrary } from '../animation-library';
 import { MatSelectionList } from '@angular/material';
 import { Title } from '@angular/platform-browser';
 import { APIClient, GroupData, Settings } from 'api';
+import { MessageService } from '../message.service';
+import { FileSaverService } from '../file-saver.service';
 
 @Component({
 	selector: 'app-tools',
 	templateUrl: './tools.component.html',
 	styleUrls: ['./tools.component.scss'],
-	providers: [APIClient],
 	animations: [AnimationLibrary.animations()]
 })
 export class ToolsComponent implements OnInit
@@ -18,7 +19,11 @@ export class ToolsComponent implements OnInit
 	public attributes: Attribute[];
 	public settings: Settings;
 
-	constructor(private apiClient: APIClient, private titleService: Title)
+	constructor(
+		private apiClient: APIClient,
+		private messageService: MessageService,
+		private fileSaver: FileSaverService,
+		private titleService: Title)
 	{
 		this.loading = true;
 	}
@@ -42,24 +47,31 @@ export class ToolsComponent implements OnInit
 			new Attribute("FireActivate")
 		];
 
-		promises.push(this.apiClient.getGroups()
-			.toPromise()
-			.then(response =>
-			{
-				this.groups = response;
-			}));
-
-		promises.push(this.apiClient.getSettings()
-			.toPromise()
-			.then(response =>
-			{
-				this.settings = response;
-			}));
-
-		Promise.all(promises).then(x => 
+		try
 		{
-			this.loading = false;
-		});
+			promises.push(this.apiClient.getGroups()
+				.toPromise()
+				.then(response =>
+				{
+					this.groups = response;
+				}));
+
+			promises.push(this.apiClient.getSettings()
+				.toPromise()
+				.then(response =>
+				{
+					this.settings = response;
+				}));
+
+			Promise.all(promises).then(x => 
+			{
+				this.loading = false;
+			});
+		}
+		catch (error)
+		{
+			this.messageService.error(error);
+		}
 
 		this.titleService.setTitle("Tools");
 	}
@@ -236,25 +248,7 @@ export class ToolsComponent implements OnInit
 
 	public download(filename, text): void
 	{
-		let pom = document.createElement('a');
-		pom.setAttribute('href', 'data:text/plain;charset=utf-8,' + encodeURIComponent(text));
-		pom.setAttribute('download', filename);
-
-		if (document.createEvent)
-		{
-			let event = document.createEvent('MouseEvents');
-			event.initEvent('click', true, true);
-			pom.dispatchEvent(event);
-		}
-		else
-		{
-			pom.click();
-		}
-	}
-
-	public getNames(list: MatSelectionList): string
-	{
-		return list.selectedOptions.selected.map(x => x.value.name).join(", ");
+		this.fileSaver.save(filename, text);
 	}
 }
 
@@ -263,12 +257,9 @@ function getSliderCode(sliderNumber: number, name: string, defaultValue: number 
 	return `slider${sliderNumber}:${defaultValue}<${min},${max},${step}>${name}`;
 }
 
-
-
-class Attribute
+export class Attribute
 {
 	constructor(public name: string, public min: number = 0, public max: number = 1, public step: number = 0.001, public defaultValue: number = 0.0)
 	{
-
 	}
 }

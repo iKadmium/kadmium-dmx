@@ -12,7 +12,6 @@ import { MessageService } from 'app/message.service';
     selector: 'app-settings',
     templateUrl: './settings.component.html',
     styleUrls: ['./settings.component.css'],
-    providers: [APIClient],
     animations: [AnimationLibrary.animations()]
 })
 export class SettingsComponent extends EditorComponent implements OnInit
@@ -26,7 +25,10 @@ export class SettingsComponent extends EditorComponent implements OnInit
 
     @ViewChild("settingsForm") formChild: NgForm;
 
-    constructor(private apiClient: APIClient, private messageService: MessageService, title: Title)
+    constructor(
+        private apiClient: APIClient,
+        private messageService: MessageService,
+        title: Title)
     {
         super();
         title.setTitle("Settings");
@@ -37,23 +39,22 @@ export class SettingsComponent extends EditorComponent implements OnInit
     ngOnInit(): void
     {
         this.form = this.formChild;
-        this.apiClient
-            .getSettings()
-            .toPromise()
-            .then(response =>
-            {
-                this.settings = response;
-                this.fakeTargets = this.settings.sacnTransmitter.unicast.map(x => { return { target: x } });
-            })
-            .catch(error => this.messageService.error(error));
-        this.apiClient
-            .getPortsEnttecProTransmitters()
-            .toPromise()
-            .then(response =>
-            {
-                this.enttecPorts = response;
-            })
-            .catch(error => this.messageService.error(error));
+
+        try
+        {
+            this.apiClient
+                .getSettings()
+                .toPromise()
+                .then(response =>
+                {
+                    this.settings = response;
+                    this.fakeTargets = this.settings.sacnTransmitter.unicast.map(x => { return { target: x } });
+                });
+        }
+        catch (error)
+        {
+            this.messageService.error(error);
+        }
     }
 
     public get loading(): boolean
@@ -86,16 +87,10 @@ export class SettingsComponent extends EditorComponent implements OnInit
         this.fakeTargets.push({ target: "" });
     }
 
-    public getElementIndex(element: UnicastTarget): number
-    {
-        return this.fakeTargets.indexOf(element);
-    }
-
     public removeElement(index: number): void
     {
         this.fakeTargets.splice(index, 1);
     }
-
 }
 
 interface UnicastTarget

@@ -2,12 +2,12 @@
 	<app-sidenav-toggle></app-sidenav-toggle>
 	Tools
 	<span class="toolbar-spacer"></span>
-	<button mat-button (click)="download('kadmium-dmx Lighting Controller.jsfx', getReaperControllerScript(attributesList))"
+	<button mat-button class="download-reaper" (click)="download('kadmium-dmx Lighting Controller.jsfx', getReaperControllerScript(attributesList))"
 	 matTooltip="Generate Reaper Controller">
 		<mat-icon>code</mat-icon>
 		<span class="button-text">Reaper</span>
 	</button>
-	<button mat-button (click)="download('kadmium-dmx Lighting.txt', getOsciiBotControllerScript(attributesList, groupsList, midiLoopbackName.value))"
+	<button mat-button class="download-oscii-bot" (click)="download('kadmium-dmx Lighting.txt', getOsciiBotControllerScript(attributesList, groupsList, midiLoopbackName.value))"
 	 matTooltip="Generate OSCII Bot Script">
 		<mat-icon>code</mat-icon>
 		<span class="button-text">OSCII Bot</span>

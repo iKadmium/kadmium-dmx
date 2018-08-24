@@ -19,7 +19,11 @@ export class UniverseEditorPresetSaveDialogComponent implements OnInit
 
     public save(filename: string, fixtures: MatListOption[])
     {
-        this.dialogRef.close({ filename: filename, fixtures: fixtures.map(x => x.value) });
+        let result: UniverseEditorPresetSaveDialogComponentResultData = {
+            filename: filename,
+            fixtures: fixtures.map(x => x.value)
+        };
+        this.dialogRef.close(result);
     }
 
     public cancel(): void
@@ -30,5 +34,11 @@ export class UniverseEditorPresetSaveDialogComponent implements OnInit
 
 export interface UniverseEditorPresetSaveDialogComponentData
 {
+    fixtures: FixtureData[]
+}
+
+export interface UniverseEditorPresetSaveDialogComponentResultData
+{
+    filename: string,
     fixtures: FixtureData[]
 }

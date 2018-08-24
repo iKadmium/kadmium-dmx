@@ -3,6 +3,7 @@ import { FixtureDefinition, FixtureDefinitionSkeleton, FixtureData } from "api/m
 import { MAT_DIALOG_DATA, MatDialogRef } from "@angular/material/dialog";
 import { AnimationLibrary } from "../animation-library";
 import { APIClient } from 'api';
+import { MessageService } from '../message.service';
 
 @Component({
     selector: 'app-fixture-options-editor',
@@ -21,8 +22,12 @@ export class FixtureOptionsEditorComponent implements OnInit
     public fixture: FixtureData;
     public options: FixtureOptions;
 
-    constructor(public dialogRef: MatDialogRef<FixtureOptionsEditorComponent>, private apiClient: APIClient,
-        @Inject(MAT_DIALOG_DATA) public data: FixtureContainer)
+    constructor(
+        public dialogRef: MatDialogRef<FixtureOptionsEditorComponent>,
+        private apiClient: APIClient,
+        @Inject(MAT_DIALOG_DATA) public data: FixtureContainer,
+        private messageService: MessageService
+    )
     {
         this.fixture = data.fixture;
         this.options = {
@@ -46,14 +51,21 @@ export class FixtureOptionsEditorComponent implements OnInit
 
     ngOnInit(): void
     {
-        this.apiClient.getFixtureDefinition({ manufacturer: this.fixture.type.manufacturer, model: this.fixture.type.model })
-            .toPromise()
-            .then(response =>
-            {
-                this.definition = response;
-                this.axisOptions = this.definition.movements
-                    .map(value => new AxisOptions(value.name, this.options, this.definition));
-            });
+        try
+        {
+            this.apiClient.getFixtureDefinition({ manufacturer: this.fixture.type.manufacturer, model: this.fixture.type.model })
+                .toPromise()
+                .then(response =>
+                {
+                    this.definition = response;
+                    this.axisOptions = this.definition.movements
+                        .map(value => new AxisOptions(value.name, this.options, this.definition));
+                });
+        }
+        catch (error)
+        {
+            this.messageService.error(error);
+        }
     }
 
     public get moving(): boolean

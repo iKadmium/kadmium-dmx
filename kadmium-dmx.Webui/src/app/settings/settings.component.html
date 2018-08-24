@@ -58,20 +58,6 @@
                         </div>
                     </div>
                 </mat-tab>
-
-                <mat-tab label="Enttec Pro">
-                    <div class="column top-margin">
-                        <mat-form-field>
-                            <input matInput required type="number" name="enttecProTransmitterDelay" min="0" max="10000" [(ngModel)]="settings.enttecProTransmitter.delay"
-                                placeholder="Delay (ms)" />
-                        </mat-form-field>
-                        <mat-form-field>
-                            <mat-select name="enttecProTransmitterPort" [(ngModel)]="settings.enttecProTransmitter.port" placeholder="Port">
-                                <mat-option *ngFor="let port of enttecPorts" [value]="port">{{port}}</mat-option>
-                            </mat-select>
-                        </mat-form-field>
-                    </div>
-                </mat-tab>
             </mat-tab-group>
         </mat-card-content>
     </mat-card>

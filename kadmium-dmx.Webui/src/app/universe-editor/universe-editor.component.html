@@ -12,9 +12,6 @@
 <mat-toolbar class="sub-toolbar">
     Fixtures
     <span class="toolbar-spacer"></span>
-    <button mat-icon-button type="button" (click)="addElement()" matTooltip="Add Fixture">
-        <mat-icon aria-label="Add Fixture">add</mat-icon>
-    </button>
     <button mat-icon-button type="button" (click)="addElements()" matTooltip="Add Fixtures">
         <mat-icon aria-label="Add Multiple Fixtures">playlist_add</mat-icon>
     </button>
@@ -26,40 +23,22 @@
     </button>
 </mat-toolbar>
 
-<mat-expansion-panel *ngFor="let fixture of universe?.fixtures">
-    <mat-expansion-panel-header>
-        <mat-panel-title>{{fixture.address}} {{fixture.type.manufacturer}} {{fixture.type.model}}</mat-panel-title>
-        <mat-panel-description>{{fixture.group}}</mat-panel-description>
-    </mat-expansion-panel-header>
-
-    <div class="column">
-        <mat-form-field>
-            <input required type="text" matInput [(ngModel)]="fixture.address" [name]="'address[' + getElementIndex(fixture) + ']'" placeholder="Address">
-        </mat-form-field>
-
-        <mat-form-field>
-            <mat-select required [(value)]="fixture.type" [compareWith]="skeletonCompareFn" placeholder="Model">
-                <mat-option *ngFor="let skeleton of fixtureDefinitionSkeletons" [value]="skeleton">{{skeleton.manufacturer}} {{skeleton.model}}</mat-option>
-            </mat-select>
-        </mat-form-field>
-
-        <mat-form-field>
-            <mat-select required [(value)]="fixture.group" placeholder="Group">
-                <mat-option *ngFor="let group of groups" [value]="group.name">{{group.name}}</mat-option>
-            </mat-select>
-        </mat-form-field>
-    </div>
-
-    <mat-action-row>
+<mat-card *ngFor="let fixture of universe?.fixtures; let i = index">
+    <mat-card-title>{{fixture.address}}</mat-card-title>
+    <mat-card-content>
+        {{fixture.type.manufacturer}} {{fixture.type.model}}<br> {{fixture.group}}
+    </mat-card-content>
+    <mat-card-actions style="text-align: right">
+        <button mat-icon-button type="button" (click)="edit(i)" matTooltip="Edit">
+            <mat-icon aria-label="Edit">edit</mat-icon>
+        </button>
         <button mat-icon-button type="button" (click)="options(fixture)" matTooltip="Fixture Options">
             <mat-icon aria-label="Settings">settings</mat-icon>
         </button>
-        <button mat-icon-button type="button" color="warn" (click)="removeElement(fixture)" matTooltip="Remove Fixture">
+        <button mat-icon-button type="button" color="warn" (click)="removeElement(i)" matTooltip="Remove Fixture">
             <mat-icon aria-label="Remove">remove_circle</mat-icon>
         </button>
-    </mat-action-row>
-</mat-expansion-panel>
-
-
+    </mat-card-actions>
+</mat-card>
 
 <input #fileInput type="file" name="name" style="display: none;" (change)="uploadFiles($event.target.files)" multiple>

@@ -5,7 +5,6 @@ import { SidenavService } from "../sidenav.service";
 	selector: 'app-sidenav-toggle',
 	templateUrl: './sidenav-toggle.component.html',
 	styleUrls: ['./sidenav-toggle.component.scss'],
-	providers: [SidenavService]
 })
 export class SidenavToggleComponent implements OnInit
 {

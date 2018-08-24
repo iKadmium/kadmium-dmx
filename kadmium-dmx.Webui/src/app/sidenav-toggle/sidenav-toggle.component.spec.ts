@@ -16,16 +16,11 @@ describe('SidenavToggleComponent', () =>
 			declarations: [
 				SidenavToggleComponent,
 				MockComponent(MatIcon)
+			],
+			providers: [
+				{ provide: SidenavService, useValue: jasmine.createSpyObj<SidenavService>({ toggle: null }) }
 			]
 		});
-
-		TestBed.overrideComponent(SidenavToggleComponent, {
-			set: {
-				providers: [
-					{ provide: SidenavService, useValue: jasmine.createSpyObj<SidenavService>({ toggle: null }) }
-				]
-			}
-		})
 
 		TestBed.compileComponents();
 	}));
@@ -40,5 +35,13 @@ describe('SidenavToggleComponent', () =>
 	it('should create', () =>
 	{
 		expect(component).toBeTruthy();
+	});
+
+	it('should toggle the sidenav when clicked', () =>
+	{
+		let button = (fixture.debugElement.nativeElement as HTMLElement).querySelector("button") as HTMLButtonElement;
+		let serviceMock = TestBed.get(SidenavService) as jasmine.SpyObj<SidenavService>;
+		button.click();
+		expect(serviceMock.toggle).toHaveBeenCalledTimes(1);
 	});
 });

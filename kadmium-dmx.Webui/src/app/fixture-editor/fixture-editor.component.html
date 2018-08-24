@@ -1,0 +1,31 @@
+<div class="mat-typography">
+	<form #editorForm="ngForm">
+		<h1 mat-dialog-title>Fixture Editor</h1>
+		<div mat-dialog-content style="padding-bottom: 1em">
+			<h3>General Options</h3>
+
+			<div class="column">
+				<mat-form-field>
+					<input required type="text" matInput [(ngModel)]="data.fixture.address" name="address" placeholder="Address">
+				</mat-form-field>
+
+				<mat-form-field>
+					<mat-select required [(value)]="data.fixture.type" [compareWith]="skeletonCompareFn" placeholder="Model">
+						<mat-option *ngFor="let skeleton of data.skeletons" [value]="skeleton">{{skeleton.manufacturer}} {{skeleton.model}}</mat-option>
+					</mat-select>
+				</mat-form-field>
+
+				<mat-form-field>
+					<mat-select required [(value)]="data.fixture.group" placeholder="Group">
+						<mat-option *ngFor="let group of data.groups" [value]="group.name">{{group.name}}</mat-option>
+					</mat-select>
+				</mat-form-field>
+			</div>
+
+		</div>
+		<div mat-dialog-actions>
+			<button mat-button class="btn-ok" (click)="ok()" [disabled]="editorForm.invalid" tabindex="0">OK</button>
+			<button mat-button class="btn-cancel" (click)="cancel()" tabindex="-1">Cancel</button>
+		</div>
+	</form>
+</div>
