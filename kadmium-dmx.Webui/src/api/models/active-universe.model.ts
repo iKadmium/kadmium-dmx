@@ -1,11 +1,9 @@
 /* tslint:disable */
-import
-{
+import {
   ActiveFixture,
-} from '..';
+} from './..';
 
-export interface ActiveUniverse
-{
+export interface ActiveUniverse {
   fixtures: ActiveFixture[];
   name: string;
   universeID: number;

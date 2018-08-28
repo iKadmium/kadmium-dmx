@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { APIClient, GroupData } from 'api';
+import { APIClient, IGroupData } from 'api';
 
 @Component({
 	selector: 'app-venue-discovery-select-group-dialog',
@@ -9,7 +9,7 @@ import { APIClient, GroupData } from 'api';
 })
 export class VenueDiscoverySelectGroupDialogComponent implements OnInit
 {
-	public groups: GroupData[];
+	public groups: IGroupData[];
 
 	constructor(private apiClient: APIClient) { }
 

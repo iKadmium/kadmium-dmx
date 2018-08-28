@@ -1,4 +1,4 @@
-import { StatusCode } from "api";
+import { StatusCode } from "app/enums/status-code.enum";
 
 export class Status 
 {

@@ -1,0 +1,18 @@
+<mat-card *ngFor="let universe of venue?.universes; let i = index" @slideIn>
+	<mat-card-title>{{universe.name}}</mat-card-title>
+	<mat-card-content>
+		Universe ID: {{universe.universeID}} <br>
+		<span *ngFor="let fixtureCount of fixtureCounts[i]">{{fixtureCount.count}}x {{fixtureCount.type.manufacturer}} {{fixtureCount.type.model}}<br></span>
+	</mat-card-content>
+	<mat-card-actions style="text-align: right">
+		<button mat-icon-button type="button" routerLink="{{universe.universeID}}" matTooltip="Edit Fixtures">
+			<mat-icon>list</mat-icon>
+		</button>
+		<button mat-icon-button type="button" (click)="editUniverse(i)" matTooltip="Edit Universe">
+			<mat-icon>edit</mat-icon>
+		</button>
+		<button mat-icon-button color="warn" type="button" (click)="removeUniverse(i)" matTooltip="Remove Universe">
+			<mat-icon>remove_circle</mat-icon>
+		</button>
+	</mat-card-actions>
+</mat-card>

@@ -9,6 +9,7 @@ using System.Net.WebSockets;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.DependencyInjection;
 using Newtonsoft.Json.Linq;
+using Newtonsoft.Json;
 
 namespace kadmium_dmx_webapi.WebSockets
 {
@@ -28,9 +29,10 @@ namespace kadmium_dmx_webapi.WebSockets
             Venue.Status.Updated += VenueStatusUpdated;
         }
 
-        public async override void OnMessage(JToken message)
+        public async override void OnMessage(string message)
         {
-            switch (message.Value<string>())
+            string token = JsonConvert.DeserializeObject<string>(message);
+            switch (token)
             {
                 case "updateAll":
                     await UpdateAll();

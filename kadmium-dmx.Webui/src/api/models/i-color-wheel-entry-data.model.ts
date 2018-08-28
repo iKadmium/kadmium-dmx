@@ -1,6 +1,6 @@
 /* tslint:disable */
 
-export interface ColorWheelEntryData {
+export interface IColorWheelEntryData {
   color: string;
   max: number;
   min: number;

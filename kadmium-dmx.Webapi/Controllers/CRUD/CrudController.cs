@@ -5,15 +5,15 @@ using System.Threading.Tasks;
 using kadmium_dmx_data;
 using kadmium_dmx_data.Storage;
 using Microsoft.AspNetCore.Mvc;
-using NSwag.Annotations;
 
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
 namespace kadmium_dmx_webapi.Controllers
 {
-    public abstract class CrudController<TStore, TKey, TItem> : Controller
+    public abstract class CrudController<TStore, TKey, TItem, TConcrete> : Controller
         where TStore : IStore<TKey, TItem>
         where TKey : IEquatable<TKey>
+        where TConcrete : TItem
     {
         protected TStore Store { get; set; }
         protected Func<TItem, TKey> KeyAccessor { get; set; }
@@ -35,12 +35,12 @@ namespace kadmium_dmx_webapi.Controllers
             return Store.Get(key);
         }
 
-        public virtual async Task Post([FromBody]TItem value)
+        public virtual async Task Post([FromBody]TConcrete value)
         {
             await Store.Add(value);
         }
 
-        public virtual async Task Put(TKey originalKey, [FromBody]TItem value)
+        public virtual async Task Put(TKey originalKey, [FromBody]TConcrete value)
         {
             await Store.Update(originalKey, value);
         }

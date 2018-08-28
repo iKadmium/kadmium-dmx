@@ -1,6 +1,7 @@
-import { Component, OnInit, Inject } from '@angular/core';
-import { FixtureDefinitionSkeleton, GroupData } from 'api/models';
+import { Component, Inject, OnInit } from '@angular/core';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material';
+import { FixtureDefinitionSkeleton, IGroupData } from 'api/models';
 
 @Component({
 	selector: 'app-universe-editor-add-multiple-fixtures-dialog',
@@ -9,19 +10,24 @@ import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material';
 })
 export class UniverseEditorAddMultipleFixturesDialogComponent implements OnInit
 {
-	public group: GroupData;
+	public group: IGroupData;
 	public fixtureType: FixtureDefinitionSkeleton;
 	public quantity: number;
 	public address: number;
 
-	public groups: GroupData[];
-	public fixtureDefinitionSkeletons: FixtureDefinitionSkeleton[];
+	public formGroup: FormGroup;
 
-	constructor(public dialogRef: MatDialogRef<UniverseEditorAddMultipleFixturesDialogComponent>,
-		@Inject(MAT_DIALOG_DATA) public data: IUniverseEditorAddMultipleFixturesDialogInputData) 
+	constructor(
+		public dialogRef: MatDialogRef<UniverseEditorAddMultipleFixturesDialogComponent>,
+		@Inject(MAT_DIALOG_DATA) public data: IUniverseEditorAddMultipleFixturesDialogInputData,
+		private fb: FormBuilder) 
 	{
-		this.groups = data.groups;
-		this.fixtureDefinitionSkeletons = data.skeletons;
+		this.formGroup = fb.group({
+			quantity: [1, Validators.required],
+			address: ['', Validators.required],
+			skeleton: [data.skeletons[0], Validators.required],
+			group: [data.groups[0], Validators.required]
+		});
 	}
 
 	ngOnInit()
@@ -50,13 +56,13 @@ export class UniverseEditorAddMultipleFixturesDialogComponent implements OnInit
 export interface IUniverseEditorAddMultipleFixturesDialogInputData
 {
 	skeletons: FixtureDefinitionSkeleton[],
-	groups: GroupData[]
+	groups: IGroupData[]
 }
 
 export interface IUniverseEditorAddMultipleFixturesDialogOutputData
 {
 	quantity: number,
 	address: number,
-	group: GroupData,
+	group: IGroupData,
 	skeleton: FixtureDefinitionSkeleton
 }

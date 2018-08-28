@@ -17,11 +17,12 @@ using kadmium_dmx_data.Mongo;
 using kadmium_dmx_data.Storage;
 using kadmium_dmx_data.Types.Settings;
 using kadmium_dmx_core;
-using NSwag.AspNetCore;
-using NSwag.SwaggerGeneration.Processors;
 using kadmium_dmx_webapi.Controllers;
 using Newtonsoft.Json.Converters;
 using Newtonsoft.Json;
+using Microsoft.Extensions.DependencyInjection.Extensions;
+using Microsoft.AspNetCore.Mvc.ApiExplorer;
+using Swashbuckle.AspNetCore.Swagger;
 
 namespace kadmium_dmx_webapi
 {
@@ -69,7 +70,12 @@ namespace kadmium_dmx_webapi
                     .AllowAnyHeader());
             });
 
-            services.AddSwagger();
+            services.AddSwaggerGen(c =>
+            {
+                c.SwaggerDoc("v1", new Info { Title = "My API", Version = "v1" });
+                c.EnableAnnotations();
+                c.SchemaFilter<EnumFilter>();
+            });
 
             MongoClient client = new MongoClient("mongodb://docker:32768");
             var database = client.GetDatabase("kadmium-dmx");
@@ -87,6 +93,7 @@ namespace kadmium_dmx_webapi
 
             services.AddSingleton<IMasterController>(MasterController);
             services.AddSingleton<IRenderer>(MasterController.Renderer);
+
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -105,10 +112,6 @@ namespace kadmium_dmx_webapi
             app.UseResponseCompression();
             app.UseStaticFiles();
 
-            app.UseSwaggerUi3WithApiExplorer(config => {
-                config.GeneratorSettings.OperationProcessors.Add(new SwaggerOperationProcessor());
-            });
-
             app.UseWebSockets();
 
             app.Map("/socket/Status", StatusStreamSocketHandler.Map);
@@ -122,18 +125,19 @@ namespace kadmium_dmx_webapi
                     name: "default",
                     template: "{controller=Home}/{action=Index}/{id?}");
 
-                //routes.MapSpaFallbackRoute("spa-fallback", new { controller = "Home", action = "Index" });
+                routes.MapSpaFallbackRoute("spa-fallback", new { controller = "Home", action = "Index" });
 
             });
 
-            if (env.IsDevelopment())
+            //app.UseSwaggerUi3WithApiExplorer(config => {
+            //    config.GeneratorSettings.OperationProcessors.Add(new SwaggerOperationProcessor());
+            //});
+
+            app.UseSwagger();
+            app.UseSwaggerUI(c =>
             {
-                app.UseDeveloperExceptionPage();
-            }
-            else
-            {
-                app.UseExceptionHandler("/error");
-            }
+                c.SwaggerEndpoint("/swagger/v1/swagger.json", "My API V1");
+            });
         }
     }
 }

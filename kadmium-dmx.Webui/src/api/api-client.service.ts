@@ -3,12 +3,12 @@
 import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
 import { Inject, Injectable, InjectionToken, Optional } from '@angular/core';
 import { Observable, throwError } from 'rxjs';
-import { DefaultHttpOptions, HttpOptions, APIClientInterface } from '.';
+import { DefaultHttpOptions, HttpOptions, APIClientInterface } from './';
 
 import * as models from './models';
 
-export const USE_DOMAIN = new InjectionToken<string>('USE_DOMAIN');
-export const USE_HTTP_OPTIONS = new InjectionToken<HttpOptions>('USE_HTTP_OPTIONS');
+export const USE_DOMAIN = new InjectionToken<string>('APIClient_USE_DOMAIN');
+export const USE_HTTP_OPTIONS = new InjectionToken<HttpOptions>('APIClient_USE_HTTP_OPTIONS');
 
 type APIHttpOptions = HttpOptions & {
   headers: HttpHeaders;
@@ -26,14 +26,14 @@ export class APIClient implements APIClientInterface
 
   readonly options: APIHttpOptions;
 
-  private readonly domain: string = `http://localhost:5000`;
+  readonly domain: string = `//${window.location.hostname}${window.location.port ? ':' + 5000 : ''}`;
 
   constructor(private readonly http: HttpClient,
-    @Optional() @Inject(USE_DOMAIN) domain: string,
-    @Optional() @Inject(USE_HTTP_OPTIONS) options: DefaultHttpOptions)
+    @Optional() @Inject(USE_DOMAIN) domain?: string,
+    @Optional() @Inject(USE_HTTP_OPTIONS) options?: DefaultHttpOptions)
   {
 
-    if (domain)
+    if (domain != null)
     {
       this.domain = domain;
     }
@@ -52,19 +52,19 @@ export class APIClient implements APIClientInterface
       model: string,
     },
     requestHttpOptions?: HttpOptions
-  ): Observable<models.FixtureDefinition>
+  ): Observable<models.IFixtureDefinition>
   {
     const path = `/api/FixtureDefinition/${args.manufacturer}/${args.model}`;
     const options: APIHttpOptions = { ...this.options, ...requestHttpOptions };
 
-    return this.sendRequest<models.FixtureDefinition>('GET', path, options);
+    return this.sendRequest<models.IFixtureDefinition>('GET', path, options);
   }
 
   putFixtureDefinition(
     args: {
       manufacturer: string,
       model: string,
-      value: models.FixtureDefinition,
+      value?: models.IFixtureDefinition,
     },
     requestHttpOptions?: HttpOptions
   ): Observable<any>
@@ -72,7 +72,7 @@ export class APIClient implements APIClientInterface
     const path = `/api/FixtureDefinition/${args.manufacturer}/${args.model}`;
     const options: APIHttpOptions = { ...this.options, ...requestHttpOptions };
 
-    return this.sendRequest<any>('PUT', path, options, args.value);
+    return this.sendRequest<any>('PUT', path, options, (args.value));
   }
 
   deleteFixtureDefinition(
@@ -95,12 +95,12 @@ export class APIClient implements APIClientInterface
       model: string,
     },
     requestHttpOptions?: HttpOptions
-  ): Observable<models.FixtureDefinition>
+  ): Observable<models.IFixtureDefinition>
   {
     const path = `/api/FixtureDefinition/${args.manufacturer}/${args.model}/download`;
     const options: APIHttpOptions = { ...this.options, ...requestHttpOptions };
 
-    return this.sendRequest<models.FixtureDefinition>('GET', path, options);
+    return this.sendRequest<models.IFixtureDefinition>('GET', path, options);
   }
 
   getFixtureDefinitions(
@@ -115,7 +115,7 @@ export class APIClient implements APIClientInterface
 
   postFixtureDefinition(
     args: {
-      value: models.FixtureDefinition,
+      value?: models.IFixtureDefinition,
     },
     requestHttpOptions?: HttpOptions
   ): Observable<any>
@@ -123,22 +123,22 @@ export class APIClient implements APIClientInterface
     const path = `/api/FixtureDefinition`;
     const options: APIHttpOptions = { ...this.options, ...requestHttpOptions };
 
-    return this.sendRequest<any>('POST', path, options, args.value);
+    return this.sendRequest<any>('POST', path, options, (args.value));
   }
 
   getGroups(
     requestHttpOptions?: HttpOptions
-  ): Observable<models.GroupData[]>
+  ): Observable<models.IGroupData[]>
   {
     const path = `/api/Group`;
     const options: APIHttpOptions = { ...this.options, ...requestHttpOptions };
 
-    return this.sendRequest<models.GroupData[]>('GET', path, options);
+    return this.sendRequest<models.IGroupData[]>('GET', path, options);
   }
 
-  putGroup(
+  putGroups(
     args: {
-      groups: any,
+      groups?: any,
     },
     requestHttpOptions?: HttpOptions
   ): Observable<any>
@@ -146,10 +146,10 @@ export class APIClient implements APIClientInterface
     const path = `/api/Group`;
     const options: APIHttpOptions = { ...this.options, ...requestHttpOptions };
 
-    return this.sendRequest<any>('PUT', path, options, args.groups);
+    return this.sendRequest<any>('PUT', path, options, (args.groups));
   }
 
-  setAttributeGroup(
+  setGroupAttribute(
     args: {
       group: string,
       attribute: string,
@@ -164,6 +164,72 @@ export class APIClient implements APIClientInterface
     return this.sendRequest<any>('GET', path, options);
   }
 
+  getOSCListenerEnabled(
+    requestHttpOptions?: HttpOptions
+  ): Observable<any>
+  {
+    const path = `/api/OSCListener/Enabled`;
+    const options: APIHttpOptions = { ...this.options, ...requestHttpOptions };
+
+    return this.sendRequest<any>('GET', path, options);
+  }
+
+  setOSCListenerEnabled(
+    args: {
+      value: boolean,
+    },
+    requestHttpOptions?: HttpOptions
+  ): Observable<any>
+  {
+    const path = `/api/OSCListener/SetEnabled/${args.value}`;
+    const options: APIHttpOptions = { ...this.options, ...requestHttpOptions };
+
+    return this.sendRequest<any>('POST', path, options);
+  }
+
+  getPreview(
+    requestHttpOptions?: HttpOptions
+  ): Observable<models.PreviewResult>
+  {
+    const path = `/api/Preview`;
+    const options: APIHttpOptions = { ...this.options, ...requestHttpOptions };
+
+    return this.sendRequest<models.PreviewResult>('GET', path, options);
+  }
+
+  getSACNTransmitterEnabled(
+    requestHttpOptions?: HttpOptions
+  ): Observable<any>
+  {
+    const path = `/api/SACNTransmitter/Enabled`;
+    const options: APIHttpOptions = { ...this.options, ...requestHttpOptions };
+
+    return this.sendRequest<any>('GET', path, options);
+  }
+
+  setSACNTransmitterEnabled(
+    args: {
+      value: boolean,
+    },
+    requestHttpOptions?: HttpOptions
+  ): Observable<any>
+  {
+    const path = `/api/SACNTransmitter/SetEnabled/${args.value}`;
+    const options: APIHttpOptions = { ...this.options, ...requestHttpOptions };
+
+    return this.sendRequest<any>('POST', path, options);
+  }
+
+  getStatus(
+    requestHttpOptions?: HttpOptions
+  ): Observable<models.Status>
+  {
+    const path = `/api/SACNTransmitter/Status`;
+    const options: APIHttpOptions = { ...this.options, ...requestHttpOptions };
+
+    return this.sendRequest<models.Status>('GET', path, options);
+  }
+
   getSettings(
     requestHttpOptions?: HttpOptions
   ): Observable<models.Settings>
@@ -174,9 +240,9 @@ export class APIClient implements APIClientInterface
     return this.sendRequest<models.Settings>('GET', path, options);
   }
 
-  postSettings(
+  putSettings(
     args: {
-      value: models.Settings,
+      value?: models.Settings,
     },
     requestHttpOptions?: HttpOptions
   ): Observable<any>
@@ -184,7 +250,20 @@ export class APIClient implements APIClientInterface
     const path = `/api/Settings`;
     const options: APIHttpOptions = { ...this.options, ...requestHttpOptions };
 
-    return this.sendRequest<any>('POST', path, options, args.value);
+    return this.sendRequest<any>('PUT', path, options, (args.value));
+  }
+
+  getActiveUniverse(
+    args: {
+      universeID: number,
+    },
+    requestHttpOptions?: HttpOptions
+  ): Observable<models.ActiveUniverse>
+  {
+    const path = `/api/Universe/getActive/${args.universeID}`;
+    const options: APIHttpOptions = { ...this.options, ...requestHttpOptions };
+
+    return this.sendRequest<models.ActiveUniverse>('GET', path, options);
   }
 
   getActiveVenue(
@@ -235,7 +314,7 @@ export class APIClient implements APIClientInterface
 
   postVenue(
     args: {
-      value: models.VenueData,
+      value?: models.IVenueData,
     },
     requestHttpOptions?: HttpOptions
   ): Observable<any>
@@ -243,7 +322,7 @@ export class APIClient implements APIClientInterface
     const path = `/api/Venue`;
     const options: APIHttpOptions = { ...this.options, ...requestHttpOptions };
 
-    return this.sendRequest<any>('POST', path, options, args.value);
+    return this.sendRequest<any>('POST', path, options, (args.value));
   }
 
   getVenue(
@@ -251,12 +330,12 @@ export class APIClient implements APIClientInterface
       name: string,
     },
     requestHttpOptions?: HttpOptions
-  ): Observable<models.VenueData>
+  ): Observable<models.IVenueData>
   {
     const path = `/api/Venue/${args.name}`;
     const options: APIHttpOptions = { ...this.options, ...requestHttpOptions };
 
-    return this.sendRequest<models.VenueData>('GET', path, options);
+    return this.sendRequest<models.IVenueData>('GET', path, options);
   }
 
   deleteVenue(
@@ -275,7 +354,7 @@ export class APIClient implements APIClientInterface
   putVenue(
     args: {
       originalName: string,
-      value: models.VenueData,
+      value?: models.IVenueData,
     },
     requestHttpOptions?: HttpOptions
   ): Observable<any>
@@ -283,129 +362,7 @@ export class APIClient implements APIClientInterface
     const path = `/api/Venue/${args.originalName}`;
     const options: APIHttpOptions = { ...this.options, ...requestHttpOptions };
 
-    return this.sendRequest<any>('PUT', path, options, args.value);
-  }
-
-  getPortsEnttecProTransmitters(
-    requestHttpOptions?: HttpOptions
-  ): Observable<string[]>
-  {
-    const path = `/api/EnttecProTransmitter/ports`;
-    const options: APIHttpOptions = { ...this.options, ...requestHttpOptions };
-
-    return this.sendRequest<string[]>('GET', path, options);
-  }
-
-  enabledEnttecProTransmitter(
-    requestHttpOptions?: HttpOptions
-  ): Observable<any>
-  {
-    const path = `/api/EnttecProTransmitter/Enabled`;
-    const options: APIHttpOptions = { ...this.options, ...requestHttpOptions };
-
-    return this.sendRequest<any>('GET', path, options);
-  }
-
-  setEnabledEnttecProTransmitter(
-    args: {
-      value: boolean,
-    },
-    requestHttpOptions?: HttpOptions
-  ): Observable<any>
-  {
-    const path = `/api/EnttecProTransmitter/SetEnabled/${args.value}`;
-    const options: APIHttpOptions = { ...this.options, ...requestHttpOptions };
-
-    return this.sendRequest<any>('POST', path, options);
-  }
-
-  statusEnttecProTransmitter(
-    requestHttpOptions?: HttpOptions
-  ): Observable<models.Status>
-  {
-    const path = `/api/EnttecProTransmitter/Status`;
-    const options: APIHttpOptions = { ...this.options, ...requestHttpOptions };
-
-    return this.sendRequest<models.Status>('GET', path, options);
-  }
-
-  enabledOSCListener(
-    requestHttpOptions?: HttpOptions
-  ): Observable<any>
-  {
-    const path = `/api/OSCListener/Enabled`;
-    const options: APIHttpOptions = { ...this.options, ...requestHttpOptions };
-
-    return this.sendRequest<any>('GET', path, options);
-  }
-
-  setEnabledOSCListener(
-    args: {
-      value: boolean,
-    },
-    requestHttpOptions?: HttpOptions
-  ): Observable<any>
-  {
-    const path = `/api/OSCListener/SetEnabled/${args.value}`;
-    const options: APIHttpOptions = { ...this.options, ...requestHttpOptions };
-
-    return this.sendRequest<any>('POST', path, options);
-  }
-
-  getPreview(
-    requestHttpOptions?: HttpOptions
-  ): Observable<models.PreviewResult>
-  {
-    const path = `/api/Preview`;
-    const options: APIHttpOptions = { ...this.options, ...requestHttpOptions };
-
-    return this.sendRequest<models.PreviewResult>('GET', path, options);
-  }
-
-  enabledSACNTransmitter(
-    requestHttpOptions?: HttpOptions
-  ): Observable<any>
-  {
-    const path = `/api/SACNTransmitter/Enabled`;
-    const options: APIHttpOptions = { ...this.options, ...requestHttpOptions };
-
-    return this.sendRequest<any>('GET', path, options);
-  }
-
-  setEnabledSACNTransmitter(
-    args: {
-      value: boolean,
-    },
-    requestHttpOptions?: HttpOptions
-  ): Observable<any>
-  {
-    const path = `/api/SACNTransmitter/SetEnabled/${args.value}`;
-    const options: APIHttpOptions = { ...this.options, ...requestHttpOptions };
-
-    return this.sendRequest<any>('POST', path, options);
-  }
-
-  statusSACNTransmitter(
-    requestHttpOptions?: HttpOptions
-  ): Observable<models.Status>
-  {
-    const path = `/api/SACNTransmitter/Status`;
-    const options: APIHttpOptions = { ...this.options, ...requestHttpOptions };
-
-    return this.sendRequest<models.Status>('GET', path, options);
-  }
-
-  getActiveUniverse(
-    args: {
-      universeID: number,
-    },
-    requestHttpOptions?: HttpOptions
-  ): Observable<models.ActiveUniverse>
-  {
-    const path = `/api/Universe/getActive/${args.universeID}`;
-    const options: APIHttpOptions = { ...this.options, ...requestHttpOptions };
-
-    return this.sendRequest<models.ActiveUniverse>('GET', path, options);
+    return this.sendRequest<any>('PUT', path, options, (args.value));
   }
 
   private sendRequest<T>(method: string, path: string, options: HttpOptions, body?: any): Observable<T>

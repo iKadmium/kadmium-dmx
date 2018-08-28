@@ -1,0 +1,46 @@
+<form @slideIn [formGroup]="form">
+	<mat-toolbar class="main-toolbar">
+		<app-sidenav-toggle></app-sidenav-toggle>
+		Fixture Definition Editor
+		<span class="toolbar-spacer"></span>
+		<button mat-icon-button color="primary" type="submit" [disabled]="!form.valid" matTooltip="Save">
+			<mat-icon aria-label="Save">save</mat-icon>
+		</button>
+	</mat-toolbar>
+	<mat-card>
+		<mat-card-content>
+			<mat-autocomplete #manufacturersAuto="matAutocomplete">
+				<mat-option *ngFor="let manufacturer of manufacturers" [value]="manufacturer">{{manufacturer}}</mat-option>
+			</mat-autocomplete>
+			<div class="column">
+				<div formGroupName="skeleton" class="column">
+					<mat-form-field>
+						<input required type="text" matInput formControlName="manufacturer" placeholder="Manufacturer" [matAutocomplete]="manufacturersAuto">
+					</mat-form-field>
+					<mat-form-field>
+						<input required type="text" matInput formControlName="model" name="model" placeholder="Model">
+					</mat-form-field>
+				</div>
+				<mat-form-field>
+					<mat-select required placeholder="Type" formControlName="fixtureType" name="type">
+						<mat-option [value]="FixtureType.LED">LED</mat-option>
+						<mat-option [value]="FixtureType.Tungsten">Tungsten</mat-option>
+						<mat-option [value]="FixtureType.Effect">Effect</mat-option>
+					</mat-select>
+				</mat-form-field>
+			</div>
+		</mat-card-content>
+		<mat-card-actions>
+			<button mat-button routerLink="channels" type="button">
+				Channels
+			</button>
+			<button mat-button routerLink="movements" type="button">
+				Movements
+			</button>
+			<button mat-button routerLink="color-wheel" type="button">
+				Color Wheel
+			</button>
+
+		</mat-card-actions>
+	</mat-card>
+</form>

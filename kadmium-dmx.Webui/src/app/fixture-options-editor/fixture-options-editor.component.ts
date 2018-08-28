@@ -1,8 +1,9 @@
-import { Component, OnInit, Input, SimpleChanges, Inject } from '@angular/core';
-import { FixtureDefinition, FixtureDefinitionSkeleton, FixtureData } from "api/models";
-import { MAT_DIALOG_DATA, MatDialogRef } from "@angular/material/dialog";
-import { AnimationLibrary } from "../animation-library";
+import { Component, Inject, OnInit } from '@angular/core';
+import { FormGroup } from '@angular/forms';
+import { MatDialogRef, MAT_DIALOG_DATA } from "@angular/material/dialog";
 import { APIClient } from 'api';
+import { IFixtureDefinition, FixtureDefinitionSkeleton, IMovementAxisData } from "api/models";
+import { AnimationLibrary } from "../animation-library";
 import { MessageService } from '../message.service';
 
 @Component({
@@ -13,54 +14,32 @@ import { MessageService } from '../message.service';
 })
 export class FixtureOptionsEditorComponent implements OnInit
 {
-    public visible = false;
-    private visibleAnimate = false;
-
-    private axisOptions: AxisOptions[];
-
-    public definition: FixtureDefinition;
-    public fixture: FixtureData;
-    public options: FixtureOptions;
+    public axisOptions: AxisOptions[];
+    public definition: IFixtureDefinition;
+    public form: FormGroup;
 
     constructor(
         public dialogRef: MatDialogRef<FixtureOptionsEditorComponent>,
         private apiClient: APIClient,
-        @Inject(MAT_DIALOG_DATA) public data: FixtureContainer,
-        private messageService: MessageService
-    )
+        @Inject(MAT_DIALOG_DATA) private data: FixtureOptionsEditorData,
+        private messageService: MessageService)
     {
-        this.fixture = data.fixture;
-        this.options = {
-            maxBrightness: this.fixture.options.maxBrightness,
-            axisRestrictions: [],
-            axisInversions: []
-        };
-        for (let option of this.fixture.options.axisInversions)
-        {
-            this.options.axisInversions.push(option);
-        }
-        for (let option of this.fixture.options.axisRestrictions)
-        {
-            this.options.axisRestrictions.push({
-                min: option.min,
-                max: option.max,
-                name: option.name
-            });
-        }
+        this.form = new FormGroup({});
     }
 
     ngOnInit(): void
     {
         try
         {
-            this.apiClient.getFixtureDefinition({ manufacturer: this.fixture.type.manufacturer, model: this.fixture.type.model })
-                .toPromise()
-                .then(response =>
-                {
-                    this.definition = response;
-                    this.axisOptions = this.definition.movements
-                        .map(value => new AxisOptions(value.name, this.options, this.definition));
-                });
+            // this.apiClient
+            //     .getFixtureDefinition({ manufacturer: this.data.type.manufacturer, model: this.data.type.model })
+            //     .toPromise()
+            //     .then(response =>
+            //     {
+            //         this.definition = response;
+            //         this.axisOptions = this.definition.movements
+            //             .map(value => new AxisOptions(value.name, this.options, this.definition));
+            //     });
         }
         catch (error)
         {
@@ -74,33 +53,26 @@ export class FixtureOptionsEditorComponent implements OnInit
     }
 }
 
-export class FixtureContainer
+export interface FixtureOptionsEditorData
 {
-    fixture: FixtureData;
+    options: FixtureOptions,
+    type: FixtureDefinitionSkeleton
 }
 
 class AxisOptions
 {
-    name: string;
+    public name: string;
+    public min: number;
+    public max: number;
 
     options: FixtureOptions;
-    definition: FixtureDefinition;
 
-    constructor(name: string, options: FixtureOptions, definition: FixtureDefinition)
+    constructor(name: string, options: FixtureOptions, definition: IMovementAxisData)
     {
-        this.name = name;
         this.options = options;
-        this.definition = definition;
-    }
-
-    public get min(): number
-    {
-        return this.definition.movements.find(value => value.name == this.name).min;
-    }
-
-    public get max(): number
-    {
-        return this.definition.movements.find(value => value.name == this.name).max;
+        this.name = definition.name;
+        this.min = definition.min;
+        this.max = definition.max;
     }
 
     public get restrictionMin(): number

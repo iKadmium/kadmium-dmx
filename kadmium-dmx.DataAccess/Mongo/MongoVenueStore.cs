@@ -7,7 +7,7 @@ using System.Text;
 
 namespace kadmium_dmx_data.Mongo
 {
-    public class MongoVenueStore : MongoStore<string, VenueData>, IVenueStore
+    public class MongoVenueStore : MongoStore<string, IVenueData>, IVenueStore
     {
         public MongoVenueStore(IMongoDatabase database) : base(database, nameof(VenueData.Name) )
         {

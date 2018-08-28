@@ -1,11 +1,9 @@
 /* tslint:disable */
-import
-{
+import {
   FixtureData,
-} from '..';
+} from './..';
 
-export interface UniverseData
-{
+export interface UniverseData {
   fixtures: FixtureData[];
   name: string;
   universeID: number;

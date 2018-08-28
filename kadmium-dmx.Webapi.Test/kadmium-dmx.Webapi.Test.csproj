@@ -20,8 +20,8 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\kadmium-dmx-core\kadmium-dmx.Core.csproj" />
-    <ProjectReference Include="..\kadmium-dmx-webapi\kadmium-dmx.Webapi.csproj" />
+    <ProjectReference Include="..\kadmium-dmx.Core\kadmium-dmx.Core.csproj" />
+    <ProjectReference Include="..\kadmium-dmx.Webapi\kadmium-dmx.Webapi.csproj" />
   </ItemGroup>
 
 </Project>

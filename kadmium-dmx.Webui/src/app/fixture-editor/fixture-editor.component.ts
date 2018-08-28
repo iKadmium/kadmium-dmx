@@ -1,6 +1,7 @@
 import { Component, OnInit, Inject } from '@angular/core';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material';
-import { FixtureDefinitionSkeleton, FixtureData, GroupData } from 'api';
+import { FixtureDefinitionSkeleton, FixtureData, IGroupData } from 'api';
+import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 
 @Component({
 	selector: 'app-fixture-editor',
@@ -9,11 +10,20 @@ import { FixtureDefinitionSkeleton, FixtureData, GroupData } from 'api';
 })
 export class FixtureEditorComponent implements OnInit
 {
+	public form: FormGroup;
+
 	constructor(
 		public dialogRef: MatDialogRef<FixtureEditorComponent>,
-		@Inject(MAT_DIALOG_DATA) public data: FixtureEditorData
+		@Inject(MAT_DIALOG_DATA) public data: FixtureEditorData,
+		private formBuilder: FormBuilder
 	)
 	{
+		this.form = this.formBuilder.group({
+			address: [this.data.fixture.address, [Validators.required, Validators.min(1), Validators.max(512)]],
+			group: [this.data.fixture.group, Validators.required],
+			type: [this.data.skeletons[0], Validators.required],
+			options: [this.data.fixture.options, Validators.required]
+		});
 	}
 
 	ngOnInit()
@@ -38,7 +48,7 @@ export class FixtureEditorComponent implements OnInit
 
 	public ok(): void
 	{
-		this.dialogRef.close(this.data.fixture);
+		this.dialogRef.close(this.form.value);
 	}
 
 	public cancel(): void
@@ -52,5 +62,5 @@ export interface FixtureEditorData
 {
 	fixture: FixtureData,
 	skeletons: FixtureDefinitionSkeleton[],
-	groups: GroupData[]
+	groups: IGroupData[]
 }

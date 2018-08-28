@@ -5,7 +5,7 @@ using System.Text;
 
 namespace kadmium_dmx_data.Storage
 {
-    public interface IFixtureDefinitionStore : IStore<FixtureDefinitionSkeleton, FixtureDefinition>
+    public interface IFixtureDefinitionStore : IStore<FixtureDefinitionSkeleton, IFixtureDefinition>
     {
     }
 }

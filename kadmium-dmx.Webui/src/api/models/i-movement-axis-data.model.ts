@@ -1,7 +1,6 @@
 /* tslint:disable */
 
-export interface DMXChannelData {
-  address: number;
+export interface IMovementAxisData {
   max: number;
   min: number;
   name: string;

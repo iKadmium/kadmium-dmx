@@ -6,12 +6,13 @@ using kadmium_dmx_data;
 using kadmium_dmx_data.Storage;
 using kadmium_dmx_data.Types;
 using kadmium_dmx_core;
+using Swashbuckle.AspNetCore.Annotations;
+using Newtonsoft.Json.Linq;
 
 // For more information on enabling MVC for empty projects, visit http://go.microsoft.com/fwlink/?LinkID=397860
 
 namespace kadmium_dmx_webapi.Controllers
 {
-
     [Route("api/[controller]")]
     public class GroupController : Controller
     {
@@ -26,14 +27,16 @@ namespace kadmium_dmx_webapi.Controllers
 
         // GET: /<controller>/
         [HttpGet]
-        public async Task<IEnumerable<GroupData>> Get()
+        [SwaggerOperation(OperationId = "GetGroups")]
+        public async Task<IEnumerable<IGroupData>> Get()
         {
-            IEnumerable<GroupData> returnVal;
+            IEnumerable<IGroupData> returnVal;
             returnVal = (await Store.GetAll()).OrderBy(x => x.Order);
             return returnVal;
         }
 
         [HttpPut]
+        [SwaggerOperation(OperationId = "PutGroups")]
         public async Task Put([FromBody]IEnumerable<GroupData> groups)
         {
             await Store.RemoveAll();
@@ -42,6 +45,7 @@ namespace kadmium_dmx_webapi.Controllers
         }
 
         [HttpGet("[action]/{group}/{attribute}/{value}")]
+        [SwaggerOperation(OperationId = "SetGroupAttribute")]
         public void SetAttribute(string group, string attribute, float value)
         {
             MasterController.Groups[group].Set(attribute, value);

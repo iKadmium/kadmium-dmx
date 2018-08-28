@@ -23,9 +23,6 @@
     <PackageReference Include="SerialPortStreamCore" Version="2.1.0" />
   </ItemGroup>
   <ItemGroup>
-    <DotNetCliToolReference Include="Microsoft.EntityFrameworkCore.Tools.DotNet" Version="1.0.0" />
-  </ItemGroup>
-  <ItemGroup>
     <ProjectReference Include="..\kadmium-dmx.Data\kadmium-dmx.Data.csproj" />
   </ItemGroup>
 </Project>

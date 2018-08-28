@@ -32,8 +32,8 @@ describe('DashboardOSCListenerComponent', () =>
 				{
 					provide: APIClient,
 					useValue: jasmine.createSpyObj<APIClient>({
-						enabledOSCListener: from([true]),
-						setEnabledOSCListener: from([])
+						getOSCListenerEnabled: from([true]),
+						setOSCListenerEnabled: from([])
 					})
 				},
 				{ provide: MessageService, useValue: jasmine.createSpyObj<MessageService>({ error: null }) }
@@ -61,7 +61,7 @@ describe('DashboardOSCListenerComponent', () =>
 	{
 		let serviceMock = TestBed.get(APIClient) as jasmine.SpyObj<APIClient>;
 		fixture.detectChanges();
-		expect(serviceMock.enabledOSCListener).toHaveBeenCalledTimes(1);
+		expect(serviceMock.getOSCListenerEnabled).toHaveBeenCalledTimes(1);
 	});
 
 	it('should show an error message if the API client throws an error', () =>
@@ -70,7 +70,7 @@ describe('DashboardOSCListenerComponent', () =>
 		let messageServiceMock = TestBed.get(MessageService) as jasmine.SpyObj<MessageService>;
 		let errorMessage = "Error";
 		let error = new Error(errorMessage);
-		serviceMock.enabledOSCListener.and.throwError(errorMessage);
+		serviceMock.getOSCListenerEnabled.and.throwError(errorMessage);
 		fixture.detectChanges();
 
 		expect(messageServiceMock.error).toHaveBeenCalledWith(error);
@@ -82,10 +82,10 @@ describe('DashboardOSCListenerComponent', () =>
 		fixture.detectChanges();
 		expect(component.enabled).toBe(false);
 		component.toggleEnabled();
-		expect(serviceMock.setEnabledOSCListener).toHaveBeenCalledWith({ value: true });
+		expect(serviceMock.setOSCListenerEnabled).toHaveBeenCalledWith({ value: true });
 		component.enabled = true;
 		component.toggleEnabled();
-		expect(serviceMock.setEnabledOSCListener).toHaveBeenCalledWith({ value: false });
+		expect(serviceMock.setOSCListenerEnabled).toHaveBeenCalledWith({ value: false });
 	});
 
 	it('should report an error if the API Client throws one while toggling', () =>
@@ -94,7 +94,7 @@ describe('DashboardOSCListenerComponent', () =>
 		let error = new Error(errorMessage);
 		let serviceMock = TestBed.get(APIClient) as jasmine.SpyObj<APIClient>;
 		let messageServiceMock = TestBed.get(MessageService) as jasmine.SpyObj<MessageService>;
-		serviceMock.setEnabledOSCListener.and.throwError(errorMessage);
+		serviceMock.setOSCListenerEnabled.and.throwError(errorMessage);
 		fixture.detectChanges();
 
 		component.toggleEnabled();

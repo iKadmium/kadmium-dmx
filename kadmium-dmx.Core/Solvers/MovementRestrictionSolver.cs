@@ -14,12 +14,13 @@ namespace kadmium_dmx_core.Solvers
         public MovementRestrictionSolver(Fixture fixture, FixtureOptions options) : base(fixture)
         {
             Axis = new Dictionary<string, RestrictableMovementAxis>();
-            foreach (var restriction in options.AxisRestrictions)
-            {
-                MovementAxis movement = fixture.MovementAxis[restriction.Name];
 
-                int min = restriction.Min;
-                int max = restriction.Max;
+            foreach (var restriction in options.AxisOptions.Where(x => x.Value.Restrictions != null))
+            {
+                MovementAxis movement = fixture.MovementAxis[restriction.Key];
+
+                int min = restriction.Value.Restrictions.Min;
+                int max = restriction.Value.Restrictions.Max;
                 var axis = new RestrictableMovementAxis(movement, min, max);
                 Axis.Add(movement.Name, axis);
             }
@@ -35,8 +36,9 @@ namespace kadmium_dmx_core.Solvers
 
         private static IEnumerable<string> GetRestrictedAxisNames(IFixtureDefinition definition, FixtureOptions options)
         {
-            var restrictedNames = from option in options.AxisRestrictions
-                                  select option.Name;
+            var restrictedNames = from option in options.AxisOptions
+                                  where option.Value.Restrictions != null
+                                  select option.Key;
 
             var restrictedAxis = from name in restrictedNames
                                  where definition.Movements.Any(x => x.Name == name)

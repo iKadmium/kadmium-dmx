@@ -1,13 +1,13 @@
 <div class="mat-typography">
-    <form #editorForm="ngForm">
+    <form [formGroup]="form">
         <h1 mat-dialog-title>{{fixture.address}} - {{fixture.type.manufacturer}} {{fixture.type.model}}</h1>
         <div mat-dialog-content *ngIf="definition" style="padding-bottom: 1em">
             <h3>General Options</h3>
 
             <div class="column">
                 <mat-form-field>
-                    <input matInput required [(ngModel)]="options.maxBrightness" type="number" min="0" max="1" step="0.01" name="maxBrightness"
-                        placeholder="Max Brightness" />
+                    <input matInput required type="number" min="0" max="1" step="0.01" formControlName="maxBrightness" placeholder="Max Brightness"
+                    />
                 </mat-form-field>
             </div>
 

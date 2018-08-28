@@ -10,6 +10,7 @@ namespace kadmium_dmx_data.Types
     {
         [BsonId]
         [BsonRepresentation(BsonType.ObjectId)]
-        public string Id { get; set; }
+        [BsonIgnoreIfDefault]
+        string Id { get; set; }
     }
 }

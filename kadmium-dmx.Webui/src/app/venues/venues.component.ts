@@ -4,9 +4,9 @@ import { APIClient } from "api/api-client.service";
 import { MatDialog } from '@angular/material';
 import { DeleteConfirmDialogComponent } from '../delete-confirm-dialog/delete-confirm-dialog.component';
 import { AnimationLibrary } from "../animation-library";
-import { VenueData } from 'api/models/venue-data.model';
 import { MessageService } from 'app/message.service';
 import { FileReaderService } from '../file-reader.service';
+import { IVenueData } from 'api';
 
 @Component({
     selector: 'app-venues',
@@ -105,8 +105,7 @@ export class VenuesComponent implements OnInit
     {
         try
         {
-            let venue = await this.fileReader.read<VenueData>(file);
-            venue.id = "";
+            let venue = await this.fileReader.read<IVenueData>(file);
             await this.apiClient.postVenue({ value: venue }).toPromise();
             this.venues.push(venue.name);
             this.messageService.info("Successfully added " + venue.name);

@@ -1,11 +1,10 @@
 /* tslint:disable */
 
 import { Observable } from 'rxjs';
-import { HttpOptions } from '.';
+import { HttpOptions } from './';
 import * as models from './models';
 
-export interface APIClientInterface
-{
+export interface APIClientInterface {
 
   getFixtureDefinition(
     args: {
@@ -13,13 +12,13 @@ export interface APIClientInterface
       model: string,
     },
     requestHttpOptions?: HttpOptions
-  ): Observable<models.FixtureDefinition>;
+  ): Observable<models.IFixtureDefinition>;
 
   putFixtureDefinition(
     args: {
       manufacturer: string,
       model: string,
-      value: models.FixtureDefinition,
+      value?: models.IFixtureDefinition,
     },
     requestHttpOptions?: HttpOptions
   ): Observable<any>;
@@ -38,7 +37,7 @@ export interface APIClientInterface
       model: string,
     },
     requestHttpOptions?: HttpOptions
-  ): Observable<models.FixtureDefinition>;
+  ): Observable<models.IFixtureDefinition>;
 
   getFixtureDefinitions(
     requestHttpOptions?: HttpOptions
@@ -46,23 +45,23 @@ export interface APIClientInterface
 
   postFixtureDefinition(
     args: {
-      value: models.FixtureDefinition,
+      value?: models.IFixtureDefinition,
     },
     requestHttpOptions?: HttpOptions
   ): Observable<any>;
 
   getGroups(
     requestHttpOptions?: HttpOptions
-  ): Observable<models.GroupData[]>;
+  ): Observable<models.IGroupData[]>;
 
-  putGroup(
+  putGroups(
     args: {
-      groups: any,
+      groups?: any,
     },
     requestHttpOptions?: HttpOptions
   ): Observable<any>;
 
-  setAttributeGroup(
+  setGroupAttribute(
     args: {
       group: string,
       attribute: string,
@@ -71,16 +70,53 @@ export interface APIClientInterface
     requestHttpOptions?: HttpOptions
   ): Observable<any>;
 
+  getOSCListenerEnabled(
+    requestHttpOptions?: HttpOptions
+  ): Observable<any>;
+
+  setOSCListenerEnabled(
+    args: {
+      value: boolean,
+    },
+    requestHttpOptions?: HttpOptions
+  ): Observable<any>;
+
+  getPreview(
+    requestHttpOptions?: HttpOptions
+  ): Observable<models.PreviewResult>;
+
+  getSACNTransmitterEnabled(
+    requestHttpOptions?: HttpOptions
+  ): Observable<any>;
+
+  setSACNTransmitterEnabled(
+    args: {
+      value: boolean,
+    },
+    requestHttpOptions?: HttpOptions
+  ): Observable<any>;
+
+  getStatus(
+    requestHttpOptions?: HttpOptions
+  ): Observable<models.Status>;
+
   getSettings(
     requestHttpOptions?: HttpOptions
   ): Observable<models.Settings>;
 
-  postSettings(
+  putSettings(
     args: {
-      value: models.Settings,
+      value?: models.Settings,
     },
     requestHttpOptions?: HttpOptions
   ): Observable<any>;
+
+  getActiveUniverse(
+    args: {
+      universeID: number,
+    },
+    requestHttpOptions?: HttpOptions
+  ): Observable<models.ActiveUniverse>;
 
   getActiveVenue(
     requestHttpOptions?: HttpOptions
@@ -106,7 +142,7 @@ export interface APIClientInterface
 
   postVenue(
     args: {
-      value: models.VenueData,
+      value?: models.IVenueData,
     },
     requestHttpOptions?: HttpOptions
   ): Observable<any>;
@@ -116,7 +152,7 @@ export interface APIClientInterface
       name: string,
     },
     requestHttpOptions?: HttpOptions
-  ): Observable<models.VenueData>;
+  ): Observable<models.IVenueData>;
 
   deleteVenue(
     args: {
@@ -128,65 +164,9 @@ export interface APIClientInterface
   putVenue(
     args: {
       originalName: string,
-      value: models.VenueData,
+      value?: models.IVenueData,
     },
     requestHttpOptions?: HttpOptions
   ): Observable<any>;
-
-  getPortsEnttecProTransmitters(
-    requestHttpOptions?: HttpOptions
-  ): Observable<string[]>;
-
-  enabledEnttecProTransmitter(
-    requestHttpOptions?: HttpOptions
-  ): Observable<any>;
-
-  setEnabledEnttecProTransmitter(
-    args: {
-      value: boolean,
-    },
-    requestHttpOptions?: HttpOptions
-  ): Observable<any>;
-
-  statusEnttecProTransmitter(
-    requestHttpOptions?: HttpOptions
-  ): Observable<models.Status>;
-
-  enabledOSCListener(
-    requestHttpOptions?: HttpOptions
-  ): Observable<any>;
-
-  setEnabledOSCListener(
-    args: {
-      value: boolean,
-    },
-    requestHttpOptions?: HttpOptions
-  ): Observable<any>;
-
-  getPreview(
-    requestHttpOptions?: HttpOptions
-  ): Observable<models.PreviewResult>;
-
-  enabledSACNTransmitter(
-    requestHttpOptions?: HttpOptions
-  ): Observable<any>;
-
-  setEnabledSACNTransmitter(
-    args: {
-      value: boolean,
-    },
-    requestHttpOptions?: HttpOptions
-  ): Observable<any>;
-
-  statusSACNTransmitter(
-    requestHttpOptions?: HttpOptions
-  ): Observable<models.Status>;
-
-  getActiveUniverse(
-    args: {
-      universeID: number,
-    },
-    requestHttpOptions?: HttpOptions
-  ): Observable<models.ActiveUniverse>;
 
 }

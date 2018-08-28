@@ -7,6 +7,7 @@ using kadmium_dmx_data.Types.Fixtures;
 using kadmium_dmx_data.Storage;
 using System.Threading.Tasks;
 using kadmium_dmx_data.Types;
+using Swashbuckle.AspNetCore.Annotations;
 
 // For more information on enabling MVC for empty projects, visit http://go.microsoft.com/fwlink/?LinkID=397860
 
@@ -26,6 +27,7 @@ namespace kadmium_dmx_webapi.Controllers
 
         // GET: /<controller>/
         [HttpGet]
+        [SwaggerOperation(OperationId = "GetPreview")]
         public async Task<PreviewResult> Get()
         {
             var fixtureDefinitionTasks = from grp in MasterController.Groups.Values

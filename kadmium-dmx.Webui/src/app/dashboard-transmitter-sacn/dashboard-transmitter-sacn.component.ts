@@ -30,7 +30,7 @@ export class DashboardTransmitterSacnComponent implements OnInit
         try
         {
             this.apiClient
-                .enabledSACNTransmitter()
+                .getSACNTransmitterEnabled()
                 .toPromise()
                 .then(response =>
                 {
@@ -51,7 +51,7 @@ export class DashboardTransmitterSacnComponent implements OnInit
         this.enabledDetermined = false;
         try
         {
-            await this.apiClient.setEnabledSACNTransmitter({ value: !oldValue }).toPromise();
+            await this.apiClient.setSACNTransmitterEnabled({ value: !oldValue }).toPromise();
             this.enabled = !oldValue;
         }
         catch (error)

@@ -1,9 +1,8 @@
 import { TestBed, inject } from '@angular/core/testing';
 
-import { AppModule } from "./app.module";
 import { StatusStreamService } from './status-stream.service';
 
-describe('DashboardService', () =>
+describe('StatusStreamService', () =>
 {
     beforeEach(() =>
     {

@@ -7,7 +7,7 @@ using System.Text;
 
 namespace kadmium_dmx_data.Mongo
 {
-    public class MongoFixtureDefinitionStore : MongoStore<FixtureDefinitionSkeleton, FixtureDefinition>, IFixtureDefinitionStore
+    public class MongoFixtureDefinitionStore : MongoStore<FixtureDefinitionSkeleton, IFixtureDefinition>, IFixtureDefinitionStore
     {
         public MongoFixtureDefinitionStore(IMongoDatabase database) : base(database, (nameof(FixtureDefinition.Skeleton)))
         {

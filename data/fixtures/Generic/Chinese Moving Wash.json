@@ -5,8 +5,6 @@
 		"manufacturer": "Generic"
 	},
 	"type": "LED",
-	"beamAngle": 30.0,
-	"lux": 4000.0,
 	"channels": [
 		{
 			"name": "PanCoarse",

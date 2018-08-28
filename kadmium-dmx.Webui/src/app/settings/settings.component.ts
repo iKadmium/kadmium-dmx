@@ -1,12 +1,13 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
-import { Title } from "@angular/platform-browser";
-
-import { Settings } from "api/models";
 import { NgForm } from '@angular/forms';
-import { AnimationLibrary } from "../animation-library";
-import { EditorComponent } from "../editor-component/editor-component";
+import { Title } from "@angular/platform-browser";
 import { APIClient } from 'api';
+import { Settings } from "api/models";
 import { MessageService } from 'app/message.service';
+import { AnimationLibrary } from "../animation-library";
+import { EditorService } from '../editor.service';
+import { Saveable } from '../unsaved-changes';
+
 
 @Component({
     selector: 'app-settings',
@@ -14,7 +15,7 @@ import { MessageService } from 'app/message.service';
     styleUrls: ['./settings.component.css'],
     animations: [AnimationLibrary.animations()]
 })
-export class SettingsComponent extends EditorComponent implements OnInit
+export class SettingsComponent implements Saveable, OnInit
 {
     settings: Settings;
     public saving: boolean;
@@ -28,9 +29,9 @@ export class SettingsComponent extends EditorComponent implements OnInit
     constructor(
         private apiClient: APIClient,
         private messageService: MessageService,
+        private editorService: EditorService<Settings>,
         title: Title)
     {
-        super();
         title.setTitle("Settings");
         this.saving = false;
         this.fakeTargets = [];
@@ -38,8 +39,6 @@ export class SettingsComponent extends EditorComponent implements OnInit
 
     ngOnInit(): void
     {
-        this.form = this.formChild;
-
         try
         {
             this.apiClient
@@ -68,8 +67,8 @@ export class SettingsComponent extends EditorComponent implements OnInit
         try
         {
             this.settings.sacnTransmitter.unicast = this.fakeTargets.map(x => x.target);
-            await this.apiClient.postSettings({ value: this.settings }).toPromise();
-            this.saved = true;
+            await this.apiClient.putSettings({ value: this.settings }).toPromise();
+            this.editorService.isDirty = false;
             this.messageService.info("Saved Successfully");
         }
         catch (error)
@@ -90,6 +89,11 @@ export class SettingsComponent extends EditorComponent implements OnInit
     public removeElement(index: number): void
     {
         this.fakeTargets.splice(index, 1);
+    }
+
+    public hasUnsavedChanges(): boolean
+    {
+        throw new Error("Method not implemented.");
     }
 }
 

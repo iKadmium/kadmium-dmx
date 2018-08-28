@@ -1,7 +1,6 @@
 ﻿using kadmium_dmx_core.Fixtures;
 using kadmium_dmx_core.Solvers;
 using kadmium_dmx_data.Types.Fixtures;
-using Newtonsoft.Json.Linq;
 using System.Collections.Generic;
 using System.Linq;
 using Xunit;
@@ -10,6 +9,41 @@ namespace kadmium_dmx_test.Solvers
 {
     public class AxisRestrictionSolverTests
     {
+        public static Fixture GetRestrictedFixture(string movementAxis, int originalMin, int originalMax, int restrictedMin, int restrictedMax)
+        {
+            FixtureOptions options = GetRestrictionOptions(movementAxis, restrictedMin, restrictedMax);
+            Fixture fixture = FixtureTests.GetMovingFixture(movementAxis, originalMin, originalMax, options);
+            return fixture;
+        }
+
+        public static FixtureOptions GetRestrictionOptions(string name, int min, int max)
+        {
+            FixtureOptions options = new FixtureOptions
+            {
+                AxisOptions = new Dictionary<string, MovementAxisOptions>()
+                {
+                    {
+                        name, new MovementAxisOptions
+                        {
+                            Restrictions = new MovementAxisRestriction
+                            {
+                                Min = min,
+                                Max = max
+                            }
+                        }
+                    }
+                }
+            };
+
+            return options;
+        }
+
+        public static Fixture GetUnrestrictedFixture(string movementAxis, int originalMin, int originalMax)
+        {
+            Fixture fixture = FixtureTests.GetMovingFixture(movementAxis, originalMin, originalMax);
+            return fixture;
+        }
+
         [Theory]
         [InlineData(-100, 100, -50, 50, 0.0f, 0.25f)] // [-100 to 100] => [-50 to 50] => 0.0 to 0.25
         [InlineData(-100, 100, -50, 50, 1.0f, 0.75f)]
@@ -53,37 +87,6 @@ namespace kadmium_dmx_test.Solvers
         {
             var fixture = GetUnrestrictedFixture("Pan", -90, 90);
             Assert.DoesNotContain<Solver>(fixture.Solvers, (x => x is MovementRestrictionSolver));
-        }
-
-        public static Fixture GetUnrestrictedFixture(string movementAxis, int originalMin, int originalMax)
-        {
-            Fixture fixture = FixtureTests.GetMovingFixture(movementAxis, originalMin, originalMax);
-            return fixture;
-        }
-
-        public static Fixture GetRestrictedFixture(string movementAxis, int originalMin, int originalMax, int restrictedMin, int restrictedMax)
-        {
-            FixtureOptions options = GetRestrictionOptions(movementAxis, restrictedMin, restrictedMax);
-            Fixture fixture = FixtureTests.GetMovingFixture(movementAxis, originalMin, originalMax, options);
-            return fixture;
-        }
-
-        public static FixtureOptions GetRestrictionOptions(string name, int min, int max)
-        {
-            FixtureOptions options = new FixtureOptions
-            {
-                AxisRestrictions = new List<MovementAxisRestriction>
-                {
-                    new MovementAxisRestriction
-                    {
-                        Name = name,
-                        Min = min,
-                        Max = max
-                    }
-                }
-            };
-
-            return options;
         }
     }
 }

@@ -50,6 +50,18 @@ import { SidenavToggleComponent } from './sidenav-toggle/sidenav-toggle.componen
 import { DashboardFixtureColorComponent } from './dashboard-fixture-color/dashboard-fixture-color.component';
 import { UniverseEditorAddMultipleFixturesDialogComponent } from './universe-editor-add-multiple-fixtures-dialog/universe-editor-add-multiple-fixtures-dialog.component';
 import { FixtureEditorComponent } from './fixture-editor/fixture-editor.component';
+import { UniversesComponent } from './universes/universes.component';
+import { VenueEditorHomeComponent } from './venue-editor-home/venue-editor-home.component';
+import { UniverseEditorDialogComponent } from './universe-editor-dialog/universe-editor-dialog.component';
+import { FixtureDefinitionEditorChannelsComponent } from './fixture-definition-editor-channels/fixture-definition-editor-channels.component';
+import { FixtureDefinitionEditorMovementsComponent } from './fixture-definition-editor-movements/fixture-definition-editor-movements.component';
+import { FixtureDefinitionEditorColorWheelComponent } from './fixture-definition-editor-color-wheel/fixture-definition-editor-color-wheel.component';
+import { FixtureDefinitionEditorHomeComponent } from './fixture-definition-editor-home/fixture-definition-editor-home.component';
+import { FixtureDefinitionEditorChannelEditorDialogComponent } from './fixture-definition-editor-channel-editor-dialog/fixture-definition-editor-channel-editor-dialog.component';
+import { FixtureDefinitionEditorColorWheelEditorDialogComponent } from './fixture-definition-editor-color-wheel-editor-dialog/fixture-definition-editor-color-wheel-editor-dialog.component';
+import { FixtureDefinitionEditorMovementAxisEditorDialogComponent } from './fixture-definition-editor-movement-axis-editor-dialog/fixture-definition-editor-movement-axis-editor-dialog.component';
+
+import { RouteDefinitions } from "app/route-definitions";
 
 @NgModule({
     declarations: [
@@ -91,57 +103,23 @@ import { FixtureEditorComponent } from './fixture-editor/fixture-editor.componen
         VenueEditorComponent,
         VenueNameDialogComponent,
         VenuesComponent,
+        UniversesComponent,
+        VenueEditorHomeComponent,
+        UniverseEditorDialogComponent,
+        FixtureDefinitionEditorChannelsComponent,
+        FixtureDefinitionEditorMovementsComponent,
+        FixtureDefinitionEditorColorWheelComponent,
+        FixtureDefinitionEditorHomeComponent,
+        FixtureDefinitionEditorChannelEditorDialogComponent,
+        FixtureDefinitionEditorColorWheelEditorDialogComponent,
+        FixtureDefinitionEditorMovementAxisEditorDialogComponent,
     ],
     imports: [
         BrowserModule,
         FormsModule,
         HttpClientModule,
 
-        RouterModule.forRoot(
-            [
-                { path: '', redirectTo: 'dashboard', pathMatch: 'full' },
-                {
-                    path: 'dashboard', children: [
-                        { path: '', component: DashboardComponent },
-                        {
-                            path: 'venue', children:
-                                [
-                                    { path: 'dmx/:universeID', component: DashboardUniverseComponent },
-                                    {
-                                        path: 'fixtures/:universeID', children:
-                                            [
-                                                { path: '', component: DashboardFixturesComponent },
-                                                { path: ':fixtureAddress', component: DashboardFixtureDetailComponent }
-                                            ]
-                                    },
-                                    { path: 'discover/:universeID', component: VenueDiscoveryComponent }
-                                ]
-                        },
-                        { path: 'oscListener', component: DashboardOscListenerMessagesComponent }
-                    ]
-                },
-                { path: 'settings', component: SettingsComponent, canDeactivate: [UnsavedChanges] },
-                { path: 'groups', component: GroupsComponent, canDeactivate: [UnsavedChanges] },
-                { path: 'tools', component: ToolsComponent },
-                {
-                    path: 'venues',
-                    children:
-                        [
-                            { path: '', component: VenuesComponent },
-                            { path: 'new', component: VenueEditorComponent, canDeactivate: [UnsavedChanges] },
-                            { path: ':id', component: VenueEditorComponent, canDeactivate: [UnsavedChanges] },
-                        ]
-                },
-                {
-                    path: 'fixture-definitions',
-                    children:
-                        [
-                            { path: '', component: FixtureDefinitionsComponent },
-                            { path: 'new', component: FixtureDefinitionEditorComponent, canDeactivate: [UnsavedChanges] },
-                            { path: ':manufacturer/:model', component: FixtureDefinitionEditorComponent, canDeactivate: [UnsavedChanges] },
-                        ]
-                }
-            ]),
+        RouterModule.forRoot(RouteDefinitions),
 
         APIClientModule,
 
@@ -182,6 +160,10 @@ import { FixtureEditorComponent } from './fixture-editor/fixture-editor.componen
         DeleteConfirmDialogComponent,
         FixtureEditorComponent,
         FixtureOptionsEditorComponent,
+        FixtureDefinitionEditorChannelEditorDialogComponent,
+        FixtureDefinitionEditorColorWheelEditorDialogComponent,
+        FixtureDefinitionEditorMovementAxisEditorDialogComponent,
+        UniverseEditorDialogComponent,
         UniverseEditorAddMultipleFixturesDialogComponent,
         UniverseEditorPresetSaveDialogComponent,
         VenueDiscoveryAddFixtureDefinitionDialogComponent,

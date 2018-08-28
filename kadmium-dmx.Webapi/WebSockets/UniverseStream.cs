@@ -27,11 +27,12 @@ namespace kadmium_dmx_webapi.WebSockets
             Renderer.OnUpdate += Instance_OnUpdate;
         }
 
-        public override void OnMessage(JToken message)
+        public override void OnMessage(string message)
         {
-            int universeID = message["universeID"].Value<int>();
-            int channel = message["channel"].Value<int>();
-            int value = message["value"].Value<int>();
+            var token = JObject.Parse(message);
+            int universeID = token["universeID"].Value<int>();
+            int channel = token["channel"].Value<int>();
+            int value = token["value"].Value<int>();
 
             this.UpdateDMX(universeID, channel, value);
         }

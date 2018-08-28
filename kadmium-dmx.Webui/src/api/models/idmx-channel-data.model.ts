@@ -1,6 +1,7 @@
 /* tslint:disable */
 
-export interface MovementAxisData {
+export interface IDMXChannelData {
+  address: number;
   max: number;
   min: number;
   name: string;

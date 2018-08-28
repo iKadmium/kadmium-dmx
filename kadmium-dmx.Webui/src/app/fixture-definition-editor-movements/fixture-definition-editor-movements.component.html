@@ -1,0 +1,31 @@
+<mat-toolbar class="toolbar">
+	<button mat-icon-button type="button" routerLink=".." matTooltip="Back">
+		<mat-icon aria-label="Back">arrow_back</mat-icon>
+	</button>
+	Movements
+	<span class="toolbar-spacer"></span>
+	<button mat-icon-button type="button" (click)="addAxis()" matTooltip="Add Axis">
+		<mat-icon aria-label="Add Axis">add</mat-icon>
+	</button>
+</mat-toolbar>
+
+<mat-card @slideIn>
+	<mat-card-content>
+		<span *ngIf="movements.length == 0">There are no movement axis currently defined.</span>
+		<table>
+			<tr *ngFor="let axis of movements; let i = index" @fadeOut>
+				<td @fadeIn>
+					{{axis.name}}<br> ({{axis.min}}&deg; - {{axis.max}}&deg;)
+				</td>
+				<td class="actionsCell">
+					<button mat-icon-button type="button" (click)="editAxis(i)" matTooltip="Edit Entry">
+						<mat-icon aria-label="Edit">edit</mat-icon>
+					</button>
+					<button mat-icon-button type="button" color="warn" (click)="removeAxis(i)" matTooltip="Remove Entry">
+						<mat-icon aria-label="Remove">remove_circle</mat-icon>
+					</button>
+				</td>
+			</tr>
+		</table>
+	</mat-card-content>
+</mat-card>

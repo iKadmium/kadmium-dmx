@@ -12,13 +12,13 @@ namespace kadmium_dmx_data.Types.Venues
     {
         public string Name { get; set; }
         public int UniverseID { get; set; }
-        public IEnumerable<IFixtureData> Fixtures { get; set; }
+        public IEnumerable<FixtureData> Fixtures { get; set; }
 
         public UniverseData()
         {
             Name = "";
             UniverseID = 0;
-            Fixtures = new List<IFixtureData>();
+            Fixtures = new List<FixtureData>();
         }
 
         [JsonConstructor]

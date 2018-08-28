@@ -10,26 +10,28 @@ using kadmium_dmx_data.Types.Fixtures;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.AspNetCore.Http;
 using Newtonsoft.Json;
-using NSwag.Annotations;
+using Swashbuckle.AspNetCore.Annotations;
 
 // For more information on enabling MVC for empty projects, visit http://go.microsoft.com/fwlink/?LinkID=397860
 
 namespace kadmium_dmx_webapi.Controllers
 {
     [Route("api/[controller]")]
-    public class FixtureDefinitionController : CrudController<IFixtureDefinitionStore, FixtureDefinitionSkeleton, FixtureDefinition>
+    public class FixtureDefinitionController : CrudController<IFixtureDefinitionStore, FixtureDefinitionSkeleton, IFixtureDefinition, FixtureDefinition>
     {
         public FixtureDefinitionController(IFixtureDefinitionStore store) : base(store, x => x.Skeleton) { }
 
         [HttpGet("{manufacturer}/{model}")]
-        public Task<FixtureDefinition> Get(string manufacturer, string model)
+        [SwaggerOperation(OperationId = "GetFixtureDefinition")]
+        public Task<IFixtureDefinition> Get(string manufacturer, string model)
         {
             FixtureDefinitionSkeleton skeleton = new FixtureDefinitionSkeleton { Manufacturer = manufacturer, Model = model };
             return base.Get(skeleton);
         }
 
         [HttpGet("{manufacturer}/{model}/download")]
-        public async Task<FixtureDefinition> Download(string manufacturer, string model)
+        [SwaggerOperation(OperationId = "DownloadFixtureDefinition")]
+        public async Task<IFixtureDefinition> Download(string manufacturer, string model)
         {
             FixtureDefinitionSkeleton skeleton = new FixtureDefinitionSkeleton { Manufacturer = manufacturer, Model = model };
             var definition = await Store.Get(skeleton);
@@ -38,14 +40,15 @@ namespace kadmium_dmx_webapi.Controllers
             return definition;
         }
 
-        [SwaggerIgnore]
-        public override Task<FixtureDefinition> Get(FixtureDefinitionSkeleton key)
+        [NonAction]
+        public override Task<IFixtureDefinition> Get(FixtureDefinitionSkeleton key)
         {
             return base.Get(key);
         }
 
         // GET: api/<controller>
         [HttpGet]
+        [SwaggerOperation(OperationId = "GetFixtureDefinitions")]
         public override Task<IEnumerable<FixtureDefinitionSkeleton>> Get()
         {
             return base.Get();
@@ -53,13 +56,27 @@ namespace kadmium_dmx_webapi.Controllers
 
         // POST api/<controller>/5
         [HttpPost]
+        [SwaggerOperation(OperationId = "PostFixtureDefinition")]
         public override Task Post([FromBody]FixtureDefinition value)
         {
             return base.Post(value);
         }
 
+        [NonAction]
+        public override Task Put(FixtureDefinitionSkeleton originalKey, [FromBody]FixtureDefinition value)
+        {
+            return base.Put(originalKey, value);
+        }
+
+        [NonAction]
+        public override Task Delete(FixtureDefinitionSkeleton key)
+        {
+            return base.Delete(key);
+        }
+
         // PUT api/<controller>/5
         [HttpPut("{manufacturer}/{model}")]
+        [SwaggerOperation(OperationId = "PutFixtureDefinition")]
         public Task Put(string manufacturer, string model, [FromBody] FixtureDefinition value)
         {
             FixtureDefinitionSkeleton originalKey = new FixtureDefinitionSkeleton { Manufacturer = manufacturer, Model = model };
@@ -68,6 +85,7 @@ namespace kadmium_dmx_webapi.Controllers
 
         // DELETE api/<controller>/5
         [HttpDelete("{manufacturer}/{model}")]
+        [SwaggerOperation(OperationId = "DeleteFixtureDefinition")]
         public Task Delete(string manufacturer, string model)
         {
             FixtureDefinitionSkeleton originalKey = new FixtureDefinitionSkeleton { Manufacturer = manufacturer, Model = model };

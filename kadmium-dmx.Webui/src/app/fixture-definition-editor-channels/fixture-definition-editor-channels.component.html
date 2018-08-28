@@ -1,0 +1,31 @@
+<mat-toolbar class="main-toolbar">
+	<button mat-icon-button type="button" routerLink=".." matTooltip="Back">
+		<mat-icon aria-label="Back">arrow_back</mat-icon>
+	</button>
+	Channels
+	<span class="toolbar-spacer"></span>
+	<button mat-icon-button type="button" (click)="addChannel()" matTooltip="Add Channel">
+		<mat-icon aria-label="Add Channel">add</mat-icon>
+	</button>
+</mat-toolbar>
+
+<mat-card @slideIn>
+	<mat-card-content>
+		<table>
+			<span *ngIf="channels.length == 0">There are no channels currently defined.</span>
+			<tr *ngFor="let channel of channels; let i = index" @fadeOut>
+				<td @fadeIn>
+					{{channel.address}}: {{channel.name}} <span *ngIf="channel.min != 0 || channel.max != 255">({{channel.min}} - {{channel.max}})</span>
+				</td>
+				<td class="actionsCell">
+					<button mat-icon-button type="button" (click)="editChannel(i)" matTooltip="Edit Channel">
+						<mat-icon aria-label="Edit">edit</mat-icon>
+					</button>
+					<button mat-icon-button type="button" color="warn" (click)="removeChannel(i)" matTooltip="Remove Channel">
+						<mat-icon aria-label="Remove">remove_circle</mat-icon>
+					</button>
+				</td>
+			</tr>
+		</table>
+	</mat-card-content>
+</mat-card>

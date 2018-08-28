@@ -1,12 +1,10 @@
 /* tslint:disable */
-import
-{
+import {
   FixtureDefinitionSkeleton,
   FixtureOptions,
-} from '..';
+} from './..';
 
-export interface FixtureData
-{
+export interface FixtureData {
   address: number;
   group: string;
   options: FixtureOptions;

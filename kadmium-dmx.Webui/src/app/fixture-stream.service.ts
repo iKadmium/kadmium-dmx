@@ -31,7 +31,7 @@ export class FixtureStreamService
             attributeName: attributeName,
             attributeValue: attributeValue
         };
-        this.subject.next(JSON.stringify(message) as any);
+        this.subject.next(message as any);
     }
 }
 

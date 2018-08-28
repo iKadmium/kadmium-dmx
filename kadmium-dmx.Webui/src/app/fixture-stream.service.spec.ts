@@ -2,7 +2,7 @@ import { TestBed, inject } from '@angular/core/testing';
 
 import { FixtureStreamService } from './fixture-stream.service';
 
-describe('SolversLiveService', () =>
+describe('FixtureStreamService', () =>
 {
   beforeEach(() =>
   {

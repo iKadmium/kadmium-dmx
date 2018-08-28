@@ -1,51 +1,69 @@
-import { Component, OnInit, Input, ViewChildren, QueryList, ChangeDetectorRef } from '@angular/core';
-import { FixtureDefinitionSkeleton, UniverseData, FixtureData } from "api/models";
-import { MatDialog } from "@angular/material/dialog";
-import { UniverseEditorPresetSaveDialogComponent } from "../universe-editor-preset-save-dialog/universe-editor-preset-save-dialog.component";
-
-import "rxjs/operator/map";
-import 'rxjs/add/operator/startWith';
-import { FixtureOptionsEditorComponent } from "../fixture-options-editor/fixture-options-editor.component";
+import { Component, OnInit, QueryList, ViewChildren } from '@angular/core';
 import { MatExpansionPanel } from '@angular/material';
-import { UniverseEditorAddMultipleFixturesDialogComponent, IUniverseEditorAddMultipleFixturesDialogInputData, IUniverseEditorAddMultipleFixturesDialogOutputData } from '../universe-editor-add-multiple-fixtures-dialog/universe-editor-add-multiple-fixtures-dialog.component';
-import { APIClient, GroupData } from 'api';
+import { MatDialog } from "@angular/material/dialog";
+import { ActivatedRoute } from '@angular/router';
+import { APIClient, IGroupData } from 'api';
+import { FixtureData, FixtureDefinitionSkeleton, UniverseData, IVenueData } from "api/models";
+import { FixtureEditorComponent, FixtureEditorData } from 'app/fixture-editor/fixture-editor.component';
 import { MessageService } from 'app/message.service';
+import 'rxjs/add/operator/startWith';
+import "rxjs/operator/map";
+import { AnimationLibrary } from '../animation-library';
+import { DeleteConfirmDialogComponent } from '../delete-confirm-dialog/delete-confirm-dialog.component';
+import { EditorService } from '../editor.service';
 import { FileReaderService } from '../file-reader.service';
 import { FileSaverService } from '../file-saver.service';
-import { FixtureEditorComponent, FixtureEditorData } from 'app/fixture-editor/fixture-editor.component';
+import { FixtureOptionsEditorComponent } from "../fixture-options-editor/fixture-options-editor.component";
+import { IUniverseEditorAddMultipleFixturesDialogInputData, IUniverseEditorAddMultipleFixturesDialogOutputData, UniverseEditorAddMultipleFixturesDialogComponent } from '../universe-editor-add-multiple-fixtures-dialog/universe-editor-add-multiple-fixtures-dialog.component';
+import { UniverseEditorPresetSaveDialogComponent } from "../universe-editor-preset-save-dialog/universe-editor-preset-save-dialog.component";
+
 
 @Component({
     selector: 'app-universe-editor',
     templateUrl: './universe-editor.component.html',
     styleUrls: ['./universe-editor.component.css'],
+    animations: [AnimationLibrary.animations()]
 })
 export class UniverseEditorComponent implements OnInit
 {
-    @Input("universe") universe: UniverseData;
-    @Input("groups") groups: GroupData[];
     @ViewChildren(MatExpansionPanel) panels: QueryList<MatExpansionPanel>;
 
+    public groups: IGroupData[];
     public fixtureDefinitionSkeletons: FixtureDefinitionSkeleton[];
+    public universe: UniverseData;
 
     constructor(
         private apiClient: APIClient,
         private messageService: MessageService,
         private fileReader: FileReaderService,
         private fileSaver: FileSaverService,
+        private editorService: EditorService<IVenueData>,
+        private activatedRoute: ActivatedRoute,
         private dialog: MatDialog)
     {
     }
 
     ngOnInit(): void
     {
+        let universeIDstring = this.activatedRoute.snapshot.params["universeID"] as string;
+        let universeID = parseInt(universeIDstring);
         try
         {
+            this.apiClient.getGroups()
+                .toPromise()
+                .then(response => 
+                {
+                    this.groups = response;
+                });
+
             this.apiClient.getFixtureDefinitions()
                 .toPromise()
                 .then(response => 
                 {
                     this.fixtureDefinitionSkeletons = response;
                 });
+
+            this.universe = this.editorService.getActive().universes.find(x => x.universeID == universeID);
         }
         catch (error)
         {
@@ -53,9 +71,19 @@ export class UniverseEditorComponent implements OnInit
         }
     }
 
-    public removeElement(index: number): void
+    public async removeElement(index: number): Promise<void>
     {
-        this.universe.fixtures.splice(index, 1);
+        let fixture = this.universe.fixtures[index];
+        let result = await this.dialog
+            .open(DeleteConfirmDialogComponent, { data: fixture.type.manufacturer + " " + fixture.type.model })
+            .afterClosed()
+            .toPromise();
+        if (result)
+        {
+            this.universe.fixtures.splice(index, 1);
+            this.editorService.isDirty = true;
+        }
+
     }
 
     public async addElements(): Promise<void>
@@ -64,10 +92,10 @@ export class UniverseEditorComponent implements OnInit
             groups: this.groups,
             skeletons: this.fixtureDefinitionSkeletons
         };
-        let ref = this.dialog.open(UniverseEditorAddMultipleFixturesDialogComponent, {
-            data: inputData
-        });
-        let result = await ref.afterClosed().toPromise();
+        let result = await this.dialog
+            .open(UniverseEditorAddMultipleFixturesDialogComponent, { data: inputData })
+            .afterClosed()
+            .toPromise();
 
         if (result != null)
         {
@@ -86,13 +114,13 @@ export class UniverseEditorComponent implements OnInit
                     type: data.skeleton,
                     options: {
                         maxBrightness: 1,
-                        axisInversions: [],
-                        axisRestrictions: []
+                        axisOptions: {}
                     }
                 };
                 this.universe.fixtures.push(fixture);
                 runningAddress += channelCount;
             }
+            this.editorService.isDirty = true;
         }
 
     }

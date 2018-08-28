@@ -9,7 +9,7 @@ import { VenueDiscoverySelectGroupDialogComponent } from "../venue-discovery-sel
 import { VenueDiscoveryAddFixtureToVenueDialogComponent } from "../venue-discovery-add-fixture-to-venue-dialog/venue-discovery-add-fixture-to-venue-dialog.component";
 import { AddFixtureDefinitionEvent } from "../venue-discovery-unassigned/venue-discovery-unassigned.component";
 import { DeleteConfirmDialogComponent } from "../delete-confirm-dialog/delete-confirm-dialog.component";
-import { APIClient, ActiveAttribute, ActiveFixture, DMXChannelData, FixtureDefinition } from 'api';
+import { APIClient, ActiveAttribute, ActiveFixture, IDMXChannelData, IFixtureDefinition } from 'api';
 import { Subscription } from 'rxjs';
 import { MessageService } from 'app/message.service';
 
@@ -167,19 +167,18 @@ export class VenueDiscoveryComponent implements OnInit, OnDestroy
 
 	public addFixtureDefinition(event: AddFixtureDefinitionEvent): void
 	{
-		let channels = JSON.parse(JSON.stringify(event.channels)) as DMXChannelData[];
+		let channels = JSON.parse(JSON.stringify(event.channels)) as IDMXChannelData[];
 		let dialogRef = this.dialog.open(VenueDiscoveryAddFixtureDefinitionDialogComponent, { data: { channels: channels, venue: this.venue.name } });
 		dialogRef.afterClosed().subscribe(async next =>
 		{
 			if (next != null)
 			{
-				let definition = next as FixtureDefinition;
+				let definition = next as IFixtureDefinition;
 				try
 				{
 					this.saving = true;
-					let id = await this.apiClient.postFixtureDefinition({ value: definition }).toPromise();
+					await this.apiClient.postFixtureDefinition({ value: definition }).toPromise();
 					this.saving = false;
-					definition.id = id;
 					let address = event.channels.map(x => x.address).sort()[0];
 					this.messageService.info(`${definition.skeleton.manufacturer} ${definition.skeleton.model} successfully added`);
 					event.resolve();
@@ -241,8 +240,7 @@ export class VenueDiscoveryComponent implements OnInit, OnDestroy
 			type: definition,
 			options: {
 				maxBrightness: 1,
-				axisInversions: [],
-				axisRestrictions: []
+				axisOptions: {}
 			}
 		};
 		universe.fixtures.push(fixture);
@@ -310,7 +308,7 @@ export class VenueDiscoveryComponent implements OnInit, OnDestroy
 
 }
 
-interface DiscoveryDMXChannel extends DMXChannelData
+interface DiscoveryDMXChannel extends IDMXChannelData
 {
 	value: number;
 }

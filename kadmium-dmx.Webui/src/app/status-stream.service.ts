@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import { URLs, SocketController } from "./url";
 import { Observable } from 'rxjs';
 import { WebSocketSubject } from 'rxjs/webSocket';
+import { StatusCode } from './enums/status-code.enum';
 
 @Injectable({
     providedIn: 'root'
@@ -25,7 +26,7 @@ export class StatusStreamService
 
 export interface StatusData
 {
-    code: string;
+    code: StatusCode;
     message: string;
     controller: string;
 }

@@ -1,13 +1,11 @@
 /* tslint:disable */
-import
-{
+import {
   ActiveAttribute,
   ColorWheelEntry,
   MovementAxis,
-} from '..';
+} from './..';
 
-export interface ActiveFixture
-{
+export interface ActiveFixture {
   address: number;
   attributes: ActiveAttribute[];
   colorWheel: ColorWheelEntry[];

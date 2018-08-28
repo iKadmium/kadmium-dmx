@@ -31,8 +31,8 @@ describe('DashboardTransmitterSacnComponent', () =>
 				{
 					provide: APIClient,
 					useValue: jasmine.createSpyObj<APIClient>({
-						enabledSACNTransmitter: from([true]),
-						setEnabledSACNTransmitter: from([])
+						getSACNTransmitterEnabled: from([true]),
+						setSACNTransmitterEnabled: from([])
 					})
 				},
 				{ provide: MessageService, useValue: jasmine.createSpyObj<MessageService>({ error: null }) }
@@ -60,7 +60,7 @@ describe('DashboardTransmitterSacnComponent', () =>
 	{
 		let serviceMock = TestBed.get(APIClient) as jasmine.SpyObj<APIClient>;
 		fixture.detectChanges();
-		expect(serviceMock.enabledSACNTransmitter).toHaveBeenCalledTimes(1);
+		expect(serviceMock.getSACNTransmitterEnabled).toHaveBeenCalledTimes(1);
 	});
 
 	it('should show an error message if the API client throws an error', () =>
@@ -69,7 +69,7 @@ describe('DashboardTransmitterSacnComponent', () =>
 		let messageServiceMock = TestBed.get(MessageService) as jasmine.SpyObj<MessageService>;
 		let errorMessage = "Error";
 		let error = new Error(errorMessage);
-		serviceMock.enabledSACNTransmitter.and.throwError(errorMessage);
+		serviceMock.getSACNTransmitterEnabled.and.throwError(errorMessage);
 		fixture.detectChanges();
 
 		expect(messageServiceMock.error).toHaveBeenCalledWith(error);
@@ -81,10 +81,10 @@ describe('DashboardTransmitterSacnComponent', () =>
 		fixture.detectChanges();
 		expect(component.enabled).toBe(false);
 		component.toggleEnabled();
-		expect(serviceMock.setEnabledSACNTransmitter).toHaveBeenCalledWith({ value: true });
+		expect(serviceMock.setSACNTransmitterEnabled).toHaveBeenCalledWith({ value: true });
 		component.enabled = true;
 		component.toggleEnabled();
-		expect(serviceMock.setEnabledSACNTransmitter).toHaveBeenCalledWith({ value: false });
+		expect(serviceMock.setSACNTransmitterEnabled).toHaveBeenCalledWith({ value: false });
 	});
 
 	it('should report an error if the API Client throws one while toggling', () =>
@@ -93,7 +93,7 @@ describe('DashboardTransmitterSacnComponent', () =>
 		let error = new Error(errorMessage);
 		let serviceMock = TestBed.get(APIClient) as jasmine.SpyObj<APIClient>;
 		let messageServiceMock = TestBed.get(MessageService) as jasmine.SpyObj<MessageService>;
-		serviceMock.setEnabledSACNTransmitter.and.throwError(errorMessage);
+		serviceMock.setSACNTransmitterEnabled.and.throwError(errorMessage);
 		fixture.detectChanges();
 
 		component.toggleEnabled();

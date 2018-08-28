@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { APIClient, FixtureDefinitionSkeleton, GroupData } from 'api';
+import { APIClient, FixtureDefinitionSkeleton, IGroupData } from 'api';
 
 @Component({
 	selector: 'app-venue-discovery-add-fixture-to-venue-dialog',
@@ -9,7 +9,7 @@ import { APIClient, FixtureDefinitionSkeleton, GroupData } from 'api';
 })
 export class VenueDiscoveryAddFixtureToVenueDialogComponent implements OnInit
 {
-	public groups: GroupData[];
+	public groups: IGroupData[];
 	public definitions: FixtureDefinitionSkeleton[];
 	public data;
 	constructor(private apiClient: APIClient) 

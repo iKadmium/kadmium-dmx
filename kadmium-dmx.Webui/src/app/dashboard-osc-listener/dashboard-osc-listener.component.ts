@@ -30,7 +30,7 @@ export class DashboardOSCListenerComponent implements OnInit
         try
         {
             this.apiClient
-                .enabledOSCListener()
+                .getOSCListenerEnabled()
                 .toPromise()
                 .then(response =>
                 {
@@ -51,7 +51,7 @@ export class DashboardOSCListenerComponent implements OnInit
         this.enabledDetermined = false;
         try
         {
-            await this.apiClient.setEnabledOSCListener({ value: !oldValue }).toPromise();
+            await this.apiClient.setOSCListenerEnabled({ value: !oldValue }).toPromise();
             this.enabled = !oldValue;
         }
         catch (error)

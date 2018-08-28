@@ -1,6 +1,6 @@
 import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
 import { AnimationLibrary } from "../animation-library";
-import { DMXChannelData } from 'api';
+import { IDMXChannelData } from 'api';
 
 @Component({
 	selector: 'app-venue-discovery-unassigned',
@@ -78,7 +78,7 @@ export interface ValueChangeEvent
 	value: number;
 }
 
-interface SelectableChannel extends DMXChannelData
+interface SelectableChannel extends IDMXChannelData
 {
 	selected: boolean;
 }

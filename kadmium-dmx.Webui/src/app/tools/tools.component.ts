@@ -1,10 +1,10 @@
 import { Component, OnInit } from '@angular/core';
-import { AnimationLibrary } from '../animation-library';
 import { MatSelectionList } from '@angular/material';
 import { Title } from '@angular/platform-browser';
-import { APIClient, GroupData, Settings } from 'api';
-import { MessageService } from '../message.service';
+import { APIClient, IGroupData, Settings } from 'api';
+import { AnimationLibrary } from '../animation-library';
 import { FileSaverService } from '../file-saver.service';
+import { MessageService } from '../message.service';
 
 @Component({
 	selector: 'app-tools',
@@ -15,7 +15,7 @@ import { FileSaverService } from '../file-saver.service';
 export class ToolsComponent implements OnInit
 {
 	public loading: boolean
-	public groups: GroupData[];
+	public groups: IGroupData[];
 	public attributes: Attribute[];
 	public settings: Settings;
 
@@ -157,7 +157,7 @@ export class ToolsComponent implements OnInit
 	{
 		let ioLines = [];
 		let selectedAttributes: Attribute[] = attributesList.selectedOptions.selected.map(x => x.value);
-		let selectedGroups: GroupData[] = groupsList.selectedOptions.selected.map(x => x.value);
+		let selectedGroups: IGroupData[] = groupsList.selectedOptions.selected.map(x => x.value);
 
 		ioLines.push(
 			`@output lightingOutput OSC "backingtracks.local:${this.settings.oscPort}"`,

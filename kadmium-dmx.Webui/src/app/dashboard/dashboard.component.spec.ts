@@ -9,9 +9,9 @@ import { DashboardOSCListenerComponent } from '../dashboard-osc-listener/dashboa
 import { DashboardVenueComponent } from '../dashboard-venue/dashboard-venue.component';
 import { DashboardTransmitterSacnComponent } from '../dashboard-transmitter-sacn/dashboard-transmitter-sacn.component';
 import { Observable, Subscriber, Subscription } from 'rxjs';
-import { StatusCode } from 'api';
 import { StatusData, StatusStreamService } from '../status-stream.service';
 import { MessageService } from 'app/message.service';
+import { StatusCode } from 'app/enums/status-code.enum';
 
 describe('DashboardComponent', () =>
 {

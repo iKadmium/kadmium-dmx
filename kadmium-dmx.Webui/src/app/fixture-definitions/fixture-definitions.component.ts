@@ -1,13 +1,13 @@
-import { Component, OnInit, ViewChild } from '@angular/core';
-import { Title } from "@angular/platform-browser";
-import { FixtureDefinitionSkeleton, FixtureDefinition } from "api/models";
+import { Component, OnInit } from '@angular/core';
 import { MatDialog } from '@angular/material';
-import { AnimationLibrary } from "../animation-library";
+import { Title } from "@angular/platform-browser";
 import { APIClient } from 'api';
-import { URLs } from '../url';
-import { DeleteConfirmDialogComponent } from '../delete-confirm-dialog/delete-confirm-dialog.component';
+import { IFixtureDefinition, FixtureDefinitionSkeleton } from "api/models";
 import { MessageService } from 'app/message.service';
+import { AnimationLibrary } from "../animation-library";
+import { DeleteConfirmDialogComponent } from '../delete-confirm-dialog/delete-confirm-dialog.component';
 import { FileReaderService } from '../file-reader.service';
+import { URLs } from '../url';
 
 @Component({
     selector: 'app-fixture-definitions',
@@ -134,7 +134,7 @@ export class FixtureDefinitionsComponent implements OnInit
     {
         try
         {
-            let definition = await this.fileReader.read<FixtureDefinition>(file);
+            let definition = await this.fileReader.read<IFixtureDefinition>(file);
             await this.apiClient.postFixtureDefinition({ value: definition }).toPromise();
             this.skeletons.push(definition.skeleton);
             this.messageService.info("Successfully added " + definition.skeleton.manufacturer + " " + definition.skeleton.model);

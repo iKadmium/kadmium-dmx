@@ -1,6 +1,7 @@
-import { Component, OnInit, Inject } from '@angular/core';
+import { Component, Inject, OnInit } from '@angular/core';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material';
-import { MovementAxis, DMXChannelData, FixtureDefinition, FixtureType } from "api/models";
+import { IDMXChannelData, IFixtureDefinition, MovementAxis } from "api";
+import { FixtureType } from 'app/enums/fixture-type.enum';
 
 @Component({
 	selector: 'app-venue-discovery-add-fixture-definition-dialog',
@@ -9,7 +10,7 @@ import { MovementAxis, DMXChannelData, FixtureDefinition, FixtureType } from "ap
 })
 export class VenueDiscoveryAddFixtureDefinitionDialogComponent implements OnInit
 {
-	public definition: FixtureDefinition;
+	public definition: IFixtureDefinition;
 	private static detectedAxis: string[] = ["Pan", "Tilt"];
 	private static axisSuffixes: string[][] = [[""], ["Fine", "Coarse"]]
 
@@ -17,7 +18,7 @@ export class VenueDiscoveryAddFixtureDefinitionDialogComponent implements OnInit
 	{
 		this.definition = {
 			id: "",
-			fixtureType: FixtureType["0"],
+			fixtureType: FixtureType.LED,
 			channels: data.channels,
 			movements: [],
 			colorWheel: [],
@@ -105,6 +106,6 @@ class ChannelCollectionVariant
 
 export class AddFixtureDefinitionData
 {
-	public channels: DMXChannelData[]
+	public channels: IDMXChannelData[]
 	public venue: string;
 }

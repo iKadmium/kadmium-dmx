@@ -1,6 +1,6 @@
 import { async, ComponentFixture, TestBed, fakeAsync } from '@angular/core/testing';
 
-import { FixtureOptionsEditorComponent, FixtureContainer } from './fixture-options-editor.component';
+import { FixtureOptionsEditorComponent, FixtureOptionsEditorData } from './fixture-options-editor.component';
 import { FormsModule } from "@angular/forms";
 import { APIClient, FixtureData, FixtureDefinition, FixtureType } from 'api';
 import { MatDialogRef, MatFormField, MatExpansionPanel, MatExpansionPanelHeader, MatExpansionPanelTitle, MatCheckbox, MatDivider, MatDialogClose, MAT_DIALOG_DATA } from '@angular/material';
@@ -13,7 +13,7 @@ describe('FixtureOptionsEditorComponent', () =>
     let component: FixtureOptionsEditorComponent;
     let fixture: ComponentFixture<FixtureOptionsEditorComponent>;
 
-    let fixtureContainer: FixtureContainer;
+    let fixtureContainer: FixtureOptionsEditorData;
     let definition: FixtureDefinition;
 
     beforeEach(async(() =>

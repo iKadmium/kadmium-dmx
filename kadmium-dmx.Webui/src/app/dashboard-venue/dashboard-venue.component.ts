@@ -6,7 +6,7 @@ import { MatDialog } from '@angular/material';
 import { AnimationLibrary } from "../animation-library";
 import { UniverseData } from "api/models";
 import { VenueNameDialogComponent } from "../venue-name-dialog/venue-name-dialog.component";
-import { APIClient, VenueData } from 'api';
+import { APIClient, IVenueData } from 'api';
 import { MessageService } from 'app/message.service';
 
 @Component({
@@ -113,7 +113,7 @@ export class DashboardVenueComponent implements OnInit
                 name: "New Universe",
                 universeID: 1
             };
-            let venue: VenueData = {
+            let venue: IVenueData = {
                 id: "",
                 name: next,
                 universes: [universe]
