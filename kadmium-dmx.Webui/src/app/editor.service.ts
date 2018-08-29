@@ -42,7 +42,6 @@ export class EditorService<T>
 
 	public set isDirty(value: boolean)
 	{
-		console.log("Dirty = " + value);
 		this.dirty = value;
 	}
 }

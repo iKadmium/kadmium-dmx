@@ -1,64 +1,62 @@
-import { async, ComponentFixture, TestBed, fakeAsync, tick } from '@angular/core/testing';
-
-import { UniverseEditorComponent } from './universe-editor.component';
+import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { FormsModule } from '@angular/forms';
-import { MatFormField, MatIcon, MatToolbar, MatExpansionPanelTitle, MatExpansionPanel, MatSelect, MatOption, MatExpansionPanelActionRow, MatExpansionPanelDescription, MatExpansionPanelHeader, MatSnackBar, MatDialog, MatCardTitle, MatCardContent, MatCardActions, MatCard, MatDialogRef } from '@angular/material';
-import { MockComponent } from 'ng-mocks';
-import { APIClient, FixtureDefinitionSkeleton, GroupData, UniverseData, FixtureData, FixtureDefinition, FixtureType, FixtureOptions } from 'api';
-import { MessageService } from 'app/message.service';
-import { from } from 'rxjs';
-import { IUniverseEditorAddMultipleFixturesDialogOutputData, UniverseEditorAddMultipleFixturesDialogComponent } from 'app/universe-editor-add-multiple-fixtures-dialog/universe-editor-add-multiple-fixtures-dialog.component';
-import { FixtureEditorComponent } from '../fixture-editor/fixture-editor.component';
-import { UniverseEditorPresetSaveDialogComponentResultData } from 'app/universe-editor-preset-save-dialog/universe-editor-preset-save-dialog.component';
-import { FileSaverService } from 'app/file-saver.service';
+import { MatCard, MatCardActions, MatCardContent, MatCardTitle, MatDialog, MatDialogRef, MatExpansionPanel, MatExpansionPanelActionRow, MatExpansionPanelDescription, MatExpansionPanelHeader, MatExpansionPanelTitle, MatFormField, MatIcon, MatOption, MatSelect, MatToolbar } from '@angular/material';
+import { ActivatedRoute } from '@angular/router';
+import { APIClient, FixtureData, FixtureDefinitionSkeleton, FixtureOptions, IFixtureDefinition, IGroupData, UniverseData } from 'api';
+import { FixtureType } from 'app/enums/fixture-type.enum';
 import { FileReaderService } from 'app/file-reader.service';
+import { FileSaverService } from 'app/file-saver.service';
+import { MessageService } from 'app/message.service';
+import { IUniverseEditorAddMultipleFixturesDialogOutputData, UniverseEditorAddMultipleFixturesDialogComponent } from 'app/universe-editor-add-multiple-fixtures-dialog/universe-editor-add-multiple-fixtures-dialog.component';
+import { UniverseEditorPresetSaveDialogComponentResultData } from 'app/universe-editor-preset-save-dialog/universe-editor-preset-save-dialog.component';
+import { MockComponent } from 'ng-mocks';
+import { from } from 'rxjs';
+import { FixtureOptionsTestHelpers } from '../test/fixture-options-test-helpers';
+import { UniverseEditorComponent } from './universe-editor.component';
+import { UniverseTestHelpers } from '../test/universe-test-helpers';
+import { FixtureDefinitionSkeletonHelpers } from '../test/fixture-definition-skeleton-helpers';
+import { FixtureDefinitionTestHelpers } from '../test/fixture-definition-test-helpers';
+import { NoopAnimationsModule } from '@angular/platform-browser/animations';
+import { DeleteConfirmDialogComponent } from 'app/delete-confirm-dialog/delete-confirm-dialog.component';
+
 
 describe('UniverseEditorComponent', () =>
 {
 	let component: UniverseEditorComponent;
 	let fixture: ComponentFixture<UniverseEditorComponent>;
-	let fixtureDefinition: FixtureDefinition;
+	let fixtureDefinition: IFixtureDefinition;
 
 	let universe: UniverseData;
-	let groups: GroupData[];
+	let groups: IGroupData[];
 	let skeletons: FixtureDefinitionSkeleton[];
 	let matDialogRef: jasmine.SpyObj<MatDialogRef<UniverseEditorAddMultipleFixturesDialogComponent>>;
 	let fixtureData: FixtureData;
 
+	let route: any;
+
 	beforeEach(async(() =>
 	{
-		universe = {
-			fixtures: [],
-			universeID: 1,
-			name: "Universe"
-		};
+		universe = UniverseTestHelpers.getUniverse();
 
-		groups = [{ id: "", name: "Group", order: 1 }];
+		groups = [{ name: "Group", order: 1 }];
 
-		skeletons = [{ manufacturer: "Manufacturer", model: "Model" }];
+		skeletons = [FixtureDefinitionSkeletonHelpers.getFixtureDefinitionSkeleton()];
 
-		fixtureDefinition = {
-			id: "",
-			skeleton: skeletons[0],
-			movements: [],
-			fixtureType: FixtureType.LED,
-			colorWheel: [],
-			channels: [
-				{ address: 1, min: 0, max: 255, name: "Red" },
-				{ address: 2, min: 0, max: 255, name: "Green" },
-				{ address: 3, min: 0, max: 255, name: "Blue" }
-			]
-		};
+		fixtureDefinition = FixtureDefinitionTestHelpers.getRGBFixtureDefinition();
 
 		fixtureData = {
 			address: 1,
 			group: groups[0].name,
-			options: {
-				axisInversions: [],
-				axisRestrictions: [],
-				maxBrightness: 1
-			},
+			options: FixtureOptionsTestHelpers.getDefaultOptions(),
 			type: skeletons[0]
+		};
+
+		route = {
+			snapshot: {
+				params: {
+					universeID: "1"
+				}
+			}
 		};
 
 		matDialogRef = jasmine.createSpyObj<MatDialogRef<UniverseEditorAddMultipleFixturesDialogComponent>>({ afterClosed: from([]) });
@@ -66,28 +64,21 @@ describe('UniverseEditorComponent', () =>
 		TestBed.configureTestingModule({
 			declarations: [
 				UniverseEditorComponent,
-				MockComponent(MatFormField),
-				MockComponent(MatIcon),
 				MockComponent(MatToolbar),
-				MockComponent(MatExpansionPanelTitle),
-				MockComponent(MatExpansionPanel),
-				MockComponent(MatExpansionPanelActionRow),
-				MockComponent(MatExpansionPanelDescription),
-				MockComponent(MatExpansionPanelHeader),
-				MockComponent(MatSelect),
-				MockComponent(MatOption),
-				MockComponent(MatFormField),
+				MockComponent(MatIcon),
+				MockComponent(MatCard),
 				MockComponent(MatCardTitle),
 				MockComponent(MatCardContent),
 				MockComponent(MatCardActions),
-				MockComponent(MatCard)
 			],
 			imports: [
-				FormsModule
+				FormsModule,
+				NoopAnimationsModule
 			],
 			providers: [
 				{
 					provide: APIClient, useValue: jasmine.createSpyObj<APIClient>({
+						getGroups: from([groups]),
 						getFixtureDefinitions: from([skeletons]),
 						getFixtureDefinition: from([fixtureDefinition])
 					})
@@ -95,7 +86,8 @@ describe('UniverseEditorComponent', () =>
 				{ provide: MessageService, useValue: jasmine.createSpyObj<MessageService>({ error: null }) },
 				{ provide: MatDialog, useValue: jasmine.createSpyObj<MatDialog>({ open: matDialogRef }) },
 				{ provide: FileSaverService, useValue: jasmine.createSpyObj<FileSaverService>({ save: Promise.resolve() }) },
-				{ provide: FileReaderService, useValue: jasmine.createSpyObj<FileReaderService>({ read: null }) }
+				{ provide: FileReaderService, useValue: jasmine.createSpyObj<FileReaderService>({ read: null }) },
+				{ provide: ActivatedRoute, useValue: route }
 			]
 		});
 
@@ -110,35 +102,56 @@ describe('UniverseEditorComponent', () =>
 		component.universe = universe;
 	});
 
-	it('should create', () =>
+	describe('component', () =>
 	{
-		fixture.detectChanges();
-		expect(component).toBeTruthy();
+		it('should create', () =>
+		{
+			fixture.detectChanges();
+			expect(component).toBeTruthy();
+		});
 	});
 
-	it('should request fixture definitions', () =>
+	describe('constructor', () =>
 	{
-		let serviceMock = TestBed.get(APIClient) as jasmine.SpyObj<APIClient>;
-		fixture.detectChanges();
-		expect(serviceMock.getFixtureDefinitions).toHaveBeenCalledTimes(1);
+		it('should request fixture definitions', () =>
+		{
+			let serviceMock = TestBed.get(APIClient) as jasmine.SpyObj<APIClient>;
+			fixture.detectChanges();
+			expect(serviceMock.getFixtureDefinitions).toHaveBeenCalledTimes(1);
+		});
+
+		it('should report an error if fetching the fixture definitions throws one', () =>
+		{
+			let error = new Error("Error");
+			let messageServiceMock = TestBed.get(MessageService) as jasmine.SpyObj<MessageService>;
+			let apiClientMock = TestBed.get(APIClient) as jasmine.SpyObj<APIClient>;
+			apiClientMock.getFixtureDefinitions.and.throwError(error.message);
+			fixture.detectChanges();
+			expect(messageServiceMock.error).toHaveBeenCalledWith(error);
+		});
 	});
 
-	it('should report an error if fetching the fixture definitions throws one', () =>
+	describe('delete', () =>
 	{
-		let error = new Error("Error");
-		let messageServiceMock = TestBed.get(MessageService) as jasmine.SpyObj<MessageService>;
-		let apiClientMock = TestBed.get(APIClient) as jasmine.SpyObj<APIClient>;
-		apiClientMock.getFixtureDefinitions.and.throwError(error.message);
-		fixture.detectChanges();
-		expect(messageServiceMock.error).toHaveBeenCalledWith(error);
-	});
+		it('should open a delete dialog', () =>
+		{
+			let matDialogMock = TestBed.get(MatDialog) as jasmine.SpyObj<MatDialog>;
+			component.universe.fixtures = [fixtureData];
+			component.removeElement(0);
+			expect(matDialogMock.open).toHaveBeenCalledWith(DeleteConfirmDialogComponent, jasmine.any(Object));
+		});
 
-	it('should remove elements', () =>
-	{
-		component.universe.fixtures = [fixtureData];
-		component.removeElement(0);
-		expect(component.universe.fixtures.length).toBe(0);
-	});
+		it('should remove elements', (done) =>
+		{
+			matDialogRef.afterClosed.and.returnValue(from([true]));
+			component.universe.fixtures = [fixtureData];
+			component.removeElement(0).then(() =>
+			{
+				expect(component.universe.fixtures.length).toBe(0);
+				done();
+			});
+		});
+	})
 
 	it('should add fixtures', (done) =>
 	{
@@ -185,11 +198,7 @@ describe('UniverseEditorComponent', () =>
 
 	it('should edit options', (done) =>
 	{
-		let result: FixtureOptions = {
-			axisInversions: [],
-			axisRestrictions: [],
-			maxBrightness: 0.1
-		}
+		let result: FixtureOptions = FixtureOptionsTestHelpers.getDefaultOptions();
 		matDialogRef.afterClosed.and.returnValue(from([result]));
 		component.options(fixtureData).then(() =>
 		{

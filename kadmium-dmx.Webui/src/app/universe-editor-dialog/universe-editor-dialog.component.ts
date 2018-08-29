@@ -15,9 +15,9 @@ export class UniverseEditorDialogComponent implements OnInit
 	constructor(
 		public dialogRef: MatDialogRef<UniverseEditorDialogComponent>,
 		@Inject(MAT_DIALOG_DATA) public data: UniverseData,
-		private fb: FormBuilder)
+		fb: FormBuilder)
 	{
-		this.formGroup = this.fb.group({
+		this.formGroup = fb.group({
 			name: [this.data.name, Validators.required],
 			universeID: [this.data.universeID, Validators.required]
 		});

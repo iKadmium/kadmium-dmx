@@ -55,7 +55,7 @@ describe('SettingsComponent', () =>
 				{
 					provide: APIClient, useValue: jasmine.createSpyObj<APIClient>({
 						getSettings: from([settings]),
-						postSettings: from([])
+						putSettings: from([])
 					})
 				},
 				{ provide: MessageService, useValue: jasmine.createSpyObj<MessageService>({ error: null }) }
@@ -102,7 +102,7 @@ describe('SettingsComponent', () =>
 		let apiClient = TestBed.get(APIClient) as jasmine.SpyObj<APIClient>;
 		component.settings = settings;
 		component.save();
-		expect(apiClient.postSettings).toHaveBeenCalledWith({ value: component.settings });
+		expect(apiClient.putSettings).toHaveBeenCalledWith({ value: component.settings });
 	});
 
 	it('should report an error if saving throws one', () =>
@@ -110,7 +110,7 @@ describe('SettingsComponent', () =>
 		let error = new Error("Error");
 		let apiClient = TestBed.get(APIClient) as jasmine.SpyObj<APIClient>;
 		let messageService = TestBed.get(MessageService) as jasmine.SpyObj<MessageService>;
-		apiClient.postSettings.and.throwError(error.message);
+		apiClient.putSettings.and.throwError(error.message);
 		component.settings = settings;
 		component.save();
 		expect(messageService.error).toHaveBeenCalledWith(error);

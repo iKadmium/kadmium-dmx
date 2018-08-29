@@ -1,25 +1,48 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { FixtureDefinitionEditorColorWheelEditorDialogComponent } from './fixture-definition-editor-color-wheel-editor-dialog.component';
+import { ReactiveFormsModule } from '@angular/forms';
+import { MockComponent } from 'ng-mocks';
+import { MatFormField, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material';
+import { IColorWheelEntryData } from 'api';
+import { ColorWheelTestHelpers } from '../test/color-wheel-test-helpers';
 
-describe('FixtureDefinitionEditorColorWheelEditorDialogComponent', () => {
-  let component: FixtureDefinitionEditorColorWheelEditorDialogComponent;
-  let fixture: ComponentFixture<FixtureDefinitionEditorColorWheelEditorDialogComponent>;
+describe('FixtureDefinitionEditorColorWheelEditorDialogComponent', () =>
+{
+	let component: FixtureDefinitionEditorColorWheelEditorDialogComponent;
+	let fixture: ComponentFixture<FixtureDefinitionEditorColorWheelEditorDialogComponent>;
+	let data: IColorWheelEntryData;
 
-  beforeEach(async(() => {
-    TestBed.configureTestingModule({
-      declarations: [ FixtureDefinitionEditorColorWheelEditorDialogComponent ]
-    })
-    .compileComponents();
-  }));
+	beforeEach(async(() =>
+	{
+		data = ColorWheelTestHelpers.getColorWheelEntry("Black");
 
-  beforeEach(() => {
-    fixture = TestBed.createComponent(FixtureDefinitionEditorColorWheelEditorDialogComponent);
-    component = fixture.componentInstance;
-    fixture.detectChanges();
-  });
+		TestBed.configureTestingModule({
+			declarations: [
+				FixtureDefinitionEditorColorWheelEditorDialogComponent,
+				MockComponent(MatFormField)
+			],
+			imports: [
+				ReactiveFormsModule
+			],
+			providers: [
+				{ provide: MatDialogRef, useValue: jasmine.createSpyObj<MatDialogRef<FixtureDefinitionEditorColorWheelEditorDialogComponent>>({ close: null }) },
+				{ provide: MAT_DIALOG_DATA, useValue: data }
+			]
+		});
 
-  it('should create', () => {
-    expect(component).toBeTruthy();
-  });
+		TestBed.compileComponents();
+	}));
+
+	beforeEach(() =>
+	{
+		fixture = TestBed.createComponent(FixtureDefinitionEditorColorWheelEditorDialogComponent);
+		component = fixture.componentInstance;
+		fixture.detectChanges();
+	});
+
+	it('should create', () =>
+	{
+		expect(component).toBeTruthy();
+	});
 });

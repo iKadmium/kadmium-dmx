@@ -13,7 +13,7 @@ import { DeleteConfirmDialogComponent } from '../delete-confirm-dialog/delete-co
 import { EditorService } from '../editor.service';
 import { FileReaderService } from '../file-reader.service';
 import { FileSaverService } from '../file-saver.service';
-import { FixtureOptionsEditorComponent } from "../fixture-options-editor/fixture-options-editor.component";
+import { FixtureOptionsEditorComponent, FixtureOptionsEditorData } from "../fixture-options-editor/fixture-options-editor.component";
 import { IUniverseEditorAddMultipleFixturesDialogInputData, IUniverseEditorAddMultipleFixturesDialogOutputData, UniverseEditorAddMultipleFixturesDialogComponent } from '../universe-editor-add-multiple-fixtures-dialog/universe-editor-add-multiple-fixtures-dialog.component';
 import { UniverseEditorPresetSaveDialogComponent } from "../universe-editor-preset-save-dialog/universe-editor-preset-save-dialog.component";
 
@@ -145,8 +145,12 @@ export class UniverseEditorComponent implements OnInit
 
     public async options(fixture: FixtureData): Promise<void>
     {
+        let data: FixtureOptionsEditorData = {
+            type: fixture.type,
+            options: fixture.options
+        };
         let ref = this.dialog.open(FixtureOptionsEditorComponent, {
-            data: { fixture: fixture }
+            data: data
         });
         let result = await ref.afterClosed().toPromise();
 

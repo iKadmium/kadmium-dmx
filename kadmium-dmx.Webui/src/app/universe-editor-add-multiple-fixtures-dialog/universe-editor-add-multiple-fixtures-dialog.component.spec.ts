@@ -1,10 +1,9 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
-
-import { UniverseEditorAddMultipleFixturesDialogComponent, IUniverseEditorAddMultipleFixturesDialogInputData, IUniverseEditorAddMultipleFixturesDialogOutputData } from './universe-editor-add-multiple-fixtures-dialog.component';
-import { MockComponent } from 'ng-mocks';
-import { FormsModule, NgForm } from '@angular/forms';
-import { MatFormField, MatSelect, MatOption, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material';
+import { NgForm, ReactiveFormsModule } from '@angular/forms';
+import { MatDialogRef, MatFormField, MatOption, MatSelect, MAT_DIALOG_DATA } from '@angular/material';
 import { By } from '@angular/platform-browser';
+import { MockComponent } from 'ng-mocks';
+import { IUniverseEditorAddMultipleFixturesDialogInputData, IUniverseEditorAddMultipleFixturesDialogOutputData, UniverseEditorAddMultipleFixturesDialogComponent } from './universe-editor-add-multiple-fixtures-dialog.component';
 
 describe('UniverseEditorAddMultipleFixturesDialogComponent', () =>
 {
@@ -26,7 +25,7 @@ describe('UniverseEditorAddMultipleFixturesDialogComponent', () =>
 				MockComponent(MatOption)
 			],
 			imports: [
-				FormsModule
+				ReactiveFormsModule
 			],
 			providers: [
 				{
@@ -55,20 +54,25 @@ describe('UniverseEditorAddMultipleFixturesDialogComponent', () =>
 
 	it('should return settings when ok is clicked', () =>
 	{
+		let address = 100;
+		let quantity = 100;
+		let skeleton = { manufacturer: "Manufacturer", model: "Model" };
+		let group = { name: "Group", order: 1 };
 		let dialogRefMock = TestBed.get(MatDialogRef) as jasmine.SpyObj<MatDialogRef<UniverseEditorAddMultipleFixturesDialogComponent>>;
-		component.address = 1;
-		component.quantity = 1;
-		component.fixtureType = { manufacturer: "Manufacturer", model: "Model" };
-		component.group = { id: "", name: "Group", order: 1 };
+
+		component.formGroup.get("address").setValue(address);
+		component.formGroup.get("quantity").setValue(quantity);
+		component.formGroup.get("skeleton").setValue(skeleton);
+		component.formGroup.get("group").setValue(group);
 
 		let okButton = (fixture.nativeElement as HTMLElement).querySelector(".btn-ok") as HTMLButtonElement;
 		okButton.click();
 
 		let expectedResult: IUniverseEditorAddMultipleFixturesDialogOutputData = {
-			address: component.address,
-			quantity: component.quantity,
-			skeleton: component.fixtureType,
-			group: component.group
+			address: address,
+			quantity: quantity,
+			skeleton: skeleton,
+			group: group
 		};
 		expect(dialogRefMock.close).toHaveBeenCalledWith(expectedResult);
 	});
@@ -80,17 +84,5 @@ describe('UniverseEditorAddMultipleFixturesDialogComponent', () =>
 		cancelButton.click();
 
 		expect(dialogRefMock.close).toHaveBeenCalledWith();
-	});
-
-	it('should update the quantity when the quantity box is changed', () =>
-	{
-		fixture.detectChanges();
-		let quantity = 3;
-		let form = (fixture.debugElement.query(By.directive(NgForm)) as any) as NgForm;
-		console.log(form);
-		let bob = form.form.controls["quantity"];
-		bob.setValue(quantity);
-		fixture.detectChanges();
-		expect(component.quantity).toBe(quantity);
 	});
 });

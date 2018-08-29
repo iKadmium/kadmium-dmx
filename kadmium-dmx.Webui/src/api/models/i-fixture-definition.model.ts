@@ -13,7 +13,6 @@ export interface IFixtureDefinition
   channels: IDMXChannelData[];
   colorWheel: IColorWheelEntryData[];
   fixtureType: FixtureType;
-  id: string;
   movements: IMovementAxisData[];
   skeleton: FixtureDefinitionSkeleton;
 }

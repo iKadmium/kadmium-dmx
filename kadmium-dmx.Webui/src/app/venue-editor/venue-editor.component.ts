@@ -53,7 +53,6 @@ export class VenueEditorComponent implements Saveable, OnInit
                 if (this.isNewItem())
                 {
                     this.venue = {
-                        id: "",
                         name: "",
                         universes: [{
                             universeID: 1,

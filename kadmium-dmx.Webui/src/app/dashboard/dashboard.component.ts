@@ -60,7 +60,7 @@ export class DashboardComponent implements OnInit, OnDestroy
     private async updateStatus(statusData: StatusData): Promise<void>
     {
         let panelStatus = this.statuses.get(statusData.controller);
-        let statusCode = StatusCode[statusData.code as string] as StatusCode;
+        let statusCode = statusData.code as StatusCode;
         if (panelStatus != null)
         {
             panelStatus.statusCode = statusCode;

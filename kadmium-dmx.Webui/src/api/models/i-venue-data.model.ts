@@ -1,10 +1,11 @@
 /* tslint:disable */
-import {
+import
+{
   UniverseData,
 } from './..';
 
-export interface IVenueData {
-  id: string;
+export interface IVenueData
+{
   name: string;
   universes: UniverseData[];
 }

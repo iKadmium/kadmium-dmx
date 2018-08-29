@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { IVenueData, UniverseData } from 'api';
 import { AnimationLibrary } from 'app/animation-library';
 import { EditorService } from '../editor.service';
+import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 
 @Component({
 	selector: 'app-venue-editor-home',
@@ -11,12 +12,21 @@ import { EditorService } from '../editor.service';
 })
 export class VenueEditorHomeComponent implements OnInit
 {
+	public form: FormGroup;
 	public venue: IVenueData;
-	constructor(private editorService: EditorService<IVenueData>) { }
+	constructor(
+		private editorService: EditorService<IVenueData>,
+		formBuilder: FormBuilder
+	) 
+	{
+		this.venue = this.editorService.getActive();
+		this.form = formBuilder.group({
+			name: [this.venue.name, Validators.required]
+		});
+	}
 
 	ngOnInit()
 	{
-		this.venue = this.editorService.getActive();
 	}
 
 	public addUniverse(): void
@@ -39,6 +49,7 @@ export class VenueEditorHomeComponent implements OnInit
 
 	public save(): void
 	{
+		this.venue.name = this.form.value.name;
 		this.editorService.save();
 	}
 }

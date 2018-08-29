@@ -15,7 +15,7 @@ export class FixtureDefinitionEditorHomeComponent implements OnInit
 {
 	public form: FormGroup;
 	public FixtureType = FixtureType;
-	private manufacturers: string[];
+	public manufacturers: string[];
 
 	constructor(
 		private formBuilder: FormBuilder,

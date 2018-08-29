@@ -114,7 +114,6 @@ export class DashboardVenueComponent implements OnInit
                 universeID: 1
             };
             let venue: IVenueData = {
-                id: "",
                 name: next,
                 universes: [universe]
             };

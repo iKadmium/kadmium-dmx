@@ -1,9 +1,10 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
-
-import { FixtureEditorComponent, FixtureEditorData } from './fixture-editor.component';
-import { FormsModule } from '@angular/forms';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { MatDialogRef, MatFormField, MatOption, MatSelect, MAT_DIALOG_DATA } from '@angular/material';
 import { MockComponent } from 'ng-mocks';
-import { MatFormField, MatSelect, MatOption, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material';
+import { FixtureEditorComponent, FixtureEditorData } from './fixture-editor.component';
+import { FixtureOptionsTestHelpers } from 'app/test/fixture-options-test-helpers';
+
 
 describe('FixtureEditorComponent', () =>
 {
@@ -17,18 +18,14 @@ describe('FixtureEditorComponent', () =>
 			fixture: {
 				address: 1,
 				group: "Group",
-				options: {
-					axisInversions: [],
-					axisRestrictions: [],
-					maxBrightness: 1
-				},
+				options: FixtureOptionsTestHelpers.getRestrictedAxis("Pan"),
 				type: {
 					manufacturer: "Manufacturer",
 					model: "Model"
 				}
 			},
 			groups: [
-				{ id: "", name: "Group", order: 1 }
+				{ name: "Group", order: 1 }
 			],
 			skeletons: [
 				{ manufacturer: "Manufacturer", model: "Model" }
@@ -42,7 +39,7 @@ describe('FixtureEditorComponent', () =>
 				MockComponent(MatSelect),
 				MockComponent(MatOption),
 			],
-			imports: [FormsModule],
+			imports: [ReactiveFormsModule],
 			providers: [
 				{ provide: MatDialogRef, useValue: jasmine.createSpyObj<MatDialogRef<FixtureEditorComponent>>({ close: null }) },
 				{ provide: MAT_DIALOG_DATA, useValue: data }

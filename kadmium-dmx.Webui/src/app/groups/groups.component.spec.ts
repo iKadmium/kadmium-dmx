@@ -44,7 +44,7 @@ describe('GroupsComponent', () =>
 				{
 					provide: APIClient, useValue: jasmine.createSpyObj<APIClient>({
 						getGroups: from([groups]),
-						putGroup: null
+						putGroups: from([])
 					})
 				},
 				{ provide: FileReaderService, useValue: jasmine.createSpyObj<FileReaderService>({ read: null }) },
@@ -121,7 +121,7 @@ describe('GroupsComponent', () =>
 		let apiClientMock = TestBed.get(APIClient) as jasmine.SpyObj<APIClient>;
 		component.groups = groups;
 		component.save();
-		expect(apiClientMock.putGroup).toHaveBeenCalledWith({ groups: component.groups });
+		expect(apiClientMock.putGroups).toHaveBeenCalledWith({ groups: component.groups });
 	});
 
 	it('should report an error if saving throws one', () =>
@@ -129,7 +129,7 @@ describe('GroupsComponent', () =>
 		let error = new Error("Error");
 		let apiClientMock = TestBed.get(APIClient) as jasmine.SpyObj<APIClient>;
 		let serviceMock = TestBed.get(MessageService) as jasmine.SpyObj<MessageService>;
-		apiClientMock.putGroup.and.throwError(error.message);
+		apiClientMock.putGroups.and.throwError(error.message);
 		component.groups = groups;
 		component.save();
 		expect(serviceMock.error).toHaveBeenCalledWith(error);

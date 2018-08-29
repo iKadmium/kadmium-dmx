@@ -1,12 +1,14 @@
-import { async, ComponentFixture, TestBed, fakeAsync } from '@angular/core/testing';
-
-import { FixtureOptionsEditorComponent, FixtureOptionsEditorData } from './fixture-options-editor.component';
-import { FormsModule } from "@angular/forms";
-import { APIClient, FixtureData, FixtureDefinition, FixtureType } from 'api';
-import { MatDialogRef, MatFormField, MatExpansionPanel, MatExpansionPanelHeader, MatExpansionPanelTitle, MatCheckbox, MatDivider, MatDialogClose, MAT_DIALOG_DATA } from '@angular/material';
+import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { FormsModule, ReactiveFormsModule } from "@angular/forms";
+import { MatCheckbox, MatDialogClose, MatDialogRef, MatDivider, MatExpansionPanel, MatExpansionPanelHeader, MatExpansionPanelTitle, MatFormField, MAT_DIALOG_DATA } from '@angular/material';
+import { APIClient, IFixtureDefinition } from 'api';
+import { MessageService } from 'app/message.service';
 import { MockComponent } from 'ng-mocks';
 import { from } from 'rxjs';
-import { MessageService } from 'app/message.service';
+import { FixtureOptionsTestHelpers } from '../test/fixture-options-test-helpers';
+import { FixtureOptionsEditorComponent, FixtureOptionsEditorData } from './fixture-options-editor.component';
+import { FixtureType } from 'app/enums/fixture-type.enum';
+
 
 describe('FixtureOptionsEditorComponent', () =>
 {
@@ -14,19 +16,15 @@ describe('FixtureOptionsEditorComponent', () =>
     let fixture: ComponentFixture<FixtureOptionsEditorComponent>;
 
     let fixtureContainer: FixtureOptionsEditorData;
-    let definition: FixtureDefinition;
+    let definition: IFixtureDefinition;
 
     beforeEach(async(() =>
     {
         fixtureContainer = {
-            fixture: {
-                address: 1,
-                group: "",
-                type: {
-                    manufacturer: "Some guy",
-                    model: "Some thing"
-                },
-                options: { maxBrightness: 1, axisInversions: [], axisRestrictions: [] }
+            options: FixtureOptionsTestHelpers.getRestrictedAxis("Pan"),
+            type: {
+                manufacturer: "Some guy",
+                model: "Some thing"
             }
         };
 
@@ -34,11 +32,10 @@ describe('FixtureOptionsEditorComponent', () =>
             channels: [],
             colorWheel: [],
             fixtureType: FixtureType.LED,
-            id: "",
             movements: [],
             skeleton: {
-                manufacturer: fixtureContainer.fixture.type.manufacturer,
-                model: fixtureContainer.fixture.type.model
+                manufacturer: fixtureContainer.type.manufacturer,
+                model: fixtureContainer.type.model
             }
         }
 
@@ -59,7 +56,7 @@ describe('FixtureOptionsEditorComponent', () =>
                 { provide: MessageService, useValue: jasmine.createSpyObj<MessageService>({ error: null }) },
                 { provide: MAT_DIALOG_DATA, useValue: fixtureContainer }
             ],
-            imports: [FormsModule]
+            imports: [ReactiveFormsModule]
         });
 
         TestBed.compileComponents();
@@ -71,26 +68,32 @@ describe('FixtureOptionsEditorComponent', () =>
         component = fixture.componentInstance;
     });
 
-    it('should create', () =>
+    describe('component', () =>
     {
-        fixture.detectChanges();
-        expect(component).toBeTruthy();
+        it('should create', () =>
+        {
+            fixture.detectChanges();
+            expect(component).toBeTruthy();
+        });
     });
 
-    it('should request the fixture definition', () =>
+    describe('constructor', () =>
     {
-        let serviceMock = TestBed.get(APIClient) as jasmine.SpyObj<APIClient>;
-        fixture.detectChanges();
-        expect(serviceMock.getFixtureDefinition).toHaveBeenCalledWith({ model: definition.skeleton.model, manufacturer: definition.skeleton.manufacturer })
-    });
+        it('should request the fixture definition', () =>
+        {
+            let serviceMock = TestBed.get(APIClient) as jasmine.SpyObj<APIClient>;
+            fixture.detectChanges();
+            expect(serviceMock.getFixtureDefinition).toHaveBeenCalledWith({ model: definition.skeleton.model, manufacturer: definition.skeleton.manufacturer })
+        });
 
-    it('should report an error if getting the fixture definition throws one', () =>
-    {
-        let error = new Error("Error");
-        let apiClient = TestBed.get(APIClient) as jasmine.SpyObj<APIClient>;
-        let messageServiceMock = TestBed.get(MessageService) as jasmine.SpyObj<MessageService>;
-        apiClient.getFixtureDefinition.and.throwError(error.message);
-        fixture.detectChanges();
-        expect(messageServiceMock.error).toHaveBeenCalledWith(error);
+        it('should report an error if getting the fixture definition throws one', () =>
+        {
+            let error = new Error("Error");
+            let apiClient = TestBed.get(APIClient) as jasmine.SpyObj<APIClient>;
+            let messageServiceMock = TestBed.get(MessageService) as jasmine.SpyObj<MessageService>;
+            apiClient.getFixtureDefinition.and.throwError(error.message);
+            fixture.detectChanges();
+            expect(messageServiceMock.error).toHaveBeenCalledWith(error);
+        });
     });
 });

@@ -1,4 +1,4 @@
-<form (ngSubmit)="save()" #editorForm="ngForm">
+<form (ngSubmit)="save()" [formGroup]="form">
 	<mat-toolbar class="main-toolbar">
 		<app-sidenav-toggle></app-sidenav-toggle>
 		Venue Editor
@@ -6,7 +6,7 @@
 		<button mat-icon-button type="button" (click)="addUniverse()" matTooltip="Add Universe">
 			<mat-icon aria-label="Add Universe">add</mat-icon>
 		</button>
-		<button mat-icon-button color="primary" type="submit" [disabled]="editorForm.invalid" matTooltip="Save">
+		<button mat-icon-button color="primary" type="submit" [disabled]="form.invalid" matTooltip="Save">
 			<mat-icon aria-label="Save">save</mat-icon>
 		</button>
 	</mat-toolbar>
@@ -16,7 +16,7 @@
 		<mat-card-content>
 			<div class="column">
 				<mat-form-field>
-					<input required matInput type="text" name="name" [(ngModel)]="venue.name" placeholder="Name" (change)="markDirty()">
+					<input required matInput type="text" formControlName="name" placeholder="Name" (change)="markDirty()">
 				</mat-form-field>
 			</div>
 		</mat-card-content>

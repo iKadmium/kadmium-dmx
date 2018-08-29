@@ -17,7 +17,6 @@ export class VenueDiscoveryAddFixtureDefinitionDialogComponent implements OnInit
 	constructor(public dialogRef: MatDialogRef<VenueDiscoveryAddFixtureDefinitionDialogComponent>, @Inject(MAT_DIALOG_DATA) data: AddFixtureDefinitionData)
 	{
 		this.definition = {
-			id: "",
 			fixtureType: FixtureType.LED,
 			channels: data.channels,
 			movements: [],

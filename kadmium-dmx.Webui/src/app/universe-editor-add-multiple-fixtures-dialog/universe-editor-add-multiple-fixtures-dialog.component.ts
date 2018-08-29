@@ -10,17 +10,12 @@ import { FixtureDefinitionSkeleton, IGroupData } from 'api/models';
 })
 export class UniverseEditorAddMultipleFixturesDialogComponent implements OnInit
 {
-	public group: IGroupData;
-	public fixtureType: FixtureDefinitionSkeleton;
-	public quantity: number;
-	public address: number;
-
 	public formGroup: FormGroup;
 
 	constructor(
 		public dialogRef: MatDialogRef<UniverseEditorAddMultipleFixturesDialogComponent>,
 		@Inject(MAT_DIALOG_DATA) public data: IUniverseEditorAddMultipleFixturesDialogInputData,
-		private fb: FormBuilder) 
+		fb: FormBuilder) 
 	{
 		this.formGroup = fb.group({
 			quantity: [1, Validators.required],
@@ -32,18 +27,11 @@ export class UniverseEditorAddMultipleFixturesDialogComponent implements OnInit
 
 	ngOnInit()
 	{
-
 	}
 
 	public ok(): void
 	{
-		let outputData: IUniverseEditorAddMultipleFixturesDialogOutputData = {
-			quantity: this.quantity,
-			address: this.address,
-			group: this.group,
-			skeleton: this.fixtureType
-		};
-		this.dialogRef.close(outputData);
+		this.dialogRef.close(this.formGroup.value);
 	}
 
 	public cancel(): void

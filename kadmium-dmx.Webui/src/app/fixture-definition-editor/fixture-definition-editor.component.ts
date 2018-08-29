@@ -58,7 +58,6 @@ export class FixtureDefinitionEditorComponent implements OnInit, Saveable
             else
             {
                 this.fixtureDefinitionService.setActive({
-                    id: "",
                     fixtureType: FixtureType.LED,
                     channels: [],
                     colorWheel: [],

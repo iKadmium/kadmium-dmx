@@ -89,7 +89,7 @@ namespace kadmium_dmx_webapi.WebSockets
             var msg = new
             {
                 Controller = controller,
-                Code = Enum.GetName(typeof(StatusCode), statusCode),
+                Code = statusCode,
                 Message = message
             };
             await SendObject(msg);

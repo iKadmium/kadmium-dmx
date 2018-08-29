@@ -19,11 +19,14 @@ export class FixtureDefinitionEditorChannelsComponent implements OnInit
 	constructor(
 		private fixtureDefinitionService: EditorService<IFixtureDefinition>,
 		private matDialog: MatDialog
-	) { }
+	)
+	{
+		this.channels = this.fixtureDefinitionService.getActive().channels;
+	}
 
 	ngOnInit()
 	{
-		this.channels = this.fixtureDefinitionService.getActive().channels;
+
 	}
 
 
