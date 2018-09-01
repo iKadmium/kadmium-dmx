@@ -10,7 +10,6 @@ import { WebSocketSubject, WebSocketSubjectConfig } from 'rxjs/webSocket';
 export class UniverseStreamService
 {
     private socketUrl = URLs.getSocketURL(SocketController.Universe);
-    private socket: WebSocket;
     private subject: WebSocketSubject<Uint8Array>;
 
     constructor()

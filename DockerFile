@@ -1,33 +1,44 @@
 FROM node:8.10 as node
 WORKDIR app
 
-COPY kadmium-dmx-webui/package.json /app/
+COPY kadmium-dmx.Webui/package.json /app/
 RUN npm install
 
-COPY kadmium-dmx-webui/ /app/
+COPY kadmium-dmx.Webui/ /app/
 ARG env=production
 
 RUN npm run build -- --prod --configuration=$env
 
-FROM microsoft/aspnetcore-build:2.0 AS build-env
+FROM microsoft/dotnet:2.1-sdk AS build-env
 WORKDIR /app
 
 # Copy csproj and restore as distinct layers
-COPY kadmium-dmx-core/*.csproj ./kadmium-dmx-core/
-COPY kadmium-dmx-test/*.csproj ./kadmium-dmx-test/
-COPY kadmium-dmx-webapi/*.csproj ./kadmium-dmx-webapi/
+COPY kadmium-dmx.Core/*.csproj ./kadmium-dmx.Core/
+COPY kadmium-dmx.Core.Test/*.csproj ./kadmium-dmx.Core.Test/
+COPY kadmium-dmx.Data/*.csproj ./kadmium-dmx.Data/
+COPY kadmium-dmx.Data.Test/*.csproj ./kadmium-dmx.Data.Test/
+COPY kadmium-dmx.DataAccess/*.csproj ./kadmium-dmx.DataAccess/
+COPY kadmium-dmx.DataAccess.Test/*.csproj ./kadmium-dmx.DataAccess.Test/
+COPY kadmium-dmx.Webapi/*.csproj ./kadmium-dmx.Webapi/
+COPY kadmium-dmx.Webapi.Test/*.csproj ./kadmium-dmx.Webapi.Test/
 COPY kadmium-dmx.sln .
 RUN dotnet restore
 
 # Copy everything else and build
-COPY kadmium-dmx-core/ ./kadmium-dmx-core/
-COPY kadmium-dmx-test/ ./kadmium-dmx-test/
-COPY kadmium-dmx-webapi/ ./kadmium-dmx-webapi/
+COPY kadmium-dmx.Core/ ./kadmium-dmx.Core/
+COPY kadmium-dmx.Core.Test/ ./kadmium-dmx.Core.Test/
+COPY kadmium-dmx.Data/ ./kadmium-dmx.Data/
+COPY kadmium-dmx.Data.Test/ ./kadmium-dmx.Data.Test/
+COPY kadmium-dmx.DataAccess/ ./kadmium-dmx.DataAccess/
+COPY kadmium-dmx.DataAccess.Test/ ./kadmium-dmx.DataAccess.Test/
+COPY kadmium-dmx.Webapi/ ./kadmium-dmx.Webapi/
+COPY kadmium-dmx.Webapi.Test/ ./kadmium-dmx.Webapi.Test/
 RUN dotnet publish -c Release -o out
-COPY --from=node /app/dist kadmium-dmx-webapi/out/wwwroot
+COPY --from=node /app/dist kadmium-dmx.Core/out/wwwroot
 
 # Build runtime image
-FROM microsoft/aspnetcore:2.0
+FROM microsoft/dotnet:2.1-aspnetcore-runtime
 WORKDIR /app/kadmium-dmx-webapi
-COPY --from=build-env /app/kadmium-dmx-webapi/out .
+COPY --from=build-env /app/kadmium-dmx.Webapi/out .
+COPY --from=node /app/dist/**/* ./wwwroot/
 ENTRYPOINT ["dotnet", "kadmium-dmx-webapi.dll"]

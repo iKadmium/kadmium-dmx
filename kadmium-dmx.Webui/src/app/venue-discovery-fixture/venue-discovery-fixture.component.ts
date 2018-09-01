@@ -1,5 +1,6 @@
 import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
-import { ActiveFixture, ActiveAttribute } from "api/models";
+import { ActiveFixture, ActiveAttribute, IDMXChannelData, FixtureData } from "api/models";
+import { FixtureDataWithDefinition } from '../venue-discovery/venue-discovery.component';
 
 @Component({
 	selector: 'app-venue-discovery-fixture',
@@ -8,19 +9,19 @@ import { ActiveFixture, ActiveAttribute } from "api/models";
 })
 export class VenueDiscoveryFixtureComponent implements OnInit
 {
-	@Input() fixture: ActiveFixture;
-	@Output("removeFixture") removeFixtureClick = new EventEmitter<ActiveFixture>();
-	public channels: ActiveAttribute[];
+	@Input() fixture: FixtureDataWithDefinition;
+	@Output("removeFixture") removeFixtureClick = new EventEmitter<FixtureData>();
+	public channels: IDMXChannelData[];
 	constructor() { }
 
 	ngOnInit()
 	{
-		this.channels = this.fixture.attributes.filter(x => x.dmx);
+		this.channels = this.fixture.definition.channels;
 	}
 
 	public removeFixture(): void
 	{
-		this.removeFixtureClick.emit(this.fixture);
+		this.removeFixtureClick.emit(this.fixture.fixture);
 	}
 
 }

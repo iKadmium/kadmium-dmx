@@ -1,13 +1,11 @@
-import { Component, OnInit, Input } from '@angular/core';
-import { Status } from "../status";
-import { PreviewVenue } from "../preview-venue";
-import { PreviewUniverse } from "../preview-universe";
+import { Component, Input, OnInit } from '@angular/core';
 import { MatDialog } from '@angular/material';
-import { AnimationLibrary } from "../animation-library";
-import { UniverseData } from "api/models";
-import { VenueNameDialogComponent } from "../venue-name-dialog/venue-name-dialog.component";
 import { APIClient, IVenueData } from 'api';
+import { UniverseData } from "api/models";
 import { MessageService } from 'app/message.service';
+import { AnimationLibrary } from "../animation-library";
+import { Status } from "../status";
+import { VenueNameDialogComponent } from "../venue-name-dialog/venue-name-dialog.component";
 
 @Component({
     selector: 'app-dashboard-venue',
@@ -18,7 +16,7 @@ import { MessageService } from 'app/message.service';
 export class DashboardVenueComponent implements OnInit
 {
     @Input() status: Status;
-    public venue: PreviewVenue;
+    public venue: IVenueData;
     public venueSkeletons: string[];
 
     public loading: boolean;
@@ -52,7 +50,7 @@ export class DashboardVenueComponent implements OnInit
         try
         {
             let response = await this.apiClient.getActiveVenue().toPromise();
-            this.venue = new PreviewVenue().load(response);
+            this.venue = response;
         }
         catch (reason)
         {
@@ -67,22 +65,9 @@ export class DashboardVenueComponent implements OnInit
         return this.venue.universes.length;
     }
 
-    public getFixtureCount(universe: PreviewUniverse): number
+    public getFixtureCount(universe: UniverseData): number
     {
         return universe.fixtures.length;
-    }
-
-    public getDMXChannelCount(universe: PreviewUniverse): number
-    {
-        if (this.venue == null) { return 0 };
-
-        let sum = 0;
-        for (let fixture of universe.fixtures)
-        {
-            sum += fixture.channelNumberMap.size;
-        }
-
-        return sum;
     }
 
     public async loadVenue(name: string): Promise<void>
@@ -104,9 +89,9 @@ export class DashboardVenueComponent implements OnInit
     public async newVenue(): Promise<void>
     {
         let dialogRef = this.dialog.open(VenueNameDialogComponent);
-        let next = await dialogRef.afterClosed().toPromise();
+        let result = await dialogRef.afterClosed().toPromise();
 
-        if (next != null)
+        if (result != null)
         {
             let universe: UniverseData = {
                 fixtures: [],
@@ -114,12 +99,12 @@ export class DashboardVenueComponent implements OnInit
                 universeID: 1
             };
             let venue: IVenueData = {
-                name: next,
+                name: result,
                 universes: [universe]
             };
             try
             {
-                await this.apiClient.postVenue({ value: venue });
+                await this.apiClient.postVenue({ value: venue }).toPromise();
                 this.messageService.info(venue.name + " successfully created");
                 await this.loadVenue(venue.name);
             }

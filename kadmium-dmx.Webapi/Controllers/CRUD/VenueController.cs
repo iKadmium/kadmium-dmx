@@ -35,15 +35,10 @@ namespace kadmium_dmx_webapi.Controllers
 
         [HttpGet("[action]")]
         [SwaggerOperation(OperationId = "GetActiveVenue")]
-        public ActiveVenue GetActive()
+        public async Task<IVenueData> GetActive()
         {
-            ActiveVenue response = new ActiveVenue
-            {
-                Name = MasterController.Venue?.Name,
-                Universes = from universe in MasterController.Venue?.Universes ?? Enumerable.Empty<Universe>()
-                            select UniverseController.GetActiveUniverse(universe)
-            };
-            return response;
+            var venueName = MasterController.Venue.Name;
+            return await Get(venueName);
         }
 
         [HttpPost("[action]/{name}")]

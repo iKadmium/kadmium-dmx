@@ -1,9 +1,0 @@
-.groupNameContainer {
-    flex-grow: 1;
-    flex-direction: column;
-    width: 100%;
-}
-
-.groupName {
-    width: 100%;
-}

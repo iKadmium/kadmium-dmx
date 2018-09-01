@@ -1,7 +1,0 @@
-<mat-grid-list [cols]="colCount">
-    <mat-grid-tile *ngFor="let fixture of universe.fixtures">
-        <mat-grid-tile-header [routerLink]="fixture.address">{{fixture.address}} ({{fixture.group}})</mat-grid-tile-header>
-        <mat-grid-tile-footer [routerLink]="fixture.address">{{fixture.manufacturer}} {{fixture.model}}</mat-grid-tile-footer>
-        <app-dashboard-fixture-preview [fixture]="fixture" [routerLink]="fixture.address"></app-dashboard-fixture-preview>
-    </mat-grid-tile>
-</mat-grid-list>

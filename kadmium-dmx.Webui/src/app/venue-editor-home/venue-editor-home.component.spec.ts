@@ -1,15 +1,14 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
-
-import { VenueEditorHomeComponent } from './venue-editor-home.component';
 import { ReactiveFormsModule } from '@angular/forms';
-import { MockComponent } from 'ng-mocks';
-import { SidenavToggleComponent } from '../sidenav-toggle/sidenav-toggle.component';
-import { MatIcon, MatFormField, MatToolbar, MatCard, MatCardContent, MatCardTitle } from '@angular/material';
-import { UniversesComponent } from '../universes/universes.component';
-import { EditorService } from '../editor.service';
-import { IVenueData } from 'api';
-import { VenueTestHelper } from '../test/venue-test-helper';
+import { MatCard, MatCardContent, MatCardTitle, MatFormField, MatIcon, MatToolbar } from '@angular/material';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
+import { IVenueData } from 'api';
+import { MockComponent } from 'ng-mocks';
+import { EditorService } from '../editor.service';
+import { SidenavToggleComponent } from '../sidenav-toggle/sidenav-toggle.component';
+import { VenueTestHelper } from '../test/venue-test-helper';
+import { UniversesComponent } from '../universes/universes.component';
+import { VenueEditorHomeComponent } from './venue-editor-home.component';
 
 describe('VenueEditorHomeComponent', () =>
 {
@@ -40,7 +39,12 @@ describe('VenueEditorHomeComponent', () =>
 				NoopAnimationsModule
 			],
 			providers: [
-				{ provide: EditorService, useValue: jasmine.createSpyObj<EditorService<IVenueData>>({ getActive: venue }) }
+				{
+					provide: EditorService, useValue: jasmine.createSpyObj<EditorService<IVenueData>>({
+						getActive: venue,
+						isDirty: true
+					})
+				}
 			]
 		})
 		TestBed.compileComponents();
@@ -53,8 +57,12 @@ describe('VenueEditorHomeComponent', () =>
 		fixture.detectChanges();
 	});
 
-	it('should create', () =>
+	describe('component', () =>
 	{
-		expect(component).toBeTruthy();
+		it('should create', () =>
+		{
+			expect(component).toBeTruthy();
+		});
 	});
+
 });

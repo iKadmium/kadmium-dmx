@@ -21,6 +21,7 @@ bld/
 [Bb]in/
 [Oo]bj/
 dist/
+out/
 
 kadmium-osc-dmx-dotnet-webui/ClientApp/**/*.js
 kadmium-osc-dmx-dotnet-webui/ClientApp/**/*.js.map

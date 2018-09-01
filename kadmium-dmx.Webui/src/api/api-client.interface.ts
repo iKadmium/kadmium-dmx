@@ -4,7 +4,8 @@ import { Observable } from 'rxjs';
 import { HttpOptions } from './';
 import * as models from './models';
 
-export interface APIClientInterface {
+export interface APIClientInterface
+{
 
   getFixtureDefinition(
     args: {
@@ -120,7 +121,7 @@ export interface APIClientInterface {
 
   getActiveVenue(
     requestHttpOptions?: HttpOptions
-  ): Observable<models.ActiveVenue>;
+  ): Observable<models.IVenueData>;
 
   activateVenue(
     args: {

@@ -13,7 +13,7 @@
 		</app-venue-discovery-fixture>
 
 		<app-venue-discovery-unassigned *ngIf="isFirstUnassignedChannel(channel.address + 1)" [start]="channel.address + 1" [length]="getUnassignedBlockSize(channel.address + 1)"
-		 (valueChange)="updateValue($event.address, $event.value)" (addFixtureClick)="addFixture($event)" (addFixtureDefinitionClick)="addFixtureDefinition($event)"></app-venue-discovery-unassigned>
+		 (valueChange)="updateValue($event.address, $event.value)" (addFixtureClick)="addFixture($event.address)" (addFixtureDefinitionClick)="addFixtureDefinition($event)"></app-venue-discovery-unassigned>
 	</div>
 </div>
 

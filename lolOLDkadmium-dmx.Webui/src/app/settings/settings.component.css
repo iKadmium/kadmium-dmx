@@ -1,8 +1,0 @@
-.unicastTargetWrapper {
-    width: 100%;
-    flex-direction: row;
-}
-
-.unicastTargetName {
-    flex-grow: 1;
-}

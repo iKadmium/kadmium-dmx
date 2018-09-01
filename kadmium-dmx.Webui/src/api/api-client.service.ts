@@ -268,12 +268,12 @@ export class APIClient implements APIClientInterface
 
   getActiveVenue(
     requestHttpOptions?: HttpOptions
-  ): Observable<models.ActiveVenue>
+  ): Observable<models.IVenueData>
   {
     const path = `/api/Venue/GetActive`;
     const options: APIHttpOptions = { ...this.options, ...requestHttpOptions };
 
-    return this.sendRequest<models.ActiveVenue>('GET', path, options);
+    return this.sendRequest<models.IVenueData>('GET', path, options);
   }
 
   activateVenue(

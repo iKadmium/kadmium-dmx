@@ -77,7 +77,7 @@ namespace kadmium_dmx_webapi
                 c.SchemaFilter<EnumFilter>();
             });
 
-            MongoClient client = new MongoClient("mongodb://docker:32768");
+            MongoClient client = new MongoClient("mongodb://mongo:27017");
             var database = client.GetDatabase("kadmium-dmx");
             services.AddSingleton(x => database);
 
@@ -126,12 +126,7 @@ namespace kadmium_dmx_webapi
                     template: "{controller=Home}/{action=Index}/{id?}");
 
                 routes.MapSpaFallbackRoute("spa-fallback", new { controller = "Home", action = "Index" });
-
             });
-
-            //app.UseSwaggerUi3WithApiExplorer(config => {
-            //    config.GeneratorSettings.OperationProcessors.Add(new SwaggerOperationProcessor());
-            //});
 
             app.UseSwagger();
             app.UseSwaggerUI(c =>
