@@ -75,7 +75,7 @@ namespace kadmium_dmx_webapi
 
             var mongoAddress = Configuration
                 .GetSection("MongoDB")
-                .GetValue<string>("Host");
+                .GetValue<string>("ConnectionString");
             MongoClient client = new MongoClient(mongoAddress);
             var databaseName = Configuration
                 .GetSection("MongoDB")

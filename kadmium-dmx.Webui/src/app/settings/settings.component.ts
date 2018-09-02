@@ -18,7 +18,8 @@ import { Saveable } from '../unsaved-changes';
 export class SettingsComponent implements Saveable, OnInit
 {
     settings: Settings;
-    public saving: boolean;
+    public loading: boolean = true;
+    public saving: boolean = false;
     enttecPorts: string[];
     activeTab: string;
 
@@ -48,17 +49,13 @@ export class SettingsComponent implements Saveable, OnInit
                 {
                     this.settings = response;
                     this.fakeTargets = this.settings.sacnTransmitter.unicast.map(x => { return { target: x } });
+                    this.loading = false;
                 });
         }
         catch (error)
         {
             this.messageService.error(error);
         }
-    }
-
-    public get loading(): boolean
-    {
-        return this.settings == null || this.enttecPorts == null;
     }
 
     public async save(): Promise<void>
@@ -93,7 +90,7 @@ export class SettingsComponent implements Saveable, OnInit
 
     public hasUnsavedChanges(): boolean
     {
-        throw new Error("Method not implemented.");
+        return this.editorService.isDirty;
     }
 }
 
