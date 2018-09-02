@@ -12,12 +12,12 @@ export class VenueDiscoveryAddFixtureToVenueDialogComponent implements OnInit
 	public groups: IGroupData[];
 	public definitions: FixtureDefinitionSkeleton[];
 	public data;
-	constructor(private apiClient: APIClient) 
+	constructor(private apiClient: APIClient)
 	{
 		this.data = {
 			group: {},
 			fixture: {}
-		}
+		};
 	}
 
 	ngOnInit()

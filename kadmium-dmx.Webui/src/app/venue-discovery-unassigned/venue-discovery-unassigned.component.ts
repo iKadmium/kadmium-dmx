@@ -1,6 +1,15 @@
-import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
+import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
+import { MatDialog } from '@angular/material';
+import { APIClient, FixtureData, FixtureDefinitionSkeleton, IDMXChannelData, IFixtureDefinition, UniverseData } from 'api';
+// tslint:disable-next-line:max-line-length
+import { VenueDiscoveryAddFixtureDefinitionDialogComponent } from 'app/venue-discovery-add-fixture-definition-dialog/venue-discovery-add-fixture-definition-dialog.component';
+// tslint:disable-next-line:max-line-length
+import { VenueDiscoveryAddFixtureToVenueDialogComponent } from 'app/venue-discovery-add-fixture-to-venue-dialog/venue-discovery-add-fixture-to-venue-dialog.component';
+// tslint:disable-next-line:max-line-length
+import { VenueDiscoverySelectGroupDialogComponent } from 'app/venue-discovery-select-group-dialog/venue-discovery-select-group-dialog.component';
 import { AnimationLibrary } from "../animation-library";
-import { IDMXChannelData } from 'api';
+import { EditorService } from '../editor.service';
+import { MessageService } from '../message.service';
 
 @Component({
 	selector: 'app-venue-discovery-unassigned',
@@ -10,33 +19,32 @@ import { IDMXChannelData } from 'api';
 })
 export class VenueDiscoveryUnassignedComponent implements OnInit
 {
+	private universe: UniverseData;
 	@Input() start: number;
+	@Input() venueName: string;
 	@Input() length: number;
-	@Output("valueChange") valueChange = new EventEmitter<ValueChangeEvent>();
-	@Output("addFixtureClick") addFixtureClick = new EventEmitter<number>();
-	@Output("addFixtureDefinitionClick") addFixtureDefinitionClick = new EventEmitter<AddFixtureDefinitionEvent>();
+	@Output() valueChange = new EventEmitter<ValueChangeEvent>();
 
 	public channels: SelectableChannel[] = [];
 
-	constructor() { }
+	constructor(
+		private dialog: MatDialog,
+		private apiClient: APIClient,
+		private messageService: MessageService,
+		private editorService: EditorService<UniverseData>
+	) { }
 
 	ngOnInit()
 	{
-		let end = this.start + this.length;
-		for (let i = this.start; i < end; i++)
+		for (let i = 0; i < this.length; i++)
 		{
-			this.channels.push({ address: i, selected: false, min: 0, max: 255, name: "" });
+			this.channels.push({ address: i + this.start, selected: false, min: 0, max: 255, name: "" });
 		}
 	}
 
 	public updateValue(address: number, value: number): void
 	{
 		this.valueChange.emit({ address: address, value: value });
-	}
-
-	public addFixture(address: number): void
-	{
-		this.addFixtureClick.emit(address);
 	}
 
 	public selectChannel(channel: SelectableChannel, selected: boolean): void
@@ -51,25 +59,68 @@ export class VenueDiscoveryUnassignedComponent implements OnInit
 
 	public async addFixtureDefinition(): Promise<void>
 	{
-		let promise = new Promise<void>((resolve, reject) =>
+		const channels = JSON.parse(JSON.stringify(this.selectedChannels)) as IDMXChannelData[];
+		const result = await this.dialog
+			.open(VenueDiscoveryAddFixtureDefinitionDialogComponent, { data: { channels: channels, venue: this.venueName } })
+			.afterClosed()
+			.toPromise();
+		if (result)
 		{
-			let event = new AddFixtureDefinitionEvent();
-			event.channels = this.selectedChannels;
-			event.resolve = resolve;
-			event.reject = reject;
-			this.addFixtureDefinitionClick.emit(event);
-		});
-		try
-		{
-			await promise;
-			this.selectedChannels.forEach(channel => channel.selected = false);
-		}
-		catch (error)
-		{
-
+			const definition = result as IFixtureDefinition;
+			try
+			{
+				await this.apiClient.postFixtureDefinition({ value: definition }).toPromise();
+				const address = channels.map(x => x.address).sort()[0];
+				this.messageService.info(`${definition.skeleton.manufacturer} ${definition.skeleton.model} successfully added`);
+				const group = await this.getGroup();
+				await this.addFixtureToVenue(address, definition.skeleton, group);
+				this.selectedChannels.forEach(channel => channel.selected = false);
+			}
+			catch (error)
+			{
+				this.messageService.error(error);
+			}
 		}
 	}
 
+	public async addFixture(address: number): Promise<void>
+	{
+		const result = await this.dialog
+			.open(VenueDiscoveryAddFixtureToVenueDialogComponent)
+			.afterClosed()
+			.toPromise();
+		if (result != null)
+		{
+			this.addFixtureToVenue(address, result.fixture, result.group);
+		}
+	}
+
+	private async getGroup(): Promise<string>
+	{
+		const result = await this.dialog
+			.open(VenueDiscoverySelectGroupDialogComponent)
+			.afterClosed()
+			.toPromise();
+		if (result != null)
+		{
+			return result;
+		}
+	}
+
+	private async addFixtureToVenue(address: number, definition: FixtureDefinitionSkeleton, group: string): Promise<void>
+	{
+		const fixture: FixtureData = {
+			address: address,
+			group: group,
+			type: definition,
+			options: {
+				maxBrightness: 1,
+				axisOptions: {}
+			}
+		};
+		this.universe.fixtures.push(fixture);
+		this.editorService.isDirty = true;
+	}
 }
 
 export interface ValueChangeEvent
@@ -81,11 +132,4 @@ export interface ValueChangeEvent
 interface SelectableChannel extends IDMXChannelData
 {
 	selected: boolean;
-}
-
-export class AddFixtureDefinitionEvent
-{
-	public channels: SelectableChannel[];
-	public resolve: () => void;
-	public reject: () => void;
 }

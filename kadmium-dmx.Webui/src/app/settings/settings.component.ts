@@ -48,7 +48,7 @@ export class SettingsComponent implements Saveable, OnInit
                 .then(response =>
                 {
                     this.settings = response;
-                    this.fakeTargets = this.settings.sacnTransmitter.unicast.map(x => { return { target: x } });
+                    this.fakeTargets = this.settings.sacnTransmitter.unicast.map(x => ({ target: x }));
                     this.loading = false;
                 });
         }

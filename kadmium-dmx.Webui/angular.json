@@ -8,7 +8,6 @@
 			"sourceRoot": "src",
 			"projectType": "application",
 			"prefix": "app",
-			"schematics": {},
 			"architect": {
 				"build": {
 					"builder": "@angular-devkit/build-angular:browser",
@@ -123,5 +122,14 @@
 			}
 		}
 	},
-	"defaultProject": "kadmium-dmx.Webui"
+	"defaultProject": "kadmium-dmx.Webui",
+	"schematics": {
+		"@schematics/angular:component": {
+			"prefix": "app",
+			"styleext": "scss"
+		},
+		"@schematics/angular:directive": {
+			"prefix": "app"
+		}
+	}
 }

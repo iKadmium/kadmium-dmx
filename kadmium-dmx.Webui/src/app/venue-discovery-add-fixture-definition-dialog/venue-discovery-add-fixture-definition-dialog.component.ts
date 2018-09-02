@@ -10,11 +10,15 @@ import { FixtureType } from 'app/enums/fixture-type.enum';
 })
 export class VenueDiscoveryAddFixtureDefinitionDialogComponent implements OnInit
 {
-	public definition: IFixtureDefinition;
 	private static detectedAxis: string[] = ["Pan", "Tilt"];
-	private static axisSuffixes: string[][] = [[""], ["Fine", "Coarse"]]
+	private static axisSuffixes: string[][] = [[""], ["Fine", "Coarse"]];
 
-	constructor(public dialogRef: MatDialogRef<VenueDiscoveryAddFixtureDefinitionDialogComponent>, @Inject(MAT_DIALOG_DATA) data: AddFixtureDefinitionData)
+	public definition: IFixtureDefinition;
+
+	constructor(
+		public dialogRef: MatDialogRef<VenueDiscoveryAddFixtureDefinitionDialogComponent>,
+		@Inject(MAT_DIALOG_DATA) data: AddFixtureDefinitionData
+	)
 	{
 		this.definition = {
 			fixtureType: FixtureType.LED,
@@ -27,25 +31,25 @@ export class VenueDiscoveryAddFixtureDefinitionDialogComponent implements OnInit
 			}
 		};
 
-		this.definition.channels.sort((a, b) => 
+		this.definition.channels.sort((a, b) =>
 		{
 			return a.address - b.address;
 		});
 
-		let firstChannel = this.definition.channels[0].address;
+		const firstChannel = this.definition.channels[0].address;
 		this.definition.channels.forEach(x => x.address -= firstChannel - 1);
 
-		//create movement axis
-		for (let axisName of this.getAxisNames())
+		// create movement axis
+		for (const axisName of this.getAxisNames())
 		{
-			for (let variant of axisName.variants)
+			for (const variant of axisName.variants)
 			{
 				if (variant.names
 					.every(name => this.definition.channels
 						.map(channel => channel.name)
-						.indexOf(name) != -1))
+						.indexOf(name) !== -1))
 				{
-					let axis: MovementAxis = {
+					const axis: MovementAxis = {
 						min: -90,
 						max: 90,
 						name: axisName.axisName
@@ -58,15 +62,15 @@ export class VenueDiscoveryAddFixtureDefinitionDialogComponent implements OnInit
 
 	private getAxisNames(): ChannelAxisNameCollection[]
 	{
-		let collections: ChannelAxisNameCollection[] = [];
-		for (let axis of VenueDiscoveryAddFixtureDefinitionDialogComponent.detectedAxis)
+		const collections: ChannelAxisNameCollection[] = [];
+		for (const axis of VenueDiscoveryAddFixtureDefinitionDialogComponent.detectedAxis)
 		{
-			let collection = new ChannelAxisNameCollection();
+			const collection = new ChannelAxisNameCollection();
 			collection.axisName = axis;
-			for (let suffixCollection of VenueDiscoveryAddFixtureDefinitionDialogComponent.axisSuffixes)
+			for (const suffixCollection of VenueDiscoveryAddFixtureDefinitionDialogComponent.axisSuffixes)
 			{
-				let variant = new ChannelCollectionVariant();
-				for (let suffix of suffixCollection)
+				const variant = new ChannelCollectionVariant();
+				for (const suffix of suffixCollection)
 				{
 					variant.names.push(axis + suffix);
 				}
@@ -105,6 +109,6 @@ class ChannelCollectionVariant
 
 export class AddFixtureDefinitionData
 {
-	public channels: IDMXChannelData[]
+	public channels: IDMXChannelData[];
 	public venue: string;
 }

@@ -1,17 +1,14 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { MatDialog, PageEvent } from '@angular/material';
 import { ActivatedRoute } from "@angular/router";
-import { ActiveFixture, APIClient, IDMXChannelData, IFixtureDefinition } from 'api';
-import { ActiveUniverse, ActiveVenue, FixtureData, FixtureDefinitionSkeleton, IVenueData, UniverseData } from "api/models";
+import { APIClient, IDMXChannelData, IFixtureDefinition } from 'api';
+import { FixtureData, FixtureDefinitionSkeleton, IVenueData, UniverseData } from "api/models";
 import { MessageService } from 'app/message.service';
 import { Subscription } from 'rxjs';
 import { AnimationLibrary } from "../animation-library";
 import { DeleteConfirmDialogComponent } from "../delete-confirm-dialog/delete-confirm-dialog.component";
+import { EditorService } from '../editor.service';
 import { UniverseStreamService } from "../universe-stream.service";
-import { VenueDiscoveryAddFixtureDefinitionDialogComponent } from '../venue-discovery-add-fixture-definition-dialog/venue-discovery-add-fixture-definition-dialog.component';
-import { VenueDiscoveryAddFixtureToVenueDialogComponent } from "../venue-discovery-add-fixture-to-venue-dialog/venue-discovery-add-fixture-to-venue-dialog.component";
-import { VenueDiscoverySelectGroupDialogComponent } from "../venue-discovery-select-group-dialog/venue-discovery-select-group-dialog.component";
-import { AddFixtureDefinitionEvent } from "../venue-discovery-unassigned/venue-discovery-unassigned.component";
 
 @Component({
 	selector: 'app-venue-discovery',
@@ -21,17 +18,17 @@ import { AddFixtureDefinitionEvent } from "../venue-discovery-unassigned/venue-d
 })
 export class VenueDiscoveryComponent implements OnInit, OnDestroy
 {
-	public dmxChannels: DiscoveryDMXChannel[]
+	public dmxChannels: DiscoveryDMXChannel[];
 
-	public loaded: boolean = false;
-	public saving: boolean = false;
+	public loaded = false;
+	public saving = false;
 
-	public displayFrom: number = 1;
-	public displayTo: number = 49;
-	public pageSize: number = 48;
+	public displayFrom = 1;
+	public pageSize = 48;
+	public displayTo = this.displayFrom + this.pageSize;
 	public filteredChannels: DiscoveryDMXChannel[];
 
-	public universeID: number = 1;
+	public universeID = 1;
 
 	public venue: IVenueData;
 	public universe: UniverseData;
@@ -45,6 +42,7 @@ export class VenueDiscoveryComponent implements OnInit, OnDestroy
 		private apiClient: APIClient,
 		private universeStreamService: UniverseStreamService,
 		public messageService: MessageService,
+		private editorService: EditorService<UniverseData>,
 		private route: ActivatedRoute
 	)
 	{
@@ -57,7 +55,7 @@ export class VenueDiscoveryComponent implements OnInit, OnDestroy
 	{
 		for (let i = 0; i < 512; i++)
 		{
-			let channel: DiscoveryDMXChannel = {
+			const channel: DiscoveryDMXChannel = {
 				name: "",
 				address: i,
 				min: 0,
@@ -67,10 +65,10 @@ export class VenueDiscoveryComponent implements OnInit, OnDestroy
 			this.dmxChannels.push(channel);
 		}
 
-		this.universeID = parseInt(this.route.snapshot.params["universeID"]);
+		this.universeID = parseInt(this.route.snapshot.params["universeID"], 10);
 
 		this.subscription = this.universeStreamService.open(this.universeID).subscribe(() => { });
-		this.pageEvent({ length: 512, pageIndex: 0, pageSize: 48 })
+		this.pageEvent({ length: 512, pageIndex: 0, pageSize: 48 });
 		this.refreshVenue();
 	}
 
@@ -84,17 +82,19 @@ export class VenueDiscoveryComponent implements OnInit, OnDestroy
 		this.apiClient.getActiveVenue().toPromise().then(async venue =>
 		{
 			this.venue = venue;
-			this.universe = this.venue.universes.find(x => x.universeID == this.universeID);
+			this.universe = this.venue.universes.find(x => x.universeID === this.universeID);
+			this.editorService.setActive(this.universe);
 
 			this.fixtureChannelMap.clear();
-			let fixtureDefinitions = await this.getDefinitions(this.universe.fixtures.map(x => x.type));
-			for (let fixture of this.universe.fixtures)
+			const fixtureDefinitions = await this.getDefinitions(this.universe.fixtures.map(x => x.type));
+			for (const fixture of this.universe.fixtures)
 			{
-				let definition = fixtureDefinitions.find(x => x.skeleton.manufacturer == fixture.type.manufacturer && x.skeleton.model == fixture.type.model);
-				for (let channel of definition.channels)
+				const definition = fixtureDefinitions.find(x => x.skeleton.manufacturer === fixture.type.manufacturer &&
+					x.skeleton.model === fixture.type.model);
+				for (const channel of definition.channels)
 				{
-					let address = channel.address + fixture.address - 1;
-					let fixtureWithDefinition: FixtureDataWithDefinition = {
+					const address = channel.address + fixture.address - 1;
+					const fixtureWithDefinition: FixtureDataWithDefinition = {
 						definition: definition,
 						fixture: fixture
 					};
@@ -107,10 +107,10 @@ export class VenueDiscoveryComponent implements OnInit, OnDestroy
 
 	private async getDefinitions(skeletons: FixtureDefinitionSkeleton[]): Promise<IFixtureDefinition[]>
 	{
-		let promises = skeletons
-			.filter((value, index, array) => array.indexOf(value) == index)
+		const promises = skeletons
+			.filter((value, index, array) => array.indexOf(value) === index)
 			.map(x => this.apiClient.getFixtureDefinition({ manufacturer: x.manufacturer, model: x.model }).toPromise());
-		let definitions = await Promise.all(promises);
+		const definitions = await Promise.all(promises);
 		return definitions;
 	}
 
@@ -121,12 +121,12 @@ export class VenueDiscoveryComponent implements OnInit, OnDestroy
 
 	public isFirstFixtureChannel(channel: number): boolean
 	{
-		let fixture = this.fixtureChannelMap.get(channel);
+		const fixture = this.fixtureChannelMap.get(channel);
 		if (fixture == null)
 		{
 			return false;
 		}
-		return fixture.fixture.address == channel;
+		return fixture.fixture.address === channel;
 	}
 
 	public isFirstUnassignedChannel(channel: number): boolean
@@ -158,67 +158,8 @@ export class VenueDiscoveryComponent implements OnInit, OnDestroy
 		return max;
 	}
 
-	public async addFixtureDefinition(event: AddFixtureDefinitionEvent): Promise<void>
+	public async save(): Promise<void>
 	{
-		let channels = JSON.parse(JSON.stringify(event.channels)) as IDMXChannelData[];
-		let dialogRef = this.dialog.open(VenueDiscoveryAddFixtureDefinitionDialogComponent, { data: { channels: channels, venue: this.venue.name } });
-		let result = await dialogRef.afterClosed().toPromise();
-		if (result)
-		{
-			let definition = result as IFixtureDefinition;
-			try
-			{
-				this.saving = true;
-				await this.apiClient.postFixtureDefinition({ value: definition }).toPromise();
-				this.saving = false;
-				let address = event.channels.map(x => x.address).sort()[0];
-				this.messageService.info(`${definition.skeleton.manufacturer} ${definition.skeleton.model} successfully added`);
-				event.resolve();
-				let group = await this.getGroup();
-				await this.addFixtureToVenue(address, definition.skeleton, group);
-			}
-			catch (error)
-			{
-				this.saving = false;
-				event.reject();
-				this.messageService.error(error);
-			}
-		}
-	}
-
-	public addFixture(address: number): void
-	{
-		let dialogRef = this.dialog.open(VenueDiscoveryAddFixtureToVenueDialogComponent);
-		dialogRef.afterClosed().subscribe(next =>
-		{
-			if (next != null)
-			{
-				this.addFixtureToVenue(address, next.fixture, next.group);
-			}
-		});
-	}
-
-	private async getGroup(): Promise<string>
-	{
-		let result = await this.dialog.open(VenueDiscoverySelectGroupDialogComponent).afterClosed().toPromise();
-		if (result)
-		{
-			return result;
-		}
-	}
-
-	private async addFixtureToVenue(address: number, definition: FixtureDefinitionSkeleton, group: string): Promise<void>
-	{
-		let fixture: FixtureData = {
-			address: address,
-			group: group,
-			type: definition,
-			options: {
-				maxBrightness: 1,
-				axisOptions: {}
-			}
-		};
-		this.universe.fixtures.push(fixture);
 		try
 		{
 			this.saving = true;
@@ -238,10 +179,10 @@ export class VenueDiscoveryComponent implements OnInit, OnDestroy
 
 	public async pageEvent(event: PageEvent): Promise<void>
 	{
-		let promise = new Promise<void>(() =>
+		const promise = new Promise<void>(() =>
 		{
 			this.displayFrom = event.pageSize * event.pageIndex + 1;
-			let displayTo = this.displayFrom + event.pageSize;
+			const displayTo = this.displayFrom + event.pageSize;
 			this.displayTo = displayTo > 513 ? 513 : displayTo;
 		});
 
@@ -252,8 +193,8 @@ export class VenueDiscoveryComponent implements OnInit, OnDestroy
 
 	public async removeFixture(fixture: FixtureData): Promise<void>
 	{
-		let name = `${fixture.type.manufacturer} ${fixture.type.model} on channel ${fixture.address}`;
-		let result = await this.dialog.open(DeleteConfirmDialogComponent, { data: name }).afterClosed().toPromise();
+		const name = `${fixture.type.manufacturer} ${fixture.type.model} on channel ${fixture.address}`;
+		const result = await this.dialog.open(DeleteConfirmDialogComponent, { data: name }).afterClosed().toPromise();
 		if (result)
 		{
 			await this.removeFixtureFromVenue(fixture);
@@ -262,7 +203,7 @@ export class VenueDiscoveryComponent implements OnInit, OnDestroy
 
 	private async removeFixtureFromVenue(fixture: FixtureData): Promise<void>
 	{
-		let index = this.universe.fixtures.findIndex(x => x.address == fixture.address);
+		const index = this.universe.fixtures.findIndex(x => x.address === fixture.address);
 		this.universe.fixtures.splice(index, 1);
 		try
 		{
@@ -286,6 +227,6 @@ interface DiscoveryDMXChannel extends IDMXChannelData
 
 export interface FixtureDataWithDefinition
 {
-	fixture: FixtureData,
-	definition: IFixtureDefinition
+	fixture: FixtureData;
+	definition: IFixtureDefinition;
 }

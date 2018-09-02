@@ -4,7 +4,8 @@
 		<div class="channel-row" *ngFor="let channel of channels">
 			<div style="flex: 1" class="address-cell">{{channel.address}}</div>
 			<div class="column slider-cell">
-				<mat-slider thumbLabel="true" (input)="updateValue(channel.address - 1, $event.value)" min="0" max="255">
+				<mat-slider thumbLabel="true" class="channel-value-slider" (input)="updateValue(channel.address - 1, $event.value)" min="0"
+				 max="255">
 				</mat-slider>
 				<div *ngIf="channel.selected" class="column">
 					<mat-form-field>
@@ -20,10 +21,10 @@
 
 			</div>
 			<div style="flex: 1" class="actions-cell">
-				<button mat-icon-button *ngIf="!channel.selected" (click)="selectChannel(channel, true)" matTooltip="Add new type of fixture">
+				<button mat-icon-button *ngIf="!channel.selected" class="select-channel-button" (click)="selectChannel(channel, true)" matTooltip="Add new type of fixture">
 					<mat-icon>create_new_folder</mat-icon>
 				</button>
-				<button mat-icon-button *ngIf="channel.selected" color="warn" (click)="selectChannel(channel, false)">
+				<button mat-icon-button class="deselect-channel-button" *ngIf="channel.selected" color="warn" (click)="selectChannel(channel, false)">
 					<mat-icon>remove_circle</mat-icon>
 				</button>
 				<button mat-icon-button *ngIf="!channel.selected" (click)="addFixture(channel)" matTooltip="Add fixture from library">
@@ -33,6 +34,6 @@
 		</div>
 	</mat-card-content>
 </mat-card>
-<button mat-fab (click)="addFixtureDefinition()" *ngIf="selectedChannels.length > 0" @slideInBackOut class="fixed-fab">
+<button mat-fab (click)="addFixtureDefinition()" *ngIf="selectedChannels.length > 0" @slideInBackOut class="fixed-fab create-new-fixture-button">
 	<mat-icon class="mat-18">create_new_folder</mat-icon>
 </button>

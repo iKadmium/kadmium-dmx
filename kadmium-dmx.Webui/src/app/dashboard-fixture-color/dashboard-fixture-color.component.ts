@@ -15,9 +15,9 @@ export class DashboardFixtureColorComponent implements OnInit
 	@Input() universeID: number;
 	@Input() attributes: PreviewAttribute[];
 	@Output() setValue = new EventEmitter<AttributeUpdateMessage>();
-	public color: string = "";
+	public color = "";
 
-	constructor() 
+	constructor()
 	{
 	}
 
@@ -27,12 +27,12 @@ export class DashboardFixtureColorComponent implements OnInit
 
 	public setColor(color: string): void
 	{
-		let red = color.slice(1, 3);
-		let green = color.slice(3, 5);
-		let blue = color.slice(5, 7);
-		let hsv = this.RGBtoHSV(parseInt(red, 16), parseInt(green, 16), parseInt(blue, 16));
+		const red = color.slice(1, 3);
+		const green = color.slice(3, 5);
+		const blue = color.slice(5, 7);
+		const hsv = this.RGBtoHSV(parseInt(red, 16), parseInt(green, 16), parseInt(blue, 16));
 
-		let messages: AttributeUpdateMessage[] = [
+		const messages: AttributeUpdateMessage[] = [
 			{
 				attributeName: "Hue",
 				attributeValue: hsv.h,
@@ -51,9 +51,9 @@ export class DashboardFixtureColorComponent implements OnInit
 				fixtureAddress: this.fixture.address,
 				universeID: this.universeID
 			}
-		]
+		];
 
-		for (let message of messages)
+		for (const message of messages)
 		{
 			this.setValue.emit(message);
 		}
@@ -62,11 +62,12 @@ export class DashboardFixtureColorComponent implements OnInit
 
 	public RGBtoHSV(r: number, g: number, b: number)
 	{
-		let max = Math.max(r, g, b), min = Math.min(r, g, b),
-			d = max - min,
-			h,
-			s = (max === 0 ? 0 : d / max),
-			v = max / 255;
+		const max = Math.max(r, g, b);
+		const min = Math.min(r, g, b);
+		const d = max - min;
+		let h;
+		const s = (max === 0 ? 0 : d / max);
+		const v = max / 255;
 
 		switch (max)
 		{

@@ -1,26 +1,23 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
-
-import { VenueDiscoveryFixtureComponent } from './venue-discovery-fixture.component';
+import { MatCard, MatCardActions, MatCardContent, MatCardSubtitle, MatCardTitle, MatIcon } from '@angular/material';
 import { MockComponent } from 'ng-mocks';
-import { MatCard, MatCardTitle, MatCardContent, MatIcon, MatCardActions } from '@angular/material';
-import { ActiveFixture } from 'api';
+import { FixtureDataTestHelpers } from '../test/fixture-data-test-helpers';
+import { FixtureDefinitionTestHelpers } from '../test/fixture-definition-test-helpers';
+import { FixtureDataWithDefinition } from '../venue-discovery/venue-discovery.component';
+import { VenueDiscoveryFixtureComponent } from './venue-discovery-fixture.component';
+
 
 describe('VenueDiscoveryFixtureComponent', () =>
 {
 	let component: VenueDiscoveryFixtureComponent;
 	let fixture: ComponentFixture<VenueDiscoveryFixtureComponent>;
-	let activeFixture: ActiveFixture;
+	let activeFixture: FixtureDataWithDefinition;
 
 	beforeEach(async(() =>
 	{
 		activeFixture = {
-			address: 1,
-			attributes: [],
-			colorWheel: [],
-			group: "",
-			manufacturer: "",
-			model: "",
-			movementAxis: []
+			fixture: FixtureDataTestHelpers.getFixtureData(),
+			definition: FixtureDefinitionTestHelpers.getRGBFixtureDefinition()
 		};
 
 		TestBed.configureTestingModule({
@@ -28,6 +25,7 @@ describe('VenueDiscoveryFixtureComponent', () =>
 				VenueDiscoveryFixtureComponent,
 				MockComponent(MatCard),
 				MockComponent(MatCardTitle),
+				MockComponent(MatCardSubtitle),
 				MockComponent(MatCardContent),
 				MockComponent(MatIcon),
 				MockComponent(MatCardActions)
