@@ -54,18 +54,14 @@ namespace kadmium_dmx_webapi
 
             services.AddMvcCore().AddApiExplorer();
 
-            services.AddMvc(options =>
-            {
-                options.Conventions.Add(new KebabCaseRoutingConvention());
-            })
-            .SetCompatibilityVersion(Microsoft.AspNetCore.Mvc.CompatibilityVersion.Latest)
-            .AddJsonOptions(options => {
-                options.SerializerSettings.Converters.Add(new StringEnumConverter());
-            });
+            services.AddMvc(options => options.Conventions.Add(new KebabCaseRoutingConvention()))
+                .SetCompatibilityVersion(Microsoft.AspNetCore.Mvc.CompatibilityVersion.Latest)
+                .AddJsonOptions(options => options.SerializerSettings.Converters.Add(new StringEnumConverter()));
 
             services.AddCors(options =>
             {
-                options.AddPolicy("AllowAll", p => p.AllowAnyOrigin()
+                options.AddPolicy("AllowAll", p => p
+                    .AllowAnyOrigin()
                     .AllowAnyMethod()
                     .AllowAnyHeader());
             });
@@ -77,8 +73,14 @@ namespace kadmium_dmx_webapi
                 c.SchemaFilter<EnumFilter>();
             });
 
-            MongoClient client = new MongoClient("mongodb://mongo:27017");
-            var database = client.GetDatabase("kadmium-dmx");
+            var mongoAddress = Configuration
+                .GetSection("MongoDB")
+                .GetValue<string>("Host");
+            MongoClient client = new MongoClient(mongoAddress);
+            var databaseName = Configuration
+                .GetSection("MongoDB")
+                .GetValue<string>("Database");
+            var database = client.GetDatabase(databaseName);
             services.AddSingleton(x => database);
 
             ISettingsStore settingsStore = new FileSettingsStore();
@@ -93,7 +95,6 @@ namespace kadmium_dmx_webapi
 
             services.AddSingleton<IMasterController>(MasterController);
             services.AddSingleton<IRenderer>(MasterController.Renderer);
-
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

@@ -38,7 +38,12 @@ namespace kadmium_dmx_webapi.Controllers
         public async Task<IVenueData> GetActive()
         {
             var venueName = MasterController.Venue.Name;
-            return await Get(venueName);
+            var venue = await Get(venueName);
+            if(venue != null)
+            {
+                return venue;
+            }
+            return null;
         }
 
         [HttpPost("[action]/{name}")]
