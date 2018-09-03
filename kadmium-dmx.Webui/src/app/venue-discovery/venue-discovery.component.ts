@@ -38,7 +38,6 @@ export class VenueDiscoveryComponent implements OnInit, OnDestroy
 	private subscription: Subscription;
 
 	constructor(
-		private dialog: MatDialog,
 		private apiClient: APIClient,
 		private universeStreamService: UniverseStreamService,
 		public messageService: MessageService,
@@ -189,34 +188,6 @@ export class VenueDiscoveryComponent implements OnInit, OnDestroy
 		this.filteredChannels = this.dmxChannels.slice(this.displayFrom - 1, this.displayTo);
 
 		await promise;
-	}
-
-	public async removeFixture(fixture: FixtureData): Promise<void>
-	{
-		const name = `${fixture.type.manufacturer} ${fixture.type.model} on channel ${fixture.address}`;
-		const result = await this.dialog.open(DeleteConfirmDialogComponent, { data: name }).afterClosed().toPromise();
-		if (result)
-		{
-			await this.removeFixtureFromVenue(fixture);
-		}
-	}
-
-	private async removeFixtureFromVenue(fixture: FixtureData): Promise<void>
-	{
-		const index = this.universe.fixtures.findIndex(x => x.address === fixture.address);
-		this.universe.fixtures.splice(index, 1);
-		try
-		{
-			await this.apiClient.putVenue({ originalName: this.venue.name, value: this.venue }).toPromise();
-			this.messageService.info("Successfully update " + this.venue.name);
-			this.loaded = false;
-			await this.apiClient.activateVenue({ name: this.venue.name }).toPromise();
-			await this.refreshVenue();
-		}
-		catch (error)
-		{
-			this.messageService.error(error);
-		}
 	}
 }
 

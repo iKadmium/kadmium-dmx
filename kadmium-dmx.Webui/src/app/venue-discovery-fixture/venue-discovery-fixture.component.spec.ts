@@ -1,5 +1,5 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
-import { MatCard, MatCardActions, MatCardContent, MatCardSubtitle, MatCardTitle, MatIcon } from '@angular/material';
+import { MatCard, MatCardActions, MatCardContent, MatCardSubtitle, MatCardTitle, MatIcon, MatDialog } from '@angular/material';
 import { MockComponent } from 'ng-mocks';
 import { FixtureDataTestHelpers } from '../test/fixture-data-test-helpers';
 import { FixtureDefinitionTestHelpers } from '../test/fixture-definition-test-helpers';
@@ -29,6 +29,9 @@ describe('VenueDiscoveryFixtureComponent', () =>
 				MockComponent(MatCardContent),
 				MockComponent(MatIcon),
 				MockComponent(MatCardActions)
+			],
+			providers: [
+				{ provide: MatDialog, useValue: jasmine.createSpyObj<MatDialog>({ open: null }) }
 			]
 		});
 

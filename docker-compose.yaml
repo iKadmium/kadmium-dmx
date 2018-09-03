@@ -1,6 +1,7 @@
 version: "3.6"
 services:
     kadmium-dmx:
+        restart: unless-stopped
         image: kadmium-dmx:latest
         volumes:
             - kadmium-dmx-volume:/app/kadmium-dmx-webapi/kadmium-dmx/data
@@ -10,8 +11,8 @@ services:
         networks:
             - default
     mongo:
-        image: mongo:latest
         restart: unless-stopped
+        image: mongo:latest
         ports:
             - "27017:27017"
         networks:

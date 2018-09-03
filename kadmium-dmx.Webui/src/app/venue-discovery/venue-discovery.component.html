@@ -1,24 +1,28 @@
-<mat-toolbar class="main-toolbar">
-	<app-sidenav-toggle></app-sidenav-toggle>
-	{{universe?.name}} Discovery
-	<span class="toolbar-spacer"></span>
-</mat-toolbar>
+<form (ngSubmit)="save()">
+	<mat-toolbar class="main-toolbar">
+		<app-sidenav-toggle></app-sidenav-toggle>
+		{{universe?.name}} Discovery
+		<span class="toolbar-spacer"></span>
+		<button mat-icon-button color="primary" type="submit" matTooltip="Save">
+			<mat-icon aria-label="Save">save</mat-icon>
+		</button>
+	</mat-toolbar>
 
-<app-busy-card [loading]="!loaded" [saving]="saving"></app-busy-card>
+	<app-busy-card [loading]="!loaded" [saving]="saving"></app-busy-card>
 
-<div *ngIf="loaded">
-	<div *ngFor="let channel of filteredChannels; let i = index">
-		<app-venue-discovery-fixture *ngIf="isFirstFixtureChannel(channel.address + 1)" [fixture]="fixtureChannelMap.get(channel.address + 1)"
-		 (removeFixture)="removeFixture($event)">
-		</app-venue-discovery-fixture>
+	<div *ngIf="loaded">
+		<div *ngFor="let channel of filteredChannels; let i = index">
+			<app-venue-discovery-fixture *ngIf="isFirstFixtureChannel(channel.address + 1)" [fixture]="fixtureChannelMap.get(channel.address + 1)">
+			</app-venue-discovery-fixture>
 
-		<app-venue-discovery-unassigned *ngIf="isFirstUnassignedChannel(channel.address + 1)" [start]="channel.address + 1" [length]="getUnassignedBlockSize(channel.address + 1)"
-		 [venueName]="venue.name" (valueChange)="updateValue($event.address, $event.value)"></app-venue-discovery-unassigned>
+			<app-venue-discovery-unassigned *ngIf="isFirstUnassignedChannel(channel.address + 1)" [start]="channel.address + 1" [length]="getUnassignedBlockSize(channel.address + 1)"
+			 [venueName]="venue.name" (valueChange)="updateValue($event.address, $event.value)"></app-venue-discovery-unassigned>
+		</div>
 	</div>
-</div>
 
-<mat-card *ngIf="loaded" class="dashboard-card">
-	<mat-card-content>
-		<mat-paginator [length]="512" [(pageSize)]="pageSize" [pageIndex]="0" [pageSizeOptions]="[24, 48, 64, 128]" (page)="pageEvent($event)"></mat-paginator>
-	</mat-card-content>
-</mat-card>
+	<mat-card *ngIf="loaded" class="dashboard-card">
+		<mat-card-content>
+			<mat-paginator [length]="512" [(pageSize)]="pageSize" [pageIndex]="0" [pageSizeOptions]="[24, 48, 64, 128]" (page)="pageEvent($event)"></mat-paginator>
+		</mat-card-content>
+	</mat-card>
+</form>
