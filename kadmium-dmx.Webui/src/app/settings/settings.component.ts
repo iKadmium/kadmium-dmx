@@ -3,11 +3,10 @@ import { NgForm } from '@angular/forms';
 import { Title } from "@angular/platform-browser";
 import { APIClient } from 'api';
 import { Settings } from "api/models";
-import { MessageService } from 'app/message.service';
+import { MessageService } from 'app/services/message.service';
 import { AnimationLibrary } from "../animation-library";
-import { EditorService } from '../editor.service';
+import { EditorService } from '../services/editor.service';
 import { Saveable } from '../unsaved-changes';
-
 
 @Component({
 	selector: 'app-settings',
@@ -17,12 +16,10 @@ import { Saveable } from '../unsaved-changes';
 })
 export class SettingsComponent implements Saveable, OnInit
 {
-	settings: Settings;
 	public loading = true;
 	public saving = false;
-	enttecPorts: string[];
-	activeTab: string;
 
+	public settings: Settings;
 	public fakeTargets: UnicastTarget[];
 
 	@ViewChild("settingsForm") formChild: NgForm;

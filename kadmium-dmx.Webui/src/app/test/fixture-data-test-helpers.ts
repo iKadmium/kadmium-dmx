@@ -4,18 +4,18 @@ import { FixtureDefinitionSkeletonHelpers } from "./fixture-definition-skeleton-
 
 export class FixtureDataTestHelpers
 {
-    public static getFixtureData(
-        address = 1,
-        group = "Group",
-        type = FixtureDefinitionSkeletonHelpers.getFixtureDefinitionSkeleton(),
-        options = FixtureOptionsTestHelpers.getDefaultOptions()): FixtureData
-    {
-        let data: FixtureData = {
-            address: 1,
-            group: group,
-            type: type,
-            options: options
-        };
-        return data;
-    }
+	public static getFixtureData(
+		address = 1,
+		group = "Group",
+		type = FixtureDefinitionSkeletonHelpers.getFixtureDefinitionSkeleton(),
+		options = FixtureOptionsTestHelpers.getDefaultOptions()): FixtureData
+	{
+		const data: FixtureData = {
+			address: address,
+			group: group,
+			type: type,
+			options: options
+		};
+		return data;
+	}
 }

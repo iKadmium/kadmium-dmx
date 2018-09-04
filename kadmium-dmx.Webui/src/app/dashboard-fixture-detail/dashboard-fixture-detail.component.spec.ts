@@ -1,21 +1,20 @@
-import { async, ComponentFixture, TestBed, fakeAsync, tick } from '@angular/core/testing';
-
-import { DashboardFixtureDetailComponent } from './dashboard-fixture-detail.component';
-import { SidenavToggleComponent } from '../sidenav-toggle/sidenav-toggle.component';
+import { async, ComponentFixture, fakeAsync, TestBed, tick } from '@angular/core/testing';
+import { MatCard, MatCardContent, MatTab, MatTabGroup, MatToolbar } from '@angular/material';
+import { NoopAnimationsModule } from '@angular/platform-browser/animations';
+import { ActivatedRoute } from '@angular/router';
+import { RouterTestingModule } from '@angular/router/testing';
+import { ActiveAttribute, ActiveUniverse, APIClient } from 'api';
+import { AttributeUpdateData, FixtureStreamService } from 'app/services/fixture-stream.service';
+import { MessageService } from 'app/services/message.service';
+import { UniverseStreamService } from 'app/services/universe-stream.service';
 import { MockComponent } from 'ng-mocks';
+import { from, Observable, Subscriber, Subscription } from 'rxjs';
 import { BusyCardComponent } from '../busy-card/busy-card.component';
-import { MatToolbar, MatCard, MatCardContent, MatTab, MatTabGroup } from '@angular/material';
-import { DashboardFixturePreviewComponent } from '../dashboard-fixture-preview/dashboard-fixture-preview.component';
 import { DashboardFixtureAttributesComponent } from '../dashboard-fixture-attributes/dashboard-fixture-attributes.component';
 import { DashboardFixtureColorComponent } from '../dashboard-fixture-color/dashboard-fixture-color.component';
-import { APIClient, ActiveUniverse, ActiveAttribute } from 'api';
-import { RouterTestingModule } from '@angular/router/testing';
-import { ActivatedRoute } from '@angular/router';
-import { UniverseStreamService } from '../universe-stream.service';
-import { FixtureStreamService, AttributeUpdateData } from '../fixture-stream.service';
-import { Observable, from, Subscriber, Subscription } from 'rxjs';
-import { NoopAnimationsModule } from '@angular/platform-browser/animations';
-import { MessageService } from 'app/message.service';
+import { DashboardFixturePreviewComponent } from '../dashboard-fixture-preview/dashboard-fixture-preview.component';
+import { SidenavToggleComponent } from '../sidenav-toggle/sidenav-toggle.component';
+import { DashboardFixtureDetailComponent } from './dashboard-fixture-detail.component';
 
 describe('DashboardFixtureDetailComponent', () =>
 {
@@ -28,12 +27,12 @@ describe('DashboardFixtureDetailComponent', () =>
 	let universeStreamObservable: Observable<Uint8Array>;
 	let universeStreamSubscriber: Subscriber<Uint8Array>;
 
-	let universeID = 1;
-	let fixtureAddress = 1;
-	let manufacturer = "Manufacturer";
-	let model = "Model";
-	let group = "Group";
-	let redChannel: ActiveAttribute = {
+	const universeID = 1;
+	const fixtureAddress = 1;
+	const manufacturer = "Manufacturer";
+	const model = "Model";
+	const group = "Group";
+	const redChannel: ActiveAttribute = {
 		name: "Red",
 		controlled: true,
 		displayMin: 0,
@@ -126,16 +125,16 @@ describe('DashboardFixtureDetailComponent', () =>
 
 	it('should request the active universe', () =>
 	{
-		let apiClient = TestBed.get(APIClient) as jasmine.SpyObj<APIClient>;
+		const apiClient = TestBed.get(APIClient) as jasmine.SpyObj<APIClient>;
 		fixture.detectChanges();
 		expect(apiClient.getActiveUniverse).toHaveBeenCalledTimes(1);
 	});
 
 	it('should show an error if it fails to get the active universe', fakeAsync(() =>
 	{
-		let error = new Error("Error Message");
-		let apiClientService = TestBed.get(APIClient) as jasmine.SpyObj<APIClient>;
-		let errorService = TestBed.get(MessageService) as jasmine.SpyObj<MessageService>;
+		const error = new Error("Error Message");
+		const apiClientService = TestBed.get(APIClient) as jasmine.SpyObj<APIClient>;
+		const errorService = TestBed.get(MessageService) as jasmine.SpyObj<MessageService>;
 		apiClientService.getActiveUniverse.and.throwError(error.message);
 
 		fixture.detectChanges();
@@ -158,7 +157,7 @@ describe('DashboardFixtureDetailComponent', () =>
 
 	it('should open a fixture stream socket when created', fakeAsync(() =>
 	{
-		let fixtureStreamService = TestBed.get(FixtureStreamService) as jasmine.SpyObj<FixtureStreamService>;
+		const fixtureStreamService = TestBed.get(FixtureStreamService) as jasmine.SpyObj<FixtureStreamService>;
 		fixture.detectChanges();
 		tick();
 		expect(fixtureStreamService.open).toHaveBeenCalledTimes(1);
@@ -167,10 +166,10 @@ describe('DashboardFixtureDetailComponent', () =>
 
 	it('should show an error if it fails to open the status stream', fakeAsync(() =>
 	{
-		let errorMessage = "Error Message";
-		let error = new Error(errorMessage);
-		let fixtureStreamService = TestBed.get(FixtureStreamService) as jasmine.SpyObj<FixtureStreamService>;
-		let errorService = TestBed.get(MessageService) as jasmine.SpyObj<MessageService>;
+		const errorMessage = "Error Message";
+		const error = new Error(errorMessage);
+		const fixtureStreamService = TestBed.get(FixtureStreamService) as jasmine.SpyObj<FixtureStreamService>;
+		const errorService = TestBed.get(MessageService) as jasmine.SpyObj<MessageService>;
 		fixtureStreamService.open.and.throwError(errorMessage);
 
 		fixture.detectChanges();
@@ -182,9 +181,9 @@ describe('DashboardFixtureDetailComponent', () =>
 
 	it('should unsubscribe from the fixture stream socket when destroyed', fakeAsync(() =>
 	{
-		let fixtureStreamService = TestBed.get(FixtureStreamService) as jasmine.SpyObj<FixtureStreamService>;
-		let mockSubscription = jasmine.createSpyObj<Subscription>({ unsubscribe: null });
-		let mockObservable = jasmine.createSpyObj<Observable<AttributeUpdateData[]>>({ subscribe: mockSubscription });
+		const fixtureStreamService = TestBed.get(FixtureStreamService) as jasmine.SpyObj<FixtureStreamService>;
+		const mockSubscription = jasmine.createSpyObj<Subscription>({ unsubscribe: null });
+		const mockObservable = jasmine.createSpyObj<Observable<AttributeUpdateData[]>>({ subscribe: mockSubscription });
 		fixtureStreamService.open.and.returnValue(mockObservable);
 		fixture.detectChanges();
 		tick();
@@ -194,7 +193,7 @@ describe('DashboardFixtureDetailComponent', () =>
 
 	it('should open a universe stream socket when created', fakeAsync(() =>
 	{
-		let universeStreamService = TestBed.get(UniverseStreamService) as jasmine.SpyObj<UniverseStreamService>;
+		const universeStreamService = TestBed.get(UniverseStreamService) as jasmine.SpyObj<UniverseStreamService>;
 		fixture.detectChanges();
 		tick();
 		expect(universeStreamService.open).toHaveBeenCalledTimes(1);
@@ -203,9 +202,9 @@ describe('DashboardFixtureDetailComponent', () =>
 
 	it('should unsubscribe from the universe stream socket when destroyed', fakeAsync(() =>
 	{
-		let universeStreamService = TestBed.get(UniverseStreamService) as jasmine.SpyObj<UniverseStreamService>;
-		let subscriptionMock = jasmine.createSpyObj<Subscription>({ unsubscribe: null });
-		let observableMock = jasmine.createSpyObj<Observable<Uint8Array>>({ subscribe: subscriptionMock });
+		const universeStreamService = TestBed.get(UniverseStreamService) as jasmine.SpyObj<UniverseStreamService>;
+		const subscriptionMock = jasmine.createSpyObj<Subscription>({ unsubscribe: null });
+		const observableMock = jasmine.createSpyObj<Observable<Uint8Array>>({ subscribe: subscriptionMock });
 		universeStreamService.open.and.returnValue(observableMock);
 
 		fixture.detectChanges();
@@ -217,7 +216,7 @@ describe('DashboardFixtureDetailComponent', () =>
 
 	it('should render at a fixed rate', fakeAsync(() =>
 	{
-		let previewComponent = jasmine.createSpyObj<DashboardFixturePreviewComponent>({ render: Promise.resolve() });
+		const previewComponent = jasmine.createSpyObj<DashboardFixturePreviewComponent>({ render: Promise.resolve() });
 		fixture.detectChanges();
 		component.fixturePreview = previewComponent;
 		tick(100);
@@ -229,10 +228,10 @@ describe('DashboardFixtureDetailComponent', () =>
 
 	it('should render the data it is given', fakeAsync(() =>
 	{
-		let dataValue = 128;
-		let data = new Uint8Array(512);
+		const dataValue = 128;
+		const data = new Uint8Array(512);
 		data.fill(dataValue);
-		let previewComponent = jasmine.createSpyObj<DashboardFixturePreviewComponent>({ render: Promise.resolve() });
+		const previewComponent = jasmine.createSpyObj<DashboardFixturePreviewComponent>({ render: Promise.resolve() });
 
 		fixture.detectChanges();
 		tick();
@@ -246,12 +245,12 @@ describe('DashboardFixtureDetailComponent', () =>
 
 	it('should update attributes when it receives an attribute update', fakeAsync(() =>
 	{
-		let attributeName = "Red";
-		let attributeValue = 1;
+		const attributeName = "Red";
+		const attributeValue = 1;
 
 		fixture.detectChanges();
 		tick();
-		let attribute = component.attributes.find(x => x.name == attributeName);
+		const attribute = component.attributes.find(x => x.name === attributeName);
 		expect(attribute.value).toBe(0);
 		fixtureStreamSubscriber.next([{ name: attributeName, value: attributeValue }]);
 		tick();

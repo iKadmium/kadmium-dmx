@@ -1,9 +1,9 @@
-import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
-import { ActiveFixture, ActiveAttribute, IDMXChannelData, FixtureData, UniverseData } from "api/models";
+import { Component, Input, OnInit } from '@angular/core';
+import { MatDialog } from '@angular/material';
+import { FixtureData, IDMXChannelData, UniverseData } from "api/models";
+import { DeleteConfirmDialogComponent } from '../delete-confirm-dialog/delete-confirm-dialog.component';
+import { EditorService } from '../services/editor.service';
 import { FixtureDataWithDefinition } from '../venue-discovery/venue-discovery.component';
-import { EditorService } from '../editor.service';
-import { MatDialog } from '../../../node_modules/@angular/material';
-import { DeleteConfirmDialogComponent } from 'app/delete-confirm-dialog/delete-confirm-dialog.component';
 
 @Component({
 	selector: 'app-venue-discovery-fixture',

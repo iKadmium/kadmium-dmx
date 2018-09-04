@@ -1,14 +1,13 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
-import { MatDialog, PageEvent } from '@angular/material';
+import { PageEvent } from '@angular/material';
 import { ActivatedRoute } from "@angular/router";
 import { APIClient, IDMXChannelData, IFixtureDefinition } from 'api';
 import { FixtureData, FixtureDefinitionSkeleton, IVenueData, UniverseData } from "api/models";
-import { MessageService } from 'app/message.service';
+import { MessageService } from 'app/services/message.service';
+import { UniverseStreamService } from "app/services/universe-stream.service";
 import { Subscription } from 'rxjs';
 import { AnimationLibrary } from "../animation-library";
-import { DeleteConfirmDialogComponent } from "../delete-confirm-dialog/delete-confirm-dialog.component";
-import { EditorService } from '../editor.service';
-import { UniverseStreamService } from "../universe-stream.service";
+import { EditorService } from '../services/editor.service';
 
 @Component({
 	selector: 'app-venue-discovery',

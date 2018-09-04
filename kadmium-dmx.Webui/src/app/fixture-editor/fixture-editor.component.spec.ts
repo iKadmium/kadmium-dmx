@@ -3,7 +3,7 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { MatDialogRef, MatFormField, MatOption, MatSelect, MAT_DIALOG_DATA } from '@angular/material';
 import { MockComponent } from 'ng-mocks';
 import { FixtureEditorComponent, FixtureEditorData } from './fixture-editor.component';
-import { FixtureOptionsTestHelpers } from 'app/test/fixture-options-test-helpers';
+import { FixtureOptionsTestHelpers } from '../test/fixture-options-test-helpers';
 
 
 describe('FixtureEditorComponent', () =>
@@ -30,7 +30,7 @@ describe('FixtureEditorComponent', () =>
 			skeletons: [
 				{ manufacturer: "Manufacturer", model: "Model" }
 			]
-		}
+		};
 
 		TestBed.configureTestingModule({
 			declarations: [
@@ -62,9 +62,9 @@ describe('FixtureEditorComponent', () =>
 
 	it('should close the dialog with a result when OK is clicked', () =>
 	{
-		let matDialogRefMock = TestBed.get(MatDialogRef) as jasmine.SpyObj<MatDialogRef<FixtureEditorComponent>>;
+		const matDialogRefMock = TestBed.get(MatDialogRef) as jasmine.SpyObj<MatDialogRef<FixtureEditorComponent>>;
 		fixture.detectChanges();
-		let okButton = (fixture.nativeElement as HTMLElement).querySelector(".btn-ok") as HTMLButtonElement;
+		const okButton = (fixture.nativeElement as HTMLElement).querySelector(".btn-ok") as HTMLButtonElement;
 		component.data = data;
 		okButton.click();
 		expect(matDialogRefMock.close).toHaveBeenCalledWith(component.data.fixture);
@@ -72,9 +72,9 @@ describe('FixtureEditorComponent', () =>
 
 	it('should close the dialog with a null result when cancel is clicked', () =>
 	{
-		let matDialogRefMock = TestBed.get(MatDialogRef) as jasmine.SpyObj<MatDialogRef<FixtureEditorComponent>>;
+		const matDialogRefMock = TestBed.get(MatDialogRef) as jasmine.SpyObj<MatDialogRef<FixtureEditorComponent>>;
 		fixture.detectChanges();
-		let cancelButton = (fixture.nativeElement as HTMLElement).querySelector(".btn-cancel") as HTMLButtonElement;
+		const cancelButton = (fixture.nativeElement as HTMLElement).querySelector(".btn-cancel") as HTMLButtonElement;
 		component.data = data;
 		cancelButton.click();
 		expect(matDialogRefMock.close).toHaveBeenCalledWith();

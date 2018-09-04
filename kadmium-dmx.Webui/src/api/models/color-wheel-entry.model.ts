@@ -1,9 +1,11 @@
 /* tslint:disable */
-import {
+import
+{
   RGB,
-} from './..';
+} from '..'
 
-export interface ColorWheelEntry {
+export interface ColorWheelEntry
+{
   color: RGB;
   colorString: string;
   max: number;

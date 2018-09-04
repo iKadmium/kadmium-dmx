@@ -1,17 +1,16 @@
-import { async, ComponentFixture, TestBed, fakeAsync, tick } from '@angular/core/testing';
-
-import { DashboardUniverseComponent } from './dashboard-universe.component';
-import { APIClient, ActiveUniverse } from 'api';
-import { from, Observable, Subscriber, Subscription } from 'rxjs';
+import { async, ComponentFixture, fakeAsync, TestBed, tick } from '@angular/core/testing';
 import { MatCard, MatCardContent, MatToolbar } from '@angular/material';
-import { SidenavToggleComponent } from '../sidenav-toggle/sidenav-toggle.component';
-import { MockComponent } from 'ng-mocks';
-import { RouterTestingModule } from '@angular/router/testing';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
-import { MessageService } from 'app/message.service';
-import { UniverseStreamService } from 'app/universe-stream.service';
-import { DashboardFixturePreviewComponent } from 'app/dashboard-fixture-preview/dashboard-fixture-preview.component';
-import { PreviewUniverseCell } from 'app/preview-universe-cell';
+import { RouterTestingModule } from '@angular/router/testing';
+import { ActiveUniverse, APIClient } from 'api';
+import { MessageService } from '../services/message.service';
+import { UniverseStreamService } from '../services/universe-stream.service';
+import { MockComponent } from 'ng-mocks';
+import { from, Observable, Subscription } from 'rxjs';
+import { DashboardFixturePreviewComponent } from '../dashboard-fixture-preview/dashboard-fixture-preview.component';
+import { PreviewUniverseCell } from '../preview-universe-cell';
+import { SidenavToggleComponent } from '../sidenav-toggle/sidenav-toggle.component';
+import { DashboardUniverseComponent } from './dashboard-universe.component';
 
 describe('DashboardUniverseComponent', () =>
 {
@@ -70,7 +69,7 @@ describe('DashboardUniverseComponent', () =>
 
 	it('should request the active universe', () =>
 	{
-		let serviceMock = TestBed.get(APIClient) as jasmine.SpyObj<APIClient>;
+		const serviceMock = TestBed.get(APIClient) as jasmine.SpyObj<APIClient>;
 
 		fixture.detectChanges();
 
@@ -79,9 +78,9 @@ describe('DashboardUniverseComponent', () =>
 
 	it('should report an error if getting the active universe failed', () =>
 	{
-		let serviceMock = TestBed.get(APIClient) as jasmine.SpyObj<APIClient>;
-		let messageMock = TestBed.get(MessageService) as jasmine.SpyObj<MessageService>;
-		let error = new Error("Error");
+		const serviceMock = TestBed.get(APIClient) as jasmine.SpyObj<APIClient>;
+		const messageMock = TestBed.get(MessageService) as jasmine.SpyObj<MessageService>;
+		const error = new Error("Error");
 		serviceMock.getActiveUniverse.and.throwError(error.message);
 
 		fixture.detectChanges();
@@ -102,7 +101,7 @@ describe('DashboardUniverseComponent', () =>
 		fixture.detectChanges();
 		tick();
 
-		let spy = spyOn((component as any).cells[0] as PreviewUniverseCell, "render");
+		const spy = spyOn((component as any).cells[0] as PreviewUniverseCell, "render");
 		tick(DashboardFixturePreviewComponent.updateTime);
 		expect(spy).toHaveBeenCalledTimes(1);
 		tick(DashboardFixturePreviewComponent.updateTime);

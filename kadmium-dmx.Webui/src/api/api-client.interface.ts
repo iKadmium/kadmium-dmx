@@ -1,8 +1,8 @@
 /* tslint:disable */
 
 import { Observable } from 'rxjs';
-import { HttpOptions } from './';
 import * as models from './models';
+import { HttpOptions } from '.';
 
 export interface APIClientInterface
 {

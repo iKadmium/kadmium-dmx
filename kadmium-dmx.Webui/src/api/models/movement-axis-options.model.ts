@@ -1,9 +1,11 @@
 /* tslint:disable */
-import {
+import
+{
   MovementAxisRestriction,
-} from './..';
+} from '..'
 
-export interface MovementAxisOptions {
+export interface MovementAxisOptions
+{
   inverted: boolean;
   restrictions: MovementAxisRestriction;
 }

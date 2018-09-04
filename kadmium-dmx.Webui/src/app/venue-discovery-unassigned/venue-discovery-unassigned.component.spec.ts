@@ -2,14 +2,13 @@ import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { FormsModule } from '@angular/forms';
 import { MatCard, MatCardContent, MatCardTitle, MatDialog, MatFormField, MatIcon, MatSlider, MatDialogRef } from '@angular/material';
 import { APIClient } from 'api';
-import { MessageService } from 'app/message.service';
+import { MessageService } from 'app/services/message.service';
 // tslint:disable-next-line:max-line-length
-import { AddFixtureDefinitionData, VenueDiscoveryAddFixtureDefinitionDialogComponent } from 'app/venue-discovery-add-fixture-definition-dialog/venue-discovery-add-fixture-definition-dialog.component';
+import { AddFixtureDefinitionData, VenueDiscoveryAddFixtureDefinitionDialogComponent } from '../venue-discovery-add-fixture-definition-dialog/venue-discovery-add-fixture-definition-dialog.component';
 import { MockComponent } from 'ng-mocks';
 import { VenueDiscoveryUnassignedComponent } from './venue-discovery-unassigned.component';
-import { NoopAnimationsModule } from '../../../node_modules/@angular/platform-browser/animations';
-import { from } from '../../../node_modules/rxjs';
-
+import { NoopAnimationsModule } from '@angular/platform-browser/animations';
+import { from } from 'rxjs';
 
 describe('VenueDiscoveryUnassignedComponent', () =>
 {

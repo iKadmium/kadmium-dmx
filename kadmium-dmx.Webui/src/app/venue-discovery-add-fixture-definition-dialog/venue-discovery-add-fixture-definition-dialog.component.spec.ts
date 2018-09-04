@@ -1,9 +1,9 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
-
-import { VenueDiscoveryAddFixtureDefinitionDialogComponent, AddFixtureDefinitionData } from './venue-discovery-add-fixture-definition-dialog.component';
 import { FormsModule } from '@angular/forms';
+import { MatDialogClose, MatDialogRef, MatFormField, MatIcon, MatOption, MatSelect, MAT_DIALOG_DATA } from '@angular/material';
 import { MockComponent } from 'ng-mocks';
-import { MatFormField, MatSelect, MatOption, MatDialogClose, MatIcon, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material';
+// tslint:disable-next-line:max-line-length
+import { AddFixtureDefinitionData, VenueDiscoveryAddFixtureDefinitionDialogComponent } from './venue-discovery-add-fixture-definition-dialog.component';
 
 describe('VenueDiscoveryAddFixtureDefinitionDialogComponent', () =>
 {
@@ -40,11 +40,15 @@ describe('VenueDiscoveryAddFixtureDefinitionDialogComponent', () =>
 		TestBed.overrideComponent(VenueDiscoveryAddFixtureDefinitionDialogComponent, {
 			set: {
 				providers: [
-					{ provide: MatDialogRef, useValue: jasmine.createSpyObj<MatDialogRef<VenueDiscoveryAddFixtureDefinitionDialogComponent>>({ close: null }) },
+					{
+						provide: MatDialogRef, useValue: jasmine.createSpyObj<MatDialogRef<VenueDiscoveryAddFixtureDefinitionDialogComponent>>({
+							close: null
+						})
+					},
 					{ provide: MAT_DIALOG_DATA, useValue: data }
 				]
 			}
-		})
+		});
 
 		TestBed.compileComponents();
 	}));

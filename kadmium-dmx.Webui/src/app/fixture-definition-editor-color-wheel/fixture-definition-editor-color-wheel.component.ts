@@ -3,8 +3,9 @@ import { MatDialog } from '@angular/material';
 import { IColorWheelEntryData, IFixtureDefinition } from 'api';
 import { AnimationLibrary } from '../animation-library';
 import { DeleteConfirmDialogComponent } from '../delete-confirm-dialog/delete-confirm-dialog.component';
-import { EditorService } from '../editor.service';
+// tslint:disable-next-line:max-line-length
 import { FixtureDefinitionEditorColorWheelEditorDialogComponent } from '../fixture-definition-editor-color-wheel-editor-dialog/fixture-definition-editor-color-wheel-editor-dialog.component';
+import { EditorService } from '../services/editor.service';
 
 @Component({
 	selector: 'app-fixture-definition-editor-color-wheel',
@@ -31,14 +32,17 @@ export class FixtureDefinitionEditorColorWheelComponent implements OnInit
 
 	public async addEntry(): Promise<void>
 	{
-		let entry: IColorWheelEntryData = {
+		const entry: IColorWheelEntryData = {
 			name: "",
 			min: 0,
 			max: 255,
 			color: "#000000"
 		};
 
-		let result = await this.dialogService.open(FixtureDefinitionEditorColorWheelEditorDialogComponent, { data: entry }).afterClosed().toPromise();
+		const result = await this.dialogService
+			.open(FixtureDefinitionEditorColorWheelEditorDialogComponent, { data: entry })
+			.afterClosed()
+			.toPromise();
 		if (result)
 		{
 			this.colorWheel.push(result);
@@ -47,8 +51,11 @@ export class FixtureDefinitionEditorColorWheelComponent implements OnInit
 
 	public async editEntry(index: number): Promise<void>
 	{
-		let entry = this.colorWheel[index];
-		let result = await this.dialogService.open(FixtureDefinitionEditorColorWheelEditorDialogComponent, { data: entry }).afterClosed().toPromise();
+		const entry = this.colorWheel[index];
+		const result = await this.dialogService
+			.open(FixtureDefinitionEditorColorWheelEditorDialogComponent, { data: entry })
+			.afterClosed()
+			.toPromise();
 		if (result)
 		{
 			this.colorWheel[index] = result;
@@ -57,8 +64,11 @@ export class FixtureDefinitionEditorColorWheelComponent implements OnInit
 
 	public async removeEntry(index: number): Promise<void>
 	{
-		let entry = this.colorWheel[index];
-		let result = await this.dialogService.open(DeleteConfirmDialogComponent, { data: entry.name }).afterClosed().toPromise();
+		const entry = this.colorWheel[index];
+		const result = await this.dialogService
+			.open(DeleteConfirmDialogComponent, { data: entry.name })
+			.afterClosed()
+			.toPromise();
 		if (result)
 		{
 			this.colorWheel.splice(index, 1);
@@ -68,13 +78,13 @@ export class FixtureDefinitionEditorColorWheelComponent implements OnInit
 	public getOtherColorWheelEntryNames(thisEntry: IColorWheelEntryData): string[]
 	{
 		return this.colorWheel
-			.filter(value => value != thisEntry)
+			.filter(value => value !== thisEntry)
 			.map((value: IColorWheelEntryData) => value.name);
 	}
 
 	public getSafeColor(entry: IColorWheelEntryData): any
 	{
-		let style = { color: entry.color };
+		const style = { color: entry.color };
 		return style;
 	}
 

@@ -1,9 +1,8 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
-
-import { VenueNameDialogComponent } from './venue-name-dialog.component';
-import { MockComponent } from 'ng-mocks';
 import { FormsModule } from '@angular/forms';
-import { MatFormField, MatDialog, MatDialogClose, MatIcon } from '@angular/material';
+import { MatDialogClose, MatFormField, MatIcon } from '@angular/material';
+import { MockComponent } from 'ng-mocks';
+import { VenueNameDialogComponent } from './venue-name-dialog.component';
 
 describe('VenueNameDialogComponent', () =>
 {
@@ -23,14 +22,6 @@ describe('VenueNameDialogComponent', () =>
 				FormsModule
 			]
 		});
-
-		TestBed.overrideComponent(VenueNameDialogComponent, {
-			set: {
-				providers: [
-
-				]
-			}
-		})
 
 		TestBed.compileComponents();
 	}));

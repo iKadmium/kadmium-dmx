@@ -5,7 +5,7 @@ import
   IColorWheelEntryData,
   IDMXChannelData,
   IMovementAxisData,
-} from './..';
+} from '..'
 import { FixtureType } from 'app/enums/fixture-type.enum';
 
 export interface IFixtureDefinition

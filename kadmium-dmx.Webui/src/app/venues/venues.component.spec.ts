@@ -1,14 +1,13 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
-
-import { VenuesComponent } from './venues.component';
-import { BusyCardComponent } from '../busy-card/busy-card.component';
-import { MockComponent } from 'ng-mocks';
-import { MatFormField, MatIcon, MatToolbar, MatCard, MatCardContent, MatDialog } from '@angular/material';
-import { SidenavToggleComponent } from '../sidenav-toggle/sidenav-toggle.component';
+import { MatCard, MatCardContent, MatDialog, MatFormField, MatIcon, MatToolbar } from '@angular/material';
 import { RouterTestingModule } from '@angular/router/testing';
-import { from } from 'rxjs';
 import { APIClient } from 'api';
-import { MessageService } from 'app/message.service';
+import { MessageService } from 'app/services/message.service';
+import { MockComponent } from 'ng-mocks';
+import { from } from 'rxjs';
+import { BusyCardComponent } from '../busy-card/busy-card.component';
+import { SidenavToggleComponent } from '../sidenav-toggle/sidenav-toggle.component';
+import { VenuesComponent } from './venues.component';
 
 describe('VenuesComponent', () =>
 {
@@ -41,7 +40,7 @@ describe('VenuesComponent', () =>
 					{ provide: MatDialog, useValue: jasmine.createSpyObj<MatDialog>({ open: null }) }
 				]
 			}
-		})
+		});
 
 		TestBed.compileComponents();
 	}));

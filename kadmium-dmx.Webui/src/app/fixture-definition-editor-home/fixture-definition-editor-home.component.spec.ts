@@ -2,12 +2,13 @@ import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { FixtureDefinitionEditorHomeComponent } from './fixture-definition-editor-home.component';
 import { MockComponent, MockDirective } from 'ng-mocks';
+// tslint:disable-next-line:max-line-length
 import { MatToolbar, MatIcon, MatSelect, MatOption, MatAutocomplete, MatAutocompleteTrigger, MatFormField, MatCard, MatCardContent, MatCardActions } from '@angular/material';
 import { ReactiveFormsModule } from '@angular/forms';
 import { SidenavToggleComponent } from '../sidenav-toggle/sidenav-toggle.component';
 import { from } from 'rxjs';
 import { APIClient, IFixtureDefinition } from 'api';
-import { EditorService } from '../editor.service';
+import { EditorService } from '../services/editor.service';
 import { FixtureDefinitionTestHelpers } from '../test/fixture-definition-test-helpers';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 

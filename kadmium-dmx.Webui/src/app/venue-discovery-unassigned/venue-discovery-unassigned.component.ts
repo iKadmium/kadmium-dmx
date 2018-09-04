@@ -1,15 +1,15 @@
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { MatDialog } from '@angular/material';
 import { APIClient, FixtureData, FixtureDefinitionSkeleton, IDMXChannelData, IFixtureDefinition, UniverseData } from 'api';
-// tslint:disable-next-line:max-line-length
-import { VenueDiscoveryAddFixtureDefinitionDialogComponent } from 'app/venue-discovery-add-fixture-definition-dialog/venue-discovery-add-fixture-definition-dialog.component';
-// tslint:disable-next-line:max-line-length
-import { VenueDiscoveryAddFixtureToVenueDialogComponent } from 'app/venue-discovery-add-fixture-to-venue-dialog/venue-discovery-add-fixture-to-venue-dialog.component';
-// tslint:disable-next-line:max-line-length
-import { VenueDiscoverySelectGroupDialogComponent } from 'app/venue-discovery-select-group-dialog/venue-discovery-select-group-dialog.component';
+import { EditorService } from 'app/services/editor.service';
+import { MessageService } from 'app/services/message.service';
 import { AnimationLibrary } from "../animation-library";
-import { EditorService } from '../editor.service';
-import { MessageService } from '../message.service';
+// tslint:disable-next-line:max-line-length
+import { VenueDiscoveryAddFixtureDefinitionDialogComponent } from '../venue-discovery-add-fixture-definition-dialog/venue-discovery-add-fixture-definition-dialog.component';
+// tslint:disable-next-line:max-line-length
+import { VenueDiscoveryAddFixtureToVenueDialogComponent } from '../venue-discovery-add-fixture-to-venue-dialog/venue-discovery-add-fixture-to-venue-dialog.component';
+// tslint:disable-next-line:max-line-length
+import { VenueDiscoverySelectGroupDialogComponent } from '../venue-discovery-select-group-dialog/venue-discovery-select-group-dialog.component';
 
 @Component({
 	selector: 'app-venue-discovery-unassigned',

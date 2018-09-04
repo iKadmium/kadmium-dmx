@@ -2,18 +2,17 @@ import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { FormsModule } from '@angular/forms';
 import { MatCard, MatCardContent, MatDialog, MatIcon, MatPaginator, MatToolbar, PageEvent } from '@angular/material';
 import { ActivatedRoute } from '@angular/router';
-import { ActiveVenue, APIClient, IFixtureDefinition, IVenueData } from 'api';
-import { MessageService } from 'app/message.service';
+import { APIClient, IFixtureDefinition, IVenueData } from 'api';
+import { MessageService } from 'app/services/message.service';
+import { UniverseStreamService } from 'app/services/universe-stream.service';
 import { MockComponent } from 'ng-mocks';
 import { from, Observable, Subscription } from 'rxjs';
 import { BusyCardComponent } from '../busy-card/busy-card.component';
 import { SidenavToggleComponent } from '../sidenav-toggle/sidenav-toggle.component';
 import { FixtureDefinitionTestHelpers } from '../test/fixture-definition-test-helpers';
-import { UniverseStreamService } from '../universe-stream.service';
 import { VenueDiscoveryFixtureComponent } from '../venue-discovery-fixture/venue-discovery-fixture.component';
 import { VenueDiscoveryUnassignedComponent } from '../venue-discovery-unassigned/venue-discovery-unassigned.component';
 import { VenueDiscoveryComponent } from './venue-discovery.component';
-
 
 describe('VenueDiscoveryComponent', () =>
 {

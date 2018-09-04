@@ -1,8 +1,6 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { PreviewFixture } from '../preview-fixture';
 import { DashboardFixturePreviewComponent } from './dashboard-fixture-preview.component';
-import { PreviewFixture } from 'app/preview-fixture';
-import { ActiveFixture } from 'api';
-import { ElementRef } from '../../../node_modules/@angular/core';
 
 describe('Preview2DFixtureComponent', () =>
 {
@@ -12,8 +10,8 @@ describe('Preview2DFixtureComponent', () =>
 	let lightFixture: jasmine.SpyObj<PreviewFixture>;
 	let contextSpy: jasmine.SpyObj<CanvasRenderingContext2D>;
 
-	let width = 100;
-	let height = 100;
+	const width = 100;
+	const height = 100;
 
 	let canvasRefMock: any;
 

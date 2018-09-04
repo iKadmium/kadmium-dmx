@@ -1,9 +1,11 @@
 /* tslint:disable */
-import {
+import
+{
   PreviewFixture,
-} from './..';
+} from '..'
 
-export interface PreviewUniverse {
+export interface PreviewUniverse
+{
   fixtures: PreviewFixture[];
   name: string;
   universeID: number;

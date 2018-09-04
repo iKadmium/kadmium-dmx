@@ -1,9 +1,9 @@
 import { Component, OnInit } from '@angular/core';
 import { MatDialog } from '@angular/material';
-import { FixtureDefinitionSkeleton, UniverseData, IVenueData } from 'api';
-import { AnimationLibrary } from 'app/animation-library';
+import { FixtureDefinitionSkeleton, IVenueData, UniverseData } from 'api';
+import { AnimationLibrary } from '../animation-library';
 import { DeleteConfirmDialogComponent } from '../delete-confirm-dialog/delete-confirm-dialog.component';
-import { EditorService } from '../editor.service';
+import { EditorService } from '../services/editor.service';
 import { UniverseEditorDialogComponent } from '../universe-editor-dialog/universe-editor-dialog.component';
 
 @Component({
@@ -26,7 +26,7 @@ export class UniversesComponent implements OnInit
 	{
 		this.venue = this.editorService.getActive();
 		this.fixtureCounts = [];
-		for (let i in this.venue.universes)
+		for (const i of Object.keys(this.venue.universes))
 		{
 			this.fixtureCounts[i] = this.getFixtureCounts(this.venue.universes[i]);
 		}
@@ -34,7 +34,7 @@ export class UniversesComponent implements OnInit
 
 	public async removeUniverse(index: number): Promise<void>
 	{
-		let result = await this.dialogService.open(DeleteConfirmDialogComponent).afterClosed().toPromise();
+		const result = await this.dialogService.open(DeleteConfirmDialogComponent).afterClosed().toPromise();
 		if (result)
 		{
 			this.venue.universes.splice(index, 1);
@@ -43,8 +43,8 @@ export class UniversesComponent implements OnInit
 
 	public async editUniverse(index: number): Promise<void>
 	{
-		let universeData = this.venue.universes[index];
-		let result = await this.dialogService.open(UniverseEditorDialogComponent, { data: universeData }).afterClosed().toPromise();
+		const universeData = this.venue.universes[index];
+		const result = await this.dialogService.open(UniverseEditorDialogComponent, { data: universeData }).afterClosed().toPromise();
 		if (result)
 		{
 			this.editorService.isDirty = true;
@@ -55,11 +55,11 @@ export class UniversesComponent implements OnInit
 
 	public getFixtureCounts(universe: UniverseData): UniverseFixtureCount[]
 	{
-		let result: UniverseFixtureCount[] = [];
-		for (let fixture of universe.fixtures)
+		const result: UniverseFixtureCount[] = [];
+		for (const fixture of universe.fixtures)
 		{
-			let index = result.findIndex(x => x.type.manufacturer == fixture.type.manufacturer && x.type.model == fixture.type.model)
-			if (index != -1)
+			const index = result.findIndex(x => x.type.manufacturer === fixture.type.manufacturer && x.type.model === fixture.type.model);
+			if (index !== -1)
 			{
 				result[index].count++;
 			}
@@ -75,6 +75,6 @@ export class UniversesComponent implements OnInit
 
 interface UniverseFixtureCount
 {
-	type: FixtureDefinitionSkeleton,
-	count: number
+	type: FixtureDefinitionSkeleton;
+	count: number;
 }

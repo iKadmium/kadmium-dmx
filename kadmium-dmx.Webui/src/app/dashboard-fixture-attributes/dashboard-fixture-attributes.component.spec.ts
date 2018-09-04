@@ -1,14 +1,13 @@
+import { SimpleChanges } from '@angular/core';
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
-import { DashboardFixtureAttributesComponent } from './dashboard-fixture-attributes.component';
 import { FormsModule } from '@angular/forms';
-import { MatIcon, MatSlider, MatListItem, MatList, MatDivider } from '@angular/material';
-
+import { MatDivider, MatIcon, MatList, MatListItem, MatSlider } from '@angular/material';
+import { ActiveAttribute } from 'api';
+import { AttributeUpdateMessage } from 'app/services/fixture-stream.service';
 import { MockComponent } from "ng-mocks";
 import { PreviewAttribute } from '../preview-attribute';
-import { SimpleChanges } from '@angular/core';
-import { ActiveAttribute } from 'api';
 import { PreviewFixture } from '../preview-fixture';
-import { AttributeUpdateMessage } from '../fixture-stream.service';
+import { DashboardFixtureAttributesComponent } from './dashboard-fixture-attributes.component';
 
 describe('DashboardFixtureAttributesComponent', () =>
 {
@@ -68,15 +67,15 @@ describe('DashboardFixtureAttributesComponent', () =>
 
 	it('should separate attributes into dmx and non-dmx', () =>
 	{
-		let red = new PreviewAttribute().load(redData);
+		const red = new PreviewAttribute().load(redData);
 
-		let strobe = new PreviewAttribute().load(fakeStrobeData);
+		const strobe = new PreviewAttribute().load(fakeStrobeData);
 
 		component.attributes = [
 			red, strobe
 		];
 
-		let changes: SimpleChanges = {
+		const changes: SimpleChanges = {
 			attributes: {
 				currentValue: [red, strobe],
 				firstChange: true,
@@ -94,7 +93,7 @@ describe('DashboardFixtureAttributesComponent', () =>
 
 	it('should raise an event when an update is made', (done) =>
 	{
-		let red = new PreviewAttribute().load(redData);
+		const red = new PreviewAttribute().load(redData);
 
 		component.fixture = new PreviewFixture({
 			address: 1,
@@ -106,10 +105,10 @@ describe('DashboardFixtureAttributesComponent', () =>
 			movementAxis: []
 		});
 
-		let value = 1;
-		let dmxValue = value * 255;
+		const value = 1;
+		const dmxValue = value * 255;
 
-		component.setValue.subscribe((generator: AttributeUpdateMessage) => 
+		component.setValue.subscribe((generator: AttributeUpdateMessage) =>
 		{
 			expect(generator.attributeName).toBe(red.name);
 			expect(generator.attributeValue).toBe(value);

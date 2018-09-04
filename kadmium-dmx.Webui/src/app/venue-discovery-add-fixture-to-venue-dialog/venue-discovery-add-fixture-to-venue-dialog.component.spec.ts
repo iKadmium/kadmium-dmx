@@ -1,11 +1,10 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
-
-import { VenueDiscoveryAddFixtureToVenueDialogComponent } from './venue-discovery-add-fixture-to-venue-dialog.component';
 import { FormsModule } from '@angular/forms';
-import { MockComponent } from 'ng-mocks';
-import { MatSelect, MatOption, MatFormField, MatIcon, MatDialogClose, MatCard, MatCardTitle } from '@angular/material';
+import { MatDialogClose, MatFormField, MatIcon, MatOption, MatSelect } from '@angular/material';
 import { APIClient } from 'api';
+import { MockComponent } from 'ng-mocks';
 import { from } from 'rxjs';
+import { VenueDiscoveryAddFixtureToVenueDialogComponent } from './venue-discovery-add-fixture-to-venue-dialog.component';
 
 describe('VenueDiscoveryAddFixtureToVenueDialogComponent', () =>
 {
@@ -40,7 +39,7 @@ describe('VenueDiscoveryAddFixtureToVenueDialogComponent', () =>
 					}
 				]
 			}
-		})
+		});
 
 		TestBed.compileComponents();
 	}));

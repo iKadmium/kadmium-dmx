@@ -1,11 +1,10 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
-
-import { VenueDiscoverySelectGroupDialogComponent } from './venue-discovery-select-group-dialog.component';
 import { FormsModule } from '@angular/forms';
-import { MockComponent } from 'ng-mocks';
-import { MatDialog, MatDialogContainer, MatDialogContent, MatButtonToggleGroup, MatButtonToggle, MatDialogClose, MatIcon } from '@angular/material';
+import { MatButtonToggle, MatButtonToggleGroup, MatDialogClose, MatDialogContent, MatIcon } from '@angular/material';
 import { APIClient } from 'api';
+import { MockComponent } from 'ng-mocks';
 import { from } from 'rxjs';
+import { VenueDiscoverySelectGroupDialogComponent } from './venue-discovery-select-group-dialog.component';
 
 describe('VenueDiscoverySelectGroupDialogComponent', () =>
 {
@@ -34,7 +33,7 @@ describe('VenueDiscoverySelectGroupDialogComponent', () =>
 					{ provide: APIClient, useValue: jasmine.createSpyObj<APIClient>({ getGroups: from([[]]) }) }
 				]
 			}
-		})
+		});
 
 		TestBed.compileComponents();
 	}));

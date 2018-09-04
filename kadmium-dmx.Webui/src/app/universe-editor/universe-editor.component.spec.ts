@@ -1,23 +1,24 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { FormsModule } from '@angular/forms';
-import { MatCard, MatCardActions, MatCardContent, MatCardTitle, MatDialog, MatDialogRef, MatExpansionPanel, MatExpansionPanelActionRow, MatExpansionPanelDescription, MatExpansionPanelHeader, MatExpansionPanelTitle, MatFormField, MatIcon, MatOption, MatSelect, MatToolbar } from '@angular/material';
+import { MatCard, MatCardActions, MatCardContent, MatCardTitle, MatDialog, MatDialogRef, MatIcon, MatToolbar } from '@angular/material';
+import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { ActivatedRoute } from '@angular/router';
 import { APIClient, FixtureData, FixtureDefinitionSkeleton, FixtureOptions, IFixtureDefinition, IGroupData, UniverseData } from 'api';
-import { FixtureType } from 'app/enums/fixture-type.enum';
-import { FileReaderService } from 'app/file-reader.service';
-import { FileSaverService } from 'app/file-saver.service';
-import { MessageService } from 'app/message.service';
-import { IUniverseEditorAddMultipleFixturesDialogOutputData, UniverseEditorAddMultipleFixturesDialogComponent } from 'app/universe-editor-add-multiple-fixtures-dialog/universe-editor-add-multiple-fixtures-dialog.component';
-import { UniverseEditorPresetSaveDialogComponentResultData } from 'app/universe-editor-preset-save-dialog/universe-editor-preset-save-dialog.component';
+import { MessageService } from 'app/services/message.service';
 import { MockComponent } from 'ng-mocks';
 import { from } from 'rxjs';
-import { FixtureOptionsTestHelpers } from '../test/fixture-options-test-helpers';
-import { UniverseEditorComponent } from './universe-editor.component';
-import { UniverseTestHelpers } from '../test/universe-test-helpers';
+import { DeleteConfirmDialogComponent } from '../delete-confirm-dialog/delete-confirm-dialog.component';
+import { FileReaderService } from '../services/file-reader.service';
+import { FileSaverService } from '../services/file-saver.service';
 import { FixtureDefinitionSkeletonHelpers } from '../test/fixture-definition-skeleton-helpers';
 import { FixtureDefinitionTestHelpers } from '../test/fixture-definition-test-helpers';
-import { NoopAnimationsModule } from '@angular/platform-browser/animations';
-import { DeleteConfirmDialogComponent } from 'app/delete-confirm-dialog/delete-confirm-dialog.component';
+import { FixtureOptionsTestHelpers } from '../test/fixture-options-test-helpers';
+import { UniverseTestHelpers } from '../test/universe-test-helpers';
+// tslint:disable-next-line:max-line-length
+import { IUniverseEditorAddMultipleFixturesDialogOutputData, UniverseEditorAddMultipleFixturesDialogComponent } from '../universe-editor-add-multiple-fixtures-dialog/universe-editor-add-multiple-fixtures-dialog.component';
+// tslint:disable-next-line:max-line-length
+import { UniverseEditorPresetSaveDialogComponentResultData } from '../universe-editor-preset-save-dialog/universe-editor-preset-save-dialog.component';
+import { UniverseEditorComponent } from './universe-editor.component';
 
 
 describe('UniverseEditorComponent', () =>
@@ -115,16 +116,16 @@ describe('UniverseEditorComponent', () =>
 	{
 		it('should request fixture definitions', () =>
 		{
-			let serviceMock = TestBed.get(APIClient) as jasmine.SpyObj<APIClient>;
+			const serviceMock = TestBed.get(APIClient) as jasmine.SpyObj<APIClient>;
 			fixture.detectChanges();
 			expect(serviceMock.getFixtureDefinitions).toHaveBeenCalledTimes(1);
 		});
 
 		it('should report an error if fetching the fixture definitions throws one', () =>
 		{
-			let error = new Error("Error");
-			let messageServiceMock = TestBed.get(MessageService) as jasmine.SpyObj<MessageService>;
-			let apiClientMock = TestBed.get(APIClient) as jasmine.SpyObj<APIClient>;
+			const error = new Error("Error");
+			const messageServiceMock = TestBed.get(MessageService) as jasmine.SpyObj<MessageService>;
+			const apiClientMock = TestBed.get(APIClient) as jasmine.SpyObj<APIClient>;
 			apiClientMock.getFixtureDefinitions.and.throwError(error.message);
 			fixture.detectChanges();
 			expect(messageServiceMock.error).toHaveBeenCalledWith(error);
@@ -135,7 +136,7 @@ describe('UniverseEditorComponent', () =>
 	{
 		it('should open a delete dialog', () =>
 		{
-			let matDialogMock = TestBed.get(MatDialog) as jasmine.SpyObj<MatDialog>;
+			const matDialogMock = TestBed.get(MatDialog) as jasmine.SpyObj<MatDialog>;
 			component.universe.fixtures = [fixtureData];
 			component.removeElement(0);
 			expect(matDialogMock.open).toHaveBeenCalledWith(DeleteConfirmDialogComponent, jasmine.any(Object));
@@ -151,19 +152,19 @@ describe('UniverseEditorComponent', () =>
 				done();
 			});
 		});
-	})
+	});
 
 	it('should add fixtures', (done) =>
 	{
-		let quantity = 3;
-		let firstAddress = 1;
-		let result: IUniverseEditorAddMultipleFixturesDialogOutputData = {
+		const quantity = 3;
+		const firstAddress = 1;
+		const result: IUniverseEditorAddMultipleFixturesDialogOutputData = {
 			address: firstAddress,
 			group: groups[0],
 			quantity: quantity,
 			skeleton: skeletons[0]
 		};
-		let matDialogMock = TestBed.get(MatDialog) as jasmine.SpyObj<MatDialog>;
+		const matDialogMock = TestBed.get(MatDialog) as jasmine.SpyObj<MatDialog>;
 		matDialogRef.afterClosed.and.returnValue(from([result]));
 		matDialogMock.open.and.returnValue(matDialogRef);
 
@@ -173,7 +174,7 @@ describe('UniverseEditorComponent', () =>
 		component.addElements().then(() =>
 		{
 			expect(component.universe.fixtures.length).toBe(quantity);
-			let expectedLastAddress = fixtureDefinition.channels.length * (quantity - 1) + firstAddress;
+			const expectedLastAddress = fixtureDefinition.channels.length * (quantity - 1) + firstAddress;
 			expect(component.universe.fixtures[quantity - 1].address).toBe(expectedLastAddress);
 			done();
 		});
@@ -181,12 +182,12 @@ describe('UniverseEditorComponent', () =>
 
 	it('should edit fixtures', (done) =>
 	{
-		let result: FixtureData = {
+		const result: FixtureData = {
 			address: 5,
 			group: groups[0].name,
 			options: {} as any,
 			type: skeletons[0]
-		}
+		};
 		matDialogRef.afterClosed.and.returnValue(from([result]));
 		component.universe.fixtures = [fixtureData];
 		component.edit(0).then(() =>
@@ -198,7 +199,7 @@ describe('UniverseEditorComponent', () =>
 
 	it('should edit options', (done) =>
 	{
-		let result: FixtureOptions = FixtureOptionsTestHelpers.getDefaultOptions();
+		const result: FixtureOptions = FixtureOptionsTestHelpers.getDefaultOptions();
 		matDialogRef.afterClosed.and.returnValue(from([result]));
 		component.options(fixtureData).then(() =>
 		{
@@ -209,11 +210,11 @@ describe('UniverseEditorComponent', () =>
 
 	it('should save presets', (done) =>
 	{
-		let result: UniverseEditorPresetSaveDialogComponentResultData = {
+		const result: UniverseEditorPresetSaveDialogComponentResultData = {
 			filename: "filename.json",
 			fixtures: [fixtureData]
 		};
-		let fileSaverServiceMock = TestBed.get(FileSaverService) as jasmine.SpyObj<FileSaverService>;
+		const fileSaverServiceMock = TestBed.get(FileSaverService) as jasmine.SpyObj<FileSaverService>;
 		component.universe.fixtures = [fixtureData];
 		matDialogRef.afterClosed.and.returnValue(from([result]));
 		component.savePresetAs().then(() =>
@@ -225,18 +226,18 @@ describe('UniverseEditorComponent', () =>
 
 	it('upload should trigger the given input element', () =>
 	{
-		let element = jasmine.createSpyObj<HTMLInputElement>({ click: null });
+		const element = jasmine.createSpyObj<HTMLInputElement>({ click: null });
 		component.upload(element);
 		expect(element.click).toHaveBeenCalledTimes(1);
 	});
 
 	it('filesSelected should call the upload method', (done) =>
 	{
-		let fileReader = TestBed.get(FileReaderService) as jasmine.SpyObj<FileReaderService>;
+		const fileReader = TestBed.get(FileReaderService) as jasmine.SpyObj<FileReaderService>;
 
-		let files: File[] = [new File([], "filename.json")];
+		const files: File[] = [new File([], "filename.json")];
 
-		let fixtures = [fixtureData, fixtureData];
+		const fixtures = [fixtureData, fixtureData];
 		fileReader.read.and.returnValue(Promise.resolve(fixtures));
 
 		component.universe.fixtures = [];
@@ -249,12 +250,12 @@ describe('UniverseEditorComponent', () =>
 
 	it('filesSelected should report an error if uploading throws one', () =>
 	{
-		let error = new Error("Error");
-		let fileReader = TestBed.get(FileReaderService) as jasmine.SpyObj<FileReaderService>;
-		let messageServiceMock = TestBed.get(MessageService) as jasmine.SpyObj<MessageService>;
+		const error = new Error("Error");
+		const fileReader = TestBed.get(FileReaderService) as jasmine.SpyObj<FileReaderService>;
+		const messageServiceMock = TestBed.get(MessageService) as jasmine.SpyObj<MessageService>;
 
 		fileReader.read.and.throwError(error.message);
-		let file = new File([JSON.stringify(fixtureData)], "file.json");
+		const file = new File([JSON.stringify(fixtureData)], "file.json");
 
 		component.uploadFiles([file]);
 		expect(messageServiceMock.error).toHaveBeenCalledWith(error);

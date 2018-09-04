@@ -2,9 +2,9 @@ import { Component, OnInit } from '@angular/core';
 import { MatSelectionList } from '@angular/material';
 import { Title } from '@angular/platform-browser';
 import { APIClient, IGroupData, Settings } from 'api';
-import { AnimationLibrary } from '../animation-library';
-import { FileSaverService } from '../file-saver.service';
-import { MessageService } from '../message.service';
+import { AnimationLibrary } from 'app/animation-library';
+import { FileSaverService } from 'app/services/file-saver.service';
+import { MessageService } from 'app/services/message.service';
 
 @Component({
 	selector: 'app-tools',
@@ -14,7 +14,7 @@ import { MessageService } from '../message.service';
 })
 export class ToolsComponent implements OnInit
 {
-	public loading: boolean
+	public loading: boolean;
 	public groups: IGroupData[];
 	public attributes: Attribute[];
 	public settings: Settings;
@@ -30,7 +30,7 @@ export class ToolsComponent implements OnInit
 
 	ngOnInit()
 	{
-		let promises = [];
+		const promises = [];
 		this.attributes = [
 			new Attribute("Hue", 0, 360, 0.1),
 			new Attribute("Saturation"),
@@ -63,7 +63,7 @@ export class ToolsComponent implements OnInit
 					this.settings = response;
 				}));
 
-			Promise.all(promises).then(x => 
+			Promise.all(promises).then(x =>
 			{
 				this.loading = false;
 			});
@@ -78,18 +78,19 @@ export class ToolsComponent implements OnInit
 
 	public getReaperControllerScript(attributesList: MatSelectionList): string
 	{
-		let sliderLines: string[] = [];
-		let selectedAttributes: Attribute[] = attributesList.selectedOptions.selected.map(x => x.value);
+		const sliderLines: string[] = [];
+		const selectedAttributes: Attribute[] = attributesList.selectedOptions.selected.map(x => x.value);
 		sliderLines.push(getSliderCode(sliderLines.length + 1, "MIDI Channel", 0, 0, 15, 1));
 
-		for (let attribute of selectedAttributes)
+		for (const attribute of selectedAttributes)
 		{
-			sliderLines.push(getSliderCode(sliderLines.length + 1, attribute.name, attribute.defaultValue, attribute.min, attribute.max, attribute.step));
+			sliderLines.push(getSliderCode(
+				sliderLines.length + 1, attribute.name, attribute.defaultValue, attribute.min, attribute.max, attribute.step));
 		}
 
-		let pinLines = ["in_pin:none", "out_pin:none"];
+		const pinLines = ["in_pin:none", "out_pin:none"];
 
-		let initLines = [
+		const initLines = [
 			`@init`,
 			`\tlastRefreshTime = 0;`,
 			`\tlastValues = 4096;`,
@@ -106,21 +107,21 @@ export class ToolsComponent implements OnInit
 			`\t);`
 		];
 
-		let blockLines = [
+		const blockLines = [
 			`@block`,
 			`\tcurrentTime = time();`,
 			`\tcurrentTime > lastRefreshTime ? (`];
 
 		for (let i = 0; i < selectedAttributes.length; i++)
 		{
-			let attribute = selectedAttributes[i];
-			if (attribute.max != 1)
+			const attribute = selectedAttributes[i];
+			if (attribute.max !== 1)
 			{
-				blockLines.push(`\t\tsendMessage(slider1, ${i + 1}, slider${i + 2} / ${attribute.max} * 127);`)
+				blockLines.push(`\t\tsendMessage(slider1, ${i + 1}, slider${i + 2} / ${attribute.max} * 127);`);
 			}
 			else
 			{
-				blockLines.push(`\t\tsendMessage(slider1, ${i + 1}, slider${i + 2} * 127);`)
+				blockLines.push(`\t\tsendMessage(slider1, ${i + 1}, slider${i + 2} * 127);`);
 			}
 		}
 
@@ -130,21 +131,21 @@ export class ToolsComponent implements OnInit
 
 		for (let i = 0; i < selectedAttributes.length; i++)
 		{
-			let attribute = selectedAttributes[i];
-			if (attribute.max != 1)
+			const attribute = selectedAttributes[i];
+			if (attribute.max !== 1)
 			{
-				blockLines.push(`\t\tsendMaybe(slider1, ${i + 1}, slider${i + 2} / ${attribute.max} * 127);`)
+				blockLines.push(`\t\tsendMaybe(slider1, ${i + 1}, slider${i + 2} / ${attribute.max} * 127);`);
 			}
 			else
 			{
-				blockLines.push(`\t\tsendMaybe(slider1, ${i + 1}, slider${i + 2} * 127);`)
+				blockLines.push(`\t\tsendMaybe(slider1, ${i + 1}, slider${i + 2} * 127);`);
 			}
 		}
 
 		blockLines.push(`\t);`);
 
 
-		let script = [
+		const script = [
 			sliderLines.join("\r\n"),
 			pinLines.join("\r\n"),
 			initLines.join("\r\n"),
@@ -155,16 +156,16 @@ export class ToolsComponent implements OnInit
 
 	public getOsciiBotControllerScript(attributesList: MatSelectionList, groupsList: MatSelectionList, midiLoopbackName: string): string
 	{
-		let ioLines = [];
-		let selectedAttributes: Attribute[] = attributesList.selectedOptions.selected.map(x => x.value);
-		let selectedGroups: IGroupData[] = groupsList.selectedOptions.selected.map(x => x.value);
+		const ioLines = [];
+		const selectedAttributes: Attribute[] = attributesList.selectedOptions.selected.map(x => x.value);
+		const selectedGroups: IGroupData[] = groupsList.selectedOptions.selected.map(x => x.value);
 
 		ioLines.push(
 			`@output lightingOutput OSC "backingtracks.local:${this.settings.oscPort}"`,
 			`@input lightingInput MIDI "${midiLoopbackName}"`
 		);
 
-		let initLines = [
+		const initLines = [
 			`@init`,
 			`\tdefaultGroup = "defaultGroup";`,
 			`\tdefaultAttribute = "defaultAttribute";`,
@@ -184,7 +185,7 @@ export class ToolsComponent implements OnInit
 
 		for (let i = 0; i < selectedGroups.length; i++)
 		{
-			let group = selectedGroups[i];
+			const group = selectedGroups[i];
 			initLines.push(
 				``,
 				`\t\tgroupNumber == ${i + 1} ? (`,
@@ -205,7 +206,7 @@ export class ToolsComponent implements OnInit
 
 		for (let i = 0; i < selectedAttributes.length; i++)
 		{
-			let attribute = selectedAttributes[i];
+			const attribute = selectedAttributes[i];
 			initLines.push(
 				``,
 				`\t\tccNumber == ${i + 1} ? (`,
@@ -220,7 +221,7 @@ export class ToolsComponent implements OnInit
 			`\t);`
 		);
 
-		let midiMsgLines = [
+		const midiMsgLines = [
 			`@midimsg`,
 			`\tchannel = msg1 & 0x0F;`,
 			`\tmessageType = msg1 & 0xF0;`,
@@ -237,7 +238,7 @@ export class ToolsComponent implements OnInit
 			`\t);`
 		];
 
-		let lines = [
+		const lines = [
 			ioLines.join("\r\n"),
 			initLines.join("\r\n"),
 			midiMsgLines.join("\r\n")
@@ -252,14 +253,16 @@ export class ToolsComponent implements OnInit
 	}
 }
 
-function getSliderCode(sliderNumber: number, name: string, defaultValue: number = 0, min: number = 0, max: number = 1, step: number = 0.001): string
+function getSliderCode(sliderNumber: number, name: string, defaultValue: number = 0,
+	min: number = 0, max: number = 1, step: number = 0.001): string
 {
 	return `slider${sliderNumber}:${defaultValue}<${min},${max},${step}>${name}`;
 }
 
 export class Attribute
 {
-	constructor(public name: string, public min: number = 0, public max: number = 1, public step: number = 0.001, public defaultValue: number = 0.0)
+	constructor(public name: string, public min: number = 0, public max: number = 1,
+		public step: number = 0.001, public defaultValue: number = 0.0)
 	{
 	}
 }

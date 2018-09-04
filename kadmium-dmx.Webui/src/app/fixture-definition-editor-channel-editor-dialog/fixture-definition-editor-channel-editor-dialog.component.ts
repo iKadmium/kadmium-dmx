@@ -64,14 +64,10 @@ export class FixtureDefinitionEditorChannelEditorDialogComponent implements OnIn
 
 	private getFilteredChannelNameOptions(): string[]
 	{
-		let name = this.form.value.name.toLowerCase();
-		let options = this.channelNameOptions
-			.filter(x => x.toLowerCase().startsWith(name) && x.toLowerCase() != name);
+		const name = this.form.value.name.toLowerCase();
+		const options = this.channelNameOptions
+			.filter(x => x.toLowerCase().startsWith(name) && x.toLowerCase() !== name);
 		return options;
-		// 	return options.filter(x => 
-		// {
-		// 	return !this.getOtherChannelNames(channel).find(other => other == x);
-		// });
 	}
 
 	public updateAutocomplete(): void

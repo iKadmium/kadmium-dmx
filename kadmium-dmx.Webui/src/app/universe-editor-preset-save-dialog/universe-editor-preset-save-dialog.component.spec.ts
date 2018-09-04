@@ -1,8 +1,8 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
-
-import { UniverseEditorPresetSaveDialogComponent, UniverseEditorPresetSaveDialogComponentData } from './universe-editor-preset-save-dialog.component';
+import { MatDialogRef, MatFormField, MatList, MatListOption, MatSelectionList, MAT_DIALOG_DATA } from '@angular/material';
 import { MockComponent } from 'ng-mocks';
-import { MatList, MatListOption, MatSelectionList, MatFormField, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material';
+// tslint:disable-next-line:max-line-length
+import { UniverseEditorPresetSaveDialogComponent, UniverseEditorPresetSaveDialogComponentData } from './universe-editor-preset-save-dialog.component';
 
 describe('UniverseEditorPresetSaveDialogComponent', () =>
 {

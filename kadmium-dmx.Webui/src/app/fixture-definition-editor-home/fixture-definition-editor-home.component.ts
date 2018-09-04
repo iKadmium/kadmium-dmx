@@ -1,9 +1,9 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { APIClient, IFixtureDefinition } from 'api';
-import { AnimationLibrary } from 'app/animation-library';
-import { EditorService } from '../editor.service';
-import { FixtureType } from 'app/enums/fixture-type.enum';
+import { AnimationLibrary } from '../animation-library';
+import { FixtureType } from '../enums/fixture-type.enum';
+import { EditorService } from '../services/editor.service';
 
 @Component({
 	selector: 'app-fixture-definition-editor-home',
@@ -23,7 +23,7 @@ export class FixtureDefinitionEditorHomeComponent implements OnInit
 		private apiClient: APIClient
 	)
 	{
-		let model = this.fixtureDefinitionService.getActive();
+		const model = this.fixtureDefinitionService.getActive();
 		this.form = this.formBuilder.group({
 			skeleton: this.formBuilder.group({
 				manufacturer: [model.skeleton.manufacturer, Validators.required],
@@ -39,7 +39,7 @@ export class FixtureDefinitionEditorHomeComponent implements OnInit
 		{
 			this.manufacturers = result
 				.map(x => x.manufacturer)
-				.filter((value, index, array) => (array.indexOf(value) == index));
+				.filter((value, index, array) => (array.indexOf(value) === index));
 		});
 	}
 

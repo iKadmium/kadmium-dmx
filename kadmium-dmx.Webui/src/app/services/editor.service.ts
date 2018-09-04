@@ -9,7 +9,7 @@ export class EditorService<T>
 	public onSave: Observable<void>;
 	private subscriber: Subscriber<void>;
 	private activeItem: T;
-	private dirty: boolean = false;
+	private dirty = false;
 
 	constructor()
 	{

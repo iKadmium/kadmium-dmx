@@ -5,7 +5,7 @@ import { MockComponent } from 'ng-mocks';
 import { MatIcon, MatToolbar, MatCard, MatCardContent, MatDialog } from '@angular/material';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { from } from 'rxjs';
-import { EditorService } from '../editor.service';
+import { EditorService } from '../services/editor.service';
 import { IFixtureDefinition } from 'api';
 import { FixtureDefinitionTestHelpers } from '../test/fixture-definition-test-helpers';
 

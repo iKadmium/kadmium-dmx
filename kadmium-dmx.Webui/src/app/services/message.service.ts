@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { MatSnackBar } from '../../node_modules/@angular/material';
+import { MatSnackBar } from '@angular/material';
 
 @Injectable({
 	providedIn: 'root'
@@ -16,7 +16,7 @@ export class MessageService
 
 	public info(message: string): void
 	{
-		console.info(message);
+		console.log(message);
 		this.snackbar.open(message, "Close", { duration: 3000 });
 	}
 }

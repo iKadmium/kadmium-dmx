@@ -1,13 +1,12 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
-
-import { DashboardOSCListenerComponent } from './dashboard-osc-listener.component';
-import { MockComponent } from 'ng-mocks';
-import { MatCard, MatCardTitle, MatCardSubtitle, MatCardContent, MatCardActions, MatIcon, MatSlideToggle } from '@angular/material';
-import { BusyCardComponent } from '../busy-card/busy-card.component';
-import { APIClient } from 'api';
-import { from } from 'rxjs';
+import { MatCard, MatCardActions, MatCardContent, MatCardSubtitle, MatCardTitle, MatIcon, MatSlideToggle } from '@angular/material';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
-import { MessageService } from 'app/message.service';
+import { APIClient } from 'api';
+import { MessageService } from 'app/services/message.service';
+import { MockComponent } from 'ng-mocks';
+import { from } from 'rxjs';
+import { BusyCardComponent } from '../busy-card/busy-card.component';
+import { DashboardOSCListenerComponent } from './dashboard-osc-listener.component';
 
 describe('DashboardOSCListenerComponent', () =>
 {
@@ -59,17 +58,17 @@ describe('DashboardOSCListenerComponent', () =>
 
 	it('should request the status of the OSC Listener', () =>
 	{
-		let serviceMock = TestBed.get(APIClient) as jasmine.SpyObj<APIClient>;
+		const serviceMock = TestBed.get(APIClient) as jasmine.SpyObj<APIClient>;
 		fixture.detectChanges();
 		expect(serviceMock.getOSCListenerEnabled).toHaveBeenCalledTimes(1);
 	});
 
 	it('should show an error message if the API client throws an error', () =>
 	{
-		let serviceMock = TestBed.get(APIClient) as jasmine.SpyObj<APIClient>;
-		let messageServiceMock = TestBed.get(MessageService) as jasmine.SpyObj<MessageService>;
-		let errorMessage = "Error";
-		let error = new Error(errorMessage);
+		const serviceMock = TestBed.get(APIClient) as jasmine.SpyObj<APIClient>;
+		const messageServiceMock = TestBed.get(MessageService) as jasmine.SpyObj<MessageService>;
+		const errorMessage = "Error";
+		const error = new Error(errorMessage);
 		serviceMock.getOSCListenerEnabled.and.throwError(errorMessage);
 		fixture.detectChanges();
 
@@ -78,7 +77,7 @@ describe('DashboardOSCListenerComponent', () =>
 
 	it('should toggle the status of the OSC Listener when requested', () =>
 	{
-		let serviceMock = TestBed.get(APIClient) as jasmine.SpyObj<APIClient>;
+		const serviceMock = TestBed.get(APIClient) as jasmine.SpyObj<APIClient>;
 		fixture.detectChanges();
 		expect(component.enabled).toBe(false);
 		component.toggleEnabled();
@@ -90,10 +89,10 @@ describe('DashboardOSCListenerComponent', () =>
 
 	it('should report an error if the API Client throws one while toggling', () =>
 	{
-		let errorMessage = "Error";
-		let error = new Error(errorMessage);
-		let serviceMock = TestBed.get(APIClient) as jasmine.SpyObj<APIClient>;
-		let messageServiceMock = TestBed.get(MessageService) as jasmine.SpyObj<MessageService>;
+		const errorMessage = "Error";
+		const error = new Error(errorMessage);
+		const serviceMock = TestBed.get(APIClient) as jasmine.SpyObj<APIClient>;
+		const messageServiceMock = TestBed.get(MessageService) as jasmine.SpyObj<MessageService>;
 		serviceMock.setOSCListenerEnabled.and.throwError(errorMessage);
 		fixture.detectChanges();
 

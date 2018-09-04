@@ -3,7 +3,8 @@ import { MatDialog } from '@angular/material';
 import { IFixtureDefinition, IMovementAxisData } from 'api';
 import { AnimationLibrary } from '../animation-library';
 import { DeleteConfirmDialogComponent } from '../delete-confirm-dialog/delete-confirm-dialog.component';
-import { EditorService } from '../editor.service';
+import { EditorService } from '../services/editor.service';
+// tslint:disable-next-line:max-line-length
 import { FixtureDefinitionEditorMovementAxisEditorDialogComponent } from '../fixture-definition-editor-movement-axis-editor-dialog/fixture-definition-editor-movement-axis-editor-dialog.component';
 
 @Component({
@@ -19,12 +20,12 @@ export class FixtureDefinitionEditorMovementsComponent implements OnInit
 	private allAxis: string[] = [
 		'Pan',
 		'Tilt'
-	]
+	];
 
 	constructor(
 		private editorService: EditorService<IFixtureDefinition>,
 		private dialogService: MatDialog
-	) 
+	)
 	{
 		if (this.editorService.getActive().movements == null)
 		{
@@ -39,12 +40,15 @@ export class FixtureDefinitionEditorMovementsComponent implements OnInit
 
 	public async addAxis(): Promise<void>
 	{
-		let axis: IMovementAxisData = {
+		const axis: IMovementAxisData = {
 			name: "",
 			min: -270,
 			max: 270
 		};
-		let result = await this.dialogService.open(FixtureDefinitionEditorMovementAxisEditorDialogComponent, { data: axis }).afterClosed().toPromise();
+		const result = await this.dialogService
+			.open(FixtureDefinitionEditorMovementAxisEditorDialogComponent, { data: axis })
+			.afterClosed()
+			.toPromise();
 		if (result)
 		{
 			this.movements.push(result);
@@ -53,8 +57,11 @@ export class FixtureDefinitionEditorMovementsComponent implements OnInit
 
 	public async editAxis(index: number): Promise<void>
 	{
-		let axis = this.movements[index];
-		let result = await this.dialogService.open(FixtureDefinitionEditorMovementAxisEditorDialogComponent, { data: axis }).afterClosed().toPromise() as IMovementAxisData;
+		const axis = this.movements[index];
+		const result = await this.dialogService
+			.open(FixtureDefinitionEditorMovementAxisEditorDialogComponent, { data: axis })
+			.afterClosed()
+			.toPromise() as IMovementAxisData;
 		if (result)
 		{
 			this.movements[index] = result;
@@ -63,8 +70,8 @@ export class FixtureDefinitionEditorMovementsComponent implements OnInit
 
 	public async removeAxis(index: number): Promise<void>
 	{
-		let axis = this.movements[index];
-		let result = await this.dialogService.open(DeleteConfirmDialogComponent, { data: axis.name }).afterClosed().toPromise();
+		const axis = this.movements[index];
+		const result = await this.dialogService.open(DeleteConfirmDialogComponent, { data: axis.name }).afterClosed().toPromise();
 		if (result)
 		{
 			this.movements.splice(index, 1);
@@ -74,7 +81,7 @@ export class FixtureDefinitionEditorMovementsComponent implements OnInit
 	public getOtherAxisNames(thisEntry: IMovementAxisData): string[]
 	{
 		return this.movements
-			.filter(value => value != thisEntry)
+			.filter(value => value !== thisEntry)
 			.map((value: IMovementAxisData) => value.name);
 	}
 

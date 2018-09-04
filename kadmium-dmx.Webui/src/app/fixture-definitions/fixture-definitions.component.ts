@@ -3,11 +3,11 @@ import { MatDialog } from '@angular/material';
 import { Title } from "@angular/platform-browser";
 import { APIClient } from 'api';
 import { IFixtureDefinition, FixtureDefinitionSkeleton } from "api/models";
-import { MessageService } from 'app/message.service';
+import { MessageService } from '../services/message.service';
 import { AnimationLibrary } from "../animation-library";
 import { DeleteConfirmDialogComponent } from '../delete-confirm-dialog/delete-confirm-dialog.component';
-import { FileReaderService } from '../file-reader.service';
-import { URLs } from '../url';
+import { FileReaderService } from '../services/file-reader.service';
+import { AppURL } from '../app-url';
 
 @Component({
 	selector: 'app-fixture-definitions',
@@ -92,7 +92,7 @@ export class FixtureDefinitionsComponent implements OnInit
 
 	public async filesSelected(files: File[]): Promise<void>
 	{
-		for (let file of files)
+		for (const file of files)
 		{
 			await this.uploadFile(file);
 		}
@@ -126,7 +126,7 @@ export class FixtureDefinitionsComponent implements OnInit
 
 	public getDownloadURL(skeleton: FixtureDefinitionSkeleton): string
 	{
-		return `${URLs.getApiURL()}/${skeleton.manufacturer}/${skeleton.model}/download`;
+		return `${AppURL.getApiURL()}/${skeleton.manufacturer}/${skeleton.model}/download`;
 	}
 
 	public getDownloadFilename(skeleton: FixtureDefinitionSkeleton): string

@@ -1,28 +1,27 @@
-import { async, ComponentFixture, TestBed, fakeAsync, tick } from '@angular/core/testing';
-
-import { GroupsComponent } from './groups.component';
-import { MockComponent, MockDirective } from 'ng-mocks';
-import { FormsModule } from '@angular/forms';
-import { SidenavToggleComponent } from '../sidenav-toggle/sidenav-toggle.component';
-import { MatIcon, MatToolbar, MatFormField, MatCardContent, MatCard } from '@angular/material';
-import { BusyCardComponent } from '../busy-card/busy-card.component';
-import { UniqueValueValidatorDirective } from '../unique-value-validator.directive';
-import { APIClient, GroupData } from 'api';
-import { from } from 'rxjs';
+import { async, ComponentFixture, fakeAsync, TestBed, tick } from '@angular/core/testing';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { MatCard, MatCardContent, MatFormField, MatIcon, MatToolbar } from '@angular/material';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
-import { MessageService } from 'app/message.service';
-import { FileSaverService } from 'app/file-saver.service';
-import { FileReaderService } from '../file-reader.service';
+import { APIClient, GroupData, IGroupData } from 'api';
+import { MockComponent } from 'ng-mocks';
+import { from } from 'rxjs';
+import { BusyCardComponent } from '../busy-card/busy-card.component';
+import { FileReaderService } from '../services/file-reader.service';
+import { FileSaverService } from '../services/file-saver.service';
+import { MessageService } from '../services/message.service';
+import { SidenavToggleComponent } from '../sidenav-toggle/sidenav-toggle.component';
+import { GroupsComponent } from './groups.component';
 
 describe('GroupsComponent', () =>
 {
 	let component: GroupsComponent;
 	let fixture: ComponentFixture<GroupsComponent>;
-	let groups: GroupData[];
+	let groups: IGroupData[];
 
 	beforeEach(async(() =>
 	{
-		groups = [{ id: "", name: "first", order: 0 }];
+		groups = [{ name: "first", order: 0 }];
+
 		TestBed.configureTestingModule({
 			declarations: [
 				GroupsComponent,
@@ -34,10 +33,10 @@ describe('GroupsComponent', () =>
 				MockComponent(MatCardContent),
 				MockComponent(MatCard),
 
-				MockDirective(UniqueValueValidatorDirective)
+				// MockDirective(UniqueValueValidatorDirective)
 			],
 			imports: [
-				FormsModule,
+				ReactiveFormsModule,
 				NoopAnimationsModule
 			],
 			providers: [
@@ -70,16 +69,16 @@ describe('GroupsComponent', () =>
 
 	it('should request groups', () =>
 	{
-		let apiClientMock = TestBed.get(APIClient) as jasmine.SpyObj<APIClient>;
+		const apiClientMock = TestBed.get(APIClient) as jasmine.SpyObj<APIClient>;
 		fixture.detectChanges();
 		expect(apiClientMock.getGroups).toHaveBeenCalledTimes(1);
 	});
 
 	it('should report an error if requesting groups throws one', () =>
 	{
-		let error = new Error("Error");
-		let messageServiceMock = TestBed.get(MessageService) as jasmine.SpyObj<MessageService>;
-		let apiClientMock = TestBed.get(APIClient) as jasmine.SpyObj<APIClient>;
+		const error = new Error("Error");
+		const messageServiceMock = TestBed.get(MessageService) as jasmine.SpyObj<MessageService>;
+		const apiClientMock = TestBed.get(APIClient) as jasmine.SpyObj<APIClient>;
 		apiClientMock.getGroups.and.throwError(error.message);
 		fixture.detectChanges();
 		expect(messageServiceMock.error).toHaveBeenCalledWith(error);
@@ -87,82 +86,87 @@ describe('GroupsComponent', () =>
 
 	it('should add a new group', () =>
 	{
-		component.groups = [];
+		component.groups.controls = [];
 		component.add();
-		expect(component.groups.length).toBe(1);
-		expect(component.groups[0].order).toBe(1);
+		expect(component.groups.controls.length).toBe(1);
 		component.add();
-		expect(component.groups.length).toBe(2);
-		expect(component.groups[1].order).toBe(2);
+		expect(component.groups.controls.length).toBe(2);
 	});
 
 	it('should delete groups', () =>
 	{
-		let group: GroupData = { id: "", name: "Group", order: 1 };
-		component.groups = [group];
-		component.delete(group);
+		fixture.detectChanges();
+		component.delete(0);
 		expect(component.groups.length).toBe(0);
 	});
 
-	it('should swap groups', () =>
+	it('should swap groups', fakeAsync(() =>
 	{
-		let first: GroupData = { id: "", name: "First", order: 1 };
-		let second: GroupData = { id: "", name: "Second", order: 2 };
-		component.groups = [first, second];
+		const first: IGroupData = { name: "First", order: 0 };
+		const second: IGroupData = { name: "Second", order: 1 };
+		groups = [first, second];
+		const apiClientMock = TestBed.get(APIClient) as jasmine.SpyObj<APIClient>;
+		apiClientMock.getGroups.and.returnValue(from([groups]));
+
+		fixture.detectChanges();
+		tick();
+
 		component.swap(0, 1);
-		expect(component.groups[0]).toBe(second);
-		expect(component.groups[1]).toBe(first);
-		expect(first.order).toBe(2);
-		expect(second.order).toBe(1);
-	});
+		const value = component.getValue();
+		expect(value[0]).toEqual(jasmine.objectContaining({ name: second.name }));
+		expect(value[1]).toEqual(jasmine.objectContaining({ name: first.name }));
+	}));
 
 	it('should save', () =>
 	{
-		let apiClientMock = TestBed.get(APIClient) as jasmine.SpyObj<APIClient>;
-		component.groups = groups;
+		const apiClientMock = TestBed.get(APIClient) as jasmine.SpyObj<APIClient>;
+		fixture.detectChanges();
 		component.save();
-		expect(apiClientMock.putGroups).toHaveBeenCalledWith({ groups: component.groups });
+		expect(apiClientMock.putGroups).toHaveBeenCalledWith({ groups: component.getValue() });
 	});
 
 	it('should report an error if saving throws one', () =>
 	{
-		let error = new Error("Error");
-		let apiClientMock = TestBed.get(APIClient) as jasmine.SpyObj<APIClient>;
-		let serviceMock = TestBed.get(MessageService) as jasmine.SpyObj<MessageService>;
+		const error = new Error("Error");
+		const apiClientMock = TestBed.get(APIClient) as jasmine.SpyObj<APIClient>;
+		const serviceMock = TestBed.get(MessageService) as jasmine.SpyObj<MessageService>;
 		apiClientMock.putGroups.and.throwError(error.message);
-		component.groups = groups;
+		fixture.detectChanges();
 		component.save();
 		expect(serviceMock.error).toHaveBeenCalledWith(error);
 	});
 
 	it('should download the groups', () =>
 	{
-		let serviceMock = TestBed.get(FileSaverService) as jasmine.SpyObj<FileSaverService>;
-		component.groups = groups;
+		const serviceMock = TestBed.get(FileSaverService) as jasmine.SpyObj<FileSaverService>;
+		fixture.detectChanges();
 		component.download();
-		expect(serviceMock.save).toHaveBeenCalledWith(jasmine.any(String), component.groups);
+		expect(serviceMock.save).toHaveBeenCalledWith(jasmine.any(String), component.getValue());
 	});
 
 	it('should trigger the click function when upload is called', () =>
 	{
-		let inputElement = jasmine.createSpyObj<HTMLInputElement>({ click: null });
+		const inputElement = jasmine.createSpyObj<HTMLInputElement>({ click: null });
 		component.upload(inputElement);
 		expect(inputElement.click).toHaveBeenCalledTimes(1);
 	});
 
 	it('should upload the groups', fakeAsync(() =>
 	{
-		let file: File = new File([], "filename.json");
-		let fileReader = TestBed.get(FileReaderService) as jasmine.SpyObj<FileReaderService>;
+		const file: File = new File([], "filename.json");
+		const apiClientMock = TestBed.get(APIClient) as jasmine.SpyObj<APIClient>;
+		apiClientMock.getGroups.and.returnValue(from([[]]));
+		const fileReader = TestBed.get(FileReaderService) as jasmine.SpyObj<FileReaderService>;
 		fileReader.read.and.returnValue(Promise.resolve(groups));
-		component.groups = [];
+		fixture.detectChanges();
 		component.filesSelected([file]);
 		expect(fileReader.read).toHaveBeenCalledWith(file);
 		tick();
-		expect(component.groups.length).toBe(groups.length);
+		const groupsValue = component.getValue();
+		expect(groupsValue.length).toBe(groups.length);
 		for (let i = 0; i < groups.length; i++)
 		{
-			expect(component.groups[i]).toBe(groups[i]);
+			expect(groupsValue[i]).toEqual(groups[i]);
 		}
 	}));
 });

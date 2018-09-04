@@ -1,11 +1,10 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
-
-import { UniverseEditorDialogComponent } from './universe-editor-dialog.component';
 import { ReactiveFormsModule } from '@angular/forms';
-import { MockComponent } from 'ng-mocks';
-import { MatFormField, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material';
+import { MatDialogRef, MatFormField, MAT_DIALOG_DATA } from '@angular/material';
 import { UniverseData } from 'api';
+import { MockComponent } from 'ng-mocks';
 import { UniverseTestHelpers } from '../test/universe-test-helpers';
+import { UniverseEditorDialogComponent } from './universe-editor-dialog.component';
 
 describe('UniverseEditorDialogComponent', () =>
 {

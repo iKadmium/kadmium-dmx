@@ -1,6 +1,6 @@
-import { TestBed, inject } from '@angular/core/testing';
-import { MessageService } from 'app/message.service';
-import { MatSnackBar, MatSnackBarConfig } from '../../node_modules/@angular/material';
+import { inject, TestBed } from '@angular/core/testing';
+import { MatSnackBar } from '@angular/material';
+import { MessageService } from 'app/services/message.service';
 
 
 describe('MessageService', () =>
@@ -22,9 +22,9 @@ describe('MessageService', () =>
 
 	it('should show a snackbar and a console log on errors', inject([MessageService], (service: MessageService) =>
 	{
-		let serviceMock = TestBed.get(MatSnackBar) as jasmine.SpyObj<MatSnackBar>;
-		let error = new Error("Error");
-		let spy = spyOn(console, "error");
+		const serviceMock = TestBed.get(MatSnackBar) as jasmine.SpyObj<MatSnackBar>;
+		const error = new Error("Error");
+		const spy = spyOn(console, "error");
 
 		service.error(error);
 		expect(serviceMock.open).toHaveBeenCalledWith(error.message, "Close", jasmine.any(Object));
@@ -33,9 +33,9 @@ describe('MessageService', () =>
 
 	it('should show a snackbar and a console log on info', inject([MessageService], (service: MessageService) =>
 	{
-		let serviceMock = TestBed.get(MatSnackBar) as jasmine.SpyObj<MatSnackBar>;
-		let message = "Message";
-		let spy = spyOn(console, "info");
+		const serviceMock = TestBed.get(MatSnackBar) as jasmine.SpyObj<MatSnackBar>;
+		const message = "Message";
+		const spy = spyOn(console, "log");
 
 		service.info(message);
 		expect(serviceMock.open).toHaveBeenCalledWith(message, "Close", jasmine.any(Object));

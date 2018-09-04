@@ -1,9 +1,11 @@
 /* tslint:disable */
-import {
+import
+{
   MovementAxisOptions,
-} from './..';
+} from '..'
 
-export interface FixtureOptions {
+export interface FixtureOptions
+{
   axisOptions: { [key: string]: MovementAxisOptions };
   maxBrightness: number;
 }

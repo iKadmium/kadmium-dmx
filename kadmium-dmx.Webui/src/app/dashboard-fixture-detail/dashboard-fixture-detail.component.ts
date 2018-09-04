@@ -1,15 +1,15 @@
 import { AfterViewInit, Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { ActivatedRoute } from "@angular/router";
 import { ActiveUniverse, APIClient } from 'api';
-import { MessageService } from 'app/message.service';
+import { AttributeUpdateData, AttributeUpdateMessage, FixtureStreamService } from 'app/services/fixture-stream.service';
+import { MessageService } from 'app/services/message.service';
+import { UniverseStreamService } from "app/services/universe-stream.service";
 import { Subscription } from 'rxjs';
 import { AnimationLibrary } from "../animation-library";
 import { DashboardFixturePreviewComponent } from "../dashboard-fixture-preview/dashboard-fixture-preview.component";
-import { AttributeUpdateData, AttributeUpdateMessage, FixtureStreamService } from '../fixture-stream.service';
 import { PreviewAttribute } from '../preview-attribute';
 import { PreviewFixture } from "../preview-fixture";
 import { PreviewUniverse } from "../preview-universe";
-import { UniverseStreamService } from "../universe-stream.service";
 
 @Component({
 	selector: 'app-dashboard-fixture-detail',

@@ -1,17 +1,16 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
-
-import { DashboardFixturesComponent } from './dashboard-fixtures.component';
-import { SidenavToggleComponent } from '../sidenav-toggle/sidenav-toggle.component';
+import { MatCard, MatCardContent, MatToolbar } from '@angular/material';
+import { RouterTestingModule } from '@angular/router/testing';
+import { ActiveFixture, ActiveUniverse, APIClient } from 'api';
+import { MessageService } from 'app/services/message.service';
+import { UniverseStreamService } from 'app/services/universe-stream.service';
 import { MockComponent } from 'ng-mocks';
-import { MatToolbar, MatCard, MatCardContent } from '@angular/material';
+import { from, Observable, Subscriber, Subscription } from 'rxjs';
 import { BusyCardComponent } from '../busy-card/busy-card.component';
 import { DashboardFixtureListComponent } from '../dashboard-fixture-list/dashboard-fixture-list.component';
-import { RouterTestingModule } from '@angular/router/testing';
-import { APIClient, ActiveFixture, ActiveUniverse } from 'api';
-import { from, Observable, Subscription, Subscriber } from 'rxjs';
-import { UniverseStreamService } from '../universe-stream.service';
 import { PreviewFixture } from '../preview-fixture';
-import { MessageService } from 'app/message.service';
+import { SidenavToggleComponent } from '../sidenav-toggle/sidenav-toggle.component';
+import { DashboardFixturesComponent } from './dashboard-fixtures.component';
 
 describe('DashboardFixturesComponent', () =>
 {
@@ -52,7 +51,12 @@ describe('DashboardFixturesComponent', () =>
 			providers: [
 				{ provide: APIClient, useValue: jasmine.createSpyObj<APIClient>({ getActiveUniverse: from([activeUniverse]) }) },
 				{ provide: MessageService, useValue: jasmine.createSpyObj<MessageService>({ error: null }) },
-				{ provide: UniverseStreamService, useValue: jasmine.createSpyObj<UniverseStreamService>({ open: universeStreamObservable, close: null }) }
+				{
+					provide: UniverseStreamService, useValue: jasmine.createSpyObj<UniverseStreamService>({
+						open: universeStreamObservable,
+						close: null
+					})
+				}
 			]
 		});
 
@@ -73,9 +77,9 @@ describe('DashboardFixturesComponent', () =>
 
 	it('should unsubscribe from the universe stream socket when destroyed', () =>
 	{
-		let mockService = TestBed.get(UniverseStreamService) as jasmine.SpyObj<UniverseStreamService>;
-		let mockSubscription = jasmine.createSpyObj<Subscription>({ unsubscribe: null });
-		let mockObservable = jasmine.createSpyObj<Observable<Uint8Array>>({ subscribe: mockSubscription });
+		const mockService = TestBed.get(UniverseStreamService) as jasmine.SpyObj<UniverseStreamService>;
+		const mockSubscription = jasmine.createSpyObj<Subscription>({ unsubscribe: null });
+		const mockObservable = jasmine.createSpyObj<Observable<Uint8Array>>({ subscribe: mockSubscription });
 		mockService.open.and.returnValue(mockObservable);
 
 		fixture.detectChanges();
@@ -86,11 +90,11 @@ describe('DashboardFixturesComponent', () =>
 
 	it('should report an error if the universe stream throws one', () =>
 	{
-		let errorMessage = "Error Message";
-		let error = new Error(errorMessage);
+		const errorMessage = "Error Message";
+		const error = new Error(errorMessage);
 
-		let mockService = TestBed.get(UniverseStreamService) as jasmine.SpyObj<UniverseStreamService>;
-		let errorMock = TestBed.get(MessageService) as jasmine.SpyObj<MessageService>;
+		const mockService = TestBed.get(UniverseStreamService) as jasmine.SpyObj<UniverseStreamService>;
+		const errorMock = TestBed.get(MessageService) as jasmine.SpyObj<MessageService>;
 
 		mockService.open.and.throwError(errorMessage);
 
@@ -102,7 +106,7 @@ describe('DashboardFixturesComponent', () =>
 
 	it('should select fixtures', () =>
 	{
-		let fixtureData: ActiveFixture = {
+		const fixtureData: ActiveFixture = {
 			address: 1,
 			manufacturer: "Manufacturer",
 			model: "Model",
@@ -111,7 +115,7 @@ describe('DashboardFixturesComponent', () =>
 			colorWheel: [],
 			movementAxis: []
 		};
-		let theFixture = new PreviewFixture(fixtureData);
+		const theFixture = new PreviewFixture(fixtureData);
 		fixture.detectChanges();
 		expect(component.selectedFixture).toBe(undefined);
 		component.selectFixture(theFixture);

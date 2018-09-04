@@ -1,11 +1,11 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { Title } from "@angular/platform-browser";
-import { StatusCode } from 'app/enums/status-code.enum';
-import { MessageService } from 'app/message.service';
+import { MessageService } from '../services/message.service';
+import { StatusData, StatusStreamService } from '../services/status-stream.service';
 import { Subscription } from 'rxjs';
 import { AnimationLibrary } from '../animation-library';
+import { StatusCode } from '../enums/status-code.enum';
 import { Status } from "../status";
-import { StatusData, StatusStreamService } from '../status-stream.service';
 
 @Component({
 	selector: 'app-dashboard',

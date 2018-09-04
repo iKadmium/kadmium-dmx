@@ -3,41 +3,41 @@ import { DashboardFixturePreviewComponent } from "../dashboard-fixture-preview/d
 import { PreviewUniverse } from "../preview-universe";
 
 @Component({
-    selector: 'app-dashboard-fixture-list',
-    templateUrl: './dashboard-fixture-list.component.html',
-    styleUrls: ['./dashboard-fixture-list.component.css']
+	selector: 'app-dashboard-fixture-list',
+	templateUrl: './dashboard-fixture-list.component.html',
+	styleUrls: ['./dashboard-fixture-list.component.css']
 })
 export class DashboardFixtureListComponent implements OnInit
 {
-    @ViewChildren(DashboardFixturePreviewComponent) fixtures: QueryList<DashboardFixturePreviewComponent>;
+	@ViewChildren(DashboardFixturePreviewComponent) fixtures: QueryList<DashboardFixturePreviewComponent>;
 
-    @Input() universe: PreviewUniverse;
+	@Input() universe: PreviewUniverse;
 
-    public colCount: number;
+	public colCount: number;
 
-    constructor()
-    {
-        this.colCount = 1;
-    }
+	constructor()
+	{
+		this.colCount = 1;
+	}
 
-    ngOnInit()
-    {
-        window.addEventListener("resize", () =>
-        {
-            this.colCount = this.getCols(window.innerWidth);
-        });
-        this.colCount = this.getCols(window.innerWidth);
-    }
+	ngOnInit()
+	{
+		window.addEventListener("resize", () =>
+		{
+			this.colCount = this.getCols(window.innerWidth);
+		});
+		this.colCount = this.getCols(window.innerWidth);
+	}
 
-    private getCols(width: number): number
-    {
-        let cols = width / DashboardFixturePreviewComponent.width;
-        return Math.floor(cols);
-    }
+	private getCols(width: number): number
+	{
+		const cols = width / DashboardFixturePreviewComponent.width;
+		return Math.floor(cols);
+	}
 
-    public async render(data: Uint8Array): Promise<void>
-    {
-        await Promise.all(this.fixtures.map(item => item.render(data)));
-    }
+	public async render(data: Uint8Array): Promise<void>
+	{
+		await Promise.all(this.fixtures.map(item => item.render(data)));
+	}
 
 }

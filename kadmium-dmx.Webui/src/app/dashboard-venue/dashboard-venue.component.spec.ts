@@ -1,16 +1,16 @@
-import { async, ComponentFixture, TestBed, fakeAsync, tick } from '@angular/core/testing';
-
-import { DashboardVenueComponent } from './dashboard-venue.component';
-import { MockComponent } from 'ng-mocks';
-import { BusyCardComponent } from '../busy-card/busy-card.component';
-import { MatCardSubtitle, MatCard, MatCardTitle, MatCardContent, MatDivider, MatCardActions, MatIcon, MatMenu, MatMenuTrigger, MatDialog, MatDialogRef } from '@angular/material';
-import { RouterTestingModule } from '@angular/router/testing';
-import { APIClient } from 'api';
-import { from } from 'rxjs';
-import { MessageService } from 'app/message.service';
+import { async, ComponentFixture, fakeAsync, TestBed, tick } from '@angular/core/testing';
+// tslint:disable-next-line:max-line-length
+import { MatCard, MatCardActions, MatCardContent, MatCardSubtitle, MatCardTitle, MatDialog, MatDialogRef, MatDivider, MatIcon, MatMenu, MatMenuTrigger } from '@angular/material';
 import { By } from '@angular/platform-browser';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
+import { RouterTestingModule } from '@angular/router/testing';
+import { APIClient } from 'api';
+import { MessageService } from 'app/services/message.service';
+import { MockComponent } from 'ng-mocks';
+import { from } from 'rxjs';
+import { BusyCardComponent } from '../busy-card/busy-card.component';
 import { VenueNameDialogComponent } from '../venue-name-dialog/venue-name-dialog.component';
+import { DashboardVenueComponent } from './dashboard-venue.component';
 
 describe('DashboardVenueComponent', () =>
 {
@@ -70,27 +70,27 @@ describe('DashboardVenueComponent', () =>
 		expect(component).toBeTruthy();
 	});
 
-	it('component should request all the venues', () => 
+	it('component should request all the venues', () =>
 	{
-		let serviceMock = TestBed.get(APIClient) as jasmine.SpyObj<APIClient>;
+		const serviceMock = TestBed.get(APIClient) as jasmine.SpyObj<APIClient>;
 		fixture.detectChanges();
 		expect(serviceMock.getVenues).toHaveBeenCalledTimes(1);
 	});
 
-	it('component should report an error if it fails to get the venues', () => 
+	it('component should report an error if it fails to get the venues', () =>
 	{
-		let error = new Error("Error");
-		let apiClientMock = TestBed.get(APIClient) as jasmine.SpyObj<APIClient>;
-		let messageServiceMock = TestBed.get(MessageService) as jasmine.SpyObj<MessageService>;
+		const error = new Error("Error");
+		const apiClientMock = TestBed.get(APIClient) as jasmine.SpyObj<APIClient>;
+		const messageServiceMock = TestBed.get(MessageService) as jasmine.SpyObj<MessageService>;
 		apiClientMock.getVenues.and.throwError(error.message);
 		fixture.detectChanges();
 		expect(messageServiceMock.error).toHaveBeenCalledWith(error);
 	});
 
-	it('component should add all the venus it receives to a list', fakeAsync(() => 
+	it('component should add all the venus it receives to a list', fakeAsync(() =>
 	{
-		let serviceMock = TestBed.get(APIClient) as jasmine.SpyObj<APIClient>;
-		let venues: string[] = [
+		const serviceMock = TestBed.get(APIClient) as jasmine.SpyObj<APIClient>;
+		const venues: string[] = [
 			"Venue 1",
 			"Venue 2"
 		];
@@ -100,53 +100,53 @@ describe('DashboardVenueComponent', () =>
 		expect(component.venueSkeletons).toBe(venues);
 	}));
 
-	it('component should call the refresh venue method on startup', () => 
+	it('component should call the refresh venue method on startup', () =>
 	{
-		let spy = spyOn(component, "refreshVenue");
+		const spy = spyOn(component, "refreshVenue");
 		fixture.detectChanges();
 		expect(spy).toHaveBeenCalledTimes(1);
 	});
 
-	it('refreshVenue should request the active venue', () => 
+	it('refreshVenue should request the active venue', () =>
 	{
-		let serviceMock = TestBed.get(APIClient) as jasmine.SpyObj<APIClient>;
+		const serviceMock = TestBed.get(APIClient) as jasmine.SpyObj<APIClient>;
 		component.refreshVenue();
 		expect(serviceMock.getActiveVenue).toHaveBeenCalledTimes(1);
 	});
 
-	it('refreshVenue should report an error if it fails to get the active venue', () => 
+	it('refreshVenue should report an error if it fails to get the active venue', () =>
 	{
-		let error = new Error("Error");
-		let apiClientMock = TestBed.get(APIClient) as jasmine.SpyObj<APIClient>;
-		let messageServiceMock = TestBed.get(MessageService) as jasmine.SpyObj<MessageService>;
+		const error = new Error("Error");
+		const apiClientMock = TestBed.get(APIClient) as jasmine.SpyObj<APIClient>;
+		const messageServiceMock = TestBed.get(MessageService) as jasmine.SpyObj<MessageService>;
 		apiClientMock.getActiveVenue.and.throwError(error.message);
 		component.refreshVenue();
 		expect(messageServiceMock.error).toHaveBeenCalledWith(error);
 	});
 
-	it('loadVenue should activate the named venue', () => 
+	it('loadVenue should activate the named venue', () =>
 	{
-		let venueName = "name";
-		let serviceMock = TestBed.get(APIClient) as jasmine.SpyObj<APIClient>;
+		const venueName = "name";
+		const serviceMock = TestBed.get(APIClient) as jasmine.SpyObj<APIClient>;
 		component.loadVenue(venueName);
 		expect(serviceMock.activateVenue).toHaveBeenCalledWith({ name: venueName });
 	});
 
-	it('loadVenue should report an error if it fails to load the active venue', () => 
+	it('loadVenue should report an error if it fails to load the active venue', () =>
 	{
-		let venueName = "name";
-		let error = new Error("Error");
-		let apiClientMock = TestBed.get(APIClient) as jasmine.SpyObj<APIClient>;
-		let messageServiceMock = TestBed.get(MessageService) as jasmine.SpyObj<MessageService>;
+		const venueName = "name";
+		const error = new Error("Error");
+		const apiClientMock = TestBed.get(APIClient) as jasmine.SpyObj<APIClient>;
+		const messageServiceMock = TestBed.get(MessageService) as jasmine.SpyObj<MessageService>;
 		apiClientMock.activateVenue.and.throwError(error.message);
 		component.loadVenue(venueName);
 		expect(messageServiceMock.error).toHaveBeenCalledWith(error);
 	});
 
-	it('loadVenue should refresh when the named venue is loaded', fakeAsync(() => 
+	it('loadVenue should refresh when the named venue is loaded', fakeAsync(() =>
 	{
-		let venueName = "name";
-		let spy = spyOn(component, "refreshVenue");
+		const venueName = "name";
+		const spy = spyOn(component, "refreshVenue");
 		component.loadVenue(venueName);
 		tick();
 		expect(spy).toHaveBeenCalledTimes(1);
@@ -154,15 +154,15 @@ describe('DashboardVenueComponent', () =>
 
 	it('newVenue should ask the user for a new venue name', () =>
 	{
-		let dialogServiceMock = TestBed.get(MatDialog) as jasmine.SpyObj<MatDialog>;
+		const dialogServiceMock = TestBed.get(MatDialog) as jasmine.SpyObj<MatDialog>;
 		component.newVenue();
 		expect(dialogServiceMock.open).toHaveBeenCalledTimes(1);
 	});
 
 	it('newVenue should create a new venue with the name if not cancelled', fakeAsync(() =>
 	{
-		let venueName = "Name";
-		let apiClientMock = TestBed.get(APIClient) as jasmine.SpyObj<APIClient>;
+		const venueName = "Name";
+		const apiClientMock = TestBed.get(APIClient) as jasmine.SpyObj<APIClient>;
 		dialogSpy.afterClosed.and.returnValue(from([venueName]));
 		component.newVenue();
 		tick();
@@ -171,9 +171,9 @@ describe('DashboardVenueComponent', () =>
 
 	it('newVenue should try to load the new venue it created', fakeAsync(() =>
 	{
-		let venueName = "Name";
-		let spy = spyOn(component, "loadVenue");
-		let apiClientMock = TestBed.get(APIClient) as jasmine.SpyObj<APIClient>;
+		const venueName = "Name";
+		const spy = spyOn(component, "loadVenue");
+		const apiClientMock = TestBed.get(APIClient) as jasmine.SpyObj<APIClient>;
 		dialogSpy.afterClosed.and.returnValue(from([venueName]));
 		component.newVenue();
 		tick();
@@ -184,9 +184,9 @@ describe('DashboardVenueComponent', () =>
 
 	it('newVenue should report an error if it fails to create a new venue', fakeAsync(() =>
 	{
-		let error = new Error("Error");
-		let apiClientMock = TestBed.get(APIClient) as jasmine.SpyObj<APIClient>;
-		let messageServiceMock = TestBed.get(MessageService) as jasmine.SpyObj<MessageService>;
+		const error = new Error("Error");
+		const apiClientMock = TestBed.get(APIClient) as jasmine.SpyObj<APIClient>;
+		const messageServiceMock = TestBed.get(MessageService) as jasmine.SpyObj<MessageService>;
 		apiClientMock.postVenue.and.throwError(error.message);
 		dialogSpy.afterClosed.and.returnValue(from(["name"]));
 		component.newVenue();
@@ -196,7 +196,7 @@ describe('DashboardVenueComponent', () =>
 
 	it('should NOT create a new venue if cancelled', (done) =>
 	{
-		let apiClientMock = TestBed.get(APIClient) as jasmine.SpyObj<APIClient>;
+		const apiClientMock = TestBed.get(APIClient) as jasmine.SpyObj<APIClient>;
 		dialogSpy.afterClosed.and.returnValue(from([null]));
 		component.newVenue().then(() =>
 		{
@@ -207,15 +207,15 @@ describe('DashboardVenueComponent', () =>
 
 	it('template should add every item in venueSkeletons to a dropdown list', () =>
 	{
-		let venues: string[] = [
+		const venues: string[] = [
 			"Venue 1",
 			"Venue 2"
 		];
 		component.venueSkeletons = venues;
 		fixture.detectChanges();
 
-		let menu = fixture.debugElement.query(By.css("mat-menu"));
-		let buttons = (menu.nativeElement as HTMLElement).querySelectorAll("button");
+		const menu = fixture.debugElement.query(By.css("mat-menu"));
+		const buttons = (menu.nativeElement as HTMLElement).querySelectorAll("button");
 		expect(buttons.length).toBe(venues.length);
 		for (let i = 0; i < venues.length; i++)
 		{

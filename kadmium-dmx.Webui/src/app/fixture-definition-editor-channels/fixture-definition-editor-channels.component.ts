@@ -3,7 +3,8 @@ import { MatDialog } from '@angular/material';
 import { IDMXChannelData, IFixtureDefinition } from 'api';
 import { AnimationLibrary } from '../animation-library';
 import { DeleteConfirmDialogComponent } from '../delete-confirm-dialog/delete-confirm-dialog.component';
-import { EditorService } from '../editor.service';
+import { EditorService } from '../services/editor.service';
+// tslint:disable-next-line:max-line-length
 import { FixtureDefinitionEditorChannelEditorDialogComponent } from '../fixture-definition-editor-channel-editor-dialog/fixture-definition-editor-channel-editor-dialog.component';
 
 @Component({
@@ -33,22 +34,25 @@ export class FixtureDefinitionEditorChannelsComponent implements OnInit
 	public async addChannel(): Promise<void>
 	{
 		let maxChannel = 0;
-		this.channels.forEach((value: IDMXChannelData) => 
+		this.channels.forEach((value: IDMXChannelData) =>
 		{
-			if (value.address > maxChannel) 
+			if (value.address > maxChannel)
 			{
 				maxChannel = value.address;
 			}
 		});
 
-		let channel: IDMXChannelData = {
+		const channel: IDMXChannelData = {
 			address: maxChannel + 1,
 			name: '',
 			min: 0,
 			max: 255
 		};
 
-		let result = (await this.matDialog.open(FixtureDefinitionEditorChannelEditorDialogComponent, { data: channel }).afterClosed().toPromise()) as IDMXChannelData;
+		const result = (await this.matDialog
+			.open(FixtureDefinitionEditorChannelEditorDialogComponent, { data: channel })
+			.afterClosed()
+			.toPromise()) as IDMXChannelData;
 		if (result)
 		{
 			this.channels.push(result);
@@ -57,8 +61,11 @@ export class FixtureDefinitionEditorChannelsComponent implements OnInit
 
 	public async removeChannel(index: number): Promise<void>
 	{
-		let channel = this.channels[index];
-		let result = (await this.matDialog.open(DeleteConfirmDialogComponent, { data: channel.name }).afterClosed().toPromise()) as IDMXChannelData;
+		const channel = this.channels[index];
+		const result = (await this.matDialog
+			.open(DeleteConfirmDialogComponent, { data: channel.name })
+			.afterClosed()
+			.toPromise()) as IDMXChannelData;
 		if (result)
 		{
 			this.channels.splice(index, 1);
@@ -68,7 +75,7 @@ export class FixtureDefinitionEditorChannelsComponent implements OnInit
 	public getOtherChannelNames(thisEntry: IDMXChannelData): string[]
 	{
 		return this.channels
-			.filter(value => value != thisEntry)
+			.filter(value => value !== thisEntry)
 			.map((value: IDMXChannelData) => value.name);
 	}
 
@@ -76,8 +83,11 @@ export class FixtureDefinitionEditorChannelsComponent implements OnInit
 
 	public async editChannel(index: number): Promise<void>
 	{
-		let channel = this.channels[index];
-		let result = (await this.matDialog.open(FixtureDefinitionEditorChannelEditorDialogComponent, { data: channel }).afterClosed().toPromise()) as IDMXChannelData;
+		const channel = this.channels[index];
+		const result = (await this.matDialog
+			.open(FixtureDefinitionEditorChannelEditorDialogComponent, { data: channel })
+			.afterClosed()
+			.toPromise()) as IDMXChannelData;
 		if (result)
 		{
 			channel.min = result.min;

@@ -1,15 +1,15 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
-
-import { UniversesComponent } from './universes.component';
-import { MockComponent } from 'ng-mocks';
-import { MatCard, MatCardTitle, MatCardContent, MatIcon, MatCardActions, MatDialog, MatDialogRef } from '@angular/material';
-import { RouterTestingModule } from '@angular/router/testing';
-import { UniverseEditorAddMultipleFixturesDialogComponent } from '../universe-editor-add-multiple-fixtures-dialog/universe-editor-add-multiple-fixtures-dialog.component';
-import { from } from 'rxjs';
-import { IVenueData } from 'api';
-import { EditorService } from '../editor.service';
-import { VenueTestHelper } from '../test/venue-test-helper';
+import { MatCard, MatCardActions, MatCardContent, MatCardTitle, MatDialog, MatDialogRef, MatIcon } from '@angular/material';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
+import { RouterTestingModule } from '@angular/router/testing';
+import { IVenueData } from 'api';
+// tslint:disable-next-line:max-line-length
+import { UniverseEditorAddMultipleFixturesDialogComponent } from 'app/universe-editor-add-multiple-fixtures-dialog/universe-editor-add-multiple-fixtures-dialog.component';
+import { MockComponent } from 'ng-mocks';
+import { from } from 'rxjs';
+import { EditorService } from '../services/editor.service';
+import { VenueTestHelper } from '../test/venue-test-helper';
+import { UniversesComponent } from './universes.component';
 
 describe('UniversesComponent', () =>
 {

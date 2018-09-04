@@ -1,18 +1,17 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
-
-import { ToolsComponent } from './tools.component';
-import { MockComponent, MockComponents } from 'ng-mocks';
-import { SidenavToggleComponent } from '../sidenav-toggle/sidenav-toggle.component';
-import { MatIcon, MatToolbar, MatExpansionPanelTitle, MatExpansionPanelDescription, MatListOption, MatList, MatExpansionPanelHeader, MatSelectionList, MatDivider, MatCard, MatCardContent, MatExpansionPanel, MatFormField } from '@angular/material';
-import { BusyCardComponent } from '../busy-card/busy-card.component';
-import { APIClient, Settings, GroupData } from 'api';
-import { from } from 'rxjs';
-import { NoopAnimationsModule } from '@angular/platform-browser/animations';
-import { MessageService } from 'app/message.service';
-import { FileSaverService } from 'app/file-saver.service';
+// tslint:disable-next-line:max-line-length
+import { MatCard, MatCardContent, MatDivider, MatExpansionPanel, MatExpansionPanelDescription, MatExpansionPanelHeader, MatExpansionPanelTitle, MatFormField, MatIcon, MatListOption, MatSelectionList, MatToolbar } from '@angular/material';
 import { By } from '@angular/platform-browser';
-import { Attribute } from 'app/tools/tools.component';
-import { group } from '@angular/animations';
+import { NoopAnimationsModule } from '@angular/platform-browser/animations';
+import { APIClient, GroupData, Settings } from 'api';
+import { MessageService } from 'app/services/message.service';
+import { MockComponent } from 'ng-mocks';
+import { from } from 'rxjs';
+import { BusyCardComponent } from '../busy-card/busy-card.component';
+import { FileSaverService } from '../services/file-saver.service';
+import { SidenavToggleComponent } from '../sidenav-toggle/sidenav-toggle.component';
+import { Attribute, ToolsComponent } from './tools.component';
+
 
 describe('ToolsComponent', () =>
 {
@@ -24,7 +23,7 @@ describe('ToolsComponent', () =>
 
 	beforeEach(async(() =>
 	{
-		attributes = [{ name: "Attribute", min: 0, max: 255, defaultValue: 0, step: 1 }]
+		attributes = [{ name: "Attribute", min: 0, max: 255, defaultValue: 0, step: 1 }];
 		settings = {
 			oscPort: 9001
 		} as any;
@@ -82,16 +81,16 @@ describe('ToolsComponent', () =>
 
 	it('should request groups', () =>
 	{
-		let serviceMock = TestBed.get(APIClient) as jasmine.SpyObj<APIClient>;
+		const serviceMock = TestBed.get(APIClient) as jasmine.SpyObj<APIClient>;
 		fixture.detectChanges();
 		expect(serviceMock.getGroups).toHaveBeenCalledTimes(1);
 	});
 
 	it('should report an error if getting groups throws one', () =>
 	{
-		let error = new Error("Error");
-		let apiClient = TestBed.get(APIClient) as jasmine.SpyObj<APIClient>;
-		let serviceMock = TestBed.get(MessageService) as jasmine.SpyObj<MessageService>;
+		const error = new Error("Error");
+		const apiClient = TestBed.get(APIClient) as jasmine.SpyObj<APIClient>;
+		const serviceMock = TestBed.get(MessageService) as jasmine.SpyObj<MessageService>;
 		apiClient.getGroups.and.throwError(error.message);
 		fixture.detectChanges();
 		expect(serviceMock.error).toHaveBeenCalledWith(error);
@@ -99,16 +98,16 @@ describe('ToolsComponent', () =>
 
 	it('should request settings', () =>
 	{
-		let serviceMock = TestBed.get(APIClient) as jasmine.SpyObj<APIClient>;
+		const serviceMock = TestBed.get(APIClient) as jasmine.SpyObj<APIClient>;
 		fixture.detectChanges();
 		expect(serviceMock.getSettings).toHaveBeenCalledTimes(1);
 	});
 
 	it('should report an error if getting settings throws one', () =>
 	{
-		let error = new Error("Error");
-		let apiClient = TestBed.get(APIClient) as jasmine.SpyObj<APIClient>;
-		let serviceMock = TestBed.get(MessageService) as jasmine.SpyObj<MessageService>;
+		const error = new Error("Error");
+		const apiClient = TestBed.get(APIClient) as jasmine.SpyObj<APIClient>;
+		const serviceMock = TestBed.get(MessageService) as jasmine.SpyObj<MessageService>;
 		apiClient.getSettings.and.throwError(error.message);
 		fixture.detectChanges();
 		expect(serviceMock.error).toHaveBeenCalledWith(error);
@@ -116,20 +115,22 @@ describe('ToolsComponent', () =>
 
 	it('should download', () =>
 	{
-		let filename = "file.json";
-		let contents = "contents";
-		let serviceMock = TestBed.get(FileSaverService) as jasmine.SpyObj<FileSaverService>;
+		const filename = "file.json";
+		const contents = "contents";
+		const serviceMock = TestBed.get(FileSaverService) as jasmine.SpyObj<FileSaverService>;
 		component.download(filename, contents);
 		expect(serviceMock.save).toHaveBeenCalledWith(filename, contents);
 	});
 
 	it('should download the oscii bot script when the button is clicked', () =>
 	{
-		let fileSaverService = TestBed.get(FileSaverService) as jasmine.SpyObj<FileSaverService>;
-		let mockedLists = fixture.debugElement.queryAll(By.directive(MockComponent(MatSelectionList))).map(x => x.componentInstance) as MatSelectionList[];
-		let mockedGroupsList = mockedLists[0];
+		const fileSaverService = TestBed.get(FileSaverService) as jasmine.SpyObj<FileSaverService>;
+		const mockedLists = fixture.debugElement
+			.queryAll(By.directive(MockComponent(MatSelectionList)))
+			.map(x => x.componentInstance) as MatSelectionList[];
+		const mockedGroupsList = mockedLists[0];
 		(mockedGroupsList.selectedOptions as any) = { selected: [] };
-		let mockedAttributesList = mockedLists[1];
+		const mockedAttributesList = mockedLists[1];
 		(mockedAttributesList.selectedOptions as any) = { selected: [] };
 
 		component.groups = groups;
@@ -137,18 +138,20 @@ describe('ToolsComponent', () =>
 		fixture.detectChanges();
 
 		component.attributes = attributes;
-		let osciiButton = (fixture.nativeElement as HTMLElement).querySelector(".download-oscii-bot") as HTMLButtonElement;
+		const osciiButton = (fixture.nativeElement as HTMLElement).querySelector(".download-oscii-bot") as HTMLButtonElement;
 		osciiButton.click();
 		expect(fileSaverService.save).toHaveBeenCalledTimes(1);
 	});
 
 	it('should download the oscii bot script when the button is clicked', () =>
 	{
-		let fileSaverService = TestBed.get(FileSaverService) as jasmine.SpyObj<FileSaverService>;
-		let mockedLists = fixture.debugElement.queryAll(By.directive(MockComponent(MatSelectionList))).map(x => x.componentInstance) as MatSelectionList[];
-		let mockedGroupsList = mockedLists[0];
+		const fileSaverService = TestBed.get(FileSaverService) as jasmine.SpyObj<FileSaverService>;
+		const mockedLists = fixture.debugElement
+			.queryAll(By.directive(MockComponent(MatSelectionList)))
+			.map(x => x.componentInstance) as MatSelectionList[];
+		const mockedGroupsList = mockedLists[0];
 		(mockedGroupsList.selectedOptions as any) = { selected: [] };
-		let mockedAttributesList = mockedLists[1];
+		const mockedAttributesList = mockedLists[1];
 		(mockedAttributesList.selectedOptions as any) = { selected: [] };
 
 		component.groups = groups;
@@ -156,7 +159,7 @@ describe('ToolsComponent', () =>
 		fixture.detectChanges();
 
 		component.attributes = attributes;
-		let reaperButton = (fixture.nativeElement as HTMLElement).querySelector(".download-reaper") as HTMLButtonElement;
+		const reaperButton = (fixture.nativeElement as HTMLElement).querySelector(".download-reaper") as HTMLButtonElement;
 		reaperButton.click();
 		expect(fileSaverService.save).toHaveBeenCalledTimes(1);
 	});

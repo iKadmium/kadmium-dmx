@@ -1,7 +1,7 @@
 export enum StatusCode
 {
-    Warning,
-    Success,
-    Error,
-    Unknown
+	Warning,
+	Success,
+	Error,
+	Unknown
 }

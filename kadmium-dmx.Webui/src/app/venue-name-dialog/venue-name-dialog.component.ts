@@ -7,8 +7,7 @@ import { Component, OnInit } from '@angular/core';
 })
 export class VenueNameDialogComponent implements OnInit
 {
-
-	public name: string = "";
+	public name = "";
 	constructor() { }
 
 	ngOnInit()

@@ -15,7 +15,7 @@ export class UniverseEditorAddMultipleFixturesDialogComponent implements OnInit
 	constructor(
 		public dialogRef: MatDialogRef<UniverseEditorAddMultipleFixturesDialogComponent>,
 		@Inject(MAT_DIALOG_DATA) public data: IUniverseEditorAddMultipleFixturesDialogInputData,
-		fb: FormBuilder) 
+		fb: FormBuilder)
 	{
 		this.formGroup = fb.group({
 			quantity: [1, Validators.required],
@@ -43,14 +43,14 @@ export class UniverseEditorAddMultipleFixturesDialogComponent implements OnInit
 
 export interface IUniverseEditorAddMultipleFixturesDialogInputData
 {
-	skeletons: FixtureDefinitionSkeleton[],
-	groups: IGroupData[]
+	skeletons: FixtureDefinitionSkeleton[];
+	groups: IGroupData[];
 }
 
 export interface IUniverseEditorAddMultipleFixturesDialogOutputData
 {
-	quantity: number,
-	address: number,
-	group: IGroupData,
-	skeleton: FixtureDefinitionSkeleton
+	quantity: number;
+	address: number;
+	group: IGroupData;
+	skeleton: FixtureDefinitionSkeleton;
 }

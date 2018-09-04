@@ -1,12 +1,11 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
-
-import { DashboardOscListenerMessagesComponent } from './dashboard-osc-listener-messages.component';
+import { MatCard, MatCardContent, MatToolbar } from '@angular/material';
+import { MessageService } from 'app/services/message.service';
+import { OSCListenerData, OSCListenerLiveService } from 'app/services/osclistener-live.service';
 import { MockComponent } from 'ng-mocks';
-import { SidenavToggleComponent } from '../sidenav-toggle/sidenav-toggle.component';
-import { MatToolbar, MatCardContent, MatCard } from '@angular/material';
-import { OSCListenerLiveService, OSCListenerData } from '../osclistener-live.service';
 import { Observable, Subscriber } from 'rxjs';
-import { MessageService } from 'app/message.service';
+import { SidenavToggleComponent } from '../sidenav-toggle/sidenav-toggle.component';
+import { DashboardOscListenerMessagesComponent } from './dashboard-osc-listener-messages.component';
 
 describe('DashboardOscListenerMessagesComponent', () =>
 {
@@ -18,7 +17,7 @@ describe('DashboardOscListenerMessagesComponent', () =>
 
 	beforeEach(async(() =>
 	{
-		observable = new Observable<OSCListenerData>(subscriberInstance => 
+		observable = new Observable<OSCListenerData>(subscriberInstance =>
 		{
 			subscriber = subscriberInstance;
 		});
@@ -57,13 +56,13 @@ describe('DashboardOscListenerMessagesComponent', () =>
 	it('should add messages to the text when it receives them', () =>
 	{
 		fixture.detectChanges();
-		let value: OSCListenerData = {
+		const value: OSCListenerData = {
 			address: "/address",
 			recognised: true,
 			time: new Date(),
 			value: 1.0
 		};
-		let textValue = `${value.address} => ${value.value}`
+		const textValue = `${value.address} => ${value.value}`;
 
 		subscriber.next(value);
 		expect(component.oscText).toBe(textValue);
@@ -73,10 +72,10 @@ describe('DashboardOscListenerMessagesComponent', () =>
 
 	it('should show an error if opening the listener throws one', () =>
 	{
-		let serviceMock = TestBed.get(OSCListenerLiveService) as jasmine.SpyObj<OSCListenerLiveService>;
-		let snackbarMock = TestBed.get(MessageService) as jasmine.SpyObj<MessageService>;
-		let errorMessage = "Error";
-		let error = new Error(errorMessage);
+		const serviceMock = TestBed.get(OSCListenerLiveService) as jasmine.SpyObj<OSCListenerLiveService>;
+		const snackbarMock = TestBed.get(MessageService) as jasmine.SpyObj<MessageService>;
+		const errorMessage = "Error";
+		const error = new Error(errorMessage);
 		serviceMock.open.and.throwError(errorMessage);
 		fixture.detectChanges();
 
@@ -87,9 +86,9 @@ describe('DashboardOscListenerMessagesComponent', () =>
 
 	it('should show an error if the listener throws one', () =>
 	{
-		let snackbarMock = TestBed.get(MessageService) as jasmine.SpyObj<MessageService>;
-		let errorMessage = "Error";
-		let error = new Error(errorMessage);
+		const snackbarMock = TestBed.get(MessageService) as jasmine.SpyObj<MessageService>;
+		const errorMessage = "Error";
+		const error = new Error(errorMessage);
 		fixture.detectChanges();
 
 		subscriber.error(error);

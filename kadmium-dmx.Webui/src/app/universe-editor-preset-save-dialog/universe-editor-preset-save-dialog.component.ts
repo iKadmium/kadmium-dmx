@@ -4,41 +4,41 @@ import { FixtureData } from 'api/models';
 import { MatListOption } from '@angular/material';
 
 @Component({
-    selector: 'app-universe-editor-preset-save-dialog',
-    templateUrl: './universe-editor-preset-save-dialog.component.html',
-    styleUrls: ['./universe-editor-preset-save-dialog.component.css']
+	selector: 'app-universe-editor-preset-save-dialog',
+	templateUrl: './universe-editor-preset-save-dialog.component.html',
+	styleUrls: ['./universe-editor-preset-save-dialog.component.css']
 })
 export class UniverseEditorPresetSaveDialogComponent implements OnInit
 {
-    constructor(public dialogRef: MatDialogRef<UniverseEditorPresetSaveDialogComponent>,
-        @Inject(MAT_DIALOG_DATA) public data: UniverseEditorPresetSaveDialogComponentData) { }
+	constructor(public dialogRef: MatDialogRef<UniverseEditorPresetSaveDialogComponent>,
+		@Inject(MAT_DIALOG_DATA) public data: UniverseEditorPresetSaveDialogComponentData) { }
 
-    ngOnInit()
-    {
-    }
+	ngOnInit()
+	{
+	}
 
-    public save(filename: string, fixtures: MatListOption[])
-    {
-        let result: UniverseEditorPresetSaveDialogComponentResultData = {
-            filename: filename,
-            fixtures: fixtures.map(x => x.value)
-        };
-        this.dialogRef.close(result);
-    }
+	public save(filename: string, fixtures: MatListOption[])
+	{
+		const result: UniverseEditorPresetSaveDialogComponentResultData = {
+			filename: filename,
+			fixtures: fixtures.map(x => x.value)
+		};
+		this.dialogRef.close(result);
+	}
 
-    public cancel(): void
-    {
-        this.dialogRef.close();
-    }
+	public cancel(): void
+	{
+		this.dialogRef.close();
+	}
 }
 
 export interface UniverseEditorPresetSaveDialogComponentData
 {
-    fixtures: FixtureData[]
+	fixtures: FixtureData[];
 }
 
 export interface UniverseEditorPresetSaveDialogComponentResultData
 {
-    filename: string,
-    fixtures: FixtureData[]
+	filename: string;
+	fixtures: FixtureData[];
 }

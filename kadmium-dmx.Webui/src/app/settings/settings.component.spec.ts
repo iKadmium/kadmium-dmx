@@ -1,14 +1,14 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
-
-import { SettingsComponent } from './settings.component';
+import { FormsModule } from '@angular/forms';
+// tslint:disable-next-line:max-line-length
+import { MatCard, MatCardContent, MatCheckbox, MatFormField, MatIcon, MatList, MatListItem, MatOption, MatSelect, MatTab, MatTabGroup, MatToolbar } from '@angular/material';
+import { APIClient, Settings } from 'api';
+import { MessageService } from 'app/services/message.service';
 import { MockComponent } from 'ng-mocks';
+import { from } from 'rxjs';
 import { BusyCardComponent } from '../busy-card/busy-card.component';
 import { SidenavToggleComponent } from '../sidenav-toggle/sidenav-toggle.component';
-import { MatIcon, MatToolbar, MatFormField, MatTab, MatCheckbox, MatOption, MatList, MatSelect, MatListItem, MatTabGroup, MatCardContent, MatCard } from '@angular/material';
-import { FormsModule } from '@angular/forms';
-import { APIClient, Settings } from 'api';
-import { from } from 'rxjs';
-import { MessageService } from 'app/message.service';
+import { SettingsComponent } from './settings.component';
 
 describe('SettingsComponent', () =>
 {
@@ -82,16 +82,16 @@ describe('SettingsComponent', () =>
 
 	it('should request settings', () =>
 	{
-		let apiClient = TestBed.get(APIClient) as jasmine.SpyObj<APIClient>;
+		const apiClient = TestBed.get(APIClient) as jasmine.SpyObj<APIClient>;
 		fixture.detectChanges();
 		expect(apiClient.getSettings).toHaveBeenCalledTimes(1);
 	});
 
 	it('should report an error if request settings throws one', () =>
 	{
-		let error = new Error("Error");
-		let apiClient = TestBed.get(APIClient) as jasmine.SpyObj<APIClient>;
-		let messageService = TestBed.get(MessageService) as jasmine.SpyObj<MessageService>;
+		const error = new Error("Error");
+		const apiClient = TestBed.get(APIClient) as jasmine.SpyObj<APIClient>;
+		const messageService = TestBed.get(MessageService) as jasmine.SpyObj<MessageService>;
 		apiClient.getSettings.and.throwError(error.message);
 		fixture.detectChanges();
 		expect(messageService.error).toHaveBeenCalledWith(error);
@@ -99,7 +99,7 @@ describe('SettingsComponent', () =>
 
 	it('should save', () =>
 	{
-		let apiClient = TestBed.get(APIClient) as jasmine.SpyObj<APIClient>;
+		const apiClient = TestBed.get(APIClient) as jasmine.SpyObj<APIClient>;
 		component.settings = settings;
 		component.save();
 		expect(apiClient.putSettings).toHaveBeenCalledWith({ value: component.settings });
@@ -107,9 +107,9 @@ describe('SettingsComponent', () =>
 
 	it('should report an error if saving throws one', () =>
 	{
-		let error = new Error("Error");
-		let apiClient = TestBed.get(APIClient) as jasmine.SpyObj<APIClient>;
-		let messageService = TestBed.get(MessageService) as jasmine.SpyObj<MessageService>;
+		const error = new Error("Error");
+		const apiClient = TestBed.get(APIClient) as jasmine.SpyObj<APIClient>;
+		const messageService = TestBed.get(MessageService) as jasmine.SpyObj<MessageService>;
 		apiClient.putSettings.and.throwError(error.message);
 		component.settings = settings;
 		component.save();

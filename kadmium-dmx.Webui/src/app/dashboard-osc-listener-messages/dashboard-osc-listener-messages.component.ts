@@ -1,7 +1,7 @@
-import { Component, OnInit, OnDestroy } from '@angular/core';
-import { OSCListenerData, OSCListenerLiveService } from "../osclistener-live.service";
+import { Component, OnDestroy, OnInit } from '@angular/core';
+import { MessageService } from 'app/services/message.service';
+import { OSCListenerData, OSCListenerLiveService } from "app/services/osclistener-live.service";
 import { Subscription } from 'rxjs';
-import { MessageService } from 'app/message.service';
 
 @Component({
 	selector: 'app-dashboard-osc-listener-messages',
@@ -15,7 +15,7 @@ export class DashboardOscListenerMessagesComponent implements OnInit, OnDestroy
 	private subscription: Subscription;
 	public oscText: string;
 
-	constructor(private oscListenerLiveService: OSCListenerLiveService, private messageService: MessageService) 
+	constructor(private oscListenerLiveService: OSCListenerLiveService, private messageService: MessageService)
 	{
 		this.oscText = "";
 	}
@@ -48,7 +48,7 @@ export class DashboardOscListenerMessagesComponent implements OnInit, OnDestroy
 		this.events.push(data);
 		if (this.events.length > DashboardOscListenerMessagesComponent.MAX_LENGTH)
 		{
-			let tooLongAmount = this.events.length - DashboardOscListenerMessagesComponent.MAX_LENGTH;
+			const tooLongAmount = this.events.length - DashboardOscListenerMessagesComponent.MAX_LENGTH;
 			this.events.splice(0, tooLongAmount);
 		}
 		this.oscText = this.events.map(x => `${x.address} => ${x.value}`).join('\r\n');

@@ -2,7 +2,7 @@
 import
 {
   UniverseData,
-} from './..';
+} from '..'
 
 export interface IVenueData
 {

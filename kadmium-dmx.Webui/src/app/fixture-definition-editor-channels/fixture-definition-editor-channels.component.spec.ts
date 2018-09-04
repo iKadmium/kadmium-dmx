@@ -4,7 +4,7 @@ import { FixtureDefinitionEditorChannelsComponent } from './fixture-definition-e
 import { MockComponent } from 'ng-mocks';
 import { MatIcon, MatCard, MatCardContent, MatToolbar, MatDialog } from '@angular/material';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
-import { EditorService } from '../editor.service';
+import { EditorService } from '../services/editor.service';
 import { IFixtureDefinition, APIClient } from 'api';
 import { FixtureType } from '../enums/fixture-type.enum';
 import { FixtureDefinitionTestHelpers } from '../test/fixture-definition-test-helpers';

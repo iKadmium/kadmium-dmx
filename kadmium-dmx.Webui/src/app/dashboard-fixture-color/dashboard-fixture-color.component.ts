@@ -1,7 +1,7 @@
-import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
-import { PreviewFixture } from "../preview-fixture";
+import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
+import { AttributeUpdateMessage, FixtureStreamService } from 'app/services/fixture-stream.service';
 import { PreviewAttribute } from "../preview-attribute";
-import { FixtureStreamService, AttributeUpdateMessage } from '../fixture-stream.service';
+import { PreviewFixture } from "../preview-fixture";
 
 @Component({
 	selector: 'app-dashboard-fixture-color',

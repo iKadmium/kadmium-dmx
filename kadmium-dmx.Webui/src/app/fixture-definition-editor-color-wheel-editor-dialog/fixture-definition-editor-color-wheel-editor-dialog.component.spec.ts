@@ -1,11 +1,10 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
-
-import { FixtureDefinitionEditorColorWheelEditorDialogComponent } from './fixture-definition-editor-color-wheel-editor-dialog.component';
 import { ReactiveFormsModule } from '@angular/forms';
-import { MockComponent } from 'ng-mocks';
-import { MatFormField, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material';
+import { MatDialogRef, MatFormField, MAT_DIALOG_DATA } from '@angular/material';
 import { IColorWheelEntryData } from 'api';
+import { MockComponent } from 'ng-mocks';
 import { ColorWheelTestHelpers } from '../test/color-wheel-test-helpers';
+import { FixtureDefinitionEditorColorWheelEditorDialogComponent } from './fixture-definition-editor-color-wheel-editor-dialog.component';
 
 describe('FixtureDefinitionEditorColorWheelEditorDialogComponent', () =>
 {
@@ -26,7 +25,11 @@ describe('FixtureDefinitionEditorColorWheelEditorDialogComponent', () =>
 				ReactiveFormsModule
 			],
 			providers: [
-				{ provide: MatDialogRef, useValue: jasmine.createSpyObj<MatDialogRef<FixtureDefinitionEditorColorWheelEditorDialogComponent>>({ close: null }) },
+				{
+					provide: MatDialogRef, useValue: jasmine.createSpyObj<MatDialogRef<FixtureDefinitionEditorColorWheelEditorDialogComponent>>({
+						close: null
+					})
+				},
 				{ provide: MAT_DIALOG_DATA, useValue: data }
 			]
 		});

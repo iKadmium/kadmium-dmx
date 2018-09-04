@@ -1,10 +1,8 @@
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
-
-import { DeleteConfirmDialogComponent } from './delete-confirm-dialog.component';
-import { MockComponent, MockDirective } from 'ng-mocks';
-import { MatDialogClose, MatIcon, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material';
 import { InjectionToken } from '@angular/core';
-import { By } from '@angular/platform-browser';
+import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { MatDialogRef, MatIcon, MAT_DIALOG_DATA } from '@angular/material';
+import { MockComponent } from 'ng-mocks';
+import { DeleteConfirmDialogComponent } from './delete-confirm-dialog.component';
 
 describe('DeleteConfirmDialogComponent', () =>
 {
@@ -41,16 +39,16 @@ describe('DeleteConfirmDialogComponent', () =>
 
 	it('should return true if delete is clicked', () =>
 	{
-		let dialogMock = TestBed.get(MatDialogRef) as jasmine.SpyObj<MatDialogRef<DeleteConfirmDialogComponent>>;
-		let deleteButton = (fixture.debugElement.nativeElement as HTMLElement).querySelector("button.delete") as HTMLButtonElement;
+		const dialogMock = TestBed.get(MatDialogRef) as jasmine.SpyObj<MatDialogRef<DeleteConfirmDialogComponent>>;
+		const deleteButton = (fixture.debugElement.nativeElement as HTMLElement).querySelector("button.delete") as HTMLButtonElement;
 		deleteButton.click();
 		expect(dialogMock.close).toHaveBeenCalledWith(true);
 	});
 
 	it('should return false if cancel is clicked', () =>
 	{
-		let dialogMock = TestBed.get(MatDialogRef) as jasmine.SpyObj<MatDialogRef<DeleteConfirmDialogComponent>>;
-		let cancelButton = (fixture.debugElement.nativeElement as HTMLElement).querySelector("button.cancel") as HTMLButtonElement;
+		const dialogMock = TestBed.get(MatDialogRef) as jasmine.SpyObj<MatDialogRef<DeleteConfirmDialogComponent>>;
+		const cancelButton = (fixture.debugElement.nativeElement as HTMLElement).querySelector("button.cancel") as HTMLButtonElement;
 		cancelButton.click();
 		expect(dialogMock.close).toHaveBeenCalledWith(false);
 	});

@@ -1,19 +1,18 @@
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
-import { WebSocketSubject } from '../../node_modules/rxjs/webSocket';
-import { SocketController, URLs } from "./url";
+import { WebSocketSubject } from 'rxjs/webSocket';
+import { AppURL, SocketController } from 'app/app-url';
 
 @Injectable({
 	providedIn: 'root'
 })
 export class FixtureStreamService
 {
-	private socketUrl = URLs.getSocketURL(SocketController.Fixture);
+	private socketUrl = AppURL.getSocketURL(SocketController.Fixture);
 	private subject: WebSocketSubject<AttributeUpdateData[]>;
 
 	constructor()
 	{
-
 	}
 
 	public open(universeID: number, fixtureAddress: number): Observable<AttributeUpdateData[]>
