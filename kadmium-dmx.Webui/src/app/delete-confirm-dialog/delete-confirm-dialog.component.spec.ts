@@ -1,6 +1,6 @@
 import { InjectionToken } from '@angular/core';
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
-import { MatDialogRef, MatIcon, MAT_DIALOG_DATA } from '@angular/material';
+import { MatDialogRef, MatIcon, MAT_DIALOG_DATA, MatDialog } from '@angular/material';
 import { MockComponent } from 'ng-mocks';
 import { DeleteConfirmDialogComponent } from './delete-confirm-dialog.component';
 

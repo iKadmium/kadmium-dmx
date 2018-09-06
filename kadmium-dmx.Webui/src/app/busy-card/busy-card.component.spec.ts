@@ -38,25 +38,25 @@ describe('BusyCardComponent', () =>
 		component.loading = true;
 		component.saving = false;
 		fixture.detectChanges();
-		let spinners = (fixture.nativeElement as HTMLElement).querySelectorAll("mat-spinner");
+		const spinners = (fixture.nativeElement as HTMLElement).querySelectorAll("mat-spinner");
 		expect(spinners.length).toBeGreaterThan(0);
-	})
+	});
 
 	it('should show the spinner if saving', () =>
 	{
 		component.loading = false;
 		component.saving = true;
 		fixture.detectChanges();
-		let spinners = (fixture.nativeElement as HTMLElement).querySelectorAll("mat-spinner");
+		const spinners = (fixture.nativeElement as HTMLElement).querySelectorAll("mat-spinner");
 		expect(spinners.length).toBeGreaterThan(0);
-	})
+	});
 
 	it('should not show the spinner if not loading or saving', () =>
 	{
 		component.loading = false;
 		component.saving = false;
 		fixture.detectChanges();
-		let spinners = (fixture.nativeElement as HTMLElement).querySelectorAll("mat-spinner");
+		const spinners = (fixture.nativeElement as HTMLElement).querySelectorAll("mat-spinner");
 		expect(spinners.length).toBe(0);
-	})
+	});
 });

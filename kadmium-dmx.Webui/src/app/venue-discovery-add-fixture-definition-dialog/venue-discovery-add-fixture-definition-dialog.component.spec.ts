@@ -1,5 +1,5 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
-import { FormsModule } from '@angular/forms';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { MatDialogClose, MatDialogRef, MatFormField, MatIcon, MatOption, MatSelect, MAT_DIALOG_DATA } from '@angular/material';
 import { MockComponent } from 'ng-mocks';
 // tslint:disable-next-line:max-line-length
@@ -34,7 +34,7 @@ describe('VenueDiscoveryAddFixtureDefinitionDialogComponent', () =>
 				MockComponent(MatDialogClose),
 				MockComponent(MatIcon)
 			],
-			imports: [FormsModule]
+			imports: [ReactiveFormsModule]
 		});
 
 		TestBed.overrideComponent(VenueDiscoveryAddFixtureDefinitionDialogComponent, {

@@ -4,7 +4,7 @@ import { UniverseData } from "api/models";
 import { Title } from "@angular/platform-browser";
 import { AnimationLibrary } from "../animation-library";
 import { APIClient, IGroupData, IVenueData } from 'api';
-import { MessageService } from 'app/services/message.service';
+import { MessageService } from '../services/message.service';
 import { Subscription } from 'rxjs';
 import { Saveable } from '../unsaved-changes';
 import { EditorService } from '../services/editor.service';

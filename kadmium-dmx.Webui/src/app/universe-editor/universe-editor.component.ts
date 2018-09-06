@@ -4,20 +4,20 @@ import { MatDialog } from "@angular/material/dialog";
 import { ActivatedRoute } from '@angular/router';
 import { APIClient, IGroupData } from 'api';
 import { FixtureData, FixtureDefinitionSkeleton, IVenueData, UniverseData } from "api/models";
-import { MessageService } from 'app/services/message.service';
 import 'rxjs/add/operator/startWith';
 import "rxjs/operator/map";
 import { AnimationLibrary } from '../animation-library';
-import { DeleteConfirmDialogComponent } from '../delete-confirm-dialog/delete-confirm-dialog.component';
 import { FixtureEditorComponent, FixtureEditorData } from '../fixture-editor/fixture-editor.component';
 import { FixtureOptionsEditorComponent, FixtureOptionsEditorData } from "../fixture-options-editor/fixture-options-editor.component";
+import { DeleteConfirmService } from '../services/delete-confirm.service';
 import { EditorService } from '../services/editor.service';
 import { FileReaderService } from '../services/file-reader.service';
 import { FileSaverService } from '../services/file-saver.service';
+import { MessageService } from '../services/message.service';
 // tslint:disable-next-line:max-line-length
 import { IUniverseEditorAddMultipleFixturesDialogInputData, IUniverseEditorAddMultipleFixturesDialogOutputData, UniverseEditorAddMultipleFixturesDialogComponent } from '../universe-editor-add-multiple-fixtures-dialog/universe-editor-add-multiple-fixtures-dialog.component';
 // tslint:disable-next-line:max-line-length
-import { UniverseEditorPresetSaveDialogComponent } from "app/universe-editor-preset-save-dialog/universe-editor-preset-save-dialog.component";
+import { UniverseEditorPresetSaveDialogComponent } from "../universe-editor-preset-save-dialog/universe-editor-preset-save-dialog.component";
 
 
 @Component({
@@ -41,6 +41,7 @@ export class UniverseEditorComponent implements OnInit
 		private fileSaver: FileSaverService,
 		private editorService: EditorService<IVenueData>,
 		private activatedRoute: ActivatedRoute,
+		private deleteConfirm: DeleteConfirmService,
 		private dialog: MatDialog)
 	{
 	}
@@ -48,7 +49,7 @@ export class UniverseEditorComponent implements OnInit
 	ngOnInit(): void
 	{
 		const universeIDstring = this.activatedRoute.snapshot.params["universeID"] as string;
-		const universeID = parseInt(universeIDstring);
+		const universeID = parseInt(universeIDstring, 10);
 		try
 		{
 			this.apiClient.getGroups()
@@ -76,10 +77,8 @@ export class UniverseEditorComponent implements OnInit
 	public async removeElement(index: number): Promise<void>
 	{
 		const fixture = this.universe.fixtures[index];
-		const result = await this.dialog
-			.open(DeleteConfirmDialogComponent, { data: fixture.type.manufacturer + " " + fixture.type.model })
-			.afterClosed()
-			.toPromise();
+		const name = fixture.type.manufacturer + " " + fixture.type.model;
+		const result = await this.deleteConfirm.confirm(name);
 		if (result)
 		{
 			this.universe.fixtures.splice(index, 1);

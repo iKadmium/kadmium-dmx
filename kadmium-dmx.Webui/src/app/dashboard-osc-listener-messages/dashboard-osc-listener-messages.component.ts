@@ -1,6 +1,6 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
-import { MessageService } from 'app/services/message.service';
-import { OSCListenerData, OSCListenerLiveService } from "app/services/osclistener-live.service";
+import { MessageService } from '../services/message.service';
+import { OSCListenerData, OSCListenerLiveService } from "../services/osclistener-live.service";
 import { Subscription } from 'rxjs';
 
 @Component({

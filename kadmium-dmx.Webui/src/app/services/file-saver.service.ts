@@ -9,10 +9,10 @@ export class FileSaverService
 
 	public save<T>(filename: string, contents: T): void
 	{
-		let anchor = document.createElement("a");
+		const anchor = document.createElement("a");
 		anchor.download = filename;
-		let stringContents = JSON.stringify(contents);
-		let blob = new Blob([stringContents], { type: "application/json" });
+		const stringContents = JSON.stringify(contents);
+		const blob = new Blob([stringContents], { type: "application/json" });
 		anchor.href = URL.createObjectURL(blob);
 		anchor.click();
 	}

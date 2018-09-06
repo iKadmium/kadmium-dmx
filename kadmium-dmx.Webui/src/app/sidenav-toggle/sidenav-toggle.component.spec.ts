@@ -1,6 +1,6 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { MatIcon } from '@angular/material';
-import { SidenavService } from 'app/services/sidenav.service';
+import { SidenavService } from '../services/sidenav.service';
 import { MockComponent } from 'ng-mocks';
 import { SidenavToggleComponent } from './sidenav-toggle.component';
 
@@ -38,8 +38,8 @@ describe('SidenavToggleComponent', () =>
 
 	it('should toggle the sidenav when clicked', () =>
 	{
-		let button = (fixture.debugElement.nativeElement as HTMLElement).querySelector("button") as HTMLButtonElement;
-		let serviceMock = TestBed.get(SidenavService) as jasmine.SpyObj<SidenavService>;
+		const button = (fixture.debugElement.nativeElement as HTMLElement).querySelector("button") as HTMLButtonElement;
+		const serviceMock = TestBed.get(SidenavService) as jasmine.SpyObj<SidenavService>;
 		button.click();
 		expect(serviceMock.toggle).toHaveBeenCalledTimes(1);
 	});

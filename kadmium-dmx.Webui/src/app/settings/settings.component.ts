@@ -1,12 +1,13 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
-import { NgForm } from '@angular/forms';
+import { NgForm, FormGroup, FormBuilder, Validators, FormArray } from '@angular/forms';
 import { Title } from "@angular/platform-browser";
 import { APIClient } from 'api';
 import { Settings } from "api/models";
-import { MessageService } from 'app/services/message.service';
+import { MessageService } from '../services/message.service';
 import { AnimationLibrary } from "../animation-library";
 import { EditorService } from '../services/editor.service';
 import { Saveable } from '../unsaved-changes';
+import { DeleteConfirmService } from '../services/delete-confirm.service';
 
 @Component({
 	selector: 'app-settings',
@@ -19,8 +20,8 @@ export class SettingsComponent implements Saveable, OnInit
 	public loading = true;
 	public saving = false;
 
-	public settings: Settings;
-	public fakeTargets: UnicastTarget[];
+	public form: FormGroup;
+	private unicast: FormArray;
 
 	@ViewChild("settingsForm") formChild: NgForm;
 
@@ -28,11 +29,24 @@ export class SettingsComponent implements Saveable, OnInit
 		private apiClient: APIClient,
 		private messageService: MessageService,
 		private editorService: EditorService<Settings>,
+		private formBuilder: FormBuilder,
+		private deleteConfirm: DeleteConfirmService,
 		title: Title)
 	{
 		title.setTitle("Settings");
 		this.saving = false;
-		this.fakeTargets = [];
+
+		this.unicast = this.formBuilder.array([]);
+		this.form = this.formBuilder.group({
+			oscPort: [9001, [Validators.min(1), Validators.max(65535), Validators.required]],
+			webPort: [5000, [Validators.min(1), Validators.max(65535), Validators.required]],
+			sacnTransmitter: this.formBuilder.group({
+				delay: [0, [Validators.min(0), Validators.required]],
+				uuid: [0, [Validators.required]],
+				multicast: [true],
+				unicast: this.unicast
+			})
+		});
 	}
 
 	ngOnInit(): void
@@ -44,8 +58,13 @@ export class SettingsComponent implements Saveable, OnInit
 				.toPromise()
 				.then(response =>
 				{
-					this.settings = response;
-					this.fakeTargets = this.settings.sacnTransmitter.unicast.map(x => ({ target: x }));
+					this.form.patchValue(response);
+					for (const address of response.sacnTransmitter.unicast)
+					{
+						this.addElement(address);
+					}
+					this.form.markAsPristine();
+					this.editorService.isDirty = false;
 					this.loading = false;
 				});
 		}
@@ -60,8 +79,7 @@ export class SettingsComponent implements Saveable, OnInit
 		this.saving = true;
 		try
 		{
-			this.settings.sacnTransmitter.unicast = this.fakeTargets.map(x => x.target);
-			await this.apiClient.putSettings({ value: this.settings }).toPromise();
+			await this.apiClient.putSettings({ value: this.form.value }).toPromise();
 			this.editorService.isDirty = false;
 			this.messageService.info("Saved Successfully");
 		}
@@ -75,23 +93,24 @@ export class SettingsComponent implements Saveable, OnInit
 		}
 	}
 
-	public addElement(): void
+	public addElement(address: string = ''): void
 	{
-		this.fakeTargets.push({ target: "" });
+		this.unicast.push(this.formBuilder.control(address, [Validators.required]));
+		this.editorService.isDirty = true;
 	}
 
-	public removeElement(index: number): void
+	public async removeElement(index: number): Promise<void>
 	{
-		this.fakeTargets.splice(index, 1);
+		const value = this.unicast.value[index];
+		if (await this.deleteConfirm.confirm(value))
+		{
+			this.unicast.removeAt(index);
+			this.editorService.isDirty = true;
+		}
 	}
 
 	public hasUnsavedChanges(): boolean
 	{
-		return this.editorService.isDirty;
+		return this.editorService.isDirty || this.form.dirty;
 	}
-}
-
-interface UnicastTarget
-{
-	target: string;
 }

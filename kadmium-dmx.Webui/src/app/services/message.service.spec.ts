@@ -1,6 +1,6 @@
 import { inject, TestBed } from '@angular/core/testing';
 import { MatSnackBar } from '@angular/material';
-import { MessageService } from 'app/services/message.service';
+import { MessageService } from './message.service';
 
 
 describe('MessageService', () =>

@@ -2,12 +2,13 @@ import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { MatCard, MatCardContent, MatDialog, MatFormField, MatIcon, MatToolbar } from '@angular/material';
 import { RouterTestingModule } from '@angular/router/testing';
 import { APIClient } from 'api';
-import { MessageService } from 'app/services/message.service';
+import { MessageService } from '../services/message.service';
 import { MockComponent } from 'ng-mocks';
 import { from } from 'rxjs';
 import { BusyCardComponent } from '../busy-card/busy-card.component';
 import { SidenavToggleComponent } from '../sidenav-toggle/sidenav-toggle.component';
 import { VenuesComponent } from './venues.component';
+import { DeleteConfirmService } from 'app/services/delete-confirm.service';
 
 describe('VenuesComponent', () =>
 {
@@ -29,17 +30,12 @@ describe('VenuesComponent', () =>
 			],
 			imports: [
 				RouterTestingModule
+			],
+			providers: [
+				{ provide: APIClient, useValue: jasmine.createSpyObj<APIClient>({ getVenues: from([[]]) }) },
+				{ provide: MessageService, useValue: jasmine.createSpyObj<MessageService>({ error: null }) },
+				{ provide: DeleteConfirmService, useValue: jasmine.createSpyObj<DeleteConfirmService>({ confirm: Promise.resolve(true) }) }
 			]
-		});
-
-		TestBed.overrideComponent(VenuesComponent, {
-			set: {
-				providers: [
-					{ provide: APIClient, useValue: jasmine.createSpyObj<APIClient>({ getVenues: from([[]]) }) },
-					{ provide: MessageService, useValue: jasmine.createSpyObj<MessageService>({ error: null }) },
-					{ provide: MatDialog, useValue: jasmine.createSpyObj<MatDialog>({ open: null }) }
-				]
-			}
 		});
 
 		TestBed.compileComponents();
@@ -49,11 +45,36 @@ describe('VenuesComponent', () =>
 	{
 		fixture = TestBed.createComponent(VenuesComponent);
 		component = fixture.componentInstance;
-		fixture.detectChanges();
 	});
 
-	it('should create', () =>
+	it('should create', (done) =>
 	{
-		expect(component).toBeTruthy();
+		fixture.detectChanges();
+		fixture.whenStable().then(() =>
+		{
+			expect(component).toBeTruthy();
+			expect(component.loading).toBeFalsy();
+			done();
+		});
+	});
+
+	describe('constructor', () =>
+	{
+		it('should request venues', () =>
+		{
+			const apiClientMock = TestBed.get(APIClient) as jasmine.SpyObj<APIClient>;
+			fixture.detectChanges();
+			expect(apiClientMock.getVenues).toHaveBeenCalledTimes(1);
+		});
+
+		it('should report an error if requesting venues throws one', () =>
+		{
+			const error = new Error("Error");
+			const apiClientMock = TestBed.get(APIClient) as jasmine.SpyObj<APIClient>;
+			const messageServiceMock = TestBed.get(MessageService) as jasmine.SpyObj<MessageService>;
+			apiClientMock.getVenues.and.throwError(error.message);
+			fixture.detectChanges();
+			expect(messageServiceMock.error).toHaveBeenCalledWith(error);
+		});
 	});
 });

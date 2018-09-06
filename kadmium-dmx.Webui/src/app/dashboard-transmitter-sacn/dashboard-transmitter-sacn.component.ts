@@ -1,6 +1,6 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { APIClient } from 'api';
-import { MessageService } from 'app/services/message.service';
+import { MessageService } from '../services/message.service';
 import { AnimationLibrary } from "../animation-library";
 import { Status } from "../status";
 

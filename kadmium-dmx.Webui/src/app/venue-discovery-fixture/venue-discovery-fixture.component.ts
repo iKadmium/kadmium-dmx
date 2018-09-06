@@ -1,7 +1,6 @@
-import { Component, Input, OnInit } from '@angular/core';
-import { MatDialog } from '@angular/material';
-import { FixtureData, IDMXChannelData, UniverseData } from "api/models";
-import { DeleteConfirmDialogComponent } from '../delete-confirm-dialog/delete-confirm-dialog.component';
+import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
+import { IDMXChannelData, UniverseData } from "api/models";
+import { DeleteConfirmService } from '../services/delete-confirm.service';
 import { EditorService } from '../services/editor.service';
 import { FixtureDataWithDefinition } from '../venue-discovery/venue-discovery.component';
 
@@ -13,10 +12,11 @@ import { FixtureDataWithDefinition } from '../venue-discovery/venue-discovery.co
 export class VenueDiscoveryFixtureComponent implements OnInit
 {
 	@Input() fixture: FixtureDataWithDefinition;
+	@Output() fixtureDeleted = new EventEmitter<void>();
 	public channels: IDMXChannelData[];
 	constructor(
 		private editorService: EditorService<UniverseData>,
-		private dialog: MatDialog
+		private deleteConfirm: DeleteConfirmService
 	) { }
 
 	ngOnInit()
@@ -24,15 +24,16 @@ export class VenueDiscoveryFixtureComponent implements OnInit
 		this.channels = this.fixture.definition.channels;
 	}
 
-	public async removeFixture(fixture: FixtureData): Promise<void>
+	public async removeFixture(): Promise<void>
 	{
-		const name = `${fixture.type.manufacturer} ${fixture.type.model} on channel ${fixture.address}`;
-		const result = await this.dialog.open(DeleteConfirmDialogComponent, { data: name }).afterClosed().toPromise();
+		const name = `${this.fixture.fixture.type.manufacturer} ${this.fixture.fixture.type.model} on channel ${this.fixture.fixture.address}`;
+		const result = await this.deleteConfirm.confirm(name);
 		if (result)
 		{
 			const universe = this.editorService.getActive();
-			const index = universe.fixtures.findIndex(x => x.address === fixture.address);
+			const index = universe.fixtures.findIndex(x => x.address === this.fixture.fixture.address);
 			universe.fixtures.splice(index, 1);
+			this.fixtureDeleted.emit();
 		}
 	}
 

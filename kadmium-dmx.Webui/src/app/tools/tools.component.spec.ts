@@ -4,7 +4,7 @@ import { MatCard, MatCardContent, MatDivider, MatExpansionPanel, MatExpansionPan
 import { By } from '@angular/platform-browser';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { APIClient, GroupData, Settings } from 'api';
-import { MessageService } from 'app/services/message.service';
+import { MessageService } from '../services/message.service';
 import { MockComponent } from 'ng-mocks';
 import { from } from 'rxjs';
 import { BusyCardComponent } from '../busy-card/busy-card.component';

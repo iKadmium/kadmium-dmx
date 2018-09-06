@@ -2,7 +2,7 @@ import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { FormsModule } from '@angular/forms';
 import { MatCard, MatCardContent, MatCardTitle, MatDialog, MatFormField, MatIcon, MatSlider, MatDialogRef } from '@angular/material';
 import { APIClient } from 'api';
-import { MessageService } from 'app/services/message.service';
+import { MessageService } from '../services/message.service';
 // tslint:disable-next-line:max-line-length
 import { AddFixtureDefinitionData, VenueDiscoveryAddFixtureDefinitionDialogComponent } from '../venue-discovery-add-fixture-definition-dialog/venue-discovery-add-fixture-definition-dialog.component';
 import { MockComponent } from 'ng-mocks';

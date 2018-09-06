@@ -2,9 +2,9 @@ import { Component, OnInit } from '@angular/core';
 import { MatDialog } from '@angular/material';
 import { IColorWheelEntryData, IFixtureDefinition } from 'api';
 import { AnimationLibrary } from '../animation-library';
-import { DeleteConfirmDialogComponent } from '../delete-confirm-dialog/delete-confirm-dialog.component';
 // tslint:disable-next-line:max-line-length
 import { FixtureDefinitionEditorColorWheelEditorDialogComponent } from '../fixture-definition-editor-color-wheel-editor-dialog/fixture-definition-editor-color-wheel-editor-dialog.component';
+import { DeleteConfirmService } from '../services/delete-confirm.service';
 import { EditorService } from '../services/editor.service';
 
 @Component({
@@ -18,7 +18,8 @@ export class FixtureDefinitionEditorColorWheelComponent implements OnInit
 	public colorWheel: IColorWheelEntryData[];
 	constructor(
 		private fixtureDefinitionService: EditorService<IFixtureDefinition>,
-		private dialogService: MatDialog
+		private dialogService: MatDialog,
+		private deleteConfirm: DeleteConfirmService
 	) { }
 
 	ngOnInit()
@@ -65,10 +66,7 @@ export class FixtureDefinitionEditorColorWheelComponent implements OnInit
 	public async removeEntry(index: number): Promise<void>
 	{
 		const entry = this.colorWheel[index];
-		const result = await this.dialogService
-			.open(DeleteConfirmDialogComponent, { data: entry.name })
-			.afterClosed()
-			.toPromise();
+		const result = await this.deleteConfirm.confirm(entry.name);
 		if (result)
 		{
 			this.colorWheel.splice(index, 1);

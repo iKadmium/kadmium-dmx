@@ -1,8 +1,8 @@
 import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { ActivatedRoute } from "@angular/router";
 import { APIClient } from 'api';
-import { MessageService } from 'app/services/message.service';
-import { UniverseStreamService } from "app/services/universe-stream.service";
+import { MessageService } from '../services/message.service';
+import { UniverseStreamService } from "../services/universe-stream.service";
 import { Subscription } from 'rxjs';
 import { AnimationLibrary } from "../animation-library";
 import { DashboardFixtureListComponent } from "../dashboard-fixture-list/dashboard-fixture-list.component";

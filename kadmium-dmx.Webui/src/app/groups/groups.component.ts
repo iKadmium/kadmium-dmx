@@ -2,12 +2,12 @@ import { Component, OnInit, ViewChild } from '@angular/core';
 import { NgForm, FormGroup, FormBuilder, FormControl, FormArray } from '@angular/forms';
 import { Title } from "@angular/platform-browser";
 import { APIClient, IGroupData } from 'api';
-import { MessageService } from 'app/services/message.service';
-import { AnimationLibrary } from "app/animation-library";
-import { EditorService } from 'app/services/editor.service';
-import { FileReaderService } from 'app/services/file-reader.service';
-import { FileSaverService } from 'app/services/file-saver.service';
-import { Saveable } from 'app/unsaved-changes';
+import { MessageService } from '../services/message.service';
+import { AnimationLibrary } from "../animation-library";
+import { EditorService } from '../services/editor.service';
+import { FileReaderService } from '../services/file-reader.service';
+import { FileSaverService } from '../services/file-saver.service';
+import { Saveable } from '../unsaved-changes';
 import { UniqueValueValidatorDirective } from '../unique-value-validator.directive';
 
 @Component({

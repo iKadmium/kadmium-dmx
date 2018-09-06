@@ -3,8 +3,8 @@ import { PageEvent } from '@angular/material';
 import { ActivatedRoute } from "@angular/router";
 import { APIClient, IDMXChannelData, IFixtureDefinition } from 'api';
 import { FixtureData, FixtureDefinitionSkeleton, IVenueData, UniverseData } from "api/models";
-import { MessageService } from 'app/services/message.service';
-import { UniverseStreamService } from "app/services/universe-stream.service";
+import { MessageService } from '../services/message.service';
+import { UniverseStreamService } from "../services/universe-stream.service";
 import { Subscription } from 'rxjs';
 import { AnimationLibrary } from "../animation-library";
 import { EditorService } from '../services/editor.service';
@@ -67,7 +67,14 @@ export class VenueDiscoveryComponent implements OnInit, OnDestroy
 
 		this.subscription = this.universeStreamService.open(this.universeID).subscribe(() => { });
 		this.pageEvent({ length: 512, pageIndex: 0, pageSize: 48 });
-		this.refreshVenue();
+
+		this.apiClient.getActiveVenue().toPromise().then(async venue =>
+		{
+			this.venue = venue;
+			this.universe = this.venue.universes.find(x => x.universeID === this.universeID);
+			this.editorService.setActive(this.universe);
+			this.refreshVenue();
+		});
 	}
 
 	ngOnDestroy()
@@ -75,32 +82,26 @@ export class VenueDiscoveryComponent implements OnInit, OnDestroy
 		this.subscription.unsubscribe();
 	}
 
-	public refreshVenue(): void
+	public async refreshVenue(): Promise<void>
 	{
-		this.apiClient.getActiveVenue().toPromise().then(async venue =>
+		this.loaded = false;
+		this.fixtureChannelMap.clear();
+		const fixtureDefinitions = await this.getDefinitions(this.universe.fixtures.map(x => x.type));
+		for (const fixture of this.universe.fixtures)
 		{
-			this.venue = venue;
-			this.universe = this.venue.universes.find(x => x.universeID === this.universeID);
-			this.editorService.setActive(this.universe);
-
-			this.fixtureChannelMap.clear();
-			const fixtureDefinitions = await this.getDefinitions(this.universe.fixtures.map(x => x.type));
-			for (const fixture of this.universe.fixtures)
+			const definition = fixtureDefinitions.find(x => x.skeleton.manufacturer === fixture.type.manufacturer &&
+				x.skeleton.model === fixture.type.model);
+			for (const channel of definition.channels)
 			{
-				const definition = fixtureDefinitions.find(x => x.skeleton.manufacturer === fixture.type.manufacturer &&
-					x.skeleton.model === fixture.type.model);
-				for (const channel of definition.channels)
-				{
-					const address = channel.address + fixture.address - 1;
-					const fixtureWithDefinition: FixtureDataWithDefinition = {
-						definition: definition,
-						fixture: fixture
-					};
-					this.fixtureChannelMap.set(address, fixtureWithDefinition);
-				}
+				const address = channel.address + fixture.address - 1;
+				const fixtureWithDefinition: FixtureDataWithDefinition = {
+					definition: definition,
+					fixture: fixture
+				};
+				this.fixtureChannelMap.set(address, fixtureWithDefinition);
 			}
-			this.loaded = true;
-		});
+		}
+		this.loaded = true;
 	}
 
 	private async getDefinitions(skeletons: FixtureDefinitionSkeleton[]): Promise<IFixtureDefinition[]>

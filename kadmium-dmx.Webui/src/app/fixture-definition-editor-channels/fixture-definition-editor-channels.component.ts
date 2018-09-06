@@ -2,10 +2,10 @@ import { Component, OnInit } from '@angular/core';
 import { MatDialog } from '@angular/material';
 import { IDMXChannelData, IFixtureDefinition } from 'api';
 import { AnimationLibrary } from '../animation-library';
-import { DeleteConfirmDialogComponent } from '../delete-confirm-dialog/delete-confirm-dialog.component';
 import { EditorService } from '../services/editor.service';
 // tslint:disable-next-line:max-line-length
 import { FixtureDefinitionEditorChannelEditorDialogComponent } from '../fixture-definition-editor-channel-editor-dialog/fixture-definition-editor-channel-editor-dialog.component';
+import { DeleteConfirmService } from '../services/delete-confirm.service';
 
 @Component({
 	selector: 'app-fixture-definition-editor-channels',
@@ -19,7 +19,8 @@ export class FixtureDefinitionEditorChannelsComponent implements OnInit
 
 	constructor(
 		private fixtureDefinitionService: EditorService<IFixtureDefinition>,
-		private matDialog: MatDialog
+		private matDialog: MatDialog,
+		private deleteConfirm: DeleteConfirmService
 	)
 	{
 		this.channels = this.fixtureDefinitionService.getActive().channels;
@@ -62,10 +63,7 @@ export class FixtureDefinitionEditorChannelsComponent implements OnInit
 	public async removeChannel(index: number): Promise<void>
 	{
 		const channel = this.channels[index];
-		const result = (await this.matDialog
-			.open(DeleteConfirmDialogComponent, { data: channel.name })
-			.afterClosed()
-			.toPromise()) as IDMXChannelData;
+		const result = await this.deleteConfirm.confirm(channel.name);
 		if (result)
 		{
 			this.channels.splice(index, 1);

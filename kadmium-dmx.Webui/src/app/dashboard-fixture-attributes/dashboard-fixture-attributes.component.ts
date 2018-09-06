@@ -1,5 +1,5 @@
 import { Component, EventEmitter, Input, OnChanges, OnInit, Output, SimpleChanges } from '@angular/core';
-import { AttributeUpdateMessage, FixtureStreamService } from "app/services/fixture-stream.service";
+import { AttributeUpdateMessage, FixtureStreamService } from "../services/fixture-stream.service";
 import { PreviewAttribute } from "../preview-attribute";
 import { PreviewFixture } from "../preview-fixture";
 

@@ -3,7 +3,7 @@ import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { FormsModule } from '@angular/forms';
 import { MatDivider, MatIcon, MatList, MatListItem, MatSlider } from '@angular/material';
 import { ActiveAttribute } from 'api';
-import { AttributeUpdateMessage } from 'app/services/fixture-stream.service';
+import { AttributeUpdateMessage } from '../services/fixture-stream.service';
 import { MockComponent } from "ng-mocks";
 import { PreviewAttribute } from '../preview-attribute';
 import { PreviewFixture } from '../preview-fixture';

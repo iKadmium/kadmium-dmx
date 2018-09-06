@@ -4,12 +4,12 @@ import { MatCard, MatCardActions, MatCardContent, MatCardTitle, MatDialog, MatDi
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { ActivatedRoute } from '@angular/router';
 import { APIClient, FixtureData, FixtureDefinitionSkeleton, FixtureOptions, IFixtureDefinition, IGroupData, UniverseData } from 'api';
-import { MessageService } from 'app/services/message.service';
+import { DeleteConfirmService } from 'app/services/delete-confirm.service';
 import { MockComponent } from 'ng-mocks';
 import { from } from 'rxjs';
-import { DeleteConfirmDialogComponent } from '../delete-confirm-dialog/delete-confirm-dialog.component';
 import { FileReaderService } from '../services/file-reader.service';
 import { FileSaverService } from '../services/file-saver.service';
+import { MessageService } from '../services/message.service';
 import { FixtureDefinitionSkeletonHelpers } from '../test/fixture-definition-skeleton-helpers';
 import { FixtureDefinitionTestHelpers } from '../test/fixture-definition-test-helpers';
 import { FixtureOptionsTestHelpers } from '../test/fixture-options-test-helpers';
@@ -84,6 +84,7 @@ describe('UniverseEditorComponent', () =>
 						getFixtureDefinition: from([fixtureDefinition])
 					})
 				},
+				{ provide: DeleteConfirmService, useValue: jasmine.createSpyObj<DeleteConfirmService>({ confirm: Promise.resolve(true) }) },
 				{ provide: MessageService, useValue: jasmine.createSpyObj<MessageService>({ error: null }) },
 				{ provide: MatDialog, useValue: jasmine.createSpyObj<MatDialog>({ open: matDialogRef }) },
 				{ provide: FileSaverService, useValue: jasmine.createSpyObj<FileSaverService>({ save: Promise.resolve() }) },
@@ -136,10 +137,10 @@ describe('UniverseEditorComponent', () =>
 	{
 		it('should open a delete dialog', () =>
 		{
-			const matDialogMock = TestBed.get(MatDialog) as jasmine.SpyObj<MatDialog>;
+			const deleteConfirmServiceMock = TestBed.get(DeleteConfirmService) as jasmine.SpyObj<DeleteConfirmService>;
 			component.universe.fixtures = [fixtureData];
 			component.removeElement(0);
-			expect(matDialogMock.open).toHaveBeenCalledWith(DeleteConfirmDialogComponent, jasmine.any(Object));
+			expect(deleteConfirmServiceMock.confirm).toHaveBeenCalledWith(`${fixtureData.type.manufacturer} ${fixtureData.type.model}`);
 		});
 
 		it('should remove elements', (done) =>

@@ -12,11 +12,12 @@
 
 	<div *ngIf="loaded">
 		<div *ngFor="let channel of filteredChannels; let i = index">
-			<app-venue-discovery-fixture *ngIf="isFirstFixtureChannel(channel.address + 1)" [fixture]="fixtureChannelMap.get(channel.address + 1)">
+			<app-venue-discovery-fixture *ngIf="isFirstFixtureChannel(channel.address + 1)" [fixture]="fixtureChannelMap.get(channel.address + 1)"
+			 (fixtureDeleted)="refreshVenue()">
 			</app-venue-discovery-fixture>
 
 			<app-venue-discovery-unassigned *ngIf="isFirstUnassignedChannel(channel.address + 1)" [start]="channel.address + 1" [length]="getUnassignedBlockSize(channel.address + 1)"
-			 [venueName]="venue.name" (valueChange)="updateValue($event.address, $event.value)"></app-venue-discovery-unassigned>
+			 [venueName]="venue.name" (valueChange)="updateValue($event.address, $event.value)" (fixtureAdded)="refreshVenue()"></app-venue-discovery-unassigned>
 		</div>
 	</div>
 

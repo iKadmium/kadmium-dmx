@@ -3,7 +3,7 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material';
 import { IColorWheelEntryData } from 'api';
 // tslint:disable-next-line:max-line-length
-import { FixtureDefinitionEditorChannelEditorDialogComponent } from 'app/fixture-definition-editor-channel-editor-dialog/fixture-definition-editor-channel-editor-dialog.component';
+import { FixtureDefinitionEditorChannelEditorDialogComponent } from '../fixture-definition-editor-channel-editor-dialog/fixture-definition-editor-channel-editor-dialog.component';
 
 @Component({
 	selector: 'app-fixture-definition-editor-color-wheel-editor-dialog',

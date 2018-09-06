@@ -2,9 +2,9 @@ import { Component, OnInit } from '@angular/core';
 import { MatSelectionList } from '@angular/material';
 import { Title } from '@angular/platform-browser';
 import { APIClient, IGroupData, Settings } from 'api';
-import { AnimationLibrary } from 'app/animation-library';
-import { FileSaverService } from 'app/services/file-saver.service';
-import { MessageService } from 'app/services/message.service';
+import { AnimationLibrary } from '../animation-library';
+import { FileSaverService } from '../services/file-saver.service';
+import { MessageService } from '../services/message.service';
 
 @Component({
 	selector: 'app-tools',

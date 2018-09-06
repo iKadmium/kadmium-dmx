@@ -1,12 +1,13 @@
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
-import { FormsModule } from '@angular/forms';
+import { async, ComponentFixture, fakeAsync, TestBed, tick } from '@angular/core/testing';
+import { FormArray, ReactiveFormsModule } from '@angular/forms';
 // tslint:disable-next-line:max-line-length
 import { MatCard, MatCardContent, MatCheckbox, MatFormField, MatIcon, MatList, MatListItem, MatOption, MatSelect, MatTab, MatTabGroup, MatToolbar } from '@angular/material';
 import { APIClient, Settings } from 'api';
-import { MessageService } from 'app/services/message.service';
+import { DeleteConfirmService } from 'app/services/delete-confirm.service';
 import { MockComponent } from 'ng-mocks';
 import { from } from 'rxjs';
 import { BusyCardComponent } from '../busy-card/busy-card.component';
+import { MessageService } from '../services/message.service';
 import { SidenavToggleComponent } from '../sidenav-toggle/sidenav-toggle.component';
 import { SettingsComponent } from './settings.component';
 
@@ -26,10 +27,6 @@ describe('SettingsComponent', () =>
 				multicast: true,
 				uuid: "",
 				unicast: []
-			},
-			enttecProTransmitter: {
-				delay: 0,
-				port: ""
 			}
 		};
 
@@ -58,10 +55,11 @@ describe('SettingsComponent', () =>
 						putSettings: from([])
 					})
 				},
-				{ provide: MessageService, useValue: jasmine.createSpyObj<MessageService>({ error: null }) }
+				{ provide: MessageService, useValue: jasmine.createSpyObj<MessageService>({ error: null }) },
+				{ provide: DeleteConfirmService, useValue: jasmine.createSpyObj<DeleteConfirmService>({ confirm: Promise.resolve(true) }) }
 			],
 			imports: [
-				FormsModule
+				ReactiveFormsModule
 			]
 		});
 
@@ -97,12 +95,19 @@ describe('SettingsComponent', () =>
 		expect(messageService.error).toHaveBeenCalledWith(error);
 	});
 
+	it('should appropriately store the settings it gets', fakeAsync(() =>
+	{
+		fixture.detectChanges();
+		tick();
+		expect(component.form.value).toEqual(settings);
+	}));
+
 	it('should save', () =>
 	{
 		const apiClient = TestBed.get(APIClient) as jasmine.SpyObj<APIClient>;
-		component.settings = settings;
+		fixture.detectChanges();
 		component.save();
-		expect(apiClient.putSettings).toHaveBeenCalledWith({ value: component.settings });
+		expect(apiClient.putSettings).toHaveBeenCalledWith({ value: component.form.value });
 	});
 
 	it('should report an error if saving throws one', () =>
@@ -111,22 +116,29 @@ describe('SettingsComponent', () =>
 		const apiClient = TestBed.get(APIClient) as jasmine.SpyObj<APIClient>;
 		const messageService = TestBed.get(MessageService) as jasmine.SpyObj<MessageService>;
 		apiClient.putSettings.and.throwError(error.message);
-		component.settings = settings;
+		fixture.detectChanges();
 		component.save();
 		expect(messageService.error).toHaveBeenCalledWith(error);
 	});
 
 	it('should add a unicast target', () =>
 	{
-		component.fakeTargets = [];
+		fixture.detectChanges();
+		const unicastTargets = component.form.get('sacnTransmitter').get('unicast') as FormArray;
+		unicastTargets.reset();
 		component.addElement();
-		expect(component.fakeTargets.length).toBe(1);
+		expect(unicastTargets.length).toBe(1);
 	});
 
-	it('should remove a unicast target', () =>
+	it('should remove a unicast target', fakeAsync(() =>
 	{
-		component.fakeTargets = [{ target: "somewhere" }];
+		fixture.detectChanges();
+		const unicastTargets = component.form.get('sacnTransmitter').get('unicast') as FormArray;
+		unicastTargets.reset();
+		component.addElement();
+		expect(unicastTargets.length).toBe(1);
 		component.removeElement(0);
-		expect(component.fakeTargets.length).toBe(0);
-	});
+		tick();
+		expect(unicastTargets.length).toBe(0);
+	}));
 });

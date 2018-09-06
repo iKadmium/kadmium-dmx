@@ -1,8 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { IVenueData, UniverseData } from 'api';
-import { AnimationLibrary } from 'app/animation-library';
-import { EditorService } from 'app/services/editor.service';
+import { AnimationLibrary } from '../animation-library';
+import { EditorService } from '../services/editor.service';
 
 @Component({
 	selector: 'app-venue-editor-home',

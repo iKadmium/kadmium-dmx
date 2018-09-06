@@ -7,7 +7,6 @@ import
 
 export interface Settings
 {
-  enttecProTransmitter: EnttecProTransmitterSettings;
   oscPort: number;
   sacnTransmitter: SacnTransmitterSettings;
   webPort: number;

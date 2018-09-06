@@ -4,10 +4,10 @@ import { MatCard, MatCardContent, MatCardTitle, MatFormField, MatIcon, MatToolba
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { IVenueData } from 'api';
 import { MockComponent } from 'ng-mocks';
-import { EditorService } from 'app/services/editor.service';
-import { SidenavToggleComponent } from 'app/sidenav-toggle/sidenav-toggle.component';
-import { VenueTestHelper } from 'app/test/venue-test-helper';
-import { UniversesComponent } from 'app/universes/universes.component';
+import { EditorService } from '../services/editor.service';
+import { SidenavToggleComponent } from '../sidenav-toggle/sidenav-toggle.component';
+import { VenueTestHelper } from '../test/venue-test-helper';
+import { UniversesComponent } from '../universes/universes.component';
 import { VenueEditorHomeComponent } from './venue-editor-home.component';
 
 describe('VenueEditorHomeComponent', () =>

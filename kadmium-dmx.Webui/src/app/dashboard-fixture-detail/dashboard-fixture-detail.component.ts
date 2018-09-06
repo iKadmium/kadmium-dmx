@@ -1,9 +1,9 @@
 import { AfterViewInit, Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { ActivatedRoute } from "@angular/router";
 import { ActiveUniverse, APIClient } from 'api';
-import { AttributeUpdateData, AttributeUpdateMessage, FixtureStreamService } from 'app/services/fixture-stream.service';
-import { MessageService } from 'app/services/message.service';
-import { UniverseStreamService } from "app/services/universe-stream.service";
+import { AttributeUpdateData, AttributeUpdateMessage, FixtureStreamService } from '../services/fixture-stream.service';
+import { MessageService } from '../services/message.service';
+import { UniverseStreamService } from "../services/universe-stream.service";
 import { Subscription } from 'rxjs';
 import { AnimationLibrary } from "../animation-library";
 import { DashboardFixturePreviewComponent } from "../dashboard-fixture-preview/dashboard-fixture-preview.component";

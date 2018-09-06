@@ -1,13 +1,12 @@
 import { Component, OnInit } from '@angular/core';
-import { MatDialog } from '@angular/material';
 import { Title } from "@angular/platform-browser";
 import { APIClient } from 'api';
-import { IFixtureDefinition, FixtureDefinitionSkeleton } from "api/models";
-import { MessageService } from '../services/message.service';
+import { FixtureDefinitionSkeleton, IFixtureDefinition } from "api/models";
 import { AnimationLibrary } from "../animation-library";
-import { DeleteConfirmDialogComponent } from '../delete-confirm-dialog/delete-confirm-dialog.component';
-import { FileReaderService } from '../services/file-reader.service';
 import { AppURL } from '../app-url';
+import { DeleteConfirmService } from '../services/delete-confirm.service';
+import { FileReaderService } from '../services/file-reader.service';
+import { MessageService } from '../services/message.service';
 
 @Component({
 	selector: 'app-fixture-definitions',
@@ -27,7 +26,7 @@ export class FixtureDefinitionsComponent implements OnInit
 
 	constructor(
 		private apiClient: APIClient,
-		private dialog: MatDialog,
+		private deleteConfirmService: DeleteConfirmService,
 		private messageService: MessageService,
 		private fileReader: FileReaderService,
 		title: Title)
@@ -100,10 +99,8 @@ export class FixtureDefinitionsComponent implements OnInit
 
 	public async deleteConfirm(fixture: FixtureDefinitionSkeleton): Promise<void>
 	{
-		const value = await this.dialog
-			.open(DeleteConfirmDialogComponent, { data: `${fixture.manufacturer} ${fixture.model}` }).afterClosed().toPromise();
-
-		if (value != null)
+		const value = await this.deleteConfirmService.confirm(`${fixture.manufacturer} ${fixture.model}`);
+		if (value)
 		{
 			try
 			{
@@ -112,6 +109,7 @@ export class FixtureDefinitionsComponent implements OnInit
 				this.messageService.info(fixture.manufacturer + " " + fixture.model + " was deleted");
 				const index = this.skeletons.indexOf(fixture);
 				this.skeletons.splice(index, 1);
+				this.applyFilter(this.filter);
 			}
 			catch (error)
 			{

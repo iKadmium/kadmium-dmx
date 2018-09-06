@@ -4,9 +4,9 @@ import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { ActivatedRoute } from '@angular/router';
 import { RouterTestingModule } from '@angular/router/testing';
 import { ActiveAttribute, ActiveUniverse, APIClient } from 'api';
-import { AttributeUpdateData, FixtureStreamService } from 'app/services/fixture-stream.service';
-import { MessageService } from 'app/services/message.service';
-import { UniverseStreamService } from 'app/services/universe-stream.service';
+import { AttributeUpdateData, FixtureStreamService } from '../services/fixture-stream.service';
+import { MessageService } from '../services/message.service';
+import { UniverseStreamService } from '../services/universe-stream.service';
 import { MockComponent } from 'ng-mocks';
 import { from, Observable, Subscriber, Subscription } from 'rxjs';
 import { BusyCardComponent } from '../busy-card/busy-card.component';
@@ -117,11 +117,14 @@ describe('DashboardFixtureDetailComponent', () =>
 		component = fixture.componentInstance;
 	});
 
-	it('should create', () =>
+	it('should create', fakeAsync(() =>
 	{
 		fixture.detectChanges();
+		tick();
 		expect(component).toBeTruthy();
-	});
+		expect(component.loading).toBeFalsy();
+		fixture.destroy();
+	}));
 
 	it('should request the active universe', () =>
 	{

@@ -21,19 +21,20 @@
 
 			</div>
 			<div style="flex: 1" class="actions-cell">
-				<button mat-icon-button *ngIf="!channel.selected" class="select-channel-button" (click)="selectChannel(channel, true)" matTooltip="Add new type of fixture">
+				<button mat-icon-button *ngIf="!channel.selected" type="button" class="select-channel-button" (click)="selectChannel(channel, true)"
+				 matTooltip="Add new type of fixture">
 					<mat-icon>create_new_folder</mat-icon>
 				</button>
-				<button mat-icon-button class="deselect-channel-button" *ngIf="channel.selected" color="warn" (click)="selectChannel(channel, false)">
+				<button mat-icon-button class="deselect-channel-button" type="button" *ngIf="channel.selected" color="warn" (click)="selectChannel(channel, false)">
 					<mat-icon>remove_circle</mat-icon>
 				</button>
-				<button mat-icon-button *ngIf="!channel.selected" (click)="addFixture(channel)" matTooltip="Add fixture from library">
+				<button mat-icon-button *ngIf="!channel.selected" type="button" (click)="addFixture(channel)" matTooltip="Add fixture from library">
 					<mat-icon>folder_open</mat-icon>
 				</button>
 			</div>
 		</div>
 	</mat-card-content>
 </mat-card>
-<button mat-fab (click)="addFixtureDefinition()" *ngIf="selectedChannels.length > 0" @slideInBackOut class="fixed-fab create-new-fixture-button">
+<button mat-fab type="button" (click)="addFixtureDefinition()" *ngIf="selectedChannels.length > 0" @slideInBackOut class="fixed-fab create-new-fixture-button">
 	<mat-icon class="mat-18">create_new_folder</mat-icon>
 </button>

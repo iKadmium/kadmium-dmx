@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { MatDialog } from '@angular/material';
 import { FixtureDefinitionSkeleton, IVenueData, UniverseData } from 'api';
 import { AnimationLibrary } from '../animation-library';
-import { DeleteConfirmDialogComponent } from '../delete-confirm-dialog/delete-confirm-dialog.component';
+import { DeleteConfirmService } from '../services/delete-confirm.service';
 import { EditorService } from '../services/editor.service';
 import { UniverseEditorDialogComponent } from '../universe-editor-dialog/universe-editor-dialog.component';
 
@@ -19,6 +19,7 @@ export class UniversesComponent implements OnInit
 
 	constructor(
 		private editorService: EditorService<IVenueData>,
+		private deleteConfirm: DeleteConfirmService,
 		private dialogService: MatDialog)
 	{ }
 
@@ -34,7 +35,8 @@ export class UniversesComponent implements OnInit
 
 	public async removeUniverse(index: number): Promise<void>
 	{
-		const result = await this.dialogService.open(DeleteConfirmDialogComponent).afterClosed().toPromise();
+		const universe = this.venue.universes[index];
+		const result = await this.deleteConfirm.confirm(universe.name);
 		if (result)
 		{
 			this.venue.universes.splice(index, 1);

@@ -1,18 +1,16 @@
 import { Component, OnInit } from '@angular/core';
 import { Title } from "@angular/platform-browser";
-import { APIClient } from "api/api-client.service";
-import { MatDialog } from '@angular/material';
-import { DeleteConfirmDialogComponent } from '../delete-confirm-dialog/delete-confirm-dialog.component';
-import { AnimationLibrary } from "../animation-library";
-import { MessageService } from 'app/services/message.service';
-import { FileReaderService } from '../services/file-reader.service';
 import { IVenueData } from 'api';
+import { APIClient } from "api/api-client.service";
+import { AnimationLibrary } from "../animation-library";
+import { DeleteConfirmService } from '../services/delete-confirm.service';
+import { FileReaderService } from '../services/file-reader.service';
+import { MessageService } from '../services/message.service';
 
 @Component({
 	selector: 'app-venues',
 	templateUrl: './venues.component.html',
 	styleUrls: ['./venues.component.css'],
-	providers: [APIClient],
 	animations: [AnimationLibrary.animations()]
 })
 export class VenuesComponent implements OnInit
@@ -28,7 +26,7 @@ export class VenuesComponent implements OnInit
 		private messageService: MessageService,
 		title: Title,
 		private fileReader: FileReaderService,
-		private dialog: MatDialog)
+		private deleteConfirmService: DeleteConfirmService)
 	{
 		title.setTitle("Venues");
 		this.venues = [];
@@ -37,35 +35,40 @@ export class VenuesComponent implements OnInit
 
 	ngOnInit(): void
 	{
-		this.apiClient.getVenues()
-			.toPromise()
-			.then(response =>
-			{
-				this.venues = response;
-				this.venues.sort();
-				this.loading = false;
-			}).catch(error => this.messageService.error(error));
+		try
+		{
+			this.apiClient.getVenues()
+				.toPromise()
+				.then(response =>
+				{
+					this.venues = response;
+					this.venues.sort();
+					this.loading = false;
+				});
+		}
+		catch (error)
+		{
+			this.messageService.error(error);
+		}
 	}
 
-	private deleteConfirm(venueName: string): void
+	public async deleteConfirm(venueName: string): Promise<void>
 	{
-		this.dialog.open(DeleteConfirmDialogComponent, { data: venueName }).afterClosed().subscribe(async value =>
+		const result = await this.deleteConfirmService.confirm(venueName);
+		if (result)
 		{
-			if (value)
+			try
 			{
-				try
-				{
-					await this.apiClient.deleteVenue({ name: venueName }).toPromise();
-					const index = this.venues.indexOf(venueName);
-					this.venues.splice(index, 1);
-					this.messageService.info(venueName + " successfully removed");
-				}
-				catch (error)
-				{
-					this.messageService.error(error);
-				}
+				await this.apiClient.deleteVenue({ name: venueName }).toPromise();
+				const index = this.venues.indexOf(venueName);
+				this.venues.splice(index, 1);
+				this.messageService.info(venueName + " successfully removed");
 			}
-		});
+			catch (error)
+			{
+				this.messageService.error(error);
+			}
+		}
 	}
 
 	public applyFilter(filterValue: string): void

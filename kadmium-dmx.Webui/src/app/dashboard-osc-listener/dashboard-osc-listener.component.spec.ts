@@ -2,7 +2,7 @@ import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { MatCard, MatCardActions, MatCardContent, MatCardSubtitle, MatCardTitle, MatIcon, MatSlideToggle } from '@angular/material';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { APIClient } from 'api';
-import { MessageService } from 'app/services/message.service';
+import { MessageService } from '../services/message.service';
 import { MockComponent } from 'ng-mocks';
 import { from } from 'rxjs';
 import { BusyCardComponent } from '../busy-card/busy-card.component';

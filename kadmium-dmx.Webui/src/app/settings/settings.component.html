@@ -1,10 +1,10 @@
 <app-busy-card [loading]="loading" [saving]="saving"></app-busy-card>
-<form *ngIf="!loading && !saving" (ngSubmit)="save()" #settingsForm="ngForm">
+<form *ngIf="!loading && !saving" (ngSubmit)="save()" [formGroup]="form">
     <mat-toolbar class="main-toolbar">
         <app-sidenav-toggle></app-sidenav-toggle>
         Settings
         <span class="toolbar-spacer"></span>
-        <button mat-icon-button color="primary" type="submit" [disabled]="!settingsForm.valid" matTooltip="Save">
+        <button mat-icon-button color="primary" type="submit" [disabled]="!form.valid" matTooltip="Save">
             <mat-icon aria-label="Save">save</mat-icon>
         </button>
     </mat-toolbar>
@@ -14,23 +14,20 @@
                 <mat-tab label='Ports'>
                     <div class="column top-margin">
                         <mat-form-field>
-                            <input matInput required type="number" name="webPort" min="1" max="65535" [(ngModel)]="settings.webPort" placeholder="HTTP Port"
-                            />
+                            <input matInput required type="number" formControlName="webPort" min="1" max="65535" placeholder="HTTP Port" />
                         </mat-form-field>
                         <mat-form-field>
-                            <input matInput required type="number" name="oscPort" min="1" max="65535" [(ngModel)]="settings.oscPort" placeholder="OSC Port"
-                            />
+                            <input matInput required type="number" formControlName="oscPort" min="1" max="65535" placeholder="OSC Port" />
                         </mat-form-field>
                     </div>
                 </mat-tab>
 
                 <mat-tab label="sACN">
-                    <div class="column top-margin">
+                    <div class="column top-margin" formGroupName="sacnTransmitter">
                         <mat-form-field>
-                            <input matInput required type="number" name="sacnTransmitterDelay" min="0" max="10000" [(ngModel)]="settings.sacnTransmitter.delay"
-                                placeholder="Delay (ms)" />
+                            <input matInput required type="number" formControlName="delay" min="0" max="10000" placeholder="Delay (ms)" />
                         </mat-form-field>
-                        <mat-checkbox [(ngModel)]="settings.sacnTransmitter.multicast" name="sacnMulticast">Multicast</mat-checkbox>
+                        <mat-checkbox formControlName="multicast">Multicast</mat-checkbox>
 
                         <div>
                             <mat-toolbar class="sub-toolbar">
@@ -40,12 +37,12 @@
                                     <mat-icon aria-label="Add">add</mat-icon>
                                 </button>
                             </mat-toolbar>
-                            <div class="column">
+                            <div class="column" formArrayName="unicast">
                                 <mat-list>
-                                    <mat-list-item *ngFor="let target of fakeTargets; let i = index" class="column" @fadeOut>
+                                    <mat-list-item *ngFor="let target of unicast.controls; let i = index" class="column" @fadeOut>
                                         <div fxLayout="row" class="unicastTargetWrapper">
                                             <mat-form-field @growX class="unicastTargetName">
-                                                <input matInput required type="text" [(ngModel)]="target.target" [name]="'unicast[' + i + ']'" placeholder="Address" />
+                                                <input matInput required type="text" [formControlName]="i" placeholder="Address" />
                                             </mat-form-field>
                                             <button mat-icon-button class="actionsCell" type="button" color="warn" (click)="removeElement(i)" matTooltip="Remove">
                                                 <mat-icon aria-label="Remove">remove_circle</mat-icon>
@@ -61,6 +58,4 @@
             </mat-tab-group>
         </mat-card-content>
     </mat-card>
-
-
 </form>

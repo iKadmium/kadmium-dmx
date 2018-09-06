@@ -1,18 +1,18 @@
 import { async, ComponentFixture, fakeAsync, TestBed, tick } from '@angular/core/testing';
-import { FormsModule, ReactiveFormsModule } from "@angular/forms";
-import { MatCard, MatCardContent, MatDialog, MatDialogRef, MatFormField, MatIcon, MatToolbar } from '@angular/material';
+import { ReactiveFormsModule } from "@angular/forms";
+import { MatCard, MatCardContent, MatFormField, MatIcon, MatToolbar } from '@angular/material';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { RouterTestingModule } from '@angular/router/testing';
-import { APIClient, IFixtureDefinition, FixtureDefinitionSkeleton } from 'api';
-import { DeleteConfirmDialogComponent } from '../delete-confirm-dialog/delete-confirm-dialog.component';
-import { FileReaderService } from '../services/file-reader.service';
+import { APIClient, FixtureDefinitionSkeleton, IFixtureDefinition } from 'api';
+import { DeleteConfirmService } from 'app/services/delete-confirm.service';
 import { MockComponent } from 'ng-mocks';
 import { from } from 'rxjs';
 import { BusyCardComponent } from '../busy-card/busy-card.component';
+import { FixtureType } from '../enums/fixture-type.enum';
+import { FileReaderService } from '../services/file-reader.service';
+import { MessageService } from '../services/message.service';
 import { SidenavToggleComponent } from '../sidenav-toggle/sidenav-toggle.component';
 import { FixtureDefinitionsComponent } from './fixture-definitions.component';
-import { FixtureType } from '../enums/fixture-type.enum';
-import { MessageService } from '../services/message.service';
 
 
 describe('FixtureDefinitionsComponent', () =>
@@ -21,12 +21,9 @@ describe('FixtureDefinitionsComponent', () =>
 	let fixture: ComponentFixture<FixtureDefinitionsComponent>;
 
 	let definition: IFixtureDefinition;
-	let dialogObservable: jasmine.SpyObj<MatDialogRef<DeleteConfirmDialogComponent>>;
 
 	beforeEach(async(() =>
 	{
-		dialogObservable = jasmine.createSpyObj<MatDialogRef<DeleteConfirmDialogComponent>>({ afterClosed: from([]) });
-
 		definition = {
 			skeleton: {
 				manufacturer: "Manufacturer",
@@ -63,7 +60,7 @@ describe('FixtureDefinitionsComponent', () =>
 						deleteFixtureDefinition: from([])
 					})
 				},
-				{ provide: MatDialog, useValue: jasmine.createSpyObj<MatDialog>({ open: dialogObservable }) },
+				{ provide: DeleteConfirmService, useValue: jasmine.createSpyObj<DeleteConfirmService>({ confirm: Promise.resolve(true) }) },
 				{
 					provide: MessageService, useValue: jasmine.createSpyObj<MessageService>({
 						error: null,
@@ -85,10 +82,15 @@ describe('FixtureDefinitionsComponent', () =>
 
 	describe('component', () =>
 	{
-		it('should create', () =>
+		it('should create', (done) =>
 		{
 			fixture.detectChanges();
-			expect(component).toBeTruthy();
+			fixture.whenStable().then(() =>
+			{
+				expect(component).toBeTruthy();
+				expect(component.loading).toBeFalsy();
+				done();
+			});
 		});
 	});
 
@@ -198,18 +200,16 @@ describe('FixtureDefinitionsComponent', () =>
 	{
 		it('should open a delete confirm dialogue when delete is called', () =>
 		{
+			const deleteConfirmServiceMock = TestBed.get(DeleteConfirmService) as jasmine.SpyObj<DeleteConfirmService>;
 			const skeleton = definition.skeleton;
-			const dialogMock = TestBed.get(MatDialog) as jasmine.SpyObj<MatDialog>;
 			component.deleteConfirm(skeleton);
-			expect(dialogMock.open).toHaveBeenCalledTimes(1);
+			expect(deleteConfirmServiceMock.confirm).toHaveBeenCalledTimes(1);
 		});
 
 		it('should delete the definition if the dialog is confirmed', fakeAsync(() =>
 		{
 			const skeleton = definition.skeleton;
 			const apiClientMock = TestBed.get(APIClient) as jasmine.SpyObj<APIClient>;
-			dialogObservable.afterClosed.and.returnValue(from([true]));
-
 			component.deleteConfirm(skeleton);
 			tick();
 			expect(apiClientMock.deleteFixtureDefinition).toHaveBeenCalledWith({ manufacturer: skeleton.manufacturer, model: skeleton.model });
@@ -221,7 +221,6 @@ describe('FixtureDefinitionsComponent', () =>
 			const skeleton = definition.skeleton;
 			const messageServiceMock = TestBed.get(MessageService) as jasmine.SpyObj<MessageService>;
 			const apiClientMock = TestBed.get(APIClient) as jasmine.SpyObj<APIClient>;
-			dialogObservable.afterClosed.and.returnValue(from([true]));
 			apiClientMock.deleteFixtureDefinition.and.throwError(error.message);
 
 			component.deleteConfirm(skeleton);

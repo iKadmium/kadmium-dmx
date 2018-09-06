@@ -2,7 +2,7 @@ import { Component, Input, OnInit } from '@angular/core';
 import { MatDialog } from '@angular/material';
 import { APIClient, IVenueData } from 'api';
 import { UniverseData } from "api/models";
-import { MessageService } from 'app/services/message.service';
+import { MessageService } from '../services/message.service';
 import { AnimationLibrary } from "../animation-library";
 import { Status } from "../status";
 import { VenueNameDialogComponent } from "../venue-name-dialog/venue-name-dialog.component";

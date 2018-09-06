@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { AppURL, SocketController } from "app/app-url";
+import { AppURL, SocketController } from "../app-url";
 import { Observable, Subject } from 'rxjs';
 import { WebSocketSubject } from 'rxjs/webSocket';
 

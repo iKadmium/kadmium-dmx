@@ -1,7 +1,8 @@
 import { Component, Inject, OnInit } from '@angular/core';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material';
-import { IDMXChannelData, IFixtureDefinition, MovementAxis } from "api";
-import { FixtureType } from 'app/enums/fixture-type.enum';
+import { IDMXChannelData, IFixtureDefinition, MovementAxis, IMovementAxisData } from "api";
+import { FixtureType } from '../enums/fixture-type.enum';
+import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 
 @Component({
 	selector: 'app-venue-discovery-add-fixture-definition-dialog',
@@ -13,39 +14,52 @@ export class VenueDiscoveryAddFixtureDefinitionDialogComponent implements OnInit
 	private static detectedAxis: string[] = ["Pan", "Tilt"];
 	private static axisSuffixes: string[][] = [[""], ["Fine", "Coarse"]];
 
-	public definition: IFixtureDefinition;
+	public form: FormGroup;
 
 	constructor(
 		public dialogRef: MatDialogRef<VenueDiscoveryAddFixtureDefinitionDialogComponent>,
+		private formBuilder: FormBuilder,
 		@Inject(MAT_DIALOG_DATA) data: AddFixtureDefinitionData
 	)
 	{
-		this.definition = {
-			fixtureType: FixtureType.LED,
-			channels: data.channels,
-			movements: [],
-			colorWheel: [],
-			skeleton: {
-				manufacturer: `Venue - ${data.venue}`,
-				model: ''
-			}
-		};
+		const firstChannel = data.channels[0].address;
 
-		this.definition.channels.sort((a, b) =>
-		{
-			return a.address - b.address;
+		this.form = this.formBuilder.group({
+			fixtureType: [FixtureType.LED],
+			skeleton: this.formBuilder.group({
+				manufacturer: [`Venue - ${data.venue}`, Validators.required],
+				model: ['', Validators.required]
+			}),
+			movements: this.formBuilder.array(
+				this.getMovementAxis(data.channels).map(axis => this.formBuilder.group({
+					min: [axis.min, Validators.required],
+					max: [axis.max, Validators.required],
+					name: [axis.name, Validators.required]
+				})
+				)
+			),
+			colorWheel: this.formBuilder.array([]),
+			channels: this.formBuilder.array(
+				data.channels.map(channel => this.formBuilder.group({
+					address: [channel.address - firstChannel + 1, [Validators.required, Validators.min(1), Validators.max(512)]],
+					min: [channel.min, [Validators.required, Validators.min(0), Validators.max(255)]],
+					max: [channel.max, [Validators.required, Validators.min(0), Validators.max(255)]],
+					name: [channel.name, [Validators.required]]
+				}))
+			)
 		});
+	}
 
-		const firstChannel = this.definition.channels[0].address;
-		this.definition.channels.forEach(x => x.address -= firstChannel - 1);
+	private getMovementAxis(channels: IDMXChannelData[]): IMovementAxisData[]
+	{
+		const movements: IMovementAxisData[] = [];
 
-		// create movement axis
 		for (const axisName of this.getAxisNames())
 		{
 			for (const variant of axisName.variants)
 			{
 				if (variant.names
-					.every(name => this.definition.channels
+					.every(name => channels
 						.map(channel => channel.name)
 						.indexOf(name) !== -1))
 				{
@@ -54,10 +68,12 @@ export class VenueDiscoveryAddFixtureDefinitionDialogComponent implements OnInit
 						max: 90,
 						name: axisName.axisName
 					};
-					this.definition.movements.push(axis);
+					movements.push(axis);
 				}
 			}
 		}
+
+		return movements;
 	}
 
 	private getAxisNames(): ChannelAxisNameCollection[]
@@ -84,6 +100,16 @@ export class VenueDiscoveryAddFixtureDefinitionDialogComponent implements OnInit
 	ngOnInit()
 	{
 
+	}
+
+	public save(): void
+	{
+		this.dialogRef.close(this.form.value);
+	}
+
+	public cancel(): void
+	{
+		this.dialogRef.close();
 	}
 }
 

@@ -3,7 +3,7 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { MatDialogRef, MAT_DIALOG_DATA } from "@angular/material/dialog";
 import { APIClient } from 'api';
 import { FixtureDefinitionSkeleton, FixtureOptions, IFixtureDefinition } from "api/models";
-import { MessageService } from 'app/services/message.service';
+import { MessageService } from '../services/message.service';
 import { AnimationLibrary } from "../animation-library";
 
 @Component({

@@ -1,7 +1,7 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { MatCard, MatCardContent, MatToolbar } from '@angular/material';
-import { MessageService } from 'app/services/message.service';
-import { OSCListenerData, OSCListenerLiveService } from 'app/services/osclistener-live.service';
+import { MessageService } from '../services/message.service';
+import { OSCListenerData, OSCListenerLiveService } from '../services/osclistener-live.service';
 import { MockComponent } from 'ng-mocks';
 import { Observable, Subscriber } from 'rxjs';
 import { SidenavToggleComponent } from '../sidenav-toggle/sidenav-toggle.component';
