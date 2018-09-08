@@ -1,9 +1,8 @@
-import { TestBed, inject, fakeAsync } from '@angular/core/testing';
-
-import { DeleteConfirmService } from './delete-confirm.service';
+import { inject, TestBed } from '@angular/core/testing';
 import { MatDialog, MatDialogRef } from '@angular/material';
-import { DeleteConfirmDialogComponent } from 'app/delete-confirm-dialog/delete-confirm-dialog.component';
+import { DeleteConfirmDialogComponent } from '../dialogs/delete-confirm-dialog/delete-confirm-dialog.component';
 import { from } from 'rxjs';
+import { DeleteConfirmService } from './delete-confirm.service';
 
 describe('DeleteConfirmService', () =>
 {

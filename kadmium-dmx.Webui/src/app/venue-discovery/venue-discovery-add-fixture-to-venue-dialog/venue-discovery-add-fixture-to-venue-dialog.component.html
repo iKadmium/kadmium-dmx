@@ -1,0 +1,31 @@
+<div class="mat-typography">
+	<form [formGroup]="form">
+		<h1 mat-dialog-title>Add Fixture to Venue</h1>
+		<div mat-dialog-content>
+			<div class="column">
+				<mat-form-field>
+					<mat-select required formControlName="group" placeholder="Group">
+						<mat-option *ngFor="let group of groups" [value]="group.name">{{group.name}}</mat-option>
+					</mat-select>
+				</mat-form-field>
+				<mat-form-field>
+					<mat-select formControlName="fixture" placeholder="Fixture Type">
+						<mat-option *ngFor="let definition of definitions" [value]="definition">{{definition.manufacturer}}
+							{{definition.model}}</mat-option>
+					</mat-select>
+				</mat-form-field>
+			</div>
+		</div>
+
+		<div mat-dialog-actions>
+			<button mat-button color="primary" (click)="save()" class="button-save" tabindex="0" [disabled]="form.invalid">
+				<mat-icon>done</mat-icon>
+				OK
+			</button>
+			<button mat-button (click)="cancel()" class="button-cancel" tabindex="-1">
+				<mat-icon>cancel</mat-icon>
+				Cancel
+			</button>
+		</div>
+	</form>
+</div>

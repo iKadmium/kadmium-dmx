@@ -1,5 +1,5 @@
 FROM node:8.10 as node
-WORKDIR app
+WORKDIR /app
 
 COPY kadmium-dmx.Webui/package.json /app/
 RUN npm install

@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { MatDialog } from '@angular/material';
-import { DeleteConfirmDialogComponent } from '../delete-confirm-dialog/delete-confirm-dialog.component';
+import { DeleteConfirmDialogComponent } from '../dialogs/delete-confirm-dialog/delete-confirm-dialog.component';
 
 @Injectable({
 	providedIn: 'root'

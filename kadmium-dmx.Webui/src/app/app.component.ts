@@ -1,13 +1,12 @@
 import { AfterViewInit, Component, OnInit, ViewChild, OnDestroy } from '@angular/core';
 import { MatSidenav } from '@angular/material';
 import { Title } from "@angular/platform-browser";
-import { SidenavService } from "./services/sidenav.service";
+import { SidenavService } from "./sidenav-toggle/sidenav.service";
 
 @Component({
 	selector: 'app-root',
 	templateUrl: './app.component.html',
-	styleUrls: ['./app.component.css'],
-	providers: [SidenavService]
+	styleUrls: ['./app.component.css']
 })
 export class AppComponent implements OnInit, AfterViewInit, OnDestroy
 {

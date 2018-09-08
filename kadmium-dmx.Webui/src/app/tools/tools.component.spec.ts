@@ -7,10 +7,10 @@ import { APIClient, GroupData, Settings } from 'api';
 import { MessageService } from '../services/message.service';
 import { MockComponent } from 'ng-mocks';
 import { from } from 'rxjs';
-import { BusyCardComponent } from '../busy-card/busy-card.component';
+import { BusyCardComponent } from '../busy-card/component/busy-card.component';
 import { FileSaverService } from '../services/file-saver.service';
-import { SidenavToggleComponent } from '../sidenav-toggle/sidenav-toggle.component';
 import { Attribute, ToolsComponent } from './tools.component';
+import { SidenavToggleComponent } from 'app/sidenav-toggle/sidenav-toggle/sidenav-toggle.component';
 
 
 describe('ToolsComponent', () =>

@@ -23,5 +23,5 @@ export class UnsavedChanges<T extends Saveable> implements CanDeactivate<T> {
 
 export interface Saveable
 {
-	hasUnsavedChanges(): boolean
+	hasUnsavedChanges(): boolean;
 }

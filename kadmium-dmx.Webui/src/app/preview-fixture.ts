@@ -4,7 +4,7 @@ import { PreviewAttribute } from "./preview-attribute";
 import { RGB } from "./color";
 import { PreviewFixtureData } from "./preview.service";
 import { ActiveFixture } from "api/models";
-import { DashboardFixturePreviewComponent } from "./dashboard-fixture-preview/dashboard-fixture-preview.component";
+import { DashboardFixturePreviewComponent } from "./dashboard/dashboard-fixture-preview/dashboard-fixture-preview.component";
 
 export class PreviewFixture
 {

@@ -13,12 +13,15 @@ services:
     mongo:
         restart: unless-stopped
         image: mongo:latest
+        volumes:
+            - mongo-db:/data/db
         ports:
             - "27017:27017"
         networks:
             - default
 volumes:
     kadmium-dmx-volume:
+    mongo-db:
 networks: 
     default:
         driver: bridge

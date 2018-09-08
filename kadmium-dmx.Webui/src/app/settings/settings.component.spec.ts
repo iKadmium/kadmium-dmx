@@ -3,13 +3,13 @@ import { FormArray, ReactiveFormsModule } from '@angular/forms';
 // tslint:disable-next-line:max-line-length
 import { MatCard, MatCardContent, MatCheckbox, MatFormField, MatIcon, MatList, MatListItem, MatOption, MatSelect, MatTab, MatTabGroup, MatToolbar } from '@angular/material';
 import { APIClient, Settings } from 'api';
-import { DeleteConfirmService } from 'app/services/delete-confirm.service';
+import { DeleteConfirmService } from '../services/delete-confirm.service';
 import { MockComponent } from 'ng-mocks';
 import { from } from 'rxjs';
-import { BusyCardComponent } from '../busy-card/busy-card.component';
+import { BusyCardComponent } from '../busy-card/component/busy-card.component';
 import { MessageService } from '../services/message.service';
-import { SidenavToggleComponent } from '../sidenav-toggle/sidenav-toggle.component';
 import { SettingsComponent } from './settings.component';
+import { SidenavToggleComponent } from 'app/sidenav-toggle/sidenav-toggle/sidenav-toggle.component';
 
 describe('SettingsComponent', () =>
 {

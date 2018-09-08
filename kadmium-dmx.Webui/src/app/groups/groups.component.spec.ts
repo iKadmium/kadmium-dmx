@@ -5,12 +5,12 @@ import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { APIClient, GroupData, IGroupData } from 'api';
 import { MockComponent } from 'ng-mocks';
 import { from } from 'rxjs';
-import { BusyCardComponent } from '../busy-card/busy-card.component';
+import { BusyCardComponent } from '../busy-card/component/busy-card.component';
 import { FileReaderService } from '../services/file-reader.service';
 import { FileSaverService } from '../services/file-saver.service';
 import { MessageService } from '../services/message.service';
-import { SidenavToggleComponent } from '../sidenav-toggle/sidenav-toggle.component';
 import { GroupsComponent } from './groups.component';
+import { SidenavToggleComponent } from 'app/sidenav-toggle/sidenav-toggle/sidenav-toggle.component';
 
 describe('GroupsComponent', () =>
 {
