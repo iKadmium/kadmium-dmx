@@ -1,4 +1,4 @@
-FROM node:8.10 as node
+FROM trion/ng-cli-karma as node
 WORKDIR /app
 
 COPY kadmium-dmx.Webui/package.json /app/
@@ -7,6 +7,7 @@ RUN npm install
 COPY kadmium-dmx.Webui/ /app/
 ARG env=production
 
+RUN ng test --watch false
 RUN npm run build -- --prod --configuration=$env
 
 FROM microsoft/dotnet:2.1-sdk AS build-env
@@ -33,11 +34,18 @@ COPY kadmium-dmx.DataAccess/ ./kadmium-dmx.DataAccess/
 COPY kadmium-dmx.DataAccess.Test/ ./kadmium-dmx.DataAccess.Test/
 COPY kadmium-dmx.Webapi/ ./kadmium-dmx.Webapi/
 COPY kadmium-dmx.Webapi.Test/ ./kadmium-dmx.Webapi.Test/
+
+RUN dotnet test kadmium-dmx.Core.Test
+RUN dotnet test kadmium-dmx.Data.Test
+RUN dotnet test kadmium-dmx.DataAccess.Test
+RUN dotnet test kadmium-dmx.Webapi.Test
 RUN dotnet publish -c Release -o out
 COPY --from=node /app/dist kadmium-dmx.Core/out/wwwroot
 
 # Build runtime image
 FROM microsoft/dotnet:2.1-aspnetcore-runtime
+EXPOSE 5000
+EXPOSE 9001/udp
 WORKDIR /app/kadmium-dmx-webapi
 COPY --from=build-env /app/kadmium-dmx.Webapi/out .
 COPY --from=node /app/dist/**/* ./wwwroot/

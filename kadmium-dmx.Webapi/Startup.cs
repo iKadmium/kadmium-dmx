@@ -103,6 +103,18 @@ namespace kadmium_dmx_webapi
             loggerFactory.AddConsole(Configuration.GetSection("Logging"));
             loggerFactory.AddDebug();
 
+            if (env.IsDevelopment())
+            {
+                app.UseDeveloperExceptionPage();
+            }
+            else
+            {
+                app.UseExceptionHandler("/Home/Error");
+            }
+
+            app.UseDefaultFiles();
+            app.UseStaticFiles();
+
             app.UseCors(builder =>
             {
                 builder.AllowAnyMethod();
@@ -111,8 +123,7 @@ namespace kadmium_dmx_webapi
             });
 
             app.UseResponseCompression();
-            app.UseStaticFiles();
-
+            
             app.UseWebSockets();
 
             app.Map("/socket/Status", StatusStreamSocketHandler.Map);
@@ -126,7 +137,13 @@ namespace kadmium_dmx_webapi
                     name: "default",
                     template: "{controller=Home}/{action=Index}/{id?}");
 
-                routes.MapSpaFallbackRoute("spa-fallback", new { controller = "Home", action = "Index" });
+                routes.MapSpaFallbackRoute(
+                    name: "spa-fallback",
+                    defaults: new
+                    {
+                        controller = "Home",
+                        action = "Index"
+                    });
             });
 
             app.UseSwagger();
