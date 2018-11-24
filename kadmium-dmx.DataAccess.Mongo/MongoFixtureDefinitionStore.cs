@@ -5,9 +5,9 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 
-namespace kadmium_dmx_data.Mongo
+namespace kadmium_dmx.DataAccess.Mongo
 {
-    public class MongoFixtureDefinitionStore : MongoStore<FixtureDefinitionSkeleton, IFixtureDefinition>, IFixtureDefinitionStore
+    public class MongoFixtureDefinitionStore : MongoStore<FixtureDefinitionSkeleton, FixtureDefinition>, IFixtureDefinitionStore
     {
         public MongoFixtureDefinitionStore(IMongoDatabase database) : base(database, (nameof(FixtureDefinition.Skeleton)))
         {

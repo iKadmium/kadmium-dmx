@@ -9,21 +9,23 @@ using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using Newtonsoft.Json.Serialization;
 
-namespace kadmium_dmx_data
+namespace kadmium_dmx.DataAccess.Json
 {
-    public class FileSettingsStore : ISettingsStore
+    public class JsonSettingsStore : ISettingsStore
     {
-        private static readonly string SettingsLocation = Path.Combine(FileAccess.DataLocation, "settings.json");
-        private static readonly FileInfo SettingsFile = new FileInfo(SettingsLocation);
-        private static readonly string SettingsSchema = Path.Combine(AppContext.BaseDirectory, "settings.schema.json");
+        private static readonly string SettingsFilename = "settings.json";
+        private IFileAccess FileAccess { get; }
 
-        public FileSettingsStore()
-        { }
+        public JsonSettingsStore(IFileAccess fileAccess)
+        {
+            FileAccess = fileAccess;
+        }
 
         public async Task<Settings> GetSettings()
         {
-            Console.WriteLine("Searching for settings in " + SettingsLocation);
-            if (!File.Exists(SettingsLocation))
+            string fullPath = FileAccess.GetFullPath(SettingsFilename);
+            Console.WriteLine("Searching for settings in " + fullPath);
+            if (!File.Exists(fullPath))
             {
                 Console.WriteLine("Not found, using defaults");
                 var settings = new Settings();
@@ -33,7 +35,7 @@ namespace kadmium_dmx_data
             else
             {
                 Console.WriteLine("Settings found, loading");
-                JObject obj = await FileAccess.Load(SettingsLocation, SettingsSchema) as JObject;
+                JObject obj = await FileAccess.Load(SettingsFilename) as JObject;
                 var settings = obj.ToObject<Settings>();
                 return settings;
             }
@@ -46,7 +48,7 @@ namespace kadmium_dmx_data
                 ContractResolver = new CamelCasePropertyNamesContractResolver()
             };
             var settingsJson = JObject.FromObject(settings, serializer);
-            await FileAccess.Save(settingsJson, SettingsFile, SettingsSchema);
+            await FileAccess.Save(settingsJson, SettingsFilename);
         }
     }
 }

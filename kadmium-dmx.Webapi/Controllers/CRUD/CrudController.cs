@@ -10,10 +10,9 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace kadmium_dmx_webapi.Controllers
 {
-    public abstract class CrudController<TStore, TKey, TItem, TConcrete> : Controller
+    public abstract class CrudController<TStore, TKey, TItem> : Controller
         where TStore : IStore<TKey, TItem>
         where TKey : IEquatable<TKey>
-        where TConcrete : TItem
     {
         protected TStore Store { get; set; }
         protected Func<TItem, TKey> KeyAccessor { get; set; }
@@ -35,12 +34,12 @@ namespace kadmium_dmx_webapi.Controllers
             return Store.Get(key);
         }
 
-        public virtual async Task Post([FromBody]TConcrete value)
+        public virtual async Task Post([FromBody]TItem value)
         {
             await Store.Add(value);
         }
 
-        public virtual async Task Put(TKey originalKey, [FromBody]TConcrete value)
+        public virtual async Task Put(TKey originalKey, [FromBody]TItem value)
         {
             await Store.Update(originalKey, value);
         }

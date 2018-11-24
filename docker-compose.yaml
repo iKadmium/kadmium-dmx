@@ -2,13 +2,13 @@ version: '3.6'
 services:
     kadmium-dmx:
         restart: unless-stopped
-        image: 'kadmium-dmx:latest'
+        image: kadmium/kadmium-dmx
         deploy:
             mode: global
             restart_policy:
                 condition: none
         volumes:
-            - 'kadmium-dmx-volume:/app/kadmium-dmx-webapi/kadmium-dmx/data'
+            - 'kadmium-dmx-volume:C:/app/kadmium-dmx-webapi/kadmium-dmx/data'
         ports:
             - '5000:5000'
             - '9001:9001/udp'
@@ -22,7 +22,7 @@ services:
             restart_policy:
                 condition: none
         volumes:
-            - 'mongo-db:/data/db'
+            - 'mongo-db:C:/data/db'
         ports:
             - '27017:27017'
         networks:

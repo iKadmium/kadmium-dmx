@@ -5,9 +5,9 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 
-namespace kadmium_dmx_data.Mongo
+namespace kadmium_dmx.DataAccess.Mongo
 {
-    public class MongoVenueStore : MongoStore<string, IVenueData>, IVenueStore
+    public class MongoVenueStore : MongoStore<string, VenueData>, IVenueStore
     {
         public MongoVenueStore(IMongoDatabase database) : base(database, nameof(VenueData.Name) )
         {

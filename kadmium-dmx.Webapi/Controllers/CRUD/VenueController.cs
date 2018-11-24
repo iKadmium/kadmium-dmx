@@ -17,7 +17,7 @@ using Swashbuckle.AspNetCore.Annotations;
 namespace kadmium_dmx_webapi.Controllers
 {
     [Route("api/[controller]")]
-    public class VenueController : CrudController<IVenueStore, string, IVenueData, VenueData>
+    public class VenueController : CrudController<IVenueStore, string, VenueData>
     {
         private IMasterController MasterController { get; }
         private IFixtureDefinitionStore FixtureDefinitionStore { get; }
@@ -86,7 +86,7 @@ namespace kadmium_dmx_webapi.Controllers
 
         [HttpGet("{name}")]
         [SwaggerOperation(OperationId = "GetVenue")]
-        public override Task<IVenueData> Get(string name)
+        public override Task<VenueData> Get(string name)
         {
             return base.Get(name);
         }

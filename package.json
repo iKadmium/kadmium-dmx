@@ -1,0 +1,24 @@
+{
+  "name": "kadmium-dmx",
+  "version": "1.0.0",
+  "description": "A lighting automation tool for live performances.",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/iKadmium/kadmium-dmx.git"
+  },
+  "author": "Jesse Higginson",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/iKadmium/kadmium-dmx/issues"
+  },
+  "homepage": "https://github.com/iKadmium/kadmium-dmx#readme",
+  "devDependencies": {
+    "gulp": "^4.0.0",
+    "gulp-clean": "^0.4.0"
+  },
+  "dependencies": {}
+}

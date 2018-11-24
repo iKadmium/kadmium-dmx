@@ -11,6 +11,7 @@ namespace kadmium_dmx_data.Storage
         Task Update(TKey id, TItem entity);
 
         Task<TItem> Get(TKey id);
+        Task<IEnumerable<TKey>> List();
         Task<IEnumerable<TItem>> GetAll();
 
         Task Remove(TKey id);

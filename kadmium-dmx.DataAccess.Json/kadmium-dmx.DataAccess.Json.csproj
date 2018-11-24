@@ -1,0 +1,12 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netcoreapp2.1</TargetFramework>
+    <RootNamespace>kadmium_dmx.DataAccess.Json</RootNamespace>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\kadmium-dmx.Data\kadmium-dmx.Data.csproj" />
+  </ItemGroup>
+
+</Project>

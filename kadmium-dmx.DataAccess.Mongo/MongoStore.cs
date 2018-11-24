@@ -7,9 +7,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace kadmium_dmx_data.Mongo
+namespace kadmium_dmx.DataAccess.Mongo
 {
-    public abstract class MongoStore<TKey, TItem> : IStore<TKey, TItem> where TKey  : IEquatable<TKey>
+    public abstract class MongoStore<TKey, TItem> : IStore<TKey, TItem> where TKey : IEquatable<TKey>
     {
         protected IMongoCollection<TItem> Collection { get; set; }
         private string KeyName { get; }
@@ -55,6 +55,9 @@ namespace kadmium_dmx_data.Mongo
             await Collection.DeleteManyAsync(x => true);
         }
 
-        
+        public Task<IEnumerable<TKey>> List()
+        {
+            throw new NotImplementedException();
+        }
     }
 }

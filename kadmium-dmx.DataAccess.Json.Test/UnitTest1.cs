@@ -1,7 +1,7 @@
 using System;
 using Xunit;
 
-namespace kadmium_dmx_DataAccess.Test
+namespace kadmium_dmx.DataAccess.Json.Test
 {
     public class UnitTest1
     {

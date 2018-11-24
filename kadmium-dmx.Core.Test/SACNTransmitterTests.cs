@@ -17,7 +17,7 @@ namespace kadmium_dmx_test
         [Fact]
         public void TestMulticast()
         {
-            short universeID = 1;
+            ushort universeID = 1;
             short universeSize = 512;
 
             SACNTransmitter transmitter = GetMulticastTransmitter();

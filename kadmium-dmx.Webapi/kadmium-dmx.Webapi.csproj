@@ -7,7 +7,7 @@
     <OutputType>Exe</OutputType>
     <PackageId>kadmium-dmx-webapi</PackageId>
     <RuntimeIdentifiers>win10-x64</RuntimeIdentifiers>
-    <MvcRazorCompileOnPublish>true</MvcRazorCompileOnPublish>
+    <TargetLatestRuntimePatch>true</TargetLatestRuntimePatch>
     <TypeScriptCompileBlocked>true</TypeScriptCompileBlocked>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
@@ -23,6 +23,8 @@
   <PropertyGroup>
     <GenerateDocumentationFile>true</GenerateDocumentationFile>
     <RootNamespace>kadmium_dmx_webapi</RootNamespace>
+    <ApplicationIcon />
+    <StartupObject />
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
     <DocumentationFile />
@@ -34,6 +36,12 @@
     </ItemGroup>
   </Target>
   <ItemGroup>
+    <Compile Remove="out\**" />
+    <Content Remove="out\**" />
+    <EmbeddedResource Remove="out\**" />
+    <None Remove="out\**" />
+  </ItemGroup>
+  <ItemGroup>
     <!--<Content Include="wwwroot\**\*"><CopyToOutputDirectory>Always</CopyToOutputDirectory><CopyToPublishDirector>Always</CopyToPublishDirector></Content>-->
     <Content Update="settings.schema.json">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
@@ -42,8 +50,8 @@
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="Microsoft.AspNetCore.Diagnostics" Version="2.1.1" />
-    <PackageReference Include="Microsoft.AspNetCore.Mvc" Version="2.1.2" />
-    <PackageReference Include="Microsoft.AspNetCore.Server.IISIntegration" Version="2.1.1" />
+    <PackageReference Include="Microsoft.AspNetCore.Mvc" Version="2.1.3" />
+    <PackageReference Include="Microsoft.AspNetCore.Server.IISIntegration" Version="2.1.2" />
     <PackageReference Include="Microsoft.AspNetCore.Server.Kestrel" Version="2.1.3" />
     <PackageReference Include="Microsoft.AspNetCore.SpaServices" Version="2.1.1" />
     <PackageReference Include="Microsoft.AspNetCore.StaticFiles" Version="2.1.1" />
@@ -54,17 +62,17 @@
     <PackageReference Include="Microsoft.Extensions.Logging.Console" Version="2.1.1" />
     <PackageReference Include="Microsoft.Extensions.Logging.Debug" Version="2.1.1" />
     <PackageReference Include="Microsoft.Extensions.Options.ConfigurationExtensions" Version="2.1.1" />
-    <PackageReference Include="MongoDB.Driver" Version="2.7.0" />
     <PackageReference Include="Newtonsoft.Json.Schema" Version="3.0.10" />
     <PackageReference Include="Microsoft.AspNetCore.WebSockets.Server" Version="0.1.0" />
     <PackageReference Include="Microsoft.AspNetCore.ResponseCompression" Version="2.1.1" />
-    <PackageReference Include="Swashbuckle.AspNetCore.Annotations" Version="3.0.0" />
-    <PackageReference Include="Swashbuckle.AspNetCore.SwaggerGen" Version="3.0.0" />
-    <PackageReference Include="Swashbuckle.AspNetCore.SwaggerUI" Version="3.0.0" />
+    <PackageReference Include="Swashbuckle.AspNetCore.Annotations" Version="4.0.1" />
+    <PackageReference Include="Swashbuckle.AspNetCore.SwaggerGen" Version="4.0.1" />
+    <PackageReference Include="Swashbuckle.AspNetCore.SwaggerUI" Version="4.0.1" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\kadmium-dmx.Core\kadmium-dmx.Core.csproj" />
-    <ProjectReference Include="..\kadmium-dmx.DataAccess\kadmium-dmx.DataAccess.csproj" />
+    <ProjectReference Include="..\kadmium-dmx.DataAccess.Json\kadmium-dmx.DataAccess.Json.csproj" />
+    <ProjectReference Include="..\kadmium-dmx.DataAccess.Mongo\kadmium-dmx.DataAccess.Mongo.csproj" />
     <ProjectReference Include="..\kadmium-dmx.Data\kadmium-dmx.Data.csproj" />
   </ItemGroup>
 </Project>

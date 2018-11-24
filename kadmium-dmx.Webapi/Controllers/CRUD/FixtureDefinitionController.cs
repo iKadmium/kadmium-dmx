@@ -17,13 +17,13 @@ using Swashbuckle.AspNetCore.Annotations;
 namespace kadmium_dmx_webapi.Controllers
 {
     [Route("api/[controller]")]
-    public class FixtureDefinitionController : CrudController<IFixtureDefinitionStore, FixtureDefinitionSkeleton, IFixtureDefinition, FixtureDefinition>
+    public class FixtureDefinitionController : CrudController<IFixtureDefinitionStore, FixtureDefinitionSkeleton, FixtureDefinition>
     {
         public FixtureDefinitionController(IFixtureDefinitionStore store) : base(store, x => x.Skeleton) { }
 
         [HttpGet("{manufacturer}/{model}")]
         [SwaggerOperation(OperationId = "GetFixtureDefinition")]
-        public Task<IFixtureDefinition> Get(string manufacturer, string model)
+        public Task<FixtureDefinition> Get(string manufacturer, string model)
         {
             FixtureDefinitionSkeleton skeleton = new FixtureDefinitionSkeleton { Manufacturer = manufacturer, Model = model };
             return base.Get(skeleton);
@@ -31,7 +31,7 @@ namespace kadmium_dmx_webapi.Controllers
 
         [HttpGet("{manufacturer}/{model}/download")]
         [SwaggerOperation(OperationId = "DownloadFixtureDefinition")]
-        public async Task<IFixtureDefinition> Download(string manufacturer, string model)
+        public async Task<FixtureDefinition> Download(string manufacturer, string model)
         {
             FixtureDefinitionSkeleton skeleton = new FixtureDefinitionSkeleton { Manufacturer = manufacturer, Model = model };
             var definition = await Store.Get(skeleton);
@@ -41,7 +41,7 @@ namespace kadmium_dmx_webapi.Controllers
         }
 
         [NonAction]
-        public override Task<IFixtureDefinition> Get(FixtureDefinitionSkeleton key)
+        public override Task<FixtureDefinition> Get(FixtureDefinitionSkeleton key)
         {
             return base.Get(key);
         }

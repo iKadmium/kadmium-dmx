@@ -11,11 +11,6 @@ namespace kadmium_dmx_data.Types
         public string Name { get; set; }
         public int Order { get; set; }
 
-        [JsonConstructor]
-        public GroupData()
-        {
-
-        }
     }
 
     

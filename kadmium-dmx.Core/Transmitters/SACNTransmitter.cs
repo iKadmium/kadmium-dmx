@@ -21,11 +21,11 @@ namespace kadmium_dmx_core.Transmitters
             List<Task> tasks = new List<Task>();
             if (Multicast)
             {
-                tasks.Add(SACNClient.Send((short)universeID, dmx));
+                tasks.Add(SACNClient.Send((ushort)universeID, dmx));
             }
             foreach (string target in UnicastTargets)
             {
-                tasks.Add(SACNClient?.Send(target, (short)universeID, dmx));
+                tasks.Add(SACNClient?.Send(target, (ushort)universeID, dmx));
             }
 
             await Task.WhenAll(tasks);

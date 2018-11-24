@@ -5,7 +5,7 @@ using System.Text;
 
 namespace kadmium_dmx_data.Storage
 {
-    public interface IVenueStore : IStore<string, IVenueData>
+    public interface IVenueStore : IStore<string, VenueData>
     {
     }
 }

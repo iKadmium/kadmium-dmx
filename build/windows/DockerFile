@@ -1,0 +1,51 @@
+FROM stefanscherer/node-windows as node
+WORKDIR /app
+
+COPY kadmium-dmx.Webui/package.json /app/
+RUN npm install
+
+COPY kadmium-dmx.Webui/ /app/
+
+#RUN ng test --watch false
+RUN npm run build -- --prod --configuration=production
+
+FROM microsoft/dotnet:2.1-sdk AS build-env
+WORKDIR /app
+
+# Copy csproj and restore as distinct layers
+COPY kadmium-dmx.Core/*.csproj ./kadmium-dmx.Core/
+COPY kadmium-dmx.Core.Test/*.csproj ./kadmium-dmx.Core.Test/
+COPY kadmium-dmx.Data/*.csproj ./kadmium-dmx.Data/
+COPY kadmium-dmx.Data.Test/*.csproj ./kadmium-dmx.Data.Test/
+COPY kadmium-dmx.DataAccess/*.csproj ./kadmium-dmx.DataAccess/
+COPY kadmium-dmx.DataAccess.Test/*.csproj ./kadmium-dmx.DataAccess.Test/
+COPY kadmium-dmx.Webapi/*.csproj ./kadmium-dmx.Webapi/
+COPY kadmium-dmx.Webapi.Test/*.csproj ./kadmium-dmx.Webapi.Test/
+COPY kadmium-dmx.sln .
+RUN dotnet restore
+
+# Copy everything else and build
+COPY kadmium-dmx.Core/ ./kadmium-dmx.Core/
+COPY kadmium-dmx.Core.Test/ ./kadmium-dmx.Core.Test/
+COPY kadmium-dmx.Data/ ./kadmium-dmx.Data/
+COPY kadmium-dmx.Data.Test/ ./kadmium-dmx.Data.Test/
+COPY kadmium-dmx.DataAccess/ ./kadmium-dmx.DataAccess/
+COPY kadmium-dmx.DataAccess.Test/ ./kadmium-dmx.DataAccess.Test/
+COPY kadmium-dmx.Webapi/ ./kadmium-dmx.Webapi/
+COPY kadmium-dmx.Webapi.Test/ ./kadmium-dmx.Webapi.Test/
+
+RUN dotnet test kadmium-dmx.Core.Test
+RUN dotnet test kadmium-dmx.Data.Test
+RUN dotnet test kadmium-dmx.DataAccess.Test
+RUN dotnet test kadmium-dmx.Webapi.Test
+RUN dotnet publish -c Release -o out
+COPY --from=node /app/dist kadmium-dmx.Core/out/wwwroot
+
+# Build runtime image
+FROM microsoft/dotnet:2.1-aspnetcore-runtime
+EXPOSE 5000
+EXPOSE 9001/udp
+WORKDIR /app/kadmium-dmx-webapi
+COPY --from=build-env /app/kadmium-dmx.Webapi/out .
+COPY --from=node /app/dist/kadmium-dmx.Webui ./wwwroot/
+ENTRYPOINT ["dotnet", "kadmium-dmx-webapi.dll"]

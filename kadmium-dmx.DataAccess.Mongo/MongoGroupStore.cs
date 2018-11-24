@@ -5,9 +5,9 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 
-namespace kadmium_dmx_data.Mongo
+namespace kadmium_dmx.DataAccess.Mongo
 {
-    public class MongoGroupStore : MongoStore<string, IGroupData>, IGroupStore
+    public class MongoGroupStore : MongoStore<string, GroupData>, IGroupStore
     {
         public MongoGroupStore(IMongoDatabase database) : base(database, nameof(GroupData.Name) )
         {

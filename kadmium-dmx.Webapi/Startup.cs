@@ -13,7 +13,6 @@ using kadmium_dmx_data;
 using System.Linq;
 using MongoDB.Driver;
 using MongoDB.Bson;
-using kadmium_dmx_data.Mongo;
 using kadmium_dmx_data.Storage;
 using kadmium_dmx_data.Types.Settings;
 using kadmium_dmx_core;
@@ -23,6 +22,8 @@ using Newtonsoft.Json;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 using Microsoft.AspNetCore.Mvc.ApiExplorer;
 using Swashbuckle.AspNetCore.Swagger;
+using kadmium_dmx.DataAccess.Mongo;
+using kadmium_dmx.DataAccess.Json;
 
 namespace kadmium_dmx_webapi
 {
@@ -73,25 +74,18 @@ namespace kadmium_dmx_webapi
                 c.SchemaFilter<EnumFilter>();
             });
 
-            var mongoAddress = Configuration
-                .GetSection("MongoDB")
-                .GetValue<string>("ConnectionString");
-            MongoClient client = new MongoClient(mongoAddress);
-            var databaseName = Configuration
-                .GetSection("MongoDB")
-                .GetValue<string>("Database");
-            var database = client.GetDatabase(databaseName);
-            services.AddSingleton(x => database);
 
-            ISettingsStore settingsStore = new FileSettingsStore();
+            IFileAccess fileAccess = new kadmium_dmx.DataAccess.Json.FileAccess(Path.Combine("kadmium-dmx", "data"));
+            services.AddSingleton(fileAccess);
+            ISettingsStore settingsStore = new JsonSettingsStore(fileAccess);
             ISettings settings = settingsStore.GetSettings().Result;
 
             MasterController = new MasterController(settings);
 
-            services.AddTransient<IFixtureDefinitionStore, MongoFixtureDefinitionStore>();
-            services.AddTransient<IVenueStore, MongoVenueStore>();
-            services.AddTransient<IGroupStore, MongoGroupStore>();
-            services.AddTransient<ISettingsStore, FileSettingsStore>();
+            services.AddTransient<IFixtureDefinitionStore, JsonFixtureDefinitionStore>();
+            services.AddTransient<IVenueStore, JsonVenueStore>();
+            services.AddTransient<IGroupStore, JsonGroupStore>();
+            services.AddTransient<ISettingsStore, JsonSettingsStore>();
 
             services.AddSingleton<IMasterController>(MasterController);
             services.AddSingleton<IRenderer>(MasterController.Renderer);
