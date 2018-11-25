@@ -48,8 +48,7 @@ export class FixtureDefinitionEditorHomeComponent implements OnInit
 	public async save(): Promise<void>
 	{
 		const definition = this.fixtureDefinitionService.getActive();
-		definition.fixtureType = this.form.value.fixtureType;
-		definition.skeleton = this.form.value.skeleton;
+		Object.assign(definition, this.form.value);
 		await this.fixtureDefinitionService.save();
 	}
 }
