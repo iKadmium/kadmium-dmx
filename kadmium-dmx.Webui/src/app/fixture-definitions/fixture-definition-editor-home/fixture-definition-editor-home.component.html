@@ -3,7 +3,7 @@
 		<app-sidenav-toggle></app-sidenav-toggle>
 		Fixture Definition Editor
 		<span class="toolbar-spacer"></span>
-		<button mat-icon-button color="primary" type="submit" [disabled]="!form.valid" matTooltip="Save">
+		<button mat-icon-button color="primary" type="submit" [disabled]="!form.valid" matTooltip="Save" (click)="save()">
 			<mat-icon aria-label="Save">save</mat-icon>
 		</button>
 	</mat-toolbar>
@@ -23,9 +23,7 @@
 				</div>
 				<mat-form-field>
 					<mat-select required placeholder="Type" formControlName="fixtureType" name="type">
-						<mat-option [value]="FixtureType.LED">LED</mat-option>
-						<mat-option [value]="FixtureType.Tungsten">Tungsten</mat-option>
-						<mat-option [value]="FixtureType.Effect">Effect</mat-option>
+						<mat-option *ngFor="let fixtureType of fixtureTypes" [value]="fixtureType">{{fixtureType}}</mat-option>
 					</mat-select>
 				</mat-form-field>
 			</div>

@@ -133,10 +133,11 @@
     }
   },
   "required": [
-    "model",
-    "manufacturer",
+    "skeleton",
     "type",
-    "channels"
+    "channels",
+    "movements",
+    "colorWheel"
   ],
   "additionalProperties": false
 }

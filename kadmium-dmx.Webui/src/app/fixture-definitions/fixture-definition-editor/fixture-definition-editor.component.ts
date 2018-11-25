@@ -1,4 +1,4 @@
-import { Component, OnInit, QueryList, ViewChildren } from '@angular/core';
+import { Component, OnInit, QueryList, ViewChildren, OnDestroy } from '@angular/core';
 import { MatExpansionPanel } from '@angular/material';
 import { Title } from "@angular/platform-browser";
 import { ActivatedRoute, Router } from "@angular/router";
@@ -8,16 +8,17 @@ import { EditorService } from '../../services/editor.service';
 import { Saveable } from '../../unsaved-changes';
 import { FixtureType } from '../../enums/fixture-type.enum';
 import { MessageService } from '../../services/message.service';
+import { Subscription } from '../../../../node_modules/rxjs';
 
 @Component({
 	selector: 'app-fixture-definition-editor',
 	templateUrl: './fixture-definition-editor.component.html',
 	styleUrls: ['./fixture-definition-editor.component.css']
 })
-export class FixtureDefinitionEditorComponent implements OnInit, Saveable
+export class FixtureDefinitionEditorComponent implements OnInit, Saveable, OnDestroy
 {
-	private manufacturer: string | null;
-	private model: string | null;
+	private originalManufacturer: string | null;
+	private originalModel: string | null;
 	public allManufacturers: string[];
 
 	public saving = false;
@@ -25,6 +26,8 @@ export class FixtureDefinitionEditorComponent implements OnInit, Saveable
 
 	@ViewChildren("movementPanels") movementPanels: QueryList<MatExpansionPanel>;
 	@ViewChildren("colorWheelPanels") colorWheelPanels: QueryList<MatExpansionPanel>;
+
+	private saveSubscription: Subscription;
 
 	constructor(
 		private route: ActivatedRoute,
@@ -40,15 +43,15 @@ export class FixtureDefinitionEditorComponent implements OnInit, Saveable
 
 	ngOnInit()
 	{
-		this.manufacturer = this.route.snapshot.params['manufacturer'];
-		this.model = this.route.snapshot.params['model'];
+		this.originalManufacturer = this.route.snapshot.params['manufacturer'];
+		this.originalModel = this.route.snapshot.params['model'];
 		this.title.setTitle("Fixture Definition Editor");
 		const promises = [];
 		try
 		{
 			if (!this.isNewItem())
 			{
-				promises.push(this.apiClient.getFixtureDefinition({ manufacturer: this.manufacturer, model: this.model })
+				promises.push(this.apiClient.getFixtureDefinition({ manufacturer: this.originalManufacturer, model: this.originalModel })
 					.toPromise()
 					.then(response =>
 					{
@@ -86,26 +89,26 @@ export class FixtureDefinitionEditorComponent implements OnInit, Saveable
 		{
 			this.loading = false;
 		});
+		this.saveSubscription = this.fixtureDefinitionService.onSave.subscribe(next =>
+		{
+			this.save();
+		});
 	}
 
-	public hasColorWheelChannel(): boolean
+	ngOnDestroy(): void
 	{
-		return this.fixtureDefinitionService.getActive().channels.find(channel => channel.name === "ColorWheel") != null;
+		this.saveSubscription.unsubscribe();
 	}
 
 	private isNewItem(): boolean
 	{
-		return this.manufacturer == null || this.manufacturer === "" || this.model == null || this.model === "";
-	}
-
-	public getFilteredManufacturers(beginning: string): string[]
-	{
-		return this.allManufacturers.filter(x => x.startsWith(beginning) && x !== beginning);
+		return this.originalManufacturer == null || this.originalManufacturer === "" || this.originalModel == null || this.originalModel === "";
 	}
 
 	public async save(): Promise<void>
 	{
 		this.saving = true;
+		console.log(this.fixtureDefinitionService.getActive());
 		try
 		{
 			if (this.isNewItem())
@@ -119,8 +122,8 @@ export class FixtureDefinitionEditorComponent implements OnInit, Saveable
 			else
 			{
 				await this.apiClient.putFixtureDefinition({
-					manufacturer: this.manufacturer,
-					model: this.model,
+					manufacturer: this.originalManufacturer,
+					model: this.originalModel,
 					value: this.fixtureDefinitionService.getActive()
 				}).toPromise();
 				this.fixtureDefinitionService.isDirty = false;

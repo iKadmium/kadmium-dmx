@@ -20,6 +20,7 @@ namespace kadmium_dmx_data.Types.Fixtures
             Channels = new List<IDMXChannelData>();
             Movements = new List<IMovementAxisData>();
             ColorWheel = new List<IColorWheelEntryData>();
+            Skeleton = new FixtureDefinitionSkeleton();
         }
 
         [JsonConstructor]
@@ -56,6 +57,12 @@ namespace kadmium_dmx_data.Types.Fixtures
         public override string ToString()
         {
             return $"{Manufacturer} {Model}";
+        }
+
+        public FixtureDefinitionSkeleton()
+        {
+            Manufacturer = "";
+            Model = "";
         }
     }
 }

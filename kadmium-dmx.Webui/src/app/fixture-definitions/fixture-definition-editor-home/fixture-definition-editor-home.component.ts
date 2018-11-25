@@ -16,6 +16,7 @@ export class FixtureDefinitionEditorHomeComponent implements OnInit
 	public form: FormGroup;
 	public FixtureType = FixtureType;
 	public manufacturers: string[];
+	public fixtureTypes: any[];
 
 	constructor(
 		private formBuilder: FormBuilder,
@@ -31,6 +32,7 @@ export class FixtureDefinitionEditorHomeComponent implements OnInit
 			}),
 			fixtureType: [model.fixtureType, Validators.required]
 		});
+		this.fixtureTypes = Object.keys(FixtureType).filter(key => !isNaN(Number(FixtureType[key])));
 	}
 
 	ngOnInit()
@@ -43,4 +45,11 @@ export class FixtureDefinitionEditorHomeComponent implements OnInit
 		});
 	}
 
+	public async save(): Promise<void>
+	{
+		const definition = this.fixtureDefinitionService.getActive();
+		definition.fixtureType = this.form.value.fixtureType;
+		definition.skeleton = this.form.value.skeleton;
+		await this.fixtureDefinitionService.save();
+	}
 }

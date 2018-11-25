@@ -43,12 +43,7 @@ namespace kadmium_dmx.DataAccess.Json
 
         public async Task SaveSettings(Settings settings)
         {
-            var serializer = new JsonSerializer()
-            {
-                ContractResolver = new CamelCasePropertyNamesContractResolver()
-            };
-            var settingsJson = JObject.FromObject(settings, serializer);
-            await FileAccess.Save(settingsJson, SettingsFilename);
+            await FileAccess.Save(settings, SettingsFilename);
         }
     }
 }

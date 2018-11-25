@@ -36,9 +36,13 @@
     </ItemGroup>
   </Target>
   <ItemGroup>
+    <Compile Remove="dist\**" />
     <Compile Remove="out\**" />
+    <Content Remove="dist\**" />
     <Content Remove="out\**" />
+    <EmbeddedResource Remove="dist\**" />
     <EmbeddedResource Remove="out\**" />
+    <None Remove="dist\**" />
     <None Remove="out\**" />
   </ItemGroup>
   <ItemGroup>

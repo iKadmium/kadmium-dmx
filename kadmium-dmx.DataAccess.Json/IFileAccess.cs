@@ -8,7 +8,7 @@ namespace kadmium_dmx.DataAccess.Json
     public interface IFileAccess
     {
         Task<JToken> Load(string path);
-        Task Save(JToken obj, string path);
+        Task Save<T>(T obj, string path);
         Task<IEnumerable<string>> List(string path);
         Task Delete(string path);
         string GetFullPath(string path);

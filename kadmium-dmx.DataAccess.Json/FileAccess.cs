@@ -5,6 +5,7 @@ using Newtonsoft.Json.Linq;
 using Newtonsoft.Json.Schema;
 using Newtonsoft.Json;
 using System.Threading.Tasks;
+using Newtonsoft.Json.Serialization;
 
 namespace kadmium_dmx.DataAccess.Json
 {
@@ -23,13 +24,18 @@ namespace kadmium_dmx.DataAccess.Json
             return Path.Combine(HomeFolder, DataFolder, path);
         }
 
-        public async Task Save(JToken obj, string path)
+        public async Task Save<T>(T obj, string path)
         {
+            var serializer = new JsonSerializer()
+            {
+                ContractResolver = new CamelCasePropertyNamesContractResolver()
+            };
+            var json = JObject.FromObject(obj, serializer);
             FileInfo file = new FileInfo(GetFullPath(path));
             Directory.CreateDirectory(Path.GetDirectoryName(file.FullName));
             using (var writer = file.Create())
             {
-                var bytes = System.Text.Encoding.UTF8.GetBytes(obj.ToString());
+                var bytes = System.Text.Encoding.UTF8.GetBytes(json.ToString());
                 await writer.WriteAsync(bytes, 0, bytes.Length);
             }
         }

@@ -46,7 +46,7 @@ function copyBackend()
 {
     return gulp
         .src("kadmium-dmx.Webapi/dist/**.*")
-        .pipe(gulp.dest('dist/wwwroot'))
+        .pipe(gulp.dest('dist'))
 }
 
 function testFrontend()

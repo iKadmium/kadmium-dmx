@@ -39,8 +39,7 @@ namespace kadmium_dmx.DataAccess.Json
         {
             string filename = KeyPathAccessor(ItemKeyAccessor(entity));
             string path = GetPath(filename);
-            JToken token = JToken.FromObject(entity);
-            await FileAccess.Save(token, path);
+            await FileAccess.Save(entity, path);
         }
 
         public async Task Update(TKey id, TItem entity)
