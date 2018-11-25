@@ -35,7 +35,7 @@ export class FixtureDefinitionEditorComponent implements OnInit, Saveable, OnDes
 		private messageService: MessageService,
 		private title: Title,
 		private router: Router,
-		private fixtureDefinitionService: EditorService<IFixtureDefinition>
+		private editorService: EditorService<IFixtureDefinition>
 	)
 	{
 		this.loading = true;
@@ -55,12 +55,12 @@ export class FixtureDefinitionEditorComponent implements OnInit, Saveable, OnDes
 					.toPromise()
 					.then(response =>
 					{
-						this.fixtureDefinitionService.setActive(response);
+						this.editorService.setActive(response);
 					}));
 			}
 			else
 			{
-				this.fixtureDefinitionService.setActive({
+				this.editorService.setActive({
 					fixtureType: FixtureType.LED,
 					channels: [],
 					colorWheel: [],
@@ -89,7 +89,7 @@ export class FixtureDefinitionEditorComponent implements OnInit, Saveable, OnDes
 		{
 			this.loading = false;
 		});
-		this.saveSubscription = this.fixtureDefinitionService.onSave.subscribe(next =>
+		this.saveSubscription = this.editorService.onSave.subscribe(next =>
 		{
 			this.save();
 		});
@@ -108,28 +108,27 @@ export class FixtureDefinitionEditorComponent implements OnInit, Saveable, OnDes
 	public async save(): Promise<void>
 	{
 		this.saving = true;
-		console.log(this.fixtureDefinitionService.getActive());
 		try
 		{
 			if (this.isNewItem())
 			{
-				await this.apiClient.postFixtureDefinition({ value: this.fixtureDefinitionService.getActive() }).toPromise();
-				this.fixtureDefinitionService.isDirty = false;
+				await this.apiClient.postFixtureDefinition({ value: this.editorService.getActive() }).toPromise();
+				this.editorService.isDirty = false;
 				this.messageService.info("Successfully added " +
-					this.fixtureDefinitionService.getActive().skeleton.manufacturer + " " +
-					this.fixtureDefinitionService.getActive().skeleton.model);
+					this.editorService.getActive().skeleton.manufacturer + " " +
+					this.editorService.getActive().skeleton.model);
 			}
 			else
 			{
 				await this.apiClient.putFixtureDefinition({
 					manufacturer: this.originalManufacturer,
 					model: this.originalModel,
-					value: this.fixtureDefinitionService.getActive()
+					value: this.editorService.getActive()
 				}).toPromise();
-				this.fixtureDefinitionService.isDirty = false;
+				this.editorService.isDirty = false;
 				this.messageService.info("Successfully edited " +
-					this.fixtureDefinitionService.getActive().skeleton.manufacturer + " " +
-					this.fixtureDefinitionService.getActive().skeleton.model);
+					this.editorService.getActive().skeleton.manufacturer + " " +
+					this.editorService.getActive().skeleton.model);
 			}
 
 			this.router.navigate(["../.."], { relativeTo: this.route });
@@ -146,7 +145,7 @@ export class FixtureDefinitionEditorComponent implements OnInit, Saveable, OnDes
 
 	public hasUnsavedChanges(): boolean
 	{
-		return this.fixtureDefinitionService.isDirty;
+		return this.editorService.isDirty;
 	}
 
 }

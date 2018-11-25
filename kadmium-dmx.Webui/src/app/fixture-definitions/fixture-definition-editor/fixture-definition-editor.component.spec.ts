@@ -7,7 +7,7 @@ import { ActivatedRoute } from '@angular/router';
 import { RouterTestingModule } from "@angular/router/testing";
 import { APIClient, FixtureDefinitionSkeleton, IFixtureDefinition } from 'api';
 import { MockComponent } from 'ng-mocks';
-import { from } from 'rxjs';
+import { from, Observable, Subscription } from 'rxjs';
 import { BusyCardComponent } from '../../busy-card/component/busy-card.component';
 import { FixtureType } from "../../enums/fixture-type.enum";
 import { EditorService } from "../../services/editor.service";
@@ -24,10 +24,14 @@ describe('FixtureDefinitionEditorComponent', () =>
 	let route: any;
 	let params: FixtureDefinitionSkeleton;
 	let definition: IFixtureDefinition;
+	let subscriptionMock: jasmine.SpyObj<Subscription>;
+	let observableMock: jasmine.SpyObj<Observable<void>>;
 
 	beforeEach(async(() =>
 	{
 		definition = FixtureDefinitionTestHelpers.getRGBFixtureDefinition();
+		subscriptionMock = jasmine.createSpyObj<Subscription>({ unsubscribe: null });
+		observableMock = jasmine.createSpyObj<Observable<void>>({ subscribe: subscriptionMock });
 
 		params = {
 			manufacturer: null,
@@ -87,6 +91,9 @@ describe('FixtureDefinitionEditorComponent', () =>
 	{
 		fixture = TestBed.createComponent(FixtureDefinitionEditorComponent);
 		component = fixture.componentInstance;
+
+		const editorServiceMock = TestBed.get(EditorService) as jasmine.SpyObj<EditorService<IFixtureDefinition>>;
+		(editorServiceMock as any).onSave = observableMock;
 	});
 
 	describe('component', () =>
@@ -194,6 +201,24 @@ describe('FixtureDefinitionEditorComponent', () =>
 			expect(messageServiceMock.error).toHaveBeenCalledWith(error);
 		});
 
+		it('should subscribe to the onSave event', () =>
+		{
+			const editorServiceMock = TestBed.get(EditorService) as jasmine.SpyObj<EditorService<IFixtureDefinition>>;
+			expect(editorServiceMock.onSave.subscribe).toHaveBeenCalledTimes(0);
+			fixture.detectChanges();
+			expect(editorServiceMock.onSave.subscribe).toHaveBeenCalledTimes(1);
+		});
+	});
+
+	describe('destructor', () =>
+	{
+		it('should unsubscribe to the onSave event', () =>
+		{
+			fixture.detectChanges();
+			expect(subscriptionMock.unsubscribe).toHaveBeenCalledTimes(0);
+			fixture.destroy();
+			expect(subscriptionMock.unsubscribe).toHaveBeenCalledTimes(1);
+		});
 	});
 
 	describe('save', () =>
