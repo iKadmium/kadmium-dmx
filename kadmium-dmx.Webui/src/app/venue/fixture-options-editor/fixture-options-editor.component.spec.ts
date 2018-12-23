@@ -2,13 +2,14 @@ import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { ReactiveFormsModule } from "@angular/forms";
 // tslint:disable-next-line:max-line-length
 import { MatCheckbox, MatDialogClose, MatDialogRef, MatDivider, MatExpansionPanel, MatExpansionPanelHeader, MatExpansionPanelTitle, MatFormField, MAT_DIALOG_DATA } from '@angular/material';
-import { APIClient, IFixtureDefinition } from 'api';
+import { APIClient, IFixtureDefinition, FixtureOptions } from 'api';
 import { MessageService } from '../../services/message.service';
 import { MockComponent } from 'ng-mocks';
 import { from } from 'rxjs';
 import { FixtureType } from '../../enums/fixture-type.enum';
 import { FixtureOptionsTestHelpers } from '../../test/fixture-options-test-helpers';
 import { FixtureOptionsEditorComponent, FixtureOptionsEditorData } from './fixture-options-editor.component';
+import { FixtureDefinitionTestHelpers } from 'app/test/fixture-definition-test-helpers';
 
 
 describe('FixtureOptionsEditorComponent', () =>
@@ -98,6 +99,32 @@ describe('FixtureOptionsEditorComponent', () =>
 			apiClient.getFixtureDefinition.and.throwError(error.message);
 			fixture.detectChanges();
 			expect(messageServiceMock.error).toHaveBeenCalledWith(error);
+		});
+	});
+
+	describe('saving', () =>
+	{
+		it('should update the options on save', () =>
+		{
+			const serviceMock = TestBed.get(APIClient) as jasmine.SpyObj<APIClient>;
+			const dialogRef = TestBed.get(MatDialogRef) as jasmine.SpyObj<MatDialogRef<FixtureOptionsEditorComponent>>;
+			definition = FixtureDefinitionTestHelpers.getMovingRGBFixtureDefinition();
+			fixture.detectChanges();
+			const value: FixtureOptions = {
+				axisOptions: {
+					Pan: {
+						restrictions: {
+							min: -5,
+							max: 5
+						},
+						inverted: false
+					}
+				},
+				maxBrightness: 1
+			};
+			component.form.setValue(value);
+			component.ok();
+			expect(dialogRef.close).toHaveBeenCalledWith(component.form.value);
 		});
 	});
 });

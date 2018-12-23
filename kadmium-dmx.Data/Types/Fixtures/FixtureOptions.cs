@@ -15,5 +15,12 @@ namespace kadmium_dmx_data.Types.Fixtures
             MaxBrightness = null;
             AxisOptions = new Dictionary<string, MovementAxisOptions>();
         }
+
+        public static string GetTitleCaseAxisName(string camelCaseAxisName)
+        {
+            var newName = camelCaseAxisName.ToUpper().Substring(0, 1);
+            newName += camelCaseAxisName.Substring(1);
+            return newName;
+        }
     }
 }

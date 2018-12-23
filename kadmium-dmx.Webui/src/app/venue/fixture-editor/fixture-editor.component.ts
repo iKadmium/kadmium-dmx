@@ -42,7 +42,7 @@ export class FixtureEditorComponent implements OnInit
 		}
 		else
 		{
-			return x.model == y.model && x.manufacturer == y.manufacturer;
+			return x.model === y.model && x.manufacturer === y.manufacturer;
 		}
 	}
 
@@ -60,7 +60,7 @@ export class FixtureEditorComponent implements OnInit
 
 export interface FixtureEditorData
 {
-	fixture: FixtureData,
-	skeletons: FixtureDefinitionSkeleton[],
-	groups: IGroupData[]
+	fixture: FixtureData;
+	skeletons: FixtureDefinitionSkeleton[];
+	groups: IGroupData[];
 }

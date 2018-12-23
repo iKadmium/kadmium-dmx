@@ -5,59 +5,59 @@ import { ColorWheelTestHelpers } from "./color-wheel-test-helpers";
 
 export class FixtureDefinitionTestHelpers
 {
-    public static getEmptyFixtureDefinition(): IFixtureDefinition
-    {
-        let definition: IFixtureDefinition = {
-            skeleton: {
-                manufacturer: "Manufacturer",
-                model: "Model"
-            },
-            fixtureType: FixtureType.LED,
-            channels: [],
-            colorWheel: [],
-            movements: []
-        };
+	public static getEmptyFixtureDefinition(model: string = "Model", manufacturer: string = "Manufacturer"): IFixtureDefinition
+	{
+		const definition: IFixtureDefinition = {
+			skeleton: {
+				manufacturer: manufacturer,
+				model: model
+			},
+			fixtureType: FixtureType.LED,
+			channels: [],
+			colorWheel: [],
+			movements: []
+		};
 
-        return definition;
-    }
+		return definition;
+	}
 
-    public static getRGBFixtureDefinition(): IFixtureDefinition
-    {
-        let definition = FixtureDefinitionTestHelpers.getEmptyFixtureDefinition();
-        definition.channels = [
-            DMXChannelTestHelpers.getDefaultDMXChannel("Red", 1),
-            DMXChannelTestHelpers.getDefaultDMXChannel("Green", 2),
-            DMXChannelTestHelpers.getDefaultDMXChannel("Blue", 3)
-        ];
+	public static getRGBFixtureDefinition(model: string = "Model", manufacturer: string = "Manufacturer"): IFixtureDefinition
+	{
+		const definition = FixtureDefinitionTestHelpers.getEmptyFixtureDefinition(model, manufacturer);
+		definition.channels = [
+			DMXChannelTestHelpers.getDefaultDMXChannel("Red", 1),
+			DMXChannelTestHelpers.getDefaultDMXChannel("Green", 2),
+			DMXChannelTestHelpers.getDefaultDMXChannel("Blue", 3)
+		];
 
-        return definition;
-    }
+		return definition;
+	}
 
-    public static getColorWheelDefinition(): IFixtureDefinition
-    {
-        let definition = FixtureDefinitionTestHelpers.getEmptyFixtureDefinition();
-        definition.channels = [
-            DMXChannelTestHelpers.getDefaultDMXChannel("Master", 1),
-            DMXChannelTestHelpers.getDefaultDMXChannel("ColorWheel", 2)
-        ];
-        definition.colorWheel = [
-            ColorWheelTestHelpers.getColorWheelEntry("Black")
-        ];
-        return definition;
-    }
+	public static getColorWheelDefinition(model: string = "Model", manufacturer: string = "Manufacturer"): IFixtureDefinition
+	{
+		const definition = FixtureDefinitionTestHelpers.getEmptyFixtureDefinition(model, manufacturer);
+		definition.channels = [
+			DMXChannelTestHelpers.getDefaultDMXChannel("Master", 1),
+			DMXChannelTestHelpers.getDefaultDMXChannel("ColorWheel", 2)
+		];
+		definition.colorWheel = [
+			ColorWheelTestHelpers.getColorWheelEntry("Black")
+		];
+		return definition;
+	}
 
-    public static getMovingRGBFixtureDefinition(): IFixtureDefinition
-    {
-        let definition = FixtureDefinitionTestHelpers.getEmptyFixtureDefinition();
-        definition.channels = [
-            DMXChannelTestHelpers.getDefaultDMXChannel("Red", 1),
-            DMXChannelTestHelpers.getDefaultDMXChannel("Green", 2),
-            DMXChannelTestHelpers.getDefaultDMXChannel("Blue", 3)
-        ];
-        definition.movements = [
-            { name: "Pan", min: -270, max: 270 }
-        ];
+	public static getMovingRGBFixtureDefinition(model: string = "Model", manufacturer: string = "Manufacturer"): IFixtureDefinition
+	{
+		const definition = FixtureDefinitionTestHelpers.getEmptyFixtureDefinition(model, manufacturer);
+		definition.channels = [
+			DMXChannelTestHelpers.getDefaultDMXChannel("Red", 1),
+			DMXChannelTestHelpers.getDefaultDMXChannel("Green", 2),
+			DMXChannelTestHelpers.getDefaultDMXChannel("Blue", 3)
+		];
+		definition.movements = [
+			{ name: "Pan", min: -270, max: 270 }
+		];
 
-        return definition;
-    }
+		return definition;
+	}
 }

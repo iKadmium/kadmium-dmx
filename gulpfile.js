@@ -80,9 +80,17 @@ function cleanBackendDist()
         .pipe(clean());
 }
 
+function cleanFrontendDist()
+{
+    return gulp
+        .src('kadmium-dmx.Webui/dist/**/*', { read: false, allowEmpty: true })
+        .pipe(clean());
+}
+
 exports.default = gulp.series(
     cleanDist,
     cleanBackendDist,
+    cleanFrontendDist,
     testCore,
     testWebapi,
     testDataAccess,

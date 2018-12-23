@@ -17,7 +17,6 @@
 <mat-card *ngIf="!loading" class="main-card" @slideIn>
     <app-busy-card [loading]="loading" [saving]="false"></app-busy-card>
     <mat-card-content>
-
         <table>
             <tr *ngFor="let element of filteredData" @fadeOut>
                 <td @fadeIn>
@@ -36,7 +35,6 @@
                 </td>
             </tr>
         </table>
-
     </mat-card-content>
 </mat-card>
 

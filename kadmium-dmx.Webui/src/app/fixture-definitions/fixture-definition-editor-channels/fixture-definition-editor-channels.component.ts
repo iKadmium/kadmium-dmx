@@ -31,7 +31,6 @@ export class FixtureDefinitionEditorChannelsComponent implements OnInit
 
 	}
 
-
 	public async addChannel(): Promise<void>
 	{
 		let maxChannel = 0;
