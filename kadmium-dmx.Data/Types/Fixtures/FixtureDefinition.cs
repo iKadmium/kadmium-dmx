@@ -7,7 +7,7 @@ using System.Linq;
 
 namespace kadmium_dmx_data.Types.Fixtures
 {
-    public class FixtureDefinition : BsonSerializable, IFixtureDefinition
+    public class FixtureDefinition : IFixtureDefinition
     {
         public FixtureDefinitionSkeleton Skeleton { get; set; }
         public IEnumerable<IDMXChannelData> Channels { get; set; }

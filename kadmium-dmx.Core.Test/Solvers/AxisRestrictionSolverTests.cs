@@ -5,7 +5,7 @@ using System.Collections.Generic;
 using System.Linq;
 using Xunit;
 
-namespace kadmium_dmx_test.Solvers
+namespace kadmium_dmx.Core.Test.Solvers
 {
     public class AxisRestrictionSolverTests
     {
@@ -20,18 +20,18 @@ namespace kadmium_dmx_test.Solvers
         {
             FixtureOptions options = new FixtureOptions
             {
-                AxisOptions = new Dictionary<string, MovementAxisOptions>()
+                AxisOptions = new List<MovementAxisOptions>()
                 {
+                    new MovementAxisOptions
                     {
-                        name, new MovementAxisOptions
+                        Name = name,
+                        Restrictions = new MovementAxisRestriction
                         {
-                            Restrictions = new MovementAxisRestriction
-                            {
-                                Min = min,
-                                Max = max
-                            }
+                            Min = min,
+                            Max = max
                         }
                     }
+                    
                 }
             };
 

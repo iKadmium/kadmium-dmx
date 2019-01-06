@@ -5,7 +5,7 @@ using Newtonsoft.Json.Linq;
 using System.Collections.Generic;
 using Xunit;
 
-namespace kadmium_dmx_test.Solvers
+namespace kadmium_dmx.Core.Test.Solvers
 {
     public class ColorWheelSolverTests
     {

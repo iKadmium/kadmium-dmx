@@ -4,7 +4,7 @@ using kadmium_dmx_data.Types.Fixtures;
 using Newtonsoft.Json.Linq;
 using Xunit;
 
-namespace kadmium_dmx_test.Solvers
+namespace kadmium_dmx.Core.Test.Solvers
 {
     public class HSBtoRGBWSolverTests
     {

@@ -116,7 +116,7 @@ export class VenueDiscoveryUnassignedComponent implements OnInit
 			type: definition,
 			options: {
 				maxBrightness: 1,
-				axisOptions: {}
+				axisOptions: []
 			}
 		};
 		this.editorService.getActive().fixtures.push(fixture);

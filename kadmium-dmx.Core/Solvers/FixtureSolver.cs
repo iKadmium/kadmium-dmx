@@ -75,7 +75,11 @@ namespace kadmium_dmx_core.Solvers
             {
                 solvers.Add(new PanTilt16BitSolver(fixture, definition));
             }
-            if(FireSafetySolver.SuitableFor(definition))
+            if (PanTilt8BitSolver.SuitableFor(definition))
+            {
+                solvers.Add(new PanTilt8BitSolver(fixture, definition));
+            }
+            if (FireSafetySolver.SuitableFor(definition))
             {
                 solvers.Add(new FireSafetySolver(fixture));
             }

@@ -1,19 +1,21 @@
-﻿using System;
+﻿using Newtonsoft.Json;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
 namespace kadmium_dmx_data.Types.Fixtures
 {
+    //[JsonConverter(typeof(FixtureOptionsJsonConverter))]
     public class FixtureOptions
     {
         public float? MaxBrightness { get; set; }
-        public IDictionary<string, MovementAxisOptions> AxisOptions { get; set; }
+        public List<MovementAxisOptions> AxisOptions { get; set; }
 
         public FixtureOptions()
         {
             MaxBrightness = null;
-            AxisOptions = new Dictionary<string, MovementAxisOptions>();
+            AxisOptions = new List<MovementAxisOptions>();
         }
 
         public static string GetTitleCaseAxisName(string camelCaseAxisName)

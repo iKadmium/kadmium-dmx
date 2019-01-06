@@ -2,7 +2,7 @@
 using kadmium_dmx_data.Types.Fixtures;
 using Xunit;
 
-namespace kadmium_dmx_test
+namespace kadmium_dmx.Core.Test
 {
     public class DMXChannelTests
     {

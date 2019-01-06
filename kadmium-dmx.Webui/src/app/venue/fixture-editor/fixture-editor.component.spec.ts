@@ -4,6 +4,7 @@ import { MatDialogRef, MatFormField, MatOption, MatSelect, MAT_DIALOG_DATA } fro
 import { MockComponent } from 'ng-mocks';
 import { FixtureEditorComponent, FixtureEditorData } from './fixture-editor.component';
 import { FixtureOptionsTestHelpers } from '../../test/fixture-options-test-helpers';
+import { FixtureData } from 'api';
 
 
 describe('FixtureEditorComponent', () =>
@@ -64,19 +65,21 @@ describe('FixtureEditorComponent', () =>
 	{
 		const matDialogRefMock = TestBed.get(MatDialogRef) as jasmine.SpyObj<MatDialogRef<FixtureEditorComponent>>;
 		fixture.detectChanges();
-		const okButton = (fixture.nativeElement as HTMLElement).querySelector(".btn-ok") as HTMLButtonElement;
 		component.data = data;
-		okButton.click();
-		expect(matDialogRefMock.close).toHaveBeenCalledWith(component.data.fixture);
+		component.ok();
+		expect(matDialogRefMock.close).toHaveBeenCalledWith(jasmine.objectContaining<FixtureData>({
+			address: component.data.fixture.address,
+			group: component.data.fixture.group,
+			type: component.data.fixture.type
+		}));
 	});
 
 	it('should close the dialog with a null result when cancel is clicked', () =>
 	{
 		const matDialogRefMock = TestBed.get(MatDialogRef) as jasmine.SpyObj<MatDialogRef<FixtureEditorComponent>>;
 		fixture.detectChanges();
-		const cancelButton = (fixture.nativeElement as HTMLElement).querySelector(".btn-cancel") as HTMLButtonElement;
 		component.data = data;
-		cancelButton.click();
+		component.cancel();
 		expect(matDialogRefMock.close).toHaveBeenCalledWith();
 	});
 });

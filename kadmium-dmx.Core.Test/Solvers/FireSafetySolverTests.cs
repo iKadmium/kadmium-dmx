@@ -6,7 +6,7 @@ using System.Collections.Generic;
 using System.Text;
 using Xunit;
 
-namespace kadmium_dmx_test.Solvers
+namespace kadmium_dmx.Core.Test.Solvers
 {
     public class FireSafetySolverTests
     {

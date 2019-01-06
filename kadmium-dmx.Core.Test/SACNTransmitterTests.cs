@@ -8,7 +8,7 @@ using System.Net.Sockets;
 using System.Threading.Tasks;
 using Xunit;
 
-namespace kadmium_dmx_test
+namespace kadmium_dmx.Core.Test
 {
     public class SACNTransmitterTests
     {

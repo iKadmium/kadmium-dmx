@@ -27,7 +27,6 @@ namespace kadmium_dmx_core.Fixtures
         {
             Group = data.Group;
             Options = data.Options;
-            CorrectAxisNames(Options);
 
             Address = data.Address;
             FixtureDefinitionSkeleton = definition.Skeleton;
@@ -49,12 +48,6 @@ namespace kadmium_dmx_core.Fixtures
             ColorWheel = colorWheelEntries.ToList();
 
             Solvers = FixtureSolver.GetDefaultSolvers(this, definition, Options).ToList();
-        }
-
-        private void CorrectAxisNames(FixtureOptions options)
-        {
-            var correctedNames = options.AxisOptions.ToDictionary(x => FixtureOptions.GetTitleCaseAxisName(x.Key), x => x.Value);
-            options.AxisOptions = correctedNames;
         }
 
         public void Update()

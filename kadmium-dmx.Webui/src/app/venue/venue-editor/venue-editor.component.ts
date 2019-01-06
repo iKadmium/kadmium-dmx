@@ -69,6 +69,10 @@ export class VenueEditorComponent implements Saveable, OnInit
 						.toPromise()
 						.then(venueResponse =>
 						{
+							for (const universe of venueResponse.universes)
+							{
+								universe.fixtures.sort((a, b) => a.address - b.address);
+							}
 							this.venue = venueResponse;
 							this.editorService.setActive(this.venue);
 							this.loading = false;

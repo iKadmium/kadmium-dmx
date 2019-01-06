@@ -2,7 +2,7 @@
 using kadmium_dmx_data.Types;
 using System.Collections.Generic;
 
-namespace kadmium_dmx_test
+namespace kadmium_dmx.Core.Test
 {
     public class GroupTests
     {

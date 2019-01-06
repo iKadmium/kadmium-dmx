@@ -4,7 +4,7 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 
-namespace kadmium_dmx_test
+namespace kadmium_dmx.Core.Test
 {
     class FixtureDefinitionTests
     {

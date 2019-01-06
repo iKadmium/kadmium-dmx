@@ -117,12 +117,13 @@ export class UniverseEditorComponent implements OnInit
 					type: data.skeleton,
 					options: {
 						maxBrightness: 1,
-						axisOptions: {}
+						axisOptions: []
 					}
 				};
 				this.universe.fixtures.push(fixture);
 				runningAddress += channelCount;
 			}
+			this.universe.fixtures.sort((a, b) => a.address - b.address);
 			this.editorService.isDirty = true;
 		}
 

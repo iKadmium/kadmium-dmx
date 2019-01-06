@@ -1,6 +1,6 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { ReactiveFormsModule } from "@angular/forms";
-import { MatCard, MatCardContent, MatFormField, MatIcon, MatInput, MatSpinner, MatToolbar } from '@angular/material';
+import { MatCard, MatCardContent, MatFormField, MatIcon, MatInput, MatSpinner, MatToolbar, MatInputModule, MatCardModule, MatFormFieldModule, MatToolbarModule, MatIconModule, MatProgressSpinnerModule } from '@angular/material';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { RouterTestingModule } from '@angular/router/testing';
 import { APIClient, FixtureDefinitionSkeleton } from 'api';
@@ -30,19 +30,18 @@ describe('FixtureDefinitionsComponent', () =>
 			declarations: [
 				FixtureDefinitionsComponent,
 				SidenavToggleComponent,
-				MatIcon,
-				MatFormField,
-				MatToolbar,
 				BusyCardComponent,
-				MatCard,
-				MatCardContent,
-				MatSpinner,
-				MatInput,
 			],
 			imports: [
 				ReactiveFormsModule,
 				RouterTestingModule,
-				NoopAnimationsModule
+				NoopAnimationsModule,
+				MatCardModule,
+				MatInputModule,
+				MatFormFieldModule,
+				MatToolbarModule,
+				MatIconModule,
+				MatProgressSpinnerModule,
 			],
 			providers: [
 				{
@@ -65,31 +64,26 @@ describe('FixtureDefinitionsComponent', () =>
 		});
 
 		TestBed.compileComponents();
-	}));
 
-	beforeEach(() =>
-	{
 		fixture = TestBed.createComponent(FixtureDefinitionsComponent);
 		component = fixture.componentInstance;
-	});
+	}));
 
 	describe('component', () =>
 	{
-		it('should create', (done) =>
+		it('should create', async (done: () => void) =>
 		{
 			fixture.detectChanges();
-			fixture.whenStable().then(() =>
-			{
-				expect(component).toBeTruthy();
-				expect(component.loading).toBeFalsy();
-				done();
-			});
+			await fixture.whenStable();
+			expect(component).toBeTruthy();
+			expect(component.loading).toBeFalsy();
+			done();
 		});
 	});
 
 	describe('template', () =>
 	{
-		it('should contain an entry for each fixture definition', async (done) =>
+		it('should contain an entry for each fixture definition', async (done: () => void) =>
 		{
 			fixture.detectChanges();
 			await fixture.whenStable();
@@ -109,9 +103,6 @@ describe('FixtureDefinitionsComponent', () =>
 				expect(text).toEqual(definition.manufacturer + " " + definition.model);
 			}
 			done();
-
 		});
-
 	});
-
 });

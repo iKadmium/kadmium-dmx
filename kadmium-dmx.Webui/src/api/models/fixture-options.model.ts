@@ -6,6 +6,6 @@ import
 
 export interface FixtureOptions
 {
-  axisOptions: { [key: string]: MovementAxisOptions };
+  axisOptions: MovementAxisOptions[];
   maxBrightness: number;
 }

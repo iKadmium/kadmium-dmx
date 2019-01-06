@@ -11,6 +11,7 @@ namespace kadmium_dmx_core.Solvers
     {
         public static float MAX_SPEED = 0.005f;
         public Dictionary<string, AnimatableAxis> Axis { get; set; }
+        private bool randomLastFrame = false;
 
         public RandomMove(Fixture fixture) : base(fixture, "RandomMove")
         {
@@ -29,6 +30,11 @@ namespace kadmium_dmx_core.Solvers
                 float speed = Attributes["RandomMove"].Value;
                 foreach (AnimatableAxis axis in Axis.Values)
                 {
+                    if(!randomLastFrame)
+                    {
+                        axis.SourceValue = Attributes[axis.Name].Value;
+                        axis.Percentage = 0;
+                    }
                     float percentageIncrease = MAX_SPEED * speed / axis.Distance;
                     axis.Percentage += percentageIncrease;
                     if (axis.Percentage >= 1.0f)
@@ -37,6 +43,11 @@ namespace kadmium_dmx_core.Solvers
                     }
                     Attributes[axis.Name].Value = axis.Value;
                 }
+                randomLastFrame = true;
+            }
+            else
+            {
+                randomLastFrame = false;
             }
         }
 

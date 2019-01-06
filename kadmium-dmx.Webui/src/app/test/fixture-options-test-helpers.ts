@@ -6,7 +6,7 @@ export class FixtureOptionsTestHelpers
 	{
 		const options: FixtureOptions = {
 			maxBrightness: 1,
-			axisOptions: {}
+			axisOptions: []
 		};
 		return options;
 	}
@@ -15,7 +15,7 @@ export class FixtureOptionsTestHelpers
 	{
 		const options: FixtureOptions = {
 			maxBrightness: 1,
-			axisOptions: {}
+			axisOptions: []
 		};
 		options.axisOptions[name] = {
 			inverted: false,

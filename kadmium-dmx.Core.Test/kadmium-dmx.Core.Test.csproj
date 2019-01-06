@@ -15,6 +15,15 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="dist\**" />
+    <Compile Remove="out\**" />
+    <EmbeddedResource Remove="dist\**" />
+    <EmbeddedResource Remove="out\**" />
+    <None Remove="dist\**" />
+    <None Remove="out\**" />
+  </ItemGroup>
+
+  <ItemGroup>
     <None Update="data\**\*">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>

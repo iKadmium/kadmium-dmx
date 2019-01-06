@@ -104,22 +104,25 @@ describe('FixtureOptionsEditorComponent', () =>
 
 	describe('saving', () =>
 	{
-		it('should update the options on save', () =>
+		it('should update the options on save', async () =>
 		{
-			const serviceMock = TestBed.get(APIClient) as jasmine.SpyObj<APIClient>;
 			const dialogRef = TestBed.get(MatDialogRef) as jasmine.SpyObj<MatDialogRef<FixtureOptionsEditorComponent>>;
 			definition = FixtureDefinitionTestHelpers.getMovingRGBFixtureDefinition();
+			const apiClient = TestBed.get(APIClient) as jasmine.SpyObj<APIClient>;
+			apiClient.getFixtureDefinition.and.returnValue(from([definition]));
 			fixture.detectChanges();
+			await fixture.whenStable();
 			const value: FixtureOptions = {
-				axisOptions: {
-					Pan: {
+				axisOptions: [
+					{
+						name: "Pan",
 						restrictions: {
 							min: -5,
 							max: 5
 						},
 						inverted: false
 					}
-				},
+				],
 				maxBrightness: 1
 			};
 			component.form.setValue(value);

@@ -1,5 +1,5 @@
 import { Component, Inject, OnInit } from '@angular/core';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { FormBuilder, FormGroup, Validators, FormArray } from '@angular/forms';
 import { MatDialogRef, MAT_DIALOG_DATA } from "@angular/material/dialog";
 import { APIClient } from 'api';
 import { FixtureDefinitionSkeleton, FixtureOptions, IFixtureDefinition } from "api/models";
@@ -17,6 +17,7 @@ export class FixtureOptionsEditorComponent implements OnInit
 	public definition: IFixtureDefinition;
 	public form: FormGroup;
 	public loading = true;
+	public axisOptions: FormArray | null;
 
 	constructor(
 		public dialogRef: MatDialogRef<FixtureOptionsEditorComponent>,
@@ -37,24 +38,23 @@ export class FixtureOptionsEditorComponent implements OnInit
 				));
 		}
 
-		if (Object.keys(data.options.axisOptions).length > 0)
+		this.axisOptions = this.formBuilder.array([]);
+		this.form.addControl("axisOptions", this.axisOptions);
+
+		if (data.options.axisOptions.length > 0)
 		{
-			const axisOptions = new FormGroup({});
-
-			for (const axisName of Object.keys(data.options.axisOptions))
+			for (const axis of data.options.axisOptions)
 			{
-				const axis = data.options.axisOptions[axisName];
-
 				const optionsGroup = this.formBuilder.group({
+					name: [axis.name],
 					inverted: [axis.inverted],
 					restrictions: this.formBuilder.group({
 						min: [axis.restrictions.min, Validators.required],
 						max: [axis.restrictions.max, Validators.required]
 					})
 				});
-				axisOptions.addControl(axisName, optionsGroup);
+				this.axisOptions.push(optionsGroup);
 			}
-			this.form.addControl("axisOptions", axisOptions);
 		}
 	}
 
@@ -69,26 +69,27 @@ export class FixtureOptionsEditorComponent implements OnInit
 				{
 					this.definition = response;
 
-					let axisOptions = this.form.get("axisOptions") as FormGroup;
+					let axisOptions = this.form.get("axisOptions") as FormArray;
 					if (axisOptions == null)
 					{
-						axisOptions = new FormGroup({});
+						axisOptions = new FormArray([]);
 						this.form.addControl("axisOptions", axisOptions);
 					}
 
 					for (const axis of response.movements)
 					{
-						let axisGroup = axisOptions.get(axis.name) as FormGroup;
+						let axisGroup = axisOptions.controls.find(x => x.value.name === axis.name) as FormGroup;
 						if (axisGroup == null)
 						{
 							axisGroup = this.formBuilder.group({
+								name: [axis.name],
 								inverted: [false],
 								restrictions: this.formBuilder.group({
 									min: [axis.min, Validators.required],
 									max: [axis.max, Validators.required]
 								})
 							});
-							axisOptions.addControl(axis.name, axisGroup);
+							axisOptions.push(axisGroup);
 						}
 					}
 
@@ -114,6 +115,16 @@ export class FixtureOptionsEditorComponent implements OnInit
 	public cancel(): void
 	{
 		this.dialogRef.close();
+	}
+
+	public getAxisMin(name: string): number
+	{
+		return this.definition.movements.find(x => x.name === name).min;
+	}
+
+	public getAxisMax(name: string): number
+	{
+		return this.definition.movements.find(x => x.name === name).max;
 	}
 }
 

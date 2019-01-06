@@ -21,8 +21,7 @@ export class FixtureEditorComponent implements OnInit
 		this.form = this.formBuilder.group({
 			address: [this.data.fixture.address, [Validators.required, Validators.min(1), Validators.max(512)]],
 			group: [this.data.fixture.group, Validators.required],
-			type: [this.data.skeletons[0], Validators.required],
-			options: [this.data.fixture.options, Validators.required]
+			type: [this.data.skeletons[0], Validators.required]
 		});
 	}
 

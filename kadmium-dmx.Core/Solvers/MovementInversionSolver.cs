@@ -14,8 +14,8 @@ namespace kadmium_dmx_core.Solvers
         public MovementInversionSolver(Fixture fixture, IFixtureDefinition definition, FixtureOptions options) : base(fixture)
         {
             InvertedAxis = from axisOptions in options.AxisOptions
-                           where axisOptions.Value.Inverted
-                           select axisOptions.Key;
+                           where axisOptions.Inverted
+                           select axisOptions.Name;
         }
 
         public override void Solve(Dictionary<string, FixtureAttribute> Attributes)
@@ -28,7 +28,7 @@ namespace kadmium_dmx_core.Solvers
 
         public static bool SuitableFor(IFixtureDefinition definition, FixtureOptions options)
         {
-            return options.AxisOptions.Values.Any(x => x.Inverted);
+            return options.AxisOptions.Any(x => x.Inverted);
         }
     }
 }

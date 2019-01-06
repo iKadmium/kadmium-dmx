@@ -6,6 +6,7 @@ import
 
 export interface MovementAxisOptions
 {
+  name: string;
   inverted: boolean;
   restrictions: MovementAxisRestriction;
 }
