@@ -6,7 +6,8 @@ matrix:
       before_script:
         - dotnet restore
         - dotnet test
-      dotnet: 2.2.104
+      dist: xenial
+      dotnet: 2.2
       mono: none
       script:
         - dotnet publish -c Release -r win10-x64 -o dist
