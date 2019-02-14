@@ -3,4 +3,5 @@
 before_script:
   - npm install -g gulp-cli
   - npm install
+dotnet: 2.2.104
 script: gulp
