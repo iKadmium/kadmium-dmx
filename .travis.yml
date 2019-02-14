@@ -1,7 +1,11 @@
 # Just install and run gulp
 
-before_script:
-  - npm install -g gulp-cli
-  - npm install
-dotnet: 2.2.104
-script: gulp
+matrix:
+  include:
+    - language: csharp
+    - before_script:
+        - dotnet restore
+        - dotnet test
+    - dotnet: 2.2.104
+    - script:
+        - dotnet publish -c Release -r win10-x64 -o dist
