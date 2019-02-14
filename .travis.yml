@@ -3,9 +3,18 @@
 matrix:
   include:
     - language: csharp
-    - before_script:
+      before_script:
         - dotnet restore
         - dotnet test
-    - dotnet: 2.2.104
-    - script:
+      dotnet: 2.2.104
+      script:
         - dotnet publish -c Release -r win10-x64 -o dist
+    - language: node
+      node_js: "node"
+      dist: trusty
+      before_script:
+        - npm install
+        - npm install -g @angular/cli
+      script:
+        - npm run test-headless
+        - ng build -c production --output-path dist
