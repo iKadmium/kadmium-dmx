@@ -12,10 +12,11 @@ matrix:
       script:
         - dotnet publish -c Release -r win10-x64 -o dist
     - language: node_js
+      env:
+      - CHROME_BIN=chromium-browser
       node_js: 
       - "node"
       - "9"
-      dist: precise
       addons:
         chrome: stable
       before_script:
