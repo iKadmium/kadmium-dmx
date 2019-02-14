@@ -11,7 +11,7 @@ matrix:
       script:
         - dotnet publish -c Release -r win10-x64 -o dist
     - language: node
-      node_js: "node"
+      node_js: "9"
       dist: trusty
       before_script:
         - cd kadmium-dmx.Webui
