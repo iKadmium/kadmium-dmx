@@ -14,6 +14,7 @@ matrix:
       node_js: "node"
       dist: trusty
       before_script:
+        - cd kadmium-dmx.Webui
         - npm install
         - npm install -g @angular/cli
       script:
