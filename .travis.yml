@@ -11,9 +11,11 @@ matrix:
       mono: none
       script:
         - dotnet publish -c Release -r win10-x64 -o dist
-    - language: node
-      node_js: "9"
-      dist: trusty
+    - language: node_js
+      node_js: 
+      - "node"
+      - "9"
+      dist: precise
       before_script:
         - cd kadmium-dmx.Webui
         - npm install
