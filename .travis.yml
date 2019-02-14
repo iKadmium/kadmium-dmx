@@ -16,6 +16,8 @@ matrix:
       - "node"
       - "9"
       dist: precise
+      addons:
+        chrome: stable
       before_script:
         - cd kadmium-dmx.Webui
         - npm install
