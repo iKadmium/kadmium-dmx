@@ -1,6 +1,7 @@
 matrix:
   include:
     - language: csharp
+      name: "API"
       before_script:
         - dotnet restore
         - dotnet test
@@ -10,6 +11,7 @@ matrix:
       script:
         - dotnet publish -c Release -r win10-x64 -o dist
     - language: node_js
+      name: "UI"
       env:
         - CHROME_BIN=chromium-browser
       node_js:
@@ -23,9 +25,8 @@ matrix:
         - npm install -g @angular/cli
       script:
         - npm run test-headless
-        - ng build -c production --output-path dist
+        - ng build -c production --output-path ../kadmium-dmx.Webapi/dist
       before_deploy:
-        - cp dist/* ../kadmium-dmx.Webapi/dist/wwwroot
         - cd ../kadmium-dmx.Webapi/dist
         - zip release.zip
 deploy:
