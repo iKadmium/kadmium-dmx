@@ -11,28 +11,26 @@ stages:
   - test
   - build
   - deploy
+skip_cleanup: true
 jobs:
   include:
-    - stage: install
-      script:
+    - stage: .NET Core Web API
+      install:
         - wget -q https://packages.microsoft.com/config/ubuntu/16.04/packages-microsoft-prod.deb
         - sudo dpkg -i packages-microsoft-prod.deb
         - sudo apt-get install apt-transport-https
         - sudo apt-get update
         - sudo apt-get install dotnet-sdk-2.2
         - dotnet restore
+      script:
+        - dotnet test
+        - dotnet publish -c Release -o dist -r win10-x64
+    - stage: Angular UI
+      script:
         - cd kadmium-dmx.Webui
         - npm install -g @angular/cli
         - npm install
-    - stage: test
-      script: dotnet test
-    - script:
-        - cd kadmium-dmx.Webui
         - npm run test-headless
-    - stage: build
-      script: dotnet publish -c Release -o dist -r win10-x64
-    - script:
-        - cd kadmium-dmx.Webui
         - ng build -c production --output-path ../kadmium-dmx.Webapi/dist
     - stage: deploy
       script: skip
@@ -42,7 +40,6 @@ jobs:
         - export TRAVIS_TAG=${TRAVIS_TAG:-$(date +'%Y%m%d%H%M%S')-$(git log --format=%h -1)}
         - git tag $TRAVIS_TAG
       deploy:
-        skip_cleanup: true
         provider: releases
         api_key:
           secure: cXXnz3MHayCih3iAorlP+vP6g6zIbbAwPYGujbjOjK4UWXRJYSh6Mr9OqT/EKJkO2jRcYZB11N6Fa3F2MO+FnqwPVbg6h6LqsMHuiNmw3oF663seHj6bg0Y5plr7z+QFl5y9dXivxqtciZmfhYLgvPkOOU/lKd0QA3qtdk4j91E9TsWdo8KmjHrf/wv7hlY7Wq1931OIRyuKJlvYgCLgYgapGBRp6zSSDoTVT0ZkoxDkze79lCeVPXPQzdIGNwgXrcTJ4iWrbU+NBtgKYIhAb1E1MNjO6Nb7rRQoBEm4tFHL6Rv37R8c8tW3cB5ll9Jz58H2phw5yO/CSKSdTy/PmMNgsxdtMaeLRkU7awzr/+CZwvwXsjy+opuwWkkPW6u2nMvZLKO3xDoI6tQF79zJCsmyk1FXJUBiHfDNOYpn6VNYllYMEV6I9p7KumE6VUzLpLP68f+M/nWKeA8ZTKfh3UHn5XfP5gGaBI2bvC7MyDEVeQUdWBXMQz1EefZSrZTF7IPAEFxLtVFyoMcKfYkFFGrncB4vrxRNcmnUwsSgShavVEefUilnDI4Ikwvd7MR/j9/x5dHeOdXwMtohn9bjdkcUfQTzNFKPvnrrcyIwDADNiBO2p1kXZx+64AHRmY3Q2/FdibR1WWHVPXBMiTGqsYhVCC0hTXVTU1yO8Dcs+ps=
