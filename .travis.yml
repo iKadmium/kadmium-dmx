@@ -7,10 +7,9 @@ node_js:
 addons:
   chrome: stable
 stages:
-  - install
-  - test
-  - build
-  - deploy
+  - .NET Core Web API
+  - Angular UI
+  - Deployment
 skip_cleanup: true
 jobs:
   include:
@@ -32,7 +31,7 @@ jobs:
         - npm install
         - npm run test-headless
         - ng build -c production --output-path ../kadmium-dmx.Webapi/dist
-    - stage: deploy
+    - stage: Deployment
       script: skip
       before_deploy:
         - cd kadmium-dmx.Webapi/dist
