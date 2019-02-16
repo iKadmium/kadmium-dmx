@@ -1,15 +1,5 @@
 matrix:
   include:
-    - language: csharp
-      name: "API"
-      before_script:
-        - dotnet restore
-        - dotnet test
-      dist: xenial
-      dotnet: 2.2
-      mono: none
-      script:
-        - dotnet publish -c Release -r win10-x64 -o dist
     - language: node_js
       name: "UI"
       env:
@@ -20,13 +10,22 @@ matrix:
       addons:
         chrome: stable
       before_script:
-        - cd kadmium-dmx.Webui
-        - npm install
+        - sudo apt-get update
+        - sudo apt-get install dotnet-sdk-2.2
+        - dotnet restore
+        - dotnet test
+        - dotnet publish -c Release -o dist -r win10-x64
+        - cd kadmium-dmx.Webapi
         - npm install -g @angular/cli
-      script:
+        - npm install
         - npm run test-headless
         - ng build -c production --output-path ../kadmium-dmx.Webapi/dist
+      script:
+        - npm run test-headless
+        - pwd
+        - ng build -c production --output-path ../kadmium-dmx.Webapi/dist
 before_deploy:
+  - pwd
   - cd kadmium-dmx.Webapi/dist
   - zip release.zip * -r
   - export TRAVIS_TAG=${TRAVIS_TAG:-$(date +'%Y%m%d%H%M%S')-$(git log --format=%h -1)}
