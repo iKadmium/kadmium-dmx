@@ -39,3 +39,4 @@ deploy:
   file: kadmium-dmx.Webapi/dist/release.zip
   on:
     repo: iKadmium/kadmium-dmx
+    all_branches: true
