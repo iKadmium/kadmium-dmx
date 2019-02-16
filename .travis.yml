@@ -13,7 +13,7 @@ stages:
 skip_cleanup: true
 jobs:
   include:
-    - stage: .NET Core Web API
+    - stage: Test and Build
       install:
         - wget -q https://packages.microsoft.com/config/ubuntu/16.04/packages-microsoft-prod.deb
         - sudo dpkg -i packages-microsoft-prod.deb
@@ -24,12 +24,12 @@ jobs:
       script:
         - dotnet test
         - dotnet publish -c Release -o dist -r win10-x64
-    - stage: Angular UI
-      script:
+    - install:
         - cd kadmium-dmx.Webui
         - npm install -g @angular/cli
         - npm install
-        - npm run test-headless
+      script:
+        - xvfb-run npm run test-headless
         - ng build -c production --output-path ../kadmium-dmx.Webapi/dist
     - stage: Deployment
       script: skip
