@@ -4,9 +4,12 @@ env:
   - CHROME_BIN=chromium-browser
 node_js:
   - node
-  - "9"
 addons:
   chrome: stable
+stages:
+  - install
+  - test
+  - build
 jobs:
   include:
     - stage: install
