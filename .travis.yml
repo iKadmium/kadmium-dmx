@@ -23,7 +23,7 @@ jobs:
       script:
         - dotnet test
         - dotnet publish -c Release -o dist -r win10-x64
-      skip_cleanup: true
+        - find
     - dist: trusty
       install:
         - cd kadmium-dmx.Webui
@@ -32,12 +32,12 @@ jobs:
       script:
         - xvfb-run npm run test-headless
         - ng build -c production --output-path ../kadmium-dmx.Webapi/dist
-      skip_cleanup: true
+        - find
     - stage: Deployment
       script: skip
       skip_cleanup: true
       before_deploy:
-        - pwd
+        - find
         - cd kadmium-dmx.Webapi/dist
         - zip release.zip * -r
         - export TRAVIS_TAG=${TRAVIS_TAG:-$(date +'%Y%m%d%H%M%S')-$(git log --format=%h -1)}
