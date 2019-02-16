@@ -1,18 +1,15 @@
 language: node_js
 
-env:
-  - CHROME_BIN=chromium-browser
 node_js:
   - node
-addons:
-  chrome: stable
+
 stages:
   - Test and Build
   - Deployment
 jobs:
   include:
     - stage: Test and Build
-      dist: xenial
+      name: "Web API"
       # install:
       # - wget -q https://packages.microsoft.com/config/ubuntu/16.04/packages-microsoft-prod.deb
       # - sudo dpkg -i packages-microsoft-prod.deb
@@ -26,7 +23,11 @@ jobs:
         - mkdir kadmium-dmx.Webapi/dist
         - echo stuff > kadmium-dmx.Webapi/dist/output1.txt
         - find
-    - dist: trusty
+    - name: "Frontend"
+      env:
+        - CHROME_BIN=chromium-browser
+      addons:
+        chrome: stable
       # install:
       #   - cd kadmium-dmx.Webui
       #   - npm install -g @angular/cli
