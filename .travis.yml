@@ -11,17 +11,19 @@ matrix:
       addons:
         chrome: stable
       before_script:
+        - wget -q https://packages.microsoft.com/config/ubuntu/16.04/packages-microsoft-prod.deb
+        - sudo dpkg -i packages-microsoft-prod.deb
+        - sudo apt-get install apt-transport-https
         - sudo apt-get update
         - sudo apt-get install dotnet-sdk-2.2
         - dotnet restore
-        - dotnet test
-        - dotnet publish -c Release -o dist -r win10-x64
         - cd kadmium-dmx.Webapi
         - npm install -g @angular/cli
         - npm install
-        - npm run test-headless
-        - ng build -c production --output-path ../kadmium-dmx.Webapi/dist
+        - cd ..
       script:
+        - dotnet test
+        - dotnet publish -c Release -o dist -r win10-x64
         - npm run test-headless
         - pwd
         - ng build -c production --output-path ../kadmium-dmx.Webapi/dist
