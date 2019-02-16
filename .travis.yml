@@ -27,8 +27,8 @@ jobs:
         - cd kadmium-dmx.Webui
         - npm run test-headless
     - stage: build
-      script:
-        - dotnet publish -c Release -o dist -r win10-x64
+      script: dotnet publish -c Release -o dist -r win10-x64
+    - script:
         - cd kadmium-dmx.Webui
         - ng build -c production --output-path ../kadmium-dmx.Webapi/dist
 before_deploy:
