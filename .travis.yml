@@ -28,7 +28,7 @@ matrix:
         - ng build -c production --output-path ../kadmium-dmx.Webapi/dist
       before_deploy:
         - cd ../kadmium-dmx.Webapi/dist
-        - zip release.zip
+        - zip release.zip * -r
 deploy:
   provider: releases
   api_key:
