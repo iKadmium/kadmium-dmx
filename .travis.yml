@@ -13,25 +13,27 @@ jobs:
   include:
     - stage: Test and Build
       dist: xenial
-      install:
-        - wget -q https://packages.microsoft.com/config/ubuntu/16.04/packages-microsoft-prod.deb
-        - sudo dpkg -i packages-microsoft-prod.deb
-        - sudo apt-get install apt-transport-https
-        - sudo apt-get update
-        - sudo apt-get install dotnet-sdk-2.2
-        - dotnet restore
+      # install:
+      # - wget -q https://packages.microsoft.com/config/ubuntu/16.04/packages-microsoft-prod.deb
+      # - sudo dpkg -i packages-microsoft-prod.deb
+      # - sudo apt-get install apt-transport-https
+      # - sudo apt-get update
+      # - sudo apt-get install dotnet-sdk-2.2
+      # - dotnet restore
       script:
-        - dotnet test
-        - dotnet publish -c Release -o dist -r win10-x64
+        # - dotnet test
+        # - dotnet publish -c Release -o dist -r win10-x64
+        - echo stuff > kadmium-dmx.Webapi/dist/output1.txt
         - find
     - dist: trusty
-      install:
-        - cd kadmium-dmx.Webui
-        - npm install -g @angular/cli
-        - npm install
+      # install:
+      #   - cd kadmium-dmx.Webui
+      #   - npm install -g @angular/cli
+      #   - npm install
       script:
-        - xvfb-run npm run test-headless
-        - ng build -c production --output-path ../kadmium-dmx.Webapi/dist
+        # - xvfb-run npm run test-headless
+        # - ng build -c production --output-path ../kadmium-dmx.Webapi/dist
+        - echo things > kadmium-dmx.Webapi/dist/output2.txt
         - find
     - stage: Deployment
       script: skip
