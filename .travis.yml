@@ -9,7 +9,6 @@ addons:
 stages:
   - Test and Build
   - Deployment
-skip_cleanup: true
 jobs:
   include:
     - stage: Test and Build
@@ -24,6 +23,7 @@ jobs:
       script:
         - dotnet test
         - dotnet publish -c Release -o dist -r win10-x64
+      skip_cleanup: true
     - dist: trusty
       install:
         - cd kadmium-dmx.Webui
@@ -32,8 +32,10 @@ jobs:
       script:
         - xvfb-run npm run test-headless
         - ng build -c production --output-path ../kadmium-dmx.Webapi/dist
+      skip_cleanup: true
     - stage: Deployment
       script: skip
+      skip_cleanup: true
       before_deploy:
         - pwd
         - cd kadmium-dmx.Webapi/dist
