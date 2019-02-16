@@ -24,8 +24,8 @@ matrix:
       script:
         - dotnet test
         - dotnet publish -c Release -o dist -r win10-x64
+        - cd kadmium-dmx.Webapi
         - npm run test-headless
-        - pwd
         - ng build -c production --output-path ../kadmium-dmx.Webapi/dist
 before_deploy:
   - pwd
