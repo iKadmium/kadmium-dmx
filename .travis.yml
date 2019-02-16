@@ -23,6 +23,7 @@ jobs:
       script:
         # - dotnet test
         # - dotnet publish -c Release -o dist -r win10-x64
+        - mkdir kadmium-dmx.Webapi/dist
         - echo stuff > kadmium-dmx.Webapi/dist/output1.txt
         - find
     - dist: trusty
@@ -33,6 +34,7 @@ jobs:
       script:
         # - xvfb-run npm run test-headless
         # - ng build -c production --output-path ../kadmium-dmx.Webapi/dist
+        - mkdir kadmium-dmx.Webapi/dist
         - echo things > kadmium-dmx.Webapi/dist/output2.txt
         - find
     - stage: Deployment
