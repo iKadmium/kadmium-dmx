@@ -10,6 +10,7 @@ stages:
   - install
   - test
   - build
+  - deploy
 jobs:
   include:
     - stage: install
@@ -23,7 +24,6 @@ jobs:
         - cd kadmium-dmx.Webui
         - npm install -g @angular/cli
         - npm install
-        - cd ..
     - stage: test
       script: dotnet test
     - script:
@@ -35,7 +35,6 @@ jobs:
         - cd kadmium-dmx.Webui
         - ng build -c production --output-path ../kadmium-dmx.Webapi/dist
 before_deploy:
-  - pwd
   - cd kadmium-dmx.Webapi/dist
   - zip release.zip * -r
   - export TRAVIS_TAG=${TRAVIS_TAG:-$(date +'%Y%m%d%H%M%S')-$(git log --format=%h -1)}
