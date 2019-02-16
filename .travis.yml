@@ -2,6 +2,7 @@ matrix:
   include:
     - language: node_js
       name: "UI"
+      dist: xenial
       env:
         - CHROME_BIN=chromium-browser
       node_js:
