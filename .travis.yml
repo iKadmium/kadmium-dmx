@@ -1,16 +1,16 @@
-matrix:
+language: node_js
+dist: xenial
+env:
+  - CHROME_BIN=chromium-browser
+node_js:
+  - node
+  - "9"
+addons:
+  chrome: stable
+jobs:
   include:
-    - language: node_js
-      name: "UI"
-      dist: xenial
-      env:
-        - CHROME_BIN=chromium-browser
-      node_js:
-        - node
-        - "9"
-      addons:
-        chrome: stable
-      before_script:
+    - stage: install
+      script:
         - wget -q https://packages.microsoft.com/config/ubuntu/16.04/packages-microsoft-prod.deb
         - sudo dpkg -i packages-microsoft-prod.deb
         - sudo apt-get install apt-transport-https
@@ -21,11 +21,15 @@ matrix:
         - npm install -g @angular/cli
         - npm install
         - cd ..
-      script:
-        - dotnet test
-        - dotnet publish -c Release -o dist -r win10-x64
+    - stage: test
+      script: dotnet test
+    - script:
         - cd kadmium-dmx.Webui
         - npm run test-headless
+    - stage: build
+      script:
+        - dotnet publish -c Release -o dist -r win10-x64
+        - cd kadmium-dmx.Webui
         - ng build -c production --output-path ../kadmium-dmx.Webapi/dist
 before_deploy:
   - pwd
