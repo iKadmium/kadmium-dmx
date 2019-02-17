@@ -15,7 +15,8 @@ jobs:
   include:
     - stage: Test and Build
       name: "Web API"
-      dist: xenial
+      #dist: xenial
+      language: minimal
       # install:
       #   - wget -q https://packages.microsoft.com/config/ubuntu/16.04/packages-microsoft-prod.deb
       #   - sudo dpkg -i packages-microsoft-prod.deb
@@ -31,6 +32,7 @@ jobs:
 
     - name: "Frontend"
       dist: trusty
+      language: minimal
       env:
         - CHROME_BIN=chromium-browser
       addons:
@@ -48,10 +50,12 @@ jobs:
 
     - stage: Deployment
       name: Deploy to Github
+      language: minimal
       script: skip
       skip_cleanup: true
       before_deploy:
         - cd kadmium-dmx.Webapi/dist
+        - find
         - zip release.zip * -r
         - export TRAVIS_TAG=${TRAVIS_TAG:-$(date +'%Y%m%d%H%M%S')-$(git log --format=%h -1)}
         - git tag $TRAVIS_TAG
