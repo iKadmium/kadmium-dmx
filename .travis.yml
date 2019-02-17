@@ -9,16 +9,12 @@ stages:
   - Deployment
 jobs:
   include:
-    - stage: Prepare
-      name: Clear cache
-      script:
-        - rm -rf ~/dist
     - stage: Test and Build
       name: "Web API"
       dist: xenial
       cache:
         directories:
-          - ~/dist
+          - ~/dist-dotnet
       # install:
       #   - wget -q https://packages.microsoft.com/config/ubuntu/16.04/packages-microsoft-prod.deb
       #   - sudo dpkg -i packages-microsoft-prod.deb
@@ -28,14 +24,14 @@ jobs:
       #   - dotnet restore
       script:
         # - dotnet test
-        # - dotnet publish -c Release -o ~/dist -r win10-x64
-        - mkdir ~/dist
+        - rm -rf ~/dist-dotnet
+        # - dotnet publish -c Release -o ~/dist-dotnet -r win10-x64
         - echo dotnet > ~/dist/out1.txt
     - name: "Frontend"
       dist: trusty
       cache:
         directories:
-          - ~/dist
+          - ~/dist-angular
       env:
         - CHROME_BIN=chromium-browser
       addons:
@@ -46,16 +42,18 @@ jobs:
         # - npm install
       script:
         # - npm run test-headless
-        # - ng build -c production --output-path ~/dist/wwwroot
-        - mkdir ~/dist
-        - echo angular > ~/dist/wwwroot/out2.txt
+        # - ng build -c production --output-path ~/dist-angular
+        - echo angular > ~/dist-angular/out2.txt
     - stage: Deployment
       name: Deploy to Github
       script: skip
       skip_cleanup: true
       before_deploy:
         - find
-        - cd ~/dist
+        - mkdir ~/dist-complete
+        - cd ~/dist-complete
+        - cp -r ~/dist-dotnet .
+        - cp -r ~/dist-angular wwwroot
         - zip release.zip * -r
         - export TRAVIS_TAG=${TRAVIS_TAG:-$(date +'%Y%m%d%H%M%S')-$(git log --format=%h -1)}
         - git tag $TRAVIS_TAG
