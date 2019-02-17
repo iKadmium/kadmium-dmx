@@ -1,7 +1,7 @@
 cache:
   directories:
-    - kadmium-dmx.Webapi/dist
-    - kadmium-dmx.Webapi/dist/wwwroot
+    - dist-dotnet
+    - dist-angular
 
 stages:
   - Prepare
@@ -13,7 +13,8 @@ jobs:
     - stage: Test and Build
       name: "Web API"
       dist: xenial
-      language: csharp
+      # language: csharp
+      language: minimal
       mono: none
       dotnet: 2.2
       # install:
@@ -25,12 +26,13 @@ jobs:
       #   - dotnet restore
       script:
         # - dotnet test
-        - rm -rf kadmium-dmx.Webapi/dist/*
+        - rm -rf dist-dotnet/*
         # - dotnet publish -c Release -o dist -r win10-x64
-        - echo dotnet > kadmium-dmx.Webapi/dist/out1.txt
+        - echo dotnet > dist-dotnet/out1.txt
 
     - name: "Frontend"
-      language: node_js
+      # language: node_js
+      language: minimal
       dist: trusty
       node_js: node
       env:
@@ -43,9 +45,9 @@ jobs:
         # - npm install
       script:
         # - npm run test-headless
-        - rm -rf ../kadmium-dmx.Webapi/dist/wwwroot/*
+        - rm -rf ../dist-angular/*
         # - ng build -c production --output-path ../kadmium-dmx.Webapi/dist/wwwroot
-        - echo angular > ../kadmium-dmx.Webapi/dist/wwwroot/out2.txt
+        - echo angular > ../dist-angular/out2.txt
 
     - stage: Deployment
       name: Deploy to Github
@@ -53,8 +55,9 @@ jobs:
       script: skip
       skip_cleanup: true
       before_deploy:
-        - cd kadmium-dmx.Webapi/dist
         - find
+        - cd dist-dotnet
+        - cp -r ../dist-angular wwwroot
         - zip release.zip * -r
         - export TRAVIS_TAG=${TRAVIS_TAG:-$(date +'%Y%m%d%H%M%S')-$(git log --format=%h -1)}
         - git tag $TRAVIS_TAG
