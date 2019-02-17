@@ -24,7 +24,7 @@ jobs:
       #   - dotnet restore
       script:
         # - dotnet test
-        - rm -rf ~/dist-dotnet
+        - rm -rf ~/dist-dotnet/*
         # - dotnet publish -c Release -o ~/dist-dotnet -r win10-x64
         - echo dotnet > ~/dist-dotnet/out1.txt
     - name: "Frontend"
@@ -42,7 +42,7 @@ jobs:
         # - npm install
       script:
         # - npm run test-headless
-        - rm -rf ~/dist-angular
+        - rm -rf ~/dist-angular/*
         # - ng build -c production --output-path ~/dist-angular
         - echo angular > ~/dist-angular/out2.txt
     - stage: Deployment
