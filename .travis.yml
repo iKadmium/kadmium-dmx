@@ -2,8 +2,7 @@ language: node_js
 
 cache:
   directories:
-    - ~/dist-dotnet
-    - ~/dist-angular
+    - kadmium-dmx.Webapi/dist
 
 node_js:
   - node
@@ -26,9 +25,9 @@ jobs:
       #   - dotnet restore
       script:
         # - dotnet test
-        - rm -rf ~/dist-dotnet/*
-        # - dotnet publish -c Release -o ~/dist-dotnet -r win10-x64
-        - echo dotnet > ~/dist-dotnet/out1.txt
+        - rm -rf kadmium-dmx.Webapi/dist/*
+        # - dotnet publish -c Release -o dist -r win10-x64
+        - echo dotnet > kadmium-dmx.Webapi/dist/out1.txt
 
     - name: "Frontend"
       dist: trusty
@@ -42,19 +41,17 @@ jobs:
         # - npm install
       script:
         # - npm run test-headless
-        - rm -rf ~/dist-angular/*
-        # - ng build -c production --output-path ~/dist-angular
-        - echo angular > ~/dist-angular/out2.txt
+        - rm -rf ../kadmium-dmx.Webapi/dist/wwwroot
+        # - ng build -c production --output-path ../kadmium-dmx.Webapi/dist/wwwroot
+        - mkdir ../kadmium-dmx.Webapi/dist/wwwroot
+        - echo angular > ../kadmium-dmx.Webapi/dist/wwwroot/out2.txt
 
     - stage: Deployment
       name: Deploy to Github
       script: skip
       skip_cleanup: true
       before_deploy:
-        - mkdir ~/dist-complete
-        - cd ~/dist-complete
-        - cp -r ~/dist-dotnet/* .
-        - cp -r ~/dist-angular wwwroot
+        - cd kadmium-dmx.Webapi/dist
         - zip release.zip * -r
         - export TRAVIS_TAG=${TRAVIS_TAG:-$(date +'%Y%m%d%H%M%S')-$(git log --format=%h -1)}
         - git tag $TRAVIS_TAG
@@ -62,7 +59,7 @@ jobs:
         provider: releases
         api_key:
           secure: cXXnz3MHayCih3iAorlP+vP6g6zIbbAwPYGujbjOjK4UWXRJYSh6Mr9OqT/EKJkO2jRcYZB11N6Fa3F2MO+FnqwPVbg6h6LqsMHuiNmw3oF663seHj6bg0Y5plr7z+QFl5y9dXivxqtciZmfhYLgvPkOOU/lKd0QA3qtdk4j91E9TsWdo8KmjHrf/wv7hlY7Wq1931OIRyuKJlvYgCLgYgapGBRp6zSSDoTVT0ZkoxDkze79lCeVPXPQzdIGNwgXrcTJ4iWrbU+NBtgKYIhAb1E1MNjO6Nb7rRQoBEm4tFHL6Rv37R8c8tW3cB5ll9Jz58H2phw5yO/CSKSdTy/PmMNgsxdtMaeLRkU7awzr/+CZwvwXsjy+opuwWkkPW6u2nMvZLKO3xDoI6tQF79zJCsmyk1FXJUBiHfDNOYpn6VNYllYMEV6I9p7KumE6VUzLpLP68f+M/nWKeA8ZTKfh3UHn5XfP5gGaBI2bvC7MyDEVeQUdWBXMQz1EefZSrZTF7IPAEFxLtVFyoMcKfYkFFGrncB4vrxRNcmnUwsSgShavVEefUilnDI4Ikwvd7MR/j9/x5dHeOdXwMtohn9bjdkcUfQTzNFKPvnrrcyIwDADNiBO2p1kXZx+64AHRmY3Q2/FdibR1WWHVPXBMiTGqsYhVCC0hTXVTU1yO8Dcs+ps=
-        file: ~/dist/release.zip
+        file: release.zip
         on:
           repo: iKadmium/kadmium-dmx
           all_branches: true
