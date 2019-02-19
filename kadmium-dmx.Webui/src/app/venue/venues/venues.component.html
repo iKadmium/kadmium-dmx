@@ -9,7 +9,7 @@
         </mat-form-field>
     </span>
 
-    <a mat-icon-button routerLink="new" matTooltip="Add">
+    <a mat-icon-button routerLink="editor/new" matTooltip="Add">
         <mat-icon aria-label="Add">add</mat-icon>
     </a>
     <button mat-icon-button (click)="upload(fileInput)" matTooltip="Upload">
@@ -24,7 +24,8 @@
                     {{element}}
                 </td>
                 <td class="actionsCell">
-                    <a mat-icon-button matTooltip="Download" href="/api/Venue/Download/{{element}}" [download]="element + '.json'">
+                    <a mat-icon-button matTooltip="Download" href="/api/Venue/Download/{{element}}"
+                        [download]="element + '.json'">
                         <mat-icon aria-label="Download">file_download</mat-icon>
                     </a>
                     <a mat-icon-button matTooltip="Edit" [routerLink]="'editor/' + element">
