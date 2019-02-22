@@ -25,15 +25,13 @@ namespace kadmium_dmx_core
         public List<Transmitter> Transmitters { get; private set; }
         public Listener Listener { get; private set; }
         public Venue Venue { get; private set; }
-        public ISettings Settings { get; set; }
-        public Strobe Strobe { get; }
+        public ISettings Settings { get; private set; }
         public Renderer Renderer { get; }
 
         public MasterController(ISettings settings)
         {
-            Strobe = new Strobe();
-            
             Settings = settings;
+            ServiceLocator.Get<IStrobe>().Frequency = settings.StrobeEffectFrequency;
             Groups = new Dictionary<string, Group>();
             Transmitters = new List<Transmitter>{
                 new SACNTransmitter(settings.SacnTransmitter)
@@ -76,7 +74,7 @@ namespace kadmium_dmx_core
                                 from fixture in universe.Fixtures
                                 group fixture by fixture.Group into groupName
                                 select groupName;
-            foreach(var fixtureGroup in fixtureGroups)
+            foreach (var fixtureGroup in fixtureGroups)
             {
                 Groups[fixtureGroup.Key].Fixtures.AddRange(fixtureGroup);
             }
@@ -95,7 +93,7 @@ namespace kadmium_dmx_core
             }
             Listener?.Dispose();
         }
-        
+
         public async Task SetSettings(Settings value)
         {
             await Renderer.Stop();
@@ -106,7 +104,7 @@ namespace kadmium_dmx_core
             Transmitters.Clear();
 
             Transmitters.Add(new SACNTransmitter(value.SacnTransmitter));
-            Transmitters.Add(new EnttecProTransmitter(value.EnttecProTransmitter));
+            ServiceLocator.Get<IStrobe>().Frequency = value.StrobeEffectFrequency;
             Renderer.Start();
         }
 

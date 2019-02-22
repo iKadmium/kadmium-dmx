@@ -21,7 +21,7 @@ export class SettingsComponent implements Saveable, OnInit
 	public saving = false;
 
 	public form: FormGroup;
-	private unicast: FormArray;
+	public unicast: FormArray;
 
 	@ViewChild("settingsForm") formChild: NgForm;
 
@@ -45,7 +45,8 @@ export class SettingsComponent implements Saveable, OnInit
 				uuid: [0, [Validators.required]],
 				multicast: [true],
 				unicast: this.unicast
-			})
+			}),
+			strobeEffectFrequency: [20, [Validators.min(1), Validators.max(40), Validators.required]]
 		});
 	}
 
@@ -81,6 +82,7 @@ export class SettingsComponent implements Saveable, OnInit
 		{
 			await this.apiClient.putSettings({ value: this.form.value }).toPromise();
 			this.editorService.isDirty = false;
+			this.form.markAsPristine();
 			this.messageService.info("Saved Successfully");
 		}
 		catch (error)

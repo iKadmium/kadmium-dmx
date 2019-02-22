@@ -72,11 +72,7 @@ namespace kadmium_dmx_webapi.WebSockets
             await SendUpdate("OSCListeners", MasterController.Listener.Status.StatusCode, MasterController.Listener.Status.Message);
             foreach (var transmitter in MasterController.Transmitters)
             {
-                if (transmitter is EnttecProTransmitter)
-                {
-                    await SendUpdate("EnttecProTransmitters", transmitter.Status.StatusCode, transmitter.Status.Message);
-                }
-                else if (transmitter is SACNTransmitter)
+                if (transmitter is SACNTransmitter)
                 {
                     await SendUpdate("SACNTransmitters", transmitter.Status.StatusCode, transmitter.Status.Message);
                 }
