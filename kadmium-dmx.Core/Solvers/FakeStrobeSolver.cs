@@ -8,22 +8,22 @@ namespace kadmium_dmx_core.Solvers
 {
     public class FakeStrobeSolver : FixtureSolver
     {
-        Strobe Strobe { get; set; }
+        IStrobe Strobe { get; set; }
 
-        public FakeStrobeSolver(Fixture fixture, Strobe strobe) : base(fixture, "Strobe")
+        public FakeStrobeSolver(Fixture fixture, IStrobe strobe) : base(fixture, "Strobe")
         {
             Strobe = strobe;
         }
 
-        public FakeStrobeSolver(Fixture fixture) : this(fixture, new Strobe()) { }
+        public FakeStrobeSolver(Fixture fixture) : this(fixture, ServiceLocator.Get<IStrobe>()) { }
 
         public override void Solve(Dictionary<string, FixtureAttribute> Attributes)
         {
             if (Attributes["Strobe"].Value > 0.0f)
             {
-                if (Strobe.GetValue())
+                if (!Strobe.GetValue())
                 {
-                    Attributes["Brightness"].Value = 1.0f;
+                    Attributes["Brightness"].Value = 0f;
                 }
             }
 

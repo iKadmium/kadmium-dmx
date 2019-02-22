@@ -12,7 +12,6 @@ export { PreviewUniverse } from './preview-universe.model';
 export { PreviewFixture } from './preview-fixture.model';
 export { Status } from './status.model';
 export { Settings } from './settings.model';
-export { EnttecProTransmitterSettings } from './enttec-pro-transmitter-settings.model';
 export { SacnTransmitterSettings } from './sacn-transmitter-settings.model';
 export { ActiveUniverse } from './active-universe.model';
 export { ActiveFixture } from './active-fixture.model';

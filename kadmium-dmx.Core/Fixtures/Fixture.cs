@@ -23,7 +23,7 @@ namespace kadmium_dmx_core.Fixtures
         public int Address { get; set; }
         public FixtureOptions Options { get; set; }
         
-        public Fixture(IFixtureData data, IFixtureDefinition definition)
+        public Fixture(IFixtureData data, IFixtureDefinition definition, bool addDefaultSolvers = true)
         {
             Group = data.Group;
             Options = data.Options;
@@ -47,7 +47,14 @@ namespace kadmium_dmx_core.Fixtures
                           select new ColorWheelEntry(entryData);
             ColorWheel = colorWheelEntries.ToList();
 
-            Solvers = FixtureSolver.GetDefaultSolvers(this, definition, Options).ToList();
+            if (addDefaultSolvers)
+            {
+                Solvers = FixtureSolver.GetDefaultSolvers(this, definition, Options).ToList();
+            }
+            else
+            {
+                Solvers = new List<FixtureSolver>();
+            }
         }
 
         public void Update()

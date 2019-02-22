@@ -8,19 +8,19 @@ namespace kadmium_dmx_core.Solvers
     public class ApeshitGroupSolver : GroupSolver
     {
         private bool? lastStrobe;
-        private Strobe Strobe { get; set; }
+        private IStrobe Strobe { get; set; }
         public double Coverage { get; set; }
         IEnumerable<Fixture> blackoutFixtures = Enumerable.Empty<Fixture>();
 
-        public ApeshitGroupSolver(Group group, Strobe strobe, double coverage = 0.2) : base(group, "Apeshit")
+        public ApeshitGroupSolver(Group group, IStrobe strobe, double coverage = 0.2) : base(group, "Apeshit")
         {
             Strobe = strobe;
             lastStrobe = null;
             Coverage = coverage;
         }
 
-        public ApeshitGroupSolver(Group group, double coverage = 0.2) : this(group, new Strobe(), coverage) { }
-        public ApeshitGroupSolver(Group group) : this(group, new Strobe()) { }
+        public ApeshitGroupSolver(Group group, double coverage = 0.2) : this(group, ServiceLocator.Get<IStrobe>(), coverage) { }
+        public ApeshitGroupSolver(Group group) : this(group, ServiceLocator.Get<IStrobe>()) { }
 
         public override void Solve(Dictionary<string, FixtureAttribute> Attributes)
         {

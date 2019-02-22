@@ -74,7 +74,6 @@ namespace kadmium_dmx_webapi
                 c.SchemaFilter<EnumFilter>();
             });
 
-
             IFileAccess fileAccess = new kadmium_dmx.DataAccess.Json.FileAccess(Path.Combine("kadmium-dmx", "data"));
             services.AddSingleton(fileAccess);
             ISettingsStore settingsStore = new JsonSettingsStore(fileAccess);
@@ -117,7 +116,7 @@ namespace kadmium_dmx_webapi
             });
 
             app.UseResponseCompression();
-            
+
             app.UseWebSockets();
 
             app.Map("/socket/Status", StatusStreamSocketHandler.Map);

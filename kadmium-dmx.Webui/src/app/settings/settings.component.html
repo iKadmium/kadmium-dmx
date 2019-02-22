@@ -14,10 +14,12 @@
                 <mat-tab label='Ports'>
                     <div class="column top-margin">
                         <mat-form-field>
-                            <input matInput required type="number" formControlName="webPort" min="1" max="65535" placeholder="HTTP Port" />
+                            <input matInput required type="number" formControlName="webPort" min="1" max="65535"
+                                placeholder="HTTP Port" />
                         </mat-form-field>
                         <mat-form-field>
-                            <input matInput required type="number" formControlName="oscPort" min="1" max="65535" placeholder="OSC Port" />
+                            <input matInput required type="number" formControlName="oscPort" min="1" max="65535"
+                                placeholder="OSC Port" />
                         </mat-form-field>
                     </div>
                 </mat-tab>
@@ -25,7 +27,8 @@
                 <mat-tab label="sACN">
                     <div class="column top-margin" formGroupName="sacnTransmitter">
                         <mat-form-field>
-                            <input matInput required type="number" formControlName="delay" min="0" max="10000" placeholder="Delay (ms)" />
+                            <input matInput required type="number" formControlName="delay" min="0" max="10000"
+                                placeholder="Delay (ms)" />
                         </mat-form-field>
                         <mat-checkbox formControlName="multicast">Multicast</mat-checkbox>
 
@@ -39,12 +42,15 @@
                             </mat-toolbar>
                             <div class="column" formArrayName="unicast">
                                 <mat-list>
-                                    <mat-list-item *ngFor="let target of unicast.controls; let i = index" class="column" @fadeOut>
+                                    <mat-list-item *ngFor="let target of unicast.controls; let i = index" class="column"
+                                        @fadeOut>
                                         <div fxLayout="row" class="unicastTargetWrapper">
                                             <mat-form-field @growX class="unicastTargetName">
-                                                <input matInput required type="text" [formControlName]="i" placeholder="Address" />
+                                                <input matInput required type="text" [formControlName]="i"
+                                                    placeholder="Address" />
                                             </mat-form-field>
-                                            <button mat-icon-button class="actionsCell" type="button" color="warn" (click)="removeElement(i)" matTooltip="Remove">
+                                            <button mat-icon-button class="actionsCell" type="button" color="warn"
+                                                (click)="removeElement(i)" matTooltip="Remove">
                                                 <mat-icon aria-label="Remove">remove_circle</mat-icon>
                                             </button>
                                         </div>
@@ -53,6 +59,15 @@
 
                             </div>
                         </div>
+                    </div>
+                </mat-tab>
+
+                <mat-tab label="Options">
+                    <div class="column top-margin">
+                        <mat-form-field>
+                            <input matInput required type="number" formControlName="strobeEffectFrequency" min="1"
+                                max="40" placeholder="Strobe Frequency (hz)" />
+                        </mat-form-field>
                     </div>
                 </mat-tab>
             </mat-tab-group>
