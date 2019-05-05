@@ -22,6 +22,7 @@ describe('SettingsComponent', () =>
 		settings = {
 			oscPort: 8001,
 			webPort: 5000,
+			strobeEffectFrequency: 10,
 			sacnTransmitter: {
 				delay: 0,
 				multicast: true,

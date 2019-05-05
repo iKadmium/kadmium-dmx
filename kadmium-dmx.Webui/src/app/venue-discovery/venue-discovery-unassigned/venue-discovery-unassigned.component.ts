@@ -1,16 +1,15 @@
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { MatDialog } from '@angular/material';
 import { APIClient, FixtureData, FixtureDefinitionSkeleton, IDMXChannelData, IFixtureDefinition, UniverseData } from 'api';
+import { AnimationLibrary } from "../../animation-library";
 import { EditorService } from '../../services/editor.service';
 import { MessageService } from '../../services/message.service';
-import { AnimationLibrary } from "../../animation-library";
 // tslint:disable-next-line:max-line-length
 import { VenueDiscoveryAddFixtureDefinitionDialogComponent } from '../venue-discovery-add-fixture-definition-dialog/venue-discovery-add-fixture-definition-dialog.component';
 // tslint:disable-next-line:max-line-length
-import { VenueDiscoveryAddFixtureToVenueDialogComponent } from '../venue-discovery-add-fixture-to-venue-dialog/venue-discovery-add-fixture-to-venue-dialog.component';
+import { VenueDiscoveryAddFixtureToVenueDialogComponent, VenueDiscoveryAddFixtureToVenueDialogComponentReturnType } from '../venue-discovery-add-fixture-to-venue-dialog/venue-discovery-add-fixture-to-venue-dialog.component';
 // tslint:disable-next-line:max-line-length
 import { VenueDiscoverySelectGroupDialogComponent } from '../venue-discovery-select-group-dialog/venue-discovery-select-group-dialog.component';
-import { FixtureDataWithDefinition } from '../venue-discovery/venue-discovery.component';
 
 @Component({
 	selector: 'app-venue-discovery-unassigned',
@@ -87,7 +86,8 @@ export class VenueDiscoveryUnassignedComponent implements OnInit
 	public async addFixture(address: number): Promise<void>
 	{
 		const result = await this.dialog
-			.open(VenueDiscoveryAddFixtureToVenueDialogComponent)
+			.open<VenueDiscoveryAddFixtureToVenueDialogComponent, any, VenueDiscoveryAddFixtureToVenueDialogComponentReturnType>
+			(VenueDiscoveryAddFixtureToVenueDialogComponent)
 			.afterClosed()
 			.toPromise();
 		if (result != null)
