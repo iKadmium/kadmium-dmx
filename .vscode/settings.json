@@ -1,0 +1,7 @@
+{
+    "jasmineExplorer.cwd": "kadmium-dmx.Webui",
+    "jasmineExplorer.nodeArgv": [
+        "-r",
+        "ts-node/register"
+    ]
+}

@@ -1,24 +1,32 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { FormsModule } from '@angular/forms';
-import { MatCard, MatCardContent, MatCardTitle, MatDialog, MatFormField, MatIcon, MatSlider, MatDialogRef } from '@angular/material';
-import { APIClient } from 'api';
+import { MatCard, MatCardContent, MatCardTitle, MatDialog, MatDialogRef, MatFormField, MatIcon, MatSlider } from '@angular/material';
+import { NoopAnimationsModule } from '@angular/platform-browser/animations';
+import { APIClient, UniverseData } from 'api';
+import { EditorService } from 'app/services/editor.service';
+import { FixtureDefinitionSkeletonHelpers } from 'app/test/fixture-definition-skeleton-helpers';
+import { MockComponent } from 'ng-mocks';
+import { from } from 'rxjs';
 import { MessageService } from '../../services/message.service';
 // tslint:disable-next-line:max-line-length
 import { AddFixtureDefinitionData, VenueDiscoveryAddFixtureDefinitionDialogComponent } from '../venue-discovery-add-fixture-definition-dialog/venue-discovery-add-fixture-definition-dialog.component';
-import { MockComponent } from 'ng-mocks';
 import { VenueDiscoveryUnassignedComponent } from './venue-discovery-unassigned.component';
-import { NoopAnimationsModule } from '@angular/platform-browser/animations';
-import { from } from 'rxjs';
 
 describe('VenueDiscoveryUnassignedComponent', () =>
 {
 	let component: VenueDiscoveryUnassignedComponent;
 	let fixture: ComponentFixture<VenueDiscoveryUnassignedComponent>;
 	let dialogSpy: jasmine.SpyObj<MatDialogRef<VenueDiscoveryAddFixtureDefinitionDialogComponent>>;
+	let activeUniverse: UniverseData;
 
 	beforeEach(async(() =>
 	{
 		dialogSpy = jasmine.createSpyObj<MatDialogRef<VenueDiscoveryAddFixtureDefinitionDialogComponent>>({ afterClosed: from([]) });
+		activeUniverse = {
+			fixtures: [],
+			name: "universe",
+			universeID: 1
+		};
 
 		TestBed.configureTestingModule({
 			declarations: [
@@ -38,7 +46,8 @@ describe('VenueDiscoveryUnassignedComponent', () =>
 			providers: [
 				{ provide: MatDialog, useValue: jasmine.createSpyObj<MatDialog>({ open: dialogSpy }) },
 				{ provide: APIClient, useValue: jasmine.createSpyObj<APIClient>({ postFixtureDefinition: null }) },
-				{ provide: MessageService, useValue: jasmine.createSpyObj<MessageService>({ error: null }) }
+				{ provide: MessageService, useValue: jasmine.createSpyObj<MessageService>({ error: null }) },
+				{ provide: EditorService, useValue: jasmine.createSpyObj<EditorService<UniverseData>>({ getActive: activeUniverse }) }
 			]
 		});
 
@@ -113,7 +122,45 @@ describe('VenueDiscoveryUnassignedComponent', () =>
 			createNewFixtureButton.click();
 			expect(matDialogMock.open).toHaveBeenCalledWith(VenueDiscoveryAddFixtureDefinitionDialogComponent,
 				jasmine.objectContaining({ data: expectedData }));
+		});
 
+		it('should add new fixtures to the venue', async (done: () => void) =>
+		{
+			const matDialogMock = TestBed.get(MatDialog) as jasmine.SpyObj<MatDialog>;
+			const start = 1;
+			const length = 5;
+			const venueName = "Venue name";
+			component.start = start;
+			component.length = length;
+			component.venueName = venueName;
+			fixture.detectChanges();
+
+			const selectButtons = Array.from((fixture.nativeElement as HTMLElement)
+				.querySelectorAll(".select-channel-button") as NodeListOf<HTMLButtonElement>);
+			selectButtons.forEach(x => x.click());
+			fixture.detectChanges();
+
+			const skeleton = FixtureDefinitionSkeletonHelpers.getFixtureDefinitionSkeleton();
+			const group = "group";
+
+			matDialogMock.open.and.returnValue({
+				afterClosed: () =>
+				{
+					return from([{
+						group: group,
+						fixture: skeleton
+					}]);
+				}
+			});
+
+			expect(activeUniverse.fixtures.length).toEqual(0);
+			await component.addFixture(1);
+			expect(activeUniverse.fixtures.length).toEqual(1);
+			expect(activeUniverse.fixtures[0].options).toBeTruthy();
+			expect(activeUniverse.fixtures[0].address).toEqual(1);
+			expect(activeUniverse.fixtures[0].group).toEqual(group);
+			expect(activeUniverse.fixtures[0].type).toEqual(skeleton);
+			done();
 		});
 	});
 });

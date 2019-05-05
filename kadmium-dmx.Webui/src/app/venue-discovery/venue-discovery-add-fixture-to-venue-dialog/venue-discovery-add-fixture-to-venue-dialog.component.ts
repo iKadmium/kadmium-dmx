@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { APIClient, FixtureDefinitionSkeleton, IGroupData } from 'api';
-import { FormGroup, Validators, FormControl } from '../../../../node_modules/@angular/forms';
+import { FormControl, FormGroup, Validators } from '../../../../node_modules/@angular/forms';
 import { MatDialogRef } from '../../../../node_modules/@angular/material';
 
 @Component({
@@ -42,4 +42,10 @@ export class VenueDiscoveryAddFixtureToVenueDialogComponent implements OnInit
 	{
 		this.dialog.close();
 	}
+}
+
+export interface VenueDiscoveryAddFixtureToVenueDialogComponentReturnType
+{
+	group: string;
+	fixture: FixtureDefinitionSkeleton;
 }
