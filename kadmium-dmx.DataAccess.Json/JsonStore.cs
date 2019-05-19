@@ -73,6 +73,13 @@ namespace kadmium_dmx.DataAccess.Json
             return items;
         }
 
+        public async Task<bool> Exists(TKey id)
+        {
+            string filename = KeyPathAccessor(id);
+            string path = GetPath(filename);
+            return await FileAccess.Exists(path);
+        }
+
         public async Task Remove(TKey id)
         {
             string filename = KeyPathAccessor(id);

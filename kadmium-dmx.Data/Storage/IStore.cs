@@ -14,6 +14,8 @@ namespace kadmium_dmx_data.Storage
         Task<IEnumerable<TKey>> List();
         Task<IEnumerable<TItem>> GetAll();
 
+        Task<bool> Exists(TKey id);
+
         Task Remove(TKey id);
         Task RemoveAll();
     }

@@ -12,5 +12,6 @@ namespace kadmium_dmx.DataAccess.Json
         Task<IEnumerable<string>> List(string path);
         Task Delete(string path);
         string GetFullPath(string path);
+        Task<bool> Exists(string path);
     }
 }

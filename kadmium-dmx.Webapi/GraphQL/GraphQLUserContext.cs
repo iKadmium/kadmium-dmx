@@ -1,0 +1,13 @@
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Security.Claims;
+using System.Threading.Tasks;
+
+namespace kadmium_dmx_webapi.GraphQL
+{
+    public class GraphQLUserContext
+    {
+        public ClaimsPrincipal User { get; set; }
+    }
+}

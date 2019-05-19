@@ -1,0 +1,5 @@
+@import '~antd/dist/antd.css';
+
+.ant-layout-sider-zero-width-trigger {
+    z-index: 10;
+}

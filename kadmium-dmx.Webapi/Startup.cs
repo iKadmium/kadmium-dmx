@@ -7,23 +7,21 @@ using kadmium_dmx_webapi.WebSockets;
 using Microsoft.AspNetCore.ResponseCompression;
 using System.IO.Compression;
 using System.IO;
-using Microsoft.DotNet.PlatformAbstractions;
-using System.Collections.Generic;
-using kadmium_dmx_data;
-using System.Linq;
-using MongoDB.Driver;
-using MongoDB.Bson;
 using kadmium_dmx_data.Storage;
 using kadmium_dmx_data.Types.Settings;
 using kadmium_dmx_core;
-using kadmium_dmx_webapi.Controllers;
 using Newtonsoft.Json.Converters;
-using Newtonsoft.Json;
 using Microsoft.Extensions.DependencyInjection.Extensions;
-using Microsoft.AspNetCore.Mvc.ApiExplorer;
 using Swashbuckle.AspNetCore.Swagger;
-using kadmium_dmx.DataAccess.Mongo;
 using kadmium_dmx.DataAccess.Json;
+using GraphQL;
+using kadmium_dmx_webapi.GraphQL;
+using GraphQL.Http;
+using GraphQL.Types;
+using kadmium_dmx_webapi.GraphQL.Schemas;
+using kadmium_dmx_webapi.GraphQL.Queries;
+using GraphiQl;
+using kadmium_dmx_webapi.GraphQL.Types;
 
 namespace kadmium_dmx_webapi
 {
@@ -53,7 +51,16 @@ namespace kadmium_dmx_webapi
                     options.Providers.Add<GzipCompressionProvider>();
                 });
 
-            services.AddMvcCore().AddApiExplorer();
+            services
+                .AddMvcCore()
+                .AddApiExplorer();
+
+            services.AddLogging(loggingBuilder =>
+            {
+                loggingBuilder.AddConfiguration(Configuration.GetSection("Logging"));
+                loggingBuilder.AddConsole();
+                loggingBuilder.AddDebug();
+            });
 
             services.AddMvc(options => options.Conventions.Add(new KebabCaseRoutingConvention()))
                 .SetCompatibilityVersion(Microsoft.AspNetCore.Mvc.CompatibilityVersion.Latest)
@@ -74,6 +81,24 @@ namespace kadmium_dmx_webapi
                 c.SchemaFilter<EnumFilter>();
             });
 
+            services.AddSingleton<IDependencyResolver>(s => new FuncDependencyResolver(s.GetRequiredService));
+            services.AddSingleton<IDocumentExecuter, DocumentExecuter>();
+            services.AddSingleton<IDocumentWriter, DocumentWriter>();
+            services.AddSingleton<KadmiumDMXQuery>();
+            services.AddSingleton<KadmiumDMXMutation>();
+            services.AddSingleton<GroupType>();
+            services.AddSingleton<SACNTransmitterSettingsType>();
+            services.AddSingleton<SettingsType>();
+            services.AddSingleton<DMXChannelType>();
+            services.AddSingleton<ColorWheelEntryType>();
+            services.AddSingleton<MovementAxisType>();
+            services.AddSingleton<FixtureTypeEnum>();
+            services.AddSingleton<FixtureDefinitionType>();
+            services.AddSingleton<FixtureInstanceType>();
+            services.AddSingleton<UniverseType>();
+            services.AddSingleton<VenueType>();
+            services.AddSingleton<ISchema, KadmiumDMXSchema>();
+
             IFileAccess fileAccess = new kadmium_dmx.DataAccess.Json.FileAccess(Path.Combine("kadmium-dmx", "data"));
             services.AddSingleton(fileAccess);
             ISettingsStore settingsStore = new JsonSettingsStore(fileAccess);
@@ -91,11 +116,8 @@ namespace kadmium_dmx_webapi
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        public void Configure(IApplicationBuilder app, IHostingEnvironment env, ILoggerFactory loggerFactory)
+        public void Configure(IApplicationBuilder app, IHostingEnvironment env)
         {
-            loggerFactory.AddConsole(Configuration.GetSection("Logging"));
-            loggerFactory.AddDebug();
-
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
@@ -119,10 +141,19 @@ namespace kadmium_dmx_webapi
 
             app.UseWebSockets();
 
-            app.Map("/socket/Status", StatusStreamSocketHandler.Map);
-            app.Map("/socket/OSC", OSCStreamSocketHandler.Map);
-            app.MapWhen(x => x.Request.Path.Value.StartsWith("/socket/Universe"), UniverseStreamSocketHandler.Map);
-            app.MapWhen(x => x.Request.Path.Value.StartsWith("/socket/Fixture"), FixtureStreamSocketHandler.Map);
+            app.UseMiddleware<GraphQLMiddleware>(new GraphQLSettings
+            {
+                BuildUserContext = ctx => new GraphQLUserContext
+                {
+                    User = ctx.User
+                }
+            });
+            app.UseGraphiQl(new GraphQLSettings().Path);
+
+            app.Map("/socket/Status", builder => builder.Use(StatusStreamSocketHandler.Acceptor));
+            app.Map("/socket/OSC", builder => builder.Use(OSCStreamSocketHandler.Acceptor));
+            app.MapWhen(x => x.Request.Path.Value.StartsWith("/socket/Universe"), builder => builder.Use(UniverseStreamSocketHandler.Acceptor));
+            app.MapWhen(x => x.Request.Path.Value.StartsWith("/socket/Fixture"), builder => builder.Use(FixtureStreamSocketHandler.Acceptor));
 
             app.UseMvc(routes =>
             {
