@@ -60,6 +60,7 @@ namespace kadmium_dmx_webapi.GraphQL
                 _.OperationName = request?.OperationName;
                 _.Inputs = request?.Variables.ToInputs();
                 _.UserContext = _settings.BuildUserContext?.Invoke(context);
+                _.ExposeExceptions = true;
                 //_.ValidationRules = DocumentValidator.CoreRules().Concat(new[] { new InputValidationRule() });
             });
 

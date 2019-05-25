@@ -1,17 +1,20 @@
 ﻿using System;
 using System.Threading.Tasks;
+using kadmium_dmx_core.DataSubscriptions;
 
 namespace kadmium_dmx_core.Transmitters
 {
-    public abstract class Transmitter : IDisposable
+    public abstract class Transmitter : IDisposable, ITransmitter
     {
         protected Transmitter(int delay)
         {
-            Status = new Status();
             Delay = delay;
         }
 
         protected bool enabled;
+
+        public event EventHandler<StatusUpdate> StatusUpdate;
+
         public bool Enabled
         {
             get { return enabled; }
@@ -20,18 +23,15 @@ namespace kadmium_dmx_core.Transmitters
                 enabled = value;
                 if (!value)
                 {
-                    Status.Update(StatusCode.Error, "Transmission is disabled", this);
+                    StatusUpdate?.Invoke(this, new StatusUpdate("Transmission is disabled", StatusCode.Error));
                 }
                 else
                 {
-                    Status.Update(StatusCode.Warning, "Ready to transmit", this);
+                    StatusUpdate?.Invoke(this, new StatusUpdate("Ready to transmit", StatusCode.Warning));
                 }
             }
         }
         public int Delay { get; set; }
-        public Status Status { get; set; }
-
-        public event EventHandler<TransmitterEventArgs> OnTransmit;
 
         public abstract Task TransmitInternal(byte[] dmx, int universeID);
         public async Task Transmit(byte[] dmx, int universeID)
@@ -45,20 +45,18 @@ namespace kadmium_dmx_core.Transmitters
                 try
                 {
                     await TransmitInternal(dmx, universeID);
-                    OnTransmit?.Invoke(this, new TransmitterEventArgs(universeID, dmx));
-                    if (Status.StatusCode != StatusCode.Success)
-                    {
-                        Status.Update(StatusCode.Success, "Transmitting", this);
-                    }
+                    StatusUpdate?.Invoke(this, new StatusUpdate($"Transmitting on universe {universeID}", StatusCode.Success));
                 }
                 catch (Exception e)
                 {
-                    if (Status.StatusCode != StatusCode.Error)
-                    {
-                        Status.Update(StatusCode.Error, e.Message, this);
-                    }
+                    StatusUpdate?.Invoke(this, new StatusUpdate(e.Message, StatusCode.Error));
                 }
             }
+        }
+
+        protected void OnStatusUpdate(object sender, StatusUpdate statusUpdate)
+        {
+            this.StatusUpdate?.Invoke(sender, statusUpdate);
         }
 
         public abstract void Dispose();

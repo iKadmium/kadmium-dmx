@@ -32,12 +32,6 @@ namespace kadmium_dmx_webapi.Controllers
             MasterController.Transmitters.Single(x => x is SACNTransmitter).Enabled = value;
         }
 
-        [HttpGet("[action]")]
-        [SwaggerOperation(OperationId = "GetStatus")]
-        public Status Status()
-        {
-            return MasterController.Transmitters.SingleOrDefault(x => x is SACNTransmitter)?.Status ?? new Status();
-        }
         
     }
 }

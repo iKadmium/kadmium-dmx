@@ -4,29 +4,41 @@ import React from 'react';
 import { Venues } from 'Venues/Venues';
 import { Settings } from 'Settings/Settings';
 import { Groups } from 'Groups/Groups';
+import { DmxViewer } from 'Dashboard/VenueDashboard/DmxViewer/DmxViewer';
+import { BreadcrumbTrailItem } from 'BreadcrumbTrail/BreadcrumbTrail';
 
-interface KeyValue
+interface Trail
 {
-    [key: string]: string
+    trail: BreadcrumbTrailItem[];
 }
 
 export class Routing
 {
-    public static getRoutes(): KeyValue
-    {
-        return {
-            '/': 'Dashboard',
-            '/venues': 'Venues',
-            '/settings': 'Settings',
-            '/groups': 'Groups'
-        };
-    }
-
     public static getMatchers(): Matcher<{}, {}>
     {
         return mount({
             '/': route({
-                title: 'Dashboard', view: <Dashboard />
+                title: 'Dashboard',
+                view: <Dashboard />,
+                data: {
+                    trail: [
+                        { address: '/', name: 'Dashboard' }
+                    ]
+                } as Trail
+            }),
+            '/venue/:universeId/dmx': route(req =>
+            {
+                let universeId = req.params.universeId;
+                return {
+                    title: 'DMX',
+                    view: <DmxViewer />,
+                    data: {
+                        trail: [
+                            { address: '/', name: 'Dashboard' },
+                            { address: `/venue/${universeId}/dmx`, name: `Universe ${universeId} DMX` }
+                        ]
+                    } as Trail
+                }
             }),
             '/venues': route({
                 title: 'Venues', view: <Venues />

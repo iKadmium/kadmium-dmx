@@ -12,21 +12,20 @@ using kadmium_dmx_data.Types.Settings;
 using kadmium_dmx_data.Types.Venues;
 using kadmium_dmx_data.Types.Fixtures;
 using kadmium_dmx_data.Types;
+using System.Collections.Concurrent;
+using kadmium_dmx_core.DataSubscriptions;
 
 namespace kadmium_dmx_core
 {
     public class MasterController : IDisposable, IMasterController
     {
-        public static long MEMORY_LIMIT = (1024 * 1024 * 256);
-
-        public event EventHandler<EventArgs> VenueActivated;
-
         public Dictionary<string, Group> Groups { get; private set; }
         public List<Transmitter> Transmitters { get; private set; }
         public Listener Listener { get; private set; }
         public Venue Venue { get; private set; }
         public ISettings Settings { get; private set; }
         public Renderer Renderer { get; }
+        public event EventHandler<VenueStatusUpdate> VenueStatusUpdated;
 
         public MasterController(ISettings settings)
         {
@@ -36,7 +35,7 @@ namespace kadmium_dmx_core
             Transmitters = new List<Transmitter>{
                 new SACNTransmitter(settings.SacnTransmitter)
             };
-            Listener = new OSCListener(settings.OscPort, "OSC Listener", this);
+            Listener = new OSCListener(settings.OscPort, this);
             Venue = new Venue(
                 new VenueData
                 {
@@ -50,16 +49,15 @@ namespace kadmium_dmx_core
                             }
                     }
                 },
-                new Dictionary<FixtureDefinitionSkeleton, IFixtureDefinition>()
+                new Dictionary<FixtureDefinitionSkeleton, IFixtureDefinition>(),
+                VenueStatusUpdated
             );
 
-            if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
-            {
-                //instance.Transmitters.Add(EnttecProTransmitter.Load(settings.EnttecProTransmitter));
-            }
-            Venue.Activate(false);
+            Venue.Activate();
             Renderer = new Renderer(this);
         }
+
+        
 
         public async Task LoadVenue(IVenueData venue, IDictionary<FixtureDefinitionSkeleton, IFixtureDefinition> definitions, IEnumerable<IGroupData> groupData)
         {
@@ -69,7 +67,7 @@ namespace kadmium_dmx_core
 
             Groups = groups.ToDictionary(x => x.Name);
             Venue?.Dispose();
-            Venue = new Venue(venue, definitions);
+            Venue = new Venue(venue, definitions, VenueStatusUpdated);
             var fixtureGroups = from universe in Venue.Universes
                                 from fixture in universe.Fixtures
                                 group fixture by fixture.Group into groupName
@@ -79,8 +77,7 @@ namespace kadmium_dmx_core
                 Groups[fixtureGroup.Key].Fixtures.AddRange(fixtureGroup);
             }
 
-            Venue.Activate(true);
-            VenueActivated?.Invoke(this, new EventArgs());
+            Venue.Activate();
             Renderer.Start();
         }
 

@@ -1,27 +1,28 @@
-using Microsoft.AspNetCore.Builder;
-using Microsoft.AspNetCore.Hosting;
-using Microsoft.Extensions.Configuration;
-using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Logging;
-using kadmium_dmx_webapi.WebSockets;
-using Microsoft.AspNetCore.ResponseCompression;
-using System.IO.Compression;
-using System.IO;
+using GraphQL;
+using GraphQL.Http;
+using GraphQL.Server;
+using GraphQL.Server.Ui.Playground;
+using GraphQL.Types;
+using kadmium_dmx.DataAccess.Json;
+using kadmium_dmx_core;
 using kadmium_dmx_data.Storage;
 using kadmium_dmx_data.Types.Settings;
-using kadmium_dmx_core;
-using Newtonsoft.Json.Converters;
-using Microsoft.Extensions.DependencyInjection.Extensions;
-using Swashbuckle.AspNetCore.Swagger;
-using kadmium_dmx.DataAccess.Json;
-using GraphQL;
 using kadmium_dmx_webapi.GraphQL;
-using GraphQL.Http;
-using GraphQL.Types;
-using kadmium_dmx_webapi.GraphQL.Schemas;
 using kadmium_dmx_webapi.GraphQL.Queries;
-using GraphiQl;
+using kadmium_dmx_webapi.GraphQL.Schemas;
 using kadmium_dmx_webapi.GraphQL.Types;
+using kadmium_dmx_webapi.WebSockets;
+using Microsoft.AspNetCore.Builder;
+using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.ResponseCompression;
+using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.DependencyInjection.Extensions;
+using Microsoft.Extensions.Logging;
+using Newtonsoft.Json.Converters;
+using Swashbuckle.AspNetCore.Swagger;
+using System.IO;
+using System.IO.Compression;
 
 namespace kadmium_dmx_webapi
 {
@@ -86,7 +87,11 @@ namespace kadmium_dmx_webapi
             services.AddSingleton<IDocumentWriter, DocumentWriter>();
             services.AddSingleton<KadmiumDMXQuery>();
             services.AddSingleton<KadmiumDMXMutation>();
+            services.AddSingleton<KadmiumDMXSubscription>();
             services.AddSingleton<GroupType>();
+            services.AddSingleton<StatusType>();
+            services.AddSingleton<VenueStatusType>();
+            services.AddSingleton<StatusCodeType>();
             services.AddSingleton<SACNTransmitterSettingsType>();
             services.AddSingleton<SettingsType>();
             services.AddSingleton<DMXChannelType>();
@@ -97,7 +102,16 @@ namespace kadmium_dmx_webapi
             services.AddSingleton<FixtureInstanceType>();
             services.AddSingleton<UniverseType>();
             services.AddSingleton<VenueType>();
+            services.AddSingleton<KadmiumDMXSchema>();
             services.AddSingleton<ISchema, KadmiumDMXSchema>();
+
+            services.AddGraphQL(options =>
+            {
+                options.EnableMetrics = true;
+                options.ExposeExceptions = true;
+            })
+            .AddWebSockets()
+            .AddDataLoader();
 
             IFileAccess fileAccess = new kadmium_dmx.DataAccess.Json.FileAccess(Path.Combine("kadmium-dmx", "data"));
             services.AddSingleton(fileAccess);
@@ -140,6 +154,8 @@ namespace kadmium_dmx_webapi
             app.UseResponseCompression();
 
             app.UseWebSockets();
+            app.UseGraphQLWebSockets<KadmiumDMXSchema>(new GraphQLSettings().Path);
+            app.UseGraphQL<KadmiumDMXSchema>(new GraphQLSettings().Path);
 
             app.UseMiddleware<GraphQLMiddleware>(new GraphQLSettings
             {
@@ -148,10 +164,12 @@ namespace kadmium_dmx_webapi
                     User = ctx.User
                 }
             });
-            app.UseGraphiQl(new GraphQLSettings().Path);
+            app.UseGraphQLPlayground(new GraphQLPlaygroundOptions()
+            {
+                Path = "/graphql",
+                GraphQLEndPoint = "/api/graphql"
+            });
 
-            app.Map("/socket/Status", builder => builder.Use(StatusStreamSocketHandler.Acceptor));
-            app.Map("/socket/OSC", builder => builder.Use(OSCStreamSocketHandler.Acceptor));
             app.MapWhen(x => x.Request.Path.Value.StartsWith("/socket/Universe"), builder => builder.Use(UniverseStreamSocketHandler.Acceptor));
             app.MapWhen(x => x.Request.Path.Value.StartsWith("/socket/Fixture"), builder => builder.Use(FixtureStreamSocketHandler.Acceptor));
 

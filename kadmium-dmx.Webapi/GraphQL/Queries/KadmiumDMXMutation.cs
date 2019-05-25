@@ -20,7 +20,7 @@ namespace kadmium_dmx_webapi.GraphQL.Queries
             FieldAsync<VenueType>(
                 "loadVenue",
                 arguments: new QueryArguments(
-                    new QueryArgument<StringGraphType> { Name = "name" }
+                    new QueryArgument<NonNullGraphType<StringGraphType>> { Name = "name" }
                 ),
                 resolve: async context => {
                     var name = context.GetArgument<string>("name");

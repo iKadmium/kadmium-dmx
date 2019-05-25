@@ -1,17 +1,20 @@
-﻿using Newtonsoft.Json.Linq;
+﻿using kadmium_dmx_core.DataSubscriptions;
+using Newtonsoft.Json.Linq;
 using System;
 
 namespace kadmium_dmx_core.Listeners
 {
-    public abstract class Listener : IDisposable
+    public abstract class Listener : IListener
     {
-        public Listener(string name)
+        public Listener()
         {
-            Name = name;
-            Status = new Status();
         }
 
         private bool enabled;
+
+        public event EventHandler<StatusUpdate> StatusUpdate;
+        public abstract event EventHandler<ListenerUpdate> MessageReceived;
+
         public bool Enabled
         {
             get { return enabled; }
@@ -20,17 +23,14 @@ namespace kadmium_dmx_core.Listeners
                 enabled = value;
                 if (enabled)
                 {
-                    Status.Update(StatusCode.Warning, "Listening", this);
+                    StatusUpdate?.Invoke(this, new StatusUpdate("Listening", StatusCode.Warning));
                 }
                 else
                 {
-                    Status.Update(StatusCode.Error, "Updates are disabled", this);
+                    StatusUpdate?.Invoke(this, new StatusUpdate("Updates are disabled", StatusCode.Error));
                 }
             }
         }
-        public string Name { get; set; }
-        public Status Status { get; set; }
-        public string DisplayName { get { return Name; } }
 
         internal static Listener Load(JObject listenerElement)
         {
@@ -40,6 +40,11 @@ namespace kadmium_dmx_core.Listeners
                     return OSCListener.Load(listenerElement);
             }
             throw new ArgumentException("No such listener known as " + listenerElement["type"].Value<string>());
+        }
+
+        protected virtual void OnStatusUpdate(object sender, StatusUpdate statusUpdate)
+        {
+            StatusUpdate?.Invoke(sender, statusUpdate);
         }
 
         public abstract void Dispose();

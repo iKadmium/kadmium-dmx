@@ -12,6 +12,14 @@
     <LangVersion>latest</LangVersion>
   </PropertyGroup>
   <ItemGroup>
+    <Compile Remove="dist\**" />
+    <Compile Remove="out\**" />
+    <EmbeddedResource Remove="dist\**" />
+    <EmbeddedResource Remove="out\**" />
+    <None Remove="dist\**" />
+    <None Remove="out\**" />
+  </ItemGroup>
+  <ItemGroup>
     <None Include="App.config" />
   </ItemGroup>
   <ItemGroup>

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using kadmium_dmx_core.DataSubscriptions;
 using kadmium_dmx_data.Types.Settings;
 using kadmium_sacn_core;
 
@@ -43,7 +44,7 @@ namespace kadmium_dmx_core.Transmitters
             }
             catch (Exception e)
             {
-                Status.Update(StatusCode.Error, e.Message, this);
+                OnStatusUpdate(this, new StatusUpdate(e.Message, StatusCode.Error));
             }
         }
 

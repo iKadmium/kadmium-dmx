@@ -4,7 +4,7 @@ import { Link, useCurrentRoute } from 'react-navi';
 import { Routing } from '../Routing/Routing';
 import './BreadcrumbTrail.css';
 
-interface RouteItem
+export interface BreadcrumbTrailItem
 {
     address: string;
     name: string;
@@ -13,19 +13,10 @@ interface RouteItem
 export const BreadcrumbTrail: React.FunctionComponent<{}> = () =>
 {
     const route = useCurrentRoute();
-    const breadcrumbNameMap = Routing.getRoutes();
 
-    const trail: RouteItem[] = [
-        { address: '/', name: breadcrumbNameMap['/'] }
-    ];
+    const trail: BreadcrumbTrailItem[] = route.data.trail || [];
 
-    const pathSnippets = route.url.pathname.split('/').filter(i => i);
-    for (let i = 0; i < pathSnippets.length; i++)
-    {
-        const url = `/${pathSnippets.slice(0, i + 1).join('/')}`;
-        const name = breadcrumbNameMap[url];
-        trail.push({ address: url, name: name });
-    }
+    console.log(route);
 
     return (
         <PageHeader title={route.title} className="header">

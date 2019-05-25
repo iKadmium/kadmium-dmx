@@ -1,4 +1,5 @@
-﻿using Newtonsoft.Json.Linq;
+﻿using kadmium_dmx_core.DataSubscriptions;
+using Newtonsoft.Json.Linq;
 using OSCforPCL;
 using System;
 using System.Threading.Tasks;
@@ -10,18 +11,12 @@ namespace kadmium_dmx_core.Listeners
         private IMasterController masterController;
 
         public int Port { get; set; }
-        public new string DisplayName
-        {
-            get
-            {
-                return "OSC Listener [" + Name + "] : " + Port;
-            }
-        }
 
         private OSCServer listener;
-        public event EventHandler<OSCListenerEventArgs> MessageReceived;
 
-        public OSCListener(int port, string name, IMasterController masterController) : base(name)
+        public override event EventHandler<ListenerUpdate> MessageReceived;
+
+        public OSCListener(int port, IMasterController masterController) : base()
         {
             this.masterController = masterController;
             Port = port;
@@ -34,7 +29,7 @@ namespace kadmium_dmx_core.Listeners
             }
             catch (Exception e)
             {
-                Status.Update(StatusCode.Error, e.Message, this);
+                OnStatusUpdate(this, new StatusUpdate(e.Message, StatusCode.Error));
             }
         }
 
@@ -61,7 +56,8 @@ namespace kadmium_dmx_core.Listeners
                 {
                     recognised = false;
                 }
-                MessageReceived?.Invoke(this, new OSCListenerEventArgs(recognised, DateTime.Now, sender.ToString(), e.Message.Address.Contents, value));
+                
+                MessageReceived?.Invoke(this, new ListenerUpdate(recognised, DateTime.Now, sender.ToString(), e.Message.Address.Contents, value));
             }
         }
 
@@ -71,10 +67,7 @@ namespace kadmium_dmx_core.Listeners
             {
                 Group group = masterController.Groups[groupName];
                 group.Set(attribute, value);
-                if (Status.StatusCode != StatusCode.Success)
-                {
-                    Status.Update(StatusCode.Success, "Messages received", this);
-                }
+                OnStatusUpdate(this, new StatusUpdate("Messages received", StatusCode.Success));
                 return true;
             }
             return false;
@@ -87,21 +80,4 @@ namespace kadmium_dmx_core.Listeners
         }
     }
 
-    public class OSCListenerEventArgs : EventArgs
-    {
-        public bool Recognised { get; }
-        public DateTime Time { get; }
-        public string Source { get; }
-        public string Address { get; }
-        public float Value { get; }
-
-        public OSCListenerEventArgs(bool recognised, DateTime time, string source, string address, float value)
-        {
-            Recognised = recognised;
-            Time = time;
-            Source = source;
-            Address = address;
-            Value = value;
-        }
-    }
 }

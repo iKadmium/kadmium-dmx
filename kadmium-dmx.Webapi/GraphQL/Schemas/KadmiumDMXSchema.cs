@@ -14,6 +14,7 @@ namespace kadmium_dmx_webapi.GraphQL.Schemas
         {
             Query = resolver.Resolve<KadmiumDMXQuery>();
             Mutation = resolver.Resolve<KadmiumDMXMutation>();
+            Subscription = resolver.Resolve<KadmiumDMXSubscription>();
         }
     }
 }

@@ -44,8 +44,8 @@ namespace kadmium_dmx_webapi.GraphQL.Queries
             FieldAsync<FixtureDefinitionType>(
                 name: "fixture",
                 arguments: new QueryArguments(
-                    new QueryArgument<StringGraphType> { Name = "manufacturer"},
-                    new QueryArgument<StringGraphType> { Name = "model" }
+                    new QueryArgument<NonNullGraphType<StringGraphType>> { Name = "manufacturer"},
+                    new QueryArgument<NonNullGraphType<StringGraphType>> { Name = "model" }
                 ),
                 resolve: async context =>
                 {
