@@ -1,0 +1,19 @@
+.ant-statistic {
+    margin-bottom: 1em;
+}
+
+.ant-statistic-content-prefix {
+    margin-right: 0.5em;
+}
+
+@media (min-width: 992px) {
+    .ant-card {
+        margin: 0 1em 0 1em;
+    }
+}
+
+@media (max-width: 991px) {
+    .ant-card {
+        margin: 0 0 1em 0;
+    }
+}

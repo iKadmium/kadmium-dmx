@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Threading.Tasks;
 using kadmium_dmx_core.DataSubscriptions;
+using kadmium_dmx_data.Types.Settings;
 
 namespace kadmium_dmx_core.Transmitters
 {
@@ -60,5 +61,7 @@ namespace kadmium_dmx_core.Transmitters
         }
 
         public abstract void Dispose();
+
+        public abstract void SetSettings(Settings value);
     }
 }

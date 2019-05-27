@@ -87,7 +87,7 @@ namespace kadmium_dmx_core
 
         private async Task Render()
         {
-            await (MasterController.Venue?.Render(MasterController.Transmitters) ?? Task.CompletedTask);
+            await (MasterController.Venue?.Render(MasterController.Transmitter) ?? Task.CompletedTask);
         }
 
         public void Dispose()

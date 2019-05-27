@@ -32,7 +32,7 @@ namespace kadmium_dmx_core.Transmitters
             await Task.WhenAll(tasks);
         }
 
-        public SACNTransmitter(ISacnTransmitterSettings settings) : base( settings.Delay)
+        public SACNTransmitter(ISacnTransmitterSettings settings) : base(settings.Delay)
         {
             Port = SACN_PORT;
             UnicastTargets = settings.Unicast;
@@ -53,6 +53,15 @@ namespace kadmium_dmx_core.Transmitters
             SACNClient.Close();
         }
 
+        public override void SetSettings(Settings value)
+        {
+            Delay = value.SacnTransmitter.Delay;
+            Multicast = value.SacnTransmitter.Multicast;
+            UnicastTargets = value.SacnTransmitter.Unicast;
+            var oldClient = SACNClient;
+            SACNClient = new SACNSender(value.SacnTransmitter.UUID, SOURCE_NAME);
+            oldClient.Close();
+        }
     }
 
     public class TransmitterEventArgs : EventArgs

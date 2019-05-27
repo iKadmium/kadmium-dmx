@@ -6,11 +6,11 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace kadmium_dmx_webapi.GraphQL.Types
+namespace kadmium_dmx_webapi.GraphQL.Types.StatusUpdates
 {
-    public class VenueStatusType : ObjectGraphType<VenueStatusUpdate>
+    public class StatusType : ObjectGraphType<StatusUpdate>
     {
-        public VenueStatusType()
+        public StatusType()
         {
             Name = "Status";
             Field(x => x.Message)
@@ -19,9 +19,6 @@ namespace kadmium_dmx_webapi.GraphQL.Types
             Field(x => x.StatusCode, type: typeof(StatusCodeType))
                 .Name("statusCode")
                 .Description("The code associated with the status");
-            Field(x => x.Venue, type: typeof(VenueType))
-                .Name("activeVenue")
-                .Description("The currently active venue");
         }
     }
 }

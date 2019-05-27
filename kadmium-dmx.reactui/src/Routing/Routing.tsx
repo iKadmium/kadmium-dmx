@@ -6,6 +6,7 @@ import { Settings } from 'Settings/Settings';
 import { Groups } from 'Groups/Groups';
 import { DmxViewer } from 'Dashboard/VenueDashboard/DmxViewer/DmxViewer';
 import { BreadcrumbTrailItem } from 'BreadcrumbTrail/BreadcrumbTrail';
+import { ListenerMessages } from 'Dashboard/ListenerDashboard/ListenerMessages/ListenerMessages';
 
 interface Trail
 {
@@ -23,6 +24,16 @@ export class Routing
                 data: {
                     trail: [
                         { address: '/', name: 'Dashboard' }
+                    ]
+                } as Trail
+            }),
+            '/listener': route({
+                title: 'OSC Listener Messages',
+                view: <ListenerMessages />,
+                data: {
+                    trail: [
+                        { address: '/', name: 'Dashboard' },
+                        { address: '/listener', name: 'Listener Messages' }
                     ]
                 } as Trail
             }),

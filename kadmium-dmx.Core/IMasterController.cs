@@ -17,8 +17,8 @@ namespace kadmium_dmx_core
     {
         Dictionary<string, Group> Groups { get; }
         Venue Venue { get; }
-        List<Transmitter> Transmitters { get; }
-        Listener Listener { get; }
+        ITransmitter Transmitter { get; }
+        IListener Listener { get; }
         event EventHandler<VenueStatusUpdate> VenueStatusUpdated;
 
         Task LoadVenue(IVenueData venue, IDictionary<FixtureDefinitionSkeleton, IFixtureDefinition> definitions, IEnumerable<IGroupData> groups);

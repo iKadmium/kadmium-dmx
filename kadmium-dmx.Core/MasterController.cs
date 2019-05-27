@@ -20,22 +20,20 @@ namespace kadmium_dmx_core
     public class MasterController : IDisposable, IMasterController
     {
         public Dictionary<string, Group> Groups { get; private set; }
-        public List<Transmitter> Transmitters { get; private set; }
-        public Listener Listener { get; private set; }
+        public ITransmitter Transmitter { get; }
+        public IListener Listener { get; private set; }
         public Venue Venue { get; private set; }
         public ISettings Settings { get; private set; }
         public Renderer Renderer { get; }
         public event EventHandler<VenueStatusUpdate> VenueStatusUpdated;
 
-        public MasterController(ISettings settings)
+        public MasterController(ISettings settings, ITransmitter transmitter, IListener listener)
         {
             Settings = settings;
             ServiceLocator.Get<IStrobe>().Frequency = settings.StrobeEffectFrequency;
             Groups = new Dictionary<string, Group>();
-            Transmitters = new List<Transmitter>{
-                new SACNTransmitter(settings.SacnTransmitter)
-            };
-            Listener = new OSCListener(settings.OscPort, this);
+            Transmitter = transmitter;
+            Listener = listener;
             Venue = new Venue(
                 new VenueData
                 {
@@ -56,8 +54,6 @@ namespace kadmium_dmx_core
             Venue.Activate();
             Renderer = new Renderer(this);
         }
-
-        
 
         public async Task LoadVenue(IVenueData venue, IDictionary<FixtureDefinitionSkeleton, IFixtureDefinition> definitions, IEnumerable<IGroupData> groupData)
         {
@@ -84,23 +80,16 @@ namespace kadmium_dmx_core
         public void Dispose()
         {
             Renderer.Dispose();
-            foreach (var transmitter in Transmitters)
-            {
-                transmitter?.Dispose();
-            }
+            Transmitter?.Dispose();
             Listener?.Dispose();
         }
 
         public async Task SetSettings(Settings value)
         {
             await Renderer.Stop();
-            foreach (var transmitter in Transmitters)
-            {
-                transmitter.Dispose();
-            }
-            Transmitters.Clear();
+            Transmitter?.Dispose();
 
-            Transmitters.Add(new SACNTransmitter(value.SacnTransmitter));
+            Transmitter.SetSettings(value);
             ServiceLocator.Get<IStrobe>().Frequency = value.StrobeEffectFrequency;
             Renderer.Start();
         }

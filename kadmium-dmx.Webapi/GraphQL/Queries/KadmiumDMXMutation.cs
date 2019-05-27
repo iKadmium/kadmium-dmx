@@ -4,6 +4,7 @@ using kadmium_dmx_data.Storage;
 using kadmium_dmx_data.Types.Fixtures;
 using kadmium_dmx_data.Types.Venues;
 using kadmium_dmx_webapi.GraphQL.Types;
+using kadmium_dmx_webapi.GraphQL.Types.Venues;
 using System;
 using System.Collections.Generic;
 using System.Linq;

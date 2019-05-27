@@ -7,7 +7,7 @@ import gql from 'graphql-tag';
 import React, { useState } from 'react';
 import { useMutation, useQuery, useSubscription } from 'react-apollo-hooks';
 import { Link } from 'react-navi';
-import "./VenueDashboard.css";
+import { StatusStatistic } from 'Dashboard/StatusStatistic/StatusStatistic';
 
 const getVenuesQuery = gql`
     query GetVenues {
@@ -81,7 +81,7 @@ export const VenueDashboard: React.FunctionComponent<{}> = () =>
         );
     };
 
-    const getActions = (venues: any[]) =>
+    const getActions = (venues: GetVenues_venues[]) =>
     {
         const actions: React.ReactNode[] = [
             <Dropdown
@@ -120,9 +120,8 @@ export const VenueDashboard: React.FunctionComponent<{}> = () =>
                 loading={venueStatusLoading}
                 title="Venue"
                 actions={getActions(getVenuesData.venues)}
-
             >
-                <Statistic title="Status" value={venueStatusData.venueStatus.message} prefix={<Icon type="check-circle" />} />
+                <StatusStatistic message={venueStatusData.venueStatus.message} code={venueStatusData.venueStatus.statusCode} />
                 <Divider />
                 <Tabs defaultActiveKey={venueStatusData.venueStatus.activeVenue.universes[0].universeID.toString()}>
                     {venueStatusData.venueStatus.activeVenue.universes.map(universe =>

@@ -34,11 +34,11 @@ namespace kadmium_dmx_core
             }
         }
         
-        public async Task Render(IEnumerable<Transmitter> transmitters)
+        public async Task Render(ITransmitter transmitter)
         {
             foreach (Universe universe in Universes)
             {
-                await universe.Transmit(transmitters);
+                await universe.Transmit(transmitter);
             }
         }
 

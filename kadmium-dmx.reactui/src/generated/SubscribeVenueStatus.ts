@@ -28,7 +28,7 @@ export interface SubscribeVenueStatus_venueStatus_activeVenue {
 }
 
 export interface SubscribeVenueStatus_venueStatus {
-  __typename: "Status";
+  __typename: "VenueStatus";
   /**
    * The code associated with the status
    */

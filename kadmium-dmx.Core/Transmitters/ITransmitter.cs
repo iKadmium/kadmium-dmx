@@ -1,4 +1,5 @@
 ﻿using kadmium_dmx_core.DataSubscriptions;
+using kadmium_dmx_data.Types.Settings;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -12,5 +13,6 @@ namespace kadmium_dmx_core.Transmitters
         bool Enabled { get; set; }
         int Delay { get; set; }
         Task Transmit(byte[] dmx, int universeID);
+        void SetSettings(Settings value);
     }
 }

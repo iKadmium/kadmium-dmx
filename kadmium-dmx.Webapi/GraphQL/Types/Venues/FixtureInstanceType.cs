@@ -5,7 +5,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace kadmium_dmx_webapi.GraphQL.Types
+namespace kadmium_dmx_webapi.GraphQL.Types.Venues
 {
     public class FixtureInstanceType : ObjectGraphType<IFixtureData>
     {

@@ -1,7 +1,6 @@
 import { Breadcrumb, PageHeader } from 'antd';
 import React from 'react';
 import { Link, useCurrentRoute } from 'react-navi';
-import { Routing } from '../Routing/Routing';
 import './BreadcrumbTrail.css';
 
 export interface BreadcrumbTrailItem

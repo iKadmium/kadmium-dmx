@@ -34,17 +34,15 @@ namespace kadmium_dmx_core.DataSubscriptions
         }
     }
 
-    public class ListenerUpdate : EventArgs
+    public class ListenerMessage : EventArgs
     {
-        public bool Recognised { get; }
         public DateTime Time { get; }
         public string Source { get; }
         public string Address { get; }
         public float Value { get; }
 
-        public ListenerUpdate(bool recognised, DateTime time, string source, string address, float value)
+        public ListenerMessage(DateTime time, string source, string address, float value)
         {
-            Recognised = recognised;
             Time = time;
             Source = source;
             Address = address;

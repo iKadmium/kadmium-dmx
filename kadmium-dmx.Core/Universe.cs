@@ -2,12 +2,8 @@
 using kadmium_dmx_core.Transmitters;
 using kadmium_dmx_data.Types.Fixtures;
 using kadmium_dmx_data.Types.Venues;
-using MongoDB.Bson.Serialization.Attributes;
-using Newtonsoft.Json;
-using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -59,12 +55,9 @@ namespace kadmium_dmx_core
             Rendered?.Invoke(this, new UpdateEventArgs(UniverseID, Fixtures));
         }
 
-        public async Task Transmit(IEnumerable<Transmitter> transmitters)
+        public async Task Transmit(ITransmitter transmitter)
         {
-            foreach (var transmitter in transmitters)
-            {
-                await transmitter.Transmit(DMX, UniverseID);
-            }
+            await transmitter.Transmit(DMX, UniverseID);
             Transmitted?.Invoke(this, new DMXEventArgs(DMX));
         }
         

@@ -5,12 +5,17 @@ using GraphQL.Server.Ui.Playground;
 using GraphQL.Types;
 using kadmium_dmx.DataAccess.Json;
 using kadmium_dmx_core;
+using kadmium_dmx_core.Listeners;
+using kadmium_dmx_core.Transmitters;
 using kadmium_dmx_data.Storage;
 using kadmium_dmx_data.Types.Settings;
 using kadmium_dmx_webapi.GraphQL;
 using kadmium_dmx_webapi.GraphQL.Queries;
 using kadmium_dmx_webapi.GraphQL.Schemas;
 using kadmium_dmx_webapi.GraphQL.Types;
+using kadmium_dmx_webapi.GraphQL.Types.FixtureDefinitions;
+using kadmium_dmx_webapi.GraphQL.Types.StatusUpdates;
+using kadmium_dmx_webapi.GraphQL.Types.Venues;
 using kadmium_dmx_webapi.WebSockets;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -59,8 +64,8 @@ namespace kadmium_dmx_webapi
             services.AddLogging(loggingBuilder =>
             {
                 loggingBuilder.AddConfiguration(Configuration.GetSection("Logging"));
-                loggingBuilder.AddConsole();
-                loggingBuilder.AddDebug();
+                //loggingBuilder.AddConsole();
+                //loggingBuilder.AddDebug();
             });
 
             services.AddMvc(options => options.Conventions.Add(new KebabCaseRoutingConvention()))
@@ -102,6 +107,7 @@ namespace kadmium_dmx_webapi
             services.AddSingleton<FixtureInstanceType>();
             services.AddSingleton<UniverseType>();
             services.AddSingleton<VenueType>();
+            services.AddSingleton<ListenerMessageType>();
             services.AddSingleton<KadmiumDMXSchema>();
             services.AddSingleton<ISchema, KadmiumDMXSchema>();
 
@@ -115,18 +121,26 @@ namespace kadmium_dmx_webapi
 
             IFileAccess fileAccess = new kadmium_dmx.DataAccess.Json.FileAccess(Path.Combine("kadmium-dmx", "data"));
             services.AddSingleton(fileAccess);
+
             ISettingsStore settingsStore = new JsonSettingsStore(fileAccess);
+            services.AddSingleton<ISettingsStore, JsonSettingsStore>();
+
+            services.AddSingleton<IFixtureDefinitionStore, JsonFixtureDefinitionStore>();
+            services.AddSingleton<IVenueStore, JsonVenueStore>();
+            services.AddSingleton<IGroupStore, JsonGroupStore>();
+
             ISettings settings = settingsStore.GetSettings().Result;
+            ITransmitter transmitter = new SACNTransmitter(settings.SacnTransmitter);
+            services.AddSingleton(transmitter);
 
-            MasterController = new MasterController(settings);
+            IListener listener = new OSCListener(settings.OscPort);
+            services.AddSingleton(listener);
 
-            services.AddTransient<IFixtureDefinitionStore, JsonFixtureDefinitionStore>();
-            services.AddTransient<IVenueStore, JsonVenueStore>();
-            services.AddTransient<IGroupStore, JsonGroupStore>();
-            services.AddTransient<ISettingsStore, JsonSettingsStore>();
+            MasterController = new MasterController(settings, transmitter, listener);
 
             services.AddSingleton<IMasterController>(MasterController);
             services.AddSingleton<IRenderer>(MasterController.Renderer);
+
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -162,7 +176,7 @@ namespace kadmium_dmx_webapi
                 BuildUserContext = ctx => new GraphQLUserContext
                 {
                     User = ctx.User
-                }
+                },
             });
             app.UseGraphQLPlayground(new GraphQLPlaygroundOptions()
             {

@@ -18,6 +18,7 @@
     "apollo-link-ws": "^1.0.17",
     "graphql": "^14.3.0",
     "graphql-tag": "^2.10.1",
+    "moment": "^2.24.0",
     "navi": "^0.12.6",
     "react": "^16.8.6",
     "react-apollo": "^2.5.5",
@@ -25,6 +26,7 @@
     "react-dom": "^16.8.6",
     "react-navi": "^0.12.6",
     "react-scripts": "3.0.1",
+    "react-vis": "^1.11.7",
     "subscriptions-transport-ws": "^0.9.16",
     "typescript": "3.4.5"
   },

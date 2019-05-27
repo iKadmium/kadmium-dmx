@@ -8,17 +8,14 @@ namespace kadmium_dmx_core.Listeners
 {
     public class OSCListener : Listener
     {
-        private IMasterController masterController;
-
         public int Port { get; set; }
 
         private OSCServer listener;
 
-        public override event EventHandler<ListenerUpdate> MessageReceived;
+        public override event EventHandler<ListenerMessage> MessageReceived;
 
-        public OSCListener(int port, IMasterController masterController) : base()
+        public OSCListener(int port) : base()
         {
-            this.masterController = masterController;
             Port = port;
 
             try
@@ -57,21 +54,14 @@ namespace kadmium_dmx_core.Listeners
                     recognised = false;
                 }
                 
-                MessageReceived?.Invoke(this, new ListenerUpdate(recognised, DateTime.Now, sender.ToString(), e.Message.Address.Contents, value));
+                MessageReceived?.Invoke(this, new ListenerMessage(DateTime.Now, sender.ToString(), e.Message.Address.Contents, value));
             }
         }
 
         private bool GroupMessageReceived(string groupName, string attribute, float value)
         {
-            if (masterController.Groups.ContainsKey(groupName))
-            {
-                Group group = masterController.Groups[groupName];
-                group.Set(attribute, value);
                 OnStatusUpdate(this, new StatusUpdate("Messages received", StatusCode.Success));
                 return true;
-            }
-            return false;
-
         }
 
         public override void Dispose()

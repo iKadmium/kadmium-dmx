@@ -9,7 +9,8 @@ import './App.css';
 import SiderLayout from './SiderLayout';
 import { WebSocketLink } from 'apollo-link-ws';
 import { getMainDefinition } from 'apollo-utilities';
-import { ApolloProvider } from 'react-apollo-hooks';
+import { ApolloProvider as ApolloHooksProvider } from 'react-apollo-hooks';
+import { ApolloProvider } from 'react-apollo';
 
 const App: React.FC = () =>
 {
@@ -58,9 +59,11 @@ const App: React.FC = () =>
 	return (
 		<div className="App">
 			<EnvironmentProvider value={environment}>
-				<ApolloProvider client={client}>
-					<SiderLayout />
-				</ApolloProvider>
+				<ApolloHooksProvider client={client}>
+					<ApolloProvider client={client}>
+						<SiderLayout />
+					</ApolloProvider>
+				</ApolloHooksProvider>
 			</EnvironmentProvider>
 		</div>
 	);

@@ -8,7 +8,7 @@ namespace kadmium_dmx_core.Listeners
     public interface IListener: IDisposable
     {
         event EventHandler<StatusUpdate> StatusUpdate;
-        event EventHandler<ListenerUpdate> MessageReceived;
+        event EventHandler<ListenerMessage> MessageReceived;
         bool Enabled { get; set; }
     }
 }

@@ -13,7 +13,7 @@ namespace kadmium_dmx_core.Listeners
         private bool enabled;
 
         public event EventHandler<StatusUpdate> StatusUpdate;
-        public abstract event EventHandler<ListenerUpdate> MessageReceived;
+        public abstract event EventHandler<ListenerMessage> MessageReceived;
 
         public bool Enabled
         {
