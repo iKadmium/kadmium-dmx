@@ -15,6 +15,7 @@ namespace kadmium_dmx_core.Transmitters
         protected bool enabled;
 
         public event EventHandler<StatusUpdate> StatusUpdate;
+        public event EventHandler<DMXEventArgs> Dmx;
 
         public bool Enabled
         {
@@ -58,6 +59,11 @@ namespace kadmium_dmx_core.Transmitters
         protected void OnStatusUpdate(object sender, StatusUpdate statusUpdate)
         {
             this.StatusUpdate?.Invoke(sender, statusUpdate);
+        }
+
+        protected void OnDmx(object sender, DMXEventArgs dmx)
+        {
+            this.Dmx?.Invoke(sender, dmx);
         }
 
         public abstract void Dispose();

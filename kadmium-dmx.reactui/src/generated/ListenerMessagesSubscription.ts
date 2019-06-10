@@ -3,10 +3,10 @@
 // This file was automatically generated and should not be edited.
 
 // ====================================================
-// GraphQL subscription operation: MessagesSubscription
+// GraphQL subscription operation: ListenerMessagesSubscription
 // ====================================================
 
-export interface MessagesSubscription_listenerMessages {
+export interface ListenerMessagesSubscription_listenerMessages {
   __typename: "ListenerMessage";
   /**
    * The OSC Address of the received message
@@ -22,6 +22,6 @@ export interface MessagesSubscription_listenerMessages {
   value: string | null;
 }
 
-export interface MessagesSubscription {
-  listenerMessages: MessagesSubscription_listenerMessages | null;
+export interface ListenerMessagesSubscription {
+  listenerMessages: ListenerMessagesSubscription_listenerMessages | null;
 }

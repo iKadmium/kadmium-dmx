@@ -21,13 +21,16 @@ namespace kadmium_dmx_core.Fixtures
 
         public byte Min { get; set; }
         public byte Max { get; set; }
-        public ushort Address { get; set; }
+        public ushort RelativeAddress { get; set; }
+        private ushort FixtureAddress { get; }
+        public ushort Address { get { return (ushort)(RelativeAddress + FixtureAddress - 1); } }
 
-        public DMXChannel(IDMXChannelData data) : base(data.Name)
+        public DMXChannel(IDMXChannelData data, ushort fixtureAddress) : base(data.Name)
         {
             Min = (byte)data.Min;
             Max = (byte)data.Max;
-            Address = (ushort)data.Address;
+            RelativeAddress = (ushort)data.Address;
+            FixtureAddress = fixtureAddress;
         }
 
         public override string ToString()

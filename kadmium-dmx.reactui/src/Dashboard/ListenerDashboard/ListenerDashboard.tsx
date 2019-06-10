@@ -1,13 +1,15 @@
-import { Button, Card, Icon } from 'antd';
+import { Button, Card, Icon, Switch } from 'antd';
 import { StatusStatistic } from 'Dashboard/StatusStatistic/StatusStatistic';
-import { ListenerDashboardSubscription } from 'generated/ListenerDashboardSubscription';
+import { ListenerEnabledQuery } from 'generated/ListenerEnabledQuery';
+import { ListenerEnableMutation, ListenerEnableMutationVariables } from 'generated/ListenerEnableMutation';
+import { ListenerStatusSubscription } from 'generated/ListenerStatusSubscription';
 import gql from 'graphql-tag';
 import React from 'react';
-import { Subscription } from 'react-apollo';
+import { Mutation, Query, Subscription } from 'react-apollo';
 import { Link } from 'react-navi';
 
-const dashboardSubscription = gql`
-    subscription ListenerDashboardSubscription {
+const listenerStatusSubscription = gql`
+    subscription ListenerStatusSubscription {
         listenerStatus
         {
             statusCode
@@ -16,24 +18,66 @@ const dashboardSubscription = gql`
     }
 `;
 
+const listenerEnabledQuery = gql`
+    query ListenerEnabledQuery {
+        listenerEnabled
+    }
+`;
+
+const listenerEnabledMutation = gql`
+    mutation ListenerEnableMutation($enabled: Boolean!) {
+        setListenerEnabled(enabled: $enabled)
+    }
+`;
+
 export const ListenerDashboard: React.FunctionComponent<{}> = () =>
 {
     const getActions = () =>
     {
         const actions: React.ReactNode[] = [
+            <Mutation<ListenerEnableMutation, ListenerEnableMutationVariables> mutation={listenerEnabledMutation}>
+                {(setListenerEnabled) =>
+                {
+                    return (
+                        <Query<ListenerEnabledQuery> query={listenerEnabledQuery}>
+                            {({ data: listenerEnabledData, loading }) =>
+                            {
+                                if (!loading)
+                                {
+                                    return (
+                                        <Switch
+                                            checkedChildren={<Icon type="check" />}
+                                            unCheckedChildren={<Icon type="pause" />}
+                                            defaultChecked={listenerEnabledData.listenerEnabled}
+                                            onChange={(checked) => setListenerEnabled({ variables: { enabled: checked } })}
+                                        />
+                                    );
+                                }
+                                else
+                                {
+                                    return null;
+                                }
+                            }}
+                        </Query>
+
+                    );
+                }}
+
+            </Mutation>,
+
             <Link href="listener">
                 <Button
                     type="primary"
                 >
                     <Icon type="search" />Monitor
-            </Button>
+                </Button>
             </Link>
         ];
         return actions;
     };
 
     return (
-        <Subscription<ListenerDashboardSubscription> subscription={dashboardSubscription}>
+        <Subscription<ListenerStatusSubscription> subscription={listenerStatusSubscription}>
             {({ data, loading }) =>
             {
                 return (

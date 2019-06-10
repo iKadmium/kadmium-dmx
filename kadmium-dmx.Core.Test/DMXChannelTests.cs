@@ -13,7 +13,7 @@ namespace kadmium_dmx.Core.Test
         public void TestByteConversion(float value, byte expected)
         {
             IDMXChannelData data = new DMXChannelData { Address = 1 };
-            DMXChannel channel = new DMXChannel(data)
+            DMXChannel channel = new DMXChannel(data, 1)
             {
                 Value = value
             };
@@ -34,7 +34,7 @@ namespace kadmium_dmx.Core.Test
                 Min = min,
                 Max = max
             };
-            DMXChannel channel = new DMXChannel(data)
+            DMXChannel channel = new DMXChannel(data, 1)
             {
                 Value = value
             };

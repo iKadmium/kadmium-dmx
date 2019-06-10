@@ -58,7 +58,7 @@ namespace kadmium_dmx_core
         public async Task Transmit(ITransmitter transmitter)
         {
             await transmitter.Transmit(DMX, UniverseID);
-            Transmitted?.Invoke(this, new DMXEventArgs(DMX));
+            Transmitted?.Invoke(this, new DMXEventArgs(DMX, UniverseID));
         }
         
         public override string ToString()
@@ -69,10 +69,12 @@ namespace kadmium_dmx_core
 
     public class DMXEventArgs : EventArgs
     {
+        public int UniverseId { get; set; }
         public byte[] DMX { get; }
-        public DMXEventArgs(byte[] dmx)
+        public DMXEventArgs(byte[] dmx, int universeId)
         {
             DMX = dmx;
+            UniverseId = universeId;
         }
     }
 

@@ -93,6 +93,11 @@ namespace kadmium_dmx_webapi
             services.AddSingleton<KadmiumDMXQuery>();
             services.AddSingleton<KadmiumDMXMutation>();
             services.AddSingleton<KadmiumDMXSubscription>();
+            services.AddSingleton<ActiveVenueType>();
+            services.AddSingleton<ActiveUniverseType>();
+            services.AddSingleton<ActiveFixtureType>();
+            services.AddSingleton<ActiveDmxChannelType>();
+            services.AddSingleton<DmxEventType>();
             services.AddSingleton<GroupType>();
             services.AddSingleton<StatusType>();
             services.AddSingleton<VenueStatusType>();
@@ -105,6 +110,8 @@ namespace kadmium_dmx_webapi
             services.AddSingleton<FixtureTypeEnum>();
             services.AddSingleton<FixtureDefinitionType>();
             services.AddSingleton<FixtureInstanceType>();
+            services.AddSingleton<UShortGraphType>();
+            services.AddSingleton<UIntGraphType>();
             services.AddSingleton<UniverseType>();
             services.AddSingleton<VenueType>();
             services.AddSingleton<ListenerMessageType>();

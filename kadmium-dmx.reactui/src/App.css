@@ -1,4 +1,5 @@
 @import '~antd/dist/antd.css';
+@import "../node_modules/react-vis/dist/style.css";
 
 .ant-layout-sider-zero-width-trigger {
     z-index: 10;

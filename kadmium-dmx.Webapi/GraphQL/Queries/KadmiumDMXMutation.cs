@@ -1,12 +1,10 @@
 using GraphQL.Types;
 using kadmium_dmx_core;
+using kadmium_dmx_core.Listeners;
 using kadmium_dmx_data.Storage;
 using kadmium_dmx_data.Types.Fixtures;
 using kadmium_dmx_data.Types.Venues;
-using kadmium_dmx_webapi.GraphQL.Types;
 using kadmium_dmx_webapi.GraphQL.Types.Venues;
-using System;
-using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -14,7 +12,7 @@ namespace kadmium_dmx_webapi.GraphQL.Queries
 {
     public class KadmiumDMXMutation : ObjectGraphType
     {
-        public KadmiumDMXMutation(IVenueStore venueStore, IGroupStore groupStore, IFixtureDefinitionStore fixtureDefinitionStore, IMasterController masterController)
+        public KadmiumDMXMutation(IVenueStore venueStore, IGroupStore groupStore, IFixtureDefinitionStore fixtureDefinitionStore, IMasterController masterController, IListener listener)
         {
             Name = "KadmiumDMXMutation";
 
@@ -23,9 +21,23 @@ namespace kadmium_dmx_webapi.GraphQL.Queries
                 arguments: new QueryArguments(
                     new QueryArgument<NonNullGraphType<StringGraphType>> { Name = "name" }
                 ),
-                resolve: async context => {
+                resolve: async context =>
+                {
                     var name = context.GetArgument<string>("name");
                     return await LoadVenue(name, venueStore, groupStore, fixtureDefinitionStore, masterController);
+                }
+            );
+
+            Field<BooleanGraphType>(
+                "setListenerEnabled",
+                arguments: new QueryArguments(
+                    new QueryArgument<NonNullGraphType<BooleanGraphType>> { Name = "enabled" }
+                ),
+                resolve: context =>
+                {
+                    var enabled = context.GetArgument<bool>("enabled");
+                    listener.Enabled = enabled;
+                    return listener.Enabled;
                 }
             );
         }

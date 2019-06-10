@@ -5,10 +5,10 @@
 import { statusCode } from "./globalTypes";
 
 // ====================================================
-// GraphQL subscription operation: ListenerDashboardSubscription
+// GraphQL subscription operation: ListenerStatusSubscription
 // ====================================================
 
-export interface ListenerDashboardSubscription_listenerStatus {
+export interface ListenerStatusSubscription_listenerStatus {
   __typename: "Status";
   /**
    * The code associated with the status
@@ -20,6 +20,6 @@ export interface ListenerDashboardSubscription_listenerStatus {
   message: string;
 }
 
-export interface ListenerDashboardSubscription {
-  listenerStatus: ListenerDashboardSubscription_listenerStatus | null;
+export interface ListenerStatusSubscription {
+  listenerStatus: ListenerStatusSubscription_listenerStatus | null;
 }

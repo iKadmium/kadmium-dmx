@@ -53,7 +53,7 @@ namespace kadmium_dmx_webapi.Controllers
                                                 DisplayMax = GetDisplayMax(fixture, attribute),
                                                 Controlled = (attribute as DMXChannel)?.Controlled ?? false,
                                                 Dmx = attribute is DMXChannel,
-                                                DmxAddress = (attribute as DMXChannel)?.Address ?? 0
+                                                DmxAddress = (attribute as DMXChannel)?.RelativeAddress ?? 0
                                             }
                            }
             };

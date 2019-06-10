@@ -34,6 +34,7 @@ namespace kadmium_dmx_core
             Groups = new Dictionary<string, Group>();
             Transmitter = transmitter;
             Listener = listener;
+            Listener.MessageReceived += Listener_MessageReceived;
             Venue = new Venue(
                 new VenueData
                 {
@@ -53,6 +54,22 @@ namespace kadmium_dmx_core
 
             Venue.Activate();
             Renderer = new Renderer(this);
+        }
+
+        private void Listener_MessageReceived(object sender, ListenerMessage e)
+        {
+            var addressParts = e.Address.Split("/", StringSplitOptions.RemoveEmptyEntries);
+            switch(addressParts[0])
+            {
+                case "group":
+                    var groupName = addressParts[1];
+                    if(this.Groups.ContainsKey(groupName))
+                    {
+                        var attribute = addressParts[2];
+                        this.Groups[groupName].Set(attribute, e.Value);
+                    }
+                    break;
+            }
         }
 
         public async Task LoadVenue(IVenueData venue, IDictionary<FixtureDefinitionSkeleton, IFixtureDefinition> definitions, IEnumerable<IGroupData> groupData)

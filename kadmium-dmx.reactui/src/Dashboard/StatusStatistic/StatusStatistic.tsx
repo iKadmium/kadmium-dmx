@@ -12,13 +12,17 @@ export const StatusStatistic: React.FunctionComponent<IStatusStatisticProps> = (
 {
     const getIcon = (code: statusCode) =>
     {
-        console.log(code);
         switch (code)
         {
             case "SUCCESS":
                 return <Icon type="check-circle" />;
             case "WARNING":
                 return <Icon type="exclamation-circle" />;
+            case "ERROR":
+                return <Icon type="close-circle" />;
+            default:
+                console.log(code);
+                return null;
         }
     };
 

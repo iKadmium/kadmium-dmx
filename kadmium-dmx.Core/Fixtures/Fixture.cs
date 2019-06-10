@@ -35,8 +35,8 @@ namespace kadmium_dmx_core.Fixtures
             FrameSettables = new Dictionary<string, FixtureAttribute>();
             foreach (var attributeData in definition.Channels ?? Enumerable.Empty<IDMXChannelData>())
             {
-                Settables.Add(attributeData.Name, new DMXChannel(attributeData));
-                FrameSettables.Add(attributeData.Name, new DMXChannel(attributeData));
+                Settables.Add(attributeData.Name, new DMXChannel(attributeData, (ushort)Address));
+                FrameSettables.Add(attributeData.Name, new DMXChannel(attributeData, (ushort)Address));
             }
             MovementAxis = new Dictionary<string, Fixtures.MovementAxis>();
             foreach (var axis in definition.Movements ?? Enumerable.Empty<IMovementAxisData>())
@@ -74,7 +74,7 @@ namespace kadmium_dmx_core.Fixtures
         {
             var channels = from channel in FrameSettables.Values
                            where channel is DMXChannel
-                           group (channel as DMXChannel) by (channel as DMXChannel).Address into chanGroup
+                           group (channel as DMXChannel) by (channel as DMXChannel).RelativeAddress into chanGroup
                            select chanGroup;
 
             foreach (var channelGroup in channels)
@@ -97,7 +97,7 @@ namespace kadmium_dmx_core.Fixtures
                 {
                     channel = channelGroup.Single();
                 }
-                dmx[channel.Address + Address - 2] = channel.ByteValue;
+                dmx[channel.RelativeAddress + Address - 2] = channel.ByteValue;
             }
         }
 

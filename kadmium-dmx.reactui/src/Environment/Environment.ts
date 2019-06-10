@@ -4,6 +4,7 @@ import { DevelopmentEnvironment } from "./Environment.development";
 export interface IEnvironment
 {
     readonly graphQLEndpoint: URL
+    readonly graphQLWebSocketsEndpoint: URL
 }
 
 export class Environment

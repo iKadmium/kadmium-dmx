@@ -41,8 +41,8 @@ export class Routing
             {
                 let universeId = req.params.universeId;
                 return {
-                    title: 'DMX',
-                    view: <DmxViewer />,
+                    title: 'DMX Viewer',
+                    view: <DmxViewer universeId={parseInt(universeId)} />,
                     data: {
                         trail: [
                             { address: '/', name: 'Dashboard' },

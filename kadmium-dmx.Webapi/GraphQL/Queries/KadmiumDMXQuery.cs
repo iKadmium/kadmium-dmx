@@ -1,5 +1,6 @@
 using GraphQL.Types;
 using kadmium_dmx_core;
+using kadmium_dmx_core.Listeners;
 using kadmium_dmx_data.Storage;
 using kadmium_dmx_data.Types.Fixtures;
 using kadmium_dmx_data.Types.Venues;
@@ -15,9 +16,15 @@ namespace kadmium_dmx_webapi.GraphQL.Queries
 {
     public class KadmiumDMXQuery : ObjectGraphType<object>
     {
-        public KadmiumDMXQuery(IGroupStore groupStore, ISettingsStore settingsStore, IFixtureDefinitionStore fixtureDefinitionStore, IVenueStore venueStore, IMasterController masterController)
+        public KadmiumDMXQuery(IGroupStore groupStore, ISettingsStore settingsStore, IFixtureDefinitionStore fixtureDefinitionStore,
+            IVenueStore venueStore, IListener listener, IMasterController masterController)
         {
             Name = "KadmiumDMXQuery";
+
+            Field<BooleanGraphType>(
+                name: "listenerEnabled",
+                resolve: context => listener.Enabled
+            );
 
             FieldAsync<ListGraphType<GroupType>>(
                 name: "groups",
@@ -60,19 +67,35 @@ namespace kadmium_dmx_webapi.GraphQL.Queries
                 }
             );
 
-            FieldAsync<VenueType>(
+            Field<ActiveVenueType>(
                 name: "activeVenue",
-                resolve: async context => {
-                    string name = masterController.Venue.Name;
-                    if(await venueStore.Exists(name))
-                    {
-                        VenueData venue = await venueStore.Get(name);
-                        return venue;
-                    }
-                    else
-                    {
-                        return null;
-                    }
+                resolve: context => {
+                    return masterController.Venue;
+                }
+            );
+
+            Field<ActiveUniverseType>(
+                name: "activeUniverse",
+                arguments: new QueryArguments(
+                    new QueryArgument<NonNullGraphType<IntGraphType>> { Name = "universeId" }
+                ),
+                resolve: context => {
+                    var universeId = context.GetArgument<int>("universeId");
+                    return masterController.Venue.Universes.Single(x => x.UniverseID == universeId);
+                }
+            );
+
+            Field<ActiveFixtureType>(
+                name: "activeFixture",
+                arguments: new QueryArguments(
+                    new QueryArgument<NonNullGraphType<IntGraphType>> { Name = "universeId" },
+                    new QueryArgument<NonNullGraphType<IntGraphType>> { Name = "address" }
+                ),
+                resolve: context => {
+                    var universeId = context.GetArgument<int>("universeId");
+                    var universe = masterController.Venue.Universes.Single(x => x.UniverseID == universeId);
+                    var address = context.GetArgument<int>("address");
+                    return universe.Fixtures.Single(x => x.Address == address);
                 }
             );
         }

@@ -17,17 +17,18 @@ namespace kadmium_dmx_core.Transmitters
         public IEnumerable<string> UnicastTargets { get; set; }
         public bool Multicast { get; set; }
 
-        public override async Task TransmitInternal(byte[] dmx, int universeID)
+        public override async Task TransmitInternal(byte[] dmx, int universeId)
         {
             List<Task> tasks = new List<Task>();
             if (Multicast)
             {
-                tasks.Add(SACNClient.Send((ushort)universeID, dmx));
+                tasks.Add(SACNClient.Send((ushort)universeId, dmx));
             }
             foreach (string target in UnicastTargets)
             {
-                tasks.Add(SACNClient?.Send(target, (ushort)universeID, dmx));
+                tasks.Add(SACNClient?.Send(target, (ushort)universeId, dmx));
             }
+            OnDmx(this, new DMXEventArgs(dmx, universeId));
 
             await Task.WhenAll(tasks);
         }
@@ -61,18 +62,6 @@ namespace kadmium_dmx_core.Transmitters
             var oldClient = SACNClient;
             SACNClient = new SACNSender(value.SacnTransmitter.UUID, SOURCE_NAME);
             oldClient.Close();
-        }
-    }
-
-    public class TransmitterEventArgs : EventArgs
-    {
-        public byte[] DMX { get; }
-        public int UniverseID { get; }
-
-        public TransmitterEventArgs(int universeID, byte[] dmx)
-        {
-            UniverseID = universeID;
-            DMX = dmx;
         }
     }
 }

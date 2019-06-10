@@ -1,15 +1,13 @@
-import { Switch, Tabs } from 'antd';
-import { MessagesSubscription, MessagesSubscription_listenerMessages } from 'generated/MessagesSubscription';
+import { Switch } from 'antd';
+import { ListenerMessagesSubscription, ListenerMessagesSubscription_listenerMessages } from 'generated/ListenerMessagesSubscription';
 import gql from 'graphql-tag';
 import React, { useState } from 'react';
 import { Subscription } from 'react-apollo';
-import { IChartData, OscMessage } from './OscMessage';
-import { LineSeries, XYPlot } from 'react-vis';
 
 const maxMessages = 20;
 
 const messagesSubscription = gql`
-    subscription MessagesSubscription {
+    subscription ListenerMessagesSubscription {
         listenerMessages {
             address
             time
@@ -21,16 +19,16 @@ const messagesSubscription = gql`
 export const ListenerMessages: React.FunctionComponent<{}> = () =>
 {
     const [updatesActivated, setUpdatesActivated] = useState(true);
-    const [messages, setMessages] = useState([] as string[]);
+    const [messages, setMessages] = useState([] as ListenerMessagesSubscription_listenerMessages[]);
 
     return (
-        <Subscription<MessagesSubscription> subscription={messagesSubscription} onSubscriptionData={options =>
+        <Subscription<ListenerMessagesSubscription> subscription={messagesSubscription} onSubscriptionData={options =>
         {
             if (updatesActivated)
             {
                 const tempMessages = messages.slice(-(maxMessages - 1));
                 const message = options.subscriptionData.data.listenerMessages;
-                tempMessages.push(message.address + " => " + message.value);
+                tempMessages.push(message);
                 setMessages([...tempMessages]);
             }
         }}>
@@ -44,7 +42,7 @@ export const ListenerMessages: React.FunctionComponent<{}> = () =>
                             checkedChildren="Active"
                             unCheckedChildren="Inactive"
                         />
-                        <pre style={{ height: "100%" }}>{messages.map(x => x + "\r\n")}</pre>
+                        <pre style={{ height: "100%" }}>{messages.map(x => x.address + " " + x.value + "\r\n")}</pre>
 
                     </>
                 );

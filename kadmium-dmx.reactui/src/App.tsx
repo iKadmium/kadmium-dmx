@@ -17,7 +17,7 @@ const App: React.FC = () =>
 	const environment = Environment.getEnvironment();
 
 	const wsLink = new WebSocketLink({
-		uri: 'ws://localhost:5000/api/graphql',
+		uri: environment.graphQLWebSocketsEndpoint.href,
 		options: {
 			reconnect: true
 		}
