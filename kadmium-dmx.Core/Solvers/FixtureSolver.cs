@@ -35,13 +35,13 @@ namespace kadmium_dmx_core.Solvers
             {
                 solvers.Add(new FakeUVSolver(fixture));
             }
-            if (FakeStrobeSolver.SuitableFor(definition))
-            {
-                solvers.Add(new FakeStrobeSolver(fixture));
-            }
             if (ApeshitFixtureSolver.SuitableFor(definition))
             {
                 solvers.Add(new ApeshitFixtureSolver(fixture));
+            }
+            if (FakeStrobeSolver.SuitableFor(definition))
+            {
+                solvers.Add(new FakeStrobeSolver(fixture));
             }
             if (HSBtoRGBWSolver.SuitableFor(definition))
             {
