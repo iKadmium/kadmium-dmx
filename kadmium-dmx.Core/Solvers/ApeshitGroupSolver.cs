@@ -7,6 +7,8 @@ namespace kadmium_dmx_core.Solvers
 {
     public class ApeshitGroupSolver : GroupSolver
     {
+        private static readonly int MinimumFixtureCount = 1;
+
         private bool? lastStrobe;
         private IStrobe Strobe { get; set; }
         public double Coverage { get; set; }
@@ -29,30 +31,39 @@ namespace kadmium_dmx_core.Solvers
                 bool strobeValue = Strobe.GetValue();
                 if (strobeValue != lastStrobe)
                 {
-                    int count = (int)System.Math.Floor((double)(Group.Fixtures.Count * (1.0 - Coverage)));
-                    while (count > Group.Fixtures.Count && count > 0)
-                    {
-                        count--;
-                    }
                     var applicableFixtures = from fixture in Group.Fixtures
                                              where fixture.Solvers.Any(x => x.GetType() == typeof(ApeshitFixtureSolver))
                                              select fixture;
-                    if (applicableFixtures.Count() > count)
+
+                    int blackoutFixtureCount = GetBlackoutFixtureCount(applicableFixtures.Count());
+
+                    IEnumerable<Fixture> proposedBlackoutFixtures = Enumerable.Empty<Fixture>();
+                    if (blackoutFixtureCount > 0)
                     {
-                        IEnumerable<Fixture> proposedBlackoutFixtures = applicableFixtures.PickRandom(count);
+                        proposedBlackoutFixtures = applicableFixtures.PickRandom(blackoutFixtureCount);
                         while (proposedBlackoutFixtures.SequenceEqualIgnoreOrder(blackoutFixtures))
                         {
-                            proposedBlackoutFixtures = applicableFixtures.PickRandom(count);
+                            proposedBlackoutFixtures = applicableFixtures.PickRandom(blackoutFixtureCount);
                         }
-                        blackoutFixtures = proposedBlackoutFixtures;
-                        lastStrobe = strobeValue;
-                        foreach (Fixture fixture in applicableFixtures)
-                        {
-                            fixture.Settables["ApeshitFixtureSelected"].Value = blackoutFixtures.Contains(fixture) ? 1f : 0f;
-                        }
+                    }
+                    blackoutFixtures = proposedBlackoutFixtures;
+                    lastStrobe = strobeValue;
+                    foreach (Fixture fixture in applicableFixtures)
+                    {
+                        fixture.Settables["ApeshitFixtureSelected"].Value = blackoutFixtures.Contains(fixture) ? 0f : 1f;
                     }
                 }
             }
+        }
+
+        private int GetBlackoutFixtureCount(int applicableFixtureCount)
+        {
+            int targetCount = (int)Math.Floor((applicableFixtureCount * (1.0 - Coverage)));
+            int maximumBlackoutCount = applicableFixtureCount - MinimumFixtureCount;
+
+            int blackoutCount = Math.Min(targetCount, maximumBlackoutCount);
+
+            return blackoutCount;
         }
     }
 
