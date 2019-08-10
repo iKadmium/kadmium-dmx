@@ -97,6 +97,8 @@ namespace kadmium_dmx_webapi
             services.AddSingleton<ActiveUniverseType>();
             services.AddSingleton<ActiveFixtureType>();
             services.AddSingleton<ActiveDmxChannelType>();
+            services.AddSingleton<ActiveFixtureAttributeType>();
+            services.AddSingleton<ActiveFixtureUpdateType>();
             services.AddSingleton<DmxEventType>();
             services.AddSingleton<GroupType>();
             services.AddSingleton<StatusType>();

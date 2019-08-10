@@ -71,7 +71,9 @@ export const VenueDashboard: React.FunctionComponent<{}> = () =>
                             <Tabs.TabPane tab={universe.name} key={universe.universeID.toString()}>
                                 <Row>
                                     <Col xs={12}>
-                                        <Statistic title="Fixtures" value={universe.fixtures ? universe.fixtures.length : "?"} prefix={<Icon type="bulb" />} />
+                                        <Link href={`venue/${universe.universeID}/fixtures`}>
+                                            <Statistic title="Fixtures" value={universe.fixtures ? universe.fixtures.length : "?"} prefix={<Icon type="bulb" />} />
+                                        </Link>
                                     </Col>
                                     <Col xs={12}>
                                         <Link href={`venue/${universe.universeID}/dmx`}>

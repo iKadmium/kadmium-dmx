@@ -1,5 +1,4 @@
 import { ActiveUniverseQuery_activeUniverse_fixtures, ActiveUniverseQuery_activeUniverse_fixtures_channels } from 'generated/ActiveUniverseQuery';
-import React from 'react';
 import { DmxCellRenderer } from './DmxCellRenderer';
 import { DmxChannelControlStatus } from './DmxChannelControlStatus';
 import { DmxDetailRenderer } from './DmxDetailRenderer';
@@ -27,7 +26,7 @@ export class DmxRenderer
 
         let index = 0;
         const channels = fixtureDetails.flatMap(x => x.channels);
-        const getDetails = (address: number) => channels.find(x => x.address == index);
+        const getDetails = (address: number) => channels.find(x => x.address === index);
 
         for (let cellNumberY = 0; cellNumberY < totalRows; cellNumberY++)
         {
@@ -88,7 +87,7 @@ export class DmxRenderer
     {
         if (this.detail.selectedChannel)
         {
-            const selectedCell = this.cells.find(x => x.address == this.detail.selectedChannel.address);
+            const selectedCell = this.cells.find(x => x.address === this.detail.selectedChannel.address);
             if (selectedCell)
             {
                 selectedCell.selected = false;
@@ -97,7 +96,7 @@ export class DmxRenderer
         this.detail.selectChannel(fixture, channel);
         if (channel)
         {
-            const selectedCell = this.cells.find(x => x.address == channel.address);
+            const selectedCell = this.cells.find(x => x.address === channel.address);
             if (selectedCell)
             {
                 selectedCell.selected = true;
@@ -117,10 +116,10 @@ export class DmxRenderer
             const index = (cellRow * cellsPerRow) + cellColumn;
             if (index <= totalCells && index >= 1)
             {
-                const fixture = this.fixtureDetails.find(x => x.channels.find(y => y.address == index) != null)
+                const fixture = this.fixtureDetails.find(x => x.channels.find(y => y.address === index) != null)
                 if (fixture)
                 {
-                    const channel = fixture.channels.find(x => x.address == index);
+                    const channel = fixture.channels.find(x => x.address === index);
                     this.selectChannel(fixture, channel);
                 }
                 else

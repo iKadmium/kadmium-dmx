@@ -3,11 +3,13 @@ using GraphQL.Subscription;
 using GraphQL.Types;
 using kadmium_dmx_core;
 using kadmium_dmx_core.DataSubscriptions;
+using kadmium_dmx_core.Fixtures;
 using kadmium_dmx_core.Listeners;
 using kadmium_dmx_core.Transmitters;
 using kadmium_dmx_webapi.GraphQL.ReplaySubject;
 using kadmium_dmx_webapi.GraphQL.Types;
 using kadmium_dmx_webapi.GraphQL.Types.StatusUpdates;
+using kadmium_dmx_webapi.GraphQL.Types.Venues;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -23,9 +25,10 @@ namespace kadmium_dmx_webapi.GraphQL.Queries
         private LastItemReplaySubject<StatusUpdate> TransmitterStatusEvents { get; }
         private LastItemReplaySubject<StatusUpdate> ListenerStatusEvents { get; }
         private RateLimitedKeyedReplaySubject<int, DMXEventArgs> DmxEvents { get; }
+        private RateLimitedKeyedReplaySubject<Tuple<int, int>, FixtureUpdateEvent> FixtureUpdateEvents { get; }
         private RateLimitedKeyedReplaySubject<string, ListenerMessage> ListenerMessageEvents { get; }
 
-        public KadmiumDMXSubscription(IMasterController masterController, ITransmitter transmitter, IListener listener)
+        public KadmiumDMXSubscription(IMasterController masterController, ITransmitter transmitter, IListener listener, IRenderer renderer)
         {
             VenueStatusEvents = new LastItemReplaySubject<VenueStatusUpdate>();
             masterController.VenueStatusUpdated += (sender, e) => VenueStatusEvents.OnNext(e);
@@ -41,8 +44,28 @@ namespace kadmium_dmx_webapi.GraphQL.Queries
             ListenerMessageEvents = new RateLimitedKeyedReplaySubject<string, ListenerMessage>(250);
             listener.MessageReceived += (sender, e) => ListenerMessageEvents.Add(e.Address, e);
 
-            DmxEvents = new RateLimitedKeyedReplaySubject<int, DMXEventArgs>(25);
+            DmxEvents = new RateLimitedKeyedReplaySubject<int, DMXEventArgs>(250);
             transmitter.Dmx += (sender, e) => DmxEvents.Add(e.UniverseId, e);
+
+            FixtureUpdateEvents = new RateLimitedKeyedReplaySubject<Tuple<int, int>, FixtureUpdateEvent>(250);
+            renderer.OnUpdate += (sender, e) =>
+            {
+            foreach (var universe in masterController.Venue.Universes)
+            {
+                foreach (var fixture in universe.Fixtures)
+                {
+                    var key = new Tuple<int, int>(universe.UniverseID, fixture.Address);
+                        var updateEvent = new FixtureUpdateEvent
+                        {
+                            Address = fixture.Address,
+                            UniverseId = universe.UniverseID,
+                            Attributes = fixture.FrameSettables.Values.Where(x => !(x is DMXChannel)).ToList(),
+                            DmxChannels = fixture.FrameSettables.Values.Where(x => (x is DMXChannel)).Select(x => x as DMXChannel).ToList()
+                        };
+                        FixtureUpdateEvents.Add(key, updateEvent);
+                    }
+                }
+            };
 
             AddField(new EventStreamFieldType
             {
@@ -93,6 +116,25 @@ namespace kadmium_dmx_webapi.GraphQL.Queries
                     return DmxEvents
                         .Where(x => x.UniverseId == universeId);
                     })
+            });
+
+            AddField(new EventStreamFieldType
+            {
+                Name = "fixtureUpdate",
+                Arguments = new QueryArguments(
+                    new QueryArgument<IntGraphType> { Name = "universeId" },
+                    new QueryArgument<IntGraphType> { Name = "address" }
+                ),
+                Type = typeof(ActiveFixtureUpdateType),
+                Resolver = new FuncFieldResolver<FixtureUpdateEvent>(ctx => ctx.Source as FixtureUpdateEvent),
+                Subscriber = new EventStreamResolver<FixtureUpdateEvent>(ctx =>
+                {
+                    var universeId = (int)ctx.Arguments["universeId"];
+                    var address = (int)ctx.Arguments["address"];
+
+                    return FixtureUpdateEvents
+                        .Where(x => x.UniverseId == universeId && x.Address == address);
+                })
             });
         }
 

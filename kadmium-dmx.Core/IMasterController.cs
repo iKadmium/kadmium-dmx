@@ -20,7 +20,7 @@ namespace kadmium_dmx_core
         ITransmitter Transmitter { get; }
         IListener Listener { get; }
         event EventHandler<VenueStatusUpdate> VenueStatusUpdated;
-
+        
         Task LoadVenue(IVenueData venue, IDictionary<FixtureDefinitionSkeleton, IFixtureDefinition> definitions, IEnumerable<IGroupData> groups);
         Task SetSettings(Settings value);
     }

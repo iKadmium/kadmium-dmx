@@ -21,6 +21,11 @@ namespace kadmium_dmx_webapi.GraphQL.Types.Venues
                 expression: x => x.Settables.Values.Where(settable => settable is DMXChannel).Select(channel => channel as DMXChannel),
                 type: typeof(ListGraphType<ActiveDmxChannelType>)
             );
+            Field(
+                name: "attributes",
+                expression: x => x.Settables.Values.Where(settable => !(settable is DMXChannel)).Select(channel => channel as FixtureAttribute),
+                type: typeof(ListGraphType<ActiveFixtureAttributeType>)
+            );
         }
     }
 }
