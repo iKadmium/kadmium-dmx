@@ -20,12 +20,6 @@ export class DmxDetailRenderer
         this.y = y;
     }
 
-    public selectChannel(fixture: ActiveUniverseQuery_activeUniverse_fixtures, channel: ActiveUniverseQuery_activeUniverse_fixtures_channels): void
-    {
-        this.selectedFixture = fixture;
-        this.selectedChannel = channel;
-    }
-
     public render(ctx: CanvasRenderingContext2D, data: number[]): void
     {
         ctx.beginPath();

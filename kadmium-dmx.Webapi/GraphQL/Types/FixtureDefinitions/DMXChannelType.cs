@@ -12,13 +12,13 @@ namespace kadmium_dmx_webapi.GraphQL.Types.FixtureDefinitions
         public DMXChannelType()
         {
             Name = "dmxChannel";
-            Field(x => x.Name)
+            Field(x => x.Name, type: typeof(NonNullGraphType<StringGraphType>))
                 .Description("The name of the channel");
-            Field(x => x.Address, type: typeof(IntGraphType))
+            Field(x => x.Address, type: typeof(NonNullGraphType<IntGraphType>))
                 .Description("The address of the channel (beginning at 1)");
-            Field(x => x.Min, type: typeof(IntGraphType))
+            Field(x => x.Min, type: typeof(NonNullGraphType<IntGraphType>))
                 .Description("The minimum meaningful value for the channel");
-            Field(x => x.Max, type: typeof(IntGraphType))
+            Field(x => x.Max, type: typeof(NonNullGraphType<IntGraphType>))
                 .Description("The maximum meaningful value for the channel");
         }
     }

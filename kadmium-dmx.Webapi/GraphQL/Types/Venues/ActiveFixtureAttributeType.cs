@@ -15,7 +15,7 @@ namespace kadmium_dmx_webapi.GraphQL.Types.Venues
 
             Field(x => x.Name);
             Field(x => x.Value,
-                type: typeof(StringGraphType));
+                type: typeof(NonNullGraphType<FloatGraphType>));
             Field(x => x.Controlled);
         }
     }

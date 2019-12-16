@@ -14,11 +14,11 @@ namespace kadmium_dmx_webapi.GraphQL.Types.Venues
             Name = "activeDmxChannel";
 
             Field(x => x.Name);
-            Field(x => x.Min, type: typeof(IntGraphType));
-            Field(x => x.Max, type: typeof(IntGraphType));
+            Field(x => x.Min, type: typeof(NonNullGraphType<IntGraphType>));
+            Field(x => x.Max, type: typeof(NonNullGraphType<IntGraphType>));
             Field(x => x.Controlled);
-            Field(x => x.Address, type: typeof(IntGraphType));
-            Field(x => x.RelativeAddress, type: typeof(IntGraphType));
+            Field(x => x.Address, type: typeof(NonNullGraphType<IntGraphType>));
+            Field(x => x.RelativeAddress, type: typeof(NonNullGraphType<IntGraphType>));
         }
     }
 }

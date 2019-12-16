@@ -17,14 +17,14 @@ export interface SubscribeVenueStatus_venueStatus_activeVenue_universes {
   __typename: "Universe";
   universeID: number;
   name: string;
-  dmxChannels: number | null;
-  fixtures: (SubscribeVenueStatus_venueStatus_activeVenue_universes_fixtures | null)[] | null;
+  dmxChannels: number;
+  fixtures: SubscribeVenueStatus_venueStatus_activeVenue_universes_fixtures[];
 }
 
 export interface SubscribeVenueStatus_venueStatus_activeVenue {
   __typename: "Venue";
   name: string;
-  universes: (SubscribeVenueStatus_venueStatus_activeVenue_universes | null)[] | null;
+  universes: SubscribeVenueStatus_venueStatus_activeVenue_universes[];
 }
 
 export interface SubscribeVenueStatus_venueStatus {
@@ -32,7 +32,7 @@ export interface SubscribeVenueStatus_venueStatus {
   /**
    * The code associated with the status
    */
-  statusCode: statusCode | null;
+  statusCode: statusCode;
   /**
    * The message associated with the status
    */
@@ -44,5 +44,5 @@ export interface SubscribeVenueStatus_venueStatus {
 }
 
 export interface SubscribeVenueStatus {
-  venueStatus: SubscribeVenueStatus_venueStatus | null;
+  venueStatus: SubscribeVenueStatus_venueStatus;
 }

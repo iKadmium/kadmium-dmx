@@ -1,10 +1,11 @@
-import { Alert } from 'antd';
+import { Alert, Card, Descriptions } from 'antd';
 import { UniverseSubscription, UniverseSubscriptionVariables } from 'generated/UniverseSubscription';
-import { ActiveUniverseQuery, ActiveUniverseQueryVariables, ActiveUniverseQuery_activeUniverse_fixtures } from 'generated/ActiveUniverseQuery';
+import { ActiveUniverseQuery, ActiveUniverseQueryVariables, ActiveUniverseQuery_activeUniverse_fixtures, ActiveUniverseQuery_activeUniverse_fixtures_channels } from 'generated/ActiveUniverseQuery';
 import gql from 'graphql-tag';
 import React from 'react';
 import { Subscription, Query } from 'react-apollo';
 import { DmxRenderer } from './DmxRenderer';
+import { DescriptionsItemProps } from 'antd/lib/descriptions';
 
 const dmxSubscription = gql`
     subscription UniverseSubscription($universeId: Int!){
@@ -37,18 +38,29 @@ interface IDmxViewerProps
     universeId: number
 };
 
-export class DmxViewer extends React.Component<IDmxViewerProps>
+interface IDmxViewerState
+{
+    selectedChannel: ActiveUniverseQuery_activeUniverse_fixtures_channels | null;
+    selectedFixture: ActiveUniverseQuery_activeUniverse_fixtures | null;
+}
+
+export class DmxViewer extends React.Component<IDmxViewerProps, IDmxViewerState>
 {
     private canvasRef: React.RefObject<HTMLCanvasElement>;
     private renderer: DmxRenderer;
     private fixtures: ActiveUniverseQuery_activeUniverse_fixtures[];
 
-    constructor(props)
+    constructor(props: Readonly<IDmxViewerProps>)
     {
         super(props);
 
         this.canvasRef = React.createRef<HTMLCanvasElement>();
+        this.onChannelClick = this.onChannelClick.bind(this);
 
+        this.state = {
+            selectedChannel: null,
+            selectedFixture: null
+        };
     }
 
     private handleCanvasClick(event: React.MouseEvent<HTMLCanvasElement, MouseEvent>): void
@@ -57,8 +69,16 @@ export class DmxViewer extends React.Component<IDmxViewerProps>
         {
             const x = event.nativeEvent.offsetX;
             const y = event.nativeEvent.offsetY;
-            this.renderer.handleCanvasClick(x, y);
+            this.renderer.handleCanvasClick(x, y, this.onChannelClick);
         }
+    }
+
+    private onChannelClick(fixture: ActiveUniverseQuery_activeUniverse_fixtures, channel: ActiveUniverseQuery_activeUniverse_fixtures_channels): void
+    {
+        this.setState({
+            selectedChannel: channel,
+            selectedFixture: fixture
+        });
     }
 
     public render()
@@ -106,14 +126,40 @@ export class DmxViewer extends React.Component<IDmxViewerProps>
                                     {
                                         this.fixtures = data.data.activeUniverse.fixtures;
                                     }
+
+                                    const getDescriptionsItems: () => DescriptionsItemProps[] = () =>
+                                    {
+                                        const items: DescriptionsItemProps[] = [];
+                                        if (this.state.selectedFixture)
+                                        {
+                                            items.push({ label: "Manufacturer", children: this.state.selectedFixture.manufacturer });
+                                            items.push({ label: "Model", children: this.state.selectedFixture.model });
+                                            items.push({ label: "Address", children: this.state.selectedFixture.address });
+                                        }
+                                        if (this.state.selectedChannel)
+                                        {
+                                            items.push({ label: "Channel", children: this.state.selectedChannel.address });
+                                            items.push({ label: "Name", children: this.state.selectedChannel.name });
+                                        }
+                                        return items;
+                                    }
                                     return (
-                                        <canvas
-                                            ref={this.canvasRef}
-                                            width={DmxRenderer.totalWidth}
-                                            height={DmxRenderer.totalHeight}
-                                            style={{ background: 'black' }}
-                                            onClick={(event) => this.handleCanvasClick(event)}
-                                        ></canvas>
+                                        <>
+                                            <canvas
+                                                ref={this.canvasRef}
+                                                width={DmxRenderer.totalWidth}
+                                                height={DmxRenderer.totalHeight}
+                                                style={{ background: 'black' }}
+                                                onClick={(event) => this.handleCanvasClick(event)}
+                                            ></canvas>
+                                            {this.state.selectedChannel &&
+                                                <Card title={`${this.state.selectedChannel.address}`}>
+                                                    <Descriptions bordered={true} column={1}>
+                                                        {getDescriptionsItems().map(item => <Descriptions.Item {...item} />)}
+                                                    </Descriptions>
+                                                </Card>
+                                            }
+                                        </>
                                     );
                                 }
                                 }
@@ -125,14 +171,5 @@ export class DmxViewer extends React.Component<IDmxViewerProps>
             </Subscription>
 
         );
-    }
-
-    private generateData = (data: number[]) => 
-    {
-        for (let i = 0; i < 512; i++)
-        {
-            const value = Math.floor(Math.random() * 255);
-            data[i] = value;
-        }
     }
 }

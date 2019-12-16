@@ -9,13 +9,11 @@ export interface IChannelMap
 
 export class FixtureRenderer
 {
-    private fixture: FixtureViewerQuery_activeUniverse_fixtures;
     private channelMap: IChannelMap;
     private colorRenderer: ColorRenderer;
 
     constructor(fixture: FixtureViewerQuery_activeUniverse_fixtures)
     {
-        this.fixture = fixture;
         this.channelMap = this.getChannelMap(fixture, ["Red", "Green", "Blue", "White", "Strobe"]);
         if (RgbwColorRenderer.isRgbw(this.channelMap))
         {

@@ -8,11 +8,11 @@
 
 export interface UniverseSubscription_universeDmx {
   __typename: "dmxEvent";
-  dmx: (number | null)[] | null;
+  dmx: number[] | null;
 }
 
 export interface UniverseSubscription {
-  universeDmx: UniverseSubscription_universeDmx | null;
+  universeDmx: UniverseSubscription_universeDmx;
 }
 
 export interface UniverseSubscriptionVariables {

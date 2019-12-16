@@ -16,7 +16,7 @@ namespace kadmium_dmx_webapi.GraphQL.Types
             Field(
                 name: "dmx",
                 x => x.DMX,
-                type: typeof(ListGraphType<IntGraphType>)
+                type: typeof(ListGraphType<NonNullGraphType<IntGraphType>>)
             );
             Field(
                 name: "universeId",

@@ -16,7 +16,7 @@ namespace kadmium_dmx_webapi.GraphQL.Types.Venues
             Field(x => x.Name);
             Field(x => x.UniverseID);
             Field(x => x.Fixtures,
-                type: typeof(ListGraphType<ActiveFixtureType>)
+                type: typeof(NonNullGraphType<ListGraphType<NonNullGraphType<ActiveFixtureType>>>)
             );
         }
     }

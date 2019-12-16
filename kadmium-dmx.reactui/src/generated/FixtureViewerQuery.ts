@@ -8,11 +8,11 @@
 
 export interface FixtureViewerQuery_activeUniverse_fixtures_channels {
   __typename: "activeDmxChannel";
-  address: number | null;
+  address: number;
   controlled: boolean;
   name: string;
-  min: number | null;
-  max: number | null;
+  min: number;
+  max: number;
 }
 
 export interface FixtureViewerQuery_activeUniverse_fixtures {
@@ -20,13 +20,13 @@ export interface FixtureViewerQuery_activeUniverse_fixtures {
   address: number;
   manufacturer: string;
   model: string;
-  channels: (FixtureViewerQuery_activeUniverse_fixtures_channels | null)[] | null;
+  channels: FixtureViewerQuery_activeUniverse_fixtures_channels[];
 }
 
 export interface FixtureViewerQuery_activeUniverse {
   __typename: "activeUniverse";
   name: string;
-  fixtures: (FixtureViewerQuery_activeUniverse_fixtures | null)[] | null;
+  fixtures: FixtureViewerQuery_activeUniverse_fixtures[];
 }
 
 export interface FixtureViewerQuery {

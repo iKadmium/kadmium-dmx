@@ -15,13 +15,13 @@ export interface ListenerMessagesSubscription_listenerMessages {
   /**
    * The time the message was received
    */
-  time: any | null;
+  time: any;
   /**
    * The normalised floating point value (0.0 to 1.0) of the message
    */
-  value: string | null;
+  value: string;
 }
 
 export interface ListenerMessagesSubscription {
-  listenerMessages: ListenerMessagesSubscription_listenerMessages | null;
+  listenerMessages: ListenerMessagesSubscription_listenerMessages;
 }

@@ -7,5 +7,5 @@
 // ====================================================
 
 export interface ListenerEnabledQuery {
-  listenerEnabled: boolean | null;
+  listenerEnabled: boolean;
 }

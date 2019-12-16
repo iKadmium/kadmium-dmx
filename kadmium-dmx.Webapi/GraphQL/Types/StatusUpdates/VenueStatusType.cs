@@ -14,10 +14,10 @@ namespace kadmium_dmx_webapi.GraphQL.Types.StatusUpdates
         public VenueStatusType()
         {
             Name = "VenueStatus";
-            Field(x => x.Message)
+            Field(x => x.Message, type: typeof(NonNullGraphType<StringGraphType>))
                 .Name("message")
                 .Description("The message associated with the status");
-            Field(x => x.StatusCode, type: typeof(StatusCodeType))
+            Field(x => x.StatusCode, type: typeof(NonNullGraphType<StatusCodeType>))
                 .Name("statusCode")
                 .Description("The code associated with the status");
             Field(x => x.Venue, type: typeof(VenueType))

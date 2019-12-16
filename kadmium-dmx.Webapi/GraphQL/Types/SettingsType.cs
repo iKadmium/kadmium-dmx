@@ -15,7 +15,7 @@ namespace kadmium_dmx_webapi.GraphQL.Types
             Field(x => x.OscPort)
                 .Name("oscPort")
                 .Description("The OSC Port on which the app should listen for commands");
-            Field(x => x.SacnTransmitter, type: typeof(SACNTransmitterSettingsType))
+            Field(x => x.SacnTransmitter, type: typeof(NonNullGraphType<SACNTransmitterSettingsType>))
                 .Name("sacnTransmitter")
                 .Description("Settings for sACN transmission");
             Field(x => x.StrobeEffectFrequency)

@@ -18,7 +18,7 @@ namespace kadmium_dmx_webapi.GraphQL.Types
             Field(x => x.Multicast)
                 .Name("multicast")
                 .Description("Enable multicast for this transmitter");
-            Field(x => x.UUID, type: typeof(StringGraphType))
+            Field(x => x.UUID, type: typeof(NonNullGraphType<StringGraphType>))
                 .Name("uuid")
                 .Description("The UUID for this sACN transmitter");
             Field(x => x.Unicast)

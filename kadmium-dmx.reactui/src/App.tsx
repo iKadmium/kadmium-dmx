@@ -9,7 +9,7 @@ import './App.css';
 import SiderLayout from './SiderLayout';
 import { WebSocketLink } from 'apollo-link-ws';
 import { getMainDefinition } from 'apollo-utilities';
-import { ApolloProvider as ApolloHooksProvider } from 'react-apollo-hooks';
+import { ApolloProvider as ApolloHooksProvider } from '@apollo/react-hooks';
 import { ApolloProvider } from 'react-apollo';
 
 const App: React.FC = () =>
@@ -53,6 +53,15 @@ const App: React.FC = () =>
 			}),
 			link
 		]),
+		defaultOptions: {
+			query: {
+				fetchPolicy: 'no-cache',
+				errorPolicy: 'all'
+			},
+			watchQuery: {
+				fetchPolicy: 'no-cache'
+			}
+		},
 		cache: new InMemoryCache()
 	});
 

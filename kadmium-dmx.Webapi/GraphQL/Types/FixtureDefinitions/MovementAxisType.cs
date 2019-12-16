@@ -12,11 +12,11 @@ namespace kadmium_dmx_webapi.GraphQL.Types.FixtureDefinitions
         public MovementAxisType()
         {
             Name = "MovementAxis";
-            Field(x => x.Name)
+            Field(x => x.Name, type: typeof(NonNullGraphType<StringGraphType>))
                 .Description("The name of the axis");
-            Field(x => x.Min)
+            Field(x => x.Min, type: typeof(NonNullGraphType<IntGraphType>))
                 .Description("The minimum angle (in degrees) of the axis");
-            Field(x => x.Max)
+            Field(x => x.Max, type: typeof(NonNullGraphType<IntGraphType>))
                 .Description("The maximum angle (in degrees) of the axis");
         }
     }

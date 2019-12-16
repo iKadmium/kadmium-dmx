@@ -70,7 +70,7 @@ namespace kadmium_dmx_webapi.GraphQL.Queries
             AddField(new EventStreamFieldType
             {
                 Name = "venueStatus",
-                Type = typeof(VenueStatusType),
+                Type = typeof(NonNullGraphType<VenueStatusType>),
                 Resolver = new FuncFieldResolver<VenueStatusUpdate>(ctx => ctx.Source as VenueStatusUpdate),
                 Subscriber = new EventStreamResolver<VenueStatusUpdate>(ctx => VenueStatusEvents)
             });
@@ -78,7 +78,7 @@ namespace kadmium_dmx_webapi.GraphQL.Queries
             AddField(new EventStreamFieldType
             {
                 Name = "listenerStatus",
-                Type = typeof(StatusType),
+                Type = typeof(NonNullGraphType<StatusType>),
                 Resolver = new FuncFieldResolver<StatusUpdate>(ctx => ctx.Source as StatusUpdate),
                 Subscriber = new EventStreamResolver<StatusUpdate>(ctx => ListenerStatusEvents.AsObservable())
             });
@@ -86,7 +86,7 @@ namespace kadmium_dmx_webapi.GraphQL.Queries
             AddField(new EventStreamFieldType
             {
                 Name = "listenerMessages",
-                Type = typeof(ListenerMessageType),
+                Type = typeof(NonNullGraphType<ListenerMessageType>),
                 Resolver = new FuncFieldResolver<ListenerMessage>(ctx => ctx.Source as ListenerMessage),
                 Subscriber = new EventStreamResolver<ListenerMessage>(ctx => ListenerMessageEvents.AsObservable())
             });
@@ -94,7 +94,7 @@ namespace kadmium_dmx_webapi.GraphQL.Queries
             AddField(new EventStreamFieldType
             {
                 Name = "transmitterStatus",
-                Type = typeof(StatusType),
+                Type = typeof(NonNullGraphType<StatusType>),
                 Resolver = new FuncFieldResolver<StatusUpdate>(ctx => ctx.Source as StatusUpdate),
                 Subscriber = new EventStreamResolver<StatusUpdate>(ctx => TransmitterStatusEvents.AsObservable())
             });
@@ -103,12 +103,12 @@ namespace kadmium_dmx_webapi.GraphQL.Queries
             {
                 Name = "universeDmx",
                 Arguments = new QueryArguments(
-                    new QueryArgument<IntGraphType>
+                    new QueryArgument<NonNullGraphType<IntGraphType>>
                     {
                         Name = "universeId"
                     }
                 ),
-                Type = typeof(DmxEventType),
+                Type = typeof(NonNullGraphType<DmxEventType>),
                 Resolver = new FuncFieldResolver<DMXEventArgs>(ctx => ctx.Source as DMXEventArgs),
                 Subscriber = new EventStreamResolver<DMXEventArgs>(ctx =>
                 {
@@ -122,10 +122,10 @@ namespace kadmium_dmx_webapi.GraphQL.Queries
             {
                 Name = "fixtureUpdate",
                 Arguments = new QueryArguments(
-                    new QueryArgument<IntGraphType> { Name = "universeId" },
-                    new QueryArgument<IntGraphType> { Name = "address" }
+                    new QueryArgument<NonNullGraphType<IntGraphType>> { Name = "universeId" },
+                    new QueryArgument<NonNullGraphType<IntGraphType>> { Name = "address" }
                 ),
-                Type = typeof(ActiveFixtureUpdateType),
+                Type = typeof(NonNullGraphType<ActiveFixtureUpdateType>),
                 Resolver = new FuncFieldResolver<FixtureUpdateEvent>(ctx => ctx.Source as FixtureUpdateEvent),
                 Subscriber = new EventStreamResolver<FixtureUpdateEvent>(ctx =>
                 {

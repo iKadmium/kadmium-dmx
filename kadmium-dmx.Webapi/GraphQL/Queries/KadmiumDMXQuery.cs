@@ -21,30 +21,30 @@ namespace kadmium_dmx_webapi.GraphQL.Queries
         {
             Name = "KadmiumDMXQuery";
 
-            Field<BooleanGraphType>(
+            Field<NonNullGraphType<BooleanGraphType>>(
                 name: "listenerEnabled",
                 resolve: context => listener.Enabled
             );
 
-            FieldAsync<ListGraphType<GroupType>>(
+            FieldAsync<NonNullGraphType<ListGraphType<NonNullGraphType<GroupType>>>>(
                 name: "groups",
                 resolve: async context => (await groupStore.GetAll())
                     .OrderBy(x => x.Order)
             );
 
-            FieldAsync<SettingsType>(
+            FieldAsync<NonNullGraphType<SettingsType>>(
                 name: "settings",
                 resolve: async context => await settingsStore.GetSettings()
             );
 
-            FieldAsync<ListGraphType<FixtureDefinitionType>>(
+            FieldAsync<NonNullGraphType<ListGraphType<NonNullGraphType<FixtureDefinitionType>>>>(
                 name: "fixtures",
                 resolve: async context => (await fixtureDefinitionStore.GetAll())
                     .OrderBy(x => x.Skeleton.Manufacturer)
                     .ThenBy(x => x.Skeleton.Model)
             );
 
-            FieldAsync<ListGraphType<VenueType>>(
+            FieldAsync<NonNullGraphType<ListGraphType<NonNullGraphType<VenueType>>>>(
                 name: "venues",
                 resolve: async context => (await venueStore.GetAll())
                     .OrderBy(x => x.Name)

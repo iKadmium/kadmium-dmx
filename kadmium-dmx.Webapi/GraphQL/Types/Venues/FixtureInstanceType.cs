@@ -21,7 +21,7 @@ namespace kadmium_dmx_webapi.GraphQL.Types.Venues
             Field(x => x.Type.Model);
 
             FieldAsync(
-                type: typeof(FixtureDefinitionType),
+                type: typeof(NonNullGraphType<FixtureDefinitionType>),
                 name: "definition",
                 resolve: async context =>
                 {

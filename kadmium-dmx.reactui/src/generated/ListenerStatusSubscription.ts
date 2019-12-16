@@ -13,7 +13,7 @@ export interface ListenerStatusSubscription_listenerStatus {
   /**
    * The code associated with the status
    */
-  statusCode: statusCode | null;
+  statusCode: statusCode;
   /**
    * The message associated with the status
    */
@@ -21,5 +21,5 @@ export interface ListenerStatusSubscription_listenerStatus {
 }
 
 export interface ListenerStatusSubscription {
-  listenerStatus: ListenerStatusSubscription_listenerStatus | null;
+  listenerStatus: ListenerStatusSubscription_listenerStatus;
 }

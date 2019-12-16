@@ -1,7 +1,6 @@
 import { ActiveUniverseQuery_activeUniverse_fixtures, ActiveUniverseQuery_activeUniverse_fixtures_channels } from 'generated/ActiveUniverseQuery';
 import { DmxCellRenderer } from './DmxCellRenderer';
 import { DmxChannelControlStatus } from './DmxChannelControlStatus';
-import { DmxDetailRenderer } from './DmxDetailRenderer';
 
 const totalCells = 512;
 const cellsPerRow = 20;
@@ -9,14 +8,13 @@ const totalRows = Math.ceil(totalCells / cellsPerRow);
 
 const totalCellWidth = (DmxCellRenderer.cellWidth + DmxCellRenderer.cellMarginX) * cellsPerRow + DmxCellRenderer.cellMarginX;
 
-
 export class DmxRenderer
 {
-    public static totalWidth = totalCellWidth + (DmxDetailRenderer.marginX * 2) + DmxDetailRenderer.width;
+    public static totalWidth = totalCellWidth;
     public static totalHeight = (DmxCellRenderer.cellHeight + DmxCellRenderer.cellMarginY) * totalRows + DmxCellRenderer.cellMarginY;
 
     private cells: DmxCellRenderer[];
-    private detail: DmxDetailRenderer;
+    private selectedChannel: ActiveUniverseQuery_activeUniverse_fixtures_channels;
     private fixtureDetails: ActiveUniverseQuery_activeUniverse_fixtures[];
 
     constructor(fixtureDetails: ActiveUniverseQuery_activeUniverse_fixtures[])
@@ -53,8 +51,6 @@ export class DmxRenderer
                 index++;
             }
         }
-
-        this.detail = new DmxDetailRenderer(totalCellWidth + DmxDetailRenderer.marginX, DmxDetailRenderer.marginY);
     }
 
     private getCellXPosition = (cellNumberX: number) =>
@@ -79,21 +75,18 @@ export class DmxRenderer
         {
             cell.render(ctx, data[cell.address - 1]);
         }
-
-        this.detail.render(ctx, data);
     }
 
-    private selectChannel(fixture: ActiveUniverseQuery_activeUniverse_fixtures, channel: ActiveUniverseQuery_activeUniverse_fixtures_channels): void
+    private selectChannel(channel: ActiveUniverseQuery_activeUniverse_fixtures_channels): void
     {
-        if (this.detail.selectedChannel)
+        if (this.selectedChannel)
         {
-            const selectedCell = this.cells.find(x => x.address === this.detail.selectedChannel.address);
+            const selectedCell = this.cells.find(x => x.address === this.selectedChannel.address);
             if (selectedCell)
             {
                 selectedCell.selected = false;
             }
         }
-        this.detail.selectChannel(fixture, channel);
         if (channel)
         {
             const selectedCell = this.cells.find(x => x.address === channel.address);
@@ -102,9 +95,10 @@ export class DmxRenderer
                 selectedCell.selected = true;
             }
         }
+        this.selectedChannel = channel;
     }
 
-    public handleCanvasClick(x: number, y: number): void
+    public handleCanvasClick(x: number, y: number, onChannelClick: (fixture: ActiveUniverseQuery_activeUniverse_fixtures, channel: ActiveUniverseQuery_activeUniverse_fixtures_channels) => void): void
     {
         if (x <= totalCellWidth && y <= DmxRenderer.totalHeight)
         {
@@ -120,7 +114,8 @@ export class DmxRenderer
                 if (fixture)
                 {
                     const channel = fixture.channels.find(x => x.address === index);
-                    this.selectChannel(fixture, channel);
+                    this.selectChannel(channel);
+                    onChannelClick(fixture, channel);
                 }
                 else
                 {
@@ -130,12 +125,14 @@ export class DmxRenderer
                         controlled: false,
                         __typename: null
                     };
-                    this.selectChannel(null, channel);
+                    this.selectChannel(channel);
+                    onChannelClick(null, channel);
                 }
             }
             else
             {
-                this.selectChannel(null, null);
+                this.selectChannel(null);
+                onChannelClick(null, null);
             }
         }
     }

@@ -8,11 +8,11 @@
 
 export interface FixtureControllerSubscription_universeDmx {
   __typename: "dmxEvent";
-  dmx: (number | null)[] | null;
+  dmx: number[] | null;
 }
 
 export interface FixtureControllerSubscription {
-  universeDmx: FixtureControllerSubscription_universeDmx | null;
+  universeDmx: FixtureControllerSubscription_universeDmx;
 }
 
 export interface FixtureControllerSubscriptionVariables {

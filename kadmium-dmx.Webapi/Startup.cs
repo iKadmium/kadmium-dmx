@@ -150,6 +150,9 @@ namespace kadmium_dmx_webapi
             services.AddSingleton<IMasterController>(MasterController);
             services.AddSingleton<IRenderer>(MasterController.Renderer);
 
+            ValueConverter.Register(typeof(double), typeof(float), value => System.Convert.ToSingle(value));
+            ValueConverter.Register(typeof(float), typeof(double), value => System.Convert.ToDouble(value));
+
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

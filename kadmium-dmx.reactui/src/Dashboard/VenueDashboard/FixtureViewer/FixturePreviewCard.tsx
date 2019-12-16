@@ -3,6 +3,7 @@ import { FixtureViewerQuery_activeUniverse_fixtures } from 'generated/FixtureVie
 import { Card, Icon } from 'antd';
 import { FixtureRenderer } from './FixtureRenderer/FixtureRenderer';
 import { Link } from 'react-navi';
+import { FixturePreviewWindow } from './FixtureController/FixturePreviewWindow';
 
 export interface IFixturePreviewCardProps
 {
@@ -12,33 +13,13 @@ export interface IFixturePreviewCardProps
 
 export class FixturePreviewCard extends React.Component<IFixturePreviewCardProps>
 {
-    private canvasRef: React.RefObject<HTMLCanvasElement>;
     private fixtureRenderer: FixtureRenderer;
 
-    constructor(props)
+    constructor(props: Readonly<IFixturePreviewCardProps>)
     {
         super(props);
         this.getActions.bind(this);
-        this.canvasRef = React.createRef<HTMLCanvasElement>();
         this.fixtureRenderer = new FixtureRenderer(props.fixture);
-    }
-
-    public shouldComponentUpdate(nextProps: IFixturePreviewCardProps): boolean
-    {
-        if (this.props.fixture !== nextProps.fixture)
-        {
-            this.fixtureRenderer = new FixtureRenderer(nextProps.fixture);
-            return true;
-        }
-        else
-        {
-            if (this.canvasRef.current)
-            {
-                const ctx = this.canvasRef.current.getContext('2d');
-                this.fixtureRenderer.render(ctx, nextProps.dmx);
-            }
-        }
-        return false;
     }
 
     private getActions(): React.ReactNode[]
@@ -61,7 +42,7 @@ export class FixturePreviewCard extends React.Component<IFixturePreviewCardProps
                 actions={this.getActions()}
             >
                 <div style={{ display: "flex", justifyContent: "center" }}>
-                    <canvas ref={this.canvasRef} width={200} height={200}></canvas>
+                    <FixturePreviewWindow fixture={this.props.fixture} dmx={this.props.dmx} />
                 </div>
             </Card>
         );

@@ -8,7 +8,7 @@
 
 export interface ActiveUniverseQuery_activeUniverse_fixtures_channels {
   __typename: "activeDmxChannel";
-  address: number | null;
+  address: number;
   name: string;
   controlled: boolean;
 }
@@ -18,12 +18,12 @@ export interface ActiveUniverseQuery_activeUniverse_fixtures {
   address: number;
   manufacturer: string;
   model: string;
-  channels: (ActiveUniverseQuery_activeUniverse_fixtures_channels | null)[] | null;
+  channels: ActiveUniverseQuery_activeUniverse_fixtures_channels[];
 }
 
 export interface ActiveUniverseQuery_activeUniverse {
   __typename: "activeUniverse";
-  fixtures: (ActiveUniverseQuery_activeUniverse_fixtures | null)[] | null;
+  fixtures: ActiveUniverseQuery_activeUniverse_fixtures[];
 }
 
 export interface ActiveUniverseQuery {

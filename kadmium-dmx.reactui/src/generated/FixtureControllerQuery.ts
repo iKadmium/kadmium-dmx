@@ -9,16 +9,17 @@
 export interface FixtureControllerQuery_activeFixture_channels {
   __typename: "activeDmxChannel";
   controlled: boolean;
-  address: number | null;
+  address: number;
   name: string;
-  min: number | null;
-  max: number | null;
+  min: number;
+  max: number;
 }
 
 export interface FixtureControllerQuery_activeFixture_attributes {
   __typename: "activeFixtureAttribute";
   controlled: boolean;
   name: string;
+  value: number;
 }
 
 export interface FixtureControllerQuery_activeFixture {
@@ -26,8 +27,8 @@ export interface FixtureControllerQuery_activeFixture {
   address: number;
   manufacturer: string;
   model: string;
-  channels: (FixtureControllerQuery_activeFixture_channels | null)[] | null;
-  attributes: (FixtureControllerQuery_activeFixture_attributes | null)[] | null;
+  channels: FixtureControllerQuery_activeFixture_channels[];
+  attributes: FixtureControllerQuery_activeFixture_attributes[];
 }
 
 export interface FixtureControllerQuery {

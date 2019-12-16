@@ -12,7 +12,7 @@ export interface LoadVenue_loadVenue {
 }
 
 export interface LoadVenue {
-  loadVenue: LoadVenue_loadVenue | null;
+  loadVenue: LoadVenue_loadVenue;
 }
 
 export interface LoadVenueVariables {

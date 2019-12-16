@@ -16,8 +16,8 @@ namespace kadmium_dmx_webapi.GraphQL.Types.Venues
             Name = "Universe";
             Field(x => x.Name);
             Field(x => x.UniverseID);
-            Field(x => x.Fixtures, type: typeof(ListGraphType<FixtureInstanceType>));
-            FieldAsync(typeof(IntGraphType), "dmxChannels", resolve: async context => await GetChannelCount(context.Source, fixtureDefinitionStore));
+            Field(x => x.Fixtures, type: typeof(NonNullGraphType<ListGraphType<NonNullGraphType<FixtureInstanceType>>>));
+            FieldAsync(typeof(NonNullGraphType<IntGraphType>), "dmxChannels", resolve: async context => await GetChannelCount(context.Source, fixtureDefinitionStore));
         }
 
         private async Task<int> GetChannelCount(IUniverseData universe, IFixtureDefinitionStore fixtureDefinitionStore)

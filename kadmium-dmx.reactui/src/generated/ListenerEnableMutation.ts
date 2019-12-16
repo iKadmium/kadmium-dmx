@@ -7,7 +7,7 @@
 // ====================================================
 
 export interface ListenerEnableMutation {
-  setListenerEnabled: boolean | null;
+  setListenerEnabled: boolean;
 }
 
 export interface ListenerEnableMutationVariables {

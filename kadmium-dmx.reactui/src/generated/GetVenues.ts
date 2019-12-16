@@ -12,5 +12,5 @@ export interface GetVenues_venues {
 }
 
 export interface GetVenues {
-  venues: (GetVenues_venues | null)[] | null;
+  venues: GetVenues_venues[];
 }

@@ -15,7 +15,7 @@ namespace kadmium_dmx_webapi.GraphQL.Types.Venues
 
             Field(x => x.Name);
             Field(x => x.Universes,
-                type: typeof(ListGraphType<ActiveUniverseType>)
+                type: typeof(NonNullGraphType<ListGraphType<NonNullGraphType<ActiveUniverseType>>>)
             );
         }
     }

@@ -16,10 +16,10 @@ namespace kadmium_dmx_webapi.GraphQL.Types.Venues
             Field(x => x.Address);
             Field(x => x.UniverseId);
             Field(x => x.Attributes,
-                type: typeof(ListGraphType<ActiveFixtureAttributeType>)
+                type: typeof(NonNullGraphType<ListGraphType<NonNullGraphType<ActiveFixtureAttributeType>>>)
             );
             Field(x => x.DmxChannels,
-                type: typeof(ListGraphType<ActiveDmxChannelType>)
+                type: typeof(NonNullGraphType<ListGraphType<NonNullGraphType<ActiveDmxChannelType>>>)
             );
         }
     }

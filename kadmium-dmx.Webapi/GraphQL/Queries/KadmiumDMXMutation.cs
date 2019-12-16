@@ -16,7 +16,7 @@ namespace kadmium_dmx_webapi.GraphQL.Queries
         {
             Name = "KadmiumDMXMutation";
 
-            FieldAsync<VenueType>(
+            FieldAsync<NonNullGraphType<VenueType>>(
                 "loadVenue",
                 arguments: new QueryArguments(
                     new QueryArgument<NonNullGraphType<StringGraphType>> { Name = "name" }
@@ -28,7 +28,7 @@ namespace kadmium_dmx_webapi.GraphQL.Queries
                 }
             );
 
-            Field<BooleanGraphType>(
+            Field<NonNullGraphType<BooleanGraphType>>(
                 "setListenerEnabled",
                 arguments: new QueryArguments(
                     new QueryArgument<NonNullGraphType<BooleanGraphType>> { Name = "enabled" }
@@ -38,6 +38,34 @@ namespace kadmium_dmx_webapi.GraphQL.Queries
                     var enabled = context.GetArgument<bool>("enabled");
                     listener.Enabled = enabled;
                     return listener.Enabled;
+                }
+            );
+
+            Field<NonNullGraphType<FloatGraphType>>(
+                "setFixtureAttribute",
+                arguments: new QueryArguments(
+                    new QueryArgument<NonNullGraphType<IntGraphType>> { Name = "universeId" },
+                    new QueryArgument<NonNullGraphType<IntGraphType>> { Name = "fixture" },
+                    new QueryArgument<NonNullGraphType<StringGraphType>> { Name = "attribute" },
+                    new QueryArgument<NonNullGraphType<FloatGraphType>> { Name = "value" }
+                ),
+                resolve: context =>
+                {
+                    var universeId = context.GetArgument<ushort>("universeId");
+                    var fixture = context.GetArgument<ushort>("fixture");
+                    var attributeName = context.GetArgument<string>("attribute");
+                    var value = context.GetArgument<float>("value");
+                    var attribute = masterController
+                        .Venue
+                        .Universes
+                        .Single(x => x.UniverseID == universeId)
+                        .Fixtures
+                        .Single(x => x.Address == fixture)
+                        .Settables
+                        .Single(x => x.Key == attributeName)
+                        .Value;
+                    attribute.Value = value;
+                    return attribute.Value;
                 }
             );
         }

@@ -13,7 +13,7 @@ export class FixturePreviewWindow extends React.Component<IFixturePreviewWindowP
     private canvasRef: React.RefObject<HTMLCanvasElement>;
     private fixtureRenderer: FixtureRenderer;
 
-    constructor(props)
+    constructor(props: Readonly<IFixturePreviewWindowProps>)
     {
         super(props);
         this.canvasRef = React.createRef<HTMLCanvasElement>();
