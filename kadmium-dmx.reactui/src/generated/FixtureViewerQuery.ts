@@ -21,6 +21,7 @@ export interface FixtureViewerQuery_activeUniverse_fixtures {
   manufacturer: string;
   model: string;
   channels: FixtureViewerQuery_activeUniverse_fixtures_channels[];
+  group: string;
 }
 
 export interface FixtureViewerQuery_activeUniverse {
@@ -29,8 +30,30 @@ export interface FixtureViewerQuery_activeUniverse {
   fixtures: FixtureViewerQuery_activeUniverse_fixtures[];
 }
 
+export interface FixtureViewerQuery_groups {
+  __typename: "Group";
+  /**
+   * The Group's name
+   */
+  name: string;
+}
+
+export interface FixtureViewerQuery_fixtures {
+  __typename: "FixtureDefinition";
+  /**
+   * The fixture's manufacturer
+   */
+  manufacturer: string;
+  /**
+   * The fixture's model name (including its personality)
+   */
+  model: string;
+}
+
 export interface FixtureViewerQuery {
   activeUniverse: FixtureViewerQuery_activeUniverse | null;
+  groups: FixtureViewerQuery_groups[];
+  fixtures: FixtureViewerQuery_fixtures[];
 }
 
 export interface FixtureViewerQueryVariables {

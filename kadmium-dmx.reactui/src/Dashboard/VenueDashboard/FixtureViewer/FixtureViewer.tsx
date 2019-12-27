@@ -1,10 +1,12 @@
-import React from 'react';
-import gql from 'graphql-tag';
-import { Query, Subscription } from 'react-apollo';
+import { useQuery, useSubscription, useMutation } from '@apollo/react-hooks';
+import { Alert, Button, Card, Col, Row, message, Tabs } from 'antd';
 import { FixtureViewerQuery, FixtureViewerQueryVariables } from 'generated/FixtureViewerQuery';
 import { FixtureViewerSubscription, FixtureViewerSubscriptionVariables } from 'generated/FixtureViewerSubscription';
-import { Alert, Card, Row, Col } from 'antd';
+import gql from 'graphql-tag';
+import { AddFixtures, IAddFixturesResult } from 'Popups/AddFixtures';
+import React, { useState } from 'react';
 import { FixturePreviewCard } from './FixturePreviewCard';
+import { AddFixtureMutation, AddFixtureMutationVariables } from 'generated/AddFixtureMutation';
 
 const fixtureViewerQuery = gql`
     query FixtureViewerQuery($universeId: Int!) {
@@ -22,7 +24,17 @@ const fixtureViewerQuery = gql`
                     min
                     max
                 }
+                group
             }
+        }
+
+        groups {
+            name
+        }
+
+        fixtures {
+            manufacturer
+            model
         }
 }
 `;
@@ -35,56 +47,109 @@ const fixtureViewerSubscription = gql`
     }
 `;
 
+const addFixtureMutation = gql`
+    mutation AddFixtureMutation($universeId: Int!, $address: Int!, $quantity: Int!, $group: String!, $manufacturer: String!, $model: String!)
+    {
+        addFixture(universeId: $universeId, address: $address, quantity: $quantity, group: $group, manufacturer: $manufacturer, model: $model) {
+            name
+        }
+    }
+`;
+
 export interface IFixtureViewerProps
 {
     universeId: number;
 }
 
-export class FixtureViewer extends React.Component<IFixtureViewerProps>
+export const FixtureViewer: React.FC<IFixtureViewerProps> = (props) =>
 {
+    const [addFixturesVisible, setAddFixturesVisible] = useState<boolean>(false);
+    const { data: queryData, error: queryError, loading: queryLoading, refetch } = useQuery<FixtureViewerQuery, FixtureViewerQueryVariables>(fixtureViewerQuery, {
+        variables: {
+            universeId: props.universeId
+        }
+    });
+    const { data: dmxData, error: subscriptionError, loading: subscriptionLoading } = useSubscription<FixtureViewerSubscription, FixtureViewerSubscriptionVariables>(fixtureViewerSubscription, {
+        variables: {
+            universeId: props.universeId
+        }
+    });
+    const [addFixture] = useMutation<AddFixtureMutation, AddFixtureMutationVariables>(addFixtureMutation);
 
-    public render(): JSX.Element
+    const onVenueUpdate = () =>
     {
-        return (
-            <Query<FixtureViewerQuery, FixtureViewerQueryVariables>
-                query={fixtureViewerQuery}
-                variables={{ universeId: this.props.universeId }}
-            >
-                {({ data: queryData, error: queryError, loading: queryLoading }) =>
-                {
-                    return (
-                        <Subscription<FixtureViewerSubscription, FixtureViewerSubscriptionVariables>
-                            subscription={fixtureViewerSubscription}
-                            variables={{ universeId: this.props.universeId }}
-                        >
-                            {({ data: dmxData, error: subscriptionError, loading: subscriptionLoading }) =>
-                            {
-                                if (queryError || subscriptionError)
-                                {
-                                    return (
-                                        <Alert type="error" message={queryError ? queryError.message : subscriptionError.message} />
-                                    );
-                                }
-                                if (queryLoading || subscriptionLoading)
-                                {
-                                    return (
-                                        <Card loading={queryLoading || subscriptionLoading}></Card>
-                                    );
-                                }
-                                return (
-                                    <Row>
-                                        {queryData.activeUniverse.fixtures.map(fixture =>
-                                            <Col lg={7} key={fixture.address}>
-                                                <FixturePreviewCard fixture={fixture} dmx={dmxData.universeDmx.dmx} />
-                                            </Col>
-                                        )}
-                                    </Row>
-                                );
-                            }}
-                        </Subscription>
-                    );
-                }}
-            </Query>
-        );
+        refetch();
     }
+
+    if (queryError || subscriptionError)
+    {
+        return (<Alert type="error" message={queryError ? queryError.message : subscriptionError.message} />);
+    }
+    if (queryLoading || subscriptionLoading)
+    {
+        return (<Card loading={queryLoading || subscriptionLoading}></Card>);
+    }
+
+    const handleAddFixtures = async (result: IAddFixturesResult) =>
+    {
+        setAddFixturesVisible(false);
+        const mutationResult = await addFixture({
+            variables: {
+                address: result.address,
+                group: result.group,
+                quantity: result.quantity,
+                universeId: props.universeId,
+                manufacturer: result.fixtureType.manufacturer,
+                model: result.fixtureType.model
+            }
+        });
+        if (mutationResult.errors)
+        {
+            message.error(mutationResult.errors);
+        }
+        else
+        {
+            refetch();
+        }
+    };
+
+    return (
+        <>
+            <h2>{queryData.activeUniverse.name} Fixtures</h2>
+            <Tabs size="large">
+                <Tabs.TabPane tab="Known" key="Known">
+                    <Row>
+                        {queryData.activeUniverse.fixtures.map(fixture =>
+                            <Col lg={7} key={fixture.address}>
+                                <FixturePreviewCard
+                                    fixture={fixture}
+                                    fixtures={queryData.fixtures}
+                                    groups={queryData.groups.map(x => x.name)}
+                                    dmx={dmxData.universeDmx.dmx}
+                                    universeId={props.universeId}
+                                    onUpdate={onVenueUpdate}
+                                />
+                            </Col>
+                        )}
+                    </Row>
+                    <Button
+                        size="large"
+                        icon="plus"
+                        type="primary"
+                        onClick={() => setAddFixturesVisible(true)}
+                    >Add</Button>
+                    {addFixturesVisible && <AddFixtures
+                        groups={queryData.groups.map(x => x.name)}
+                        fixtures={queryData.fixtures}
+                        onCancel={() => setAddFixturesVisible(false)}
+                        onOk={handleAddFixtures}
+                    />}
+                </Tabs.TabPane>
+                <Tabs.TabPane tab="Discover" key="Discover">
+                    Discover!
+                </Tabs.TabPane>
+            </Tabs>
+        </>
+    );
+
 }

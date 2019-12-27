@@ -14,9 +14,9 @@ namespace kadmium_dmx_core
         public string Name { get; set; }
         public List<Universe> Universes { get; set; }
         private event EventHandler<VenueStatusUpdate> VenueStatusUpdated;
-        public IVenueData SourceData { get; }
-
-        public Venue(IVenueData data, IDictionary<FixtureDefinitionSkeleton, IFixtureDefinition> fixtureDefinitions, EventHandler<VenueStatusUpdate> venueStatusUpdated)
+        public VenueData SourceData { get; set; }
+        
+        public Venue(VenueData data, IDictionary<FixtureDefinitionSkeleton, IFixtureDefinition> fixtureDefinitions, EventHandler<VenueStatusUpdate> venueStatusUpdated)
         {
             Name = data.Name;
             var universes = from universeData in data.Universes

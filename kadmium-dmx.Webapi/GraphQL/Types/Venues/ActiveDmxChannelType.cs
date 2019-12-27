@@ -19,6 +19,10 @@ namespace kadmium_dmx_webapi.GraphQL.Types.Venues
             Field(x => x.Controlled);
             Field(x => x.Address, type: typeof(NonNullGraphType<IntGraphType>));
             Field(x => x.RelativeAddress, type: typeof(NonNullGraphType<IntGraphType>));
+            Field("value",
+                x => x.ByteValue,
+                type: typeof(NonNullGraphType<IntGraphType>)
+            );
         }
     }
 }

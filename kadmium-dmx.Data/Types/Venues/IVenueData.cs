@@ -10,6 +10,6 @@ namespace kadmium_dmx_data.Types.Venues
     public interface IVenueData
     {
         string Name { get; set; }
-        IEnumerable<UniverseData> Universes { get; set; }
+        IList<UniverseData> Universes { get; set; }
     }
 }

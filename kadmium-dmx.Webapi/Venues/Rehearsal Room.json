@@ -1,0 +1,197 @@
+{
+  "name": "Rehearsal Room",
+  "universes": [
+    {
+      "name": "Private Universe",
+      "universeID": 1,
+      "fixtures": [
+        {
+          "address": 301,
+          "type": {
+            "manufacturer": "Generic",
+            "model": "Chinese Moving Wash"
+          },
+          "options": {
+            "maxBrightness": 1.0,
+            "axisOptions": [
+              {
+                "name": "Pan",
+                "restrictions": {
+                  "min": -90,
+                  "max": 90
+                },
+                "inverted": false
+              },
+              {
+                "name": "Tilt",
+                "restrictions": {
+                  "min": 0,
+                  "max": 90
+                },
+                "inverted": false
+              }
+            ]
+          },
+          "group": "rearSides"
+        },
+        {
+          "address": 315,
+          "type": {
+            "manufacturer": "Generic",
+            "model": "Chinese Moving Wash"
+          },
+          "options": {
+            "maxBrightness": 1.0,
+            "axisOptions": [
+              {
+                "name": "Pan",
+                "restrictions": {
+                  "min": -90,
+                  "max": 90
+                },
+                "inverted": false
+              },
+              {
+                "name": "Tilt",
+                "restrictions": {
+                  "min": 0,
+                  "max": 90
+                },
+                "inverted": false
+              }
+            ]
+          },
+          "group": "rearSides"
+        },
+        {
+          "address": 329,
+          "type": {
+            "manufacturer": "Generic",
+            "model": "Chinese Moving Wash"
+          },
+          "options": {
+            "maxBrightness": 1.0,
+            "axisOptions": [
+              {
+                "name": "Pan",
+                "restrictions": {
+                  "min": -90,
+                  "max": 90
+                },
+                "inverted": true
+              },
+              {
+                "name": "Tilt",
+                "restrictions": {
+                  "min": 0,
+                  "max": 90
+                },
+                "inverted": false
+              }
+            ]
+          },
+          "group": "rearSides"
+        },
+        {
+          "address": 343,
+          "type": {
+            "manufacturer": "Generic",
+            "model": "Chinese Moving Wash"
+          },
+          "options": {
+            "maxBrightness": 1.0,
+            "axisOptions": [
+              {
+                "name": "Pan",
+                "restrictions": {
+                  "min": -90,
+                  "max": 90
+                },
+                "inverted": true
+              },
+              {
+                "name": "Tilt",
+                "restrictions": {
+                  "min": 0,
+                  "max": 90
+                },
+                "inverted": false
+              }
+            ]
+          },
+          "group": "rearSides"
+        },
+        {
+          "address": 400,
+          "type": {
+            "manufacturer": "Generic",
+            "model": "Chinese RGBW (5ch)"
+          },
+          "options": {
+            "maxBrightness": 1.0,
+            "axisOptions": []
+          },
+          "group": "vocalist"
+        },
+        {
+          "address": 405,
+          "type": {
+            "manufacturer": "Generic",
+            "model": "Chinese RGBW (5ch)"
+          },
+          "options": {
+            "maxBrightness": 1.0,
+            "axisOptions": []
+          },
+          "group": "guitarist"
+        },
+        {
+          "address": 410,
+          "type": {
+            "manufacturer": "Generic",
+            "model": "Chinese RGBW (5ch)"
+          },
+          "options": {
+            "maxBrightness": 1.0,
+            "axisOptions": []
+          },
+          "group": "bassist"
+        },
+        {
+          "address": 415,
+          "type": {
+            "manufacturer": "Generic",
+            "model": "Chinese RGBW (5ch)"
+          },
+          "options": {
+            "maxBrightness": 1.0,
+            "axisOptions": []
+          },
+          "group": "drummer"
+        },
+        {
+          "address": 1,
+          "type": {
+            "manufacturer": "Generic",
+            "model": "Chinese Moving Wash"
+          },
+          "options": {
+            "maxBrightness": null,
+            "axisOptions": []
+          },
+          "group": "vocalist"
+        }
+      ]
+    },
+    {
+      "name": "Universe 2",
+      "universeID": 2,
+      "fixtures": []
+    },
+    {
+      "name": "Universe 3",
+      "universeID": 3,
+      "fixtures": []
+    }
+  ]
+}

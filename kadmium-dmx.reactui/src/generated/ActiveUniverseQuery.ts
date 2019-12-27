@@ -19,10 +19,12 @@ export interface ActiveUniverseQuery_activeUniverse_fixtures {
   manufacturer: string;
   model: string;
   channels: ActiveUniverseQuery_activeUniverse_fixtures_channels[];
+  group: string;
 }
 
 export interface ActiveUniverseQuery_activeUniverse {
   __typename: "activeUniverse";
+  name: string;
   fixtures: ActiveUniverseQuery_activeUniverse_fixtures[];
 }
 

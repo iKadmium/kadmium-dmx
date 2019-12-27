@@ -17,6 +17,7 @@ namespace kadmium_dmx_core
         public int UniverseID { get; set; }
         public List<Fixture> Fixtures { get; }
         public byte[] DMX { get; }
+
         public event EventHandler<UpdateEventArgs> Rendered;
         public event EventHandler<DMXEventArgs> Transmitted;
 

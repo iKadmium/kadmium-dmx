@@ -81,5 +81,14 @@ namespace kadmium_dmx.DataAccess.Json
                 return File.Exists(fullPath);
             });
         }
+
+        public async Task Move(string oldPath, string newPath)
+        {
+            string fullPath = GetFullPath(newPath);
+            await Task.Factory.StartNew(() =>
+            {
+                File.Move(oldPath, fullPath);
+            });
+        }
     }
 }

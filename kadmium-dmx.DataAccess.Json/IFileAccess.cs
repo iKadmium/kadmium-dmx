@@ -9,6 +9,7 @@ namespace kadmium_dmx.DataAccess.Json
     {
         Task<JToken> Load(string path);
         Task Save<T>(T obj, string path);
+        Task Move(string oldPath, string newPath);
         Task<IEnumerable<string>> List(string path);
         Task Delete(string path);
         string GetFullPath(string path);

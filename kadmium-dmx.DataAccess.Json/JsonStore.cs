@@ -42,10 +42,20 @@ namespace kadmium_dmx.DataAccess.Json
             await FileAccess.Save(entity, path);
         }
 
+        private async Task<string> AddTemp(TItem entity)
+        {
+            string path = Path.GetTempFileName();
+            await FileAccess.Save(entity, path);
+            return path;
+        }
+
         public async Task Update(TKey id, TItem entity)
         {
+            string tempPath = await AddTemp(entity);
+            string destinationPath = KeyPathAccessor(ItemKeyAccessor(entity));
             await Remove(id);
-            await Add(entity);
+            string path = GetPath(destinationPath);
+            await FileAccess.Move(tempPath, path);
         }
 
         public async Task<TItem> Get(TKey id)

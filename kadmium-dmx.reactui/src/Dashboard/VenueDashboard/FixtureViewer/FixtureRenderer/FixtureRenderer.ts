@@ -1,5 +1,6 @@
 import { FixtureViewerQuery_activeUniverse_fixtures } from "generated/FixtureViewerQuery";
 import { ColorRenderer } from './ColorRenderer/ColorRenderer';
+import { RgbColorRenderer } from './ColorRenderer/RGBColorRenderer';
 import { RgbwColorRenderer } from './ColorRenderer/RGBWColorRenderer';
 
 export interface IChannelMap
@@ -18,6 +19,9 @@ export class FixtureRenderer
         if (RgbwColorRenderer.isRgbw(this.channelMap))
         {
             this.colorRenderer = new RgbwColorRenderer(this.channelMap);
+        } else if (RgbColorRenderer.isRgb(this.channelMap))
+        {
+            this.colorRenderer = new RgbColorRenderer(this.channelMap);
         }
     }
 

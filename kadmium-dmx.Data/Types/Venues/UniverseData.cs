@@ -12,7 +12,7 @@ namespace kadmium_dmx_data.Types.Venues
     {
         public string Name { get; set; }
         public int UniverseID { get; set; }
-        public IEnumerable<FixtureData> Fixtures { get; set; }
+        public IList<FixtureData> Fixtures { get; set; }
 
         public UniverseData()
         {
@@ -22,7 +22,7 @@ namespace kadmium_dmx_data.Types.Venues
         }
 
         [JsonConstructor]
-        public UniverseData(IEnumerable<FixtureData> fixtures) : base()
+        public UniverseData(IList<FixtureData> fixtures) : base()
         {
             Fixtures = fixtures;
         }

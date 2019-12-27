@@ -8,7 +8,7 @@ namespace kadmium_dmx_data.Types.Venues
     public class VenueData : IVenueData
     {
         public string Name { get; set; }
-        public IEnumerable<UniverseData> Universes { get; set; }
+        public IList<UniverseData> Universes { get; set; }
 
         public VenueData()
         {
@@ -17,7 +17,7 @@ namespace kadmium_dmx_data.Types.Venues
         }
 
         [JsonConstructor]
-        public VenueData(IEnumerable<UniverseData> universes) : base()
+        public VenueData(IList<UniverseData> universes) : base()
         {
             Universes = universes;
         }

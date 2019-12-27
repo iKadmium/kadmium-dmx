@@ -12,6 +12,6 @@ namespace kadmium_dmx_data.Types.Venues
     {
         string Name { get; set; }
         int UniverseID { get; set; }
-        IEnumerable<FixtureData> Fixtures { get; set; }
+        IList<FixtureData> Fixtures { get; set; }
     }
 }

@@ -13,6 +13,7 @@ export interface FixtureControllerQuery_activeFixture_channels {
   name: string;
   min: number;
   max: number;
+  value: number;
 }
 
 export interface FixtureControllerQuery_activeFixture_attributes {
@@ -29,6 +30,7 @@ export interface FixtureControllerQuery_activeFixture {
   model: string;
   channels: FixtureControllerQuery_activeFixture_channels[];
   attributes: FixtureControllerQuery_activeFixture_attributes[];
+  group: string;
 }
 
 export interface FixtureControllerQuery {

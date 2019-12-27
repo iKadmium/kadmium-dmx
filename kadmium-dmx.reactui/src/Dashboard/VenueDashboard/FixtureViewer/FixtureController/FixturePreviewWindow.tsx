@@ -1,6 +1,17 @@
 import { FixtureViewerQuery_activeUniverse_fixtures } from 'generated/FixtureViewerQuery';
 import React from 'react';
 import { FixtureRenderer } from '../FixtureRenderer/FixtureRenderer';
+import styled from 'styled-components';
+
+const Container = styled.div`
+    display: flex;
+    justify-content: center;
+`;
+
+const Canvas = styled.canvas`
+    border: 1px solid black;
+    margin-bottom: 20px;
+`;
 
 export interface IFixturePreviewWindowProps
 {
@@ -41,9 +52,9 @@ export class FixturePreviewWindow extends React.Component<IFixturePreviewWindowP
     public render(): JSX.Element
     {
         return (
-            <div style={{ display: "flex", justifyContent: "center" }}>
-                <canvas ref={this.canvasRef} width={200} height={200}></canvas>
-            </div>
+            <Container>
+                <Canvas ref={this.canvasRef} width={200} height={200}></Canvas>
+            </Container>
         );
     }
 }

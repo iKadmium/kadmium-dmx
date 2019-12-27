@@ -72,7 +72,7 @@ namespace kadmium_dmx_core
             }
         }
 
-        public async Task LoadVenue(IVenueData venue, IDictionary<FixtureDefinitionSkeleton, IFixtureDefinition> definitions, IEnumerable<IGroupData> groupData)
+        public async Task LoadVenue(VenueData venue, IDictionary<FixtureDefinitionSkeleton, IFixtureDefinition> definitions, IEnumerable<IGroupData> groupData)
         {
             await Renderer.Stop();
             var groups = from grp in groupData

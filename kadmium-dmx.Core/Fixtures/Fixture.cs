@@ -22,7 +22,7 @@ namespace kadmium_dmx_core.Fixtures
         public string Group { get; set; }
         public int Address { get; set; }
         public FixtureOptions Options { get; set; }
-        
+
         public Fixture(IFixtureData data, IFixtureDefinition definition, bool addDefaultSolvers = true)
         {
             Group = data.Group;

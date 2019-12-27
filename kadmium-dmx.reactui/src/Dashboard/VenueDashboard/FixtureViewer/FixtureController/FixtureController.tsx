@@ -1,10 +1,11 @@
 import { useQuery, useSubscription } from '@apollo/react-hooks';
-import { Alert, Card, Collapse, Divider, Slider } from 'antd';
+import { Alert, Card, Collapse, Divider } from 'antd';
 import { FixtureControllerQuery, FixtureControllerQueryVariables } from 'generated/FixtureControllerQuery';
 import { FixtureControllerSubscription, FixtureControllerSubscriptionVariables } from 'generated/FixtureControllerSubscription';
 import gql from 'graphql-tag';
 import React from 'react';
 import { AttributeSlider } from './AttributeSlider';
+import { DmxChannelSlider } from './DmxChannelSlider';
 import { FixturePreviewWindow } from './FixturePreviewWindow';
 
 const fixtureControllerQuery = gql`
@@ -18,13 +19,15 @@ const fixtureControllerQuery = gql`
                 address,
                 name,
                 min,
-                max
+                max,
+                value
             },
             attributes {
                 controlled,
                 name,
                 value
             }
+            group
         }
     }
 `;
@@ -61,18 +64,6 @@ export const FixtureController: React.FC<IFixtureControllerProps> = (props) =>
         }
     );
 
-    const channelSteps = {
-        0: "0",
-        32: "32",
-        64: "64",
-        96: "96",
-        128: "128",
-        160: "160",
-        192: "192",
-        224: "224",
-        255: "255"
-    };
-
     if (queryError || subscriptionError)
     {
         return (<Alert message={queryError.message} />);
@@ -84,17 +75,15 @@ export const FixtureController: React.FC<IFixtureControllerProps> = (props) =>
 
     return (
         <Card title={`${props.address} ${queryData.activeFixture.manufacturer} ${queryData.activeFixture.model}`}>
-
             <FixturePreviewWindow dmx={subscriptionData.universeDmx.dmx} fixture={queryData.activeFixture} />
-
             <Collapse>
                 <Collapse.Panel key="DMX Channels" header="DMX Channels">
                     {queryData.activeFixture.channels.map(channel =>
-                        <div key={channel.name}>
-                            {channel.address} {channel.name} {channel.controlled && "(controlled)"}
-                            <Slider min={channel.min} max={channel.max} disabled={channel.controlled} step={1} marks={channelSteps} />
-                        </div>
-
+                        <DmxChannelSlider
+                            channel={channel}
+                            fixtureAddress={props.address}
+                            universeId={props.universeId}
+                        />
                     )}
                 </Collapse.Panel>
                 <Divider />
